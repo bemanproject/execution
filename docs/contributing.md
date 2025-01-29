@@ -21,7 +21,7 @@ incomplete list of starting points for contributions:
 * The layout of some pages related to the project can be improved.
 * Some behaviour of a component isn't tested or documented.
 * You found something which should be linked from the
-    [resources](https://github.com/bemanproject/execution/docs/resources.md) page.
+    [resources](https://github.com/bemanproject/execution/blob/main/docs/contributing.md) page.
 * There are [pull requests](https://github.com/bemanproject/execution/pulls)
     which could be reviewed.
 * This very page or list is lacking something.

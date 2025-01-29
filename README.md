@@ -42,8 +42,8 @@ e.g.:
 ## Help Welcome!
 
 There are plenty of things which need to be done. See the
-[contributions page](https://github.com/bemanproject/execution/docs/contributing.md)
-for some ideas how to contribute. The [resources page](https://github.com/bemanproject/execution/docs/resources.md)
+[contributions page](https://github.com/bemanproject/execution/blob/main/docs/contributing.md)
+for some ideas how to contribute. The [resources page](https://github.com/bemanproject/execution/blob/main/docs/resources.md)
 contains some links for general information about the sender/receivers and `std::execution`.
 
 ## Build
