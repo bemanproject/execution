@@ -28,12 +28,10 @@
 #include <type_traits>
 #include <utility>
 
-
 #include <beman/execution/detail/suppress_push.hpp>
 namespace beman::execution::detail {
 
 struct bulk_t {
-
 
     template <class Sender, class Shape, class f>
         requires(::beman::execution::sender<Sender> && std::is_integral_v<Shape> &&
@@ -56,8 +54,8 @@ struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
                                          Index, State& state, Rcvr& rcvr, Tag, Args&&... args) noexcept -> void
         requires(not::std::same_as<Tag, set_value_t> ||
                  requires(State& s, Args&&... a) {
-                (s.template get<1>())(s.template get<0>(), ::std::forward<Args>(a)...);
-            })
+                     (s.template get<1>())(s.template get<0>(), ::std::forward<Args>(a)...);
+                 })
     {
         if constexpr (std::same_as<Tag, set_value_t>) {
             auto& [shape, f] = state;
@@ -98,12 +96,12 @@ struct completion_signatures_for_impl<
     using make_error_completions =
         ::beman::execution::completion_signatures<::beman::execution::set_error_t(const std::decay_t<Args>&)...>;
 
-    // Retrieves the value completion signatures from the Sender using Env, 
+    // Retrieves the value completion signatures from the Sender using Env,
     // then applies `make_value_completions` to format them and merges all signatures.
     using value_completions = ::beman::execution::
         value_types_of_t<Sender, Env, make_value_completions, ::beman::execution::detail::meta::combine>;
 
-    // Retrieves the error completion signatures from the Sender using Env, 
+    // Retrieves the error completion signatures from the Sender using Env,
     // then applies make_error_completions to format them.
     using error_completions = ::beman::execution::error_types_of_t<Sender, Env, make_error_completions>;
 
@@ -111,7 +109,6 @@ struct completion_signatures_for_impl<
         ::beman::execution::completion_signatures<::beman::execution::set_stopped_t(),
                                                   ::beman::execution::set_error_t(std::exception_ptr)>;
 
-    
     using type = ::beman::execution::detail::meta::unique<
         ::beman::execution::detail::meta::combine<fixed_completions, value_completions, error_completions>>;
 };
