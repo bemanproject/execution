@@ -86,7 +86,7 @@ struct completion_signatures_for_impl<
         basic_sender<::beman::execution::detail::bulk_t, ::beman::execution::detail::product_type<Shape, f>, Sender>,
     Env> {
 
-    // Creates a completion signature for set_value_t`
+    // Creates a completion signature for set_value_t
     template <class... Args>
     using make_value_completions =
         ::beman::execution::completion_signatures<::beman::execution::set_value_t(const std::decay_t<Args>&...)>;
@@ -97,7 +97,7 @@ struct completion_signatures_for_impl<
         ::beman::execution::completion_signatures<::beman::execution::set_error_t(const std::decay_t<Args>&)...>;
 
     // Retrieves the value completion signatures from the Sender using Env,
-    // then applies `make_value_completions` to format them and merges all signatures.
+    // then applies make_value_completions to format them and merges all signatures.
     using value_completions = ::beman::execution::
         value_types_of_t<Sender, Env, make_value_completions, ::beman::execution::detail::meta::combine>;
 
