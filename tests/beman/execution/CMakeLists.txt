@@ -57,6 +57,7 @@ list(
   exec-when-all.test
   exec-with-awaitable-senders.test
   execution-queryable-concept.test
+  exec-bulk.test
   execution-syn.test
   forward-like.test
   function-objects.test
