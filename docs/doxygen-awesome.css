@@ -1,5 +1,5 @@
 /**
-
+SPDX-License-Identifier: MIT License
 Doxygen Awesome
 https://github.com/jothepro/doxygen-awesome-css
 
