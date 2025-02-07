@@ -46,7 +46,7 @@ class DoxygenAwesomeDarkModeToggle extends HTMLElement {
             DoxygenAwesomeDarkModeToggle.onSystemPreferenceChanged()
         })
         // Update the color scheme when the tab is made visible again.
-        // It is possible that the appearance was changed in another tab 
+        // It is possible that the appearance was changed in another tab
         // while this tab was in the background.
         document.addEventListener("visibilitychange", visibilityState => {
             if (document.visibilityState === 'visible') {
