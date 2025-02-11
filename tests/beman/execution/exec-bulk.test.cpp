@@ -43,7 +43,7 @@ auto test_bulk() {
     std::vector<int> results(a.size(), 0);
 
     auto b2 = test_std::bulk(test_std::just(a), a.size(), [&](std::size_t index, const std::vector<int>& vec) {
-        results[index] = vec[index] * b[index]; 
+        results[index] = vec[index] * b[index];
     });
     static_assert(test_std::sender<decltype(b2)>);
     auto b2_env         = test_std::get_env(b2);
@@ -58,20 +58,18 @@ auto test_bulk() {
     // Expected results: element-wise multiplication of a and b
     std::vector<int> expected{9, 20, 33, 52, 70, 90, 112, 136};
 
-    
     for (size_t i = 0; i < results.size(); ++i) {
         ASSERT(results[i] == expected[i]);
     }
 }
 
 auto test_bulk_noexept() {
-    auto b0 = test_std::bulk(test_std::just(), 1, [](int) noexcept {});
+    auto b0             = test_std::bulk(test_std::just(), 1, [](int) noexcept {});
     auto b0_env         = test_std::get_env(b0);
     auto b0_completions = test_std::get_completion_signatures(b0, b0_env);
-    /*static_assert(
-        std::is_same_v<decltype(b0_completions),
-                       beman::execution::completion_signatures<beman::execution::set_value_t()> >,
-        "Completion signatures do not match!");*/
+    static_assert(std::is_same_v<decltype(b0_completions),
+                                 beman::execution::completion_signatures<beman::execution::set_value_t()> >,
+                  "Completion signatures do not match!");
     static_assert(test_std::sender<decltype(b0)>);
 }
 
