@@ -4,9 +4,9 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BULK
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BULK
 
-#include "beman/execution/detail/callable.hpp"
-#include "beman/execution/detail/get_completion_signatures.hpp"
-#include "beman/execution/detail/nothrow_callable.hpp"
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
@@ -69,8 +69,9 @@ struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
                 }();
 
             } catch (...) {
-
-                ::beman::execution::set_error(std::move(rcvr), std::current_exception());
+                if constexpr (not nothrow) {
+                    ::beman::execution::set_error(std::move(rcvr), std::current_exception());
+                }
             }
         } else {
             Tag()(std::move(rcvr), std::forward<Args>(args)...);
@@ -78,116 +79,25 @@ struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
     };
 };
 
-template <typename T>
-struct print_type;
-
-// Specialization to trigger a compile-time error and print the type
-template <typename T>
-struct print_type {
-    static_assert(sizeof(T) == 0, "Debugging type...");
-};
-
-template <typename T>
-concept function_constraint = std::is_function_v<T>;
-
-template <typename T, typename... Args>
-struct function_type;
-
-template <typename T, typename... Args>
-using function_type_t = typename function_type<T, Args...>::type;
-
-template <typename>
-struct function_type_basis {};
-
-template <typename T, typename...>
-struct function_type : function_type_basis<std::remove_cv_t<T>> {};
-
-template <function_constraint T>
-struct function_type_basis<T> {
-    using type = T;
-};
-
-template <function_constraint T>
-struct function_type_basis<T*> {
-    using type = T;
-};
-
-template <function_constraint T>
-struct function_type_basis<T&> {
-    using type = T;
-};
-
-template <function_constraint T>
-struct function_type_basis<T&&> {
-    using type = T;
-};
-
-template <function_constraint T, typename C>
-struct function_type_basis<T C::*> {
-    using type = T;
-};
-
-template <typename, typename...>
-struct function_object_type {};
-
-template <typename C, typename... Args>
-    requires(bool(&C::operator()))
-struct function_object_type<C, Args...> : function_type_basis<decltype(&C::operator())> {};
-
-template <typename F, typename... Args>
-    requires std::is_class<std::remove_cvref_t<F>>::value
-struct function_type<F, Args...> : function_object_type<F, Args...> {};
-
-template <typename>
-struct function_traits;
-
-// Specialization for function types
-template <typename R, typename... Args, bool NoExcept>
-struct function_traits<R(Args...) noexcept(NoExcept)> {
-    // The return type
-    using return_type = R;
-    // A tuple containing all argument types
-    using argument_types = std::tuple<Args...>;
-
-    // The number of arguments
-    static constexpr std::size_t arity = sizeof...(Args);
-};
-
-template <typename R, typename... Args, bool NoExcept>
-struct function_traits<R(Args...) const noexcept(NoExcept)> {
-    // The return type
-    using return_type = R;
-    // A tuple containing all argument types
-    using argument_types = std::tuple<Args...>;
-    // The number of arguments
-    static constexpr std::size_t arity = sizeof...(Args);
-};
-
-template <typename F, typename FunctionType>
-struct is_invocable_with; 
-
-template <typename F, typename... Args>
-struct is_invocable_with<F, std::tuple<Args...>> {
-    static constexpr bool is_invocable = std::is_invocable_v<F, Args...>;
-    static constexpr bool is_no_throw  = ::beman::execution::detail::nothrow_callable<F, Args...>;
-};
-
 template <typename, typename, typename>
 struct fixed_completions_helper;
 
 template <typename F, typename Shape, typename... Args>
 struct fixed_completions_helper<F, Shape, completion_signatures<Args...>> {
-    // get function signature
-    using signature = function_type_t<F>;
-    // break apart return type and args types
-    using signature_helper = function_traits<signature>;
-    // get arg types
-    using function_args_type = signature_helper::argument_types;
-    // print_type<function_args_type> debug;
-    // check if function is well form
-    static_assert(is_invocable_with<F, function_args_type>::is_invocable,
-                  "Error: The function is not callable with the given arguments.");
-    using type = std::conditional_t<is_invocable_with<F, function_args_type>::is_no_throw,
+
+    template <typename, typename>
+    struct may_throw;
+    template <typename XF, typename Tag, typename... XArgs>
+    struct may_throw<XF, Tag(XArgs...)> {
+        static constexpr bool value = std::same_as<Tag, ::beman::execution::set_value_t> &&
+                                      not::std::is_nothrow_invocable<XF, Shape, XArgs...>();
+    };
+    template <typename XF, typename... Sigs>
+    struct may_throw<XF, completion_signatures<Sigs...>> {
+        static constexpr bool value = (false || ... || may_throw<XF, Sigs>::value);
+    };
+
+    using type = std::conditional_t<!may_throw<F, Args...>::value,
                                     completion_signatures<Args...>,
                                     completion_signatures<Args..., set_error_t(std::exception_ptr)>>;
 };
@@ -202,8 +112,8 @@ struct completion_signatures_for_impl<
     Env> {
 
     using completions = decltype(get_completion_signatures(std::declval<Sender>(), std::declval<Env>()));
-    using type        = fixed_completions<F, Shape, completions>;
-    // print_type<F> debug;
+    using type        = ::beman::execution::detail::meta::unique<
+               ::beman::execution::detail::meta::combine<fixed_completions<F, Shape, completions>>>;
 };
 
 } // namespace beman::execution::detail

@@ -10,6 +10,7 @@
 #include <beman/execution/detail/just.hpp>
 #include <vector>
 
+namespace {
 auto test_bulk() {
     auto b0 = test_std::bulk(test_std::just(), 1, [](int) {});
 
@@ -71,7 +72,22 @@ auto test_bulk_noexept() {
                                  beman::execution::completion_signatures<beman::execution::set_value_t()> >,
                   "Completion signatures do not match!");
     static_assert(test_std::sender<decltype(b0)>);
+
+    int counter = 0;
+
+    auto b1 = test_std::bulk(test_std::just(), 5, [&](int i) noexcept { counter += i; });
+
+    static_assert(test_std::sender<decltype(b1)>);
+    auto b1_env         = test_std::get_env(b0);
+    auto b1_completions = test_std::get_completion_signatures(b1, b1_env);
+    static_assert(std::is_same_v<decltype(b1_completions),
+                                 beman::execution::completion_signatures<beman::execution::set_value_t()> >,
+                  "Completion signatures do not match!");
+    test_std::sync_wait(b1);
+    ASSERT(counter == 10);
 }
+
+} // namespace
 
 TEST(exec_bulk) {
 
