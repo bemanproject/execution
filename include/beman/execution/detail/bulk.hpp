@@ -66,7 +66,7 @@ struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
             try {
                 [&]() noexcept(nothrow) {
                     for (decltype(s_type(shape)) i = 0; i < shape; i++) {
-                        f(auto(i), args...);
+                        f(s_type(i), args...);
                     }
                     Tag()(std::move(rcvr), std::forward<Args>(args)...);
                 }();
