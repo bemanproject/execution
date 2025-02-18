@@ -48,12 +48,13 @@ struct bulk_t {
 template <>
 struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
 
-    static constexpr auto complete = []<class Index, class State, class Rcvr, class Tag, class... Args>(
-                                         Index, State& state, Rcvr& rcvr, Tag, Args&&... args) noexcept -> void
-        requires(not::std::same_as<Tag, set_value_t> ||
-                 requires(State& s, Args&&... a) {
-                     (s.template get<1>())(s.template get<0>(), ::std::forward<Args>(a)...);
-                 })
+    static constexpr auto complete = []<class Index, class Shape, class Fun, class Rcvr, class Tag, class... Args>(
+                                         Index,
+                                         ::beman::execution::detail::product_type<Shape, Fun>& state,
+                                         Rcvr&                                                 rcvr,
+                                         Tag,
+                                         Args&&... args) noexcept -> void
+        requires(not::std::same_as<Tag, set_value_t> || std::is_invocable_v<Fun, Shape, Args...>)
     {
         if constexpr (std::same_as<Tag, set_value_t>) {
             auto& [shape, f] = state;
