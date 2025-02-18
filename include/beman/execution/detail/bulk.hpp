@@ -59,11 +59,13 @@ struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
         if constexpr (std::same_as<Tag, set_value_t>) {
             auto& [shape, f] = state;
 
-            constexpr bool nothrow = noexcept(f(auto(shape), args...));
+            using s_type = std::remove_cvref_t<decltype(shape)>;
+
+            constexpr bool nothrow = noexcept(f(s_type(shape), args...));
 
             try {
                 [&]() noexcept(nothrow) {
-                    for (decltype(auto(shape)) i = 0; i < shape; i++) {
+                    for (decltype(s_type(shape)) i = 0; i < shape; i++) {
                         f(auto(i), args...);
                     }
                     Tag()(std::move(rcvr), std::forward<Args>(args)...);
