@@ -13,6 +13,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "basic_receiver.hpp", "basic__receiver_8hpp_source.html", null ],
     [ "basic_sender.hpp", "basic__sender_8hpp_source.html", null ],
     [ "basic_state.hpp", "basic__state_8hpp_source.html", null ],
+    [ "bulk.hpp", "bulk_8hpp_source.html", null ],
     [ "call_result_t.hpp", "call__result__t_8hpp_source.html", null ],
     [ "callable.hpp", "callable_8hpp_source.html", null ],
     [ "check_type_alias_exist.hpp", "check__type__alias__exist_8hpp_source.html", null ],
