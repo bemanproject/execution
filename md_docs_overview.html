@@ -280,10 +280,11 @@ Example</summary>
 <li><code><a href="‘#connect’">connect</a>(<em>sender</em>, <a href="‘#receiver’">receiver</a>) -&gt; <a href="‘#operation-state’">operation_state</a></code></li>
 </ul>
 <p></code></p>
-<p><code>&lt;detail&gt; </code></p>
-<p><code>Example</code></p>
-<p><code> The example shows a sender implementing an operation similar to <code><a href="‘#just’">just</a>(_value)</code>.</code></p>
-<p><code></p><div class="fragment"><div class="line"> {c++}</div>
+<p><code></p><details >
+<summary >
+Example</summary>
+<p>The example shows a sender implementing an operation similar to <code><a href="‘#just’">just</a>(_value)</code>.</p>
+<div class="fragment"><div class="line"> {c++}</div>
 <div class="line">struct example_sender</div>
 <div class="line">{</div>
 <div class="line">    template &lt;std::execution::receiver Receiver&gt;</div>
@@ -312,33 +313,34 @@ Example</summary>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">static_assert(std::execution::sender&lt;example_sender&gt;);</div>
-</div><!-- fragment --><p> </code></p>
+</div><!-- fragment --> </details>
+<p></code></p>
 </details>
-<p><code> </p><details >
+<details >
 <summary >
 <code>sender_in&lt;<em>Sender, Env</em> = std::execution::empty_env&gt;</code></summary>
-<p></p>
-<p>The concept <code>sender_in&lt;<em>Sender, Env</em>&gt;</code> tests whether <code><em>Sender</em></code> is a <code><a href="‘#sender’">sender</a></code>, <code><em>Env</em></code> is a destructible type, and <code><a href="‘#get_completion_signatures’">std::execution::get_completion_signatures</a>(<em>sender</em>, <em>env</em>)</code> yields a specialization of <code><a href="‘#completion_signatures’">std::execution::completion_signatures</a></code>. </p>
+<p><code> </code></p>
+<p><code>The concept <code>sender_in&lt;<em>Sender, Env</em>&gt;</code> tests whether <code><em>Sender</em></code> is a <code><a href="‘#sender’">sender</a></code>, <code><em>Env</em></code> is a destructible type, and <code><a href="‘#get_completion_signatures’">std::execution::get_completion_signatures</a>(<em>sender</em>, <em>env</em>)</code> yields a specialization of <code><a href="‘#completion_signatures’">std::execution::completion_signatures</a></code>. </code></p>
 </details>
 <details >
 <summary >
 <code>sender_to&lt;<em>Sender, Receiver</em>&gt;</code></summary>
-<p></p>
-<p>The concept <code>sender_to&lt;<em>Sender, Receiver</em>&gt;</code> tests if <code><a href="‘#sender_in’">std::execution::sender_in</a>&lt;<em>Sender</em>, <a href="#env_of_t">std::execution::env_of_t</a>&lt;<em>Receiver</em>&gt;&gt;</code> is true, and if <code><em>Receiver</em></code> can receive all <a href="‘#completion-signals’">completion signals</a> which can be sent by <code><em>Sender</em></code>, and if <code><em>Sender</em></code> can be <code><a href="‘#connect’">connect</a></code>ed to <code><em>Receiver</em></code>.</p>
-<p>To determine if <code><em>Receiver</em></code> can receive all <a href="‘#completion-signals’">completion signals</a> from <code><em>Sender</em></code> it checks that for each <code><em>Signature</em></code> in <code><a href="‘#get_completion_signals’">std::execution::get_completion_signals</a>(<em>sender</em>, std::declval&lt;<a href="#env_of_t">std::execution::env_of_t</a>&lt;<em>Receiver</em>&gt;&gt;())</code> the test <code><a href="‘#receiver_of’">std::execution::receiver_of</a>&lt;<em>Receiver</em>, <em>Signature</em>&gt;</code> yields true. To determine if <code><em>Sender</em></code> can be <code><a href="‘#connect’">connect</a></code>ed to <code><em>Receiver</em></code> the concept checks if <code><a href="‘#connect’">connect</a>(std::declval&lt;<em>Sender</em>&gt;(), std::declval&lt;<em>Receiver</em>&gt;)</code> is a valid expression. </p>
+<p><code> </code></p>
+<p><code>The concept <code>sender_to&lt;<em>Sender, Receiver</em>&gt;</code> tests if <code><a href="‘#sender_in’">std::execution::sender_in</a>&lt;<em>Sender</em>, <a href="#env_of_t">std::execution::env_of_t</a>&lt;<em>Receiver</em>&gt;&gt;</code> is true, and if <code><em>Receiver</em></code> can receive all <a href="‘#completion-signals’">completion signals</a> which can be sent by <code><em>Sender</em></code>, and if <code><em>Sender</em></code> can be <code><a href="‘#connect’">connect</a></code>ed to <code><em>Receiver</em></code>.</code></p>
+<p><code>To determine if <code><em>Receiver</em></code> can receive all <a href="‘#completion-signals’">completion signals</a> from <code><em>Sender</em></code> it checks that for each <code><em>Signature</em></code> in <code><a href="‘#get_completion_signals’">std::execution::get_completion_signals</a>(<em>sender</em>, std::declval&lt;<a href="#env_of_t">std::execution::env_of_t</a>&lt;<em>Receiver</em>&gt;&gt;())</code> the test <code><a href="‘#receiver_of’">std::execution::receiver_of</a>&lt;<em>Receiver</em>, <em>Signature</em>&gt;</code> yields true. To determine if <code><em>Sender</em></code> can be <code><a href="‘#connect’">connect</a></code>ed to <code><em>Receiver</em></code> the concept checks if <code><a href="‘#connect’">connect</a>(std::declval&lt;<em>Sender</em>&gt;(), std::declval&lt;<em>Receiver</em>&gt;)</code> is a valid expression. </code></p>
 </details>
 <details >
 <summary >
 <code>sends_stopped&lt;<em>Sender, Env</em> = std::execution::empty_env&gt;</code></summary>
-<p></p>
-<p>The concept <code>sends_stopped&lt;<em>Sender, Env</em>&gt;</code> determines if <code><em>Sender</em></code> may send a <code><a href="‘#set_stopped’">stopped</a></code> <a href="‘#completion-signals’">completion signal</a>. To do so, the concepts determines if <code><a href="‘#get_completion_signals’">std::execution::get_completion_signals</a>(<em>sender</em>, <em>env</em>)</code> contains the signatures <code><a href="‘#set_stopped’">std::execution::set_stopped_t</a>()</code>. </p>
+<p><code> </code></p>
+<p><code>The concept <code>sends_stopped&lt;<em>Sender, Env</em>&gt;</code> determines if <code><em>Sender</em></code> may send a <code><a href="‘#set_stopped’">stopped</a></code> <a href="‘#completion-signals’">completion signal</a>. To do so, the concepts determines if <code><a href="‘#get_completion_signals’">std::execution::get_completion_signals</a>(<em>sender</em>, <em>env</em>)</code> contains the signatures <code><a href="‘#set_stopped’">std::execution::set_stopped_t</a>()</code>. </code></p>
 </details>
 <details >
 <summary >
 <code>stoppable_token&lt;<em>Token</em>&gt;</code></summary>
-<p>A <code>stoppable_token&lt;<em>Token</em>&gt;</code>, e.g., obtained via <code><a href="‘#get-stop-token’">std::execution::get_stop_token</a>(<em>env</em>)</code> is used to support cancellation of asynchronous operations. Using <code><em>token</em>.stop_requested()</code> an active operation can poll whether it was requested to cancel. An inactive operation waiting for a notification can use an object of a specialization of the template <code><em>Token</em>::callback_type</code> to get notified when cancellation is requested.</p>
-<p>Required members for <code><em>Token</em></code>:</p>
-<ul>
+<p><code>  A <code>stoppable_token&lt;<em>Token</em>&gt;</code>, e.g., obtained via <code><a href="‘#get-stop-token’">std::execution::get_stop_token</a>(<em>env</em>)</code> is used to support cancellation of asynchronous operations. Using <code><em>token</em>.stop_requested()</code> an active operation can poll whether it was requested to cancel. An inactive operation waiting for a notification can use an object of a specialization of the template <code><em>Token</em>::callback_type</code> to get notified when cancellation is requested.</code></p>
+<p><code>Required members for <code><em>Token</em></code>:</code></p>
+<p><code></p><ul>
 <li><code><em>Token</em>::callback_type&lt;<em>Callback</em>&gt;</code> can be specialized with a <code>std::callable&lt;<em>Callback</em>&gt;</code> type.</li>
 <li><code><em>token</em>.stop_requested() const noexcept -&gt; bool</code></li>
 <li><code><em>token</em>.stop_possible() const noexcept -&gt; bool</code></li>
@@ -422,11 +424,12 @@ Example: inactive</summary>
 </blockquote>
 </li>
 </ul>
+<p></code></p>
 </details>
 <details >
 <summary >
 <code>unstoppable_token&lt;<em>Token</em>&gt;</code></summary>
-<p>The concept <code>unstoppable_token&lt;Token&gt;</code> is modeled by a <code><em>Token</em></code> if <code>stoppable_token&lt;<em>Token</em>&gt;</code> is true and it can statically be determined that both <code><em>token</em>.stop_requested()</code> and <code><em>token</em>.stop_possible()</code> are <code>constexpr</code> epxressions yielding <code>false</code>. This concept is primarily used to avoid extra work when using stop tokens which will never indicate that cancellations are requested. </p><blockquote class="doxtable">
+<p><code>  The concept <code>unstoppable_token&lt;Token&gt;</code> is modeled by a <code><em>Token</em></code> if <code>stoppable_token&lt;<em>Token</em>&gt;</code> is true and it can statically be determined that both <code><em>token</em>.stop_requested()</code> and <code><em>token</em>.stop_possible()</code> are <code>constexpr</code> epxressions yielding <code>false</code>. This concept is primarily used to avoid extra work when using stop tokens which will never indicate that cancellations are requested. </p><blockquote class="doxtable">
 <details >
 <summary >
 Example</summary>
@@ -437,8 +440,8 @@ Example</summary>
 <div class="line">static_assert(not std::execution::unstoppable_token&lt;std::execution::inline_stop_token&gt;);</div>
 </div><!-- fragment --> </details>
 </blockquote>
-</details>
 <p></code></p>
+</details>
 <p><code></code></p>
 <h2><a class="anchor" id="autotoc_md5"></a>
 Queries</h2>
