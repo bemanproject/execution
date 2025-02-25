@@ -251,36 +251,33 @@ Example</summary>
 <details >
 <summary >
 <code>scheduler&lt;<em>Scheduler</em>&gt;</code></summary>
-<p>Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href="‘#schedule’">schedule</a></code> operation yielding a <code><a href="‘sender’">sender with a value completion signal</a> without parameters. The completion is on the respective execution context.</code></p>
-<p><code>Requirements for <code><em>Scheduler</em></code>:</p><ul>
+<p>Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href="‘#schedule’">schedule</a></code> operation yielding a <code><a href="‘sender’">sender</a></code> with a value <a href="‘#completion-signal’">completion signal</a> without parameters. The completion is on the respective execution context.</p>
+<p>Requirements for <code><em>Scheduler</em></code>:</p><ul>
 <li>The type <code><em>Scheduler</em>::scheduler_concept</code> is an alias for <code>scheduler_t</code> or a type derived thereof`.</li>
 <li><code><a href="‘#schedule’">schedule</a>(<em>scheduler</em>) -&gt; <a href="‘sender’">sender</a></code></li>
 <li>The <a href="‘#get-completion-scheduler’">value completion scheduler</a> of the <code><a href="‘sender’">sender</a></code>’s <a href="‘#environment’">environment</a> is the <code><em>scheduler</em></code>: <em>scheduler</em> == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;( std::execution::get_env(std::execution::schedule(<em>scheduler</em>)) )</li>
 <li><code>std::equality_comparable&lt;<em>Scheduler</em>&gt;</code></li>
 <li><code>std::copy_constructible&lt;<em>Scheduler</em>&gt;</code> </li>
 </ul>
-<p></code></p>
 </details>
 <details >
 <summary >
 <code>sender&lt;<em>Sender</em>&gt;</code></summary>
-<p><code> </code></p>
-<p><code>Senders represent asynchronous work. They may get composed from multiple senders to model a workflow. Senders can’t be run directly. Instead, they are passed to a &lt;a href=‘::sender-consumer’ which <code><a href="‘#connect’">connect</a></code>s the sender to a <code><a href="‘#receiver’">receiver</a></code> to produce an <code><a href="‘#operation-state’">operation_state</a></code> which may get started. When using senders to represent work the inner workings shouldn’t matter. They do become relevant when creating sender algorithms.</code></p>
-<p><code>Requirements for <code><em>Sender</em></code>:</p><ul>
+<p></p>
+<p>Senders represent asynchronous work. They may get composed from multiple senders to model a workflow. Senders can’t be run directly. Instead, they are passed to a &lt;a href=‘::sender-consumer’ which <code><a href="‘#connect’">connect</a></code>s the sender to a <code><a href="‘#receiver’">receiver</a></code> to produce an <code><a href="‘#operation-state’">operation_state</a></code> which may get started. When using senders to represent work the inner workings shouldn’t matter. They do become relevant when creating sender algorithms.</p>
+<p>Requirements for <code><em>Sender</em></code>:</p><ul>
 <li>The type <code><em>Sender</em>::sender_concept</code> is an alias for <code>sender_t</code> or a type derived thereof or <code><em>Sender</em></code> is a suitable <em>awaitable</em>.</li>
 <li><code><a href="get_env">std::execution::get_env</a>(<em>sender</em>)</code> is valid. By default this operation returns <code><a href="‘empty-env’">std::execution::empty_env</a></code>.</li>
 <li>Rvalues of type <code><em>Sender</em></code> can be moved.</li>
 <li>Lvalues of type <code><em>Sender</em></code> can be copied.</li>
 </ul>
-<p></code></p>
-<p><code>Typical members for <code><em>Sender</em></code>:</p><ul>
+<p>Typical members for <code><em>Sender</em></code>:</p><ul>
 <li><code><a href="‘get_env’">get_env</a>() const noexcept</code></li>
 <li><code><a href="‘get_completion_signatures’">get_completion_signatures</a>(<em>env</em>) const noexcept -&gt; <a href="‘completion-signatures’">std::execution::completion_signatures</a>&lt;...&gt;</code></li>
 <li><code><em>Sender</em>::completion_signatures</code> is a type alias for <code><a href="‘completion-signatures’">std::execution::completion_signatures</a>&lt;...&gt;</code> (if there is no <code><a href="‘get_completion_signatures’">get_completion_signatures</a></code> member).</li>
 <li><code><a href="‘#connect’">connect</a>(<em>sender</em>, <a href="‘#receiver’">receiver</a>) -&gt; <a href="‘#operation-state’">operation_state</a></code></li>
 </ul>
-<p></code></p>
-<p><code></p><details >
+<details >
 <summary >
 Example</summary>
 <p>The example shows a sender implementing an operation similar to <code><a href="‘#just’">just</a>(_value)</code>.</p>
@@ -314,33 +311,32 @@ Example</summary>
 <div class="line"> </div>
 <div class="line">static_assert(std::execution::sender&lt;example_sender&gt;);</div>
 </div><!-- fragment --> </details>
-<p></code></p>
 </details>
 <details >
 <summary >
 <code>sender_in&lt;<em>Sender, Env</em> = std::execution::empty_env&gt;</code></summary>
-<p><code> </code></p>
-<p><code>The concept <code>sender_in&lt;<em>Sender, Env</em>&gt;</code> tests whether <code><em>Sender</em></code> is a <code><a href="‘#sender’">sender</a></code>, <code><em>Env</em></code> is a destructible type, and <code><a href="‘#get_completion_signatures’">std::execution::get_completion_signatures</a>(<em>sender</em>, <em>env</em>)</code> yields a specialization of <code><a href="‘#completion_signatures’">std::execution::completion_signatures</a></code>. </code></p>
+<p></p>
+<p>The concept <code>sender_in&lt;<em>Sender, Env</em>&gt;</code> tests whether <code><em>Sender</em></code> is a <code><a href="‘#sender’">sender</a></code>, <code><em>Env</em></code> is a destructible type, and <code><a href="‘#get_completion_signatures’">std::execution::get_completion_signatures</a>(<em>sender</em>, <em>env</em>)</code> yields a specialization of <code><a href="‘#completion_signatures’">std::execution::completion_signatures</a></code>. </p>
 </details>
 <details >
 <summary >
 <code>sender_to&lt;<em>Sender, Receiver</em>&gt;</code></summary>
-<p><code> </code></p>
-<p><code>The concept <code>sender_to&lt;<em>Sender, Receiver</em>&gt;</code> tests if <code><a href="‘#sender_in’">std::execution::sender_in</a>&lt;<em>Sender</em>, <a href="#env_of_t">std::execution::env_of_t</a>&lt;<em>Receiver</em>&gt;&gt;</code> is true, and if <code><em>Receiver</em></code> can receive all <a href="‘#completion-signals’">completion signals</a> which can be sent by <code><em>Sender</em></code>, and if <code><em>Sender</em></code> can be <code><a href="‘#connect’">connect</a></code>ed to <code><em>Receiver</em></code>.</code></p>
-<p><code>To determine if <code><em>Receiver</em></code> can receive all <a href="‘#completion-signals’">completion signals</a> from <code><em>Sender</em></code> it checks that for each <code><em>Signature</em></code> in <code><a href="‘#get_completion_signals’">std::execution::get_completion_signals</a>(<em>sender</em>, std::declval&lt;<a href="#env_of_t">std::execution::env_of_t</a>&lt;<em>Receiver</em>&gt;&gt;())</code> the test <code><a href="‘#receiver_of’">std::execution::receiver_of</a>&lt;<em>Receiver</em>, <em>Signature</em>&gt;</code> yields true. To determine if <code><em>Sender</em></code> can be <code><a href="‘#connect’">connect</a></code>ed to <code><em>Receiver</em></code> the concept checks if <code><a href="‘#connect’">connect</a>(std::declval&lt;<em>Sender</em>&gt;(), std::declval&lt;<em>Receiver</em>&gt;)</code> is a valid expression. </code></p>
+<p></p>
+<p>The concept <code>sender_to&lt;<em>Sender, Receiver</em>&gt;</code> tests if <code><a href="‘#sender_in’">std::execution::sender_in</a>&lt;<em>Sender</em>, <a href="#env_of_t">std::execution::env_of_t</a>&lt;<em>Receiver</em>&gt;&gt;</code> is true, and if <code><em>Receiver</em></code> can receive all <a href="‘#completion-signals’">completion signals</a> which can be sent by <code><em>Sender</em></code>, and if <code><em>Sender</em></code> can be <code><a href="‘#connect’">connect</a></code>ed to <code><em>Receiver</em></code>.</p>
+<p>To determine if <code><em>Receiver</em></code> can receive all <a href="‘#completion-signals’">completion signals</a> from <code><em>Sender</em></code> it checks that for each <code><em>Signature</em></code> in <code><a href="‘#get_completion_signals’">std::execution::get_completion_signals</a>(<em>sender</em>, std::declval&lt;<a href="#env_of_t">std::execution::env_of_t</a>&lt;<em>Receiver</em>&gt;&gt;())</code> the test <code><a href="‘#receiver_of’">std::execution::receiver_of</a>&lt;<em>Receiver</em>, <em>Signature</em>&gt;</code> yields true. To determine if <code><em>Sender</em></code> can be <code><a href="‘#connect’">connect</a></code>ed to <code><em>Receiver</em></code> the concept checks if <code><a href="‘#connect’">connect</a>(std::declval&lt;<em>Sender</em>&gt;(), std::declval&lt;<em>Receiver</em>&gt;)</code> is a valid expression. </p>
 </details>
 <details >
 <summary >
 <code>sends_stopped&lt;<em>Sender, Env</em> = std::execution::empty_env&gt;</code></summary>
-<p><code> </code></p>
-<p><code>The concept <code>sends_stopped&lt;<em>Sender, Env</em>&gt;</code> determines if <code><em>Sender</em></code> may send a <code><a href="‘#set_stopped’">stopped</a></code> <a href="‘#completion-signals’">completion signal</a>. To do so, the concepts determines if <code><a href="‘#get_completion_signals’">std::execution::get_completion_signals</a>(<em>sender</em>, <em>env</em>)</code> contains the signatures <code><a href="‘#set_stopped’">std::execution::set_stopped_t</a>()</code>. </code></p>
+<p></p>
+<p>The concept <code>sends_stopped&lt;<em>Sender, Env</em>&gt;</code> determines if <code><em>Sender</em></code> may send a <code><a href="‘#set_stopped’">stopped</a></code> <a href="‘#completion-signals’">completion signal</a>. To do so, the concepts determines if <code><a href="‘#get_completion_signals’">std::execution::get_completion_signals</a>(<em>sender</em>, <em>env</em>)</code> contains the signatures <code><a href="‘#set_stopped’">std::execution::set_stopped_t</a>()</code>. </p>
 </details>
 <details >
 <summary >
 <code>stoppable_token&lt;<em>Token</em>&gt;</code></summary>
-<p><code>  A <code>stoppable_token&lt;<em>Token</em>&gt;</code>, e.g., obtained via <code><a href="‘#get-stop-token’">std::execution::get_stop_token</a>(<em>env</em>)</code> is used to support cancellation of asynchronous operations. Using <code><em>token</em>.stop_requested()</code> an active operation can poll whether it was requested to cancel. An inactive operation waiting for a notification can use an object of a specialization of the template <code><em>Token</em>::callback_type</code> to get notified when cancellation is requested.</code></p>
-<p><code>Required members for <code><em>Token</em></code>:</code></p>
-<p><code></p><ul>
+<p>A <code>stoppable_token&lt;<em>Token</em>&gt;</code>, e.g., obtained via <code><a href="‘#get-stop-token’">std::execution::get_stop_token</a>(<em>env</em>)</code> is used to support cancellation of asynchronous operations. Using <code><em>token</em>.stop_requested()</code> an active operation can poll whether it was requested to cancel. An inactive operation waiting for a notification can use an object of a specialization of the template <code><em>Token</em>::callback_type</code> to get notified when cancellation is requested.</p>
+<p>Required members for <code><em>Token</em></code>:</p>
+<ul>
 <li><code><em>Token</em>::callback_type&lt;<em>Callback</em>&gt;</code> can be specialized with a <code>std::callable&lt;<em>Callback</em>&gt;</code> type.</li>
 <li><code><em>token</em>.stop_requested() const noexcept -&gt; bool</code></li>
 <li><code><em>token</em>.stop_possible() const noexcept -&gt; bool</code></li>
@@ -424,12 +420,11 @@ Example: inactive</summary>
 </blockquote>
 </li>
 </ul>
-<p></code></p>
 </details>
 <details >
 <summary >
 <code>unstoppable_token&lt;<em>Token</em>&gt;</code></summary>
-<p><code>  The concept <code>unstoppable_token&lt;Token&gt;</code> is modeled by a <code><em>Token</em></code> if <code>stoppable_token&lt;<em>Token</em>&gt;</code> is true and it can statically be determined that both <code><em>token</em>.stop_requested()</code> and <code><em>token</em>.stop_possible()</code> are <code>constexpr</code> epxressions yielding <code>false</code>. This concept is primarily used to avoid extra work when using stop tokens which will never indicate that cancellations are requested. </p><blockquote class="doxtable">
+<p>The concept <code>unstoppable_token&lt;Token&gt;</code> is modeled by a <code><em>Token</em></code> if <code>stoppable_token&lt;<em>Token</em>&gt;</code> is true and it can statically be determined that both <code><em>token</em>.stop_requested()</code> and <code><em>token</em>.stop_possible()</code> are <code>constexpr</code> epxressions yielding <code>false</code>. This concept is primarily used to avoid extra work when using stop tokens which will never indicate that cancellations are requested. </p><blockquote class="doxtable">
 <details >
 <summary >
 Example</summary>
@@ -440,13 +435,11 @@ Example</summary>
 <div class="line">static_assert(not std::execution::unstoppable_token&lt;std::execution::inline_stop_token&gt;);</div>
 </div><!-- fragment --> </details>
 </blockquote>
-<p></code></p>
 </details>
-<p><code></code></p>
 <h2><a class="anchor" id="autotoc_md5"></a>
 Queries</h2>
-<p><code>The queries are used to obtain properties associated with and object. Except <code><a href="‘#forwarding-query’">forwarding_query</a></code> and <code><a href="‘#get-env’">get_env</a></code> the queries work on <a href="‘#environment’">environments</a>.</code></p>
-<p><code></p><details >
+<p>The queries are used to obtain properties associated with and object. Except <code><a href="‘#forwarding-query’">forwarding_query</a></code> and <code><a href="‘#get-env’">get_env</a></code> the queries work on <a href="‘#environment’">environments</a>.</p>
+<details >
 <summary >
 <code>forwarding_query(<em>query</em>) -&gt; bool</code></summary>
 <p></p>
@@ -497,36 +490,29 @@ Queries</h2>
 <code>get_stop_token(<em>env</em>)</code></summary>
 <p></p>
 </details>
-<p></code></p>
-<p><code></code></p>
 <h3><a class="anchor" id="autotoc_md6"></a>
 Customization Point Objects</h3>
-<p><code></p><ul>
+<ul>
 <li><code>connect(<em>sender, receiver</em>) -&gt; <em>operation_state</em></code></li>
 <li><code>set_error(<em>error</em>) noexcept -&gt; void</code></li>
 <li><code>set_stopped(<em>receiver</em>) noexcept -&gt; void</code></li>
 <li><code>set_value(<em>receiver, value...</em>) noexcept -&gt; void</code></li>
 <li><code>start(<em>state&amp;</em>) noexcept -&gt; void</code></li>
 </ul>
-<p></code></p>
-<p><code></code></p>
 <h2><a class="anchor" id="autotoc_md7"></a>
 Senders</h2>
-<p><code> </code></p>
 <h3><a class="anchor" id="autotoc_md8"></a>
 Sender Factories</h3>
-<p><code></p><ul>
+<ul>
 <li><code>just(<em>value...</em>) -&gt; <em>sender-of</em>&lt;set_value_t(<em>Value...</em>)&gt;</code></li>
 <li><code>just_error(<em>error</em>) -&gt; <em>sender-of</em>&lt;set_error_t(<em>Error</em>)&gt;</code></li>
 <li><code>just_stopped() -&gt; <em>sender-of</em>&lt;set_stopped_t()&gt;</code></li>
 <li><code>read_env(<em>query</em>) -&gt; <em>sender-of</em>&lt;set_value_t(<em>query-result</em>)&gt;</code></li>
 <li><code>schedule(<em>scheduler</em>) -&gt; <em>sender-of</em>&lt;set_value_t()&gt;</code></li>
 </ul>
-<p></code></p>
-<p><code></code></p>
 <h3><a class="anchor" id="autotoc_md9"></a>
 Sender Adaptors</h3>
-<p><code></p><ul>
+<ul>
 <li><code>bulk</code></li>
 <li><code>continues_on(<em>sender</em>, <em>scheduler</em>) -&gt; <em>sender</em></code></li>
 <li><code>into_variant(<em>sender</em>) -&gt; <em>sender-of</em>&lt;set_value_t(std::variant&lt;T...&gt;)&gt;</code>`</li>
@@ -545,18 +531,14 @@ Sender Adaptors</h3>
 <li><code>when_all(<em>sender</em>...) -&gt; <em>sender</em></code></li>
 <li><code>when_all_with_variant(<em>sender</em>...) -&gt; <em>sender</em></code></li>
 </ul>
-<p></code></p>
-<p><code></code></p>
 <h3><a class="anchor" id="autotoc_md10"></a>
 Sender Consumers</h3>
-<p><code></p><ul>
+<ul>
 <li><code>sync_wait(<em>sender</em>) -&gt; std::optional&lt;std::tuple&lt;T...&gt;&gt;</code></li>
 </ul>
-<p></code></p>
-<p><code></code></p>
 <h2><a class="anchor" id="autotoc_md11"></a>
 Helpers</h2>
-<p><code></p><ul>
+<ul>
 <li><code>as_awaitable</code></li>
 <li><code>with_awaitable_sender</code></li>
 <li><code>apply_sender</code></li>
@@ -582,16 +564,13 @@ Helpers</h2>
 <li><code>transform_completion_signatures_of</code></li>
 <li><code>value_types_of_t</code></li>
 </ul>
-<p></code></p>
-<p><code></code></p>
 <h2><a class="anchor" id="autotoc_md12"></a>
 Stop Token</h2>
-<p><code></p><ul>
+<ul>
 <li><code>never_stop_token</code></li>
 <li><code>stop_token</code></li>
 <li><code>inplace_stop_token</code> </li>
 </ul>
-<p></code></p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
