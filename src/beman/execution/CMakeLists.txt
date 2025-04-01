@@ -12,8 +12,8 @@ if(NOT BEMAN_execution_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
 endif()
 
 # Add the binary directory to include paths so config.hpp can be found
-target_include_directories(${TARGET_NAME} 
-  PUBLIC 
+target_include_directories(${TARGET_NAME}
+  PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:include>
