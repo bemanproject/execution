@@ -6,10 +6,18 @@
 add_library(${TARGET_NAME} STATIC)
 add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
 
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
+if(NOT BEMAN_execution_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
   target_link_libraries(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${TARGET_NAME}_project_options>)
   target_link_libraries(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${TARGET_NAME}_project_warnings>)
 endif()
+
+# Add the binary directory to include paths so config.hpp can be found
+target_include_directories(${TARGET_NAME} 
+  PUBLIC 
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
 include(CMakePrintHelpers)
 cmake_print_variables(TARGET_ALIAS TARGET_NAME TARGET_PREFIX PROJECT_SOURCE_DIR)
@@ -193,12 +201,20 @@ source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
 
-target_compile_features(${TARGET_NAME} PUBLIC
-  "$<$<COMPILE_FEATURES:cxx_std_26>:cxx_std_26>"
-  "$<$<NOT:$<COMPILE_FEATURES:cxx_std_26>>:cxx_std_23>"
-)
+# Check for C++26 support at configuration time instead of using target_compile_features
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag("-std=c++26" COMPILER_SUPPORTS_CXX26)
+check_cxx_compiler_flag("-std=c++23" COMPILER_SUPPORTS_CXX23)
 
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
+if(COMPILER_SUPPORTS_CXX26)
+  message(STATUS "Using C++26 for ${TARGET_NAME}")
+elseif(COMPILER_SUPPORTS_CXX23)
+  message(STATUS "Using C++23 for ${TARGET_NAME}")
+else()
+  message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} does not support C++23 or later. Please use a different compiler.")
+endif()
+
+if(NOT BEMAN_execution_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
   return()
 endif()
 
@@ -208,6 +224,12 @@ install(
   ARCHIVE DESTINATION lib/$<CONFIG>
   FILE_SET ${TARGET_NAME}_public_headers
   FILE_SET ${TARGET_NAME}_detail_headers
+)
+
+# Install the generated config.hpp file
+install(
+  FILES ${PROJECT_BINARY_DIR}/include/beman/execution/detail/config/config.hpp
+  DESTINATION include/beman/execution/detail/config
 )
 # cmake-format: on
 
