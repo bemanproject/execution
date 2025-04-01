@@ -7,40 +7,6 @@ cmake_minimum_required(VERSION 3.25...3.31)
 
 project(beman.execution VERSION 0.0.1 LANGUAGES CXX)
 
-# Setup C++ feature tests
-include(CheckCXXSourceCompiles)
-
-# Check for __cpp_explicit_this_parameter
-check_cxx_source_compiles("
-    struct S {
-        void f(this S& self) {}
-    };
-    int main() { S s; s.f(); }
-" BEMAN_EXECUTION_HAS_EXPLICIT_THIS_PARAMETER)
-
-# Check for __cpp_lib_unreachable
-check_cxx_source_compiles("
-    #include <utility>
-    int main() { std::unreachable(); }
-" BEMAN_EXECUTION_HAS_LIB_UNREACHABLE)
-
-# Check for __cpp_lib_forward_like
-check_cxx_source_compiles("
-    #include <utility>
-    int main() {
-        int x = 42;
-        auto&& r = std::forward_like<int&>(x);
-        return 0;
-    }
-" BEMAN_EXECUTION_HAS_LIB_FORWARD_LIKE)
-
-# Configure the config.hpp file
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/beman/execution/detail/config/config.hpp.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/include/beman/execution/detail/config/config.hpp"
-  @ONLY
-)
-
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "In-source builds are not allowed!")
 endif()
