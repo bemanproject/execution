@@ -27,7 +27,7 @@ check_cxx_source_compiles("
 # Check for __cpp_lib_forward_like
 check_cxx_source_compiles("
     #include <utility>
-    int main() { 
+    int main() {
         int x = 42;
         auto&& r = std::forward_like<int&>(x);
         return 0;
