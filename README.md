@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 # beman.execution: Building Block For Asynchronous Programs
 
-<img src="https://github.com/bemanproject/beman/blob/main/images/logos/beman_logo-beman_library_under_development.png" style="width:5%; height:auto;">
+![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Linux build status](https://github.com/bemanproject/execution/actions/workflows/linux.yml/badge.svg) ![MacOS build status](https://github.com/bemanproject/execution/actions/workflows/macos.yml/badge.svg) ![Window build status](https://github.com/bemanproject/execution/actions/workflows/windows.yml/badge.svg)
 
 `beman.execution` provides the basic vocabulary for asynchronous
 programming as well as important algorithms implemented in terms
@@ -47,10 +47,6 @@ for some ideas how to contribute. The [resources page](https://github.com/bemanp
 contains some links for general information about the sender/receivers and `std::execution`.
 
 ## Build
-
-| Library | Linux | MacOS | Windows |
-| ------- | ----- | ----- | ------- |
-| build | ![Linux build status](https://github.com/bemanproject/execution/actions/workflows/linux.yml/badge.svg) | ![MacOS build status](https://github.com/bemanproject/execution/actions/workflows/macos.yml/badge.svg) | ![Window build status](https://github.com/bemanproject/execution/actions/workflows/windows.yml/badge.svg) |
 
 The following instructions build the library and the examples:
 

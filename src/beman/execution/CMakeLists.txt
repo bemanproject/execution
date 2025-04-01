@@ -6,7 +6,7 @@
 add_library(${TARGET_NAME} STATIC)
 add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
 
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
+if(NOT BEMAN_execution_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
   target_link_libraries(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${TARGET_NAME}_project_options>)
   target_link_libraries(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${TARGET_NAME}_project_warnings>)
 endif()
@@ -193,12 +193,7 @@ source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
 
-target_compile_features(${TARGET_NAME} PUBLIC
-  "$<$<COMPILE_FEATURES:cxx_std_26>:cxx_std_26>"
-  "$<$<NOT:$<COMPILE_FEATURES:cxx_std_26>>:cxx_std_23>"
-)
-
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
+if(NOT BEMAN_execution_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
   return()
 endif()
 
@@ -209,6 +204,7 @@ install(
   FILE_SET ${TARGET_NAME}_public_headers
   FILE_SET ${TARGET_NAME}_detail_headers
 )
+
 # cmake-format: on
 
 install(
