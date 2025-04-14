@@ -39,7 +39,7 @@ namespace beman::execution {
  */
 using forwarding_query_t = beman::execution::detail::forwarding_query_t;
 /*!
- * \brief The customizatoin point object to determine whether queries should be forwarded
+ * \brief The customization point object to determine whether queries should be forwarded
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  *
  * \details
