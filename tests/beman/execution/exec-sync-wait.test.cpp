@@ -145,7 +145,7 @@ auto test_sync_wait_receiver() -> void {
         ASSERT(not state.result);
         ASSERT(not state.error);
         test_std::set_value(test_detail::sync_wait_receiver<local_sender>{&state}, arg<0>{2}, arg<1>{3}, arg<2>{5});
-        ASSERT(state.result);
+        ASSERT(state.result.has_value());
         ASSERT(not state.error);
         ASSERT(*state.result == (std::tuple{arg<0>{2}, arg<1>{3}, arg<2>{5}}));
     }
@@ -156,7 +156,8 @@ auto test_sync_wait_receiver() -> void {
         ASSERT(not state.error);
         test_std::set_error(test_detail::sync_wait_receiver<local_sender>{&state}, error{17});
         ASSERT(not state.result);
-        ASSERT(state.error);
+        // FIXME: ASSERT(state.error);
+        ASSERT(state.error != nullptr);
         try {
             std::rethrow_exception(state.error);
         } catch (const error& e) {
@@ -173,7 +174,8 @@ auto test_sync_wait_receiver() -> void {
         ASSERT(not state.error);
         test_std::set_error(test_detail::sync_wait_receiver<local_sender>{&state}, std::make_exception_ptr(error{17}));
         ASSERT(not state.result);
-        ASSERT(state.error);
+        // FIXME: ASSERT(state.error);
+        ASSERT(state.error != nullptr);
         try {
             std::rethrow_exception(state.error);
         } catch (const error& e) {
@@ -197,7 +199,7 @@ auto test_sync_wait_receiver() -> void {
 auto test_sync_wait() -> void {
     try {
         auto value{test_std::sync_wait(test_std::just(arg<0>{7}, arg<1>{11}))};
-        ASSERT(value);
+        ASSERT(value.has_value());
         ASSERT(*value == (std::tuple{arg<0>{7}, arg<1>{11}}));
     } catch (...) {
         // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
@@ -228,12 +230,14 @@ auto test_sync_wait() -> void {
 }
 
 auto test_provides_scheduler() -> void {
-    ASSERT(test_std::sync_wait(test_std::then(test_std::read_env(test_std::get_scheduler), [](auto&&) noexcept {})));
+    ASSERT(test_std::sync_wait(test_std::then(test_std::read_env(test_std::get_scheduler), [](auto&&) noexcept {
+           })).has_value());
 }
 
 auto test_provides_delegation_scheduler() -> void {
     ASSERT(test_std::sync_wait(
-        test_std::then(test_std::read_env(test_std::get_delegation_scheduler), [](auto&&) noexcept {})));
+               test_std::then(test_std::read_env(test_std::get_delegation_scheduler), [](auto&&) noexcept {}))
+               .has_value());
 }
 } // namespace
 

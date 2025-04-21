@@ -150,7 +150,7 @@ void test_completion_sigs_and_sync_wait_on_split() {
     static_assert(std::same_as<value_completions, expected_value_completions>);
 
     auto eat_completion = beman::execution::then(split, [&](const NonCopyable&) {});
-    ASSERT(beman::execution::sync_wait(eat_completion));
+    ASSERT(beman::execution::sync_wait(eat_completion).has_value());
 }
 
 void test_two_sync_waits_on_one_split() {
@@ -161,8 +161,8 @@ void test_two_sync_waits_on_one_split() {
         beman::execution::then(split, [&](const NonCopyable& obj) { pointer = static_cast<const void*>(&obj); });
     auto assert_pointer = beman::execution::then(
         split, [&](const NonCopyable& obj) { ASSERT(pointer == static_cast<const void*>(&obj)); });
-    ASSERT(beman::execution::sync_wait(save_pointer));
-    ASSERT(beman::execution::sync_wait(assert_pointer));
+    ASSERT(beman::execution::sync_wait(save_pointer).has_value());
+    ASSERT(beman::execution::sync_wait(assert_pointer).has_value());
 }
 
 void test_completion_from_another_thread() {

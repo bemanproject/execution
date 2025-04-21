@@ -29,7 +29,7 @@ list(
   exec-get-scheduler.test
   exec-get-stop-token.test
   exec-getcomplsigs.test
-  # exec-into-variant.test
+  exec-into-variant.test
   exec-just.test
   exec-let.test
   exec-opstate-start.test
@@ -50,15 +50,15 @@ list(
   exec-snd-expos.test
   exec-snd-transform.test
   exec-starts-on.test
-  # exec-split.test
-  # exec-sync-wait.test
+  exec-split.test
+  exec-sync-wait.test
   # exec-then.test
   # exec-utils-cmplsigs.test
   # exec-when-all.test
   # exec-with-awaitable-senders.test
   execution-queryable-concept.test
   exec-bulk.test
-  # execution-syn.test
+  execution-syn.test
   forward-like.test
   function-objects.test
   functional-syn.test
