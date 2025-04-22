@@ -224,7 +224,7 @@ $(document).ready(function(){initNavTree('when__all_8hpp_source.html',''); initR
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        }</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordtype">void</span> complete(Receiver&amp; recvr) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keywordflow">switch</span> (this-&gt;disp) {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keywordflow">switch</span> (disposition(this-&gt;disp)) {</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            <span class="keywordflow">case</span> disposition::started: {</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                <span class="keyword">auto</span> tie = []&lt;<span class="keyword">typename</span>... T&gt;(::std::tuple&lt;T...&gt;&amp; t) <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                    return ::std::apply([](<span class="keyword">auto</span>&amp;... a) { return ::std::tie(a...); }, t);</div>
