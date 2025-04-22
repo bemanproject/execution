@@ -7,6 +7,7 @@
 #define INCLUDED_EXAMPLES_INTRO_TIMER
 
 #include <beman/execution/execution.hpp>
+#include <chrono>
 #include <queue>
 #include <thread>
 #include <tuple>
