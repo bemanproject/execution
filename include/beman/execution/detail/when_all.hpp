@@ -122,7 +122,7 @@ struct impls_for<::beman::execution::detail::when_all_t> : ::beman::execution::d
         }
 
         void complete(Receiver& recvr) noexcept {
-            switch (this->disp) {
+            switch (disposition(this->disp)) {
             case disposition::started: {
                 auto tie = []<typename... T>(::std::tuple<T...>& t) noexcept {
                     return ::std::apply([](auto&... a) { return ::std::tie(a...); }, t);
