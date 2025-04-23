@@ -17,10 +17,8 @@ struct is_set_error : ::std::false_type {};
 template <typename Error>
 struct is_set_error<::beman::execution::set_error_t(Error)> : ::std::true_type {};
 
-template <typename>
-struct is_set_stopped : ::std::false_type {};
-template <>
-struct is_set_error<::beman::execution::set_stopped_t()> : ::std::true_type {};
+template <typename Fun>
+using is_set_stopped = ::std::is_same<Fun, ::beman::execution::set_stopped_t()>;
 
 template <typename>
 struct is_set_value : ::std::false_type {};
