@@ -40,7 +40,9 @@ option(
 include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
+if(PROJECT_IS_TOP_LEVEL AND NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
+  set(CMAKE_SKIP_INSTALL_RULES ON)
+
   include(FetchContent)
 
   # Add project_options from https://github.com/aminya/project_options

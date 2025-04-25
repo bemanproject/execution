@@ -114,6 +114,7 @@ if(PROJECT_IS_TOP_LEVEL)
   if(beman_execution_FOUND)
     set(execution_tests exec-awaitable.test) # only one sample to save time! CK
   else()
+    set(BEMAN_EXECUTION_ENABLE_INSTALL ON)
     add_subdirectory(../../.. beman_execution)
 
     include(CMakePrintHelpers)
