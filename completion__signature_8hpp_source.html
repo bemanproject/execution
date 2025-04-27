@@ -119,25 +119,23 @@ $(document).ready(function(){initNavTree('completion__signature_8hpp_source.html
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Error&gt;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">struct </span>is_set_error&lt;::<a class="code hl_struct" href="structbeman_1_1execution_1_1set__error__t.html">beman::execution::set_error_t</a>(Error)&gt; : ::std::true_type {};</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">struct </span>is_set_stopped : ::std::false_type {};</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">struct </span>is_set_error&lt;::<a class="code hl_struct" href="structbeman_1_1execution_1_1set__stopped__t.html">beman::execution::set_stopped_t</a>()&gt; : ::std::true_type {};</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">struct </span>is_set_value : ::std::false_type {};</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">struct </span>is_set_value&lt;::<a class="code hl_struct" href="structbeman_1_1execution_1_1set__value__t.html">beman::execution::set_value_t</a>(Args...)&gt; : ::std::true_type {};</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Fun&gt;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">concept </span>completion_signature =</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    ::beman::execution::detail::is_set_error&lt;Fun&gt;::value || ::beman::execution::detail::is_set_stopped&lt;Fun&gt;::value ||</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    ::beman::execution::detail::is_set_value&lt;Fun&gt;::value;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Fun&gt;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">using </span>is_set_stopped = ::std::is_same&lt;Fun, <a class="code hl_struct" href="structbeman_1_1execution_1_1set__stopped__t.html">::beman::execution::set_stopped_t</a>()&gt;;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">struct </span>is_set_value : ::std::false_type {};</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">struct </span>is_set_value&lt;::<a class="code hl_struct" href="structbeman_1_1execution_1_1set__value__t.html">beman::execution::set_value_t</a>(Args...)&gt; : ::std::true_type {};</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Fun&gt;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">concept </span>completion_signature =</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    ::beman::execution::detail::is_set_error&lt;Fun&gt;::value || ::beman::execution::detail::is_set_stopped&lt;Fun&gt;::value ||</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    ::beman::execution::detail::is_set_value&lt;Fun&gt;::value;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__error__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__error__t.html">beman::execution::set_error_t</a></div><div class="ttdoc">Type of the customization point object for error completions.</div><div class="ttdef"><b>Definition:</b> set_error.hpp:19</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__stopped__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__stopped__t.html">beman::execution::set_stopped_t</a></div><div class="ttdoc">Type of the customization point object for cancellation completions.</div><div class="ttdef"><b>Definition:</b> set_stopped.hpp:19</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__value__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__value__t.html">beman::execution::set_value_t</a></div><div class="ttdoc">Type of the customization point object for successful completions.</div><div class="ttdef"><b>Definition:</b> set_value.hpp:19</div></div>
