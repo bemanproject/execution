@@ -6,9 +6,11 @@
 add_library(${TARGET_NAME} STATIC)
 add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
 
+if(FALSE)
 if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
   target_link_libraries(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${TARGET_NAME}_project_options>)
   target_link_libraries(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${TARGET_NAME}_project_warnings>)
+endif()
 endif()
 
 include(CMakePrintHelpers)

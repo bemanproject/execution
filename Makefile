@@ -34,7 +34,8 @@ CXX_FLAGS ?= -g
 SANITIZER ?= default
 SOURCEDIR = $(CURDIR)
 BUILDROOT = build
-BUILD     = $(BUILDROOT)/$(SANITIZER)
+SYSTEM    = $(shell uname -s)
+BUILD     = $(BUILDROOT)/$(SYSTEM)/$(SANITIZER)
 EXAMPLE   = beman.execution.examples.stop_token
 CMAKE_CXX_COMPILER=$(COMPILER)
 
@@ -113,6 +114,7 @@ check:
 	done | tsort > /dev/null
 
 build/$(SANITIZER)/compile_commands.json: $(SANITIZER)
+
 clang-tidy: $(BUILD)/compile_commands.json
 	run-clang-tidy -p $(BUILD) tests examples
 
@@ -138,7 +140,7 @@ clean-doc:
 	$(RM) -r docs/html docs/latex
 
 clean: clean-doc
-	$(RM) -r $(BUILD)
+	cmake --build $(BUILD) --target clean
 	$(RM) mkerr olderr *~
 
 distclean: clean
