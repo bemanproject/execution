@@ -24,7 +24,7 @@ class sched_attrs {
 
   public:
     template <typename S>
-        requires (not ::std::same_as<sched_attrs, ::std::remove_cvref_t<S>>)
+        requires(not ::std::same_as<sched_attrs, ::std::remove_cvref_t<S>>)
     explicit sched_attrs(S&& s) : sched(::std::forward<S>(s)) {}
 
     template <typename Tag>
