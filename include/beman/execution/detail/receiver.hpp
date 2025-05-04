@@ -20,8 +20,7 @@ concept receiver =
     requires(const ::std::remove_cvref_t<Rcvr>& rcvr) {
         { ::beman::execution::get_env(rcvr) } -> ::beman::execution::detail::queryable;
     } && ::std::move_constructible<::std::remove_cvref_t<Rcvr>> &&
-    ::std::constructible_from<::std::remove_cvref_t<Rcvr>, Rcvr> &&
-    (!::std::is_final_v<::std::remove_cvref_t<Rcvr>>);
+    ::std::constructible_from<::std::remove_cvref_t<Rcvr>, Rcvr> && (!::std::is_final_v<::std::remove_cvref_t<Rcvr>>);
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

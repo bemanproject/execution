@@ -228,14 +228,11 @@ auto test_detail_stoppable_source() -> void {
     // Reference: [stoptoken.concepts] p6
 
     static_assert(::test_detail::stoppable_source<::stoppable_source::source<true, bool, true, bool, true, bool>>);
-    static_assert(
-        !::test_detail::stoppable_source<::stoppable_source::source<false, bool, true, bool, true, bool>>);
+    static_assert(!::test_detail::stoppable_source<::stoppable_source::source<false, bool, true, bool, true, bool>>);
     static_assert(!::test_detail::stoppable_source<::stoppable_source::source<true, int, true, bool, true, bool>>);
-    static_assert(
-        !::test_detail::stoppable_source<::stoppable_source::source<true, bool, false, bool, true, bool>>);
+    static_assert(!::test_detail::stoppable_source<::stoppable_source::source<true, bool, false, bool, true, bool>>);
     static_assert(!::test_detail::stoppable_source<::stoppable_source::source<true, bool, true, int, true, bool>>);
-    static_assert(
-        !::test_detail::stoppable_source<::stoppable_source::source<true, bool, true, bool, false, bool>>);
+    static_assert(!::test_detail::stoppable_source<::stoppable_source::source<true, bool, true, bool, false, bool>>);
     static_assert(!::test_detail::stoppable_source<::stoppable_source::source<true, bool, true, bool, true, int>>);
 }
 } // namespace

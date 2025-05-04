@@ -92,8 +92,8 @@ struct fixed_completions_helper<F, Shape, completion_signatures<Args...>> {
     struct may_throw;
     template <typename XF, typename Tag, typename... XArgs>
     struct may_throw<XF, Tag(XArgs...)> {
-        static constexpr bool value = std::same_as<Tag, ::beman::execution::set_value_t> &&
-                                      !::std::is_nothrow_invocable<XF, Shape, XArgs...>();
+        static constexpr bool value =
+            std::same_as<Tag, ::beman::execution::set_value_t> && !::std::is_nothrow_invocable<XF, Shape, XArgs...>();
     };
     template <typename XF, typename... Sigs>
     struct may_throw<XF, completion_signatures<Sigs...>> {

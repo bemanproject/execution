@@ -39,7 +39,7 @@ template <typename Sender, typename Env>
                 typename ::beman::execution::value_types_of_t<Sender, Env, ::std::decay_t, ::std::type_identity_t>;
             }) &&
             (!::std::same_as<::std::variant<::std::tuple<>>,
-                                ::beman::execution::value_types_of_t<Sender, Env, ::std::tuple, ::std::variant>>) &&
+                             ::beman::execution::value_types_of_t<Sender, Env, ::std::tuple, ::std::variant>>) &&
             requires {
                 typename ::beman::execution::
                     value_types_of_t<Sender, Env, ::beman::execution::detail::decayed_tuple, ::std::type_identity_t>;
