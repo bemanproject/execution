@@ -41,4 +41,4 @@ jobs:
           tool_name: pre-commit
           level: warning
           reviewdog_flags: "-fail-level=error"
-          githubt_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
