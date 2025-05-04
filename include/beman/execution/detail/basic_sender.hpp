@@ -39,7 +39,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
     }
 
     template <typename Receiver>
-        requires(not::beman::execution::receiver<Receiver>)
+        requires(!::beman::execution::receiver<Receiver>)
     auto connect(Receiver receiver) = BEMAN_EXECUTION_DELETE("the passed receiver doesn't model receiver");
 
   private:

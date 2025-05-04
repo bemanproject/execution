@@ -21,9 +21,9 @@ TEST(stopcallback_cons) {
     };
     static_assert(::std::is_constructible_v<::test_std::stop_callback<Callback>, const ::test_std::stop_token&, int*>);
     static_assert(
-        not::std::is_constructible_v<::test_std::stop_callback<Callback>, const ::test_std::stop_token&, bool*>);
+        !::std::is_constructible_v<::test_std::stop_callback<Callback>, const ::test_std::stop_token&, bool*>);
     static_assert(::std::is_constructible_v<::test_std::stop_callback<Callback>, ::test_std::stop_token&&, int*>);
-    static_assert(not::std::is_constructible_v<::test_std::stop_callback<Callback>, ::test_std::stop_token&&, bool*>);
+    static_assert(!::std::is_constructible_v<::test_std::stop_callback<Callback>, ::test_std::stop_token&&, bool*>);
 
     // Reference: [stopcallback.cons] p2, p3
     // Plan:

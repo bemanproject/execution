@@ -21,11 +21,11 @@ TEST(thread_stoptoken_syn) {
     // - Then the compiler should OK doing so.
     // Reference: [thread.stoptoken.syn]
 
-    static_assert((not::test_detail::stoppable_callback_for<int, int, int>));
-    static_assert((not::test_detail::stoppable_source<int>));
+    static_assert((!::test_detail::stoppable_callback_for<int, int, int>));
+    static_assert((!::test_detail::stoppable_source<int>));
 
-    static_assert((not::test_std::stoppable_token<int>));
-    static_assert((not::test_std::unstoppable_token<int>));
+    static_assert((!::test_std::stoppable_token<int>));
+    static_assert((!::test_std::unstoppable_token<int>));
 
     type_exists<::test_std::stop_token>();
     type_exists<::test_std::stop_source>();

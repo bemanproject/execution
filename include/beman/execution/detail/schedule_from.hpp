@@ -83,7 +83,7 @@ struct impls_for<::beman::execution::detail::schedule_from_t> : ::beman::executi
             try {
                 ::std::visit(
                     [this]<typename Tuple>(Tuple& result) noexcept -> void {
-                        if constexpr (not::std::same_as<::std::monostate, Tuple>) {
+                        if constexpr (!::std::same_as<::std::monostate, Tuple>) {
                             ::std::apply(
                                 [this](auto&& tag, auto&&... args) {
                                     tag(::std::move(this->state->receiver), ::std::move(args)...);

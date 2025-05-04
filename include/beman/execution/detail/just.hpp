@@ -8,6 +8,7 @@
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/impls_for.hpp>
@@ -22,12 +23,13 @@
 
 namespace beman::execution::detail {
 template <typename Completion, typename... T>
-concept just_size = (not::std::same_as<Completion, ::beman::execution::set_error_t> or 1u == sizeof...(T)) &&
-                    (not::std::same_as<Completion, ::beman::execution::set_stopped_t> or 0u == sizeof...(T));
+concept just_size = (!::std::same_as<Completion, ::beman::execution::set_error_t> or 1u == sizeof...(T)) &&
+                    (!::std::same_as<Completion, ::beman::execution::set_stopped_t> or 0u == sizeof...(T));
 template <typename Completion>
 struct just_t {
     template <typename... T>
-        requires ::beman::execution::detail::just_size<Completion, T...> && (::std::movable<::std::decay_t<T>> && ...)
+        requires ::beman::execution::detail::just_size<Completion, T...> &&
+                 (::beman::execution::detail::movable_value<T> && ...)
     auto operator()(T&&... arg) const {
         return ::beman::execution::detail::make_sender(
             *this, ::beman::execution::detail::product_type{::std::forward<T>(arg)...});

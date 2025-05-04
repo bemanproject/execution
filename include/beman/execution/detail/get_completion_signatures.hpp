@@ -53,9 +53,9 @@ struct get_completion_signatures_t {
 
   public:
     template <typename Sender, typename Env>
-        requires(not::std::same_as<void,
-                                   decltype(get_completion_signatures_t::get(::std::declval<Sender>(),
-                                                                             ::std::declval<Env>()))>)
+        requires(!::std::same_as<void,
+                                 decltype(get_completion_signatures_t::get(::std::declval<Sender>(),
+                                                                           ::std::declval<Env>()))>)
     auto operator()(Sender&& sender, Env&& env) const noexcept {
         return this->get(::std::forward<Sender>(sender), ::std::forward<Env>(env));
     }

@@ -246,7 +246,7 @@ struct impls_for<split_impl_t> : ::beman::execution::detail::default_impls {
                 try {
                     ::std::visit(
                         [&]<class Arg>(const Arg& arg) noexcept -> void {
-                            if constexpr (not::std::same_as<::std::decay_t<Arg>, ::std::monostate>) {
+                            if constexpr (!::std::same_as<::std::decay_t<Arg>, ::std::monostate>) {
                                 ::std::apply(
                                     [&](auto tag, const auto&... args) noexcept -> void {
                                         tag(::std::move(*receiver), args...);

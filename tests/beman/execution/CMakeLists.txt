@@ -11,6 +11,7 @@ endif()
 list(
   APPEND
   execution_tests
+  issue-144.test
   exec-on.test
   notify.test
   exec-scounting.test

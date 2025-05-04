@@ -29,10 +29,10 @@ auto test_stop_callback_interface() -> void {
     CB ccb(ctoken, ThrowInit());
     CB tcb{::test_std::stop_token(), ThrowInit()};
 
-    static_assert(not::std::is_copy_constructible_v<CB>);
-    static_assert(not::std::is_move_constructible_v<CB>);
-    static_assert(not::std::is_copy_assignable_v<CB>);
-    static_assert(not::std::is_move_assignable_v<CB>);
+    static_assert(!::std::is_copy_constructible_v<CB>);
+    static_assert(!::std::is_move_constructible_v<CB>);
+    static_assert(!::std::is_copy_assignable_v<CB>);
+    static_assert(!::std::is_move_assignable_v<CB>);
 
     ::test_std::stop_callback cb(ctoken, Callback(ThrowInit()));
 }

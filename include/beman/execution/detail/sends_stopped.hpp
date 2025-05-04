@@ -17,7 +17,7 @@
 namespace beman::execution {
 template <typename Sender, typename Env = ::beman::execution::empty_env>
     requires ::beman::execution::sender_in<Sender, Env>
-inline constexpr bool sends_stopped{not::std::same_as<
+inline constexpr bool sends_stopped{!::std::same_as<
     ::beman::execution::detail::type_list<>,
     ::beman::execution::detail::gather_signatures< ::beman::execution::set_stopped_t,
                                                    ::beman::execution::completion_signatures_of_t<Sender, Env>,

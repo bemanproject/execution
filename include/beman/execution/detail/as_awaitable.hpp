@@ -31,7 +31,7 @@ struct as_awaitable_t {
             return ::std::forward<Expr>(expr).as_awaitable(promise);
         } else if constexpr (::beman::execution::detail::
                                  is_awaitable<Expr, ::beman::execution::detail::unspecified_promise> ||
-                             not::beman::execution::detail::awaitable_sender<Expr, Promise>) {
+                             !::beman::execution::detail::awaitable_sender<Expr, Promise>) {
             return ::std::forward<Expr>(expr);
         } else {
             return ::beman::execution::detail::sender_awaitable<Expr, Promise>{::std::forward<Expr>(expr), promise};
