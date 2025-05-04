@@ -23,8 +23,8 @@
 
 namespace beman::execution::detail {
 template <typename Completion, typename... T>
-concept just_size = (not ::std::same_as<Completion, ::beman::execution::set_error_t> or 1u == sizeof...(T)) &&
-                    (not ::std::same_as<Completion, ::beman::execution::set_stopped_t> or 0u == sizeof...(T));
+concept just_size = (!::std::same_as<Completion, ::beman::execution::set_error_t> or 1u == sizeof...(T)) &&
+                    (!::std::same_as<Completion, ::beman::execution::set_stopped_t> or 0u == sizeof...(T));
 template <typename Completion>
 struct just_t {
     template <typename... T>

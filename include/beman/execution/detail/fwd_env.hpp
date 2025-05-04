@@ -28,7 +28,7 @@ class fwd_env {
     explicit fwd_env(Env&& e) : env(::std::forward<Env>(e)) {}
 
     template <typename Query, typename... Args>
-        requires(not ::beman::execution::forwarding_query(::std::remove_cvref_t<Query>()))
+        requires(!::beman::execution::forwarding_query(::std::remove_cvref_t<Query>()))
     constexpr auto query(Query&& q,
                          Args&&... args) const = BEMAN_EXECUTION_DELETE("the used query is not forwardable");
 

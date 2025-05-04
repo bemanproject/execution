@@ -28,7 +28,7 @@ template <typename Domain, ::beman::execution::sender Sender, typename... Env>
             requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
             } &&
-            (not ::std::same_as<::std::remove_cvref_t<Sender>,
+            (!::std::same_as<::std::remove_cvref_t<Sender>,
                                 std::remove_cvref_t<decltype(::std::declval<Domain>().transform_sender(
                                     ::std::declval<Sender>(), ::std::declval<const Env&>()...))>>)
 constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) noexcept -> ::beman::execution::sender
@@ -53,7 +53,7 @@ template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(not requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
             }) &&
-            (not ::std::same_as<::std::remove_cvref_t<Sender>,
+            (!::std::same_as<::std::remove_cvref_t<Sender>,
                                 ::std::remove_cvref_t<decltype(::beman::execution::default_domain{}.transform_sender(
                                     ::std::declval<Sender>(), ::std::declval<Env>()...))>>)
 constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) noexcept(noexcept(
@@ -83,7 +83,7 @@ template <typename Domain, ::beman::execution::sender Sender, typename... Env>
             requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
             } &&
-            (not ::std::same_as<::std::remove_cvref_t<Sender>,
+            (!::std::same_as<::std::remove_cvref_t<Sender>,
                                 std::remove_cvref_t<decltype(::std::declval<Domain>().transform_sender(
                                     ::std::declval<Sender>(), ::std::declval<const Env&>()...))>>)
 constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) noexcept -> ::beman::execution::sender
@@ -110,7 +110,7 @@ template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(sizeof...(Env) < 2) && (not requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
             }) &&
-            (not ::std::same_as<::std::remove_cvref_t<Sender>,
+            (!::std::same_as<::std::remove_cvref_t<Sender>,
                                 ::std::remove_cvref_t<decltype(::beman::execution::default_domain{}.transform_sender(
                                     ::std::declval<Sender>(), ::std::declval<Env>()...))>>)
 constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) noexcept(
