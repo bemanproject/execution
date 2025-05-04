@@ -54,7 +54,7 @@ struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
                                          Rcvr&                                                 rcvr,
                                          Tag,
                                          Args&&... args) noexcept -> void
-        requires(not::std::same_as<Tag, set_value_t> || std::is_invocable_v<Fun, Shape, Args...>)
+        requires(not ::std::same_as<Tag, set_value_t> || std::is_invocable_v<Fun, Shape, Args...>)
     {
         if constexpr (std::same_as<Tag, set_value_t>) {
             auto& [shape, f] = state;
@@ -93,7 +93,7 @@ struct fixed_completions_helper<F, Shape, completion_signatures<Args...>> {
     template <typename XF, typename Tag, typename... XArgs>
     struct may_throw<XF, Tag(XArgs...)> {
         static constexpr bool value = std::same_as<Tag, ::beman::execution::set_value_t> &&
-                                      not::std::is_nothrow_invocable<XF, Shape, XArgs...>();
+                                      not ::std::is_nothrow_invocable<XF, Shape, XArgs...>();
     };
     template <typename XF, typename... Sigs>
     struct may_throw<XF, completion_signatures<Sigs...>> {

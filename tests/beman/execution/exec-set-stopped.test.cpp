@@ -20,11 +20,11 @@ template <typename R>
 auto test_callable() -> void {
     // can be called with non-const rvalue receiver
     static_assert(requires { test_std::set_stopped(std::declval<R>()); });
-    static_assert(requires { test_std::set_stopped(std::declval<R&&>()); });
+    static_assert(requires { test_std::set_stopped(std::declval<R &&>()); });
 
     // cannot be called with const or lvalue receiver
     static_assert(not requires { test_std::set_stopped(std::declval<const R>()); });
-    static_assert(not requires { test_std::set_stopped(std::declval<const R&&>()); });
+    static_assert(not requires { test_std::set_stopped(std::declval<const R &&>()); });
     static_assert(not requires { test_std::set_stopped(std::declval<R&>()); });
     static_assert(not requires { test_std::set_stopped(std::declval<const R&>()); });
     static_assert(not requires { test_std::set_stopped(std::declval<volatile R&>()); });

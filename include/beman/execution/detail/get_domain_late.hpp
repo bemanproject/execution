@@ -17,7 +17,7 @@
 
 namespace beman::execution::detail {
 template <typename T>
-concept not_void = not::std::same_as<T, void>;
+concept not_void = not ::std::same_as<T, void>;
 
 template <typename Tag>
 struct get_domain_late_helper {

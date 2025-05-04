@@ -25,10 +25,10 @@ struct receiver {
 template <typename R>
 void test_callable() {
     static_assert(requires { test_std::set_error(std::declval<R>(), 42); });
-    static_assert(requires { test_std::set_error(std::declval<R&&>(), 42); });
+    static_assert(requires { test_std::set_error(std::declval<R &&>(), 42); });
 
     static_assert(not requires { test_std::set_error(std::declval<const R>(), 42); });
-    static_assert(not requires { test_std::set_error(std::declval<const R&&>(), 42); });
+    static_assert(not requires { test_std::set_error(std::declval<const R &&>(), 42); });
     static_assert(not requires { test_std::set_error(std::declval<R&>(), 42); });
     static_assert(not requires { test_std::set_error(std::declval<const R&>(), 42); });
     static_assert(not requires { test_std::set_error(std::declval<volatile R&>(), 42); });

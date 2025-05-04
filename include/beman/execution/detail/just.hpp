@@ -23,12 +23,13 @@
 
 namespace beman::execution::detail {
 template <typename Completion, typename... T>
-concept just_size = (not::std::same_as<Completion, ::beman::execution::set_error_t> or 1u == sizeof...(T)) &&
-                    (not::std::same_as<Completion, ::beman::execution::set_stopped_t> or 0u == sizeof...(T));
+concept just_size = (not ::std::same_as<Completion, ::beman::execution::set_error_t> or 1u == sizeof...(T)) &&
+                    (not ::std::same_as<Completion, ::beman::execution::set_stopped_t> or 0u == sizeof...(T));
 template <typename Completion>
 struct just_t {
     template <typename... T>
-        requires ::beman::execution::detail::just_size<Completion, T...> && (::beman::execution::detail::movable_value<T> && ...)
+        requires ::beman::execution::detail::just_size<Completion, T...> &&
+                 (::beman::execution::detail::movable_value<T> && ...)
     auto operator()(T&&... arg) const {
         return ::beman::execution::detail::make_sender(
             *this, ::beman::execution::detail::product_type{::std::forward<T>(arg)...});

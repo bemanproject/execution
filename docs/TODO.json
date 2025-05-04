@@ -1,66 +1,346 @@
 {
-    "allocator.requirements.general": { "code":true, "test":true, "doc":false },
-    "execution": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.queries": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.queryable": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.queryable.general]": { "code":true, "test":true, "doc":false, "comment":"nothing testable" },
-    "execution.forwarding_query": { "code":true, "test":true, "doc":false },
-    "execution.get_allocator": { "code":true, "test":true, "doc":false },
-    "execution.get_stop_token": { "code":true, "test":true, "doc":false },
-    "execution.environment.get_env": { "code":true, "test":true, "doc":false },
-    "execution.get_domain": { "code":true, "test":true, "doc":false },
-    "execution.queryable.concepts": { "code":true, "test":true, "doc":false },
-    "execution.receivers": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.senders": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.senders.factories": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.senders.adapt": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.senders.consumers": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.snd_rec_utils": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.contexts": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.coro_utils": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "execution.receivers.set_value": { "code":true, "test":true, "doc":false },
-    "execution.receivers.set_error": { "code":true, "test":true, "doc":false },
-    "execution.receivers.set_stopped": { "code":true, "test":true, "doc":false },
-    "execution.opstate.start": { "code":true, "test":true, "doc":false },
-    "execution.opstate": { "code":true, "test":true, "doc":false },
-    "execution.general": { "code":true, "test":true, "doc":false },
-    "except": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "except.special": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "library": { "code":true, "test":true, "doc":true, "comment":"term definition only" },
-    "support": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "support.limits": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "utilities": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "function.objects": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "functional.syn": { "code":true, "test":true, "doc":false },
-    "thread": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "thread.stoptoken": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "thread.stoptoken.intro": { "code":true, "test":true, "doc":false },
-    "thread.stoptoken.syn": { "code":true, "test":true, "doc":false },
-    "stoptoken.nonmembers": { "code":true, "test":true, "doc":true, "comment":"removed" },
-    "stoptoken.concepts": { "code":true, "test":true, "doc":false },
-    "stoptoken": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "stoptoken.cons": { "removed":true },
-    "stoptoken.general": { "code":true, "test":true, "doc":false },
-    "stoptoken.mem": { "code":true, "test":true, "doc":false },
-    "stopsource": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "stopsource.general": { "code":true, "test":true, "doc":false },
-    "stopsource.cons": { "code":true, "test":true, "doc":false },
-    "stopsource.mem": { "code":true, "test":true, "doc":false },
-    "stopsource.nonmembers": { "code":true, "test":true, "doc":true, "comment":"removed" },
-    "stopcallback": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "stopcallback.general": { "code":true, "test":true, "doc":false },
-    "stopcallback.cons": { "code":true, "test":true, "doc":false },
-    "stoptoken.never": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "stoptoken.never.general": { "code":true, "test":true, "doc":false },
-    "stoptoken.inplace": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "stoptoken.inplace.general": { "code":true, "test":true, "doc":false },
-    "stoptoken.inplace.members": { "code":true, "test":true, "doc":false },
-    "stopsource.inplace": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "stopsource.inplace.general": { "code":true, "test":true, "doc":false },
-    "stopsource.inplace.cons": { "code":true, "test":true, "doc":false },
-    "stopsource.inplace.mem": { "code":true, "test":true, "doc":false },
-    "stopcallback.inplace": { "code":true, "test":true, "doc":true, "comment":"empty" },
-    "stopcallback.inplace.general": { "code":true, "test":true, "doc":false },
-    "stopcallback.inplace.cons": { "code":true, "test":true, "doc":false },
-    "": {}
+  "allocator.requirements.general": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.queries": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.queryable": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.queryable.general]": {
+    "code": true,
+    "test": true,
+    "doc": false,
+    "comment": "nothing testable"
+  },
+  "execution.forwarding_query": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.get_allocator": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.get_stop_token": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.environment.get_env": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.get_domain": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.queryable.concepts": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.receivers": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.senders": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.senders.factories": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.senders.adapt": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.senders.consumers": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.snd_rec_utils": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.contexts": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.coro_utils": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "execution.receivers.set_value": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.receivers.set_error": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.receivers.set_stopped": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.opstate.start": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.opstate": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "execution.general": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "except": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "except.special": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "library": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "term definition only"
+  },
+  "support": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "support.limits": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "utilities": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "function.objects": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "functional.syn": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "thread": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "thread.stoptoken": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "thread.stoptoken.intro": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "thread.stoptoken.syn": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stoptoken.nonmembers": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "removed"
+  },
+  "stoptoken.concepts": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stoptoken": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "stoptoken.cons": {
+    "removed": true
+  },
+  "stoptoken.general": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stoptoken.mem": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopsource": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "stopsource.general": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopsource.cons": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopsource.mem": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopsource.nonmembers": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "removed"
+  },
+  "stopcallback": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "stopcallback.general": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopcallback.cons": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stoptoken.never": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "stoptoken.never.general": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stoptoken.inplace": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "stoptoken.inplace.general": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stoptoken.inplace.members": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopsource.inplace": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "stopsource.inplace.general": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopsource.inplace.cons": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopsource.inplace.mem": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopcallback.inplace": {
+    "code": true,
+    "test": true,
+    "doc": true,
+    "comment": "empty"
+  },
+  "stopcallback.inplace.general": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "stopcallback.inplace.cons": {
+    "code": true,
+    "test": true,
+    "doc": false
+  },
+  "": {}
 }

@@ -31,7 +31,7 @@ concept is_sender_adaptor_closure =
 
 namespace beman::execution::detail::pipeable {
 template <::beman::execution::sender Sender, typename Adaptor>
-    requires(not::beman::execution::sender<Adaptor>) &&
+    requires(not ::beman::execution::sender<Adaptor>) &&
             ::std::derived_from<::std::decay_t<Adaptor>,
                                 ::beman::execution::sender_adaptor_closure<::std::decay_t<Adaptor>>> &&
             requires(Sender&& sender, Adaptor&& adaptor) {
