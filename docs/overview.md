@@ -352,7 +352,7 @@ static_assert(not std::execution::unstoppable_token<std::execution::inline_stop_
 </details>
 
 ## Queries
-The queries are used to obtain properties associated with and object. Except <code><a href=‘#forwarding-query’>forwarding_query</a></code>, <code><a href=‘#get-env’>get_env</a></code>, and <code><a href=‘#get-completion-signatures’>get_completion_signatures</a></code> the queries work on <a href=‘#environment’>environments</a>. The 
+The queries are used to obtain properties associated with an object. Except <code><a href=‘#forwarding-query’>forwarding_query</a></code>, <code><a href=‘#get-env’>get_env</a></code>, and <code><a href=‘#get-completion-signatures’>get_completion_signatures</a></code> the queries work on <a href=‘#environment’>environments</a>. The
 <a href=‘#environment’>environment</a> queries are defined by providing a member <code>query(<i>query_t</i>, <i>a...</i>) const</code> on the <a href=‘#environment’>environment</a> object.
 <details>
 <summary>Example defining a query on an environment</summary>
@@ -361,12 +361,12 @@ This example shows how to define an environment class which provides a <a href=�
 ```
 struct alloc_env {
    std::pmr::memory_resource res{std::pmr::new_delete_resource()};
-   
+
    auto query(get_allocator_t const&) const noexcept {
        return std::pmr::polymorphic_allocator<>(this->res);
    }
 };
-``` 
+```
 </details>
 <details>
 <summary><code>forwarding_query(<i>query</i>) -> bool</code></summary>
@@ -437,12 +437,12 @@ This example shows how to define an environment class which provides a <a href=�
 ```
 struct alloc_env {
    std::pmr::memory_resource res{std::pmr::new_delete_resource()};
-   
+
    auto query(get_allocator_t const&) const noexcept {
        return std::pmr::polymorphic_allocator<>(this->res);
    }
 };
-``` 
+```
 </details>
 </div>
 </details>
