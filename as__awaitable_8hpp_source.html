@@ -129,7 +129,7 @@ $(document).ready(function(){initNavTree('as__awaitable_8hpp_source.html',''); i
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            return ::std::forward&lt;Expr&gt;(expr).as_awaitable(promise);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::beman::execution::detail::</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                                 is_awaitable&lt;Expr, ::beman::execution::detail::unspecified_promise&gt; ||</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                             not::beman::execution::detail::awaitable_sender&lt;Expr, Promise&gt;) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                             !::beman::execution::detail::awaitable_sender&lt;Expr, Promise&gt;) {</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            return ::std::forward&lt;Expr&gt;(expr);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            return ::beman::execution::detail::sender_awaitable&lt;Expr, Promise&gt;{::std::forward&lt;Expr&gt;(expr), promise};</div>

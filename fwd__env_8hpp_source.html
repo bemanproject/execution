@@ -125,7 +125,7 @@ $(document).ready(function(){initNavTree('fwd__env_8hpp_source.html',''); initRe
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">explicit</span> fwd_env(Env&amp;&amp; e) : env(::std::forward&lt;Env&gt;(e)) {}</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Query, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keyword">requires</span>(not::beman::execution::forwarding_query(::std::remove_cvref_t&lt;Query&gt;()))</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keyword">requires</span>(!<a class="code hl_variable" href="namespacebeman_1_1execution.html#a9b0f7f25fb2dfd00f655321db3a2d18f">::beman::execution::forwarding_query</a>(::std::remove_cvref_t&lt;Query&gt;()))</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> query(Query&amp;&amp; q,</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                         Args&amp;&amp;... args) <span class="keyword">const</span> = BEMAN_EXECUTION_DELETE(<span class="stringliteral">&quot;the used query is not forwardable&quot;</span>);</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>

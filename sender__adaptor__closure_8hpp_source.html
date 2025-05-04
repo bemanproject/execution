@@ -133,7 +133,7 @@ $(document).ready(function(){initNavTree('sender__adaptor__closure_8hpp_source.h
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span>beman::execution::detail::pipeable {</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">template</span> &lt;::beman::execution::sender Sender, <span class="keyword">typename</span> Adaptor&gt;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">requires</span>(not::beman::execution::sender&lt;Adaptor&gt;) &amp;&amp;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">requires</span>(!::beman::execution::sender&lt;Adaptor&gt;) &amp;&amp;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            ::std::derived_from&lt;::std::decay_t&lt;Adaptor&gt;,</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                                <a class="code hl_struct" href="structbeman_1_1execution_1_1sender__adaptor__closure.html">::beman::execution::sender_adaptor_closure</a>&lt;::std::decay_t&lt;Adaptor&gt;&gt;&gt; &amp;&amp;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keyword">requires</span>(Sender&amp;&amp; sender, Adaptor&amp;&amp; adaptor) {</div>

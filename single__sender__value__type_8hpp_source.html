@@ -140,8 +140,8 @@ $(document).ready(function(){initNavTree('single__sender__value__type_8hpp_sourc
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">requires</span>(not <span class="keyword">requires</span> {</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                typename ::beman::execution::value_types_of_t&lt;Sender, Env, ::std::decay_t, ::std::type_identity_t&gt;;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            }) &amp;&amp;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            (not::std::same_as&lt;::std::variant&lt;::std::tuple&lt;&gt;&gt;,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                               ::beman::execution::value_types_of_t&lt;Sender, Env, ::std::tuple, ::std::variant&gt;&gt;) &amp;&amp;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            (!::std::same_as&lt;::std::variant&lt;::std::tuple&lt;&gt;&gt;,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                             ::beman::execution::value_types_of_t&lt;Sender, Env, ::std::tuple, ::std::variant&gt;&gt;) &amp;&amp;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keyword">requires</span> {</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                typename ::beman::execution::</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                    value_types_of_t&lt;Sender, Env, ::beman::execution::detail::decayed_tuple, ::std::type_identity_t&gt;;</div>

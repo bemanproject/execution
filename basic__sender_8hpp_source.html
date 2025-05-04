@@ -136,7 +136,7 @@ $(document).ready(function(){initNavTree('basic__sender_8hpp_source.html',''); i
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Receiver&gt;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keyword">requires</span>(not::beman::execution::receiver&lt;Receiver&gt;)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keyword">requires</span>(!::beman::execution::receiver&lt;Receiver&gt;)</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">auto</span> <a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(Receiver receiver) = BEMAN_EXECUTION_DELETE(<span class="stringliteral">&quot;the passed receiver doesn&#39;t model receiver&quot;</span>);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">private</span>:</div>

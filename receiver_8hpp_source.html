@@ -122,13 +122,12 @@ $(document).ready(function(){initNavTree('receiver_8hpp_source.html',''); initRe
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">requires</span>(const ::std::remove_cvref_t&lt;Rcvr&gt;&amp; rcvr) {</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        { ::beman::execution::get_env(rcvr) } -&gt; ::beman::execution::detail::queryable;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    } &amp;&amp; ::std::move_constructible&lt;::std::remove_cvref_t&lt;Rcvr&gt;&gt; &amp;&amp;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    ::std::constructible_from&lt;::std::remove_cvref_t&lt;Rcvr&gt;, Rcvr&gt; &amp;&amp;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    (not::std::is_final_v&lt;::std::remove_cvref_t&lt;Rcvr&gt;&gt;);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    ::std::constructible_from&lt;::std::remove_cvref_t&lt;Rcvr&gt;, Rcvr&gt; &amp;&amp; (!::std::is_final_v&lt;::std::remove_cvref_t&lt;Rcvr&gt;&gt;);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>} <span class="comment">// namespace beman::execution</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1receiver_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1receiver.html">beman::execution::receiver</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:18</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> allocator_aware_move.hpp:16</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1receiver__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1receiver__t.html">beman::execution::receiver_t</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:15</div></div>

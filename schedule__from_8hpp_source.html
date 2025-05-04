@@ -177,7 +177,7 @@ $(document).ready(function(){initNavTree('schedule__from_8hpp_source.html',''); 
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                ::std::visit(</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                    [<span class="keyword">this</span>]&lt;<span class="keyword">typename</span> Tuple&gt;(Tuple&amp; result) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (not::std::same_as&lt;::std::monostate, Tuple&gt;) {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!::std::same_as&lt;::std::monostate, Tuple&gt;) {</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                            ::std::apply(</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                                [<span class="keyword">this</span>](<span class="keyword">auto</span>&amp;&amp; tag, <span class="keyword">auto</span>&amp;&amp;... args) {</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                                    tag(::std::move(this-&gt;state-&gt;receiver), ::std::move(args)...);</div>

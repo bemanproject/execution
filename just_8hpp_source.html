@@ -110,70 +110,72 @@ $(document).ready(function(){initNavTree('just_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;beman/execution/detail/set_stopped.hpp&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;beman/execution/detail/set_value.hpp&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;beman/execution/detail/make_sender.hpp&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;beman/execution/detail/product_type.hpp&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;beman/execution/detail/completion_signatures_for.hpp&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;beman/execution/detail/impls_for.hpp&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;beman/execution/detail/default_impls.hpp&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;concepts&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_push.hpp&gt;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">namespace </span>beman::execution::detail {</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Completion, <span class="keyword">typename</span>... T&gt;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">concept </span>just_size = (not::std::same_as&lt;Completion, ::beman::execution::set_error_t&gt; or 1u == <span class="keyword">sizeof</span>...(T)) &amp;&amp;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                    (not::std::same_as&lt;Completion, ::beman::execution::set_stopped_t&gt; or 0u == <span class="keyword">sizeof</span>...(T));</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Completion&gt;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">struct </span>just_t {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... T&gt;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        requires ::beman::execution::detail::just_size&lt;Completion, T...&gt; &amp;&amp; (::std::movable&lt;::std::decay_t&lt;T&gt;&gt; &amp;&amp; ...)</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">auto</span> operator()(T&amp;&amp;... arg)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        return ::beman::execution::detail::make_sender(</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            *<span class="keyword">this</span>, ::beman::execution::detail::product_type{::std::forward&lt;T&gt;(arg)...});</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Completion, <span class="keyword">typename</span>... T, <span class="keyword">typename</span> Env&gt;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">struct </span>completion_signatures_for_impl&lt;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    ::beman::execution::detail::basic_sender&lt;just_t&lt;Completion&gt;, ::beman::execution::detail::product_type&lt;T...&gt;&gt;,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    Env&gt; {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">using </span>type = <a class="code hl_struct" href="structbeman_1_1execution_1_1completion__signatures.html">::beman::execution::completion_signatures</a>&lt;Completion(T...)&gt;;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Completion&gt;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">struct </span>impls_for&lt;just_t&lt;Completion&gt;&gt; : ::beman::execution::detail::default_impls {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> start = []&lt;<span class="keyword">typename</span> State&gt;(State&amp; state, <span class="keyword">auto</span>&amp; receiver) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        [&amp;state, &amp;receiver]&lt;::std::size_t... I&gt;(::std::index_sequence&lt;I...&gt;) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            Completion()(::std::move(receiver), ::std::move(state.template get&lt;I&gt;())...);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        }(::std::make_index_sequence&lt;State::size()&gt;{});</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    };</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>};</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;beman/execution/detail/movable_value.hpp&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;beman/execution/detail/product_type.hpp&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;beman/execution/detail/completion_signatures_for.hpp&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;beman/execution/detail/impls_for.hpp&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;beman/execution/detail/default_impls.hpp&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;concepts&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_push.hpp&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span>beman::execution::detail {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Completion, <span class="keyword">typename</span>... T&gt;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">concept </span>just_size = (!::std::same_as&lt;Completion, ::beman::execution::set_error_t&gt; or 1u == <span class="keyword">sizeof</span>...(T)) &amp;&amp;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                    (!::std::same_as&lt;Completion, ::beman::execution::set_stopped_t&gt; or 0u == <span class="keyword">sizeof</span>...(T));</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Completion&gt;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">struct </span>just_t {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... T&gt;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        requires ::beman::execution::detail::just_size&lt;Completion, T...&gt; &amp;&amp;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                 (::beman::execution::detail::movable_value&lt;T&gt; &amp;&amp; ...)</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">auto</span> operator()(T&amp;&amp;... arg)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        return ::beman::execution::detail::make_sender(</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            *<span class="keyword">this</span>, ::beman::execution::detail::product_type{::std::forward&lt;T&gt;(arg)...});</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    }</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>};</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Completion, <span class="keyword">typename</span>... T, <span class="keyword">typename</span> Env&gt;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">struct </span>completion_signatures_for_impl&lt;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    ::beman::execution::detail::basic_sender&lt;just_t&lt;Completion&gt;, ::beman::execution::detail::product_type&lt;T...&gt;&gt;,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    Env&gt; {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">using </span>type = <a class="code hl_struct" href="structbeman_1_1execution_1_1completion__signatures.html">::beman::execution::completion_signatures</a>&lt;Completion(T...)&gt;;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>};</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Completion&gt;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">struct </span>impls_for&lt;just_t&lt;Completion&gt;&gt; : ::beman::execution::detail::default_impls {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> start = []&lt;<span class="keyword">typename</span> State&gt;(State&amp; state, <span class="keyword">auto</span>&amp; receiver) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        [&amp;state, &amp;receiver]&lt;::std::size_t... I&gt;(::std::index_sequence&lt;I...&gt;) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            Completion()(::std::move(receiver), ::std::move(state.template get&lt;I&gt;())...);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        }(::std::make_index_sequence&lt;State::size()&gt;{});</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    };</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>} <span class="comment">// namespace beman::execution::detail</span></div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">using </span>just_t         = ::beman::execution::detail::just_t&lt;::beman::execution::set_value_t&gt;;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">using </span>just_error_t   = ::beman::execution::detail::just_t&lt;::beman::execution::set_error_t&gt;;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">using </span>just_stopped_t = ::beman::execution::detail::just_t&lt;::beman::execution::set_stopped_t&gt;;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">  110</a></span><span class="keyword">inline</span> constexpr ::beman::execution::just_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">just</a>{};</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead">  168</a></span><span class="keyword">inline</span> constexpr ::beman::execution::just_error_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead">just_error</a>{};</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f">  222</a></span><span class="keyword">inline</span> constexpr ::beman::execution::just_stopped_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f">just_stopped</a>{};</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">using </span>just_t         = ::beman::execution::detail::just_t&lt;::beman::execution::set_value_t&gt;;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">using </span>just_error_t   = ::beman::execution::detail::just_t&lt;::beman::execution::set_error_t&gt;;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">using </span>just_stopped_t = ::beman::execution::detail::just_t&lt;::beman::execution::set_stopped_t&gt;;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">  112</a></span><span class="keyword">inline</span> constexpr ::beman::execution::just_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">just</a>{};</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead">  170</a></span><span class="keyword">inline</span> constexpr ::beman::execution::just_error_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead">just_error</a>{};</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f">  224</a></span><span class="keyword">inline</span> constexpr ::beman::execution::just_stopped_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f">just_stopped</a>{};</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>} <span class="comment">// namespace beman::execution</span></div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> allocator_aware_move.hpp:16</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_a4043903f88f6bb02acdf1c1c369f4ead"><div class="ttname"><a href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead">beman::execution::just_error</a></div><div class="ttdeci">constexpr ::beman::execution::just_error_t just_error</div><div class="ttdoc">just_error(error) yields a sender completing with set_error_t(Error)</div><div class="ttdef"><b>Definition:</b> just.hpp:168</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_a6406f8f62cb941fe811fedeebf0b985f"><div class="ttname"><a href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f">beman::execution::just_stopped</a></div><div class="ttdeci">constexpr ::beman::execution::just_stopped_t just_stopped</div><div class="ttdoc">just_stopped(_) yields a sender completing with set_stopped_t()</div><div class="ttdef"><b>Definition:</b> just.hpp:222</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_acdbad94bfa3d61a849a61c99a753d5da"><div class="ttname"><a href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">beman::execution::just</a></div><div class="ttdeci">constexpr ::beman::execution::just_t just</div><div class="ttdoc">just(arg...)` yields a sender completing with set_value_t(Arg...)</div><div class="ttdef"><b>Definition:</b> just.hpp:110</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_a4043903f88f6bb02acdf1c1c369f4ead"><div class="ttname"><a href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead">beman::execution::just_error</a></div><div class="ttdeci">constexpr ::beman::execution::just_error_t just_error</div><div class="ttdoc">just_error(error) yields a sender completing with set_error_t(Error)</div><div class="ttdef"><b>Definition:</b> just.hpp:170</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_a6406f8f62cb941fe811fedeebf0b985f"><div class="ttname"><a href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f">beman::execution::just_stopped</a></div><div class="ttdeci">constexpr ::beman::execution::just_stopped_t just_stopped</div><div class="ttdoc">just_stopped(_) yields a sender completing with set_stopped_t()</div><div class="ttdef"><b>Definition:</b> just.hpp:224</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_acdbad94bfa3d61a849a61c99a753d5da"><div class="ttname"><a href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">beman::execution::just</a></div><div class="ttdeci">constexpr ::beman::execution::just_t just</div><div class="ttdoc">just(arg...)` yields a sender completing with set_value_t(Arg...)</div><div class="ttdef"><b>Definition:</b> just.hpp:112</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1completion__signatures_html"><div class="ttname"><a href="structbeman_1_1execution_1_1completion__signatures.html">beman::execution::completion_signatures</a></div><div class="ttdoc">Class template used to a specify a list of completion signatures.</div><div class="ttdef"><b>Definition:</b> completion_signatures.hpp:24</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

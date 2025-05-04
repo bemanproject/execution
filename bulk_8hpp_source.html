@@ -156,7 +156,7 @@ $(document).ready(function(){initNavTree('bulk_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                                         Rcvr&amp;                                                 rcvr,</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                                         Tag,</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                                         Args&amp;&amp;... args) noexcept -&gt; void</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        requires(not::std::same_as&lt;Tag, set_value_t&gt; || std::is_invocable_v&lt;Fun, Shape, Args...&gt;)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        requires(!::std::same_as&lt;Tag, set_value_t&gt; || std::is_invocable_v&lt;Fun, Shape, Args...&gt;)</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    {</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::same_as&lt;Tag, set_value_t&gt;) {</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            <span class="keyword">auto</span>&amp; [shape, f] = state;</div>
@@ -194,8 +194,8 @@ $(document).ready(function(){initNavTree('bulk_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">struct </span>may_throw;</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> XF, <span class="keyword">typename</span> Tag, <span class="keyword">typename</span>... XArgs&gt;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">struct </span>may_throw&lt;XF, Tag(XArgs...)&gt; {</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> value = std::same_as&lt;Tag, ::beman::execution::set_value_t&gt; &amp;&amp;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                                      not::std::is_nothrow_invocable&lt;XF, Shape, XArgs...&gt;();</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> value =</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            std::same_as&lt;Tag, ::beman::execution::set_value_t&gt; &amp;&amp; !::std::is_nothrow_invocable&lt;XF, Shape, XArgs...&gt;();</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    };</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> XF, <span class="keyword">typename</span>... Sigs&gt;</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keyword">struct </span>may_throw&lt;XF, completion_signatures&lt;Sigs...&gt;&gt; {</div>
