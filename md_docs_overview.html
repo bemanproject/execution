@@ -424,7 +424,7 @@ Example: inactive</summary>
 <details >
 <summary >
 <code>unstoppable_token&lt;<em>Token</em>&gt;</code></summary>
-<p>The concept <code>unstoppable_token&lt;Token&gt;</code> is modeled by a <code><em>Token</em></code> if <code>stoppable_token&lt;<em>Token</em>&gt;</code> is true and it can statically be determined that both <code><em>token</em>.stop_requested()</code> and <code><em>token</em>.stop_possible()</code> are <code>constexpr</code> epxressions yielding <code>false</code>. This concept is primarily used to avoid extra work when using stop tokens which will never indicate that cancellations are requested. </p><blockquote class="doxtable">
+<p>The concept <code>unstoppable_token&lt;Token&gt;</code> is modeled by a <code><em>Token</em></code> if <code>stoppable_token&lt;<em>Token</em>&gt;</code> is true and it can statically be determined that both <code><em>token</em>.stop_requested()</code> and <code><em>token</em>.stop_possible()</code> are <code>constexpr</code> epxressions yielding <code>false</code>. This concept is used to avoid extra work when using stop tokens which will never indicate that cancellations are requested. </p><blockquote class="doxtable">
 <details >
 <summary >
 Example</summary>
@@ -438,32 +438,98 @@ Example</summary>
 </details>
 <h2><a class="anchor" id="autotoc_md5"></a>
 Queries</h2>
-<p>The queries are used to obtain properties associated with and object. Except <code><a href="‘#forwarding-query’">forwarding_query</a></code> and <code><a href="‘#get-env’">get_env</a></code> the queries work on <a href="‘#environment’">environments</a>.</p>
+<p>The queries are used to obtain properties associated with an object. Except <code><a href="‘#forwarding-query’">forwarding_query</a></code>, <code><a href="‘#get-env’">get_env</a></code>, and <code><a href="‘#get-completion-signatures’">get_completion_signatures</a></code> the queries work on <a href="‘#environment’">environments</a>. The <a href="‘#environment’">environment</a> queries are defined by providing a member <code>query(<em>query_t</em>, <em>a...</em>) const</code> on the <a href="‘#environment’">environment</a> object. </p><details >
+<summary >
+Example defining a query on an environment</summary>
+<p>This example shows how to define an environment class which provides a <a href="‘#get-allocator’"><code>get_allocator</code></a> query. The objects stores a <code>std::pmr::memory_resource*</code> and returns a correspondingly initialized <code>std::pmr::polymorphic_allocator&lt;&gt;</code>.</p>
+<div class="fragment"><div class="line">struct alloc_env {</div>
+<div class="line">   std::pmr::memory_resource res{std::pmr::new_delete_resource()};</div>
+<div class="line"> </div>
+<div class="line">   auto query(get_allocator_t const&amp;) const noexcept {</div>
+<div class="line">       return std::pmr::polymorphic_allocator&lt;&gt;(this-&gt;res);</div>
+<div class="line">   }</div>
+<div class="line">};</div>
+</div><!-- fragment --> </details>
 <details >
 <summary >
 <code>forwarding_query(<em>query</em>) -&gt; bool</code></summary>
+<p><b>Default</b>: <code>false</code> <br  />
+ <code>forwarding_query(<em>query</em>)</code> is a <code>constexpr</code> query used to determine if the query <code><em>query</em></code> should be forwarded when wrapping an environment. </p><blockquote class="doxtable">
+<details >
+<summary >
+Example</summary>
+<p>When defining a custom query <code><em>custom</em></code> it is desirable to allow the query getting forwarded. It is necessary to explicit define the result of <code>forwarding_query(<em>custom</em>)</code>. The result can be defined by providing a corresponding <code>query</code> member function. When using this approach the function isn’t allowed to throw, needs to return <code>bool</code>, and needs to be a core constant expression:</p>
+<div class="fragment"><div class="line">struct custom_t {</div>
+<div class="line">    // ...</div>
+<div class="line">    constexpr bool query(forwarding_query_t const&amp;) const noexcept {</div>
+<div class="line">        return true;</div>
+<div class="line">    }</div>
+<div class="line">};</div>
+<div class="line">inline constexpr custom_t custom{};</div>
+</div><!-- fragment --><p>Alternatively, the query can be defined as forwarding by deriving publicly from <code>forwarding_query_t</code>:</p>
+<div class="fragment"><div class="line">struct custom_t: forwarding_query_t {</div>
+<div class="line">    // ...</div>
+<div class="line">};</div>
+</div><!-- fragment --> </details>
+<blockquote class="doxtable">
 <p></p>
+</blockquote>
+</blockquote>
 </details>
 <details >
 <summary >
-<code>get_env(<em>queryable</em>)</code></summary>
-<p></p>
+<code>get_env(<em>queryable</em>) -&gt; <em>env</em></code></summary>
+<p><b>Default</b>: <a href="#empty_env"><code>empty_env</code></a> <br  />
+ <code>get_env(<em>queryable</em>)</code> is used to get the environment <code><em>env</em></code> associated with <code><em>queryable</em></code>. To provide a non-default environment for a <code><em>queryable</em></code> a <code>get_env</code> member needs to be defined. If <code><em>queryable</em></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href="‘#empty_env’">empty_env</a></code> is returned. </p><div> <details >
+<summary >
+Example</summary>
+<p>The example defines an <a href="‘#environment’">environment</a> class <code>env</code> which stores a pointer to the relevant data and is returned as the <a href="‘#environment’">environment</a> for the type <code>queryable</code>:</p>
+<div class="fragment"><div class="line"> {c++}</div>
+<div class="line">struct data { /*...*/ };</div>
+<div class="line"> </div>
+<div class="line">struct env { data* d; /* ... */ };</div>
+<div class="line"> </div>
+<div class="line">struct queryable {</div>
+<div class="line">    data* d;\</div>
+<div class="line">    // ...</div>
+<div class="line">    env get_env() const noexcept { return { this-&gt;d }; }</div>
+<div class="line">};</div>
+</div><!-- fragment --><p>Note that the <code>get_env</code> member is both <code>const</code> and <code>noexcept</code>. </p>
 </details>
+</div> </details>
 <details >
 <summary >
-<code>get_allocator(<em>env</em>)</code></summary>
-<p></p>
-</details>
+<code>get_allocator(<em>env</em>) -&gt; <em>allocator</em></code></summary>
+<p><b>Default</b>: <em>none</em> <br  />
+ <code>get_allocator(<em>env</em>)</code> returns an <code><em>allocator</em></code> for any memory allocations in the respective context. If <code><em>env</em></code> doesn’t support this query any attempt to access it will result in a compilation error. </p><div> <details >
+<summary >
+Example</summary>
+<p>This example shows how to define an environment class which provides a <a href="‘#get-allocator’"><code>get_allocator</code></a> query. The objects stores a <code>std::pmr::memory_resource*</code> and returns a correspondingly initialized <code>std::pmr::polymorphic_allocator&lt;&gt;</code>.</p>
+<div class="fragment"><div class="line">struct alloc_env {</div>
+<div class="line">   std::pmr::memory_resource res{std::pmr::new_delete_resource()};</div>
+<div class="line"> </div>
+<div class="line">   auto query(get_allocator_t const&amp;) const noexcept {</div>
+<div class="line">       return std::pmr::polymorphic_allocator&lt;&gt;(this-&gt;res);</div>
+<div class="line">   }</div>
+<div class="line">};</div>
+</div><!-- fragment --> </details>
+</div> </details>
 <details >
 <summary >
-<code>get_completion_scheduler(<em>env</em>)</code></summary>
-<p></p>
+<code>get_completion_scheduler&lt;<em>tag</em>&gt;(<em>env</em>) -&gt; <em>scheduler</em></code></summary>
+<p><b>Default</b>: <em>none</em> <br  />
+ If the expression <code>get_completion_scheduler&lt;tag&gt;(get_env(<em>sender</em>))</code> is well-formed and returns a scheduler it defines the scheduler on which the completion <code><em>tag</em></code> executes. In particular <code>get_completion_scheduler&lt;set_value_t&gt;(schedule(<em>sched</em>))</code> returns <code><em>sched</em></code>. </p>
 </details>
 <details >
 <summary >
 <code>get_completion_signatures(<em>sender</em>, <em>env</em>)</code></summary>
+<p>The expression <code>get_completion_signatures(<em>sender</em>, <em>env</em>)</code> returns an object whose type is a specialization of <a href="‘#completion-signatures’"><code>completion_signatures</code></a> defining the possible completion signatures of <code><em>sender</em></code> when connected to a <a href="‘#receiver’"><code><em>receiver</em></code></a> whose &lt;a href=‘::environment'&gt;environment <code>get_env(<em>receiver</em>)</code> is <code><em>env</em></code>. A <a href="‘#sender’"><code>sender</code></a> can define the result of this query either by defining a member function <code>get_completion_signatures</code> or using a type alias <code>completion_signatures</code>. </p><div> <details >
+<summary >
+Example</summary>
+<p>When a <a href="‘#sender’"><code>sender</code></a> doesn’t need to compute the completion signatures based on an <a href="‘#environment’">environment</a> it is easiest to use a the type alias:</p>
 <p></p>
 </details>
+</div> </details>
 <details >
 <summary >
 <code>get_delegation_scheduler(<em>env</em>)</code></summary>
