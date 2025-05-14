@@ -161,7 +161,7 @@ static_assert(not std::execution::receiver_of<example_receiver,
 Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href=‘#schedule’>schedule</a></code> operation yielding a <code><a href=‘sender’>sender</a></code> with a value <a href=‘#completion-signal’>completion signal</a> without parameters. The completion is on the respective execution context.
 
 Requirements for <code>_Scheduler_</code>:
-- The type <code>_Scheduler_::scheduler_concept</code> is an alias for `scheduler_t` or a type derived thereof`.
+- The type <code>_Scheduler_::scheduler_concept</code> is an alias for `scheduler_t` or a type derived thereof.
 - <code><a href=‘#schedule’>schedule</a>(_scheduler_) -> <a href=‘sender’>sender</a></code>
 - The <a href=‘#get-completion-scheduler’>value completion scheduler</a> of the <code><a href=‘sender’>sender</a></code>’s <a href=‘#environment’>environment</a> is the <code>_scheduler_</code>:
     _scheduler_ == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;(
