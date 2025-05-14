@@ -13,47 +13,48 @@
 // ----------------------------------------------------------------------------
 
 namespace {
-    struct sender {
-        using sender_concept = test_std::sender_t;
-    };
-    static_assert(test_std::sender<sender>);
+struct sender {
+    using sender_concept = test_std::sender_t;
+};
+static_assert(test_std::sender<sender>);
 
-    struct copyable {};
-    static_assert(std::copyable<copyable>);
-    struct non_copyable {
-        non_copyable() = default;
-        non_copyable(non_copyable const&) = delete;
-    };
-    static_assert(not std::copyable<non_copyable>);
+struct copyable {};
+static_assert(std::copyable<copyable>);
+struct non_copyable {
+    non_copyable()                    = default;
+    non_copyable(const non_copyable&) = delete;
+};
+static_assert(not std::copyable<non_copyable>);
 
-    struct empty {};
+struct empty {};
 
-    template <test_std::sender S>
-    struct wrap {
-        using sender_concept = test_std::sender_t;
-        std::remove_cvref_t<S> sndr;
-        template <typename E>
-        auto get_completion_signatures(E const& e) const noexcept {
-            return test_std::get_completion_signatures(sndr, e);
-        }
-    };
-    static_assert(test_std::sender<wrap<sender>>);
+template <test_std::sender S>
+struct wrap {
+    using sender_concept = test_std::sender_t;
+    std::remove_cvref_t<S> sndr;
+    template <typename E>
+    auto get_completion_signatures(const E& e) const noexcept {
+        return test_std::get_completion_signatures(sndr, e);
+    }
+};
+static_assert(test_std::sender<wrap<sender>>);
 
-    template <test_std::sender>
-    struct bad {
-        using sender_concept = test_std::sender_t;
-    };
+template <test_std::sender>
+struct bad {
+    using sender_concept = test_std::sender_t;
+};
 
-
-    template <typename Mem, typename Bool, bool Noexcept, template <test_std::sender> class Wrap>
-    struct token {
-        Mem mem{};
-        auto try_associate() -> Bool { return {}; }
-        auto disassociate() noexcept(Noexcept) -> void {}
-        template <test_std::sender Sender>
-        auto wrap(Sender&& sndr) -> Wrap<Sender> { return Wrap<Sender>(std::forward<Sender>(sndr)); }
-    };
-}
+template <typename Mem, typename Bool, bool Noexcept, template <test_std::sender> class Wrap>
+struct token {
+    Mem  mem{};
+    auto try_associate() -> Bool { return {}; }
+    auto disassociate() noexcept(Noexcept) -> void {}
+    template <test_std::sender Sender>
+    auto wrap(Sender&& sndr) -> Wrap<Sender> {
+        return Wrap<Sender>(std::forward<Sender>(sndr));
+    }
+};
+} // namespace
 
 TEST(exec_scope_concepts) {
     static_assert(test_std::async_scope_token<token<copyable, bool, true, wrap>>);

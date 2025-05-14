@@ -8,18 +8,18 @@
 // ----------------------------------------------------------------------------
 
 namespace {
-    struct sender {
-        using sender_concept = test_std::sender_t;
-    };
-    static_assert(test_std::sender<sender>);
-    static_assert(test_std::sender<sender&>);
-    static_assert(test_std::sender<sender const&>);
-}
+struct sender {
+    using sender_concept = test_std::sender_t;
+};
+static_assert(test_std::sender<sender>);
+static_assert(test_std::sender<sender&>);
+static_assert(test_std::sender<const sender&>);
+} // namespace
 
 TEST(exec_nest) {
-    static_assert(std::same_as<test_std::nest_t const, decltype(test_std::nest)>);
+    static_assert(std::same_as<const test_std::nest_t, decltype(test_std::nest)>);
 
     sender sndr{};
-    int token{};
-    //test_std::nest(sndr, token);
+    int    token{};
+    // test_std::nest(sndr, token);
 }

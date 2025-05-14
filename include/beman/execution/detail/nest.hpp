@@ -10,13 +10,12 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-    struct nest_t {
-        template <::beman::execution::sender Sender, ::beman::execution::async_scope_token Token>
-        auto operator()(Sender&&, Token&&) const {
-        }
-    };
-    inline constexpr nest_t nest{};
-}
+struct nest_t {
+    template <::beman::execution::sender Sender, ::beman::execution::async_scope_token Token>
+    auto operator()(Sender&&, Token&&) const {}
+};
+inline constexpr nest_t nest{};
+} // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
