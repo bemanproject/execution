@@ -3,7 +3,7 @@
 # Contributing to `beman::execution`
 
 We welcome all constructive contributions! You will have something you
-can contribute independent of your level expertise!
+can contribute independent of your level of expertise!
 
 There is a huge range of contributions needed and welcome! Here is an
 incomplete list of starting points for contributions:
@@ -21,7 +21,7 @@ incomplete list of starting points for contributions:
 * The layout of some pages related to the project can be improved.
 * Some behaviour of a component isn't tested or documented.
 * You found something which should be linked from the
-    [resources](https://github.com/bemanproject/execution/blob/main/docs/contributing.md) page.
+    [resources](https://github.com/bemanproject/execution/blob/main/docs/resources.md) page.
 * There are [pull requests](https://github.com/bemanproject/execution/pulls)
     which could be reviewed.
 * This very page or list is lacking something.
