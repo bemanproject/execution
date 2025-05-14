@@ -11,6 +11,8 @@ endif()
 list(
   APPEND
   execution_tests
+  exec-scope-concepts.test
+  exec-nest.test
   issue-144.test
   exec-on.test
   notify.test
