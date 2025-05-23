@@ -36,9 +36,8 @@ var NAVTREE =
       [ "std::execution Overview", "md_docs_overview.html#autotoc_md2", [
         [ "Terms", "md_docs_overview.html#autotoc_md3", null ],
         [ "Concepts", "md_docs_overview.html#autotoc_md4", null ],
-        [ "Queries", "md_docs_overview.html#autotoc_md5", [
-          [ "Customization Point Objects", "md_docs_overview.html#autotoc_md6", null ]
-        ] ],
+        [ "Queries", "md_docs_overview.html#autotoc_md5", null ],
+        [ "Customization Point Objects", "md_docs_overview.html#autotoc_md6", null ],
         [ "Senders", "md_docs_overview.html#autotoc_md7", [
           [ "Sender Factories", "md_docs_overview.html#autotoc_md8", null ],
           [ "Sender Adaptors", "md_docs_overview.html#autotoc_md9", null ],

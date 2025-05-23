@@ -438,7 +438,8 @@ Example</summary>
 </details>
 <h2><a class="anchor" id="autotoc_md5"></a>
 Queries</h2>
-<p>The queries are used to obtain properties associated with an object. Except <code><a href="‘#forwarding-query’">forwarding_query</a></code>, <code><a href="‘#get-env’">get_env</a></code>, and <code><a href="‘#get-completion-signatures’">get_completion_signatures</a></code> the queries work on <a href="‘#environment’">environments</a>. The <a href="‘#environment’">environment</a> queries are defined by providing a member <code>query(<em>query_t</em>, <em>a...</em>) const</code> on the <a href="‘#environment’">environment</a> object. </p><details >
+<p>The queries are used to obtain properties associated with an object.</p>
+<details >
 <summary >
 Example defining a query on an environment</summary>
 <p>This example shows how to define an environment class which provides a <a href="‘#get-allocator’"><code>get_allocator</code></a> query. The objects stores a <code>std::pmr::memory_resource*</code> and returns a correspondingly initialized <code>std::pmr::polymorphic_allocator&lt;&gt;</code>.</p>
@@ -454,7 +455,16 @@ Example defining a query on an environment</summary>
 <summary >
 <code>forwarding_query(<em>query</em>) -&gt; bool</code></summary>
 <p><b>Default</b>: <code>false</code> <br  />
- <code>forwarding_query(<em>query</em>)</code> is a <code>constexpr</code> query used to determine if the query <code><em>query</em></code> should be forwarded when wrapping an environment. </p><blockquote class="doxtable">
+ The expression <code>forwarding_query(<em>query</em>)</code> is a <code>constexpr</code> query used to determine if the query <code><em>query</em></code> should be forwarded when wrapping an environment. The expression is required to be a core constant expression if <code><em>query</em></code> is a core constant expression.</p>
+<p>The result of the expression is determined as follows: </p><ol>
+<li>
+The result is the value of the expression <code><em>query</em>.query(forwarding_query)</code> if this expression is valid and <code>noexcept</code>. </li>
+<li>
+The result is <code>true</code> if the type of <code><em>query</em></code> is <code>public</code>ly derived from <code>forwarding_query</code>. </li>
+<li>
+Otherwise the result is <code>false</code>. </li>
+</ol>
+<blockquote class="doxtable">
 <details >
 <summary >
 Example</summary>
@@ -480,7 +490,13 @@ Example</summary>
 <summary >
 <code>get_env(<em>queryable</em>) -&gt; <em>env</em></code></summary>
 <p><b>Default</b>: <a href="#empty_env"><code>empty_env</code></a> <br  />
- <code>get_env(<em>queryable</em>)</code> is used to get the environment <code><em>env</em></code> associated with <code><em>queryable</em></code>. To provide a non-default environment for a <code><em>queryable</em></code> a <code>get_env</code> member needs to be defined. If <code><em>queryable</em></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href="‘#empty_env’">empty_env</a></code> is returned. </p><div> <details >
+ The expresion <code>get_env(<em>queryable</em>)</code> is used to get the environment <code><em>env</em></code> associated with <code><em>queryable</em></code>. To provide a non-default environment for a <code><em>queryable</em></code> a <code>get_env</code> member needs to be defined. If <code><em>queryable</em></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href="‘#empty_env’">empty_env</a></code> is returned. The value of the expression is </p><ol>
+<li>
+the result of <code>as_const(<em>queryable</em>).get_env()</code> if this expression is valid and <code>noexcept</code>. </li>
+<li>
+<code>empty_env</code> otherwise. </li>
+</ol>
+<div> <details >
 <summary >
 Example</summary>
 <p>The example defines an <a href="‘#environment’">environment</a> class <code>env</code> which stores a pointer to the relevant data and is returned as the <a href="‘#environment’">environment</a> for the type <code>queryable</code>:</p>
@@ -501,7 +517,17 @@ Example</summary>
 <summary >
 <code>get_allocator(<em>env</em>) -&gt; <em>allocator</em></code></summary>
 <p><b>Default</b>: <em>none</em> <br  />
- <code>get_allocator(<em>env</em>)</code> returns an <code><em>allocator</em></code> for any memory allocations in the respective context. If <code><em>env</em></code> doesn’t support this query any attempt to access it will result in a compilation error. </p><div> <details >
+ The expression <code>get_allocator(<em>env</em>)</code> returns an <code><em>allocator</em></code> for any memory allocations in the respective context. If <code><em>env</em></code> doesn’t support this query any attempt to access it will result in a compilation error. The value of the expression <code>get_allocator(<em>env</em>)</code> is the result of <code>as_const(<em>env</em>).query(get_allocator)</code> if </p><ul>
+<li>
+the expression is valid; </li>
+<li>
+the expression is <code>noexcept</code>; </li>
+<li>
+the result of the expression satisfies <code><em>simple-allocator</em></code>. </li>
+</ul>
+<p>Otherwise the expression is ill-formed. </p>
+</details>
+<div> <details >
 <summary >
 Example</summary>
 <p>This example shows how to define an environment class which provides a <a href="‘#get-allocator’"><code>get_allocator</code></a> query. The objects stores a <code>std::pmr::memory_resource*</code> and returns a correspondingly initialized <code>std::pmr::polymorphic_allocator&lt;&gt;</code>.</p>
@@ -513,58 +539,142 @@ Example</summary>
 <div class="line">   }</div>
 <div class="line">};</div>
 </div><!-- fragment --> </details>
-</div> </details>
-<details >
+</div> <details >
 <summary >
-<code>get_completion_scheduler&lt;<em>tag</em>&gt;(<em>env</em>) -&gt; <em>scheduler</em></code></summary>
+<code>get_completion_scheduler&lt;&lt;iTtag&gt;(<em>env</em>) -&gt; <em>scheduler</em></code></summary>
 <p><b>Default</b>: <em>none</em> <br  />
- If the expression <code>get_completion_scheduler&lt;tag&gt;(get_env(<em>sender</em>))</code> is well-formed and returns a scheduler it defines the scheduler on which the completion <code><em>tag</em></code> executes. In particular <code>get_completion_scheduler&lt;set_value_t&gt;(schedule(<em>sched</em>))</code> returns <code><em>sched</em></code>. </p>
+ The expression <code>get_complet_scheduler&lt;Tag&gt;(<em>env</em>)</code> yields the completion scheduler for the completion signal <code>Tag</code> associated with <code><em>env</em></code>. This query can be used to determine the scheduler a sender <code><em>sender</em></code> completes on for a given completion signal <code>Tag</code> by using <code>get_completion_scheduler&lt;Tag&gt;(get_env(<em>sender</em>))</code>. The value of the expression is equivalent to <code>as_const(<em>env</em>).query(get_completion_scheduler&lt;Tag&gt;)</code> if </p><ol>
+<li>
+<code>Tag</code> is one of the types <code>set_value_t</code>, <code>set_error_t</code>, or <code>set_stopped_t</code>; </li>
+<li>
+this expression is valid; </li>
+<li>
+this expression is <code>noexcept</code>; </li>
+<li>
+the expression’s type satisfies <code>scheduler</code>. </li>
+</ol>
+<p>Otherwise the expression is invalid. </p>
 </details>
 <details >
 <summary >
 <code>get_completion_signatures(<em>sender</em>, <em>env</em>)</code></summary>
-<p>The expression <code>get_completion_signatures(<em>sender</em>, <em>env</em>)</code> returns an object whose type is a specialization of <a href="‘#completion-signatures’"><code>completion_signatures</code></a> defining the possible completion signatures of <code><em>sender</em></code> when connected to a <a href="‘#receiver’"><code><em>receiver</em></code></a> whose &lt;a href=‘::environment'&gt;environment <code>get_env(<em>receiver</em>)</code> is <code><em>env</em></code>. A <a href="‘#sender’"><code>sender</code></a> can define the result of this query either by defining a member function <code>get_completion_signatures</code> or using a type alias <code>completion_signatures</code>. </p><div> <details >
+<p>The expression <code>get_completion_signatures(<em>sender</em>, <em>env</em>)</code> returns an object whose type is a specialization of <a href="‘#completion-signatures’"><code>completion_signatures</code></a> defining the possible completion signatures of <code><em>sender</em></code> when connected to a <a href="‘#receiver’"><code><em>receiver</em></code></a> whose &lt;a href=‘::environment'&gt;environment <code>get_env(<em>receiver</em>)</code> is <code><em>env</em></code>. A <a href="‘#sender’"><code>sender</code></a> can define the result of this query either by defining a member function <code>get_completion_signatures</code> or using a type alias <code>completion_signatures</code>.</p>
+<p>To determine the result the <code><em>sender</em></code> is first transformed using <code>transform_sender(<em>domain</em>, <em>sender</em>, <em>env</em>)</code> to get <code><em>new-sender</em></code> with type <code><em>New-Sender-Type</em></code>. With that the result type is </p><ol>
+<li>
+the type of <code><em>new-sender</em>.get_completion_signatures(<em>env</em>)</code> if this expression is valid; </li>
+<li>
+the type <code>remove_cvref_t&lt;<em>New-Sender-Type</em>&gt;::completion_signatures</code> if this type exists; </li>
+<li>
+<code>completion_signatures&lt;set_value_t(<em>T</em>), set_error_t(exception_ptr), set_stopped_t()&gt;</code> if <code><em>New-Sender-Type</em></code> is an awaitable type which would yield an object of type <code><em>T</em></code> when it is <code>co_await</code>ed; </li>
+<li>
+invalid otherwise. </li>
+</ol>
+<div> <details >
 <summary >
 Example</summary>
-<p>When a <a href="‘#sender’"><code>sender</code></a> doesn’t need to compute the completion signatures based on an <a href="‘#environment’">environment</a> it is easiest to use a the type alias:</p>
-<p></p>
-</details>
+<p>When a <a href="‘#sender’"><code>sender</code></a> doesn’t need to compute the completion signatures based on an <a href="‘#environment’">environment</a> it is easiest to use a the type alias, e.g.: </p><div class="fragment"><div class="line"> {c++}</div>
+<div class="line">struct sender {</div>
+<div class="line">    using sender_concept = std::execution::sender_t;</div>
+<div class="line">    using completion_signatures = std::completion_signatures&lt;</div>
+<div class="line">        std::execution::set_value_t(int),</div>
+<div class="line">        std::execution::set_error_t(std::error_code),</div>
+<div class="line">        std::execution::set_stopped()</div>
+<div class="line">    &gt;;</div>
+<div class="line">    // ...</div>
+<div class="line">};</div>
+</div><!-- fragment --> </details>
 </div> </details>
 <details >
 <summary >
-<code>get_delegation_scheduler(<em>env</em>)</code></summary>
-<p></p>
+<code>get_delegation_scheduler(<em>env</em>) -&gt; <em>scheduler</em></code></summary>
+<p>The expression <code>get_delegation_scheduler(<em>env</em>)</code> yields the scheduler associated with <code><em>env</em></code> which is used for forward progress delegation. The value of the expression is equivalent to <code>as_const(<em>env</em>).query(get_delegation_scheduler) -&gt; <em>scheduler</em></code> if </p><ol>
+<li>
+this expression is valid; </li>
+<li>
+this expression is <code>noexcept</code>; </li>
+<li>
+the expression’s type satisfies <code>scheduler</code>. </li>
+</ol>
+<p>Otherwise the expression is invalid. </p>
 </details>
 <details >
 <summary >
-<code>get_domain(<em>env</em>)</code></summary>
+<code>get_domain(<em>env</em>) -&gt; <em>domain</em></code></summary>
 <p></p>
-<p></p>
+<p>The expression <code>get_domain(<em>env</em>)</code> yields the domain associated with <code><em>env</em></code>. The value of the expression is equivalent to <code>as_const(<em>env</em>).query(get_domain)</code> if </p><ol>
+<li>
+this expression is valid; </li>
+<li>
+this expression is <code>noexcept</code>. </li>
+</ol>
+<p>Otherwise the expression is invalid. </p>
 </details>
 <details >
 <summary >
-<code>get_forward_progress_guarantee(<em>env</em>)</code></summary>
-<p></p>
+<code>get_forward_progress_guarantee(<em>scheduler</em>) -&gt; forward_progress_guarantee</code></summary>
+<p>The expression <code>get_forward_progress_guarantee(<em>scheduler</em>)</code> yields the forward progress guarantee of the <em>scheduler</em>’s execution agent. The value of the expression is equivalent to <code>as_const(<em>env</em>).query(get_scheduler)</code> if </p><ol>
+<li>
+this expression is valid; </li>
+<li>
+this expression is <code>noexcept</code>; </li>
+<li>
+the expression’s type is <code>forward_progress_guarantee</code>. </li>
+</ol>
+<p>Otherwise the expression is invalid. </p>
 </details>
 <details >
 <summary >
-<code>get_scheduler(<em>env</em>)</code></summary>
-<p></p>
+<code>get_scheduler(<em>env</em>) -&gt; <em>scheduler</em></code></summary>
+<p>The expression <code>get_scheduler(<em>env</em>)</code> yields the scheduler associated with <code><em>env</em></code>. The value of the expression is equivalent to <code>as_const(<em>env</em>).query(get_scheduler)</code> if </p><ol>
+<li>
+this expression is valid; </li>
+<li>
+this expression is <code>noexcept</code>; </li>
+<li>
+the expression’s type satisfies <code>scheduler</code>. </li>
+</ol>
+<p>Otherwise the expression is invalid. </p>
 </details>
 <details >
 <summary >
-<code>get_stop_token(<em>env</em>)</code></summary>
-<p></p>
-</details>
-<h3><a class="anchor" id="autotoc_md6"></a>
-Customization Point Objects</h3>
-<ul>
-<li><code>connect(<em>sender, receiver</em>) -&gt; <em>operation_state</em></code></li>
-<li><code>set_error(<em>error</em>) noexcept -&gt; void</code></li>
-<li><code>set_stopped(<em>receiver</em>) noexcept -&gt; void</code></li>
-<li><code>set_value(<em>receiver, value...</em>) noexcept -&gt; void</code></li>
-<li><code>start(<em>state&amp;</em>) noexcept -&gt; void</code></li>
+<code>get_stop_token(<em>env</em>) -&gt; <em>stoppable_token</em></code></summary>
+<p>The expression <code>get_stop_token(<em>env</em>)</code> yields the stop token associated with <code><em>env</em></code>. The value is the result of the expression <code>as_const(<em>env</em>).query(get_stop_token)</code> if </p><ul>
+<li>
+the expression is valid; </li>
+<li>
+the expression is <code>noexcept</code>; </li>
+<li>
+the expression satisfies <code>stoppable_token</code>. </li>
 </ul>
+<p>Otherwise the value is <code>never_stop_token{}</code>. </p>
+</details>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Customization Point Objects</h2>
+<details >
+<summary >
+<code>connect(<em>sender, receiver</em>) -&gt; <em>operation_state</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>set_error(<em>receiver</em>, <em>error</em>) noexcept -&gt; void</code></summary>
+<p>The expression <code>set_error(<em>receiver</em>, <em>error</em>)</code> invokes the <code>set_error</code> completion signal on <code><em>receiver</em></code> with the argument <code><em>error</em></code>, i.e., it invokes <code><em>receiver</em>.set_error(<em>error</em>)</code>. </p>
+</details>
+<details >
+<summary >
+<code>set_stopped(<em>receiver</em>) noexcept -&gt; void</code></summary>
+<p>The expression <code>set_stopped(<em>receiver</em>)</code> invokes the <code>set_stopped</code> completion signal on <code><em>receiver</em></code>, i.e., it invokes <code><em>receiver</em>.set_stopped()</code>. </p>
+</details>
+<details >
+<summary >
+<code>set_value(<em>receiver</em>, <em>value</em>...) noexcept -&gt; void</code></summary>
+<p>The expression <code>set_value(<em>receiver</em>, <em>value</em>...)</code> invokes the <code>set_value</code> completion signal on <code><em>receiver</em></code> with the argument(s) <code><em>value</em>...</code>, i.e., it invokes <code><em>receiver</em>.set_value(<em>value</em>...)</code>. </p>
+</details>
+<details >
+<summary >
+<code>start(<em>state</em>) noexcept -&gt; void</code></summary>
+<p>The expression <code>start(<em>state</em>)</code> starts the execution of the <code>operation_state</code> object <code><em>state</em></code>. Once this expression started executing the object <code><em>state</em></code> is required to stay valid at least until one of the completion signals of <code><em>state</em></code>’s <code>receiver</code> is invoked. Once started exactly one of the completion signals is eventually called. </p>
+</details>
 <h2><a class="anchor" id="autotoc_md7"></a>
 Senders</h2>
 <h3><a class="anchor" id="autotoc_md8"></a>
