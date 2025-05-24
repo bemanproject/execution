@@ -253,7 +253,7 @@ Example</summary>
 <code>scheduler&lt;<em>Scheduler</em>&gt;</code></summary>
 <p>Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href="‘#schedule’">schedule</a></code> operation yielding a <code><a href="‘sender’">sender</a></code> with a value <a href="‘#completion-signal’">completion signal</a> without parameters. The completion is on the respective execution context.</p>
 <p>Requirements for <code><em>Scheduler</em></code>:</p><ul>
-<li>The type <code><em>Scheduler</em>::scheduler_concept</code> is an alias for <code>scheduler_t</code> or a type derived thereof`.</li>
+<li>The type <code><em>Scheduler</em>::scheduler_concept</code> is an alias for <code>scheduler_t</code> or a type derived thereof.</li>
 <li><code><a href="‘#schedule’">schedule</a>(<em>scheduler</em>) -&gt; <a href="‘sender’">sender</a></code></li>
 <li>The <a href="‘#get-completion-scheduler’">value completion scheduler</a> of the <code><a href="‘sender’">sender</a></code>’s <a href="‘#environment’">environment</a> is the <code><em>scheduler</em></code>: <em>scheduler</em> == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;( std::execution::get_env(std::execution::schedule(<em>scheduler</em>)) )</li>
 <li><code>std::equality_comparable&lt;<em>Scheduler</em>&gt;</code></li>
