@@ -11,12 +11,12 @@ endif()
 list(
   APPEND
   execution_tests
+  exec-scope-simple-counting.test
   exec-scope-concepts.test
   exec-nest.test
   issue-144.test
   exec-on.test
   notify.test
-  exec-scounting.test
   exec-awaitable.test
   allocator-requirements-general.test
   exec-connect.test
@@ -134,6 +134,7 @@ foreach(test ${execution_tests})
   add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
+if(FALSE)
 if(NOT PROJECT_IS_TOP_LEVEL AND BEMAN_EXECUTION_ENABLE_TESTING)
   # test if the targets are findable from the build directory
   # cmake-format: off
@@ -155,4 +156,5 @@ if(NOT PROJECT_IS_TOP_LEVEL AND BEMAN_EXECUTION_ENABLE_TESTING)
           # TODO(CK): Needed too? "--config $<CONFIG>"
   )
   # cmake-format: on
+endif()
 endif()

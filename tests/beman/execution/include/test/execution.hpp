@@ -7,6 +7,12 @@
 #include <beman/execution/stop_token.hpp>
 #include <concepts>
 #include <cstddef>
+#ifndef _MSC_VER
+#include <cstdlib>
+#include <unistd.h>
+#include <iostream>
+#include <source_location>
+#endif
 
 #undef NDEBUG
 #include <cassert>
@@ -41,6 +47,29 @@ struct throws {
     auto operator=(const throws&) noexcept(false) -> throws& = default;
 };
 
+inline auto death([[maybe_unused]] auto                   fun,
+                  [[maybe_unused]] ::std::source_location location = std::source_location::current()) noexcept
+    -> void {
+#ifndef _MSC_VER
+    switch (::pid_t rc = ::fork()) {
+    default: {
+        int stat{};
+        ASSERT(rc == ::wait(&stat));
+        if (stat == EXIT_SUCCESS) {
+            ::std::cerr << "failed death test at "
+                        << "file=" << location.file_name() << ":" << location.line() << "\n"
+                        << std::flush;
+            ASSERT(stat != EXIT_SUCCESS);
+        }
+    } break;
+    case 0: {
+        ::close(2);
+        fun();
+        ::std::exit(EXIT_SUCCESS);
+    } break;
+    }
+#endif
+}
 } // namespace test
 
 #endif // INCLUDED_TEST_EXECUTION
