@@ -525,9 +525,7 @@ the expression is <code>noexcept</code>; </li>
 <li>
 the result of the expression satisfies <code><em>simple-allocator</em></code>. </li>
 </ul>
-<p>Otherwise the expression is ill-formed. </p>
-</details>
-<div> <details >
+<p>Otherwise the expression is ill-formed. </p><div> <details >
 <summary >
 Example</summary>
 <p>This example shows how to define an environment class which provides a <a href="‘#get-allocator’"><code>get_allocator</code></a> query. The objects stores a <code>std::pmr::memory_resource*</code> and returns a correspondingly initialized <code>std::pmr::polymorphic_allocator&lt;&gt;</code>.</p>
@@ -539,7 +537,8 @@ Example</summary>
 <div class="line">   }</div>
 <div class="line">};</div>
 </div><!-- fragment --> </details>
-</div> <details >
+</div> </details>
+<details >
 <summary >
 <code>get_completion_scheduler&lt;&lt;iTtag&gt;(<em>env</em>) -&gt; <em>scheduler</em></code></summary>
 <p><b>Default</b>: <em>none</em> <br  />
@@ -652,8 +651,8 @@ the expression satisfies <code>stoppable_token</code>. </li>
 Customization Point Objects</h2>
 <details >
 <summary >
-<code>connect(<em>sender, receiver</em>) -&gt; <em>operation_state</em></code></summary>
-<p></p>
+<code>connect(<em>sender</em>, <em>receiver</em>) -&gt; <em>operation_state</em></code></summary>
+<p>The expresion <code>connect(<em>sender</em>, <em>receiver</em>)</code> combines <code><em>sender</em></code> and <code><em>receiver</em></code> into an operation state <code><em>state</em></code>. When this <code><em>state</em></code> gets started using <code>start(<em>state</em>)</code> the operation represented by <code><em>sender</em></code> gets started and reports its completion to <code><em>receiver</em></code> or an object copied or moved from <code><em>receiver</em></code>. While the operation state <code><em>state</em></code> isn’t started it can be destroyed but once it got started it needs to stay valid until one of the completion signals is called on <code><em>receiver</em></code>. </p>
 </details>
 <details >
 <summary >
@@ -679,34 +678,152 @@ Customization Point Objects</h2>
 Senders</h2>
 <h3><a class="anchor" id="autotoc_md8"></a>
 Sender Factories</h3>
-<ul>
-<li><code>just(<em>value...</em>) -&gt; <em>sender-of</em>&lt;set_value_t(<em>Value...</em>)&gt;</code></li>
-<li><code>just_error(<em>error</em>) -&gt; <em>sender-of</em>&lt;set_error_t(<em>Error</em>)&gt;</code></li>
-<li><code>just_stopped() -&gt; <em>sender-of</em>&lt;set_stopped_t()&gt;</code></li>
-<li><code>read_env(<em>query</em>) -&gt; <em>sender-of</em>&lt;set_value_t(<em>query-result</em>)&gt;</code></li>
-<li><code>schedule(<em>scheduler</em>) -&gt; <em>sender-of</em>&lt;set_value_t()&gt;</code></li>
+<p>Sender factories create a sender which forms the start of a graph of lazy work items.</p>
+<details >
+<summary >
+<code>just(<em>value...</em>) -&gt; <em>sender-of</em>&lt;set_value_t(<em>Value...</em>)&gt;</code></summary>
+<p>The expression <code>just(<em>value...</em>)</code> creates a sender which sends <code><em>value...</em></code> on the <code>set_value</code> (success) channel when started (note that <code><em>value...</em></code> can be empty).</p>
+<p><b>Completions</b> </p><ul>
+<li>
+<code>set_value_t(decltype(<em>value</em>)...)</code> </li>
 </ul>
+</details>
+<details >
+<summary >
+<code>just_error(<em>error</em>) -&gt; <em>sender-of</em>&lt;set_error_t(<em>Error</em>)&gt;</code></summary>
+<p>The expression <code>just_error(<em>error</em>)</code> creates a sender which sends <code><em>error</em></code> on the <code>set_error</code> (failure) channel when started.</p>
+<p><b>Completions</b> </p><ul>
+<li>
+<code>set_error_t(decltype(<em>error</em>))</code> </li>
+</ul>
+</details>
+<details >
+<summary >
+<code>just_stopped() -&gt; <em>sender-of</em>&lt;set_stopped_t()&gt;</code></summary>
+<p>The expression <code>just_stopped()</code> creates a sender which sends a completion on the <code>set_stopped</code> (cancellation) channel when started.</p>
+<p><b>Completions</b> </p><ul>
+<li>
+<code>set_stopped_t()</code> </li>
+</ul>
+</details>
+<details >
+<summary >
+<code>read_env(<em>query</em>) -&gt; <em>sender-of</em>&lt;set_value_t(<em>query-result</em>)&gt;</code></summary>
+<p>The expression <code>read_env(<em>query</em>)</code> creates a sender which sends the result of querying <code><em>query</em></code> the environment of the <code><em>receiver</em></code> it gets connected to on the <code>set_value</code> channel when started. Put differently, it calls <code>set_value(move(<em>receiver</em>), <em>query</em>(get_env(<em>receiver</em>)))</code>. For example, in a coroutine it may be useful to extra the stop token associated with the coroutine which can be done using <code>read_env</code>:</p>
+<div class="fragment"><div class="line"> {c++\}</div>
+<div class="line">auto token = co_await read_env(get_stop_token);</div>
+</div><!-- fragment --><p><b>Completions</b> </p><ul>
+<li>
+<code>set_value_t(decltype(<em>query</em>(get_env(<em>receiver</em>))))</code> </li>
+</ul>
+</details>
+<details >
+<summary >
+<code>schedule(<em>scheduler</em>) -&gt; <em>sender-of</em>&lt;set_value_t()&gt;</code></summary>
+<p>The expression <code>schedule(<em>scheduler</em>)</code> creates a sender which upon success completes on the <code>set_value</code> channel without any arguments running on the execution context associated with <code><em>scheduler</em></code>. Depending on the scheduler it is possible that the sender can complete with an error if the scheduling fails or using <code>set_stopped()</code> if the operation gets cancelled before it is successful.</p>
+<p><b>Completions</b> </p><ul>
+<li>
+<code>set_value_t()</code> upon success </li>
+<li>
+<code>set_error_t(<em>Error</em>)</code> upon failure if <code><em>scheduler</em></code> may fail </li>
+<li>
+<code>set_stopped_t()</code> upon cancellation if <code><em>scheduler</em></code> supports cancellation </li>
+</ul>
+</details>
 <h3><a class="anchor" id="autotoc_md9"></a>
 Sender Adaptors</h3>
-<ul>
-<li><code>bulk</code></li>
-<li><code>continues_on(<em>sender</em>, <em>scheduler</em>) -&gt; <em>sender</em></code></li>
-<li><code>into_variant(<em>sender</em>) -&gt; <em>sender-of</em>&lt;set_value_t(std::variant&lt;T...&gt;)&gt;</code>`</li>
-<li><code>let_error(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></li>
-<li><code>let_stopped(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></li>
-<li><code>let_value(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></li>
-<li><code>on</code></li>
-<li><code>schedule_from(<em>scheduler</em>, <em>sender</em>) -&gt; <em>sender</em></code></li>
-<li><code>split</code></li>
-<li><code>starts_on(<em>scheduler</em>, <em>sender</em>) -&gt; <em>sender</em></code></li>
-<li><code>stopped_as_error</code></li>
-<li><code>stopped_as_optional</code></li>
-<li><code>then(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></li>
-<li><code>upon_error(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></li>
-<li><code>upon_stopped(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></li>
-<li><code>when_all(<em>sender</em>...) -&gt; <em>sender</em></code></li>
-<li><code>when_all_with_variant(<em>sender</em>...) -&gt; <em>sender</em></code></li>
+<p>The sender adaptors take one or more senders and adapt their respective behavior to complete with a corresponding result. The description uses the informal function <code><em>completions-of</em>(<em>sender</em>)</code> to represent the completion signatures which <code><em>sender</em></code> produces. Also, completion signatures are combined using <code>+</code>: the result is the deduplicated set of the combined completion signatures.</p>
+<details >
+<summary >
+<code>bulk</code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>continues_on(<em>sender</em>, <em>scheduler</em>) -&gt; <em>sender-of</em>&lt;<em>completions-of</em>(<em>sender</em>) + <em>completions-of</em>(schedule(<em>scheduler</em>))&gt;</code></summary>
+<p>The expression <code>continues_on(<em>sender</em>, <em>scheduler</em>)</code> creates a sender <code><em>cs</em></code> which starts <code><em>sender</em></code> when started. The results from <code><em>sender</em></code> are stored. Once that is <code><em>cs</em></code> creates a sender using <code>schedule(<em>scheduler</em>)</code> and completes itself on the execution once that sender completes.</p>
+<p><b>Completions</b> </p><ul>
+<li>
+<code><em>completions-of</em>(<em>sender</em>)</code> </li>
+<li>
+<code><em>completions-of</em>(schedule(<em>scheduler</em>))</code> </li>
 </ul>
+</details>
+<details >
+<summary >
+<code>into_variant(<em>sender</em>) -&gt; <em>sender-of</em>&lt;set_value_t(std::variant&lt;<em>Tuple</em>...&gt;)&gt;</code></summary>
+<p>The expression <code>into_variant(<em>sender</em>)</code> creates a sender which transforms the results of possibly multiple <code>set_value</code> completions of <code><em>sender</em></code> into one <code>set_value</code> completion respresenting the different upstream results as different options of a <code>variant&lt;<em>Tuple</em>...&gt;</code> where each <code><em>Tuple</em></code> is a <code>tuple</code> of values initialized with the respective arguments passed to <code>set_value</code>. The order of options in the <code>variant</code> isn’t specified. </p>
+</details>
+<details >
+<summary >
+<code>let_error(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>let_stopped(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>let_value(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>on</code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>schedule_from(<em>scheduler</em>, <em>sender</em>) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>split</code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>starts_on(<em>scheduler</em>, <em>sender</em>) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>stopped_as_error</code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>stopped_as_optional</code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>then(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>upon_error(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>upon_stopped(<em>upstream</em>, <em>fun</em>) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>when_all(<em>sender</em>...) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>when_all_with_variant(<em>sender</em>...) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
 <h3><a class="anchor" id="autotoc_md10"></a>
 Sender Consumers</h3>
 <ul>
