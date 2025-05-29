@@ -35,6 +35,7 @@
 #include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/type_list.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
+#include <beman/execution/detail/sends_stopped.hpp>
 
 #include <concepts>
 #include <exception>
@@ -250,7 +251,11 @@ struct completion_signatures_for_impl<
             type;
     using error_types = ::beman::execution::detail::meta::unique<
         ::beman::execution::detail::meta::combine<::beman::execution::error_types_of_t<Sender, Env, error_comps>...>>;
-    using type = ::beman::execution::detail::meta::combine<value_types, error_types>;
+    using stopped_types =
+        ::std::conditional_t<(false || ... || ::beman::execution::sends_stopped<Sender, Env>),
+                             ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
+                             ::beman::execution::completion_signatures<>>;
+    using type = ::beman::execution::detail::meta::combine<value_types, error_types, stopped_types>;
 };
 } // namespace beman::execution::detail
 

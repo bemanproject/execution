@@ -27,6 +27,8 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/execution.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/functional.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/stop_token.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/execution.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/stop_token.hpp
   PUBLIC FILE_SET
          ${TARGET_NAME}_detail_headers
          TYPE
@@ -47,6 +49,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/basic_receiver.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/basic_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/basic_state.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/bulk.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/call_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/callable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/check_type_alias_exist.hpp
