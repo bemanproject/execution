@@ -110,7 +110,6 @@ if(NOT DEFINED CMAKE_PREFIX_PATH)
 endif()
 
 if(PROJECT_IS_TOP_LEVEL)
-  enable_testing()
   find_package(beman_execution 0.0.1 EXACT QUIET)
   if(beman_execution_FOUND)
     set(execution_tests exec-awaitable.test) # only one sample to save time! CK

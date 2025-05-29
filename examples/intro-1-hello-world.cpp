@@ -10,7 +10,7 @@ namespace ex = ::beman::execution;
 using namespace std::string_literals;
 
 // ----------------------------------------------------------------------------
-// Please see the explanation in docs/intro-examples.md for an explanation.
+// Explanation: https://github.com/bemanproject/execution/blob/main/docs/intro-examples.md
 
 int main() {
     // clang-format off
