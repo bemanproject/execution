@@ -7,12 +7,13 @@
 #include <iostream>
 #include <string>
 #include <tuple>
+#include <cinttypes>
 
 namespace ex = ::beman::execution;
 using namespace std::string_literals;
 
-enum class success { one };
-enum class failure { fail_one };
+enum class success : std::uint8_t { one };
+enum class failure : std::uint8_t { fail_one };
 
 struct expected_to_channel_t {
     template <typename Receiver>

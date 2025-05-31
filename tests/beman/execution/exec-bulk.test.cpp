@@ -98,7 +98,7 @@ TEST(exec_bulk) {
 
     } catch (...) {
 
-        ASSERT(nullptr == "the bulk tests shouldn't throw");
+        ASSERT(nullptr == +"the bulk tests shouldn't throw");
     }
 
     return EXIT_SUCCESS;

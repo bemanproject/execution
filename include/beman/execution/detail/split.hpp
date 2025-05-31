@@ -28,6 +28,7 @@
 #include <beman/execution/detail/value_types_of_t.hpp>
 
 #include <atomic>
+#include <exception>
 #include <optional>
 #include <variant>
 #include <tuple>
@@ -166,7 +167,10 @@ struct impls_for<split_impl_t> : ::beman::execution::detail::default_impls {
             } else if (!(*maybe_ptr)) {
                 // the operation was not started yet, we are first, and we start it
                 assert(op_state);
-                ::beman::execution::start(*op_state);
+                if (op_state)
+                    ::beman::execution::start(*op_state);
+                else
+                    std::terminate();
             }
         }
 

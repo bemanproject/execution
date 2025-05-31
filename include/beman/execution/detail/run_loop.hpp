@@ -50,6 +50,7 @@ class run_loop {
         run_loop* loop;
         Receiver  receiver;
 
+        // NOLINTBEGIN(misc-no-recursion)
         template <typename R>
         opstate(run_loop* l, R&& rcvr) : loop(l), receiver(::std::forward<Receiver>(rcvr)) {}
         auto start() & noexcept -> void {
@@ -59,6 +60,7 @@ class run_loop {
                 ::beman::execution::set_error(::std::move(this->receiver), ::std::current_exception());
             }
         }
+        // NOLINTEND(misc-no-recursion)
         auto execute() noexcept -> void override {
             if (::beman::execution::get_stop_token(::beman::execution::get_env(this->receiver)).stop_requested())
                 ::beman::execution::set_stopped(::std::move(this->receiver));
