@@ -38,6 +38,7 @@ SYSTEM    = $(shell uname -s)
 BUILD     = $(BUILDROOT)/$(SYSTEM)/$(SANITIZER)
 EXAMPLE   = beman.execution.examples.stop_token
 CMAKE_CXX_COMPILER=$(COMPILER)
+INSTALL_PREFIX = /opt/local
 
 ifeq ($(SANITIZER),release)
     CXX_FLAGS = -O3 -Wpedantic -Wall -Wextra -Wno-shadow -Werror
@@ -81,16 +82,14 @@ doc:
 build:
 	CC=$(CXX) cmake --fresh -G Ninja -S $(SOURCEDIR) -B  $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 \
-	  -D CMAKE_SKIP_INSTALL_RULES=1 \
 	  -D CMAKE_CXX_COMPILER=$(CXX) # XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
-# NOTE: without install! CK
 test: build
-	ctest --test-dir $(BUILD) --rerun-failed --output-on-failure
+	ctest --test-dir $(BUILD) --output-on-failure
 
 install: test
-	cmake --install $(BUILD) --prefix /opt/local
+	cmake --install $(BUILD) --prefix $(INSTALL_PREFIX)
 
 release:
 	cmake --workflow --preset $@ --fresh

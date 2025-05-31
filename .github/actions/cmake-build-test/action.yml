@@ -1,0 +1,61 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+name: 'CMake Build Test'
+description: ''
+inputs:
+  cpp_version:
+    required: true
+  toolchain_file:
+    required: true
+  cmake_extra_args:
+    description: 'extra cmake arguments'
+    Default: ''
+  disable_test:
+    Default: false
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Macos
+      if: startsWith(matrix.platform.os, 'macos')
+      shell: bash
+      run: sudo chmod -R 777 /opt/
+    - name: Print installed software
+      shell: bash
+      run: |
+        echo "Build system:"
+        cmake --version
+        ninja --version
+    - name: Configure CMake
+      shell: bash
+      run: |
+        cmake \
+          -B build \
+          -S . \
+          -DCMAKE_CXX_STANDARD=${{ inputs.cpp_version }} \
+          -DCMAKE_TOOLCHAIN_FILE="${{ inputs.toolchain_file }}" \
+          -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="./cmake/use-fetch-content.cmake" \
+          ${{ matrix.cmake_args.args }}
+      env:
+        CMAKE_GENERATOR: "Ninja Multi-Config"
+    - name: Build Release
+      shell: bash
+      run: |
+        cmake --build build --config Release --parallel --verbose
+        cmake --build build --config Release --target all_verify_interface_header_sets
+        cmake --install build --config Release --prefix /opt/beman.package
+        ls -R /opt/beman.package
+    - name: Test Release
+      if: ${{ !inputs.disable_test }}
+      shell: bash
+      run: ctest --test-dir build --build-config Release
+    - name: Build Debug
+      shell: bash
+      run: |
+        cmake --build build --config Debug --parallel --verbose
+        cmake --build build --config Debug --target all_verify_interface_header_sets
+        cmake --install build --config Debug --prefix /opt/beman.package
+        ls -R /opt/beman.package
+    - name: Test Debug
+      if: ${{ !inputs.disable_test }}
+      shell: bash
+      run: ctest --test-dir build --build-config Debug

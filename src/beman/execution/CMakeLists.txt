@@ -3,17 +3,16 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # cmake-format: on
 
-add_library(${TARGET_NAME} STATIC)
-add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
+include (GNUInstallDirs)
 
-include(CMakePrintHelpers)
-cmake_print_variables(TARGET_ALIAS TARGET_NAME TARGET_PREFIX PROJECT_SOURCE_DIR)
+add_library(beman.execution STATIC)
+add_library(beman::execution ALIAS beman.execution)
 
 target_sources(
-  ${TARGET_NAME}
+  beman.execution
   PRIVATE execution.cpp
   PUBLIC FILE_SET
-         ${TARGET_NAME}_public_headers
+         beman_execution_public_headers
          TYPE
          HEADERS
          BASE_DIRS
@@ -25,7 +24,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/execution.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/stop_token.hpp
   PUBLIC FILE_SET
-         ${TARGET_NAME}_detail_headers
+         beman_execution_detail_headers
          TYPE
          HEADERS
          BASE_DIRS
@@ -186,32 +185,55 @@ target_sources(
 )
 
 # cmake-format: off
-get_property(DETAIL_HEADER_FILES TARGET ${TARGET_NAME} PROPERTY HEADER_SET_${TARGET_NAME}_detail_headers)
+get_property(DETAIL_HEADER_FILES TARGET beman.execution PROPERTY HEADER_SET_beman_execution_detail_headers)
 source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
-set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
+set_target_properties(beman.execution PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
 
-target_compile_features(${TARGET_NAME} PUBLIC
+target_compile_features(beman.execution PUBLIC
   "$<$<COMPILE_FEATURES:cxx_std_26>:cxx_std_26>"
   "$<$<NOT:$<COMPILE_FEATURES:cxx_std_26>>:cxx_std_23>"
 )
 
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
-  return()
-endif()
-
 install(
-  TARGETS ${TARGET_NAME}
-  EXPORT ${TARGETS_EXPORT_NAME}1
-  ARCHIVE DESTINATION lib/$<CONFIG>
-  FILE_SET ${TARGET_NAME}_public_headers
-  FILE_SET ${TARGET_NAME}_detail_headers
+  TARGETS beman.execution COMPONENT beman.execution
+  EXPORT beman.execution
+  DESTINATION $<$<CONFIG:Debug>:debug/>${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION $<$<CONFIG:Debug>:debug/>${CMAKE_INSTALL_BINDIR}
+  FILE_SET beman_execution_public_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILE_SET beman_execution_detail_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 # cmake-format: on
 
-install(
-  EXPORT ${TARGETS_EXPORT_NAME}1
-  FILE ${TARGETS_EXPORT_NAME}.cmake
-  DESTINATION "${INSTALL_CONFIGDIR}"
-  NAMESPACE ${TARGET_NAMESPACE}::
-)
+if(BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE)
+    include(CMakePackageConfigHelpers)
+
+    configure_package_config_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/beman.execution-config.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-config.cmake"
+        INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/beman.execution"
+        PATH_VARS PROJECT_NAME PROJECT_VERSION
+    )
+
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-version.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY ExactVersion
+    )
+
+    install(
+        FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-config.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-version.cmake"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/beman.execution"
+        COMPONENT beman.execution
+    )
+
+    install(
+        EXPORT beman.execution
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/beman.execution"
+        NAMESPACE beman::
+        FILE beman.execution-targets.cmake
+        COMPONENT beman.execution
+    )
+endif()

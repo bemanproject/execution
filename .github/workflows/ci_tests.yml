@@ -1,0 +1,246 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+name: Continuous Integration Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 15 * * *'
+
+jobs:
+  preset-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        presets:
+          - preset: "gcc-debug"
+            platform: "ubuntu-latest"
+          - preset: "gcc-release"
+            platform: "ubuntu-latest"
+          - preset: "llvm-debug"
+            platform: "ubuntu-latest"
+          - preset: "llvm-release"
+            platform: "ubuntu-latest"
+          - preset: "appleclang-debug"
+            platform: "macos-latest"
+          - preset: "appleclang-release"
+            platform: "macos-latest"
+          - preset: "msvc-debug"
+            platform: "windows-latest"
+          - preset: "msvc-release"
+            platform: "windows-latest"
+    name: "Preset: ${{ matrix.presets.preset }} on ${{ matrix.presets.platform }}"
+    runs-on: ${{ matrix.presets.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.25.0"
+          ninjaVersion: "^1.11.1"
+      - name: Setup MSVC
+        if: startsWith(matrix.presets.platform, 'windows')
+        uses: TheMrMilchmann/setup-msvc-dev@v3
+        with:
+          arch: x64
+      - name: Run preset
+        run: cmake --workflow --preset ${{ matrix.presets.preset }}
+
+  gtest-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - description: "Ubuntu GNU"
+            os: ubuntu-latest
+            toolchain: "cmake/gnu-toolchain.cmake"
+          - description: "Ubuntu LLVM"
+            os: ubuntu-latest
+            toolchain: "cmake/llvm-toolchain.cmake"
+          - description: "Windows MSVC"
+            os: windows-latest
+            toolchain: "cmake/msvc-toolchain.cmake"
+          - description: "Macos Appleclang"
+            os: macos-latest
+            toolchain: "cmake/appleclang-toolchain.cmake"
+        cpp_version: [20, 23, 26]
+        cmake_args:
+          - description: "Default"
+          - description: "TSan"
+            args: "-DBEMAN_BUILDSYS_SANITIZER=TSan"
+          - description: "MaxSan"
+            args: "-DBEMAN_BUILDSYS_SANITIZER=MaxSan"
+        include:
+          - platform:
+              description: "Ubuntu GCC"
+              os: ubuntu-latest
+              toolchain: "cmake/gnu-toolchain.cmake"
+            cpp_version: 20
+            cmake_args:
+              description: "Werror"
+              args: "-DCMAKE_CXX_FLAGS='-Werror=all -Werror=extra'"
+          - platform:
+              description: "Ubuntu GCC"
+              os: ubuntu-latest
+              toolchain: "cmake/gnu-toolchain.cmake"
+            cpp_version: 20
+            cmake_args:
+              description: "Dynamic"
+              args: "-DBUILD_SHARED_LIBS=on"
+        exclude:
+            # MSVC does not support thread sanitizer
+          - platform:
+              description: "Windows MSVC"
+            cmake_args:
+              description: "TSan"
+
+    name: "Unit:
+              ${{ matrix.platform.description }}
+              ${{ matrix.cpp_version }}
+              ${{ matrix.cmake_args.description }}"
+    runs-on: ${{ matrix.platform.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.25.0"
+          ninjaVersion: "^1.11.1"
+      - name: Setup MSVC
+        if: startsWith(matrix.platform.os, 'windows')
+        uses: TheMrMilchmann/setup-msvc-dev@v3
+        with:
+          arch: x64
+      - name: Build and Test
+        uses: ./.github/actions/cmake-build-test
+        with:
+          cpp_version: ${{ matrix.cpp_version }}
+          toolchain_file: ${{ matrix.platform.toolchain }}
+          cmake_extra_args: ${{ matrix.cmake_args.args }}
+
+  configuration-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        args:
+          - name: "Disable build testing"
+            arg: "-DBEMAN_EXECUTION_BUILD_TESTS=OFF"
+          - name: "Disable example building"
+            arg: "-DBEMAN_EXECUTION_BUILD_EXAMPLES=OFF"
+          - name: "Disable config-file package creation"
+            arg: "-DBEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE=OFF"
+    name: "CMake: ${{ matrix.args.name }}"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.25.0"
+          ninjaVersion: "^1.11.1"
+      - name: Build and Test
+        uses: ./.github/actions/cmake-build-test
+        with:
+          cpp_version: 20
+          toolchain_file: "cmake/gnu-toolchain.cmake"
+          cmake_extra_args: ${{ matrix.args.arg }}
+          disable_test: true
+
+  compiler-test:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        compilers:
+          - class: GNU
+            version: 14
+            toolchain: "cmake/gnu-toolchain.cmake"
+          - class: GNU
+            version: 13
+            toolchain: "cmake/gnu-toolchain.cmake"
+          - class: GNU
+            version: 12
+            toolchain: "cmake/gnu-toolchain.cmake"
+          - class: LLVM
+            version: 20
+            toolchain: "cmake/llvm-toolchain.cmake"
+          - class: LLVM
+            version: 19
+            toolchain: "cmake/llvm-toolchain.cmake"
+          - class: LLVM
+            version: 18
+            toolchain: "cmake/llvm-toolchain.cmake"
+          - class: LLVM
+            version: 17
+            toolchain: "cmake/llvm-toolchain.cmake"
+    name: "Compiler: ${{ matrix.compilers.class }} ${{ matrix.compilers.version }}"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.25.0"
+          ninjaVersion: "^1.11.1"
+      - name: Install Compiler
+        id: install-compiler
+        run: |
+          sudo add-apt-repository universe
+          sudo apt-get update
+
+          if [ "${{ matrix.compilers.class }}" = "GNU" ]; then
+            CC=gcc-${{ matrix.compilers.version }}
+            CXX=g++-${{ matrix.compilers.version }}
+
+            sudo apt-get install -y $CC
+            sudo apt-get install -y $CXX
+
+            $CC --version
+            $CXX --version
+          else
+            wget https://apt.llvm.org/llvm.sh
+            chmod +x llvm.sh
+            sudo bash llvm.sh ${{ matrix.compilers.version }}
+
+            CC=clang-${{ matrix.compilers.version }}
+            CXX=clang++-${{ matrix.compilers.version }}
+
+            $CC --version
+            $CXX --version
+          fi
+
+          echo "CC=$CC" >> "$GITHUB_OUTPUT"
+          echo "CXX=$CXX" >> "$GITHUB_OUTPUT"
+      - name: Build and Test
+        uses: ./.github/actions/cmake-build-test
+        with:
+          cpp_version: 20
+          toolchain_file: ${{ matrix.compilers.toolchain }}
+
+  create-issue-when-fault:
+    runs-on: ubuntu-latest
+    needs: [preset-test, gtest-test, configuration-test, compiler-test]
+    if: failure() && github.event_name == 'schedule'
+    steps:
+      # See https://github.com/cli/cli/issues/5075
+      - uses: actions/checkout@v4
+      - name: Create issue
+        run: |
+          issue_num=$(gh issue list -s open -S "[SCHEDULED-BUILD] Build & Test failure" -L 1 --json number | jq 'if length == 0 then -1 else .[0].number end')
+
+          body="**Build-and-Test Failure Report**
+          - **Time of Failure**: $(date -u '+%B %d, %Y, %H:%M %Z')
+          - **Commit**: [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+          - **Action Run**: [View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+          The scheduled build-and-test triggered by cron has failed.
+          Please investigate the logs and recent changes associated with this commit or rerun the workflow if you believe this is an error."
+
+          if [[ $issue_num -eq -1 ]]; then
+            gh issue create --repo ${{ github.repository }} --title "[SCHEDULED-BUILD] Build & Test failure" --body "$body"
+          else
+            gh issue comment --repo ${{ github.repository }} $issue_num --body "$body"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}

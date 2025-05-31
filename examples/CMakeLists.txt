@@ -3,8 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # cmake-format: on
 
-list(
-  APPEND
+set(
   EXAMPLES
   inspect
   playground
@@ -22,9 +21,9 @@ list(
 )
 
 foreach(EXAMPLE ${EXAMPLES})
-  set(EXAMPLE_TARGET ${TARGET_PREFIX}.examples.${EXAMPLE})
+  set(EXAMPLE_TARGET beman.execution.examples.${EXAMPLE})
   add_executable(${EXAMPLE_TARGET})
   target_sources(${EXAMPLE_TARGET} PRIVATE ${EXAMPLE}.cpp)
-  target_link_libraries(${EXAMPLE_TARGET} PRIVATE ${TARGET_NAMESPACE}::${TARGET_NAME})
+  target_link_libraries(${EXAMPLE_TARGET} PRIVATE beman::execution)
   add_test(NAME ${EXAMPLE_TARGET} COMMAND $<TARGET_FILE:${EXAMPLE_TARGET}>)
 endforeach()

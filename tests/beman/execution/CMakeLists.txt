@@ -1,12 +1,5 @@
 # src/beman/execution/tests/CMakeLists.txt
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-cmake_minimum_required(VERSION 3.25...3.31)
-
-project(beman_execution_tests LANGUAGES CXX)
-
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-  message(FATAL_ERROR "In-source builds are not allowed!")
-endif()
 
 list(
   APPEND
@@ -105,51 +98,9 @@ if(NOT DEFINED CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 23)
 endif()
 
-if(NOT DEFINED CMAKE_PREFIX_PATH)
-  set(CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
-endif()
-
-if(PROJECT_IS_TOP_LEVEL)
-  find_package(beman_execution 0.0.1 EXACT QUIET)
-  if(beman_execution_FOUND)
-    set(execution_tests exec-awaitable.test) # only one sample to save time! CK
-  else()
-    set(BEMAN_EXECUTION_ENABLE_INSTALL ON)
-    add_subdirectory(../../.. beman_execution)
-
-    include(CMakePrintHelpers)
-    cmake_print_variables(TARGET_ALIAS TARGET_LIBRARY TARGET_PREFIX PROJECT_SOURCE_DIR)
-  endif()
-endif()
-
-remove_definitions(-DNDEBUG) # NOTE: we want ASSERT statements in Release too! CK
-
 foreach(test ${execution_tests})
-  set(TEST_EXE ${TARGET_PREFIX}.${test})
+  set(TEST_EXE beman.execution.${test})
   add_executable(${TEST_EXE} ${test}.cpp)
   target_link_libraries(${TEST_EXE} PRIVATE beman::execution)
   add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
-
-if(NOT PROJECT_IS_TOP_LEVEL AND BEMAN_EXECUTION_ENABLE_TESTING)
-  # test if the targets are findable from the build directory
-  # cmake-format: off
-  add_test(NAME find-package-test
-    COMMAND ${CMAKE_CTEST_COMMAND}
-      # --verbose
-      --output-on-failure
-      -C $<CONFIG>
-      --build-and-test
-          "${CMAKE_CURRENT_SOURCE_DIR}"
-          "${CMAKE_CURRENT_BINARY_DIR}/find-package-test"
-      --build-generator ${CMAKE_GENERATOR}
-      --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-      --build-options
-          "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
-          "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}"
-          "-DCMAKE_BUILD_TYPE=$<CONFIG>"
-          "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
-          # TODO(CK): Needed too? "--config $<CONFIG>"
-  )
-  # cmake-format: on
-endif()
