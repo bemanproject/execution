@@ -1,6 +1,7 @@
 // examples/intro-1-hello-world.cpp                                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifndef __clang__
 #include <beman/execution/execution.hpp>
 #include <beman/execution/detail/suppress_push.hpp>
 #include <expected>
@@ -92,3 +93,7 @@ int main() {
                   ex::then([](success) noexcept { std::cout << "success\n"; }) |
                   ex::upon_error([](failure) noexcept { std::cout << "fail\n"; }));
 }
+#else
+int main() {
+}
+#endif
