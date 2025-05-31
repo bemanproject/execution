@@ -1,7 +1,6 @@
 // examples/intro-1-hello-world.cpp                                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef __clang__
 #include <beman/execution/execution.hpp>
 #include <beman/execution/detail/suppress_push.hpp>
 #include <expected>
@@ -10,6 +9,11 @@
 #include <tuple>
 #include <cinttypes>
 
+#if __cpp_lib_expected < 202202L
+int main() {
+    std::cout << "this example needs a working std::expected\n";
+}
+#else
 namespace ex = ::beman::execution;
 using namespace std::string_literals;
 
@@ -92,8 +96,5 @@ int main() {
     ex::sync_wait(ex::just(std::expected<success, failure>(success::one)) | expected_to_channel() |
                   ex::then([](success) noexcept { std::cout << "success\n"; }) |
                   ex::upon_error([](failure) noexcept { std::cout << "fail\n"; }));
-}
-#else
-int main() {
 }
 #endif
