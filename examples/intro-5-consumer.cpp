@@ -10,9 +10,7 @@
 #include <cinttypes>
 
 #if __cpp_lib_expected < 202202L
-int main() {
-    std::cout << "this example needs a working std::expected\n";
-}
+int main() { std::cout << "this example needs a working std::expected\n"; }
 #else
 namespace ex = ::beman::execution;
 using namespace std::string_literals;
