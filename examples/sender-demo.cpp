@@ -41,6 +41,8 @@ struct just_sender {
         return {std::forward<Receiver>(r), std::move(value)};
     }
 };
+template <typename T>
+just_sender(T&&) -> just_sender<std::remove_cvref_t<T>>;
 
 static_assert(ex::sender<just_sender<std::pmr::string>>);
 static_assert(ex::sender_in<just_sender<std::pmr::string>>);
