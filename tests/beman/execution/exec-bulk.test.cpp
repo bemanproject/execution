@@ -15,7 +15,7 @@ auto test_bulk() {
     auto b0 = test_std::bulk(test_std::just(), 1, [](int) {});
 
     static_assert(test_std::sender<decltype(b0)>);
-    auto b0_env         = test_std::get_env(b0);
+    auto                  b0_env         = test_std::get_env(b0);
     [[maybe_unused]] auto b0_completions = test_std::get_completion_signatures(b0, b0_env);
     static_assert(
         std::is_same_v<decltype(b0_completions),
@@ -28,7 +28,7 @@ auto test_bulk() {
     auto b1 = test_std::bulk(test_std::just(), 5, [&](int i) { counter += i; });
 
     static_assert(test_std::sender<decltype(b1)>);
-    auto b1_env         = test_std::get_env(b0);
+    auto                  b1_env         = test_std::get_env(b0);
     [[maybe_unused]] auto b1_completions = test_std::get_completion_signatures(b1, b1_env);
     static_assert(
         std::is_same_v<decltype(b1_completions),
@@ -47,7 +47,7 @@ auto test_bulk() {
         results[index] = vec[index] * b[index];
     });
     static_assert(test_std::sender<decltype(b2)>);
-    auto b2_env         = test_std::get_env(b2);
+    auto                  b2_env         = test_std::get_env(b2);
     [[maybe_unused]] auto b2_completions = test_std::get_completion_signatures(b2, b2_env);
     static_assert(
         std::is_same_v<decltype(b2_completions),
@@ -65,8 +65,8 @@ auto test_bulk() {
 }
 
 auto test_bulk_noexept() {
-    auto b0             = test_std::bulk(test_std::just(), 1, [](int) noexcept {});
-    auto b0_env         = test_std::get_env(b0);
+    auto                  b0             = test_std::bulk(test_std::just(), 1, [](int) noexcept {});
+    auto                  b0_env         = test_std::get_env(b0);
     [[maybe_unused]] auto b0_completions = test_std::get_completion_signatures(b0, b0_env);
     static_assert(std::is_same_v<decltype(b0_completions),
                                  beman::execution::completion_signatures<beman::execution::set_value_t()> >,
@@ -78,7 +78,7 @@ auto test_bulk_noexept() {
     auto b1 = test_std::bulk(test_std::just(), 5, [&](int i) noexcept { counter += i; });
 
     static_assert(test_std::sender<decltype(b1)>);
-    auto b1_env         = test_std::get_env(b0);
+    auto                  b1_env         = test_std::get_env(b0);
     [[maybe_unused]] auto b1_completions = test_std::get_completion_signatures(b1, b1_env);
     static_assert(std::is_same_v<decltype(b1_completions),
                                  beman::execution::completion_signatures<beman::execution::set_value_t()> >,

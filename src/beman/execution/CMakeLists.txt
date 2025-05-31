@@ -3,6 +3,13 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # cmake-format: on
 
+project(
+    beman.execution
+    DESCRIPTION "Beman implementation of asynchronous components"
+    LANGUAGES CXX
+    VERSION 0.0.1
+)
+
 include (GNUInstallDirs)
 
 add_library(beman.execution STATIC)
