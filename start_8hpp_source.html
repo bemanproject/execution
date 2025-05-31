@@ -138,20 +138,22 @@ $(document).ready(function(){initNavTree('start_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">auto</span> operator()(<span class="keyword">const</span> State&amp; state) <span class="keyword">const</span> <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        state.start();</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> State&gt;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">auto</span> operator()(State&amp; state) <span class="keyword">const</span> <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        state.start();</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    }</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>};</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structbeman_1_1execution_1_1start__t.html">start_t</a> start{};</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// NOLINTBEGIN(misc-no-recursion)</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> State&gt;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">auto</span> operator()(State&amp; state) <span class="keyword">const</span> <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        state.start();</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">// NOLINTEND(misc-no-recursion)</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>};</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structbeman_1_1execution_1_1start__t.html">start_t</a> start{};</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>} <span class="comment">// namespace beman::execution</span></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> allocator_aware_move.hpp:16</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1start__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1start__t.html">beman::execution::start_t</a></div><div class="ttdef"><b>Definition:</b> start.hpp:14</div></div>
 </div><!-- fragment --></div><!-- contents -->

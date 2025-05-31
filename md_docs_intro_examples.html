@@ -127,7 +127,7 @@ Introduction by Example</h1>
 <div class="line">         ex::when_all(</div>
 <div class="line">             ex::just(<span class="stringliteral">&quot;hello, &quot;</span>s),</div>
 <div class="line">             ex::just(<span class="stringliteral">&quot;world&quot;</span>s)</div>
-<div class="line">         ) | ex::then([](<span class="keyword">auto</span> s1, <span class="keyword">auto</span> s2) { <span class="keywordflow">return</span> s1 + s2; })</div>
+<div class="line">         ) | ex::then([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; s1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; s2) { <span class="keywordflow">return</span> s1 + s2; })</div>
 <div class="line">         ).value_or(std::tuple(<span class="stringliteral">&quot;&quot;</span>s)</div>
 <div class="line">     );</div>
 <div class="line">    <span class="comment">// clang-format on</span></div>
@@ -205,7 +205,7 @@ world"</code>: it uses components for dealing with asynchronous work to synchron
 <div class="line">                     | ex::then([] { std::cout &lt;&lt; <span class="stringliteral">&quot;,\n&quot;</span>; return std::string(<span class="stringliteral">&quot;, &quot;</span>); }),</div>
 <div class="line">                 timer.resume_after(2s)</div>
 <div class="line">                     | ex::then([] { std::cout &lt;&lt; <span class="stringliteral">&quot;w\n&quot;</span>; return std::string(<span class="stringliteral">&quot;world&quot;</span>); })</div>
-<div class="line">             ) | ex::then([](<span class="keyword">auto</span> s1, <span class="keyword">auto</span> s2, <span class="keyword">auto</span> s3) { return s1 + s2 + s3; })</div>
+<div class="line">             ) | ex::then([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; s1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; s2, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; s3) { return s1 + s2 + s3; })</div>
 <div class="line">         )</div>
 <div class="line">     ).value_or(std::tuple(std::string(<span class="stringliteral">&quot;&quot;</span>)));</div>
 <div class="line">    <span class="comment">// clang-format on</span></div>
