@@ -142,5 +142,5 @@ clean: clean-doc
 	cmake --build $(BUILD) --target clean
 	$(RM) mkerr olderr *~
 
-distclean: clean
+distclean:
 	$(RM) -r $(BUILDROOT) stagedir
