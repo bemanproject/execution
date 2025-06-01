@@ -123,8 +123,8 @@ struct intro::timer {
 
     auto run() { return run_sender{this}; }
 
-    template <typename T>
-    auto resume_after(std::chrono::duration<T> d) {
+    template <typename T, typename P>
+    auto resume_after(std::chrono::duration<T, P> d) {
         auto ms(std::chrono::duration_cast<std::chrono::milliseconds>(d));
         return sender{this, ms};
     }

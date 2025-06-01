@@ -100,3 +100,26 @@ foreach(test ${execution_tests})
   target_link_libraries(${TEST_EXE} PRIVATE beman::execution)
   add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
+
+if(NOT PROJECT_IS_TOP_LEVEL AND BEMAN_EXECUTION_ENABLE_TESTING)
+  # test if the targets are findable from the build directory
+  # cmake-format: off
+  add_test(NAME find-package-test
+    COMMAND ${CMAKE_CTEST_COMMAND}
+      # --verbose
+      --output-on-failure
+      -C $<CONFIG>
+      --build-and-test
+          "${CMAKE_CURRENT_SOURCE_DIR}"
+          "${CMAKE_CURRENT_BINARY_DIR}/find-package-test"
+      --build-generator ${CMAKE_GENERATOR}
+      --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+      --build-options
+          "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+          "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}"
+          "-DCMAKE_BUILD_TYPE=$<CONFIG>"
+          "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+          # TODO(CK): Needed too? "--config $<CONFIG>"
+  )
+  # cmake-format: on
+endif()
