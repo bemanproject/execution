@@ -118,7 +118,7 @@ clang-tidy: $(BUILD)/compile_commands.json
 	run-clang-tidy -p $(BUILD) tests examples
 
 codespell:
-	codespell -L statics,snd,copyable,cancelled
+	codespell -w
 
 format: cmake-format clang-format
 

@@ -5,6 +5,8 @@
 
 include(GNUInstallDirs)
 
+find_package(Threads REQUIRED)
+
 add_library(beman.execution STATIC)
 add_library(beman::execution ALIAS beman.execution)
 
@@ -189,11 +191,7 @@ get_property(DETAIL_HEADER_FILES TARGET beman.execution PROPERTY HEADER_SET_bema
 source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 set_target_properties(beman.execution PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
-
-target_compile_features(beman.execution PUBLIC
-    "$<$<COMPILE_FEATURES:cxx_std_26>:cxx_std_26>"
-    "$<$<NOT:$<COMPILE_FEATURES:cxx_std_26>>:cxx_std_23>"
-)
+target_link_libraries(beman.execution PUBLIC Threads::Threads)
 
 install(
     TARGETS beman.execution COMPONENT beman.execution
