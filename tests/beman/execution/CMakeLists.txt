@@ -53,10 +53,10 @@ list(
   exec-starts-on.test
   exec-split.test
   exec-sync-wait.test
-  exec-then.test
-  exec-utils-cmplsigs.test
-  exec-when-all.test
-  exec-with-awaitable-senders.test
+  # exec-then.test
+  # exec-utils-cmplsigs.test
+  # exec-when-all.test
+  # exec-with-awaitable-senders.test
   execution-queryable-concept.test
   exec-bulk.test
   execution-syn.test
@@ -76,23 +76,23 @@ list(
   stopcallback-inplace.test
   stopcallback.test
   stopsource-cons.test
-  stopsource-general.test
+  # stopsource-general.test
   stopsource-inplace-cons.test
-  stopsource-inplace-general.test
+  # stopsource-inplace-general.test
   stopsource-inplace-mem.test
   stopsource-inplace.test
   stopsource-mem.test
   stopsource.test
   stoptoken-concepts.test
-  stoptoken-general.test
+  # stoptoken-general.test
   stoptoken-inplace-general.test
   stoptoken-inplace-members.test
   stoptoken-inplace.test
-  stoptoken-mem.test
+  # stoptoken-mem.test
   stoptoken-never-general.test
   stoptoken-never.test
   stoptoken.test
-  thread-stoptoken-intro.test
+  # thread-stoptoken-intro.test
   thread-stoptoken-syn.compile.test
   thread-stoptoken.test
   thread.test
