@@ -47,7 +47,7 @@ struct expected_to_channel_t {
     template <ex::sender CSender, ex::receiver Receiver>
     struct state {
         using operation_state_concept = ex::operation_state_t;
-        using child_state_t = decltype(ex::connect(std::declval<CSender>(), std::declval<own_receiver<Receiver>>()));
+        using child_state_t = decltype(ex::connect(std::declval<CSender>(), std::declval<own_receiver<Receiver> >()));
         Receiver      parent_receiver;
         child_state_t child_state;
         template <ex::sender S, ex::receiver R>
@@ -73,17 +73,17 @@ struct expected_to_channel_t {
         CSender child_sender;
 
         template <ex::receiver Receiver>
-        state<CSender, std::remove_cvref_t<Receiver>> connect(Receiver&& receiver) && {
+        state<CSender, std::remove_cvref_t<Receiver> > connect(Receiver&& receiver) && {
             return {std::move(this->child_sender), std::forward<Receiver>(receiver)};
         }
         template <ex::receiver Receiver>
-        state<CSender, std::remove_cvref_t<Receiver>> connect(Receiver&& receiver) const& {
+        state<CSender, std::remove_cvref_t<Receiver> > connect(Receiver&& receiver) const& {
             return {this->child_sender, std::forward<Receiver>(receiver)};
         }
     };
 
     template <ex::sender CSender>
-    sender<std::remove_cvref_t<CSender>> operator()(CSender&& child_sender) const {
+    sender<std::remove_cvref_t<CSender> > operator()(CSender&& child_sender) const {
         return {std::forward<CSender>(child_sender)};
     }
     auto operator()() const { return ex::detail::sender_adaptor{*this}; }

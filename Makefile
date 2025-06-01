@@ -123,7 +123,7 @@ codespell:
 format: cmake-format clang-format
 
 cmake-format:
-	cmake-format -i `git diff --name-only main | egrep '(CMakeLists.txt|\.cmake)'`
+	git ls-files ::*.cmake ::*CMakeLists.txt | xargs cmake-format -i
 
 clang-format:
 	git clang-format main

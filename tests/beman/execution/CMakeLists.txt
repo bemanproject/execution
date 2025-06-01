@@ -94,10 +94,6 @@ list(
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-if(NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 23)
-endif()
-
 foreach(test ${execution_tests})
   set(TEST_EXE beman.execution.${test})
   add_executable(${TEST_EXE} ${test}.cpp)

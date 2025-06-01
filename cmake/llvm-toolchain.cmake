@@ -19,11 +19,11 @@ set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
 
 if(BEMAN_BUILDSYS_SANITIZER STREQUAL "MaxSan")
-    set(SANITIZER_FLAGS
-        "-fsanitize=address -fsanitize=leak -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize=undefined -fsanitize-undefined-trap-on-error"
-    )
+  set(SANITIZER_FLAGS
+      "-fsanitize=address -fsanitize=leak -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize=undefined -fsanitize-undefined-trap-on-error"
+  )
 elseif(BEMAN_BUILDSYS_SANITIZER STREQUAL "TSan")
-    set(SANITIZER_FLAGS "-fsanitize=thread")
+  set(SANITIZER_FLAGS "-fsanitize=thread")
 endif()
 
 set(CMAKE_C_FLAGS_DEBUG_INIT "${SANITIZER_FLAGS}")
