@@ -3,7 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # cmake-format: on
 
-include (GNUInstallDirs)
+include(GNUInstallDirs)
+
+find_package(Threads REQUIRED)
 
 add_library(beman.execution STATIC)
 add_library(beman::execution ALIAS beman.execution)
@@ -189,51 +191,41 @@ get_property(DETAIL_HEADER_FILES TARGET beman.execution PROPERTY HEADER_SET_bema
 source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 set_target_properties(beman.execution PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
-
-target_compile_features(beman.execution PUBLIC
-  "$<$<COMPILE_FEATURES:cxx_std_26>:cxx_std_26>"
-  "$<$<NOT:$<COMPILE_FEATURES:cxx_std_26>>:cxx_std_23>"
-)
+target_link_libraries(beman.execution PUBLIC Threads::Threads)
 
 install(
-  TARGETS beman.execution COMPONENT beman.execution
-  EXPORT beman.execution
-  DESTINATION $<$<CONFIG:Debug>:debug/>${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION $<$<CONFIG:Debug>:debug/>${CMAKE_INSTALL_BINDIR}
-  FILE_SET beman_execution_public_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  FILE_SET beman_execution_detail_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    TARGETS beman.execution COMPONENT beman.execution
+    EXPORT beman.execution
+    DESTINATION $<$<CONFIG:Debug>:debug/>${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION $<$<CONFIG:Debug>:debug/>${CMAKE_INSTALL_BINDIR}
+    FILE_SET beman_execution_public_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILE_SET beman_execution_detail_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 # cmake-format: on
 
 if(BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE)
-    include(CMakePackageConfigHelpers)
+  include(CMakePackageConfigHelpers)
 
-    configure_package_config_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/beman.execution-config.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-config.cmake"
-        INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/beman.execution"
-        PATH_VARS PROJECT_NAME PROJECT_VERSION
-    )
+  configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/beman.execution-config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-config.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/beman.execution" PATH_VARS PROJECT_NAME PROJECT_VERSION
+  )
 
-    write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-version.cmake"
-        VERSION ${PROJECT_VERSION}
-        COMPATIBILITY ExactVersion
-    )
+  write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-version.cmake" VERSION ${PROJECT_VERSION} COMPATIBILITY ExactVersion
+  )
 
-    install(
-        FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-config.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-version.cmake"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/beman.execution"
-        COMPONENT beman.execution
-    )
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-config.cmake"
+                "${CMAKE_CURRENT_BINARY_DIR}/beman.execution-version.cmake"
+          DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/beman.execution" COMPONENT beman.execution
+  )
 
-    install(
-        EXPORT beman.execution
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/beman.execution"
-        NAMESPACE beman::
-        FILE beman.execution-targets.cmake
-        COMPONENT beman.execution
-    )
+  install(
+    EXPORT beman.execution
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/beman.execution"
+    NAMESPACE beman::
+    FILE beman.execution-targets.cmake
+    COMPONENT beman.execution
+  )
 endif()

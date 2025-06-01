@@ -80,9 +80,9 @@ doc:
 # 	$(MAKE) SANITIZER=$@
 
 build:
-	CC=$(CXX) cmake --fresh -G Ninja -S $(SOURCEDIR) -B  $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
+	CC=$(CXX) cmake --fresh -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 \
-	  -D CMAKE_CXX_COMPILER=$(CXX) # XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	  -D CMAKE_CXX_COMPILER=$(CXX) -D CMAKE_CXX_STANDARD=23 # XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
 test: build
@@ -92,10 +92,10 @@ install: test
 	cmake --install $(BUILD) --prefix $(INSTALL_PREFIX)
 
 release:
-	cmake --workflow --preset $@ --fresh
+	cmake --workflow --preset $(WORKFLOW)$@ --fresh
 
 debug:
-	cmake --workflow --preset $@ --fresh
+	cmake --workflow --preset $(WORKFLOW)$@ --fresh
 
 ce:
 	@mkdir -p $(BUILD)
@@ -118,12 +118,12 @@ clang-tidy: $(BUILD)/compile_commands.json
 	run-clang-tidy -p $(BUILD) tests examples
 
 codespell:
-	codespell -L statics,snd,copyable,cancelled
+	codespell -w
 
 format: cmake-format clang-format
 
 cmake-format:
-	cmake-format -i `git diff --name-only main | egrep '(CMakeLists.txt|\.cmake)'`
+	git ls-files ::*.cmake ::*.cmake.in ::*CMakeLists.txt | xargs cmake-format -i
 
 clang-format:
 	git clang-format main
