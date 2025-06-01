@@ -1,5 +1,8 @@
 set(BEMAN_EXECUTION_VERSION @PROJECT_VERSION@)
 
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+
 @PACKAGE_INIT@
 
 include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)

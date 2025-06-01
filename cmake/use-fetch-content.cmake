@@ -147,4 +147,5 @@ function(BemanExemplar_provideDependency method package_name)
   endforeach()
 endfunction()
 
-cmake_language(SET_DEPENDENCY_PROVIDER BemanExemplar_provideDependency SUPPORTED_METHODS FIND_PACKAGE)
+# FIXME: Sinnfrei!
+# cmake_language(SET_DEPENDENCY_PROVIDER BemanExemplar_provideDependency SUPPORTED_METHODS FIND_PACKAGE)
