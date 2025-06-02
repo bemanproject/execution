@@ -10,6 +10,10 @@
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
+#include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/set_error.hpp>
+#include <beman/execution/detail/set_stopped.hpp>
+#include <beman/execution/detail/set_value.hpp>
 #include <utility>
 #include <variant>
 #include <type_traits>
@@ -28,9 +32,10 @@ namespace beman::execution::detail {
     template <typename Completions> struct spawn_future_state_base;
     template <typename... Sigs>
     struct spawn_future_state_base<::beman::execution::completion_signatures<Sigs...>> {
+        static constexpr bool has_non_throwing_args_copy = (true && ... && non_throwing_args_copy_v<Sigs>);
         using variant_t = ::beman::execution::detail::meta::unique<
             ::std::conditional_t<
-                (true && ... && non_throwing_args_copy_v<Sigs>),
+                has_non_throwing_args_copy,
                 ::std::variant<::std::monostate, ::beman::execution::detail::as_tuple_t<Sigs>...>,
                 ::std::variant<::std::monostate, ::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>, ::beman::execution::detail::as_tuple_t<Sigs>...>
             >
@@ -39,6 +44,39 @@ namespace beman::execution::detail {
         variant_t result{};
         virtual ~spawn_future_state_base() = default;
         virtual auto complete() noexcept -> void = 0;
+    };
+
+    template <typename Completions>
+    struct spawn_future_receiver {
+        using receiver_concept = ::beman::execution::receiver_t;
+        using state_t = ::beman::execution::detail::spawn_future_state_base<Completions>;
+
+        state_t* state{};
+
+        template <typename... A>
+        auto set_value(A&&... a) && noexcept -> void {
+            this->set_complete<::beman::execution::set_value_t>(::std::forward<A>(a)...);
+        }
+        template <typename E>
+        auto set_error(E&& e) && noexcept -> void {
+            this->set_complete<::beman::execution::set_error_t>(::std::forward<E>(e));
+        }
+        auto set_stopped() && noexcept -> void {
+            this->set_complete<::beman::execution::set_stopped_t>();
+        }
+
+        template <typename Tag, typename... T>
+        auto set_complete(T&&... t) noexcept {
+            try {
+                this->state->result.template emplace<::beman::execution::detail::decayed_tuple<Tag, T...>>(Tag(), ::std::forward<T>(t)...);
+            }
+            catch (...) {
+                if constexpr (!state_t::has_non_throwing_args_copy) {
+                    this->state->result.template emplace<::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>>(::beman::execution::set_error_t{}, ::std::current_exception());
+                }
+            }
+            this->state->complete();
+        }
     };
 
     class spawn_future_t {

@@ -5,6 +5,7 @@
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/async_scope_token.hpp>
+#include <beman/execution/detail/receiver.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 
@@ -37,9 +38,10 @@ namespace
     static_assert(test_std::async_scope_token<token<true>>);
     static_assert(not test_std::async_scope_token<token<false>>);
 
+    struct exception { int value; };
     struct throws {
         throws() = default;
-        throws(throws&&) noexcept(false) = default;
+        throws(throws&&) noexcept(false) { throw exception{42}; }
     };
     static_assert(!std::is_nothrow_constructible_v<std::decay_t<throws>, throws>);
 
@@ -53,7 +55,8 @@ namespace
 
     template <typename Completions>
     struct state_base: test_detail::spawn_future_state_base<Completions> {
-        auto complete() noexcept -> void override {}
+        bool called{false};
+        auto complete() noexcept -> void override { this->called = true; }
     };
     auto test_state_base() {
         static_assert(noexcept(std::declval<test_detail::spawn_future_state_base<test_std::completion_signatures<>>&>().complete()));
@@ -81,6 +84,83 @@ namespace
         [[maybe_unused]] state4_t b4;
         static_assert(std::same_as<std::variant<std::monostate, std::tuple<test_std::set_error_t, std::exception_ptr>, std::tuple<test_std::set_value_t, throws>>, typename state4_t::variant_t>);
         static_assert(std::same_as<state4_t::variant_t, decltype(b4.result)>);
+
+        using state5_t = state_base<test_std::completion_signatures<test_std::set_stopped_t()>>;
+        [[maybe_unused]] state5_t b5;
+        static_assert(std::same_as<std::variant<std::monostate, std::tuple<test_std::set_stopped_t>>, typename state5_t::variant_t>);
+        static_assert(std::same_as<state5_t::variant_t, decltype(b5.result)>);
+    }
+
+    auto test_receiver() {
+        {
+        using c_t = test_std::completion_signatures<test_std::set_stopped_t()>;
+        state_base<c_t> state{};
+        ASSERT(state.called == false);
+        ASSERT(std::holds_alternative<std::monostate>(state.result));
+        static_assert(test_std::receiver<test_detail::spawn_future_receiver<c_t>>);
+        [[maybe_unused]] test_detail::spawn_future_receiver<c_t> r0{&state};
+        [](auto&& r){ static_assert(not requires{ r.set_stopped(); }); }(r0);
+        static_assert(noexcept(std::move(r0).set_stopped()));
+        std::move(r0).set_stopped();
+        ASSERT(state.called == true);
+        ASSERT((std::holds_alternative<std::tuple<test_std::set_stopped_t>>(state.result)));
+        }
+
+        {
+        using c_t = test_std::completion_signatures<test_std::set_error_t(int)>;
+        state_base<c_t> state{};
+        ASSERT(state.called == false);
+        ASSERT(std::holds_alternative<std::monostate>(state.result));
+        static_assert(test_std::receiver<test_detail::spawn_future_receiver<c_t>>);
+        [[maybe_unused]] test_detail::spawn_future_receiver<c_t> r0{&state};
+        [](auto&& r){ static_assert(not requires{ r.set_error(17); }); }(r0);
+        static_assert(noexcept(std::move(r0).set_error(17)));
+        std::move(r0).set_error(17);
+        ASSERT(state.called == true);
+        ASSERT((std::holds_alternative<std::tuple<test_std::set_error_t, int>>(state.result)));
+        ASSERT((std::get<1>(std::get<std::tuple<test_std::set_error_t, int>>(state.result)) == 17));
+        }
+
+        {
+        using c_t = test_std::completion_signatures<test_std::set_value_t(int, bool, char)>;
+        state_base<c_t> state{};
+        ASSERT(state.called == false);
+        ASSERT(std::holds_alternative<std::monostate>(state.result));
+        static_assert(test_std::receiver<test_detail::spawn_future_receiver<c_t>>);
+        [[maybe_unused]] test_detail::spawn_future_receiver<c_t> r0{&state};
+        [](auto&& r){ static_assert(not requires{ r.set_value(17, true, 'x'); }); }(r0);
+        static_assert(noexcept(std::move(r0).set_value(17, true, 'x')));
+        std::move(r0).set_value(17, true, 'x');
+        ASSERT(state.called == true);
+        ASSERT((std::holds_alternative<std::tuple<test_std::set_value_t, int, bool, char>>(state.result)));
+        ASSERT((std::get<1>(std::get<std::tuple<test_std::set_value_t, int, bool, char>>(state.result)) == 17));
+        ASSERT((std::get<2>(std::get<std::tuple<test_std::set_value_t, int, bool, char>>(state.result)) == true));
+        ASSERT((std::get<3>(std::get<std::tuple<test_std::set_value_t, int, bool, char>>(state.result)) == 'x'));
+        }
+
+        {
+        using c_t = test_std::completion_signatures<test_std::set_value_t(int, throws, char)>;
+        state_base<c_t> state{};
+        ASSERT(state.called == false);
+        ASSERT(std::holds_alternative<std::monostate>(state.result));
+        static_assert(test_std::receiver<test_detail::spawn_future_receiver<c_t>>);
+        [[maybe_unused]] test_detail::spawn_future_receiver<c_t> r0{&state};
+        [](auto&& r){ static_assert(not requires{ r.set_value(17, throws(), 'x'); }); }(r0);
+        static_assert(noexcept(std::move(r0).set_value(17, throws(), 'x')));
+        std::move(r0).set_value(17, throws(), 'x');
+        ASSERT(state.called == true);
+        ASSERT((std::holds_alternative<std::tuple<test_std::set_error_t, std::exception_ptr>>(state.result)));
+        try {
+            std::rethrow_exception(std::get<1>(std::get<std::tuple<test_std::set_error_t, std::exception_ptr>>(state.result)));
+            ASSERT(nullptr == "not reached");
+        }
+        catch (exception const& ex) {
+            ASSERT(ex.value == 42);
+        }
+        catch (...) {
+            ASSERT(nullptr == "not reached");
+        }
+        }
     }
 }
 
@@ -92,4 +172,5 @@ TEST(exec_spawn_future) {
     test_spawn_future_interface<false>(sender{}, token<true>{}, *new non_env{});
 
     test_state_base();
+    test_receiver();
 }
