@@ -27,6 +27,8 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/execution.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/functional.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/stop_token.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/execution.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/stop_token.hpp
   PUBLIC FILE_SET
          ${TARGET_NAME}_detail_headers
          TYPE
@@ -39,6 +41,8 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/apply_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_awaitable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_except_ptr.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_tuple.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/async_scope_token.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/atomic_intrusive_stack.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/await_result_type.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/await_suspend_result.hpp
@@ -47,6 +51,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/basic_receiver.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/basic_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/basic_state.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/bulk.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/call_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/callable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/check_type_alias_exist.hpp
@@ -65,6 +70,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect_awaitable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/continues_on.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_same_as.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_tuple.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_type_list.hpp
@@ -119,6 +125,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_transform.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_unique.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/movable_value.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nest.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/never_stop_token.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nostopstate.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nothrow_callable.hpp
@@ -156,6 +163,8 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/simple_counting_scope.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/single_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/single_sender_value_type.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_future.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/split.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/start.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/starts_on.hpp

@@ -12,6 +12,7 @@ list(
   APPEND
   execution_tests
   exec-scope-simple-counting.test
+  exec-spawn-future.test
   exec-scope-concepts.test
   exec-nest.test
   issue-144.test
