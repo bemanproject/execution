@@ -11,6 +11,7 @@ endif()
 list(
   APPEND
   execution_tests
+  exec-prop.test
   exec-scope-simple-counting.test
   exec-spawn-future.test
   exec-scope-concepts.test

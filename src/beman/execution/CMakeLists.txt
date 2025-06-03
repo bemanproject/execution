@@ -135,6 +135,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state_task.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/product_type.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/prop.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/query_with_default.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/queryable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/read_env.hpp
