@@ -24,11 +24,11 @@ int main() {
          ex::when_all(
              timer.run(),
              ex::when_all(
-                 timer.resume_after(3s)
+                 timer.resume_after(30ms)
                      | ex::then([] { std::cout << "h\n"; return std::string("hello"); }),
-                 timer.resume_after(1s)
+                 timer.resume_after(10ms)
                      | ex::then([] { std::cout << ",\n"; return std::string(", "); }),
-                 timer.resume_after(2s)
+                 timer.resume_after(20ms)
                      | ex::then([] { std::cout << "w\n"; return std::string("world"); })
              ) | ex::then([](auto const& s1, auto const& s2, auto const& s3) { return s1 + s2 + s3; })
          )

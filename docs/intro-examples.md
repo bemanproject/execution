@@ -6,7 +6,7 @@ This page provides a series of examples showing how to use the
 `std::execution` components.
 
 <details>
-<summary>`"Hello, world"` - synchronous using asynchronous components</summary>
+<summary><code>"Hello, world"</code> - synchronous using asynchronous components</summary>
 
 Code: [`examples/intro-1-hello-world.cpp`]()
 @include examples/intro-1-hello-world.cpp
@@ -17,7 +17,7 @@ synchronously produce the result. The intention is to show a basic
 use of some involved components to build up a feeling of how things
 work.
 
-The componentes for `std::execution` are declared in the header
+The components for `std::execution` are declared in the header
 `<execution>`.  This particular implementation implements the
 cmponents in namespace `beman::execution` declared in the header
 `<beman/execution/execution.hpp>`:
@@ -124,7 +124,7 @@ The components used in this example do all of that synchronously:
 </details>
 
 <details>
-<summary>`"Hello, async"` - a simple asynchronous example</summary>
+<summary><code>"Hello, async"</code> - a simple asynchronous example</summary>
 
 Code: [`examples/intro-2-hello-async.cpp`]()
 @include examples/intro-2-hello-async.cpp

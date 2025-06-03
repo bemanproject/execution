@@ -38,6 +38,7 @@ SYSTEM    = $(shell uname -s)
 BUILD     = $(BUILDROOT)/$(SYSTEM)/$(SANITIZER)
 EXAMPLE   = beman.execution.examples.stop_token
 CMAKE_CXX_COMPILER=$(COMPILER)
+INSTALL_PREFIX = /opt/local
 
 ifeq ($(SANITIZER),release)
     CXX_FLAGS = -O3 -Wpedantic -Wall -Wextra -Wno-shadow -Werror
@@ -79,24 +80,22 @@ doc:
 # 	$(MAKE) SANITIZER=$@
 
 build:
-	CC=$(CXX) cmake --fresh -G Ninja -S $(SOURCEDIR) -B  $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
+	CC=$(CXX) cmake --fresh -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 \
-	  -D CMAKE_SKIP_INSTALL_RULES=1 \
-	  -D CMAKE_CXX_COMPILER=$(CXX) # XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	  -D CMAKE_CXX_COMPILER=$(CXX) -D CMAKE_CXX_STANDARD=23 # XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
-# NOTE: without install! CK
 test: build
-	ctest --test-dir $(BUILD) --rerun-failed --output-on-failure
+	ctest --test-dir $(BUILD) --output-on-failure
 
 install: test
-	cmake --install $(BUILD) --prefix /opt/local
+	cmake --install $(BUILD) --prefix $(INSTALL_PREFIX)
 
 release:
-	cmake --workflow --preset $@ --fresh
+	cmake --workflow --preset $(WORKFLOW)$@ --fresh
 
 debug:
-	cmake --workflow --preset $@ --fresh
+	cmake --workflow --preset $(WORKFLOW)$@ --fresh
 
 ce:
 	@mkdir -p $(BUILD)
@@ -119,12 +118,12 @@ clang-tidy: $(BUILD)/compile_commands.json
 	run-clang-tidy -p $(BUILD) tests examples
 
 codespell:
-	codespell -L statics,snd,copyable,cancelled
+	codespell -w
 
 format: cmake-format clang-format
 
 cmake-format:
-	cmake-format -i `git diff --name-only main | egrep '(CMakeLists.txt|\.cmake)'`
+	git ls-files ::*.cmake ::*.cmake.in ::*CMakeLists.txt | xargs cmake-format -i
 
 clang-format:
 	git clang-format main
@@ -143,5 +142,5 @@ clean: clean-doc
 	cmake --build $(BUILD) --target clean
 	$(RM) mkerr olderr *~
 
-distclean: clean
+distclean:
 	$(RM) -r $(BUILDROOT) stagedir

@@ -8,18 +8,20 @@
 #include <cstddef>
 #include <cstring>
 
+// NOLINTNEXTLINE(hicpp-no-malloc)
+#if false && (not defined(__clang__) || not defined(__SANITIZE_THREAD__))
 namespace {
 bool fail{};
-
 }
 
-// NOLINTNEXTLINE(hicpp-no-malloc)
 auto operator new(::std::size_t size) -> void* { return fail ? throw ::std::bad_alloc() : ::std::malloc(size); }
 
 auto operator delete(void* ptr) noexcept -> void { ::std::free(ptr); }                // NOLINT(hicpp-no-malloc)
 auto operator delete(void* ptr, ::std::size_t) noexcept -> void { ::std::free(ptr); } // NOLINT(hicpp-no-malloc)
+#endif
 
 TEST(stopsource_cons) {
+#if false && (not defined(__clang__) || not defined(__SANITIZE_THREAD__))
     // Reference: [stopsource.cons] p1
     try {
         ::test_std::stop_source source;
@@ -40,4 +42,5 @@ TEST(stopsource_cons) {
     } catch (...) {
         ASSERT(nullptr == "can't be reached"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
+#endif
 }

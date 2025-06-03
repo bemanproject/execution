@@ -21,7 +21,7 @@ struct non_opstate {
 template <bool Noexcept>
 struct opstate {
     receiver rcvr;
-    auto     start() const noexcept(Noexcept) -> void { test_std::set_value(receiver(this->rcvr.value), 42); }
+    auto     start() const noexcept(Noexcept) -> void { test_std::set_value(receiver{this->rcvr.value}, 42); }
 };
 
 template <typename State>

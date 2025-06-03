@@ -409,7 +409,7 @@ struct custom_t: forwarding_query_t {
 <summary><code>get_env(<i>queryable</i>) -> <i>env</i></code></summary>
 **Default**: <a href='#empty_env'>`empty_env`</a>
 <br/>
-The expresion <code>get_env(<i>queryable</i>)</code> is used to get the environment <code><i>env</i></code> associated with <code><i>queryable</i></code>. To provide a non-default environment for a <code><i>queryable</i></code> a `get_env` member needs to be defined. If <code><i>queryable</i></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href=‘#empty_env’>empty_env</a></code> is returned.
+The expression <code>get_env(<i>queryable</i>)</code> is used to get the environment <code><i>env</i></code> associated with <code><i>queryable</i></code>. To provide a non-default environment for a <code><i>queryable</i></code> a `get_env` member needs to be defined. If <code><i>queryable</i></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href=‘#empty_env’>empty_env</a></code> is returned.
 The value of the expression is <ol>
    <li>the result of <code>as_const(<i>queryable</i>).get_env()</code> if this expression is valid and <code>noexcept</code>.</li>
    <li><code>empty_env</code> otherwise.
@@ -560,7 +560,7 @@ Otherwise the value is <code>never_stop_token{}</code>.
 
 <details>
 <summary><code>connect(<i>sender</i>, <i>receiver</i>) -> <i>operation_state</i></code></summary>
-The expresion <code>connect(<i>sender</i>, <i>receiver</i>)</code> combines <code><i>sender</i></code> and <code><i>receiver</i></code> into an operation state <code><i>state</i></code>. When this <code><i>state</i></code> gets started using <code>start(<i>state</i>)</code> the operation represented by <code><i>sender</i></code> gets started and reports its completion to <code><i>receiver</i></code> or an object copied or moved from <code><i>receiver</i></code>. While the operation state <code><i>state</i></code> isn’t started it can be destroyed but once it got started it needs to stay valid until one of the completion signals is called on <code><i>receiver</i></code>.
+The expression <code>connect(<i>sender</i>, <i>receiver</i>)</code> combines <code><i>sender</i></code> and <code><i>receiver</i></code> into an operation state <code><i>state</i></code>. When this <code><i>state</i></code> gets started using <code>start(<i>state</i>)</code> the operation represented by <code><i>sender</i></code> gets started and reports its completion to <code><i>receiver</i></code> or an object copied or moved from <code><i>receiver</i></code>. While the operation state <code><i>state</i></code> isn’t started it can be destroyed but once it got started it needs to stay valid until one of the completion signals is called on <code><i>receiver</i></code>.
 </details>
 <details>
 <summary><code>set_error(<i>receiver</i>, <i>error</i>) noexcept -> void</code></summary>
@@ -655,7 +655,7 @@ The expression <code>continues_on(<i>sender</i>, <i>scheduler</i>)</code> create
 </details>
 <details>
 <summary><code>into_variant(<i>sender</i>) -> <i>sender-of</i>&lt;set_value_t(std::variant&lt;<i>Tuple</i>...&gt;)&gt;</code></summary>
-The expression <code>into_variant(<i>sender</i>)</code> creates a sender which transforms the results of possibly multiple <code>set_value</code> completions of <code><i>sender</i></code> into one <code>set_value</code> completion respresenting the different upstream results as different options of a <code>variant&lt;<i>Tuple</i>...&gt;</code> where each <code><i>Tuple</i></code> is a <code>tuple</code> of values initialized with the respective arguments passed to <code>set_value</code>. The order of options in the <code>variant</code> isn’t specified.
+The expression <code>into_variant(<i>sender</i>)</code> creates a sender which transforms the results of possibly multiple <code>set_value</code> completions of <code><i>sender</i></code> into one <code>set_value</code> completion representing the different upstream results as different options of a <code>variant&lt;<i>Tuple</i>...&gt;</code> where each <code><i>Tuple</i></code> is a <code>tuple</code> of values initialized with the respective arguments passed to <code>set_value</code>. The order of options in the <code>variant</code> isn’t specified.
 </details>
 <details>
 <summary><code>let_error(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>

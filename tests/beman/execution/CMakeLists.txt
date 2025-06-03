@@ -1,12 +1,5 @@
 # src/beman/execution/tests/CMakeLists.txt
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-cmake_minimum_required(VERSION 3.25...3.31)
-
-project(beman_execution_tests LANGUAGES CXX)
-
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-  message(FATAL_ERROR "In-source builds are not allowed!")
-endif()
 
 list(
   APPEND
@@ -101,32 +94,8 @@ list(
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-if(NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 23)
-endif()
-
-if(NOT DEFINED CMAKE_PREFIX_PATH)
-  set(CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
-endif()
-
-if(PROJECT_IS_TOP_LEVEL)
-  enable_testing()
-  find_package(beman_execution 0.0.1 EXACT QUIET)
-  if(beman_execution_FOUND)
-    set(execution_tests exec-awaitable.test) # only one sample to save time! CK
-  else()
-    set(BEMAN_EXECUTION_ENABLE_INSTALL ON)
-    add_subdirectory(../../.. beman_execution)
-
-    include(CMakePrintHelpers)
-    cmake_print_variables(TARGET_ALIAS TARGET_LIBRARY TARGET_PREFIX PROJECT_SOURCE_DIR)
-  endif()
-endif()
-
-remove_definitions(-DNDEBUG) # NOTE: we want ASSERT statements in Release too! CK
-
 foreach(test ${execution_tests})
-  set(TEST_EXE ${TARGET_PREFIX}.${test})
+  set(TEST_EXE beman.execution.${test})
   add_executable(${TEST_EXE} ${test}.cpp)
   target_link_libraries(${TEST_EXE} PRIVATE beman::execution)
   add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
