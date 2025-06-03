@@ -9,19 +9,19 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-    template <typename Query, typename Value>
-    struct prop {
-        [[no_unique_address]] Query query_;
-        Value value_;
+template <typename Query, typename Value>
+struct prop {
+    [[no_unique_address]] Query query_;
+    Value                       value_;
 
-        auto operator=(prop const&) = delete;
+    auto operator=(const prop&) = delete;
 
-        constexpr auto query(Query) const noexcept -> Value { return this->value_; }
-    };
+    constexpr auto query(Query) const noexcept -> Value { return this->value_; }
+};
 
-    template <typename Query, typename Value>
-    prop(Query, Value) -> prop<Query, ::std::unwrap_reference_t<Value>>; 
-}
+template <typename Query, typename Value>
+prop(Query, Value) -> prop<Query, ::std::unwrap_reference_t<Value>>;
+} // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 

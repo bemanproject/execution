@@ -173,6 +173,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_callback_for_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_source.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_token_of_t.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_when.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stoppable_source.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stoppable_token.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suppress_pop.hpp

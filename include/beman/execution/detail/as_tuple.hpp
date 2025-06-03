@@ -9,12 +9,16 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-    template <typename T> struct as_tuple;
-    template <typename Rc, typename... A>
-    struct as_tuple<Rc(A...)> { using type = ::beman::execution::detail::decayed_tuple<Rc, A...>; };
+template <typename T>
+struct as_tuple;
+template <typename Rc, typename... A>
+struct as_tuple<Rc(A...)> {
+    using type = ::beman::execution::detail::decayed_tuple<Rc, A...>;
+};
 
-    template <typename T> using as_tuple_t = typename ::beman::execution::detail::as_tuple<T>::type;
-}
+template <typename T>
+using as_tuple_t = typename ::beman::execution::detail::as_tuple<T>::type;
+} // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
 
