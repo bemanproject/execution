@@ -6,6 +6,11 @@
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/async_scope_token.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/simple_allocator.hpp>
+#include <beman/execution/detail/get_allocator.hpp>
+#include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/join_env.hpp>
+#include <beman/execution/detail/inplace_stop_source.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 
@@ -17,14 +22,18 @@ struct non_env {
 };
 static_assert(not test_detail::queryable<non_env>);
 
-struct env {};
+struct env {
+    int  value{};
+    auto operator==(const env&) const -> bool = default;
+};
 static_assert(test_detail::queryable<env>);
 
 struct non_sender {};
 static_assert(not test_std::sender<non_sender>);
 
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept        = test_std::sender_t;
+    using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
 };
 static_assert(test_std::sender<sender>);
 
@@ -55,7 +64,7 @@ auto test_spawn_future_interface(Sender&& sndr, Token&& tok) -> void {
         static_assert(Expect ==
                       requires { test_std::spawn_future(std::forward<Sender>(sndr), std::forward<Token>(tok)); });
     }
-    static_assert(Expect == requires(Env const& e){
+    static_assert(Expect == requires(const Env& e) {
         test_std::spawn_future(std::forward<Sender>(sndr), std::forward<Token>(tok), e);
     });
 }
@@ -182,6 +191,81 @@ auto test_receiver() {
         }
     }
 }
+
+template <test_std::sender Sndr, test_std::async_scope_token Tok, typename Ev>
+auto test_spawn_future(Sndr&& sndr, Tok&& tok, Ev&& ev) {
+    test_std::spawn_future(std::forward<Sndr>(sndr), std::forward<Tok>(tok), std::forward<Ev>(ev));
+}
+
+struct allocator {
+    using value_type = int;
+    int value{};
+
+    auto allocate(std::size_t n) -> int* { return new int[n]; }
+    auto deallocate(int* p, std::size_t) -> void { delete[] p; }
+
+    auto operator==(const allocator&) const -> bool = default;
+};
+static_assert(test_detail::simple_allocator<allocator>);
+
+struct alloc_env {
+    int  value{};
+    auto operator==(const alloc_env&) const -> bool = default;
+
+    auto query(const test_std::get_allocator_t&) const noexcept -> allocator { return allocator{this->value}; }
+};
+
+struct alloc_sender {
+    using sender_concept = test_std::sender_t;
+    int value{};
+
+    auto get_env() const noexcept -> alloc_env { return alloc_env{this->value}; }
+};
+static_assert(test_std::sender<alloc_sender>);
+
+auto test_get_allocator() {
+    {
+        alloc_env ae{87};
+        auto [alloc, ev] = test_detail::spawn_future_get_allocator(sender{}, ae);
+        static_assert(std::same_as<decltype(alloc), allocator>);
+        ASSERT(alloc == allocator{87});
+        static_assert(std::same_as<decltype(ev), alloc_env>);
+        ASSERT(ev == alloc_env{87});
+    }
+    {
+        auto [alloc, ev] = test_detail::spawn_future_get_allocator(alloc_sender{53}, env{42});
+        static_assert(std::same_as<decltype(alloc), allocator>);
+        ASSERT(alloc == allocator{53});
+        ASSERT(test_std::get_allocator(ev) == allocator{53});
+    }
+    {
+        test_std::inplace_stop_source source;
+        auto [alloc, ev] = test_detail::spawn_future_get_allocator(
+            alloc_sender{53}, test_std::prop(test_std::get_stop_token, source.get_token()));
+        static_assert(std::same_as<decltype(alloc), allocator>);
+        ASSERT(alloc == allocator{53});
+        ASSERT(test_std::get_allocator(ev) == allocator{53});
+        ASSERT(test_std::get_stop_token(ev) == source.get_token());
+    }
+    {
+        test_std::inplace_stop_source source;
+        auto [alloc, ev] = test_detail::spawn_future_get_allocator(
+            alloc_sender{53},
+            test_detail::join_env(test_std::prop(test_std::get_allocator, allocator(101)),
+                                  test_std::prop(test_std::get_stop_token, source.get_token())));
+        static_assert(std::same_as<decltype(alloc), allocator>);
+        ASSERT(alloc == allocator{101});
+        ASSERT(test_std::get_allocator(ev) == allocator{101});
+        ASSERT(test_std::get_stop_token(ev) == source.get_token());
+    }
+    {
+        auto [alloc, ev] = test_detail::spawn_future_get_allocator(sender{}, env{42});
+        static_assert(std::same_as<decltype(alloc), std::allocator<void>>);
+        static_assert(std::same_as<decltype(ev), env>);
+        ASSERT(ev == env{42});
+    }
+}
+
 } // namespace
 
 TEST(exec_spawn_future) {
@@ -194,4 +278,8 @@ TEST(exec_spawn_future) {
 
     test_state_base();
     test_receiver();
+
+    test_get_allocator();
+
+    test_spawn_future(sender{}, token<true>{}, env{});
 }

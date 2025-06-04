@@ -33,8 +33,8 @@ using source_location = ::std::source_location;
 #else
 struct source_location {
     static auto current() -> source_location { return {}; }
-    auto file_name() const -> char const* { return "<unknown:no std::source_location>"; }
-    auto line() const -> char const* { return "<unknown:no std::source_location>"; }
+    auto        file_name() const -> const char* { return "<unknown:no std::source_location>"; }
+    auto        line() const -> const char* { return "<unknown:no std::source_location>"; }
 };
 #endif
 

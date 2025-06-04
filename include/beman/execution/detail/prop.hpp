@@ -11,9 +11,14 @@
 namespace beman::execution {
 template <typename Query, typename Value>
 struct prop {
-    [[no_unique_address]] Query query_;
+    [[no_unique_address]] Query query_{};
     Value                       value_;
 
+    template <typename Q, typename V>
+    prop(Q q, V&& v) : query_(q), value_(v) {}
+    prop(prop&&)                = default;
+    prop(const prop&)           = default;
+    auto operator=(prop&&)      = delete;
     auto operator=(const prop&) = delete;
 
     constexpr auto query(Query) const noexcept -> Value { return this->value_; }
