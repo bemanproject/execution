@@ -49,14 +49,14 @@ struct throws {
 };
 static_assert(!std::is_nothrow_constructible_v<std::decay_t<throws>, throws>);
 
-template <bool Expect, typename Sender, typename Token, typename Env = ::env>
-auto test_spawn_future_interface(Sender&& sndr, Token&& tok, Env&& e = Env{}) -> void {
+template <bool Expect, typename Env = ::env, typename Sender, typename Token>
+auto test_spawn_future_interface(Sender&& sndr, Token&& tok) -> void {
     if constexpr (!std::same_as<std::remove_cvref_t<Env>, non_env>) {
         static_assert(Expect ==
                       requires { test_std::spawn_future(std::forward<Sender>(sndr), std::forward<Token>(tok)); });
     }
-    static_assert(Expect == requires {
-        test_std::spawn_future(std::forward<Sender>(sndr), std::forward<Token>(tok), std::forward<Env>(e));
+    static_assert(Expect == requires(Env const& e){
+        test_std::spawn_future(std::forward<Sender>(sndr), std::forward<Token>(tok), e);
     });
 }
 
@@ -189,7 +189,8 @@ TEST(exec_spawn_future) {
     test_spawn_future_interface<true>(sender{}, token<true>{});
     test_spawn_future_interface<false>(non_sender{}, token<true>{});
     test_spawn_future_interface<false>(sender{}, token<false>{});
-    test_spawn_future_interface<false>(sender{}, token<true>{}, *new non_env{});
+
+    test_spawn_future_interface<false, non_env>(sender{}, token<true>{});
 
     test_state_base();
     test_receiver();

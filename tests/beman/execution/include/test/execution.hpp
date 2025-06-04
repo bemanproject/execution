@@ -10,9 +10,10 @@
 #ifndef _MSC_VER
 #include <cstdlib>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <iostream>
-#include <source_location>
 #endif
+#include <source_location>
 
 #undef NDEBUG
 #include <cassert>
@@ -27,6 +28,16 @@ namespace test_std    = ::beman::execution;
 namespace test_detail = ::beman::execution::detail;
 
 namespace test {
+#if 201907L <= __cpp_lib_source_location
+using source_location = ::std::source_location;
+#else
+struct source_location {
+    static auto current() -> source_location { return {}; }
+    auto file_name() const -> char const* { return "<unknown:no std::source_location>"; }
+    auto line() const -> char const* { return "<unknown:no std::source_location>"; }
+};
+#endif
+
 inline bool unreachable_helper() { return false; }
 
 template <typename>
@@ -48,7 +59,7 @@ struct throws {
 };
 
 inline auto death([[maybe_unused]] auto                   fun,
-                  [[maybe_unused]] ::std::source_location location = std::source_location::current()) noexcept
+                  [[maybe_unused]] ::std::source_location location = test::source_location::current()) noexcept
     -> void {
 #ifndef _MSC_VER
     switch (::pid_t rc = ::fork()) {
