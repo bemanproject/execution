@@ -153,7 +153,7 @@ class spawn_future_t {
     template <::beman::execution::sender Sndr, ::beman::execution::async_scope_token Tok, typename Ev>
         requires ::beman::execution::detail::queryable<::std::remove_cvref_t<Ev>>
     auto operator()(Sndr&& sndr, Tok&& tok, Ev&& ev) const {
-        auto make{[&] -> decltype(auto) { //-dk:TODO while decltype(auto) instead of auto?
+        auto make{[&]() -> decltype(auto) { //-dk:TODO while decltype(auto) instead of auto?
             return tok.wrap(::std::forward<Sndr>(sndr));
         }};
         using sndr_t = decltype(make());
