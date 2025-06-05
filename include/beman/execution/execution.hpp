@@ -43,6 +43,7 @@
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/on.hpp>
+#include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/schedule_from.hpp>
 #include <beman/execution/detail/starts_on.hpp>
