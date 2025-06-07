@@ -11,6 +11,7 @@
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
+#include <beman/execution/detail/just.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 
@@ -33,7 +34,11 @@ static_assert(not test_std::sender<non_sender>);
 
 struct sender {
     using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+    using completion_signatures = test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>;
+    template <test_std::receiver Rcvr>
+    auto connect(Rcvr&& rcvr) {
+        return test_std::connect(test_std::just(), ::std::forward<Rcvr>(rcvr));
+    }
 };
 static_assert(test_std::sender<sender>);
 
@@ -79,22 +84,22 @@ auto test_state_base() {
         noexcept(std::declval<test_detail::spawn_future_state_base<test_std::completion_signatures<>>&>().complete()));
     using state0_t = state_base<test_std::completion_signatures<>>;
     [[maybe_unused]] state0_t b0;
-    static_assert(std::same_as<std::variant<std::monostate>, state0_t::variant_t>);
-    static_assert(std::same_as<state0_t::variant_t, decltype(b0.result)>);
+    static_assert(std::same_as<std::variant<std::monostate>, state0_t::result_t>);
+    static_assert(std::same_as<state0_t::result_t, decltype(b0.result)>);
 
     using state1_t = state_base<test_std::completion_signatures<test_std::set_value_t(int)>>;
     [[maybe_unused]] state1_t b1;
     static_assert(
-        std::same_as<std::variant<std::monostate, std::tuple<test_std::set_value_t, int>>, state1_t::variant_t>);
-    static_assert(std::same_as<state1_t::variant_t, decltype(b1.result)>);
+        std::same_as<std::variant<std::monostate, std::tuple<test_std::set_value_t, int>>, state1_t::result_t>);
+    static_assert(std::same_as<state1_t::result_t, decltype(b1.result)>);
 
     using state2_t = state_base<test_std::completion_signatures<test_std::set_value_t(throws)>>;
     [[maybe_unused]] state2_t b2;
     static_assert(std::same_as<std::variant<std::monostate,
                                             std::tuple<test_std::set_error_t, std::exception_ptr>,
                                             std::tuple<test_std::set_value_t, throws>>,
-                               typename state2_t::variant_t>);
-    static_assert(std::same_as<state2_t::variant_t, decltype(b2.result)>);
+                               typename state2_t::result_t>);
+    static_assert(std::same_as<state2_t::result_t, decltype(b2.result)>);
 
     using state3_t = state_base<
         test_std::completion_signatures<test_std::set_value_t(throws), test_std::set_error_t(std::exception_ptr)>>;
@@ -102,8 +107,8 @@ auto test_state_base() {
     static_assert(std::same_as<std::variant<std::monostate,
                                             std::tuple<test_std::set_error_t, std::exception_ptr>,
                                             std::tuple<test_std::set_value_t, throws>>,
-                               typename state3_t::variant_t>);
-    static_assert(std::same_as<state3_t::variant_t, decltype(b3.result)>);
+                               typename state3_t::result_t>);
+    static_assert(std::same_as<state3_t::result_t, decltype(b3.result)>);
 
     using state4_t = state_base<
         test_std::completion_signatures<test_std::set_value_t(throws), test_std::set_value_t(const throws&)>>;
@@ -111,14 +116,14 @@ auto test_state_base() {
     static_assert(std::same_as<std::variant<std::monostate,
                                             std::tuple<test_std::set_error_t, std::exception_ptr>,
                                             std::tuple<test_std::set_value_t, throws>>,
-                               typename state4_t::variant_t>);
-    static_assert(std::same_as<state4_t::variant_t, decltype(b4.result)>);
+                               typename state4_t::result_t>);
+    static_assert(std::same_as<state4_t::result_t, decltype(b4.result)>);
 
     using state5_t = state_base<test_std::completion_signatures<test_std::set_stopped_t()>>;
     [[maybe_unused]] state5_t b5;
     static_assert(
-        std::same_as<std::variant<std::monostate, std::tuple<test_std::set_stopped_t>>, typename state5_t::variant_t>);
-    static_assert(std::same_as<state5_t::variant_t, decltype(b5.result)>);
+        std::same_as<std::variant<std::monostate, std::tuple<test_std::set_stopped_t>>, typename state5_t::result_t>);
+    static_assert(std::same_as<state5_t::result_t, decltype(b5.result)>);
 }
 
 auto test_receiver() {
@@ -192,11 +197,6 @@ auto test_receiver() {
     }
 }
 
-template <test_std::sender Sndr, test_std::async_scope_token Tok, typename Ev>
-auto test_spawn_future(Sndr&& sndr, Tok&& tok, Ev&& ev) {
-    test_std::spawn_future(std::forward<Sndr>(sndr), std::forward<Tok>(tok), std::forward<Ev>(ev));
-}
-
 struct allocator {
     using value_type = int;
     int value{};
@@ -264,6 +264,24 @@ auto test_get_allocator() {
         static_assert(std::same_as<decltype(ev), env>);
         ASSERT(ev == env{42});
     }
+}
+
+struct rcvr {
+    using receiver_concept = test_std::receiver_t;
+
+    auto set_value(auto&&...) && noexcept -> void {}
+    auto set_error(auto&&) && noexcept -> void {}
+    auto set_stopped() && noexcept -> void {}
+};
+static_assert(test_std::receiver<rcvr>);
+
+template <test_std::sender Sndr, test_std::async_scope_token Tok, typename Ev>
+auto test_spawn_future(Sndr&& sndr, Tok&& tok, Ev&& ev) {
+    auto sender{test_std::spawn_future(std::forward<Sndr>(sndr), std::forward<Tok>(tok), std::forward<Ev>(ev))};
+    static_assert(test_std::sender<decltype(sender)>);
+    auto state(test_std::connect(std::move(sender), rcvr{}));
+    static_assert(test_std::operation_state<decltype(state)>);
+    test_std::start(state);
 }
 
 } // namespace

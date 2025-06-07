@@ -15,6 +15,8 @@
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/stop_callback_for_t.hpp>
 #include <beman/execution/detail/never_stop_token.hpp>
+#include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/sync_wait.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 #include <optional>
@@ -140,4 +142,6 @@ TEST(exec_stop_when) {
         source2.request_stop();
         ASSERT(comp == completion::stopped);
     }
+    test_std::inplace_stop_source source;
+    test_std::sync_wait(test_detail::stop_when(test_std::just(), source.get_token()));
 }
