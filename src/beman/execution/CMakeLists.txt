@@ -117,6 +117,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/matching_sig.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_combine.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_contain_same.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_contains.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_filter.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_prepend.hpp

@@ -13,6 +13,8 @@
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/then.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/meta_contain_same.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 
@@ -35,9 +37,8 @@ static_assert(not test_std::sender<non_sender>);
 
 template <typename... T>
 struct sender {
-    using sender_concept = test_std::sender_t;
-    using completion_signatures =
-        test_std::completion_signatures<test_std::set_value_t(T...), test_std::set_stopped_t()>;
+    using sender_concept        = test_std::sender_t;
+    using completion_signatures = test_std::completion_signatures<test_std::set_value_t(T...)>;
 
     struct state_base {
         virtual ~state_base()               = default;
@@ -387,6 +388,19 @@ auto test_spawn_future() {
             ASSERT(count == 1u);
             ASSERT(handle != nullptr);
             ASSERT(result == 0);
+#if 0
+            using type = typename beman::execution::detail::completion_signatures_for_impl<decltype(sndr), test_std::empty_env>::type;
+            static_assert(std::same_as<test_std::completion_signatures<test_std::set_stopped_t(), test_std::set_value_t(int), test_std::set_error_t(std::exception_ptr)>, type>);
+            static_assert(std::same_as<
+                test_std::completion_signatures<test_std::set_stopped_t(), test_std::set_value_t(int), test_std::set_error_t(std::exception_ptr)>,
+                decltype(test_std::get_completion_signatures(sndr, test_std::empty_env{}))
+            >);
+#endif
+            using exp_type  = test_std::completion_signatures<test_std::set_stopped_t(),
+                                                              test_std::set_value_t(int),
+                                                              test_std::set_error_t(std::exception_ptr)>;
+            using comp_type = decltype(test_std::get_completion_signatures(std::move(sndr), test_std::empty_env{}));
+            static_assert(test_detail::meta::contain_same<exp_type, comp_type>);
 
             handle->complete(17);
             ASSERT(result == 0);

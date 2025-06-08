@@ -105,17 +105,21 @@ using future_spawned_sender = decltype(::beman::execution::write_env(
                                           ::std::declval<::beman::execution::inplace_stop_token>()),
     ::std::declval<Env>()));
 
+template <::beman::execution::sender Sndr, typename Env>
+using spawn_future_sigs = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::prepend<
+    ::beman::execution::set_stopped_t(),
+    ::beman::execution::completion_signatures_of_t<::beman::execution::detail::future_spawned_sender<Sndr, Env>>>>;
+
 template <typename Allocator,
           ::beman::execution::async_scope_token Token,
           ::beman::execution::sender            Sndr,
           typename Env>
 struct spawn_future_state
-    : ::beman::execution::detail::spawn_future_state_base<::beman::execution::completion_signatures_of_t<
-          ::beman::execution::detail::future_spawned_sender<Sndr, Env>>> {
+    : ::beman::execution::detail::spawn_future_state_base<::beman::execution::detail::spawn_future_sigs<Sndr, Env>> {
     using alloc_t          = typename ::std::allocator_traits<Allocator>::template rebind_alloc<spawn_future_state>;
     using traits_t         = ::std::allocator_traits<alloc_t>;
     using spawned_sender_t = ::beman::execution::detail::future_spawned_sender<Sndr, Env>;
-    using sigs_t           = ::beman::execution::completion_signatures_of_t<spawned_sender_t>;
+    using sigs_t           = ::beman::execution::detail::spawn_future_sigs<Sndr, Env>;
     using receiver_t       = ::beman::execution::detail::spawn_future_receiver<sigs_t>;
     static_assert(::beman::execution::sender<spawned_sender_t>);
     static_assert(::beman::execution::receiver<receiver_t>);
@@ -257,6 +261,14 @@ class spawn_future_t {
     auto operator()(Sndr&& sndr, Tok&& tok) const {
         return (*this)(::std::forward<Sndr>(sndr), ::std::forward<Tok>(tok), ::beman::execution::empty_env{});
     }
+};
+
+template <typename State, typename Deleter, typename Env>
+struct completion_signatures_for_impl<
+    ::beman::execution::detail::basic_sender<::beman::execution::detail::spawn_future_t,
+                                             ::std::unique_ptr<State, Deleter>>,
+    Env> {
+    using type = typename State::sigs_t;
 };
 
 template <>
