@@ -150,7 +150,7 @@ struct spawn_future_state
             ::std::lock_guard cerberos(this->gate);
             if (this->receiver == nullptr) {
                 this->receiver = this;
-                this->fun      = [](void*, spawn_future_state::result_t&) noexcept {};
+                this->fun      = [](void*, typename spawn_future_state::result_t&) noexcept {};
                 this->source.request_stop();
                 return;
             }
@@ -158,7 +158,7 @@ struct spawn_future_state
         this->destroy();
     }
     template <::beman::execution::receiver Rcvr>
-    static auto complete_receiver(Rcvr& rcvr, spawn_future_state::result_t& res) noexcept {
+    static auto complete_receiver(Rcvr& rcvr, typename spawn_future_state::result_t& res) noexcept {
         std::visit(
             [&rcvr]<typename Tuplish>(Tuplish&& tuplish) noexcept {
                 if constexpr (!::std::same_as<::std::remove_cvref_t<decltype(tuplish)>, ::std::monostate>) {
@@ -177,7 +177,7 @@ struct spawn_future_state
             ::std::lock_guard cerberos(this->gate);
             if (this->receiver != nullptr) {
                 this->receiver = &rcvr;
-                this->fun      = [](void* ptr, spawn_future_state::result_t& res) noexcept {
+                this->fun      = [](void* ptr, typename spawn_future_state::result_t& res) noexcept {
                     spawn_future_state::complete_receiver(*static_cast<Rcvr*>(ptr), res);
                 };
                 return;
@@ -205,7 +205,7 @@ struct spawn_future_state
     Token                                   token;
     bool                                    associated{false};
     void*                                   receiver{};
-    auto (*fun)(void*, spawn_future_state::result_t&) noexcept -> void;
+    auto (*fun)(void*, typename spawn_future_state::result_t&) noexcept -> void;
 };
 
 template <::beman::execution::sender Sndr, typename Ev>
