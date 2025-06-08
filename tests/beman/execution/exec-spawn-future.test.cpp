@@ -12,6 +12,7 @@
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/then.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 
@@ -32,20 +33,40 @@ static_assert(test_detail::queryable<env>);
 struct non_sender {};
 static_assert(not test_std::sender<non_sender>);
 
+template <typename... T>
 struct sender {
-    using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>;
+    using sender_concept = test_std::sender_t;
+    using completion_signatures =
+        test_std::completion_signatures<test_std::set_value_t(T...), test_std::set_stopped_t()>;
+
+    struct state_base {
+        virtual ~state_base()               = default;
+        virtual auto complete(T...) -> void = 0;
+    };
     template <test_std::receiver Rcvr>
-    auto connect(Rcvr&& rcvr) {
-        return test_std::connect(test_std::just(), ::std::forward<Rcvr>(rcvr));
+    struct state : state_base {
+        using operation_state_concept = test_std::operation_state_t;
+        std::remove_cvref_t<Rcvr> rcvr;
+        state_base**              handle{};
+        auto complete(T... a) -> void override { test_std::set_value(std::move(this->rcvr), a...); }
+        state(auto&& r, state_base** h) : rcvr(std::forward<decltype(r)>(r)), handle(h) {}
+        auto start() & noexcept { *this->handle = this; }
+    };
+    state_base** handle{nullptr};
+    template <test_std::receiver Rcvr>
+    auto connect(Rcvr&& rcvr) -> state<Rcvr> {
+        return state<Rcvr>(std::forward<Rcvr>(rcvr), this->handle);
     }
 };
-static_assert(test_std::sender<sender>);
+static_assert(test_std::sender<sender<>>);
+static_assert(test_std::sender<sender<int>>);
+static_assert(test_std::sender<sender<int, bool>>);
 
 template <bool Noexcept>
 struct token {
-    auto try_associate() -> bool { return {}; }
-    auto disassociate() noexcept(Noexcept) -> void {}
+    std::size_t* count{nullptr};
+    auto         try_associate() -> bool { return this->count && bool(++*this->count); }
+    auto         disassociate() noexcept(Noexcept) -> void { --*this->count; }
     template <test_std::sender Sender>
     auto wrap(Sender&& sender) -> Sender {
         return std::forward<Sender>(sender);
@@ -226,7 +247,7 @@ static_assert(test_std::sender<alloc_sender>);
 auto test_get_allocator() {
     {
         alloc_env ae{87};
-        auto [alloc, ev] = test_detail::spawn_future_get_allocator(sender{}, ae);
+        auto [alloc, ev] = test_detail::spawn_future_get_allocator(sender<>{}, ae);
         static_assert(std::same_as<decltype(alloc), allocator>);
         ASSERT(alloc == allocator{87});
         static_assert(std::same_as<decltype(ev), alloc_env>);
@@ -259,7 +280,7 @@ auto test_get_allocator() {
         ASSERT(test_std::get_stop_token(ev) == source.get_token());
     }
     {
-        auto [alloc, ev] = test_detail::spawn_future_get_allocator(sender{}, env{42});
+        auto [alloc, ev] = test_detail::spawn_future_get_allocator(sender<>{}, env{42});
         static_assert(std::same_as<decltype(alloc), std::allocator<void>>);
         static_assert(std::same_as<decltype(ev), env>);
         ASSERT(ev == env{42});
@@ -275,13 +296,104 @@ struct rcvr {
 };
 static_assert(test_std::receiver<rcvr>);
 
-template <test_std::sender Sndr, test_std::async_scope_token Tok, typename Ev>
-auto test_spawn_future(Sndr&& sndr, Tok&& tok, Ev&& ev) {
-    auto sender{test_std::spawn_future(std::forward<Sndr>(sndr), std::forward<Tok>(tok), std::forward<Ev>(ev))};
-    static_assert(test_std::sender<decltype(sender)>);
-    auto state(test_std::connect(std::move(sender), rcvr{}));
-    static_assert(test_std::operation_state<decltype(state)>);
-    test_std::start(state);
+auto test_spawn_future() {
+    {
+        std::size_t              count{};
+        sender<int>::state_base* handle{};
+        int                      result{};
+        ASSERT(count == 0u);
+        ASSERT(handle == nullptr);
+        ASSERT(result == 0);
+
+        auto sndr{test_std::spawn_future(
+            sender<int>{&handle} | test_std::then([](int v) { return v; }), token<true>{&count}, env{})};
+        ASSERT(count == 1u);
+        ASSERT(handle != nullptr);
+        ASSERT(result == 0);
+
+        {
+            auto state(test_std::connect(std::move(sndr) | test_std::then([&result](int v) { result = v; }), rcvr{}));
+            ASSERT(result == 0);
+
+            test_std::start(state);
+            ASSERT(count == 1u);
+            ASSERT(result == 0);
+
+            handle->complete(42);
+            ASSERT(result == 42);
+            ASSERT(count == 1u);
+        }
+        ASSERT(count == 0u);
+    }
+    {
+        std::size_t              count{};
+        sender<int>::state_base* handle{};
+        int                      result{};
+        ASSERT(count == 0u);
+        ASSERT(handle == nullptr);
+        ASSERT(result == 0);
+
+        auto sndr{test_std::spawn_future(
+            sender<int>{&handle} | test_std::then([](int v) { return v; }), token<true>{&count}, env{})};
+        ASSERT(count == 1u);
+        ASSERT(handle != nullptr);
+        ASSERT(result == 0);
+
+        {
+            auto state(test_std::connect(std::move(sndr) | test_std::then([&result](int v) { result = v; }), rcvr{}));
+            ASSERT(result == 0);
+
+            handle->complete(42);
+            ASSERT(result == 0);
+
+            test_std::start(state);
+
+            ASSERT(result == 42);
+            ASSERT(count == 1u);
+        }
+        ASSERT(count == 0u);
+    }
+    {
+        std::size_t              count{};
+        sender<int>::state_base* handle{};
+        int                      result{};
+        ASSERT(count == 0u);
+        ASSERT(handle == nullptr);
+        ASSERT(result == 0);
+
+        {
+            auto sndr{test_std::spawn_future(
+                sender<int>{&handle} | test_std::then([](int v) { return v; }), token<true>{&count}, env{})};
+            ASSERT(count == 1u);
+            ASSERT(handle != nullptr);
+            ASSERT(result == 0);
+        }
+        ASSERT(count == 1u);
+        handle->complete(17);
+        ASSERT(count == 0u);
+        ASSERT(result == 0);
+    }
+    {
+        std::size_t              count{};
+        sender<int>::state_base* handle{};
+        int                      result{};
+        ASSERT(count == 0u);
+        ASSERT(handle == nullptr);
+        ASSERT(result == 0);
+
+        {
+            auto sndr{test_std::spawn_future(
+                sender<int>{&handle} | test_std::then([](int v) { return v; }), token<true>{&count}, env{})};
+            ASSERT(count == 1u);
+            ASSERT(handle != nullptr);
+            ASSERT(result == 0);
+
+            handle->complete(17);
+            ASSERT(result == 0);
+        }
+        ASSERT(count == 0u);
+        ASSERT(result == 0);
+    }
 }
 
 } // namespace
@@ -299,5 +411,5 @@ TEST(exec_spawn_future) {
 
     test_get_allocator();
 
-    test_spawn_future(sender{}, token<true>{}, env{});
+    test_spawn_future();
 }

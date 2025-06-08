@@ -58,17 +58,16 @@ struct throws {
     auto operator=(const throws&) noexcept(false) -> throws& = default;
 };
 
-inline auto death([[maybe_unused]] auto                   fun,
-                  [[maybe_unused]] ::std::source_location location = test::source_location::current()) noexcept
-    -> void {
+inline auto
+death([[maybe_unused]] auto                   fun,
+      [[maybe_unused]] ::std::source_location location = test::source_location::current()) noexcept -> void {
 #ifndef _MSC_VER
     switch (::pid_t rc = ::fork()) {
     default: {
         int stat{};
         ASSERT(rc == ::wait(&stat));
         if (stat == EXIT_SUCCESS) {
-            ::std::cerr << "failed death test at "
-                        << "file=" << location.file_name() << ":" << location.line() << "\n"
+            ::std::cerr << "failed death test at " << "file=" << location.file_name() << ":" << location.line() << "\n"
                         << std::flush;
             ASSERT(stat != EXIT_SUCCESS);
         }

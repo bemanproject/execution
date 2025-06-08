@@ -54,9 +54,7 @@ struct join_receiver {
 };
 
 auto ctor() -> void {
-    {
-        test_std::simple_counting_scope scope;
-    }
+    { test_std::simple_counting_scope scope; }
     test::death([] {
         test_std::simple_counting_scope scope;
         scope.get_token().try_associate();

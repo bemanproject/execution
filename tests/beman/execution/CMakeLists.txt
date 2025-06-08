@@ -138,9 +138,9 @@ foreach(test ${execution_tests})
 endforeach()
 
 if(FALSE)
-if(NOT PROJECT_IS_TOP_LEVEL AND BEMAN_EXECUTION_ENABLE_TESTING)
-  # test if the targets are findable from the build directory
-  # cmake-format: off
+  if(NOT PROJECT_IS_TOP_LEVEL AND BEMAN_EXECUTION_ENABLE_TESTING)
+    # test if the targets are findable from the build directory
+    # cmake-format: off
   add_test(NAME find-package-test
     COMMAND ${CMAKE_CTEST_COMMAND}
       # --verbose
@@ -159,5 +159,5 @@ if(NOT PROJECT_IS_TOP_LEVEL AND BEMAN_EXECUTION_ENABLE_TESTING)
           # TODO(CK): Needed too? "--config $<CONFIG>"
   )
   # cmake-format: on
-endif()
+  endif()
 endif()

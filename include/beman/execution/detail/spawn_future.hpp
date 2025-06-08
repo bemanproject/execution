@@ -138,24 +138,28 @@ struct spawn_future_state
     auto complete() noexcept -> void override {
         {
             ::std::lock_guard cerberos(this->gate);
-            if (this->receiver == nullptr) {
+            if (this->fun == nullptr) {
                 this->receiver = this;
                 return;
             }
         }
-        this->fun(this->receiver, this->result);
+        this->fun(this->receiver, *this);
     }
     auto abandon() noexcept -> void {
-        {
+        bool ready{[&] {
             ::std::lock_guard cerberos(this->gate);
             if (this->receiver == nullptr) {
                 this->receiver = this;
-                this->fun      = [](void*, typename spawn_future_state::result_t&) noexcept {};
-                this->source.request_stop();
-                return;
+                this->fun      = [](void*, spawn_future_state& state) noexcept { state.destroy(); };
+                return false;
             }
+            return true;
+        }()};
+        if (ready) {
+            this->destroy();
+        } else {
+            this->source.request_stop();
         }
-        this->destroy();
     }
     template <::beman::execution::receiver Rcvr>
     static auto complete_receiver(Rcvr& rcvr, typename spawn_future_state::result_t& res) noexcept {
@@ -175,10 +179,10 @@ struct spawn_future_state
     auto consume(Rcvr& rcvr) noexcept -> void {
         {
             ::std::lock_guard cerberos(this->gate);
-            if (this->receiver != nullptr) {
+            if (this->receiver == nullptr) {
                 this->receiver = &rcvr;
-                this->fun      = [](void* ptr, typename spawn_future_state::result_t& res) noexcept {
-                    spawn_future_state::complete_receiver(*static_cast<Rcvr*>(ptr), res);
+                this->fun      = [](void* ptr, spawn_future_state& state) noexcept {
+                    spawn_future_state::complete_receiver(*static_cast<Rcvr*>(ptr), state.result);
                 };
                 return;
             }
@@ -205,7 +209,7 @@ struct spawn_future_state
     Token                                   token;
     bool                                    associated{false};
     void*                                   receiver{};
-    auto (*fun)(void*, typename spawn_future_state::result_t&) noexcept -> void;
+    auto (*fun)(void*, spawn_future_state&) noexcept -> void = nullptr;
 };
 
 template <::beman::execution::sender Sndr, typename Ev>
