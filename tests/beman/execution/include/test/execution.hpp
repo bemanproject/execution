@@ -58,9 +58,9 @@ struct throws {
     auto operator=(const throws&) noexcept(false) -> throws& = default;
 };
 
-inline auto
-death([[maybe_unused]] auto                   fun,
-      [[maybe_unused]] ::std::source_location location = test::source_location::current()) noexcept -> void {
+inline auto death([[maybe_unused]] auto                   fun,
+                  [[maybe_unused]] ::std::source_location location = test::source_location::current()) noexcept
+    -> void {
 #ifndef _MSC_VER
     switch (::pid_t rc = ::fork()) {
     default: {
