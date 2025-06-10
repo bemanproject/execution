@@ -1,8 +1,8 @@
-// include/beman/execution/detail/async_scope_token.hpp               -*-C++-*-
+// include/beman/execution/detail/scope_token.hpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ASYNC_SCOPE_TOKEN
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ASYNC_SCOPE_TOKEN
+#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
+#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
 
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
@@ -28,7 +28,7 @@ static_assert(::beman::execution::sender_in<::beman::execution::detail::token_te
 
 namespace beman::execution {
 template <typename Token>
-concept async_scope_token = ::std::copyable<Token> && requires(Token token) {
+concept scope_token = ::std::copyable<Token> && requires(Token token) {
     { token.try_associate() } -> ::std::same_as<bool>;
     { token.disassociate() } noexcept;
     {

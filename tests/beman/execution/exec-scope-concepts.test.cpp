@@ -1,7 +1,7 @@
 // tests/beman/execution/exec-scope-concepts.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/async_scope_token.hpp>
+#include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
@@ -57,10 +57,10 @@ struct token {
 } // namespace
 
 TEST(exec_scope_concepts) {
-    static_assert(test_std::async_scope_token<token<copyable, bool, true, wrap>>);
-    static_assert(not test_std::async_scope_token<token<non_copyable, bool, true, wrap>>);
-    static_assert(not test_std::async_scope_token<token<copyable, int, true, wrap>>);
-    static_assert(not test_std::async_scope_token<token<copyable, bool, false, wrap>>);
-    static_assert(not test_std::async_scope_token<token<copyable, bool, true, bad>>);
-    static_assert(not test_std::async_scope_token<empty>);
+    static_assert(test_std::scope_token<token<copyable, bool, true, wrap>>);
+    static_assert(not test_std::scope_token<token<non_copyable, bool, true, wrap>>);
+    static_assert(not test_std::scope_token<token<copyable, int, true, wrap>>);
+    static_assert(not test_std::scope_token<token<copyable, bool, false, wrap>>);
+    static_assert(not test_std::scope_token<token<copyable, bool, true, bad>>);
+    static_assert(not test_std::scope_token<empty>);
 }

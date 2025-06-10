@@ -5,7 +5,7 @@
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/async_scope_token.hpp>
+#include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/simple_allocator.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
@@ -74,8 +74,8 @@ struct token {
         return std::forward<Sender>(sender);
     }
 };
-static_assert(test_std::async_scope_token<token<true>>);
-static_assert(not test_std::async_scope_token<token<false>>);
+static_assert(test_std::scope_token<token<true>>);
+static_assert(not test_std::scope_token<token<false>>);
 
 struct exception {
     int value;

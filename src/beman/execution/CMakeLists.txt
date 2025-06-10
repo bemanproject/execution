@@ -42,7 +42,6 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_awaitable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_except_ptr.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_tuple.hpp
-         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/async_scope_token.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/atomic_intrusive_stack.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/await_result_type.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/await_suspend_result.hpp
@@ -150,6 +149,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler_t.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_token.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_adaptor.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_adaptor_closure.hpp

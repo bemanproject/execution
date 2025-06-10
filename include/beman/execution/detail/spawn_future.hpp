@@ -6,7 +6,7 @@
 
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/as_tuple.hpp>
-#include <beman/execution/detail/async_scope_token.hpp>
+#include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -111,10 +111,7 @@ using spawn_future_sigs = ::beman::execution::detail::meta::unique<::beman::exec
     ::beman::execution::set_stopped_t(),
     ::beman::execution::completion_signatures_of_t<::beman::execution::detail::future_spawned_sender<Sndr, Env>>>>;
 
-template <typename Allocator,
-          ::beman::execution::async_scope_token Token,
-          ::beman::execution::sender            Sndr,
-          typename Env>
+template <typename Allocator, ::beman::execution::scope_token Token, ::beman::execution::sender Sndr, typename Env>
 struct spawn_future_state
     : ::beman::execution::detail::spawn_future_state_base<::beman::execution::detail::spawn_future_sigs<Sndr, Env>> {
     using alloc_t          = typename ::std::allocator_traits<Allocator>::template rebind_alloc<spawn_future_state>;
@@ -219,7 +216,7 @@ struct spawn_future_state
 
 class spawn_future_t {
   public:
-    template <::beman::execution::sender Sndr, ::beman::execution::async_scope_token Tok, typename Ev>
+    template <::beman::execution::sender Sndr, ::beman::execution::scope_token Tok, typename Ev>
         requires ::beman::execution::detail::queryable<::std::remove_cvref_t<Ev>>
     auto operator()(Sndr&& sndr, Tok&& tok, Ev&& ev) const {
         auto make{[&]() -> decltype(auto) { //-dk:TODO why decltype(auto) instead of auto?
@@ -244,7 +241,7 @@ class spawn_future_t {
         using deleter = decltype([](state_t* p) noexcept { p->abandon(); });
         return ::beman::execution::detail::make_sender(*this, ::std::unique_ptr<state_t, deleter>{op});
     }
-    template <::beman::execution::sender Sndr, ::beman::execution::async_scope_token Tok>
+    template <::beman::execution::sender Sndr, ::beman::execution::scope_token Tok>
     auto operator()(Sndr&& sndr, Tok&& tok) const {
         return (*this)(::std::forward<Sndr>(sndr), ::std::forward<Tok>(tok), ::beman::execution::empty_env{});
     }

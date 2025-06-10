@@ -4,7 +4,7 @@
 #include <beman/execution/detail/spawn.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
-#include <beman/execution/detail/async_scope_token.hpp>
+#include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <test/execution.hpp>
@@ -60,8 +60,8 @@ struct token {
         return std::forward<Sndr>(sndr);
     }
 };
-static_assert(test_std::async_scope_token<token<true>>);
-static_assert(!test_std::async_scope_token<token<false>>);
+static_assert(test_std::scope_token<token<true>>);
+static_assert(!test_std::scope_token<token<false>>);
 
 template <bool Expect, typename Sndr, typename Tok, typename Ev>
 auto test_overload(Sndr&& sndr, Tok&& tok, Ev ev) -> void {
@@ -113,7 +113,7 @@ auto test_spawn_receiver() -> void {
     }
 }
 
-template <typename Alloc, test_std::async_scope_token Tok, test_std::sender Sndr>
+template <typename Alloc, test_std::scope_token Tok, test_std::sender Sndr>
 auto test_spawn_state(Alloc&& alloc, Tok&& tok, Sndr&& sndr) -> void {
     static_assert(requires(test_detail::spawn_t::state<Alloc, Tok, Sndr> state) {
         static_cast<test_detail::spawn_t::state_base&>(state);
