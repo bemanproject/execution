@@ -11,6 +11,7 @@ endif()
 list(
   APPEND
   execution_tests
+  exec-spawn.test
   exec-stop-when.test
   exec-prop.test
   exec-scope-simple-counting.test

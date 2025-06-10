@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution/detail/spawn_future.hpp>
+#include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/async_scope_token.hpp>
@@ -248,21 +249,21 @@ static_assert(test_std::sender<alloc_sender>);
 auto test_get_allocator() {
     {
         alloc_env ae{87};
-        auto [alloc, ev] = test_detail::spawn_future_get_allocator(sender<>{}, ae);
+        auto [alloc, ev] = test_detail::spawn_get_allocator(sender<>{}, ae);
         static_assert(std::same_as<decltype(alloc), allocator>);
         ASSERT(alloc == allocator{87});
         static_assert(std::same_as<decltype(ev), alloc_env>);
         ASSERT(ev == alloc_env{87});
     }
     {
-        auto [alloc, ev] = test_detail::spawn_future_get_allocator(alloc_sender{53}, env{42});
+        auto [alloc, ev] = test_detail::spawn_get_allocator(alloc_sender{53}, env{42});
         static_assert(std::same_as<decltype(alloc), allocator>);
         ASSERT(alloc == allocator{53});
         ASSERT(test_std::get_allocator(ev) == allocator{53});
     }
     {
         test_std::inplace_stop_source source;
-        auto [alloc, ev] = test_detail::spawn_future_get_allocator(
+        auto [alloc, ev] = test_detail::spawn_get_allocator(
             alloc_sender{53}, test_std::prop(test_std::get_stop_token, source.get_token()));
         static_assert(std::same_as<decltype(alloc), allocator>);
         ASSERT(alloc == allocator{53});
@@ -271,7 +272,7 @@ auto test_get_allocator() {
     }
     {
         test_std::inplace_stop_source source;
-        auto [alloc, ev] = test_detail::spawn_future_get_allocator(
+        auto [alloc, ev] = test_detail::spawn_get_allocator(
             alloc_sender{53},
             test_detail::join_env(test_std::prop(test_std::get_allocator, allocator(101)),
                                   test_std::prop(test_std::get_stop_token, source.get_token())));
@@ -281,7 +282,7 @@ auto test_get_allocator() {
         ASSERT(test_std::get_stop_token(ev) == source.get_token());
     }
     {
-        auto [alloc, ev] = test_detail::spawn_future_get_allocator(sender<>{}, env{42});
+        auto [alloc, ev] = test_detail::spawn_get_allocator(sender<>{}, env{42});
         static_assert(std::same_as<decltype(alloc), std::allocator<void>>);
         static_assert(std::same_as<decltype(ev), env>);
         ASSERT(ev == env{42});

@@ -167,6 +167,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/single_sender_value_type.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_future.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_get_allocator.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/split.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/start.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/starts_on.hpp

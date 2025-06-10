@@ -4,6 +4,7 @@
 #ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
 #define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
 
+#include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/async_scope_token.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
@@ -216,20 +217,6 @@ struct spawn_future_state
     auto (*fun)(void*, spawn_future_state&) noexcept -> void = nullptr;
 };
 
-template <::beman::execution::sender Sndr, typename Ev>
-auto spawn_future_get_allocator(const Sndr& sndr, const Ev& ev) {
-    if constexpr (requires { ::beman::execution::get_allocator(ev); }) {
-        return ::std::pair(::beman::execution::get_allocator(ev), ev);
-    } else if constexpr (requires { ::beman::execution::get_allocator(::beman::execution::get_env(sndr)); }) {
-        auto alloc{::beman::execution::get_allocator(::beman::execution::get_env(sndr))};
-        return ::std::pair(alloc,
-                           ::beman::execution::detail::join_env(
-                               ::beman::execution::prop(::beman::execution::get_allocator, alloc), ev));
-    } else {
-        return ::std::pair(::std::allocator<void>{}, ev);
-    }
-}
-
 class spawn_future_t {
   public:
     template <::beman::execution::sender Sndr, ::beman::execution::async_scope_token Tok, typename Ev>
@@ -241,7 +228,7 @@ class spawn_future_t {
         using sndr_t = decltype(make());
         static_assert(::beman::execution::sender<Sndr>);
 
-        auto [alloc, senv] = spawn_future_get_allocator(sndr, ev);
+        auto [alloc, senv] = spawn_get_allocator(sndr, ev);
         using state_t = ::beman::execution::detail::spawn_future_state<decltype(alloc), Tok, sndr_t, decltype(senv)>;
         using state_alloc_t  = typename ::std::allocator_traits<decltype(alloc)>::template rebind_alloc<state_t>;
         using state_traits_t = ::std::allocator_traits<state_alloc_t>;
