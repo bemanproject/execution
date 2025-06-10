@@ -45,6 +45,11 @@ struct impls_for<write_env_t> : ::beman::execution::detail::default_impls {
 inline constexpr write_env_t write_env{};
 } // namespace beman::execution::detail
 
+namespace beman::execution {
+using write_env_t = ::beman::execution::detail::write_env_t;
+inline constexpr write_env_t write_env{};
+} // namespace beman::execution
+
 // ----------------------------------------------------------------------------
 
 #endif

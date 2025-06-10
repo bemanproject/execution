@@ -41,6 +41,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/apply_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_awaitable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_except_ptr.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_tuple.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/atomic_intrusive_stack.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/await_result_type.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/await_suspend_result.hpp
@@ -68,6 +69,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect_awaitable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/continues_on.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_same_as.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_tuple.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_type_list.hpp
@@ -114,6 +116,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/matching_sig.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_combine.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_contain_same.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_contains.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_filter.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_prepend.hpp
@@ -122,6 +125,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_transform.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_unique.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/movable_value.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nest.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/never_stop_token.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nostopstate.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nothrow_callable.hpp
@@ -131,6 +135,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state_task.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/product_type.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/prop.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/query_with_default.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/queryable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/read_env.hpp
@@ -144,6 +149,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler_t.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_token.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_adaptor.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_adaptor_closure.hpp
@@ -159,6 +165,9 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/simple_counting_scope.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/single_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/single_sender_value_type.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_future.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_get_allocator.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/split.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/start.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/starts_on.hpp
@@ -166,6 +175,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_callback_for_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_source.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_token_of_t.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_when.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stoppable_source.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stoppable_token.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suppress_pop.hpp
