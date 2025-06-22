@@ -11,13 +11,13 @@ endif()
 list(
   APPEND
   execution_tests
+  exec-associate.test
   exec-spawn.test
   exec-stop-when.test
   exec-prop.test
   exec-scope-simple-counting.test
   exec-spawn-future.test
   exec-scope-concepts.test
-  exec-nest.test
   issue-144.test
   exec-on.test
   notify.test
