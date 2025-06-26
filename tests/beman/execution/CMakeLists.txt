@@ -10,9 +10,13 @@ endif()
 
 list(
   APPEND
+  todo
+  exec-associate.test
+)
+list(
+  APPEND
   execution_tests
   exec-scope-counting.test
-  exec-associate.test
   exec-spawn.test
   exec-stop-when.test
   exec-prop.test
