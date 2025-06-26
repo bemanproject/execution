@@ -118,6 +118,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1completion__signatures.html">completion_signatures</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template used to a specify a list of completion signatures.  <a href="structbeman_1_1execution_1_1completion__signatures.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1execution_1_1counting__scope.html">counting_scope</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1default__domain.html">default_domain</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Domain type used when no domain is specified explicitly.  <a href="structbeman_1_1execution_1_1default__domain.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,6 +153,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1nostopstate__t.html">nostopstate_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1operation__state__t.html">operation_state_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1prop.html">prop</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1receiver__t.html">receiver_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,6 +201,8 @@ Concepts</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1scheduler.html">scheduler</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1scope__token.html">scope_token</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1sender.html">sender</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1sender__in.html">sender_in</a></td></tr>
@@ -208,6 +214,9 @@ Concepts</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a895bd0a9db25eeec7ff44a98312056de"><td class="memItemLeft" align="right" valign="top"><a id="a895bd0a9db25eeec7ff44a98312056de" name="a895bd0a9db25eeec7ff44a98312056de"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>associate_t</b> = ::beman::execution::detail::associate_t</td></tr>
+<tr class="separator:a895bd0a9db25eeec7ff44a98312056de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e99e041850bb265a3bf47fac9ccd25d"><td class="memTemplParams" colspan="2"><a id="a1e99e041850bb265a3bf47fac9ccd25d" name="a1e99e041850bb265a3bf47fac9ccd25d"></a>
 template&lt;typename Sender , typename Env  = ::beman::execution::empty_env&gt; </td></tr>
 <tr class="memitem:a1e99e041850bb265a3bf47fac9ccd25d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>completion_signatures_of_t</b> = ::beman::execution::detail::call_result_t&lt; <a class="el" href="structbeman_1_1execution_1_1get__completion__signatures__t.html">::beman::execution::get_completion_signatures_t</a>, Sender, Env &gt;</td></tr>
@@ -266,6 +275,12 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>schedule_from_t</b> 
 template&lt;::beman::execution::scheduler Scheduler&gt; </td></tr>
 <tr class="memitem:a1725c7792650f8912632c997a7b7d8d6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>schedule_result_t</b> = decltype(::beman::execution::schedule(::std::declval&lt; Scheduler &gt;()))</td></tr>
 <tr class="separator:a1725c7792650f8912632c997a7b7d8d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2e3f7450698863bc16128a74177f7b4"><td class="memItemLeft" align="right" valign="top"><a id="ad2e3f7450698863bc16128a74177f7b4" name="ad2e3f7450698863bc16128a74177f7b4"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>spawn_t</b> = ::beman::execution::detail::spawn_t</td></tr>
+<tr class="separator:ad2e3f7450698863bc16128a74177f7b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d723b3cb43a250ea12cd379a22de78a"><td class="memItemLeft" align="right" valign="top"><a id="a6d723b3cb43a250ea12cd379a22de78a" name="a6d723b3cb43a250ea12cd379a22de78a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>spawn_future_t</b> = ::beman::execution::detail::spawn_future_t</td></tr>
+<tr class="separator:a6d723b3cb43a250ea12cd379a22de78a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69d564762658850291d70725c464e525"><td class="memItemLeft" align="right" valign="top"><a id="a69d564762658850291d70725c464e525" name="a69d564762658850291d70725c464e525"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>split_t</b> = ::beman::execution::detail::split_t</td></tr>
 <tr class="separator:a69d564762658850291d70725c464e525"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -297,6 +312,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>upon_stopped_t</b> =
 template&lt;typename Sender , typename Env  = ::beman::execution::empty_env, template&lt; typename... &gt; class Tuple = ::beman::execution::detail::decayed_tuple, template&lt; typename... &gt; class Variant = ::beman::execution::detail::variant_or_empty&gt; </td></tr>
 <tr class="memitem:ab00b4048999529c02e3e9a5f384de7ed"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>value_types_of_t</b> = ::beman::execution::detail::gather_signatures&lt; <a class="el" href="structbeman_1_1execution_1_1set__value__t.html">::beman::execution::set_value_t</a>, <a class="el" href="namespacebeman_1_1execution.html#a1e99e041850bb265a3bf47fac9ccd25d">::beman::execution::completion_signatures_of_t</a>&lt; Sender, Env &gt;, Tuple, Variant &gt;</td></tr>
 <tr class="separator:ab00b4048999529c02e3e9a5f384de7ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae08b2d0f0e8241817d5e513308337252"><td class="memItemLeft" align="right" valign="top"><a id="ae08b2d0f0e8241817d5e513308337252" name="ae08b2d0f0e8241817d5e513308337252"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>write_env_t</b> = ::beman::execution::detail::write_env_t</td></tr>
+<tr class="separator:ae08b2d0f0e8241817d5e513308337252"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -316,6 +334,10 @@ requires (not requires(Domain domain, Tag tag, Sender&amp;&amp; sender, Args&amp
 template&lt;typename CallbackFun &gt; </td></tr>
 <tr class="memitem:adbbf7018f3e3e401db128266d42a0838"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>inplace_stop_callback</b> (<a class="el" href="classbeman_1_1execution_1_1inplace__stop__token.html">::beman::execution::inplace_stop_token</a>, CallbackFun) -&gt; <a class="el" href="classbeman_1_1execution_1_1inplace__stop__callback.html">inplace_stop_callback</a>&lt; CallbackFun &gt;</td></tr>
 <tr class="separator:adbbf7018f3e3e401db128266d42a0838"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac327ed51174c84d794580d4a65bf36d7"><td class="memTemplParams" colspan="2"><a id="ac327ed51174c84d794580d4a65bf36d7" name="ac327ed51174c84d794580d4a65bf36d7"></a>
+template&lt;typename Query , typename Value &gt; </td></tr>
+<tr class="memitem:ac327ed51174c84d794580d4a65bf36d7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>prop</b> (Query, Value) -&gt; <a class="el" href="structbeman_1_1execution_1_1prop.html">prop</a>&lt; Query, ::std::unwrap_reference_t&lt; Value &gt; &gt;</td></tr>
+<tr class="separator:ac327ed51174c84d794580d4a65bf36d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77d1435e9602646025b0bd95004515e7"><td class="memTemplParams" colspan="2"><a id="a77d1435e9602646025b0bd95004515e7" name="a77d1435e9602646025b0bd95004515e7"></a>
 template&lt;typename CallbackFun &gt; </td></tr>
 <tr class="memitem:a77d1435e9602646025b0bd95004515e7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>stop_callback</b> (<a class="el" href="classbeman_1_1execution_1_1stop__token.html">::beman::execution::stop_token</a>, CallbackFun) -&gt; <a class="el" href="classbeman_1_1execution_1_1stop__callback.html">stop_callback</a>&lt; CallbackFun &gt;</td></tr>
@@ -346,6 +368,9 @@ Variables</h2></td></tr>
 <tr class="memitem:a3f18a47d8dc6b7476eadadb3df7420a7"><td class="memItemLeft" align="right" valign="top"><a id="a3f18a47d8dc6b7476eadadb3df7420a7" name="a3f18a47d8dc6b7476eadadb3df7420a7"></a>
 constexpr <a class="el" href="structbeman_1_1execution_1_1as__awaitable__t.html">::beman::execution::as_awaitable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>as_awaitable</b> {}</td></tr>
 <tr class="separator:a3f18a47d8dc6b7476eadadb3df7420a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d365f894679ff01040833af8fb69b14"><td class="memItemLeft" align="right" valign="top"><a id="a1d365f894679ff01040833af8fb69b14" name="a1d365f894679ff01040833af8fb69b14"></a>
+constexpr associate_t&#160;</td><td class="memItemRight" valign="bottom"><b>associate</b> {}</td></tr>
+<tr class="separator:a1d365f894679ff01040833af8fb69b14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d068db5741c84f306e945c832744cd9"><td class="memItemLeft" align="right" valign="top"><a id="a0d068db5741c84f306e945c832744cd9" name="a0d068db5741c84f306e945c832744cd9"></a>
 constexpr ::beman::execution::bulk_t&#160;</td><td class="memItemRight" valign="bottom"><b>bulk</b> {}</td></tr>
 <tr class="separator:a0d068db5741c84f306e945c832744cd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -435,6 +460,12 @@ constexpr <a class="el" href="structbeman_1_1execution_1_1set__stopped__t.html">
 constexpr <a class="el" href="structbeman_1_1execution_1_1set__value__t.html">set_value_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_value</b> {}</td></tr>
 <tr class="memdesc:a88ba134b297e5c0b06590a57ae9d5dfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object for successful completions. <br /></td></tr>
 <tr class="separator:a88ba134b297e5c0b06590a57ae9d5dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad68e634e7a244efee148d8acaa6e3227"><td class="memItemLeft" align="right" valign="top"><a id="ad68e634e7a244efee148d8acaa6e3227" name="ad68e634e7a244efee148d8acaa6e3227"></a>
+constexpr spawn_t&#160;</td><td class="memItemRight" valign="bottom"><b>spawn</b> {}</td></tr>
+<tr class="separator:ad68e634e7a244efee148d8acaa6e3227"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26d569173995dbdd870ab9b204e65f54"><td class="memItemLeft" align="right" valign="top"><a id="a26d569173995dbdd870ab9b204e65f54" name="a26d569173995dbdd870ab9b204e65f54"></a>
+constexpr spawn_future_t&#160;</td><td class="memItemRight" valign="bottom"><b>spawn_future</b> {}</td></tr>
+<tr class="separator:a26d569173995dbdd870ab9b204e65f54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab504a7494c49d4cff66b80e457d08bb4"><td class="memItemLeft" align="right" valign="top"><a id="ab504a7494c49d4cff66b80e457d08bb4" name="ab504a7494c49d4cff66b80e457d08bb4"></a>
 constexpr ::beman::execution::split_t&#160;</td><td class="memItemRight" valign="bottom"><b>split</b> {}</td></tr>
 <tr class="separator:ab504a7494c49d4cff66b80e457d08bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -462,6 +493,9 @@ constexpr ::beman::execution::when_all_t&#160;</td><td class="memItemRight" vali
 <tr class="memitem:a279072c2c153dc5cda04612e142ae1e6"><td class="memItemLeft" align="right" valign="top"><a id="a279072c2c153dc5cda04612e142ae1e6" name="a279072c2c153dc5cda04612e142ae1e6"></a>
 constexpr ::beman::execution::when_all_with_variant_t&#160;</td><td class="memItemRight" valign="bottom"><b>when_all_with_variant</b> {}</td></tr>
 <tr class="separator:a279072c2c153dc5cda04612e142ae1e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2defa838a747e82bc632f5b0fdb4d6cf"><td class="memItemLeft" align="right" valign="top"><a id="a2defa838a747e82bc632f5b0fdb4d6cf" name="a2defa838a747e82bc632f5b0fdb4d6cf"></a>
+constexpr write_env_t&#160;</td><td class="memItemRight" valign="bottom"><b>write_env</b> {}</td></tr>
+<tr class="separator:a2defa838a747e82bc632f5b0fdb4d6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96e6606229cea8cab1a5097791d50cc9"><td class="memItemLeft" align="right" valign="top"><a id="a96e6606229cea8cab1a5097791d50cc9" name="a96e6606229cea8cab1a5097791d50cc9"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td></tr>
 <tr class="separator:a96e6606229cea8cab1a5097791d50cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>

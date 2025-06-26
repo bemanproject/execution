@@ -4,6 +4,7 @@ var annotated_dup =
       [ "execution", "namespacebeman_1_1execution.html", [
         [ "as_awaitable_t", "structbeman_1_1execution_1_1as__awaitable__t.html", null ],
         [ "completion_signatures", "structbeman_1_1execution_1_1completion__signatures.html", null ],
+        [ "counting_scope", "classbeman_1_1execution_1_1counting__scope.html", "classbeman_1_1execution_1_1counting__scope" ],
         [ "default_domain", "structbeman_1_1execution_1_1default__domain.html", null ],
         [ "empty_env", "structbeman_1_1execution_1_1empty__env.html", null ],
         [ "get_allocator_t", "structbeman_1_1execution_1_1get__allocator__t.html", null ],
@@ -20,6 +21,7 @@ var annotated_dup =
         [ "never_stop_token", "classbeman_1_1execution_1_1never__stop__token.html", null ],
         [ "nostopstate_t", "structbeman_1_1execution_1_1nostopstate__t.html", null ],
         [ "operation_state_t", "structbeman_1_1execution_1_1operation__state__t.html", null ],
+        [ "prop", "structbeman_1_1execution_1_1prop.html", null ],
         [ "receiver_t", "structbeman_1_1execution_1_1receiver__t.html", null ],
         [ "run_loop", "classbeman_1_1execution_1_1run__loop.html", null ],
         [ "schedule_t", "structbeman_1_1execution_1_1schedule__t.html", null ],

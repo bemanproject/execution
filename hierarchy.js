@@ -1,7 +1,6 @@
 var hierarchy =
 [
     [ "beman::execution::as_awaitable_t", "structbeman_1_1execution_1_1as__awaitable__t.html", null ],
-    [ "beman::execution::simple_counting_scope::assoc", "classbeman_1_1execution_1_1simple__counting__scope_1_1assoc.html", null ],
     [ "CallbackFun", null, [
       [ "beman::execution::stop_callback< CallbackFun >", "classbeman_1_1execution_1_1stop__callback.html", null ]
     ] ],
@@ -19,7 +18,10 @@ var hierarchy =
     [ "beman::execution::get_env_t", "structbeman_1_1execution_1_1get__env__t.html", null ],
     [ "beman::execution::get_stop_token_t", "structbeman_1_1execution_1_1get__stop__token__t.html", null ],
     [ "beman::execution::detail::immovable", null, [
-      [ "beman::execution::simple_counting_scope", "classbeman_1_1execution_1_1simple__counting__scope.html", null ]
+      [ "beman::execution::detail::counting_scope_base", null, [
+        [ "beman::execution::counting_scope", "classbeman_1_1execution_1_1counting__scope.html", null ],
+        [ "beman::execution::simple_counting_scope", "classbeman_1_1execution_1_1simple__counting__scope.html", null ]
+      ] ]
     ] ],
     [ "beman::execution::inplace_stop_callback< CallbackFun >", "classbeman_1_1execution_1_1inplace__stop__callback.html", null ],
     [ "beman::execution::inplace_stop_source", "classbeman_1_1execution_1_1inplace__stop__source.html", null ],
@@ -30,6 +32,7 @@ var hierarchy =
     [ "beman::execution::never_stop_token", "classbeman_1_1execution_1_1never__stop__token.html", null ],
     [ "beman::execution::nostopstate_t", "structbeman_1_1execution_1_1nostopstate__t.html", null ],
     [ "beman::execution::operation_state_t", "structbeman_1_1execution_1_1operation__state__t.html", null ],
+    [ "beman::execution::prop< Query, Value >", "structbeman_1_1execution_1_1prop.html", null ],
     [ "beman::execution::receiver_t", "structbeman_1_1execution_1_1receiver__t.html", null ],
     [ "beman::execution::run_loop", "classbeman_1_1execution_1_1run__loop.html", null ],
     [ "beman::execution::schedule_t", "structbeman_1_1execution_1_1schedule__t.html", null ],
@@ -50,7 +53,10 @@ var hierarchy =
     ] ],
     [ "beman::execution::stop_source", "classbeman_1_1execution_1_1stop__source.html", null ],
     [ "beman::execution::stop_token", "classbeman_1_1execution_1_1stop__token.html", null ],
-    [ "beman::execution::simple_counting_scope::token", "classbeman_1_1execution_1_1simple__counting__scope_1_1token.html", null ],
+    [ "beman::execution::detail::counting_scope_base::token", null, [
+      [ "beman::execution::counting_scope::token", "classbeman_1_1execution_1_1counting__scope_1_1token.html", null ],
+      [ "beman::execution::simple_counting_scope::token", "classbeman_1_1execution_1_1simple__counting__scope_1_1token.html", null ]
+    ] ],
     [ "std::tuple_element< I, T >", "structstd_1_1tuple__element_3_01I_00_01T_01_4.html", null ],
     [ "beman::execution::with_awaitable_senders< Promise >", "structbeman_1_1execution_1_1with__awaitable__senders.html", null ]
 ];

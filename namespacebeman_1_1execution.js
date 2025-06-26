@@ -2,6 +2,7 @@ var namespacebeman_1_1execution =
 [
     [ "as_awaitable_t", "structbeman_1_1execution_1_1as__awaitable__t.html", null ],
     [ "completion_signatures", "structbeman_1_1execution_1_1completion__signatures.html", null ],
+    [ "counting_scope", "classbeman_1_1execution_1_1counting__scope.html", "classbeman_1_1execution_1_1counting__scope" ],
     [ "default_domain", "structbeman_1_1execution_1_1default__domain.html", null ],
     [ "empty_env", "structbeman_1_1execution_1_1empty__env.html", null ],
     [ "get_allocator_t", "structbeman_1_1execution_1_1get__allocator__t.html", null ],
@@ -18,6 +19,7 @@ var namespacebeman_1_1execution =
     [ "never_stop_token", "classbeman_1_1execution_1_1never__stop__token.html", null ],
     [ "nostopstate_t", "structbeman_1_1execution_1_1nostopstate__t.html", null ],
     [ "operation_state_t", "structbeman_1_1execution_1_1operation__state__t.html", null ],
+    [ "prop", "structbeman_1_1execution_1_1prop.html", null ],
     [ "receiver_t", "structbeman_1_1execution_1_1receiver__t.html", null ],
     [ "run_loop", "classbeman_1_1execution_1_1run__loop.html", null ],
     [ "schedule_t", "structbeman_1_1execution_1_1schedule__t.html", null ],
@@ -37,6 +39,7 @@ var namespacebeman_1_1execution =
     [ "receiver", "conceptbeman_1_1execution_1_1receiver.html", null ],
     [ "receiver_of", "conceptbeman_1_1execution_1_1receiver__of.html", null ],
     [ "scheduler", "conceptbeman_1_1execution_1_1scheduler.html", null ],
+    [ "scope_token", "conceptbeman_1_1execution_1_1scope__token.html", null ],
     [ "sender", "conceptbeman_1_1execution_1_1sender.html", null ],
     [ "sender_in", "conceptbeman_1_1execution_1_1sender__in.html", null ],
     [ "stoppable_token", "conceptbeman_1_1execution_1_1stoppable__token.html", null ],
