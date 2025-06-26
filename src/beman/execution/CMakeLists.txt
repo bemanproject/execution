@@ -73,6 +73,8 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/continues_on.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope_base.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope_join.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_same_as.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_tuple.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_type_list.hpp

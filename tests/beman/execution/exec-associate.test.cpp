@@ -7,6 +7,7 @@
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/sync_wait.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 #include <type_traits>
@@ -21,9 +22,7 @@ struct sender {
         auto start() & noexcept {}
     };
     using sender_concept = test_std::sender_t;
-    auto connect(auto&&) {
-        return state();
-    }
+    auto connect(auto&&) { return state(); }
 };
 static_assert(test_std::sender<sender>);
 
@@ -31,10 +30,10 @@ template <test_std::sender Sender>
 struct wrap_sender {
     using sender_concept = test_std::sender_t;
     std::remove_cvref_t<Sender> sender;
-    wrap_sender(Sender&& s): sender(std::forward<Sender>(s)) {}
+    wrap_sender(Sender&& s) : sender(std::forward<Sender>(s)) {}
 
     template <typename Env>
-    auto get_completion_signatures(Env const& env) const noexcept {
+    auto get_completion_signatures(const Env& env) const noexcept {
         return test_std::get_completion_signatures(this->sender, env);
     }
     template <test_std::receiver Receiver>
@@ -53,13 +52,19 @@ static_assert(test_std::sender<wrap_sender<sender>>);
 
 template <bool Noexcept>
 struct token {
-    bool value{};
+    bool         value{};
     std::size_t* count{};
-    auto try_associate() noexcept(Noexcept) -> bool {
-        if (this->value && this->count) {++*this->count; }
+    auto         try_associate() noexcept(Noexcept) -> bool {
+        if (this->value && this->count) {
+            ++*this->count;
+        }
         return this->value;
     }
-    auto disassociate() noexcept -> void {if (this->count) { --*this->count; } }
+    auto disassociate() noexcept -> void {
+        if (this->count) {
+            --*this->count;
+        }
+    }
     template <test_std::sender Sender>
     auto wrap(Sender&& sender) noexcept {
         return wrap_sender(std::forward<Sender>(sender));
@@ -72,11 +77,9 @@ struct dtor_sender {
     std::size_t* count{};
     using sender_concept = test_std::sender_t;
 
-    explicit dtor_sender(std::size_t* c): count(c) {}
-    dtor_sender(dtor_sender&& other): count(std::exchange(other.count, nullptr)) {}
-    ~dtor_sender() {
-        ASSERT(count == nullptr || *count == 1u);
-    }
+    explicit dtor_sender(std::size_t* c) : count(c) {}
+    dtor_sender(dtor_sender&& other) : count(std::exchange(other.count, nullptr)) {}
+    ~dtor_sender() { ASSERT(count == nullptr || *count == 1u); }
 };
 static_assert(test_std::sender<dtor_sender>);
 
@@ -85,17 +88,17 @@ auto test_associate_data() {
     static_assert(std::same_as<wrap_sender<sender>, data_t::wrap_sender>);
 
     {
-    test_detail::associate_data data(token<true>{true}, sender{});
-    static_assert(std::same_as<data_t, decltype(data)>);
-    ASSERT(data.sender);
-    test_detail::associate_data move(std::move(data));
-    ASSERT(!data.sender.has_value());
-    ASSERT(move.sender);
+        test_detail::associate_data data(token<true>{true}, sender{});
+        static_assert(std::same_as<data_t, decltype(data)>);
+        ASSERT(data.sender);
+        test_detail::associate_data move(std::move(data));
+        ASSERT(!data.sender.has_value());
+        ASSERT(move.sender);
     }
     {
-    test_detail::associate_data data(token<true>{false}, sender{});
-    static_assert(std::same_as<data_t, decltype(data)>);
-    ASSERT(!data.sender);
+        test_detail::associate_data data(token<true>{false}, sender{});
+        static_assert(std::same_as<data_t, decltype(data)>);
+        ASSERT(!data.sender);
     }
     {
         std::size_t count{};
@@ -134,9 +137,7 @@ template <test_std::sender Sender, test_std::scope_token Token>
 auto test_associate(Sender&& sender, Token&& token) -> void {
     [[maybe_unused]] auto sndr = test_std::associate(std::forward<Sender>(sender), std::forward<Token>(token));
     static_assert(test_std::sender<decltype(sndr)>);
-    auto s{test_std::get_completion_signatures(sndr, test_std::empty_env{})};
-    auto state{test_std::connect(std::move(sndr), receiver{})};
-    ::test_std::start(state);
+    test_std::sync_wait(std::move(sndr));
 }
 
 } // namespace
@@ -147,5 +148,4 @@ TEST(exec_associate) {
     test_associate_data();
 
     test_associate(sender{}, token<true>{});
-
 }
