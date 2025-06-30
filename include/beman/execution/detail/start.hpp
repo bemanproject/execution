@@ -36,10 +36,12 @@ struct start_t {
     auto operator()(const State& state) const noexcept -> void {
         state.start();
     }
+    // NOLINTBEGIN(misc-no-recursion)
     template <typename State>
     auto operator()(State& state) const noexcept -> void {
         state.start();
     }
+    // NOLINTEND(misc-no-recursion)
 };
 
 inline constexpr start_t start{};

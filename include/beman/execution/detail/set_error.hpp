@@ -34,10 +34,12 @@ struct set_error_t {
     auto operator()(Receiver&&, Error&&) const
         -> void = BEMAN_EXECUTION_DELETE("the call to receiver.set_error(error) has to be noexcept");
 
+    // NOLINTBEGIN(misc-no-recursion)
     template <typename Receiver, typename Error>
     auto operator()(Receiver&& receiver, Error&& error) const noexcept -> void {
         ::std::forward<Receiver>(receiver).set_error(::std::forward<Error>(error));
     }
+    // NOLINTEND(misc-no-recursion)
 };
 
 /*!

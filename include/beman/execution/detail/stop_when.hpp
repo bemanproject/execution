@@ -127,6 +127,7 @@ struct beman::execution::detail::stop_when_t::sender {
         return state<Rcvr>{std::move(this->sndr), ::std::move(this->tok), ::std::forward<Rcvr>(rcvr)};
     }
 };
+
 // ----------------------------------------------------------------------------
 
 #endif

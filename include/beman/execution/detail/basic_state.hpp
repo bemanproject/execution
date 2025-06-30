@@ -8,6 +8,7 @@
 #include <beman/execution/detail/sender_decompose.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
 #include <beman/execution/detail/state_type.hpp>
+#include <exception>
 #include <utility>
 
 // ----------------------------------------------------------------------------

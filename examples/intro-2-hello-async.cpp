@@ -30,7 +30,7 @@ int main() {
                      | ex::then([] { std::cout << ",\n"; return std::string(", "); }),
                  timer.resume_after(2s)
                      | ex::then([] { std::cout << "w\n"; return std::string("world"); })
-             ) | ex::then([](auto s1, auto s2, auto s3) { return s1 + s2 + s3; })
+             ) | ex::then([](auto const& s1, auto const& s2, auto const& s3) { return s1 + s2 + s3; })
          )
      ).value_or(std::tuple(std::string("")));
     // clang-format on

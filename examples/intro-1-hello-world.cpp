@@ -18,7 +18,7 @@ int main() {
          ex::when_all(
              ex::just("hello, "s),
              ex::just("world"s)
-         ) | ex::then([](auto s1, auto s2) { return s1 + s2; })
+         ) | ex::then([](auto const& s1, auto const& s2) { return s1 + s2; })
          ).value_or(std::tuple(""s)
      );
     // clang-format on

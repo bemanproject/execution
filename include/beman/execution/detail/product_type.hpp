@@ -114,6 +114,7 @@ constexpr auto is_product_type(const ::beman::execution::detail::product_type<T.
 
 template <::std::size_t Start, typename Fun, typename Tuple, ::std::size_t... I>
 constexpr auto sub_apply_helper(Fun&& fun, Tuple&& tuple, ::std::index_sequence<I...>) -> decltype(auto) {
+    // NOLINTNEXTLINE(bugprone-use-after-move,hicpp-invalid-access-moved)
     return ::std::forward<Fun>(fun)(::std::forward<Tuple>(tuple).template get<I + Start>()...);
 }
 
