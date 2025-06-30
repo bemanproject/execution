@@ -32,13 +32,7 @@ inline constexpr struct stop_when_t {
     struct sender;
 
     template <::beman::execution::sender Sndr, ::beman::execution::stoppable_token Tok>
-    auto operator()(Sndr&& sndr, Tok&& tok) const noexcept {
-        if constexpr (::beman::execution::unstoppable_token<Tok>) {
-            return ::std::forward<Sndr>(sndr);
-        } else {
-            return sender<Sndr, Tok>(*this, ::std::forward<Tok>(tok), ::std::forward<Sndr>(sndr));
-        }
-    }
+    auto operator()(Sndr&& sndr, Tok&& tok) const noexcept;
 } stop_when{};
 } // namespace beman::execution::detail
 
@@ -127,6 +121,15 @@ struct beman::execution::detail::stop_when_t::sender {
         return state<Rcvr>{std::move(this->sndr), ::std::move(this->tok), ::std::forward<Rcvr>(rcvr)};
     }
 };
+
+    template <::beman::execution::sender Sndr, ::beman::execution::stoppable_token Tok>
+    inline auto beman::execution::detail::stop_when_t::operator()(Sndr&& sndr, Tok&& tok) const noexcept {
+        if constexpr (::beman::execution::unstoppable_token<Tok>) {
+            return ::std::forward<Sndr>(sndr);
+        } else {
+            return sender<Sndr, Tok>(*this, ::std::forward<Tok>(tok), ::std::forward<Sndr>(sndr));
+        }
+    }
 
 // ----------------------------------------------------------------------------
 
