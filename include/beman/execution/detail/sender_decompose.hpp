@@ -42,7 +42,7 @@ auto get_sender_data(Sender&& sender) {
         //-dk:TODO should use a dynamic/language approach:
         auto&& [tag, data, ... children] = sender;
         return sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(children)...>>;
-#endif
+#else
     using sender_type = ::std::remove_cvref_t<Sender>;
     static constexpr ::beman::execution::detail::sender_convert_to_any_t at{};
 
@@ -68,10 +68,11 @@ auto get_sender_data(Sender&& sender) {
         return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0)};
     } else if constexpr (requires { sender_type{at, at}; }) {
         auto&& [tag, data] = sender;
-        return ::beman::execution::detail::sender_data{tag, data, ::std::tuple<>()};
+        return ::beman::execution::detail::sender_data{tag, data, ::std::tuple<>{}};
     } else {
         return ::beman::execution::detail::sender_meta<void, void, void>{};
     }
+#endif
 }
 
 template <typename Sender>

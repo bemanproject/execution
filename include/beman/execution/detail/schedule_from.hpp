@@ -4,36 +4,37 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_FROM
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_FROM
 
+#include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/child_type.hpp>
-#include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
+#include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_prepend.hpp>
 #include <beman/execution/detail/meta_to.hpp>
 #include <beman/execution/detail/meta_transform.hpp>
+#include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/query_with_default.hpp>
 #include <beman/execution/detail/sched_attrs.hpp>
-#include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/schedule_result_t.hpp>
+#include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
+#include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
-#include <beman/execution/detail/meta_unique.hpp>
 
 #include <exception>
 #include <type_traits>
@@ -43,23 +44,6 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-/*!
- * \brief Turn a completion signatures into a std::tuple type.
- * \internal
- */
-template <typename>
-struct as_tuple;
-/*!
- * \brief The actual operational partial specialization of as_tuple.
- * \internal
- */
-template <typename Tag, typename... T>
-struct as_tuple<Tag(T...)> {
-    using type = ::beman::execution::detail::decayed_tuple<Tag, T...>;
-};
-template <typename T>
-using as_tuple_t = typename as_tuple<T>::type;
-
 struct schedule_from_t {
     template <::beman::execution::scheduler Scheduler, ::beman::execution::sender Sender>
     auto operator()(Scheduler&& scheduler, Sender&& sender) const {

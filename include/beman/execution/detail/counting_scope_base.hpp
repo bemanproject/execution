@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-struct counting_scope_base;
+class counting_scope_base;
 }
 
 // ----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ class beman::execution::detail::counting_scope_base : ::beman::execution::detail
 
 // ----------------------------------------------------------------------------
 
-beman::execution::detail::counting_scope_base::~counting_scope_base() {
+inline beman::execution::detail::counting_scope_base::~counting_scope_base() {
     ::std::lock_guard kerberos(this->mutex);
     switch (this->state) {
     default:
@@ -83,7 +83,7 @@ beman::execution::detail::counting_scope_base::~counting_scope_base() {
     }
 }
 
-auto beman::execution::detail::counting_scope_base::close() noexcept -> void {
+inline auto beman::execution::detail::counting_scope_base::close() noexcept -> void {
     switch (this->state) {
     default:
         break;
@@ -99,12 +99,12 @@ auto beman::execution::detail::counting_scope_base::close() noexcept -> void {
     }
 }
 
-auto beman::execution::detail::counting_scope_base::add_node(node* n, ::std::lock_guard<::std::mutex>&) noexcept
+inline auto beman::execution::detail::counting_scope_base::add_node(node* n, ::std::lock_guard<::std::mutex>&) noexcept
     -> void {
     n->next = std::exchange(this->head, n);
 }
 
-auto beman::execution::detail::counting_scope_base::try_associate() noexcept -> bool {
+inline auto beman::execution::detail::counting_scope_base::try_associate() noexcept -> bool {
     ::std::lock_guard lock(this->mutex);
     switch (this->state) {
     default:
@@ -118,7 +118,8 @@ auto beman::execution::detail::counting_scope_base::try_associate() noexcept -> 
         return true;
     }
 }
-auto beman::execution::detail::counting_scope_base::disassociate() noexcept -> void {
+
+inline auto beman::execution::detail::counting_scope_base::disassociate() noexcept -> void {
     {
         ::std::lock_guard lock(this->mutex);
         if (0u < --this->count)
@@ -128,7 +129,7 @@ auto beman::execution::detail::counting_scope_base::disassociate() noexcept -> v
     this->complete();
 }
 
-auto beman::execution::detail::counting_scope_base::complete() noexcept -> void {
+inline auto beman::execution::detail::counting_scope_base::complete() noexcept -> void {
     node* current{[this] {
         ::std::lock_guard lock(this->mutex);
         return ::std::exchange(this->head, nullptr);
@@ -138,7 +139,7 @@ auto beman::execution::detail::counting_scope_base::complete() noexcept -> void 
     }
 }
 
-auto beman::execution::detail::counting_scope_base::start_node(node* n) -> void {
+inline auto beman::execution::detail::counting_scope_base::start_node(node* n) -> void {
     ::std::lock_guard kerberos(this->mutex);
     switch (this->state) {
     case ::beman::execution::detail::counting_scope_base::state_t::unused:

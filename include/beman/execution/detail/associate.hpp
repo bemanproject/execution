@@ -106,13 +106,15 @@ struct impls_for<associate_t> : ::beman::execution::detail::default_impls {
             struct op_state {
                 using sop_t        = op_t;
                 using sscope_token = scope_token;
+                struct assoc_t {
+                    sscope_token tok;
+                    sop_t        op;
+                };
+
                 bool associated{false};
                 union {
                     Receiver* rcvr;
-                    struct {
-                        sscope_token tok;
-                        sop_t        op;
-                    } assoc;
+                    assoc_t   assoc;
                 };
                 explicit op_state(Receiver& r) noexcept : rcvr(::std::addressof(r)) {}
                 explicit op_state(sscope_token tk, wrap_sender&& sndr, Receiver& r) try

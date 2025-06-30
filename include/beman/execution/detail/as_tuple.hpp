@@ -9,8 +9,16 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
+/*!
+ * \brief Turn a completion signatures into a std::tuple type.
+ * \internal
+ */
 template <typename T>
 struct as_tuple;
+/*!
+ * \brief The actual operational partial specialization of as_tuple.
+ * \internal
+ */
 template <typename Rc, typename... A>
 struct as_tuple<Rc(A...)> {
     using type = ::beman::execution::detail::decayed_tuple<Rc, A...>;

@@ -54,6 +54,13 @@
 #include <beman/execution/detail/with_awaitable_senders.hpp>
 #include <beman/execution/detail/write_env.hpp>
 
+#include <beman/execution/detail/associate.hpp>
+#include <beman/execution/detail/counting_scope.hpp>
+#include <beman/execution/detail/scope_token.hpp>
+#include <beman/execution/detail/simple_counting_scope.hpp>
+#include <beman/execution/detail/spawn_future.hpp>
+#include <beman/execution/detail/spawn.hpp>
+
 // ----------------------------------------------------------------------------
 
 #endif
