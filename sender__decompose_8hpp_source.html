@@ -144,7 +144,7 @@ $(document).ready(function(){initNavTree('sender__decompose_8hpp_source.html',''
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="comment">//-dk:TODO should use a dynamic/language approach:</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data, ... children] = sender;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keywordflow">return</span> sender_meta&lt;<span class="keyword">decltype</span>(tag), <span class="keyword">decltype</span>(data), ::std::tuple&lt;<span class="keyword">decltype</span>(children)...&gt;&gt;;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#else</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">using </span>sender_type = ::std::remove_cvref_t&lt;Sender&gt;;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">static</span> constexpr ::beman::execution::detail::sender_convert_to_any_t at{};</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
@@ -170,22 +170,23 @@ $(document).ready(function(){initNavTree('sender__decompose_8hpp_source.html',''
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0)};</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at}; }) {</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data] = sender;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tuple&lt;&gt;()};</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tuple&lt;&gt;{}};</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        return ::beman::execution::detail::sender_meta&lt;void, void, void&gt;{};</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    }</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender&gt;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">auto</span> get_sender_meta(Sender&amp;&amp; sender) {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">using </span>type = <span class="keyword">decltype</span>(get_sender_data(sender));</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">return</span> sender_meta&lt;typename type::tag_type, typename type::data_type, typename type::children_type&gt;{};</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender&gt;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">auto</span> get_sender_meta(Sender&amp;&amp; sender) {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">using </span>type = <span class="keyword">decltype</span>(get_sender_data(sender));</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">return</span> sender_meta&lt;typename type::tag_type, typename type::data_type, typename type::children_type&gt;{};</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>}</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
