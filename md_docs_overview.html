@@ -490,7 +490,7 @@ Example</summary>
 <summary >
 <code>get_env(<em>queryable</em>) -&gt; <em>env</em></code></summary>
 <p><b>Default</b>: <a href="#empty_env"><code>empty_env</code></a> <br  />
- The expresion <code>get_env(<em>queryable</em>)</code> is used to get the environment <code><em>env</em></code> associated with <code><em>queryable</em></code>. To provide a non-default environment for a <code><em>queryable</em></code> a <code>get_env</code> member needs to be defined. If <code><em>queryable</em></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href="‘#empty_env’">empty_env</a></code> is returned. The value of the expression is </p><ol>
+ The expression <code>get_env(<em>queryable</em>)</code> is used to get the environment <code><em>env</em></code> associated with <code><em>queryable</em></code>. To provide a non-default environment for a <code><em>queryable</em></code> a <code>get_env</code> member needs to be defined. If <code><em>queryable</em></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href="‘#empty_env’">empty_env</a></code> is returned. The value of the expression is </p><ol>
 <li>
 the result of <code>as_const(<em>queryable</em>).get_env()</code> if this expression is valid and <code>noexcept</code>. </li>
 <li>
@@ -652,7 +652,7 @@ Customization Point Objects</h2>
 <details >
 <summary >
 <code>connect(<em>sender</em>, <em>receiver</em>) -&gt; <em>operation_state</em></code></summary>
-<p>The expresion <code>connect(<em>sender</em>, <em>receiver</em>)</code> combines <code><em>sender</em></code> and <code><em>receiver</em></code> into an operation state <code><em>state</em></code>. When this <code><em>state</em></code> gets started using <code>start(<em>state</em>)</code> the operation represented by <code><em>sender</em></code> gets started and reports its completion to <code><em>receiver</em></code> or an object copied or moved from <code><em>receiver</em></code>. While the operation state <code><em>state</em></code> isn’t started it can be destroyed but once it got started it needs to stay valid until one of the completion signals is called on <code><em>receiver</em></code>. </p>
+<p>The expression <code>connect(<em>sender</em>, <em>receiver</em>)</code> combines <code><em>sender</em></code> and <code><em>receiver</em></code> into an operation state <code><em>state</em></code>. When this <code><em>state</em></code> gets started using <code>start(<em>state</em>)</code> the operation represented by <code><em>sender</em></code> gets started and reports its completion to <code><em>receiver</em></code> or an object copied or moved from <code><em>receiver</em></code>. While the operation state <code><em>state</em></code> isn’t started it can be destroyed but once it got started it needs to stay valid until one of the completion signals is called on <code><em>receiver</em></code>. </p>
 </details>
 <details >
 <summary >
@@ -752,7 +752,7 @@ Sender Adaptors</h3>
 <details >
 <summary >
 <code>into_variant(<em>sender</em>) -&gt; <em>sender-of</em>&lt;set_value_t(std::variant&lt;<em>Tuple</em>...&gt;)&gt;</code></summary>
-<p>The expression <code>into_variant(<em>sender</em>)</code> creates a sender which transforms the results of possibly multiple <code>set_value</code> completions of <code><em>sender</em></code> into one <code>set_value</code> completion respresenting the different upstream results as different options of a <code>variant&lt;<em>Tuple</em>...&gt;</code> where each <code><em>Tuple</em></code> is a <code>tuple</code> of values initialized with the respective arguments passed to <code>set_value</code>. The order of options in the <code>variant</code> isn’t specified. </p>
+<p>The expression <code>into_variant(<em>sender</em>)</code> creates a sender which transforms the results of possibly multiple <code>set_value</code> completions of <code><em>sender</em></code> into one <code>set_value</code> completion representing the different upstream results as different options of a <code>variant&lt;<em>Tuple</em>...&gt;</code> where each <code><em>Tuple</em></code> is a <code>tuple</code> of values initialized with the respective arguments passed to <code>set_value</code>. The order of options in the <code>variant</code> isn’t specified. </p>
 </details>
 <details >
 <summary >
