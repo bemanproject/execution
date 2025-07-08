@@ -1,0 +1,22 @@
+[project]
+name = "beman-tidy"
+version = "0.1.0"
+description = "The Codebase Bemanification Tool"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Darius Neațu", email = "neatudarius@gmail.com" }]
+maintainers = [{ name = "Rishyak", email = "hello@rishyak.com" }]
+dependencies = ["gitpython==3.1.44", "pyyaml==6.0.2"]
+
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[dependency-groups]
+dev = ["pytest>=8.4.0", "ruff>=0.11.13"]
+
+[project.scripts]
+beman-tidy = "beman_tidy.cli:main"
+
+[tool.pytest.ini_options]
+addopts = "-v"

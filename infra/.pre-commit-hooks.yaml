@@ -1,0 +1,7 @@
+- id: beman-tidy
+  name: "beman-tidy: bemanification your repo"
+  entry: ./tools/beman-tidy/beman-tidy
+  language: script
+  pass_filenames: false
+  always_run: true
+  args: [".", "--verbose"]

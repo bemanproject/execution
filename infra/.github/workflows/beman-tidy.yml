@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+name: beman-tidy tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/beman-tidy
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Sync environment
+        run: |
+          uv sync
+
+      - name: Run linter
+        run: |
+          echo "Running linter"
+          uv run ruff check --diff
+
+      - name: Run tests
+        run: |
+          uv run pytest tests/ -v

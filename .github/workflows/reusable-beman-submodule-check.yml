@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+name: 'beman-submodule check'
+on:
+  workflow_call:
+    inputs:
+      infra_path:
+        description: "Path to the infra beman-submodule"
+        type: string
+        default: './infra/'
+jobs:
+  check:
+    name: Check beman submodules for consistency
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: beman submodule consistency check
+        run: |
+          (set -o pipefail; ${{ inputs.infra_path }}/tools/beman-submodule/beman-submodule status | grep -qvF '+')
