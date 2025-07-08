@@ -17,7 +17,7 @@ synchronously produce the result. The intention is to show a basic
 use of some involved components to build up a feeling of how things
 work.
 
-The componentes for `std::execution` are declared in the header
+The components for `std::execution` are declared in the header
 `<execution>`.  This particular implementation implements the
 cmponents in namespace `beman::execution` declared in the header
 `<beman/execution/execution.hpp>`:
