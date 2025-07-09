@@ -22,7 +22,7 @@ repos:
 
   # CMake linting and formatting
   - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.19.3
+    rev: 0.20.0
     hooks:
       - id: gersemi
         name: CMake linting
@@ -39,4 +39,4 @@ repos:
     hooks:
       - id: codespell
         files: ^.*\.(cmake|cpp|hpp|txt|md|json|in|yaml|yml)$
-        args: ["--ignore-words", ".codespellignore" ]
+        args: ["-w", "--ignore-words", ".codespellignore" ]
