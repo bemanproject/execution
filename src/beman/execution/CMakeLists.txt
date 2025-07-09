@@ -210,11 +210,6 @@ source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
 
-target_compile_features(${TARGET_NAME} PUBLIC
-  "$<$<COMPILE_FEATURES:cxx_std_26>:cxx_std_26>"
-  "$<$<NOT:$<COMPILE_FEATURES:cxx_std_26>>:cxx_std_23>"
-)
-
 if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
   return()
 endif()

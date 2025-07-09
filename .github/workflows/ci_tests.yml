@@ -46,14 +46,14 @@ jobs:
                     }
                   ]
                 },
-                { "cxxversions": ["c++23", "c++20"],
+                { "cxxversions": ["c++23"],
                   "tests": [{ "stdlibs": ["libstdc++"], "tests": ["Release.Default"]}]
                 }
               ]
             },
             { "versions": ["14", "13"],
               "tests": [
-                { "cxxversions": ["c++26", "c++23", "c++20"],
+                { "cxxversions": ["c++26", "c++23"],
                   "tests": [{ "stdlibs": ["libstdc++"], "tests": ["Release.Default"]}]
                 }
               ]
@@ -72,7 +72,7 @@ jobs:
                     }
                   ]
                 },
-                { "cxxversions": ["c++23", "c++20"],
+                { "cxxversions": ["c++23"],
                   "tests": [
                     {"stdlibs": ["libstdc++", "libc++"], "tests": ["Release.Default"]}
                   ]
@@ -81,7 +81,7 @@ jobs:
             },
             { "versions": ["19"],
               "tests": [
-                { "cxxversions": ["c++26", "c++23", "c++20"],
+                { "cxxversions": ["c++26", "c++23"],
                   "tests": [
                     {"stdlibs": ["libstdc++", "libc++"], "tests": ["Release.Default"]}
                   ]
@@ -90,7 +90,7 @@ jobs:
             },
             { "versions": ["18", "17"],
               "tests": [
-                { "cxxversions": ["c++26", "c++23", "c++20"],
+                { "cxxversions": ["c++26", "c++23"],
                   "tests": [{"stdlibs": ["libc++"], "tests": ["Release.Default"]}]
                 }
               ]
