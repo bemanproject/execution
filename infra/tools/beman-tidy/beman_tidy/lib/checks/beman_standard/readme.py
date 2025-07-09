@@ -72,10 +72,42 @@ class ReadmeBadgesCheck(ReadmeBaseCheck):
         pass
 
 
-# TODO README.PURPOSE
+@register_beman_standard_check("README.IMPLEMENTS")
+class ReadmeImplementsCheck(ReadmeBaseCheck):
+    def __init__(self, repo_info, beman_standard_check_config):
+        super().__init__(repo_info, beman_standard_check_config)
 
+    def check(self):
+        lines = self.read_lines_strip()
 
-# TODO README.IMPLEMENTS
+        # Match the pattern to start with "Implements:" and then have a paper reference and a wg21.link URL.
+        # Examples of valid lines:
+        # **Implements**: [Standard Library Concepts (P0898R3)](https://wg21.link/P0898R3).
+        # **Implements**: [Give *std::optional* Range Support (P3168R2)](https://wg21.link/P3168R2) and [`std::optional<T&>` (P2988R5)](https://wg21.link/P2988R5)
+        # **Implements**: [.... (PxyzwRr)](https://wg21.link/PxyzwRr), [.... (PabcdRr)](https://wg21.link/PabcdRr), and [.... (PijklRr)](https://wg21.link/PijklRr),
+        regex = r"^\*\*Implements\*\*:\s+.*\bP\d{4}R\d+\b.*wg21\.link/\S+"
+
+        # Count how many lines match the regex
+        implement_lines = 0
+        for line in lines:
+            if re.match(regex, line):
+                implement_lines += 1
+
+        # If there is exactly one "Implements:" line, it is valid
+        if implement_lines == 1:
+            return True
+
+        # Invalid/missing/duplicate "Implements:" line
+        self.log(
+            f"Invalid/missing/duplicate 'Implements:' line in '{self.path}'. See https://github.com/bemanproject/beman/blob/main/docs/BEMAN_STANDARD.md#readmeimplements for more information."
+        )
+        return False
+
+    def fix(self):
+        self.log(
+            "Please write a Implements line in README.md file. See https://github.com/bemanproject/beman/blob/main/docs/BEMAN_STANDARD.md#readmeimplements for the desired format."
+        )
+        return False
 
 
 @register_beman_standard_check("README.LIBRARY_STATUS")

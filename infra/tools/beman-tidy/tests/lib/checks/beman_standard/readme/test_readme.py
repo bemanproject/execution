@@ -13,6 +13,7 @@ from tests.utils.path_runners import (
 from beman_tidy.lib.checks.beman_standard.readme import (
     ReadmeTitleCheck,
     ReadmeBadgesCheck,
+    ReadmeImplementsCheck,
     ReadmeLibraryStatusCheck,
 )
 
@@ -126,6 +127,55 @@ def test__README_BADGES__invalid(repo_info, beman_standard_check_config):
 def test__README_BADGES__fix_inplace(repo_info, beman_standard_check_config):
     """
     Test that the fix method corrects an invalid README.md badges.
+    """
+    pass
+
+
+def test__README_IMPLEMENTS__valid(repo_info, beman_standard_check_config):
+    """
+    Test that a valid README.md "Implements" passes the check
+    """
+    valid_readme_paths = [
+        Path(f"{valid_prefix}/README-v1.md"),
+        Path(f"{valid_prefix}/README-v2.md"),
+        Path(f"{valid_prefix}/README-v3.md"),
+        Path(f"{valid_prefix}/README-v4.md"),
+    ]
+
+    run_check_for_each_path(
+        True,
+        valid_readme_paths,
+        ReadmeImplementsCheck,
+        repo_info,
+        beman_standard_check_config,
+    )
+
+
+def test__README_IMPLEMENTS__invalid(repo_info, beman_standard_check_config):
+    """
+    Test that an invalid README.md "Implements" fails the check
+    """
+    invalid_readme_paths = [
+        Path(f"{invalid_prefix}/invalid.md"),
+        Path(f"{invalid_prefix}/invalid-implements-v1.md"),
+        Path(f"{invalid_prefix}/invalid-implements-v2.md"),
+        Path(f"{invalid_prefix}/invalid-implements-v3.md"),
+        Path(f"{invalid_prefix}/invalid-implements-v4.md"),
+    ]
+
+    run_check_for_each_path(
+        False,
+        invalid_readme_paths,
+        ReadmeImplementsCheck,
+        repo_info,
+        beman_standard_check_config,
+    )
+
+
+@pytest.mark.skip(reason="NOT implemented")
+def test__README_IMPLEMENTS__fix_inplace(repo_info, beman_standard_check_config):
+    """
+    Test that the fix method corrects an invalid README.md "Implements"
     """
     pass
 
