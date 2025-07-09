@@ -1,0 +1,48 @@
+{
+  "version": 6,
+  "include": [
+    "CMakeGenericPresets.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "debug-base-Darwin",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "release-base-Darwin",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug Build",
+      "inherits": [
+        "root-config",
+        "debug-base-Darwin"
+      ]
+    },
+    {
+      "name": "release",
+      "displayName": "Release Build",
+      "inherits": [
+        "root-config",
+        "release-base-Darwin"
+      ]
+    }
+  ]
+}

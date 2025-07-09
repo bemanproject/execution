@@ -1,0 +1,32 @@
+{
+  "version": 6,
+  "include": [
+    "CMakeGenericPresets.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "release",
+      "description": "Windows preset for library developers",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build",
+      "inherits": [
+        "root-config"
+      ],
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "debug",
+      "description": "Windows preset for library developers",
+      "inherits": [
+        "release"
+      ]
+    }
+  ]
+}
