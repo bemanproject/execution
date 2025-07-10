@@ -52,19 +52,36 @@ contains some links for general information about the sender/receivers and `std:
 
 ## Build
 
+## Precondisions
+
+- cmake v3.30 or newer
+- ninja v1.11.1 or newer
+- A compiler that supports at least C++23
+
+
 | Library | Linux | MacOS | Windows |
 | ------- | ----- | ----- | ------- |
 | build | ![Linux build status](https://github.com/bemanproject/execution/actions/workflows/linux.yml/badge.svg) | ![MacOS build status](https://github.com/bemanproject/execution/actions/workflows/macos.yml/badge.svg) | ![Window build status](https://github.com/bemanproject/execution/actions/workflows/windows.yml/badge.svg) |
 
 The following instructions build the library and the examples:
 
+    ln -s cmake/CMakeUserPresets.json .
     cmake --workflow --list-presets
     Available workflow presets:
 
       "debug"
       "release"
+      "gcc-debug"
+      "gcc-release"
+      "llvm-debug"
+      "llvm-release"
+      "appleclang-debug"
+      "appleclang-release"
+      "msvc-debug"
+      "msvc-release"
 
-    cmake --workflow --preset release
+
+    CXX=g++-15 cmake --workflow --preset release
 
 The implementation compiles and passes tests using [clang](https://clang.llvm.org/),
 [gcc](http://gcc.gnu.org), and [MSVC++](https://visualstudio.microsoft.com/vs/features/cplusplus/).

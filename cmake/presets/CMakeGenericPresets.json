@@ -17,6 +17,17 @@
         "CMAKE_CXX_STANDARD_REQUIRED": true,
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
         "CMAKE_SKIP_TEST_ALL_DEPENDENCY": false
+      },
+      "warnings": {
+        "dev": true,
+        "deprecated": true,
+        "uninitialized": true,
+        "unusedCli": true,
+        "systemVars": false
+      },
+      "errors": {
+        "dev": false,
+        "deprecated": true
       }
     }
   ]

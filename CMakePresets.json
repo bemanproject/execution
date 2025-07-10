@@ -102,6 +102,11 @@
       ],
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/msvc-toolchain.cmake"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
@@ -113,6 +118,11 @@
       ],
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/msvc-toolchain.cmake"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     }
   ],

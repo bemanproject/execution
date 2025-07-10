@@ -37,7 +37,8 @@ BUILDROOT = build
 SYSTEM    = $(shell uname -s)
 BUILD     = $(BUILDROOT)/$(SYSTEM)/$(SANITIZER)
 EXAMPLE   = beman.execution.examples.stop_token
-CMAKE_CXX_COMPILER=$(COMPILER)
+
+export CXX=$(COMPILER)
 
 ifeq ($(SANITIZER),release)
     CXX_FLAGS = -O3 -Wpedantic -Wall -Wextra -Wno-shadow -Werror
@@ -79,9 +80,10 @@ doc:
 # 	$(MAKE) SANITIZER=$@
 
 build:
-	CC=$(CXX) cmake --fresh -G Ninja -S $(SOURCEDIR) -B  $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
+	cmake --fresh -G Ninja -S $(SOURCEDIR) -B  $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 \
 	  -D CMAKE_SKIP_INSTALL_RULES=1 \
+	  -D CMAKE_CXX_STANDARD=23 \
 	  -D CMAKE_CXX_COMPILER=$(CXX) # XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
@@ -92,11 +94,16 @@ test: build
 install: test
 	cmake --install $(BUILD) --prefix /opt/local
 
-release:
-	cmake --workflow --preset $@ --fresh
+CMakeUserPresets.json: cmake/CMakeUserPresets.json
+	ln -s $< $@
 
-debug:
-	cmake --workflow --preset $@ --fresh
+release: CMakeUserPresets.json
+	cmake --preset $@ --fresh --log-level=TRACE
+	cmake --workflow --preset $@
+
+debug: CMakeUserPresets.json
+	cmake --preset $@ --fresh --log-level=TRACE
+	cmake --workflow --preset $@
 
 ce:
 	@mkdir -p $(BUILD)

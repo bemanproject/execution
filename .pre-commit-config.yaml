@@ -22,7 +22,7 @@ repos:
 
   # CMake linting and formatting
   - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.20.0
+    rev: 0.20.1
     hooks:
       - id: gersemi
         name: CMake linting
