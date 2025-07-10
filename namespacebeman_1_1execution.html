@@ -382,7 +382,7 @@ constexpr continues_on_t&#160;</td><td class="memItemRight" valign="bottom"><b>c
 <tr class="memdesc:ac82cc62b2a581cacd988ddc78cbc3bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object to create a <code>continues_on</code> sender. <br /></td></tr>
 <tr class="separator:ac82cc62b2a581cacd988ddc78cbc3bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b0f7f25fb2dfd00f655321db3a2d18f"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6">forwarding_query_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a9b0f7f25fb2dfd00f655321db3a2d18f">forwarding_query</a> {}</td></tr>
-<tr class="memdesc:a9b0f7f25fb2dfd00f655321db3a2d18f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The customizatoin point object to determine whether queries should be forwarded.  <br /></td></tr>
+<tr class="memdesc:a9b0f7f25fb2dfd00f655321db3a2d18f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The customization point object to determine whether queries should be forwarded.  <br /></td></tr>
 <tr class="separator:a9b0f7f25fb2dfd00f655321db3a2d18f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bab3fbcd5c39321b7eb3131745a2684"><td class="memItemLeft" align="right" valign="top"><a id="a2bab3fbcd5c39321b7eb3131745a2684" name="a2bab3fbcd5c39321b7eb3131745a2684"></a>
 constexpr <a class="el" href="structbeman_1_1execution_1_1get__allocator__t.html">get_allocator_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> {}</td></tr>
@@ -549,8 +549,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
 </table>
 </div><div class="memdoc">
 
-<p>The customizatoin point object to determine whether queries should be forwarded. </p>
-<p>The <code>constexpr</code> call <code><a class="el" href="namespacebeman_1_1execution.html#a9b0f7f25fb2dfd00f655321db3a2d18f" title="The customizatoin point object to determine whether queries should be forwarded.">forwarding_query(q)</a></code> determines whether the query <code>q</code> passed as argument should be forwarded. The result is determined as follows:</p>
+<p>The customization point object to determine whether queries should be forwarded. </p>
+<p>The <code>constexpr</code> call <code><a class="el" href="namespacebeman_1_1execution.html#a9b0f7f25fb2dfd00f655321db3a2d18f" title="The customization point object to determine whether queries should be forwarded.">forwarding_query(q)</a></code> determines whether the query <code>q</code> passed as argument should be forwarded. The result is determined as follows:</p>
 <ul>
 <li>If the <code>q.query(forwarding_query)</code> is a <code>noexcept</code> expression of type <code>bool</code> the result of this call.</li>
 <li>If the type of <code>q</code> is derived from <code>forwarding_query_t</code>.</li>
