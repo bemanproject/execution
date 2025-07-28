@@ -12,7 +12,7 @@
 
 namespace {
 auto test_bulk() {
-    auto b0 = test_std::bulk(test_std::just(), 1, [](int) {});
+    auto b0 = test_std::just() | test_std::bulk(1, [](int) {});
 
     static_assert(test_std::sender<decltype(b0)>);
     auto b0_env         = test_std::get_env(b0);
@@ -25,7 +25,7 @@ auto test_bulk() {
 
     int counter = 0;
 
-    auto b1 = test_std::bulk(test_std::just(), 5, [&](int i) { counter += i; });
+    auto b1 = test_std::just() | test_std::bulk(5, [&](int i) { counter += i; });
 
     static_assert(test_std::sender<decltype(b1)>);
     auto b1_env         = test_std::get_env(b0);
@@ -43,9 +43,9 @@ auto test_bulk() {
 
     std::vector<int> results(a.size(), 0);
 
-    auto b2 = test_std::bulk(test_std::just(a), a.size(), [&](std::size_t index, const std::vector<int>& vec) {
-        results[index] = vec[index] * b[index];
-    });
+    auto b2 = test_std::just(a) | test_std::bulk(a.size(), [&](std::size_t index, const std::vector<int>& vec) {
+                  results[index] = vec[index] * b[index];
+              });
     static_assert(test_std::sender<decltype(b2)>);
     auto b2_env         = test_std::get_env(b2);
     auto b2_completions = test_std::get_completion_signatures(b2, b2_env);
@@ -65,7 +65,7 @@ auto test_bulk() {
 }
 
 auto test_bulk_noexept() {
-    auto b0             = test_std::bulk(test_std::just(), 1, [](int) noexcept {});
+    auto b0             = test_std::just() | test_std::bulk(1, [](int) noexcept {});
     auto b0_env         = test_std::get_env(b0);
     auto b0_completions = test_std::get_completion_signatures(b0, b0_env);
     static_assert(std::is_same_v<decltype(b0_completions),
@@ -75,7 +75,7 @@ auto test_bulk_noexept() {
 
     int counter = 0;
 
-    auto b1 = test_std::bulk(test_std::just(), 5, [&](int i) noexcept { counter += i; });
+    auto b1 = test_std::just() | test_std::bulk(5, [&](int i) noexcept { counter += i; });
 
     static_assert(test_std::sender<decltype(b1)>);
     auto b1_env         = test_std::get_env(b0);
