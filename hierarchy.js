@@ -38,6 +38,7 @@ var hierarchy =
     [ "beman::execution::schedule_t", "structbeman_1_1execution_1_1schedule__t.html", null ],
     [ "beman::execution::scheduler_t", "structbeman_1_1execution_1_1scheduler__t.html", null ],
     [ "beman::execution::detail::pipeable::sender_adaptor_closure_base", null, [
+      [ "beman::execution::sender_adaptor_closure< bulk_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< sender_adaptor< Adaptor, T... > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< then_t< Completion > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
