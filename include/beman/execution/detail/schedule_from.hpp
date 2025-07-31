@@ -130,16 +130,15 @@ struct impls_for<::beman::execution::detail::schedule_from_t> : ::beman::executi
                 ::std::monostate,
                 ::beman::execution::detail::meta::transform<
                     ::beman::execution::detail::as_tuple_t,
-                    ::beman::execution::detail::meta::to<
-                        ::std::variant,
-                        ::beman::execution::detail::meta::combine<
-                            ::beman::execution::completion_signatures_of_t<
-                                ::beman::execution::detail::child_type<Sender>,
-                                ::beman::execution::env_of_t<Receiver>>,
-                            //-dk:TODO get proper error completion signatures
-                            ::beman::execution::completion_signatures<::beman::execution::set_error_t(
-                                ::std::exception_ptr),
-                                ::beman::execution::set_stopped_t()>>>>>>;
+                    ::beman::execution::detail::meta::to<::std::variant,
+                                                         ::beman::execution::detail::meta::combine<
+                                                             ::beman::execution::completion_signatures_of_t<
+                                                                 ::beman::execution::detail::child_type<Sender>,
+                                                                 ::beman::execution::env_of_t<Receiver>>,
+                                                             //-dk:TODO get proper error completion signatures
+                                                             ::beman::execution::completion_signatures<
+                                                                 ::beman::execution::set_error_t(::std::exception_ptr),
+                                                                 ::beman::execution::set_stopped_t()>>>>>>;
 
             return state_type<Receiver, sched_t, variant_t>(sch, receiver);
         }};
