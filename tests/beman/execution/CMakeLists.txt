@@ -12,6 +12,7 @@ list(APPEND todo exec-associate.test)
 list(
     APPEND
     execution_tests
+    issue-174.test
     exec-scope-counting.test
     exec-spawn.test
     exec-stop-when.test

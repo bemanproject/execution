@@ -138,7 +138,8 @@ struct impls_for<::beman::execution::detail::schedule_from_t> : ::beman::executi
                                 ::beman::execution::env_of_t<Receiver>>,
                             //-dk:TODO get proper error completion signatures
                             ::beman::execution::completion_signatures<::beman::execution::set_error_t(
-                                ::std::exception_ptr)>>>>>>;
+                                ::std::exception_ptr),
+                                ::beman::execution::set_stopped_t()>>>>>>;
 
             return state_type<Receiver, sched_t, variant_t>(sch, receiver);
         }};
