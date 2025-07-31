@@ -47,7 +47,7 @@ static_assert(ex::sender_in<just_sender<std::pmr::string>>);
 
 int main() {
     try {
-        auto j = just_sender{std::pmr::string("value")};
+        auto j = just_sender<std::pmr::string>{std::pmr::string("value")};
         auto t = std::move(j) | ex::then([](const std::pmr::string& v) { return v + " then"; });
         auto w = ex::when_all(std::move(t));
         auto e = ex::detail::write_env(std::move(w),

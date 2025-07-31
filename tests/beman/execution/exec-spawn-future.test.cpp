@@ -274,7 +274,7 @@ auto test_get_allocator() {
         test_std::inplace_stop_source source;
         auto [alloc, ev] = test_detail::spawn_get_allocator(
             alloc_sender{53},
-            test_detail::join_env(test_std::prop(test_std::get_allocator, allocator(101)),
+            test_detail::join_env(test_std::prop(test_std::get_allocator, allocator{101}),
                                   test_std::prop(test_std::get_stop_token, source.get_token())));
         static_assert(std::same_as<decltype(alloc), allocator>);
         ASSERT(alloc == allocator{101});

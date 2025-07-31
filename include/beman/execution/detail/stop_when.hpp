@@ -27,7 +27,6 @@
 
 namespace beman::execution::detail {
 inline constexpr struct stop_when_t {
-
     template <::beman::execution::sender Sndr, ::beman::execution::stoppable_token Tok>
     struct sender;
 
@@ -102,12 +101,12 @@ struct beman::execution::detail::stop_when_t::sender {
         state(S&& s, T&& t, R&& r)
             : tok(::std::forward<T>(t)),
               base{::std::forward<R>(r)},
-              inner_state(::beman::execution::connect(::std::forward<S>(s), receiver(&this->base))) {}
+              inner_state(::beman::execution::connect(::std::forward<S>(s), receiver{&this->base})) {}
 
         auto start() & noexcept {
-            this->cb1.emplace(this->tok, cb_t(this->base.source));
+            this->cb1.emplace(this->tok, cb_t{this->base.source});
             this->cb2.emplace(::beman::execution::get_stop_token(::beman::execution::get_env(this->base.rcvr)),
-                              cb_t(this->base.source));
+                              cb_t{this->base.source});
             ::beman::execution::start(this->inner_state);
         }
     };
@@ -127,7 +126,7 @@ inline auto beman::execution::detail::stop_when_t::operator()(Sndr&& sndr, Tok&&
     if constexpr (::beman::execution::unstoppable_token<Tok>) {
         return ::std::forward<Sndr>(sndr);
     } else {
-        return sender<Sndr, Tok>(*this, ::std::forward<Tok>(tok), ::std::forward<Sndr>(sndr));
+        return sender<Sndr, Tok>{*this, ::std::forward<Tok>(tok), ::std::forward<Sndr>(sndr)};
     }
 }
 

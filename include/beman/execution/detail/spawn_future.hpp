@@ -128,13 +128,13 @@ struct spawn_future_state
         : alloc(::std::move(a)),
           op(::beman::execution::write_env(
                  ::beman::execution::detail::stop_when(::std::forward<S>(s), source.get_token()), env),
-             receiver_t(this)),
+             receiver_t{this}),
           token(::std::move(tok)),
           associated(token.try_associate()) {
         if (this->associated) {
             ::beman::execution::start(this->op);
         } else {
-            ::beman::execution::set_stopped(receiver_t(this));
+            ::beman::execution::set_stopped(receiver_t{this});
         }
     }
     auto complete() noexcept -> void override {

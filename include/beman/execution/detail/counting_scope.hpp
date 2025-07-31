@@ -6,6 +6,7 @@
 
 #include <beman/execution/detail/counting_scope_base.hpp>
 #include <beman/execution/detail/counting_scope_join.hpp>
+#include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/stop_when.hpp>
@@ -50,6 +51,7 @@ class beman::execution::counting_scope::token : public ::beman::execution::detai
     explicit token(::beman::execution::counting_scope* s)
         : ::beman::execution::detail::counting_scope_base::token(s) {}
 };
+static_assert(::beman::execution::scope_token<::beman::execution::counting_scope::token>);
 
 // ----------------------------------------------------------------------------
 
