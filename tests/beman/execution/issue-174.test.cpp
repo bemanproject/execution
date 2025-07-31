@@ -1,3 +1,6 @@
+// tests/beman/execution/issue-174.test.cpp                            *-C++-*-
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
 #include <beman/execution/execution.hpp>
 #include <iostream>
 #include <format>
