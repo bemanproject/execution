@@ -3,7 +3,9 @@
 
 #include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/then.hpp>
+#include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #include <test/execution.hpp>
 #include <array>
@@ -105,6 +107,14 @@ auto test_let_value_allocator() -> void {
     // static_assert(std::same_as<void, decltype(test_std::get_completion_signatures(s, test_std::empty_env{}))>);
     ex::sync_wait(s);
 }
+
+auto test_let_value_env() -> void {
+    ex::sync_wait(
+        ex::just()
+        | ex::let_value([]{ return ex::read_env(ex::get_scheduler); })
+        | ex::then([](auto s){ static_assert(ex::scheduler<decltype(s)>); })
+        );
+}
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -117,6 +127,7 @@ TEST(exec_let) {
     try {
         test_let_value();
         test_let_value_allocator();
+        test_let_value_env();
     } catch (...) {
         // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "let tests are not expected to throw");
