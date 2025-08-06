@@ -5,6 +5,8 @@
 
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/forwarding_query.hpp>
+#include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
@@ -22,12 +24,23 @@ struct error {
 };
 struct non_sender {};
 
+struct get_value_t: test_std::forwarding_query_t {
+    auto operator()(auto const& e) const noexcept -> int {
+        return e.query(*this);
+    }
+};
+
 struct receiver {
     using receiver_concept = test_std::receiver_t;
 
     auto set_error(auto&&) && noexcept -> void {}
     auto set_stopped() && noexcept -> void {}
     auto set_value(auto&&...) && noexcept -> void {}
+
+    struct env {
+        auto query(get_value_t const&) const noexcept { return 42; }
+    };
+    auto get_env() const noexcept { return env{}; }
 };
 
 template <typename... T>
@@ -214,6 +227,31 @@ auto test_then_allocator() -> void {
     auto state{test_std::connect(std::move(sender), memory_receiver{&resource2})};
     ASSERT(resource2.count == 1u);
 }
+
+auto test_then_env() -> void {
+    {
+        receiver r{};
+        auto     e{test_std::get_env(r)};
+        ASSERT(e.query(get_value_t{}) == 42);
+        ASSERT(get_value_t{}(e) == 42);
+    }
+    {
+        auto state{test_std::connect(test_std::read_env(get_value_t{}), receiver{})};
+        test_std::start(state);
+    }
+    {
+        int value{0};
+        auto state{test_std::connect(
+            test_std::then(test_std::read_env(get_value_t{}),
+            [&value](int v){ value = v; }),
+            receiver{})
+        };
+        ASSERT(value == 0);
+        test_std::start(state);
+        ASSERT(value == 42);
+    }
+}
+
 } // namespace
 
 TEST(exec_then) {
@@ -230,4 +268,6 @@ TEST(exec_then) {
     test_then_multi_type();
     test_then_value();
     test_then_allocator();
+
+    test_then_env();
 }

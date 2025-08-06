@@ -17,7 +17,8 @@ struct token_test_env {};
 
 struct token_test_sender {
     using sender_concept = ::beman::execution::sender_t;
-    auto get_completion_signatures(::beman::execution::detail::token_test_env) const noexcept {
+    template <typename... Env>
+    auto get_completion_signatures(Env const&...) const noexcept {
         return ::beman::execution::completion_signatures<>{};
     }
 };
