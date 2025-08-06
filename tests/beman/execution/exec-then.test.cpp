@@ -24,10 +24,8 @@ struct error {
 };
 struct non_sender {};
 
-struct get_value_t: test_std::forwarding_query_t {
-    auto operator()(auto const& e) const noexcept -> int {
-        return e.query(*this);
-    }
+struct get_value_t : test_std::forwarding_query_t {
+    auto operator()(const auto& e) const noexcept -> int { return e.query(*this); }
 };
 
 struct receiver {
@@ -38,7 +36,7 @@ struct receiver {
     auto set_value(auto&&...) && noexcept -> void {}
 
     struct env {
-        auto query(get_value_t const&) const noexcept { return 42; }
+        auto query(const get_value_t&) const noexcept { return 42; }
     };
     auto get_env() const noexcept { return env{}; }
 };
@@ -240,12 +238,9 @@ auto test_then_env() -> void {
         test_std::start(state);
     }
     {
-        int value{0};
-        auto state{test_std::connect(
-            test_std::then(test_std::read_env(get_value_t{}),
-            [&value](int v){ value = v; }),
-            receiver{})
-        };
+        int  value{0};
+        auto state{test_std::connect(test_std::then(test_std::read_env(get_value_t{}), [&value](int v) { value = v; }),
+                                     receiver{})};
         ASSERT(value == 0);
         test_std::start(state);
         ASSERT(value == 42);
