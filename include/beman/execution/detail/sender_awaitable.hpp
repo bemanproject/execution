@@ -82,7 +82,7 @@ class sender_awaitable {
         if constexpr (::std::is_void_v<value_type>) {
             return;
         } else {
-            return ::std::get<value_type>(result);
+            return ::std::get<value_type>(std::move(result));
         }
     }
 };
