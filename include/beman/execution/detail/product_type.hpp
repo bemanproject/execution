@@ -93,12 +93,12 @@ struct product_type : ::beman::execution::detail::product_type_base<::std::index
     }
     template <typename Fun, ::std::size_t... I>
     constexpr auto apply_elements(::std::index_sequence<I...>, Fun&& fun) -> decltype(auto) {
-        #if 0
+#if 0
         return ::std::forward<Fun>(fun)(this->template get<I>()...);
-        #else
+#else
         //-dk:TODO provide rvalue, lvalue, const lvalue overloads?
         return ::std::forward<Fun>(fun)(std::move(this->template get<I>())...);
-        #endif
+#endif
     }
     template <typename Fun>
     constexpr auto apply(Fun&& fun) -> decltype(auto) {
