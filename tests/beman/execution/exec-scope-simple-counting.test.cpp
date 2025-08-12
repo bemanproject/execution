@@ -109,7 +109,7 @@ auto mem() -> void {
         ASSERT(true == scope.get_token().try_associate());
         bool called{false};
         ASSERT(called == false);
-        auto state(test_std::connect(scope.join(), join_receiver(called)));
+        auto state(test_std::connect(scope.join(), join_receiver{called}));
         ASSERT(called == false);
         test_std::start(state);
         ASSERT(called == false);
@@ -126,7 +126,7 @@ auto token() -> void {
 
     ASSERT(true == tok.try_associate());
     bool called{false};
-    auto state(test_std::connect(scope.join(), join_receiver(called)));
+    auto state(test_std::connect(scope.join(), join_receiver{called}));
     test_std::start(state);
     ASSERT(false == called);
     scope.close();
