@@ -43,7 +43,7 @@ template <typename Default = ::beman::execution::default_domain, typename Sender
 constexpr auto completion_domain(const Sender& sender) noexcept {
 
     static_assert(::beman::execution::sender<Sender>);
-    auto get = [&sender]<typename Tag>(Tag) {
+    constexpr auto get = []<typename Tag>(Tag, const Sender& sender) {
         if constexpr (requires {
                           ::beman::execution::get_domain(
                               ::beman::execution::get_completion_scheduler<Tag>(::beman::execution::get_env(sender)));
@@ -56,9 +56,9 @@ constexpr auto completion_domain(const Sender& sender) noexcept {
     };
 
     using type = typename completion_domain_merge<
-        typename completion_domain_merge<decltype(get(::beman::execution::set_error)),
-                                         decltype(get(::beman::execution::set_stopped))>::type,
-        decltype(get(::beman::execution::set_value))>::type;
+        typename completion_domain_merge<decltype(get(::beman::execution::set_error, sender)),
+                                         decltype(get(::beman::execution::set_stopped, sender))>::type,
+        decltype(get(::beman::execution::set_value, sender))>::type;
     return ::std::conditional_t< ::std::same_as<type, completion_domain_undefined>, Default, type>();
 }
 } // namespace beman::execution::detail
