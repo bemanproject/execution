@@ -13,6 +13,7 @@ list(
     APPEND
     execution_tests
     issue-174.test
+    issue-186.test
     exec-scope-counting.test
     exec-spawn.test
     exec-stop-when.test

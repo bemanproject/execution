@@ -165,9 +165,10 @@ struct impls_for<::beman::execution::detail::let_t<Completion>> : ::beman::execu
     static auto let_bind(auto& state, Receiver& receiver, Args&&... args) {
         using args_t = ::beman::execution::detail::decayed_tuple<Args...>;
         auto mkop{[&] {
+            state.args.template emplace<args_t>(::std::forward<Args>(args)...);
             return ::beman::execution::connect(
                 ::std::apply(::std::move(state.fun),
-                             state.args.template emplace<args_t>(::std::forward<Args>(args)...)),
+                             ::std::move(state.args.template emplace<args_t>(::std::forward<Args>(args)...))),
                 let_receiver<Receiver, decltype(state.env)>{receiver, state.env});
         }};
         ::beman::execution::start(
