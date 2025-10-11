@@ -269,7 +269,7 @@ $(document).ready(function(){initNavTree('let_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        <span class="keyword">auto</span> mkop{[&amp;] {</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            return ::beman::execution::connect(</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                ::std::apply(::std::move(state.fun),</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                             state.args.template emplace&lt;args_t&gt;(::std::forward&lt;Args&gt;(args)...)),</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                             ::std::move(state.args.template emplace&lt;args_t&gt;(::std::forward&lt;Args&gt;(args)...))),</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                let_receiver&lt;Receiver, <span class="keyword">decltype</span>(state.env)&gt;{receiver, state.env});</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        }};</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        ::beman::execution::start(</div>
