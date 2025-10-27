@@ -251,7 +251,7 @@ Required members for <code>_Token_</code>:
 - <code>_token_.stop_possible() const noexcept -&gt; bool</code>
 - <code>std::copyable&lt;_Token_&gt;</code>
 - <code>std::equality_comparable&lt;_Token_&gt;</code>
-- <code>std::swapable&lt;_Token_&gt;</code>
+- <code>std::swappable&lt;_Token_&gt;</code>
 <blockquote>
 <details>
 <summary>Example: concept use</summary>
