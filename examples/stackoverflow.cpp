@@ -11,7 +11,7 @@ struct task {
     using completion_signatures = ex::completion_signatures<ex::set_value_t()>;
 
     struct base {
-        virtual void complete_value() noexcept = 0;
+        virtual void complete_value() noexcept   = 0;
         virtual void complete_stopped() noexcept = 0;
     };
 
@@ -20,17 +20,16 @@ struct task {
             base* data;
             bool  await_ready() noexcept { return false; }
             auto  await_suspend(auto h) noexcept { this->data->complete_value(); };
-            void await_resume() noexcept {}
+            void  await_resume() noexcept {}
         };
         std::suspend_always     initial_suspend() const noexcept { return {}; }
         final_awaiter           final_suspend() const noexcept { return {this->data}; }
         void                    unhandled_exception() const noexcept {}
         std::coroutine_handle<> unhandled_stopped() {
-
             this->data->complete_stopped();
             return std::noop_coroutine();
         }
-        auto                    return_void() {}
+        auto return_void() {}
         auto get_return_object() { return task{std::coroutine_handle<promise_type>::from_promise(*this)}; }
         template <::beman::execution::sender Sender>
         auto await_transform(Sender&& sender) noexcept {

@@ -87,16 +87,15 @@ class sender_awaitable {
                                             sender_awaitable::awaitable_receiver{::std::addressof(result)})} {}
 
     static constexpr bool await_ready() noexcept { return false; }
-    ::std::coroutine_handle<> await_suspend(::std::coroutine_handle<Promise> handle) noexcept {
+    bool                  await_suspend(::std::coroutine_handle<Promise>) noexcept {
         ::beman::execution::start(state);
         if (::std::get<1>(this->result).exchange(true, std::memory_order_acq_rel)) {
             if (::std::holds_alternative<::std::monostate>(::std::get<0>(this->result))) {
-                return static_cast<::std::coroutine_handle<>>(
-                    ::std::get<2>(this->result).promise().unhandled_stopped());
+                return bool(::std::get<2>(this->result).promise().unhandled_stopped());
             }
-            return handle;
+            return false;
         }
-        return ::std::noop_coroutine();
+        return true;
     }
     value_type await_resume() {
         if (::std::holds_alternative<::std::exception_ptr>(::std::get<0>(result))) {
