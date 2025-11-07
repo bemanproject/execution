@@ -22,6 +22,8 @@
 #include <type_traits>
 #include <utility>
 #include <variant>
+#include <tuple>
+#include <atomic>
 
 namespace beman::execution::detail {
 template <class Sndr, class Promise>
@@ -31,58 +33,79 @@ class sender_awaitable {
         ::beman::execution::detail::single_sender_value_type<Sndr, ::beman::execution::env_of_t<Promise>>;
     using result_type  = ::std::conditional_t<::std::is_void_v<value_type>, unit, value_type>;
     using variant_type = ::std::variant<::std::monostate, result_type, ::std::exception_ptr>;
+    using data_type    = ::std::tuple<variant_type, ::std::atomic<bool>, ::std::coroutine_handle<Promise>>;
+
     struct awaitable_receiver {
         using receiver_concept = ::beman::execution::receiver_t;
+
+        void resume() {
+            if (::std::get<1>(*result_ptr_).exchange(true, std::memory_order_acq_rel)) {
+                ::std::get<2>(*result_ptr_).resume();
+            }
+        }
 
         template <class... Args>
             requires ::std::constructible_from<result_type, Args...>
         void set_value(Args&&... args) && noexcept {
             try {
-                result_ptr_->template emplace<1>(::std::forward<Args>(args)...);
+                ::std::get<0>(*result_ptr_).template emplace<1>(::std::forward<Args>(args)...);
             } catch (...) {
-                result_ptr_->template emplace<2>(::std::current_exception());
+                ::std::get<0>(*result_ptr_).template emplace<2>(::std::current_exception());
             }
-            continuation_.resume();
+            this->resume();
         }
-
         template <class Error>
         void set_error(Error&& error) && noexcept {
-            result_ptr_->template emplace<2>(::beman::execution::detail::as_except_ptr(::std::forward<Error>(error)));
-            continuation_.resume();
+            ::std::get<0>(*result_ptr_)
+                .template emplace<2>(::beman::execution::detail::as_except_ptr(::std::forward<Error>(error)));
+            this->resume();
         }
 
         void set_stopped() && noexcept {
-            static_cast<::std::coroutine_handle<>>(continuation_.promise().unhandled_stopped()).resume();
+            if (::std::get<1>(*result_ptr_).exchange(true, ::std::memory_order_acq_rel)) {
+                static_cast<::std::coroutine_handle<>>(::std::get<2>(*result_ptr_).promise().unhandled_stopped())
+                    .resume();
+            }
         }
 
         auto get_env() const noexcept {
-            return ::beman::execution::detail::fwd_env{::beman::execution::get_env(continuation_.promise())};
+            return ::beman::execution::detail::fwd_env{
+                ::beman::execution::get_env(::std::get<2>(*result_ptr_).promise())};
         }
 
-        variant_type*                    result_ptr_;
-        ::std::coroutine_handle<Promise> continuation_;
+        data_type* result_ptr_;
     };
     using op_state_type = ::beman::execution::connect_result_t<Sndr, awaitable_receiver>;
 
-    variant_type  result{};
+    data_type     result{};
     op_state_type state;
 
   public:
     sender_awaitable(Sndr&& sndr, Promise& p)
-        : state{::beman::execution::connect(
-              ::std::forward<Sndr>(sndr),
-              awaitable_receiver{::std::addressof(result), ::std::coroutine_handle<Promise>::from_promise(p)})} {}
+        : result{::std::monostate{}, false, ::std::coroutine_handle<Promise>::from_promise(p)},
+          state{::beman::execution::connect(::std::forward<Sndr>(sndr),
+                                            sender_awaitable::awaitable_receiver{::std::addressof(result)})} {}
 
     static constexpr bool await_ready() noexcept { return false; }
-    void       await_suspend(::std::coroutine_handle<Promise>) noexcept { ::beman::execution::start(state); }
+    ::std::coroutine_handle<> await_suspend(::std::coroutine_handle<Promise> handle) noexcept {
+        ::beman::execution::start(state);
+        if (::std::get<1>(this->result).exchange(true, std::memory_order_acq_rel)) {
+            if (::std::holds_alternative<::std::monostate>(::std::get<0>(this->result))) {
+                return static_cast<::std::coroutine_handle<>>(
+                    ::std::get<2>(this->result).promise().unhandled_stopped());
+            }
+            return handle;
+        }
+        return ::std::noop_coroutine();
+    }
     value_type await_resume() {
-        if (::std::holds_alternative<::std::exception_ptr>(result)) {
-            ::std::rethrow_exception(::std::get<::std::exception_ptr>(result));
+        if (::std::holds_alternative<::std::exception_ptr>(::std::get<0>(result))) {
+            ::std::rethrow_exception(::std::get<::std::exception_ptr>(::std::get<0>(result)));
         }
         if constexpr (::std::is_void_v<value_type>) {
             return;
         } else {
-            return ::std::get<value_type>(std::move(result));
+            return ::std::get<value_type>(std::move(::std::get<0>(result)));
         }
     }
 };

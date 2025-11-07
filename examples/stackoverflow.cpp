@@ -12,23 +12,24 @@ struct task {
 
     struct base {
         virtual void complete_value() noexcept = 0;
+        virtual void complete_stopped() noexcept = 0;
     };
 
     struct promise_type {
         struct final_awaiter {
             base* data;
             bool  await_ready() noexcept { return false; }
-            auto  await_suspend(auto h) noexcept {
-                std::cout << "final_awaiter\n";
-                this->data->complete_value();
-                std::cout << "completed\n";
-            };
+            auto  await_suspend(auto h) noexcept { this->data->complete_value(); };
             void await_resume() noexcept {}
         };
         std::suspend_always     initial_suspend() const noexcept { return {}; }
         final_awaiter           final_suspend() const noexcept { return {this->data}; }
         void                    unhandled_exception() const noexcept {}
-        std::coroutine_handle<> unhandled_stopped() { return std::coroutine_handle<>(); }
+        std::coroutine_handle<> unhandled_stopped() {
+
+            this->data->complete_stopped();
+            return std::noop_coroutine();
+        }
         auto                    return_void() {}
         auto get_return_object() { return task{std::coroutine_handle<promise_type>::from_promise(*this)}; }
         template <::beman::execution::sender Sender>
@@ -51,7 +52,14 @@ struct task {
             this->handle.promise().data = this;
             this->handle.resume();
         }
-        void complete_value() noexcept override { ex::set_value(std::move(this->r)); }
+        void complete_value() noexcept override {
+            this->handle.destroy();
+            ex::set_value(std::move(this->r));
+        }
+        void complete_stopped() noexcept override {
+            this->handle.destroy();
+            ex::set_stopped(std::move(this->r));
+        }
     };
 
     std::coroutine_handle<promise_type> handle;
@@ -63,11 +71,23 @@ struct task {
 };
 
 int main(int ac, char*[]) {
+    std::cout << std::unitbuf;
+    using on_exit = std::unique_ptr<const char, decltype([](auto msg) { std::cout << msg << "\n"; })>;
     static_assert(ex::sender<task>);
     ex::sync_wait([](int n) -> task {
-        for (int i{}; i < n; ++i) {
-            std::cout << "await=" << (co_await ex::just(i)) << "\n";
-        }
-        co_return;
+        on_exit msg("coro run to the end");
+        if constexpr (true)
+            for (int i{}; i < n; ++i) {
+                std::cout << "await just=" << (co_await ex::just(i)) << "\n";
+            }
+        if constexpr (false)
+            for (int i{}; i < n; ++i) {
+                try {
+                    co_await ex::just_error(i);
+                } catch (int x) {
+                    std::cout << "await error=" << x << "\n";
+                }
+            }
+        co_await ex::just_stopped();
     }(ac < 2 ? 3 : 30000));
 }
