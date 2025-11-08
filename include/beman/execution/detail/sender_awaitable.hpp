@@ -86,7 +86,7 @@ class sender_awaitable {
           state{::beman::execution::connect(::std::forward<Sndr>(sndr),
                                             sender_awaitable::awaitable_receiver{::std::addressof(result)})} {}
 
-    static constexpr bool await_ready() noexcept { return false; }
+    static constexpr bool     await_ready() noexcept { return false; }
     ::std::coroutine_handle<> await_suspend(::std::coroutine_handle<Promise> handle) noexcept {
         ::beman::execution::start(state);
         if (::std::get<1>(this->result).exchange(true, std::memory_order_acq_rel)) {
