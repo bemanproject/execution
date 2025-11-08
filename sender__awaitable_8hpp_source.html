@@ -188,16 +188,16 @@ $(document).ready(function(){initNavTree('sender__awaitable_8hpp_source.html',''
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>          state{::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(::std::forward&lt;Sndr&gt;(sndr),</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                                            sender_awaitable::awaitable_receiver{::std::addressof(result)})} {}</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> await_ready() noexcept { <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordtype">bool</span>                  await_suspend(::std::coroutine_handle&lt;Promise&gt;) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span>     await_ready() noexcept { <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    ::std::coroutine_handle&lt;&gt; await_suspend(::std::coroutine_handle&lt;Promise&gt; handle) <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        ::beman::execution::start(state);</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordflow">if</span> (::std::get&lt;1&gt;(this-&gt;result).exchange(<span class="keyword">true</span>, std::memory_order_acq_rel)) {</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">if</span> (::std::holds_alternative&lt;::std::monostate&gt;(::std::get&lt;0&gt;(this-&gt;result))) {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                <span class="keywordflow">return</span> bool(::std::get&lt;2&gt;(this-&gt;result).promise().unhandled_stopped());</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                return ::std::get&lt;2&gt;(this-&gt;result).promise().unhandled_stopped();</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            return ::std::move(handle);</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        }</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        return ::std::noop_coroutine();</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    value_type await_resume() {</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="keywordflow">if</span> (::std::holds_alternative&lt;::std::exception_ptr&gt;(::std::get&lt;0&gt;(result))) {</div>
