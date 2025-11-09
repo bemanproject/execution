@@ -52,7 +52,7 @@ contains some links for general information about the sender/receivers and `std:
 
 ## Build
 
-## Precondisions
+## Preconditions
 
 - cmake v3.30 or newer
 - ninja v1.11.1 or newer
