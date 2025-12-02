@@ -63,8 +63,14 @@ class run_loop {
         }
         // NOLINTEND(misc-no-recursion)
         auto execute() noexcept -> void override {
+            using token = decltype(::beman::execution::get_stop_token(::beman::execution::get_env(this->receiver)));
+            if constexpr (not ::beman::execution::unstoppable_token<token>)
+            {
             if (::beman::execution::get_stop_token(::beman::execution::get_env(this->receiver)).stop_requested())
                 ::beman::execution::set_stopped(::std::move(this->receiver));
+            else
+                ::beman::execution::set_value(::std::move(this->receiver));
+            }
             else
                 ::beman::execution::set_value(::std::move(this->receiver));
         }
