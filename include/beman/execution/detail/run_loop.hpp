@@ -15,6 +15,7 @@
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/unstoppable_token.hpp>
 
 #include <exception>
 #include <condition_variable>
@@ -70,10 +71,25 @@ class run_loop {
     };
     struct sender {
         using sender_concept = ::beman::execution::sender_t;
+#if 0
         using completion_signatures =
             ::beman::execution::completion_signatures<::beman::execution::set_value_t(),
                                                       ::beman::execution::set_error_t(::std::exception_ptr),
                                                       ::beman::execution::set_stopped_t()>;
+#else
+        template <typename Env = ::beman::execution::empty_env>
+        auto get_completion_signatures(Env&& env) const noexcept {
+            if constexpr (::beman::execution::unstoppable_token<decltype(::beman::execution::get_stop_token(env))>)
+                return ::beman::execution::completion_signatures<
+                    ::beman::execution::set_value_t()
+                    >{};
+            else
+                return ::beman::execution::completion_signatures<
+                    ::beman::execution::set_value_t(),
+                    ::beman::execution::set_stopped_t()
+                    >{};
+        }
+#endif
 
         run_loop* loop;
 
