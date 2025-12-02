@@ -80,14 +80,10 @@ class run_loop {
         template <typename Env = ::beman::execution::empty_env>
         auto get_completion_signatures(Env&& env) const noexcept {
             if constexpr (::beman::execution::unstoppable_token<decltype(::beman::execution::get_stop_token(env))>)
-                return ::beman::execution::completion_signatures<
-                    ::beman::execution::set_value_t()
-                    >{};
+                return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>{};
             else
-                return ::beman::execution::completion_signatures<
-                    ::beman::execution::set_value_t(),
-                    ::beman::execution::set_stopped_t()
-                    >{};
+                return ::beman::execution::completion_signatures<::beman::execution::set_value_t(),
+                                                                 ::beman::execution::set_stopped_t()>{};
         }
 #endif
 
