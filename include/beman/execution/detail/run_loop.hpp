@@ -12,7 +12,6 @@
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/unstoppable_token.hpp>
@@ -54,35 +53,21 @@ class run_loop {
         // NOLINTBEGIN(misc-no-recursion)
         template <typename R>
         opstate(run_loop* l, R&& rcvr) : loop(l), receiver(::std::forward<Receiver>(rcvr)) {}
-        auto start() & noexcept -> void {
-            try {
-                this->loop->push_back(this);
-            } catch (...) {
-                ::beman::execution::set_error(::std::move(this->receiver), ::std::current_exception());
-            }
-        }
+        auto start() & noexcept -> void { this->loop->push_back(this); }
         // NOLINTEND(misc-no-recursion)
         auto execute() noexcept -> void override {
             using token = decltype(::beman::execution::get_stop_token(::beman::execution::get_env(this->receiver)));
-            if constexpr (not ::beman::execution::unstoppable_token<token>)
-            {
-            if (::beman::execution::get_stop_token(::beman::execution::get_env(this->receiver)).stop_requested())
-                ::beman::execution::set_stopped(::std::move(this->receiver));
-            else
-                ::beman::execution::set_value(::std::move(this->receiver));
-            }
-            else
+            if constexpr (not ::beman::execution::unstoppable_token<token>) {
+                if (::beman::execution::get_stop_token(::beman::execution::get_env(this->receiver)).stop_requested())
+                    ::beman::execution::set_stopped(::std::move(this->receiver));
+                else
+                    ::beman::execution::set_value(::std::move(this->receiver));
+            } else
                 ::beman::execution::set_value(::std::move(this->receiver));
         }
     };
     struct sender {
         using sender_concept = ::beman::execution::sender_t;
-#if 0
-        using completion_signatures =
-            ::beman::execution::completion_signatures<::beman::execution::set_value_t(),
-                                                      ::beman::execution::set_error_t(::std::exception_ptr),
-                                                      ::beman::execution::set_stopped_t()>;
-#else
         template <typename Env = ::beman::execution::empty_env>
         auto get_completion_signatures(Env&& env) const noexcept {
             if constexpr (::beman::execution::unstoppable_token<decltype(::beman::execution::get_stop_token(env))>)
@@ -91,7 +76,6 @@ class run_loop {
                 return ::beman::execution::completion_signatures<::beman::execution::set_value_t(),
                                                                  ::beman::execution::set_stopped_t()>{};
         }
-#endif
 
         run_loop* loop;
 
@@ -118,7 +102,8 @@ class run_loop {
     opstate_base*             front{};
     opstate_base*             back{};
 
-    auto push_back(opstate_base* item) -> void {
+    auto push_back(opstate_base* item) noexcept -> void {
+        //-dk:TODO run_loop::push_back should really be lock-free
         ::std::lock_guard guard(this->mutex);
         if (auto previous_back{::std::exchange(this->back, item)}) {
             previous_back->next = item;
@@ -127,7 +112,8 @@ class run_loop {
             this->condition.notify_one();
         }
     }
-    auto pop_front() -> opstate_base* {
+    auto pop_front() noexcept -> opstate_base* {
+        //-dk:TODO run_loop::pop_front should really be lock-free
         ::std::unique_lock guard(this->mutex);
         this->condition.wait(guard, [this] { return this->front || this->current_state == state::finishing; });
         if (this->front == this->back)
