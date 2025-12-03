@@ -162,7 +162,12 @@ struct impls_for<::beman::execution::detail::let_t<Completion>> : ::beman::execu
                        {}};
     }};
     template <typename Receiver, typename... Args>
-    static auto let_bind(auto& state, Receiver& receiver, Args&&... args) {
+    static auto
+    let_bind(auto& state, Receiver& receiver, Args&&... args) noexcept(noexcept(::beman::execution::connect(
+        ::std::apply(::std::move(state.fun),
+                     ::std::move(state.args.template emplace<::beman::execution::detail::decayed_tuple<Args...>>(
+                         ::std::forward<Args>(args)...))),
+        let_receiver<Receiver, decltype(state.env)>{receiver, state.env}))) {
         using args_t = ::beman::execution::detail::decayed_tuple<Args...>;
         auto mkop{[&] {
             return ::beman::execution::connect(
@@ -179,7 +184,8 @@ struct impls_for<::beman::execution::detail::let_t<Completion>> : ::beman::execu
                 try {
                     let_bind(state, receiver, ::std::forward<Args>(args)...);
                 } catch (...) {
-                    ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                    if constexpr (not noexcept(let_bind(state, receiver, ::std::forward<Args>(args)...)))
+                        ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
                 }
             } else {
                 Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
