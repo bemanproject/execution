@@ -1,6 +1,6 @@
 # src/beman/execution/tests/CMakeLists.txt
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-cmake_minimum_required(VERSION 3.25...3.31)
+cmake_minimum_required(VERSION 3.25...4.2)
 
 project(beman_execution_tests LANGUAGES CXX)
 
@@ -10,8 +10,7 @@ endif()
 
 list(APPEND todo exec-associate.test)
 list(
-    APPEND
-    execution_tests
+    APPEND execution_tests
     issue-174.test
     issue-186.test
     exec-scope-counting.test
