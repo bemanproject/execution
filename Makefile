@@ -34,11 +34,37 @@ CXX_FLAGS ?= -g
 SANITIZER ?= default
 SOURCEDIR = $(CURDIR)
 BUILDROOT = build
-SYSTEM    = $(shell uname -s)
-BUILD     = $(BUILDROOT)/$(SYSTEM)/$(SANITIZER)
+export hostSystemName:=$(shell uname -s)
+BUILD     = $(BUILDROOT)/$(hostSystemName)/$(SANITIZER)
 EXAMPLE   = beman.execution.examples.stop_token
 
-export CXX=$(COMPILER)
+################################################
+ifeq (${hostSystemName},Darwin)
+	export LLVM_PREFIX:=$(shell brew --prefix llvm)
+  export LLVM_DIR:=$(shell realpath ${LLVM_PREFIX})
+  export PATH:=${LLVM_DIR}/bin:${PATH}
+
+  # export CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_DIR}/lib/c++/libc++.modules.json
+  # export CXX=clang++
+  # export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi -lc++ # -lc++experimental
+  # export GCOV="llvm-cov gcov"
+
+  ### TODO: to test g++-15:
+  export GCC_PREFIX:=$(shell brew --prefix gcc)
+  export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
+
+  export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
+  export CXX:=g++-15
+  export CXXFLAGS:=-stdlib=libstdc++
+  export GCOV="gcov"
+else ifeq (${hostSystemName},Linux)
+  export LLVM_DIR=/usr/lib/llvm-20
+  export PATH:=${LLVM_DIR}/bin:${PATH}
+  export CXX=clang++-20
+else
+  export CXX=$(COMPILER)
+endif
+################################################
 
 ifeq ($(SANITIZER),release)
     CXX_FLAGS = -O3 -Wpedantic -Wall -Wextra -Wno-shadow -Werror
@@ -80,10 +106,12 @@ doc:
 # 	$(MAKE) SANITIZER=$@
 
 build:
-	cmake --fresh -G Ninja -S $(SOURCEDIR) -B  $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
-	  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 \
-	  -D CMAKE_SKIP_INSTALL_RULES=1 \
+	cmake --fresh -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
+	  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
+	  -D CMAKE_SKIP_INSTALL_RULES=ON \
 	  -D CMAKE_CXX_STANDARD=23 \
+	  -D CMAKE_CXX_EXTENSIONS=ON \
+	  -D CMAKE_CXX_STANDARD_REQUIRED=ON \
 	  -D CMAKE_CXX_COMPILER=$(CXX) # XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
@@ -94,15 +122,17 @@ test: build
 install: test
 	cmake --install $(BUILD) --prefix /opt/local
 
-CMakeUserPresets.json: cmake/CMakeUserPresets.json
+CMakeUserPresets.json:: cmake/CMakeUserPresets.json
 	ln -s $< $@
 
 release: CMakeUserPresets.json
 	cmake --preset $@ --fresh --log-level=TRACE
+	ln -fs $(BUILDROOT)/$@/compile_commands.json .
 	cmake --workflow --preset $@
 
 debug: CMakeUserPresets.json
 	cmake --preset $@ --fresh --log-level=TRACE
+	ln -fs $(BUILDROOT)build/$@/compile_commands.json .
 	cmake --workflow --preset $@
 
 ce:
@@ -123,18 +153,21 @@ check:
 build/$(SANITIZER)/compile_commands.json: $(SANITIZER)
 
 clang-tidy: $(BUILD)/compile_commands.json
+	ln -fs $< .
 	run-clang-tidy -p $(BUILD) tests examples
 
 codespell:
-	codespell -L statics,snd,copyable,cancelled
+	pre-commit run $@
 
-format: cmake-format clang-format
-
-cmake-format:
+format:
 	pre-commit run --all
 
+cmake-format:
+	pre-commit run gersemi
+
 clang-format:
-	git clang-format main
+	pre-commit run $@
+	# XXX TBD: git clang-format main
 
 todo:
 	bin/mk-todo.py
@@ -147,8 +180,16 @@ clean-doc:
 	$(RM) -r docs/html docs/latex
 
 clean: clean-doc
-	cmake --build $(BUILD) --target clean
+	-cmake --build $(BUILD) --target clean
 	$(RM) mkerr olderr *~
 
 distclean: clean
 	$(RM) -r $(BUILDROOT) stagedir
+
+Makefile :: ;
+*.txt :: ;
+*.json :: ;
+
+# Anything we don't know how to build will use this rule.
+% ::
+	ninja -C $(BUILD) $(@)

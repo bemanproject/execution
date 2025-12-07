@@ -8,8 +8,12 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "CMAKE_CXX_STANDARD": "23",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "./infra/cmake/use-fetch-content.cmake"
+        "CMAKE_CXX_EXTENSIONS": true,
+        "CMAKE_CXX_SCAN_FOR_MODULES": false,
+        "CMAKE_CXX_STANDARD_REQUIRED": true,
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_SKIP_TEST_ALL_DEPENDENCY": false,
+        "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "infra/cmake/use-fetch-content.cmake"
       }
     },
     {

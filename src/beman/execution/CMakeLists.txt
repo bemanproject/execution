@@ -1,9 +1,11 @@
-# cmake-format: off
+# gersemi: off
 # src/beman/execution/CMakeLists.txt -*-makefile-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-# cmake-format: on
+# gersemi: on
 
-add_library(${TARGET_NAME} STATIC)
+if(NOT TARGET ${TARGET_NAME})
+    add_library(${TARGET_NAME} STATIC)
+endif()
 add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
 
 target_sources(

@@ -1,7 +1,7 @@
-# cmake-format: off
+# gersemi: off
 # examples/CMakeLists.txt -*-makefile-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-# cmake-format: on
+# gersemi: on
 
 list(
     APPEND EXAMPLES
