@@ -21,6 +21,10 @@ list(
     doc-just_stopped
 )
 
+if(BEMAN_USE_MODULES)
+    list(APPEND EXAMPLES modules) # modules.cpp
+endif()
+
 foreach(EXAMPLE ${EXAMPLES})
     set(EXAMPLE_TARGET ${TARGET_PREFIX}.examples.${EXAMPLE})
     add_executable(${EXAMPLE_TARGET})

@@ -31,11 +31,13 @@ endif
 LDFLAGS   ?=
 SAN_FLAGS ?=
 CXX_FLAGS ?= -g
+# TODO: SANITIZER := release
 SANITIZER ?= default
 SOURCEDIR = $(CURDIR)
 BUILDROOT = build
 export hostSystemName:=$(shell uname -s)
-BUILD     = $(BUILDROOT)/$(hostSystemName)/$(SANITIZER)
+# TODO BUILD     := $(BUILDROOT)/$(SANITIZER)
+BUILD     ?= $(BUILDROOT)/$(hostSystemName)/$(SANITIZER)
 EXAMPLE   = beman.execution.examples.stop_token
 
 ################################################
@@ -92,6 +94,9 @@ ifeq ($(SANITIZER),lsan)
     LDFLAGS = $(SAN_FLAGS)
 endif
 
+# TODO: beman.execution.examples.modules
+# FIXME: beman.execution.execution-module.test beman.execution.stop-token-module.test
+
 default: test
 
 all: $(SANITIZERS)
@@ -115,7 +120,7 @@ build:
 	  -D CMAKE_CXX_COMPILER=$(CXX) # XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
-# NOTE: without install! CK
+# NOTE: without install, see CMAKE_SKIP_INSTALL_RULES! CK
 test: build
 	ctest --test-dir $(BUILD) --rerun-failed --output-on-failure
 
@@ -126,12 +131,12 @@ CMakeUserPresets.json:: cmake/CMakeUserPresets.json
 	ln -s $< $@
 
 release: CMakeUserPresets.json
-	cmake --preset $@ --fresh --log-level=TRACE
+	cmake --preset $@ --log-level=TRACE # XXX --fresh
 	ln -fs $(BUILDROOT)/$@/compile_commands.json .
 	cmake --workflow --preset $@
 
 debug: CMakeUserPresets.json
-	cmake --preset $@ --fresh --log-level=TRACE
+	cmake --preset $@ --log-level=TRACE # XXX --fresh
 	ln -fs $(BUILDROOT)build/$@/compile_commands.json .
 	cmake --workflow --preset $@
 

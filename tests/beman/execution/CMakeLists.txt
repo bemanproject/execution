@@ -9,6 +9,15 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 list(APPEND todo exec-associate.test)
+
+if(BEMAN_USE_MODULES)
+    list(
+        APPEND execution_tests
+        execution-module.test # execution-module.test.cpp
+        stop-token-module.test # stop-token-module.test.cpp
+    )
+endif()
+
 list(
     APPEND execution_tests
     issue-174.test

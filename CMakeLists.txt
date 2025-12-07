@@ -34,7 +34,7 @@ set(TARGET_PREFIX ${TARGET_NAMESPACE}.${TARGET_NAME})
 set(TARGET_LIBRARY ${PROJECT_NAME})
 set(TARGET_ALIAS ${TARGET_NAMESPACE}::${TARGET_NAME})
 set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
-set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets)
+set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-config-targets)
 
 #========================== post project settings ==============================
 # Tell CMake that we explicitly want `import std`.
