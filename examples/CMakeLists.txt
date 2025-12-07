@@ -4,8 +4,7 @@
 # cmake-format: on
 
 list(
-    APPEND
-    EXAMPLES
+    APPEND EXAMPLES
     stackoverflow
     inspect
     playground
