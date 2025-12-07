@@ -181,10 +181,11 @@ clean-doc:
 
 clean: clean-doc
 	-cmake --build $(BUILD) --target clean
-	$(RM) mkerr olderr *~
+	$(RM) mkerr olderr compile_commands.json
 
 distclean: clean
-	$(RM) -r $(BUILDROOT) stagedir
+	$(RM) -r $(BUILDROOT) stagedir CMakeUserPresets.json
+	find . -name '*~' -delete
 
 Makefile :: ;
 *.txt :: ;
