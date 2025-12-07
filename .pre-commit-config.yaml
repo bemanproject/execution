@@ -58,8 +58,5 @@ repos:
     rev: 25.11.0
     hooks:
       - id: black
-      - id: codespell
-        files: ^.*\.(cmake|cpp|hpp|txt|md|json|in|yaml|yml)$
-        args: ["-w", "--ignore-words", ".codespellignore" ]
 
 exclude: 'infra/'
