@@ -34,7 +34,7 @@ set(TARGET_PREFIX ${TARGET_NAMESPACE}.${TARGET_NAME})
 set(TARGET_LIBRARY ${PROJECT_NAME})
 set(TARGET_ALIAS ${TARGET_NAMESPACE}::${TARGET_NAME})
 set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
-set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-config-targets)
+set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets)
 
 #========================== post project settings ==============================
 # Tell CMake that we explicitly want `import std`.
@@ -45,11 +45,27 @@ if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
     message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
 endif()
 
+add_library(${TARGET_NAME} STATIC)
+
+# CMake requires the language standard to be specified as compile feature
+# when a target provides C++23 modules and the target will be installed
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_23)
+
 if(CMAKE_CXX_SCAN_FOR_MODULES AND ${CMAKE_GENERATOR} STREQUAL Ninja)
     set(BEMAN_USE_MODULES ON)
     message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
+    target_compile_definitions(${TARGET_NAME} PUBLIC BEMAN_USE_MODULES)
 else()
     message(WARNING "Missing support for CMAKE_CXX_SCAN_FOR_MODULES!")
+endif()
+
+if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
+    set(BEMAN_HAS_IMPORT_STD ON)
+    message(STATUS "BEMAN_HAS_IMPORT_STD=${BEMAN_HAS_IMPORT_STD}")
+    target_compile_definitions(${TARGET_NAME} PUBLIC BEMAN_HAS_IMPORT_STD)
+else()
+    set(CMAKE_CXX_MODULE_STD OFF)
+    message(WARNING "Missing support for CMAKE_CXX_MODULE_STD!")
 endif()
 
 # gersemi: off
@@ -61,17 +77,6 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
     )
 endif()
 # gersemi: on
-
-# CMake requires the language standard to be specified as compile feature
-# when a target provides C++23 modules and the target will be installed
-add_library(${TARGET_NAME} STATIC)
-target_compile_features(${TARGET_NAME} PUBLIC cxx_std_23)
-
-if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
-    target_compile_definitions(${TARGET_NAME} PUBLIC BEMAN_HAS_IMPORT_STD)
-else()
-    message(WARNING "Missing support for CMAKE_CXX_MODULE_STD!")
-endif()
 #===============================================================================
 
 option(

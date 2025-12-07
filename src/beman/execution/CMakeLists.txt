@@ -204,6 +204,11 @@ if(BEMAN_USE_MODULES)
                 BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
                 FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
     )
+else()
+    set_target_properties(
+        ${TARGET_NAME}
+        PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON
+    )
 endif()
 
 get_property(
@@ -212,8 +217,6 @@ get_property(
     PROPERTY HEADER_SET_${TARGET_NAME}_detail_headers
 )
 source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
-
-set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
 
 if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
     return()
@@ -225,7 +228,7 @@ install(
     ARCHIVE DESTINATION lib/$<CONFIG>
     FILE_SET ${TARGET_NAME}_public_headers
     FILE_SET ${TARGET_NAME}_detail_headers
-    FILE_SET CXX_MODULES DESTINATION ${INSTALL_CONFIGDIR}/module
+    FILE_SET CXX_MODULES DESTINATION ${INSTALL_CONFIGDIR}/cxx-modules
     # There's currently no convention for this location
     CXX_MODULES_BMI
         DESTINATION ${INSTALL_CONFIGDIR}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>

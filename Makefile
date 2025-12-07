@@ -31,12 +31,12 @@ endif
 LDFLAGS   ?=
 SAN_FLAGS ?=
 CXX_FLAGS ?= -g
-# TODO: SANITIZER := release
-SANITIZER ?= default
+SANITIZER := release
+SANITIZER ?= RelWithDebInfo
 SOURCEDIR = $(CURDIR)
 BUILDROOT = build
 export hostSystemName:=$(shell uname -s)
-# TODO BUILD     := $(BUILDROOT)/$(SANITIZER)
+BUILD     := $(BUILDROOT)/$(SANITIZER)
 BUILD     ?= $(BUILDROOT)/$(hostSystemName)/$(SANITIZER)
 EXAMPLE   = beman.execution.examples.stop_token
 
@@ -46,19 +46,19 @@ ifeq (${hostSystemName},Darwin)
   export LLVM_DIR:=$(shell realpath ${LLVM_PREFIX})
   export PATH:=${LLVM_DIR}/bin:${PATH}
 
-  # export CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_DIR}/lib/c++/libc++.modules.json
-  # export CXX=clang++
-  # export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi -lc++ # -lc++experimental
-  # export GCOV="llvm-cov gcov"
+  export CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_DIR}/lib/c++/libc++.modules.json
+  export CXX=clang++
+  export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi # NO! -lc++ -lc++experimental
+  export GCOV="llvm-cov gcov"
 
   ### TODO: to test g++-15:
   export GCC_PREFIX:=$(shell brew --prefix gcc)
   export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
 
-  export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
+  # export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
   # export CXX:=g++-15
-  # export CXXFLAGS:=-stdlib=libstdc++
-  export GCOV="gcov"
+  # export CXXFLAGS:=-stdlib=libstdc++
+  # export GCOV="gcov"
 else ifeq (${hostSystemName},Linux)
   export LLVM_DIR=/usr/lib/llvm-20
   export PATH:=${LLVM_DIR}/bin:${PATH}
@@ -95,9 +95,9 @@ ifeq ($(SANITIZER),lsan)
 endif
 
 # TODO: beman.execution.examples.modules
-# FIXME: beman.execution.execution-module.test beman.execution.stop-token-module.test
+FIXME: beman.execution.execution-module.test beman.execution.stop-token-module.test
 
-default: test
+# XXX: NO! $(SANITIZER): test
 
 all: $(SANITIZERS)
 
@@ -112,16 +112,19 @@ doc:
 # 	$(MAKE) SANITIZER=$@
 
 build:
-	cmake --fresh -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
+	cmake -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
 	  -D CMAKE_SKIP_INSTALL_RULES=ON \
 	  -D CMAKE_CXX_STANDARD=23 \
 	  -D CMAKE_CXX_EXTENSIONS=ON \
 	  -D CMAKE_CXX_STANDARD_REQUIRED=ON \
-	  -D CMAKE_CXX_COMPILER=$(CXX) # XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	  -D CMAKE_CXX_SCAN_FOR_MODULES=ON \
+	  -D CMAKE_EXPERIMENTAL_CXX_IMPORT_STD=OFF \
+	  -D CMAKE_BUILD_TYPE=$(SANITIZER) \
+	  -D CMAKE_CXX_COMPILER=$(CXX) # XXX --fresh -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
-# NOTE: without install, see CMAKE_SKIP_INSTALL_RULES! CK
+# NOTE: may w/o enabled install, see CMAKE_SKIP_INSTALL_RULES! CK
 test: build
 	ctest --test-dir $(BUILD) --rerun-failed --output-on-failure
 

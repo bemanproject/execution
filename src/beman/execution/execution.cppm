@@ -3,15 +3,24 @@
 // ----------------------------------------------------------------------------
 
 module;
+
+#ifndef BEMAN_HAS_IMPORT_STD
 #include <execution>
 #include <stop_token>
-#include <beman/execution/execution.hpp>
+#endif
+
+// FIXME: #include <beman/execution/execution.hpp>
 #include <beman/execution/stop_token.hpp>
 
 export module beman_execution;
 
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#endif
+
 namespace beman::execution {
 export int version(0);
+
 // [stoptoken.concepts], stop token concepts
 export using ::beman::execution::stoppable_token;
 export using ::beman::execution::unstoppable_token;
@@ -19,6 +28,7 @@ export using ::beman::execution::unstoppable_token;
 // [stoptoken], class stop_token
 export using ::beman::execution::stop_token;
 
+#ifdef USE_THIS_CODE
 // [stopsource], class stop_source
 export using ::beman::execution::stop_source;
 
@@ -218,5 +228,6 @@ export using ::beman::execution::sync_wait;
 
 // [exec.with.awaitable.senders]
 //-dk:TODO export using ::beman::execution::with_awaitable_senders;
+#endif
 
 } // namespace beman::execution
