@@ -37,12 +37,15 @@ CMakeUserPresets.json
 build
 .DS_store
 .vs
+.cache
 .vscode
+compile_commands.json
 stagedir
 
 # In-source builds are not allowed
 CMakeCache.txt
 CMakeFiles/
 
+*.log
 docs/html
 docs/latex

@@ -1,9 +1,11 @@
-# cmake-format: off
+# gersemi: off
 # src/beman/execution/CMakeLists.txt -*-makefile-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-# cmake-format: on
+# gersemi: on
 
-add_library(${TARGET_NAME} STATIC)
+if(NOT TARGET ${TARGET_NAME})
+    add_library(${TARGET_NAME} STATIC)
+endif()
 add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
 
 target_sources(
@@ -190,6 +192,16 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/write_env.hpp
 )
 
+if(BEMAN_USE_MODULES)
+    target_sources(
+        ${TARGET_NAME}
+        PUBLIC
+            FILE_SET CXX_MODULES
+                BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
+                FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
+    )
+endif()
+
 get_property(
     DETAIL_HEADER_FILES
     TARGET ${TARGET_NAME}
@@ -209,6 +221,10 @@ install(
     ARCHIVE DESTINATION lib/$<CONFIG>
     FILE_SET ${TARGET_NAME}_public_headers
     FILE_SET ${TARGET_NAME}_detail_headers
+    FILE_SET CXX_MODULES DESTINATION ${INSTALL_CONFIGDIR}/module
+    # There's currently no convention for this location
+    CXX_MODULES_BMI
+        DESTINATION ${INSTALL_CONFIGDIR}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
 )
 
 install(
@@ -216,4 +232,6 @@ install(
     FILE ${TARGETS_EXPORT_NAME}.cmake
     DESTINATION "${INSTALL_CONFIGDIR}"
     NAMESPACE ${TARGET_NAMESPACE}::
+    CXX_MODULES_DIRECTORY
+    .
 )

@@ -11,9 +11,18 @@ repos:
         exclude: ^\.clang-(format|tidy)$
       - id: check-added-large-files
 
+  # Config file: .codespellrc
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        files: ^.*\.(cmake|cpp|hpp|txt|md|json|in|yaml|yml|py|toml)$
+        args: ["--write", "--ignore-words", ".codespellignore" ]
+
   # Clang-format for C++
   # This brings in a portable version of clang-format.
   # See also: https://github.com/ssciwr/clang-format-wheel
+  # Config file: .clang-format
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v21.1.7
     hooks:
@@ -36,11 +45,18 @@ repos:
   #   hooks:
   #     - id: markdownlint
 
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+  # Config file: pyproject.toml
+  # first Python sort imports
+  - repo: https://github.com/pycqa/isort
+    rev: 7.0.0
     hooks:
-      - id: codespell
-        files: ^.*\.(cmake|cpp|hpp|txt|md|json|in|yaml|yml)$
-        args: ["-w", "--ignore-words", ".codespellignore" ]
+      - id: isort
+
+  # Config file: pyproject.toml
+  # second Python code formatting
+  - repo: https://github.com/psf/black
+    rev: 25.11.0
+    hooks:
+      - id: black
 
 exclude: 'infra/'

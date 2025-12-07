@@ -1,7 +1,7 @@
-# cmake-format: off
+# gersemi: off
 # examples/CMakeLists.txt -*-makefile-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-# cmake-format: on
+# gersemi: on
 
 list(
     APPEND EXAMPLES
@@ -20,6 +20,10 @@ list(
     doc-just_error
     doc-just_stopped
 )
+
+if(BEMAN_USE_MODULES)
+    list(APPEND EXAMPLES modules) # modules.cpp
+endif()
 
 foreach(EXAMPLE ${EXAMPLES})
     set(EXAMPLE_TARGET ${TARGET_PREFIX}.examples.${EXAMPLE})
