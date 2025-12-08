@@ -42,7 +42,7 @@ EXAMPLE   = beman.execution.examples.stop_token
 
 ################################################
 ifeq (${hostSystemName},Darwin)
-	export LLVM_PREFIX:=$(shell brew --prefix llvm)
+  export LLVM_PREFIX:=$(shell brew --prefix llvm)
   export LLVM_DIR:=$(shell realpath ${LLVM_PREFIX})
   export PATH:=${LLVM_DIR}/bin:${PATH}
 
@@ -114,7 +114,7 @@ doc:
 build:
 	cmake -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
-	  -D CMAKE_SKIP_INSTALL_RULES=ON \
+	  -D CMAKE_SKIP_INSTALL_RULES=OFF \
 	  -D CMAKE_CXX_STANDARD=23 \
 	  -D CMAKE_CXX_EXTENSIONS=ON \
 	  -D CMAKE_CXX_STANDARD_REQUIRED=ON \

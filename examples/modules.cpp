@@ -4,11 +4,9 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
-
 #include <version>
 #include <iostream>
 #include <string>
-
 #endif
 
 import beman_execution;
@@ -21,7 +19,9 @@ int main() {
                                   ex::then([](const auto& s1, const auto& s2) { return s1 + s2; }))
                         .value_or(std::tuple(std::string("oops")));
     std::cout << "result='" << result << "'\n";
-#else
+#elif defined(BEMAN_HAS_IMPORT_STD)
     std::println("ex::version = {}", ex::version);
+#else
+    std::cout << "ex::version = " << ex::version << "\n";
 #endif
 }
