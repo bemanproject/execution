@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 9,
   "include": [
     "CMakeGenericPresets.json"
   ],
@@ -22,7 +22,7 @@
       "hidden": true,
       "cacheVariables": {
         "CMAKE_CXX_STDLIB_MODULES_JSON": "$env{CMAKE_CXX_STDLIB_MODULES_JSON}",
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+        "CMAKE_BUILD_TYPE": "Release"
       },
       "condition": {
         "type": "equals",

@@ -4,7 +4,10 @@
 #ifndef INCLUDED_TEST_EXECUTION
 #define INCLUDED_TEST_EXECUTION
 
+// #ifndef BEMAN_USE_MODULES
 #include <beman/execution/stop_token.hpp>
+// #endif
+
 #include <concepts>
 #include <cstddef>
 #ifndef _MSC_VER
@@ -23,6 +26,7 @@
 #define TEST(name) auto main() -> int
 
 namespace beman::execution {}
+namespace beman::execution::detail {}
 
 namespace test_std    = ::beman::execution;
 namespace test_detail = ::beman::execution::detail;

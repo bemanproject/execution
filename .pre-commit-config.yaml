@@ -32,7 +32,7 @@ repos:
 
   # CMake linting and formatting
   - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.23.2
+    rev: 0.24.0
     hooks:
       - id: gersemi
         name: CMake linting
@@ -55,7 +55,7 @@ repos:
   # Config file: pyproject.toml
   # second Python code formatting
   - repo: https://github.com/psf/black
-    rev: 25.11.0
+    rev: 25.12.0
     hooks:
       - id: black
 

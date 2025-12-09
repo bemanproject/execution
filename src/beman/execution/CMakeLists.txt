@@ -197,8 +197,14 @@ if(BEMAN_USE_MODULES)
         ${TARGET_NAME}
         PUBLIC
             FILE_SET CXX_MODULES
-                BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
-                FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
+                # BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
+                # FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
+                FILES execution.cppm
+    )
+else()
+    set_target_properties(
+        ${TARGET_NAME}
+        PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON
     )
 endif()
 
@@ -209,26 +215,24 @@ get_property(
 )
 source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
-set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
-
 if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
     return()
 endif()
 
 install(
     TARGETS ${TARGET_NAME}
-    EXPORT ${TARGETS_EXPORT_NAME}1
+    EXPORT ${TARGETS_EXPORT_NAME}
     ARCHIVE DESTINATION lib/$<CONFIG>
     FILE_SET ${TARGET_NAME}_public_headers
     FILE_SET ${TARGET_NAME}_detail_headers
-    FILE_SET CXX_MODULES DESTINATION ${INSTALL_CONFIGDIR}/module
+    FILE_SET CXX_MODULES DESTINATION ${INSTALL_CONFIGDIR}/cxx-modules
     # There's currently no convention for this location
     CXX_MODULES_BMI
         DESTINATION ${INSTALL_CONFIGDIR}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
 )
 
 install(
-    EXPORT ${TARGETS_EXPORT_NAME}1
+    EXPORT ${TARGETS_EXPORT_NAME}
     FILE ${TARGETS_EXPORT_NAME}.cmake
     DESTINATION "${INSTALL_CONFIGDIR}"
     NAMESPACE ${TARGET_NAMESPACE}::
