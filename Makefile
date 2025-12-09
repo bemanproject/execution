@@ -61,9 +61,9 @@ ifeq (${hostSystemName},Darwin)
   # export CXXFLAGS:=-stdlib=libstdc++
   # export GCOV="gcov"
 else ifeq (${hostSystemName},Linux)
-  export LLVM_DIR=/usr/lib/llvm-20
+  export LLVM_DIR=/usr/lib/llvm-22
   export PATH:=${LLVM_DIR}/bin:${PATH}
-  # export CXX=clang++-20
+  export CXX=clang++-22
 else
   export CXX=$(COMPILER)
 endif

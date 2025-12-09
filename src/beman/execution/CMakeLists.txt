@@ -201,8 +201,9 @@ if(BEMAN_USE_MODULES)
         ${TARGET_NAME}
         PUBLIC
             FILE_SET CXX_MODULES
-                BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
-                FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
+                # BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
+                # FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
+                FILES execution.cppm
     )
 else()
     set_target_properties(
