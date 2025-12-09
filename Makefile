@@ -31,7 +31,8 @@ endif
 LDFLAGS   ?=
 SAN_FLAGS ?=
 CXX_FLAGS ?= -g
-SANITIZER := release
+# Note: disabled while working on CXX_MODULES! CK
+# XXX: NO! SANITIZER := release
 SANITIZER ?= RelWithDebInfo
 SOURCEDIR = $(CURDIR)
 BUILDROOT = build
@@ -94,12 +95,25 @@ ifeq ($(SANITIZER),lsan)
     LDFLAGS = $(SAN_FLAGS)
 endif
 
+.PHONY: help FIXME TODO
+help:
+	@echo "Use one of the folling targets:"
+	@echo ""
+	@echo "build   -> use CXX_MODULES if possible"
+	@echo "test    -> build and test "
+	@echo "debug   -> preset with 'import std;'"
+	@echo "release -> preset with 'import std;'"
+	@echo "doc"
+	@echo "clean"
+	@echo "format"
+	@echo "distclean"
+
 # TODO: beman.execution.examples.modules
 FIXME: beman.execution.execution-module.test beman.execution.stop-token-module.test
 
+# Note: disabled while working on CXX_MODULES! CK
 # XXX: NO! $(SANITIZER): test
-
-all: $(SANITIZERS)
+# XXX all: $(SANITIZERS)
 
 run: test
 	./$(BUILD)/examples/$(EXAMPLE)
@@ -108,13 +122,14 @@ doc:
 	./bin/mk-doc.py docs/*.mds
 	doxygen docs/Doxyfile
 
+# Note: disabled while working on CXX_MODULES! CK
 # $(SANITIZERS):
 # 	$(MAKE) SANITIZER=$@
 
 build:
 	cmake -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
-	  -D CMAKE_SKIP_INSTALL_RULES=OFF \
+	  -D CMAKE_SKIP_INSTALL_RULES=ON \
 	  -D CMAKE_CXX_STANDARD=23 \
 	  -D CMAKE_CXX_EXTENSIONS=ON \
 	  -D CMAKE_CXX_STANDARD_REQUIRED=ON \
@@ -169,6 +184,7 @@ codespell:
 	pre-commit run $@
 
 format:
+	pre-commit autoupdate
 	pre-commit run --all
 
 cmake-format:

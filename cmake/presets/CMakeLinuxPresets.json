@@ -22,7 +22,7 @@
       "hidden": true,
       "cacheVariables": {
         "CMAKE_CXX_STDLIB_MODULES_JSON": "$env{CMAKE_CXX_STDLIB_MODULES_JSON}",
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+        "CMAKE_BUILD_TYPE": "Release"
       },
       "condition": {
         "type": "equals",
