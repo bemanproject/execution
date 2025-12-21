@@ -56,8 +56,8 @@ ifeq (${hostSystemName},Darwin)
   export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
 
   export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
-  export CXX:=g++-15
-  export CXXFLAGS:=-stdlib=libstdc++
+  # export CXX:=g++-15
+  # export CXXFLAGS:=-stdlib=libstdc++
   export GCOV="gcov"
 else ifeq (${hostSystemName},Linux)
   export LLVM_DIR=/usr/lib/llvm-20

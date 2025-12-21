@@ -5,6 +5,7 @@
 
 list(
     APPEND EXAMPLES
+    tst-basic-timer
     stackoverflow
     inspect
     playground
