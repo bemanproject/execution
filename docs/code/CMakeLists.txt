@@ -5,20 +5,6 @@
 
 list(
     APPEND EXAMPLES
-    stackoverflow
-    inspect
-    playground
-    sender-demo
-    when_all-cancel
-    stop_token
-    stopping
-    allocator
-    intro-1-hello-world
-    intro-2-hello-async
-    intro-5-consumer
-    doc-just
-    doc-just_error
-    doc-just_stopped
 )
 
 if(BEMAN_USE_MODULES)

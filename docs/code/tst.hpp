@@ -6,6 +6,7 @@
 #define INCLUDED_EXAMPLES_TST
 
 #include "tst-repeat_effect_until.hpp"
+#include "tst-sync_wait.hpp"
 #include <beman/execution/execution.hpp>
 #include <chrono>
 #include <queue>

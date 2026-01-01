@@ -667,7 +667,7 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 <summary><code>let_value(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
 </details>
 <details>
-<summary>`on`</summary>
+<summary><code>on(_sched_, _sndr_)</code></summary>
 </details>
 <details>
 <summary><code>schedule_from(<i>scheduler</i>, <i>sender</i>) -> <i>sender</i></code></summary>
