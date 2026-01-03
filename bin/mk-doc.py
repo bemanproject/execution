@@ -5,7 +5,8 @@ import sys
 
 prestart_re = re.compile('\s*<pre name="([^\"]*)">')
 preend_re = re.compile("\s*</pre>")
-append_re = re.compile("\s*APPEND EXAMPLES\s*")
+append_re = re.compile("list\(APPEND EXAMPLES")
+appendp_re = re.compile("list\(APPEND EXAMPLES\)")
 paren_re = re.compile("\)")
 
 def update_cmake(list):
@@ -18,10 +19,14 @@ def update_cmake(list):
                     skipping = False
                     text += line
             else:
-                text += line
                 if append_re.match(line):
+                    text += "list(APPEND EXAMPLES\n"
                     text += "\n".join(list) + "\n"
-                    skipping = True
+                    skipping = not appendp_re.match(line)
+                    if not skipping:
+                        text += ")\n"
+                else:
+                    text += line
 
     with open("docs/code/CMakeLists.txt", "w") as cmake:
         cmake.write(text)
