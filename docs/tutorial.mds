@@ -360,7 +360,165 @@ pipe notation.
       </ul>
     </li>
     <li>
-    `let` family
+      Transform results into a sender using a function object <code>_fun_</code>:
+      <ul>
+        <li>
+          <details>
+            <summary>common: result of a sender returned from <code>_fun_</code></summary>
+	  All of these algorithms require that invoking the function
+	  object <code>_fun_</code> with the results from
+	  <code>_sender_</code> returns a sender <code>_s_</code>
+	  when the result of <code>_sender_</code> match algorithm
+	  name (`let_value` => success; `let_error` => error,
+	  `let_stopped` => stopped). In that case the result becomes
+	  the result of executing this sender <code>_s_</code>.
+    If <code>_sender_</code> completes differently, the result is
+    forwarded. If the invocation of <code>_fun_</code> exits with
+    an exception the algorithm completes with an error passing an
+    <code>std::exception_ptr</code> to the caught exception.
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary><code>_sender_ | ex::let_value(_fun_)</code></summary>
+	    Transform a successful result into a sender and get
+	    this sender executed.
+            <ul>
+              <li>
+                <details>
+                  <summary>`ex::just(17) | ex::let_value([f](int i){ return ex::just(f * i); })`</summary>
+                  The transformation returns another sender. In this example
+                  a value is returned synchronously but in general the
+                  sender can be any asynchronous operation.
+                  <pre name="just-let_value">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  namespace ex = beman::execution;
+  int main() {
+    int f{3};
+    auto[r] = *ex::sync_wait(ex::just(17) | ex::let_value([f](int i){ return ex::just(f * i); }));
+    std::cout << "r=" << r << "\n";
+  }
+                  </pre>
+                </details>
+              </li>
+              <li>
+                <details>
+                  <summary>`ex::just(17) | ex::let_value([f](int i){ return ex::just_error(f * i); })`</summary>
+                  The transformation returns another sender. In this example
+                  a value is returned synchronously but in general the
+                  sender can be any asynchronous operation. `let_value` can
+                  be used to turn a result into a non-successful one (without
+                  throwing an exception; in this case the result is used with
+                  `sync_wait` which will still throw an exception).
+                  <pre name="just-let_value-just_error">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+  int main() {
+    int f{3};
+    try { tst::sync_wait(ex::just(17) | ex::let_value([f](int i){ return ex::just_error(f * i); })); }
+    catch (int e) {
+      std::cout << "e=" << e << "\n";
+    }
+  }
+                  </pre>
+                </details>
+              </li>
+              <li>
+                <details>
+                  <summary>`tst::just_error(17) | ex::let_value([f](auto...){ return ex::just(f); })`</summary>
+                  As with `then`, if the upstream sender's result doesn't match the
+                  kind of results to be transformed, the upstream sender's result
+                  is forwarded. Note that upstream sender also needs to be able to
+                  complete the transformed kind of results (`tst::just_error` is like
+                  `ex::just_error` but also pretends to complete successful).
+                  <pre name="just_error-let_value">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+  int main() {
+    int f{3};
+    try { tst::sync_wait(tst::just_error(17) | ex::let_value([f](auto...){ return ex::just(f); })); }
+    catch (int e) {
+      std::cout << "e=" << e << "\n";
+    }
+  }
+                  </pre>
+                </details>
+              </li>
+              <li>
+                <details>
+                  <summary>`ex::just(17) | ex::let_value([f](int i){ throw f * i; return ex::just(); })`</summary>
+                  When an exception is throwing from the function object, the result is an
+                  error with a <code>std::exception_ptr</code> to the caught exception. Note
+                  the function object still needs to return a sender to satisfy the requirement
+                  of `let_value`'s interface.
+                  <pre name="just-let_value-throw">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+  int main() {
+    int f{3};
+    try { *tst::sync_wait(ex::just(17) | ex::let_value([f](int i){ throw f * i; return ex::just(); })); }
+    catch (int e) {
+      std::cout << "e=" << e << "\n";
+    }
+  }
+                  </pre>
+                </details>
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary><code>_sender_ | ex::let_error(_fun_)</code></summary>
+	    Transform an error result into a sender and get this sender executed.
+            <ul>
+              <li>
+                <details>
+                  <summary>`ex::just_error(17) | ex::let_error([](int e) { return ex::just(e); })`</summary>
+                  <pre name="just_error-let_error">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  namespace ex = beman::execution;
+  int main() {
+    auto[r] = *ex::sync_wait(ex::just_error(17) | ex::let_error([](int e){ return ex::just(e); }));
+    std::cout << "r=" << r << "\n";
+  }
+                  </pre>
+                </details>
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary><code>_sender_ | ex::let_stopped(_fun_)</code></summary>
+	    Transform a stopped result into a sender and get this sender executed.
+            <ul>
+              <li>
+                <details>
+                  <summary>`ex::just_stopped() | ex::let_stopped([](int e) { return ex::just(7); })`</summary>
+                  <pre name="just_stopped-let_stopped">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  namespace ex = beman::execution;
+  int main() {
+    auto[r] = *ex::sync_wait(ex::just_error(17) | ex::let_error([](int e){ return ex::just(e); }));
+    std::cout << "r=" << r << "\n";
+  }
+                  </pre>
+                </details>
+              </li>
+            </ul>
+          </details>
+        </li>
+      </ul>
     </li>
     <li>
     <pre name="when_all">

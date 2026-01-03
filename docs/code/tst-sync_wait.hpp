@@ -13,15 +13,15 @@
 
 namespace tst {
     template <tst::ex::sender Sender>
-    struct sync_wait_sender {
+    struct add_set_value {
         template <typename S> struct is_set_value: std::false_type {};
         template <typename... A> struct is_set_value<tst::ex::set_value_t(A...)>: std::true_type {};
         template <typename> struct contains_set_value;
         template <typename... S> struct contains_set_value<tst::ex::completion_signatures<S...>>: std::bool_constant<(... || is_set_value<S>::value)> {
         };
 
-        template <typename T, bool = contains_set_value<T>::value> struct add_set_value { using type = T; };
-        template <typename...S> struct add_set_value<tst::ex::completion_signatures<S...>, false> {
+        template <typename T, bool = contains_set_value<T>::value> struct add_signature { using type = T; };
+        template <typename...S> struct add_signature<tst::ex::completion_signatures<S...>, false> {
             using type = tst::ex::completion_signatures<
                 tst::ex::set_value_t(), S...
             >;
@@ -30,7 +30,7 @@ namespace tst {
         template <typename Env>
         constexpr auto get_completion_signatures(Env const& e) noexcept {
             using orig = decltype(tst::ex::get_completion_signatures(std::declval<Sender>(), e));
-            return typename add_set_value<orig>::type{};
+            return typename add_signature<orig>::type{};
         }
         std::remove_cvref_t<Sender> inner;
         template <tst::ex::receiver Rcvr>
@@ -41,8 +41,16 @@ namespace tst {
         }
     };
     template <tst::ex::sender Sender>
+    add_set_value(Sender&&) -> add_set_value<std::remove_cvref_t<Sender>>;
+
+    inline constexpr struct just_error_t {
+        template <typename E>
+        auto operator()(E&& e) const { return add_set_value(ex::just_error(std::forward<E>(e))); }
+    } just_error{};
+
+    template <tst::ex::sender Sender>
     auto sync_wait(Sender&& sndr) {
-        return tst::ex::sync_wait(sync_wait_sender<Sender>{std::forward<Sender>(sndr)});
+        return tst::ex::sync_wait(add_set_value<Sender>{std::forward<Sender>(sndr)});
     }
 }
 
