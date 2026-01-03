@@ -56,7 +56,7 @@ with namespace alias `ex` for the namespace for `beman::execution`:
 </details>
 The standard library doesn't readily provide components for certain asynchronous
 operations, it is lacking some algorithms, or the interface as some quirks which
-would cause unnecessary complexities. To make the tutorial go smoothly it uses a 
+would cause unnecessary complexities. To make the tutorial go smoothly it uses a
 collections of components mode available by a header:
 <details>
    <summary>`#include "tst.hpp"`</summary>
@@ -106,11 +106,12 @@ with the kinds of results an asynchronous function can produce:
   #include <beman/execution/execution.hpp>
   #include <iostream>
   namespace ex = beman::execution;
+
   int main() {
     auto[b, i] = *ex::sync_wait(ex::just(true, 1));
     std::cout << "b=" << b << ", i=" << i << "\n";
   }
-</pre> 
+</pre>
       </details>
    </li>
    <li>
@@ -132,6 +133,7 @@ with the kinds of results an asynchronous function can produce:
   #include <iostream>
   #include "tst.hpp"
   namespace ex = beman::execution;
+
   int main() {
     try { tst::sync_wait(ex::just_error(17)); }
     catch (int e) { std::cout << "error=" << e << "\n"; }
@@ -157,6 +159,7 @@ with the kinds of results an asynchronous function can produce:
   #include <iostream>
   #include "tst.hpp"
   namespace ex = beman::execution;
+
   int main() {
     if (not tst::sync_wait(ex::just_stopped())) {
         std::cout << "the operation was cancelled\n";
@@ -219,7 +222,7 @@ pipe notation.
   #include <beman/execution/execution.hpp>
   #include <iostream>
   namespace ex = beman::execution;
-           
+
   int main() {
     auto[r] = *ex::sync_wait(ex::just(true, 17) | ex::then([](bool, int i){ return 2 * i; }));
     std::cout << "r=" << r << "\n";
@@ -236,7 +239,7 @@ pipe notation.
   #include <beman/execution/execution.hpp>
   #include <iostream>
   namespace ex = beman::execution;
-           
+
   int main() {
     try { ex::sync_wait(ex::just(true, 17) | ex::then([](bool, int i){ throw 2 * i; })); }
     catch (int e) { std::cout << "e=" << e << "\n"; }
@@ -255,7 +258,7 @@ pipe notation.
   #include <iostream>
   #include "tst.hpp"
   namespace ex = beman::execution;
-           
+
   int main() {
     try {
       tst::sync_wait(ex::just_error(17) | ex::then([](bool, int i){ return 2 * i; }));
@@ -279,7 +282,7 @@ pipe notation.
   #include <iostream>
   #include "tst.hpp"
   namespace ex = beman::execution;
-           
+
   int main() {
     auto o = tst::sync_wait(ex::just_stopped() | ex::then([](bool, int i){ return 2 * i; }));
     std::cout << "o=" << (o? "": "not ") << "set\n";
@@ -302,7 +305,7 @@ pipe notation.
   #include <beman/execution/execution.hpp>
   #include <iostream>
   namespace ex = beman::execution;
-           
+
   int main() {
     auto[r] = *ex::sync_wait(ex::just_error(17) | ex::upon_error([](int e){ return e; }));
     std::cout << "r=" << r << "\n";
@@ -319,7 +322,7 @@ pipe notation.
   #include <expected>
   #include <iostream>
   namespace ex = beman::execution;
-           
+
   int main() {
     auto[e] = *ex::sync_wait(
       ex::just_error(17)
@@ -345,7 +348,7 @@ pipe notation.
   #include <beman/execution/execution.hpp>
   #include <iostream>
   namespace ex = beman::execution;
-           
+
   int main() {
     auto[r] = *ex::sync_wait(ex::just_stopped() | ex::upon_stopped([](){ return 42; }));
     std::cout << "r=" << r << "\n";
@@ -393,6 +396,7 @@ pipe notation.
   #include <beman/execution/execution.hpp>
   #include <iostream>
   namespace ex = beman::execution;
+
   int main() {
     int f{3};
     auto[r] = *ex::sync_wait(ex::just(17) | ex::let_value([f](int i){ return ex::just(f * i); }));
@@ -415,6 +419,7 @@ pipe notation.
   #include <iostream>
   #include "tst.hpp"
   namespace ex = beman::execution;
+
   int main() {
     int f{3};
     try { tst::sync_wait(ex::just(17) | ex::let_value([f](int i){ return ex::just_error(f * i); })); }
@@ -438,6 +443,7 @@ pipe notation.
   #include <iostream>
   #include "tst.hpp"
   namespace ex = beman::execution;
+
   int main() {
     int f{3};
     try { tst::sync_wait(tst::just_error(17) | ex::let_value([f](auto...){ return ex::just(f); })); }
@@ -460,6 +466,7 @@ pipe notation.
   #include <iostream>
   #include "tst.hpp"
   namespace ex = beman::execution;
+
   int main() {
     int f{3};
     try { *tst::sync_wait(ex::just(17) | ex::let_value([f](int i){ throw f * i; return ex::just(); })); }
@@ -485,6 +492,7 @@ pipe notation.
   #include <beman/execution/execution.hpp>
   #include <iostream>
   namespace ex = beman::execution;
+
   int main() {
     auto[r] = *ex::sync_wait(ex::just_error(17) | ex::let_error([](int e){ return ex::just(e); }));
     std::cout << "r=" << r << "\n";
@@ -507,6 +515,7 @@ pipe notation.
   #include <beman/execution/execution.hpp>
   #include <iostream>
   namespace ex = beman::execution;
+
   int main() {
     auto[r] = *ex::sync_wait(ex::just_error(17) | ex::let_error([](int e){ return ex::just(e); }));
     std::cout << "r=" << r << "\n";
@@ -550,7 +559,7 @@ pipe notation.
   #include <beman/execution/execution.hpp>
   #include <iostream>
   namespace ex = beman::execution;
-           
+
   int main() {
     auto[b, i, f] = *ex::sync_wait(ex::when_all(ex::just(true), ex::just(), ex::just(17, 2.5)));
     std::cout << "b=" << b << " i=" << i << " f=" << f << "\n";
@@ -572,7 +581,7 @@ pipe notation.
   #include <iostream>
   #include "tst.hpp"
   namespace ex = beman::execution;
-           
+
   int main() {
     try { ex::sync_wait(tst::when_all(ex::just(true), ex::just_error(1), ex::just(17, 2.5))); }
     catch (int e) {
@@ -596,7 +605,7 @@ pipe notation.
   #include <iostream>
   #include "tst.hpp"
   namespace ex = beman::execution;
-           
+
   int main() {
     if (not ex::sync_wait(tst::when_all(ex::just(true), ex::just_stopped(), ex::just(17, 2.5)))) {
       std::cout << "no result set => operation was stopped\n";
@@ -627,9 +636,10 @@ For example, `tst::resume_after(500ms)` is a concrete example of a sender whose 
  namespace ex = beman::execution;
  #include &lt;tst.hpp>
  #include &lt;chrono>
- using std::chrono::literals; 
+ using std::chrono::literals;
+
  int main() {
-    ex::sync_wait(tst::resume_after(500ms)); 
+    ex::sync_wait(tst::resume_after(500ms));
  }
  </pre>
 </details>
@@ -716,7 +726,7 @@ If the work isn't known in advanced something is needed to `start` new work and 
       co_await tst::resume_after(1ms);
       ex::spawn(s.get_token(), work([](int i) {
          (i % 5) || (std::cout << "buzz");
-      }));      
+      }));
       co_await scope.when_empty();
     }(scope));
     </pre>
@@ -734,12 +744,12 @@ The above are the key tools needed to create an application using asynchronous a
     `start` a sender and synchronously await its completion: `ex::sync_wait`.
   </li>
   <li>
-    Create new work, get it `start`ed, and its completion awaited. 
+    Create new work, get it `start`ed, and its completion awaited.
   </li>
   <li>
     `ex::task` makes composition of senders easier in many cases.
   </li>
 </ol>
 <p>
-  The above doesn't explain how sender are implemented or what tools are available. There are more advanced needs  
+  The above doesn't explain how sender are implemented or what tools are available. There are more advanced needs
 </p>

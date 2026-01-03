@@ -3,7 +3,7 @@
 import re
 import sys
 
-prestart_re = re.compile("\s*<pre name=\"([^\"]*)\">")
+prestart_re = re.compile('\s*<pre name="([^\"]*)">')
 preend_re = re.compile("\s*</pre>")
 append_re = re.compile("\s*APPEND EXAMPLES\s*")
 paren_re = re.compile("\)")
@@ -26,18 +26,18 @@ def update_cmake(list):
     with open("docs/code/CMakeLists.txt", "w") as cmake:
         cmake.write(text)
 
+
 def transform(text, output):
     capturing = False
-    code      = ""
-    name      = ""
-    names     = {}
+    code = ""
+    name = ""
+    names = {}
     for line in text:
         match = prestart_re.match(line)
         if match:
             print(f"example: {match.group(1)}")
             name = match.group(1)
             code = ""
-            #output.write(f"<pre>")
             output.write(f"```c++\n")
             capturing = True
         elif capturing and preend_re.match(line):
@@ -48,13 +48,13 @@ def transform(text, output):
                 with open("docs/code/" + name + ".cpp", "w") as codeout:
                     codeout.write(code)
             capturing = False
-            #output.write(line)
             output.write(f"```\n")
         else:
             if capturing:
                 code += line
             output.write(f"{line}")
     update_cmake(names.keys())
+
 
 def process(root):
     print(f"processing {root}")

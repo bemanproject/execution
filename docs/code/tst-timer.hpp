@@ -86,8 +86,8 @@ class tst::timer {
             tst::timer*                   object;
             std::chrono::milliseconds     duration;
             std::remove_cvref_t<Receiver> receiver;
-            state(tst::timer* obj, std::chrono::milliseconds dur, Receiver&& rcvr) noexcept
-                : object(obj), duration(dur), receiver(std::forward<Receiver>(rcvr)) {
+            state(tst::timer* obj, std::chrono::milliseconds drtn, Receiver&& rcvr) noexcept
+                : object(obj), duration(drtn), receiver(std::forward<Receiver>(rcvr)) {
                 static_assert(tst::ex::operation_state<state>);
             }
             auto start() & noexcept -> void { this->object->add_timer(this->duration, this); }
