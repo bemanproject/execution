@@ -10,22 +10,34 @@ This document introduces the use of [`std::execution`](https://wg21.link/exec), 
   </p>
 </details>
 
-The examples shown won't be complete code and omit, e.g., headers/`import` statements, namespace aliases, etc. The examples are tested using [`beman::execution`](https://github.com/bemanproject/execution) and assume the library is made available using code like this:
+The examples shown won't be complete code and omit, e.g.,
+`#include`/`import` statements, namespace aliases, etc. The examples
+are tested using
+[`beman::execution`](https://github.com/bemanproject/execution) and
+assume the library is made available using code like this together
+with namespace alias `ex` for the namespace for `beman::execution`:
 <details>
-  <summary>
-     <pre>
-         #include <beman/execution.hpp>
-         namespace ex = beman::execution;
-     </pre>
-  </summary>
+  <summary>`#include <beman/execution/execution.hpp>`</summary>
   <p>
-    There are or will be other implementations of [`std::execution`](https://wg21.link/exec) and the examples should work with these implementations assuming the declarations are suitably made available:
+    There are or will be multiple implementations of
+    [`std::execution`](https://wg21.link/exec) and the examples
+    should work with these implementations assuming the declarations
+    are suitably made available:
   </p>
      <ul>
+       <li>
+       This documentation is part of [`beman::execution`](https://github.com/bemanproject/execution)
+       the example were tested with this implementation. The examples would start
+       with
+       <pre>
+         #include <beman/execution/execution.hpp>
+         namespace ex = beman::execution;
+       </pre>
+       </li>
        <li>The standard C++ library should ship with an implementation with C++26 mode (`-std=c++26`) or later using (as of 2025-12-31 none does, though):
        <pre>
          import std;
-         using ex = std::execution;
+         namespace ex = std::execution;
        </pre>
       </li>
       <li>[`stdexec`](https://github.com/NVIDIA/stdexec) using
@@ -42,183 +54,329 @@ The examples shown won't be complete code and omit, e.g., headers/`import` state
       </li>
    </ul>
 </details>
+The standard library doesn't readily provide components for certain asynchronous
+operations, it is lacking some algorithms, or the interface as some quirks which
+would cause unnecessary complexities. To make the tutorial go smoothly it uses a 
+collections of components mode available by a header:
 <details>
-   <summary>
-   A library of asynchronous components augmenting the standard C++ library is accessed using:
-   <pre>
-      #include <tst.hpp>
-   </pre>
-   </summary>
-The standard C++ library doesn't, yet, provide many asynchronous components. To create more realistic examples this tutorial uses a number of components defined in a header file. The implementation of all used components will be described in this tutorial. All additional components live in the namespace `tst`.
+   <summary>`#include "tst.hpp"`</summary>
+   These components use names from the use implementation of
+   [`std::execution`](https://wg21.link/exec). By default the names from
+   [`beman::execution`](https://github.com/bemanproject/execution) are
+   used. The used names are set up via
+   [`docs/code/tst-config.hpp`](https://github.com/bemanproject/execution/files/docs/code/tst-config.hpp).
+   When trying to use the examples with a different implementation it should be sufficient to adjust
+   this header accordingly.
 </details>
 ## Basic Abstraction: Senders
 <p>
 The key abstraction of [`std::execution`](https://wg21.link/exec) are [_senders_](https://wg21.link/exec.snd). A sender is a fully curried asynchronous function representing some work. There are a few steps needed to get the work represented by a sender executed which are relevant when creating library components using senders. The details will be provided when explaining how to create senders. For now, it is sufficient to know that <code>ex::sync_wait(_sender_)</code> can execute <code>_sender_</code> and obtain the result of that execution (senders are normally executed differently).
 </p>
-### Standard Library Building Blocks
+### Fundamental Building Blocks: `just` and `sync_wait`
 <p>
-The first few examples will use the asynchronous interface for synchronous operations to demonstrate how the components are used. The expression <code>ex::just(_args_...)</code> is used to get a sender which completes successful and produces the values <code>_args_...</code> when it gets `start`ed. Likewise, the expression <code>ex::just_error(<i>e</i>)</code> is used to get a sender which completes with the error <code>_e_</code> when it gets `start`ed. Asynchronous operations can also be stopped (cancelled) without either producing a value or an error and the expression `ex::just_stopped()` produces a sender which completes indicating that it got stopped when it gets `start`ed.
+To get going with senders, it is necessary to get some sender. One
+fundamental sender is one which [synchronously] produces a particular
+result when it gets started.  The expression
+<code>ex::just(_args_...)</code> is used to get a sender which
+completes successful and produces the values <code>_args_...</code>
+when it gets `start`ed. Likewise, the expression
+<code>ex::just_error(<i>e</i>)</code> is used to get a sender which
+completes with the error <code>_e_</code> when it gets `start`ed.
+Asynchronous operations can also be stopped (cancelled) without
+either producing a value or an error and the expression
+`ex::just_stopped()` produces a sender which completes indicating
+that it got stopped when it gets `start`ed.
 </p>
 <p>
-The function <code>ex::sync_wait(_sender_)</code> `start`s the argument <code>_sender_</code>, awaits the results, and `return`s them.
-The result of `ex::sync_wait` is an <code>std::optional&lt;std::tuple&lt;_T_...&gt;&gt;</code> to cope with the kinds of results an asynchronous function can produce:
+Once you got a sender it needs to be `start`ed and the result needs
+to be awaited to get the sender effect.  The function
+<code>ex::sync_wait(_sender_)</code> `start`s the argument
+<code>_sender_</code>, awaits the results, and `return`s them.  The
+result of `ex::sync_wait` is an
+<code>std::optional&lt;std::tuple&lt;_T_...&gt;&gt;</code> to cope
+with the kinds of results an asynchronous function can produce:
 <ul>
    <li>
-      When the asynchronous function completes successfully a list of values is produced which become the `tuple` elements in the `optional`, e.g.:
+      When the asynchronous function used with `sync_wait` completes
+      successfully producing a list of values, `sync_wait` returns a
+      `tuple` of these values in an `optional`:
       <details>
-        <summary>
-      <code>
-      auto[b, i] = *ex::sync_wait(ex::just(true, 1));
-      std::cout << "b=" << b << ", i=" << i << '\n';
-      </code>
-        </summary>
+        <summary>`auto[b, i] = *ex::sync_wait(ex::just(true, 1));`</summary>
         <pre name="sync_wait-just">
-        #include <beman/execution/execution.hpp>
-        #include <iostream>
-        namespace ex = beman::execution;
-        int main() {
-          auto[b, i] = *ex::sync_wait(ex::just(true, 1));
-          std::cout << "b=" << b << ", i=" << i << '\n';
-        }
-        </pre> 
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  namespace ex = beman::execution;
+  int main() {
+    auto[b, i] = *ex::sync_wait(ex::just(true, 1));
+    std::cout << "b=" << b << ", i=" << i << "\n";
+  }
+</pre> 
       </details>
    </li>
    <li>
-      When the asynchronous function completes with an error the error is thrown as an exception, e.g.:
+      When the asynchronous function used with `sync_wait` completes
+      with an error,  `sync_wait` throws the error an exception:
       <details>
-      <summary>
-      <code>
-      try { tst::sync_wait(ex::just_error(17)); }
-      catch (int e) { std::cout << "error=" << e << '\n'; }
-      </code>
-      </summary>
+      <summary>`try { tst::sync_wait(ex::just_error(17)); } catch (int e) { ... }`</summary>
+      This example uses `tst::sync_wait` instead of `ex::sync_wait`
+      because `ex::sync_wait` requires that the passed sender
+      declares exactly one way how it completes successfully.
+      However, `ex::just_error(17)` only declares one way to complete
+      with an error. <code>tst::sync_wait(_sndr_)</code> wraps the
+      <code>_sndr_</code> into a new sender which claims to complete
+      successfully if <code>_sndr_</code> doesn't already declare
+      how it can succeed. How to do that will be shown later in the
+      tutorial.
       <pre name="sync_wait-just_error">
-      #include <beman/execution/execution.hpp>
-      #include <iostream>
-      #include "tst.hpp"
-      namespace ex = beman::execution;
-      int main() {
-        try { tst::sync_wait(ex::just_error(17)); }
-        catch (int e) { std::cout << "error=" << e << '\n'; }
-      }
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+  int main() {
+    try { tst::sync_wait(ex::just_error(17)); }
+    catch (int e) { std::cout << "error=" << e << "\n"; }
+  }
       </pre>
       </details>
    </li>
    <li>
-      When the asynchronous function is asked to stop prematurely it is indicated by a disengaged `optional`, e.g.:
+      When the asynchronous function used with `sync_wait` is asked to stop prematurely it is indicated by `sync_wait` returning a disengaged `optional`:
       <details>
-      <summary>
-      <code>
-      if (not tst::sync_wait(ex::just_stopped())) {
-          std::cout << "the operation was cancelled\n";
-      }
-      </code>
-      </summary>
+      <summary>`if (not tst::sync_wait(ex::just_stopped())) { ... }`</summary>
+      This example uses `tst::sync_wait` instead of `ex::sync_wait`
+      because `ex::sync_wait` requires that the passed sender
+      declares exactly one way how it completes successfully.
+      However, `ex::just_stopped()` only declares one way to complete
+      indicating that the operation was asked to stop.
+      <code>tst::sync_wait(_sndr_)</code> wraps the <code>_sndr_</code>
+      into a new sender which claims to complete successfully if
+      <code>_sndr_</code> doesn't already declare how it can succeed.
+      How to do that will be shown later in the tutorial  .
       <pre name="sync_wait-just_stopped">
-      #include <beman/execution/execution.hpp>
-      #include <iostream>
-      #include "tst.hpp"
-      namespace ex = beman::execution;
-      int main() {
-        if (not tst::sync_wait(ex::just_stopped())) {
-            std::cout << "the operation was cancelled\n";
-        }
-      }
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+  int main() {
+    if (not tst::sync_wait(ex::just_stopped())) {
+        std::cout << "the operation was cancelled\n";
+    }
+  }
       </pre>
       </details>
    </li>
 </ul>
-The `just` family of sender algorithms and `sync_wait` are basic building blocks for creating and executing senders. The standard library ships with more building blocks to compose senders, i.e., asynchronous work. Some of the algorithms are _pipeable_ which means that instead of writing <code>_algo_(_sender_, _args_...)</code> it is possible to write <code>_sender_ | _algo_(_args_...)</code>. This alternative notation results in composing the algorithms in processing order instead of the algorithm which is executed first being the most nested one. Where applicable, the summary below shows the pipe notation.
+### Composing Senders
+<p>
+The `just` family of sender algorithms and `sync_wait` are basic
+building blocks for creating and executing senders. The standard
+library ships with various algorithms to compose senders: these
+algorithms take one or more senders as well as other parameters and
+produce a new sender. This composition is a major objective of the
+sender interface. This section describes a few algorithms used in
+the examples below.
+</p>
+<p>
+Some of the algorithms are _pipeable_ which means that instead of
+writing <code>_algo_(_sender_, _args_...)</code> it is possible to
+write <code>_sender_ | _algo_(_args_...)</code>.  This alternative
+notation results in composing the algorithms in processing order.
+Using the call notation causes the starting point to be the most
+nested algorithm. Where applicable, the summary below shows the
+pipe notation.
+</p>
+
 <ul>
     <li>
-    <details>
-        <summary>
-        The expressions <code>_sender_ | ex::then(_fun_)</code>, <code>_sender_ | ex::upon_error(_fun_)</code>, and <code>_sender_ | ex::upon_stopped(_fun_)</code> adapt <code>_sender_</code> to transform the respective results into a new result which is obtained by calling <code>_fun_(_res_...)</code>.
-        </summary>
-        The expressions <code>ex::then(_sender_, _fun_)</code>, <code>ex::upon_error(_sender_, _fun_)</code>, and <code>ex::upon_stopped(_sender_, _fun_)</code> adapt <code>_sender_</code> into a new sender <code>_asndr_</code>. When <code>_asndr_</code> is started the adapted <code>_sender_</code> is started and its completion is awaited. If <code>_sender_</code> completes correspondingly (successful for `ex::then`, erronously for `ex::upon_error`, and stopped for `ex::upon_stopped`) the function <code>_fun_</code> is invoked with the result value(s) as arguments(s). The result of this invocation of <code>_fun_</code> becomes the [successful] result of <code>_asndr_</code>'s completion. When <code>_sender_</code> completes differently, the result of <code>_sender_</code> is forwarded as <code>_asndr_</code>'s completion.
-        Here are a few examples:
-        <ul>
+      Transform results using a function object <code>_fun_</code>:
+      <ul>
         <li>
-        <details>
-           <summary>
-           Project the successful results to the last one:
-           <code>
-           auto[r] = *ex::sync_wait(
-             ex::just(true, 17)
-             | ex::then([](bool, int i){ return i; }));
-           </code>
-           </summary>
-           <pre name="just-then">
-           #include <beman/execution/execution.hpp>
-           #include <iostream>
-           namespace ex = beman::execution;
-           
-           int main() {
-             auto[r] = *ex::sync_wait(
-               ex::just(true, 17)
-               | ex::then([](bool, int i){ return i; }));
-             std::cout << "r=" << r << '\n';
-           }
-           </pre>
-        </details>
-        </li>
-        
-        <li>
-        <details>
-           <summary>
-           An unsuccessful result pass to `then` gets passed through:
-           <code>
-           auto o = tst::sync_wait(
-             ex::just_stopped()
-             | ex::then([](bool, int i){ return i; }));
-           </code>
-           </summary>
-           Only the succesful result is transformed by `then`. Error or stopped results are just passed through. In this case the stopped result results in the optional returned from `sync_wait` not being set. 
-           <pre name="just_stopped-then">
-           #include <beman/execution/execution.hpp>
-           #include <iostream>
-           #include "tst.hpp"
-           namespace ex = beman::execution;
-           
-           int main() {
-             auto o = tst::sync_wait(
-               ex::just_stopped()
-               | ex::then([](bool, int i){ return i; }));
-             std::cout << "o=" << (o? "": "not ") << "set\n";
-           }
-           </pre>
-        </details>
+          <details>
+	          <summary>common: successful value when <code>_sender_</code> completes according to the name</summary>
+      When <code>_sender_</code>
+	    completes according to the name of the algorithm (`then`
+	    => success; `upon_error` => error; `upon_stopped` =>
+	    stop), <code>_fun_</code> is invoked with the value
+	    produced by <code>_sender_</code> and the [successful]
+	    result of the algorithm is the value returned from this
+	    invocation (if any). If the invocation of <code>_fun_</code>
+	    throws, the algorithm completes with an error
+      provding an `std::exception_ptr` to caught exception. If
+      <code>_sender_</code> doesn't complete accordingly to the
+      algorithm's name, the completion is forwarded.
+	        </details>
         </li>
         <li>
-        <details>
-           <summary>
-           Turn an error into an unexpected value:
-           <code>
-           auto[r] = *ex::sync_wait(
-             ex::just_error(17)
-             | ex::upon_error([](int i){
-               return std::execpted<int, int>(std::unexpected, i); }));
-           </code>
-           </summary>
-           <pre name="upon_error">
+          <details>
+            <summary><code>_sender_ | ex::then(_fun_)</code></summary>
+            Transform a successful result using <code>_fun_</code>.
+            <ul>
+               <li>
+                 <details>
+                   <summary>`ex::just(true, 17) | ex::then([](bool, int i){ return 2 * i; })`</summary>
+                   Transform the results by doubling the second element and returning it.
+                   <pre name="just-then">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  namespace ex = beman::execution;
+           
+  int main() {
+    auto[r] = *ex::sync_wait(ex::just(true, 17) | ex::then([](bool, int i){ return 2 * i; }));
+    std::cout << "r=" << r << "\n";
+  }
+                   </pre>
+                 </details>
+               </li>
+               <li>
+                 <details>
+                   <summary>`ex::just(true, 17) | ex::then([](bool, int i){ throw 2 * i; })`</summary>
+                   If the transformation fails with an exception, an error with the caught
+                   exception is produced.
+                   <pre name="just-then-throw">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  namespace ex = beman::execution;
+           
+  int main() {
+    try { ex::sync_wait(ex::just(true, 17) | ex::then([](bool, int i){ throw 2 * i; })); }
+    catch (int e) { std::cout << "e=" << e << "\n"; }
+  }
+                   </pre>
+                 </details>
+               </li>
+               <li>
+                 <details>
+                  <summary>`ex::just_error(17) | ex::then([](bool, int i){ return 2 * i; })`</summary>
+                  The transformed sender completes with an error, i.e., the result doesn't get
+                  transformed by the function passed to `ex::then`. Instead, the error is passed
+                  through.
+                  <pre name="just_error-then">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+           
+  int main() {
+    try {
+      tst::sync_wait(ex::just_error(17) | ex::then([](bool, int i){ return 2 * i; }));
+    }
+    catch (int e) {
+      std::cout << "e=" << e << "\n";
+    }
+  }
+                   </pre>
+                 </details>
+               </li>
+               <li>
+                 <details>
+                  <summary>`ex::just_stopped() | ex::then([](bool, int i){ return 2 * i; })`</summary>
+		  The transformed sender completes with stopped,
+		  i.e., the result doesn't get transformed by the
+		  function passed to `ex::then`. Instead, the stopped
+		  completion is passed through.
+                  <pre name="just_stopped-then">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+           
+  int main() {
+    auto o = tst::sync_wait(ex::just_stopped() | ex::then([](bool, int i){ return 2 * i; }));
+    std::cout << "o=" << (o? "": "not ") << "set\n";
+  }
+                   </pre>
+                 </details>
+               </li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary><code>_sender_ | ex::upon_error(_fun_)</code></summary>
+            Transform an error result.
+            <ul>
+              <li>
+                <details>
+                   <summary>`ex:::just_error(17) | ex::upon_error([](int e){ return e; })`</summary>
+                   <pre name="upon_error">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  namespace ex = beman::execution;
+           
+  int main() {
+    auto[r] = *ex::sync_wait(ex::just_error(17) | ex::upon_error([](int e){ return e; }));
+    std::cout << "r=" << r << "\n";
+  }
+                   </pre>
+              </li>
+              <li>
+                <details>
+                   <summary>turn a result into an `expected`</summary>
+                   Using both `then` and `upon_error` the result of an
+                   operation can be turned into an `std::expected`:
+                   <pre name="expected">
+  #include <beman/execution/execution.hpp>
+  #include <expected>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+           
+  int main() {
+    auto[e] = *tst::sync_wait(
+      ex::just_error(17)
+      | ex::then([](bool, int i) noexcept { return std::expected<int, int>(i); })
+      | ex::upon_error([](int e) noexcept { return std::expected<int, int>(std::unexpected(e)); })
+    );
+    std::cout << (e? "success": "failure") << " e=" << (e? e.value(): e.error()) << "\n";
+  }
+                   </pre>
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary><code>_sender_ | ex::upon_stopped(_fun_)</code></summary>
+            Transform a stop result.
+            <ul>
+              <li>
+                <details>
+                   <summary>`ex:::just_stopped() | ex::upon_stopped([](){ return 42; })`</summary>
+                   <pre name="upon_stopped">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  namespace ex = beman::execution;
+           
+  int main() {
+    auto[r] = *ex::sync_wait(ex::just_stopped() | ex::upon_stopped([](){ return 42; }));
+    std::cout << "r=" << r << "\n";
+  }
+                   </pre>
+                </details>
+              </li>
+            </ul>
+          </details>
+        </li>
+      </ul>
+    </li>
+    <li>
+    `let` family
+    </li>
+    <li>
+    <pre name="when_all">
            #include <beman/execution/execution.hpp>
            #include <expected>
            #include <iostream>
            namespace ex = beman::execution;
            
            int main() {
-             auto[r] = *ex::sync_wait(
-               ex::just_error(17)
-               | ex::upon_error([](int i){
-                 return std::expected<int, int>(std::unexpected{i}); }));
-             std::cout << "r=" << r.error() << '\n';
+             auto[b, i, s] = *ex::sync_wait(
+              ex::when_all(ex::just(), ex::just(true), ex::just(17, std::string("data")))
+             );
+             std::cout << "b=" << b << " i=" << i << " s=" << s << "\n";
            }
-           </pre>
-        </details>
-        </li>
-        </ul>
-       </details>
-    </li
+    </pre>
+    </li>
 </ul>
 </p>
 <p>

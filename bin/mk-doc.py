@@ -59,7 +59,7 @@ def process(root):
     text = []
     with open(root + ".mds") as input:
         text = input.readlines()
-    with open(root + ".mdt", "w") as output:
+    with open(root + ".md", "w") as output:
         transform(text, output)
 
 sys.argv.pop(0)

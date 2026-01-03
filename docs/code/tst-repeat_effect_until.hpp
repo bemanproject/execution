@@ -5,16 +5,14 @@
 #ifndef INCLUDED_EXAMPLES_TST_REPEAT_EFFECT_UNTIL
 #define INCLUDED_EXAMPLES_TST_REPEAT_EFFECT_UNTIL
 
-#include <beman/execution/execution.hpp>
 #include <optional>
 #include <type_traits>
 #include <utility>
+#include "tst-config.hpp"
 
 // ----------------------------------------------------------------------------
 
 namespace tst {
-    namespace ex = beman::execution;
-
     template <ex::sender Sndr, ex::receiver Rcvr>
     struct connector {
         decltype(ex::connect(::std::declval<Sndr>(), ::std::declval<Rcvr>())) op;

@@ -105,6 +105,7 @@ run: test
 	./$(BUILD)/examples/$(EXAMPLE)
 
 doc:
+	./bin/mk-doc.py docs/*.mds
 	doxygen docs/Doxyfile
 
 # $(SANITIZERS):
@@ -178,7 +179,7 @@ todo:
 	bin/mk-todo.py
 
 unstage:
-	git restore --staged tests/beman/execution/CMakeLists.txt
+	git restore --staged tests/beman/execution/CMakeLists.txt docs/code/CMakeLists.txt
 
 .PHONY: clean-doc
 clean-doc:

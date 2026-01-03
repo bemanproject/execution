@@ -5,6 +5,17 @@
 
 list(
     APPEND EXAMPLES
+sync_wait-just
+sync_wait-just_error
+sync_wait-just_stopped
+just-then
+just-then-throw
+just_error-then
+just_stopped-then
+upon_error
+expected
+upon_stopped
+when_all
 )
 
 if(BEMAN_USE_MODULES)
