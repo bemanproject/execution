@@ -318,11 +318,10 @@ pipe notation.
   #include <beman/execution/execution.hpp>
   #include <expected>
   #include <iostream>
-  #include "tst.hpp"
   namespace ex = beman::execution;
            
   int main() {
-    auto[e] = *tst::sync_wait(
+    auto[e] = *ex::sync_wait(
       ex::just_error(17)
       | ex::then([](bool, int i) noexcept { return std::expected<int, int>(i); })
       | ex::upon_error([](int e) noexcept { return std::expected<int, int>(std::unexpected(e)); })
@@ -521,22 +520,99 @@ pipe notation.
       </ul>
     </li>
     <li>
-    <pre name="when_all">
-           #include <beman/execution/execution.hpp>
-           #include <expected>
-           #include <iostream>
-           namespace ex = beman::execution;
+    Await completion of multiple senders.
+      <ul>
+        <li>
+          <details>
+            <summary><code>ex::when_all(_s_...)</code></summary>
+	    The algorithm `when_all` is used to await completion
+	    of multiple senders. Upon successful completion of all
+	    senders <code>_s_...</code> a `std::tuple` with all
+	    results is produced. If an error or a cancellation is
+	    encountered all outstanding senders are stopped and
+	    once all senders are completed the unsuccessful result
+	    is reported.
+            <ul>
+              <li>
+                <details>
+                  <summary>`ex::when_all(ex::just(true), ex::just(), ex::just(17, 2.5))`</summary>
+                  When all senders complete successfully the result is a `std::tuple` of
+                  all values produced. In the example above there are three senders producing
+                  a result:
+                  <ol>
+                    <li>The first sender `ex::just(true)` produces one `bool` value.</li>
+                    <li>The second sender `ex::just()` doesn't produce any value.</li>
+                    <li>The third sender `ex::just(17, 2.5)` produces one `int` and one `float` value.</code>
+                  </ol>
+                  The result of `ex::when_all(ex::just(true), ex::just(), ex::just(17, 2.5))` is
+                  a `std::tuple(true, 17, 2.5)`.
+  <pre name="when_all">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  namespace ex = beman::execution;
            
-           int main() {
-             auto[b, i, s] = *ex::sync_wait(
-              ex::when_all(ex::just(), ex::just(true), ex::just(17, std::string("data")))
-             );
-             std::cout << "b=" << b << " i=" << i << " s=" << s << "\n";
-           }
-    </pre>
+  int main() {
+    auto[b, i, f] = *ex::sync_wait(ex::when_all(ex::just(true), ex::just(), ex::just(17, 2.5)));
+    std::cout << "b=" << b << " i=" << i << " f=" << f << "\n";
+  }
+  </pre>
+                </details>
+              </li>
+              <li>
+                <details>
+                  <summary>`tst::when_all(ex::just(true), ex::just_error(1), ex::just(17, 2.5))`</summary>
+                  If one sender completes with an error all outstanding senders
+                  are stopped. Once all senders complete the result of `ex::when_all`
+                  becomes the error. The example uses `tst::when_all` because `ex::when_all`
+                  expects all senders to have exactly one successful way to complete and
+                  `tst::when_all` adapts each sender to pretend that they can complete
+                  successfully if it doesn't already.
+  <pre name="when_all-error">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+           
+  int main() {
+    try { ex::sync_wait(tst::when_all(ex::just(true), ex::just_error(1), ex::just(17, 2.5))); }
+    catch (int e) {
+       std::cout << "e=" << e << "\n";
+    }
+  }
+  </pre>
+                </details>
+              </li>
+              <li>
+                <details>
+                  <summary>`tst::when_all(ex::just(true), ex::just_stopped(), ex::just(17, 2.5))`</summary>
+                  If one sender completes with stopped all outstanding senders
+                  are stopped. Once all senders complete the result of `ex::when_all`
+                  becomes stopped. The example uses `tst::when_all` because `ex::when_all`
+                  expects all senders to have exactly one successful way to complete and
+                  `tst::when_all` adapts each sender to pretend that they can complete
+                  successfully if it doesn't already.
+  <pre name="when_all-stopped">
+  #include <beman/execution/execution.hpp>
+  #include <iostream>
+  #include "tst.hpp"
+  namespace ex = beman::execution;
+           
+  int main() {
+    if (not ex::sync_wait(tst::when_all(ex::just(true), ex::just_stopped(), ex::just(17, 2.5)))) {
+      std::cout << "no result set => operation was stopped\n";
+    }
+  }
+  </pre>
+                </details>
+              </li>
+            </ul>
+          </details>
+        </li>
+      </ul>
     </li>
 </ul>
 </p>
+<hr/>
 <p>
 For example, `tst::resume_after(500ms)` is a concrete example of a sender whose work consists of doing nothing and completing after `500ms`. One way to `start` this sender and awaiting its completion is using <code>ex::sync_wait(_sender_)</code>:
 </p>

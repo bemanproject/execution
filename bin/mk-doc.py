@@ -37,7 +37,8 @@ def transform(text, output):
             print(f"example: {match.group(1)}")
             name = match.group(1)
             code = ""
-            output.write(f"<pre>")
+            #output.write(f"<pre>")
+            output.write(f"```c++\n")
             capturing = True
         elif capturing and preend_re.match(line):
             if name in names:
@@ -47,7 +48,8 @@ def transform(text, output):
                 with open("docs/code/" + name + ".cpp", "w") as codeout:
                     codeout.write(code)
             capturing = False
-            output.write(line)
+            #output.write(line)
+            output.write(f"```\n")
         else:
             if capturing:
                 code += line

@@ -172,8 +172,8 @@ cmake-format:
 	pre-commit run gersemi
 
 clang-format:
-	pre-commit run $@
-	# XXX TBD: git clang-format main
+	# pre-commit run $@
+	git clang-format main
 
 todo:
 	bin/mk-todo.py

@@ -20,7 +20,7 @@ likely observable.
 - [exec.snd.concepts] "The type tag_of_t<Sndr> is +defined+ as follows:"
 - [exec.sched] uses `auto(get_completion_scheduler<set_value_t>(...))`
     which is OK for clang but doesn't seem to compile for g++ os MSVC.
-- [exec.just] p2.1: movable-value<Ts> doesn't seems right: movable-value<decay_t<Ts>>
+- [exec.just] p2.1: `movable-value<Ts>` doesn't seems right: `movable-value<decay_t<Ts>>`
 - [exec.just] Otherwise after p2.3 is missing <ts...>
 - [exec.run.loop.types] p9.1: "refers remains" -> "refers to remains"
 - [exec.run.loop.types] p9.2: "get_stop_token(REC(o))": REC is a receiver, any
@@ -36,7 +36,7 @@ likely observable.
     in turn calls loop.finish(). When the loop then is run() it immediately
     std::terminate()s because the run_loop's state is finished not starting.
     I can see two potential fixes:
-    1. connect(on(sender), sync-wait-receiver<Sndr>{&state})
+    1. connect(on(sender), `sync-wait-receiver<Sndr>{&state})`
     2. have run_loop::run() only terminate when the state is running; if
         the state is already finishing, leave it at that
 - [exec.sync_wait] are sync_wait(just_error(17)) and sync_wait(just_stopped())

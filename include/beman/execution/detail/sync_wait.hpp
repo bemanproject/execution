@@ -108,6 +108,53 @@ struct sync_wait_t {
 
 namespace beman::execution {
 using sync_wait_t = ::beman::execution::detail::sync_wait_t;
+/*!
+ * \brief <code>sync_wait(_sender_)</code> starts <code>_sender_</code> and waits for its completion.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ *
+ * \details
+ * `sync_wait` is a callable object of type `sync_wait_t`. Invoking
+ * <code>sync_wait(_sender_)</code> starts <code>_sender_</code> and
+ * waits for its completion. This involves a few steps:
+ * 1. A <code>run_loop</code> is created to provide a scheduler.
+ * 2. The <code>_sender_</code> is `connect`ed to a receiver capturing
+ *     the results and providing an environment with access to the
+ *     `run_loop`'s scheduler.
+ * 3. The operation state returned from `connect` is `start`ed.
+ * 4. The `run_loop` is run to process any work scheduled.
+ *
+ * Once the <code>_sender_</code> completes, the result is provided by `sync_wait`:
+ * - If the <code>_sender_</code> completes with <code>set_value(_arg_...)</code>, `sync_wait` returns
+ *     an <code>std::optional<std::tuple<_Arg_...>></code> containing the results
+ *     <code>_arg_...</code>.
+ * - If the <code>_sender_</code> completes with `set_stopped()`, `sync_wait` returns a
+ *    disengaged <code>std::optional<std::tuple<_Arg_...>></code>.
+ * - If the <code>_sender_</code> completes with
+ *    <code>set_error(_error_)</code>, `sync_wait` throw <code>_error_</code> or rethrows the exception if
+ * <code>_error_</code> is an <code>std::exception_ptr</code>.
+ *
+ * <h4>Usage</h4>
+ * <pre>
+ * sync_wait(<i>sender</i>...)
+ * </pre>
+ *
+ * <h4>Example</h4>
+ *
+ * The use of <code>sync_wait(_sender_)</code> is in `main`
+ * to synchronously wait for the completion of the asynchronous work
+ * of the program represented by <code>_sender_</code>.
+ *
+ * <pre example="doc-sync_wait.cpp">
+ * #include <beman/execution/execution.hpp>
+ * #include <cassert>
+ *
+ * int main() {
+ *     auto result = ex::sync_wait(ex::just(17));
+ *     assert(result);
+ *     assert(*result == std::tuple(17));
+ * }
+ * </pre>
+ */
 inline constexpr ::beman::execution::sync_wait_t sync_wait{};
 } // namespace beman::execution
 

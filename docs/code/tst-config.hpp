@@ -8,7 +8,7 @@
 
 #include <beman/execution/execution.hpp>
 namespace tst {
-    namespace ex = beman::execution;
+namespace ex = beman::execution;
 }
 
 // ----------------------------------------------------------------------------

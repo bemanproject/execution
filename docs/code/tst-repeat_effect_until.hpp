@@ -13,77 +13,74 @@
 // ----------------------------------------------------------------------------
 
 namespace tst {
-    template <ex::sender Sndr, ex::receiver Rcvr>
-    struct connector {
-        decltype(ex::connect(::std::declval<Sndr>(), ::std::declval<Rcvr>())) op;
-        connector(auto sndr, auto rcvr)
-            : op(ex::connect(::std::move(sndr), ::std::move(rcvr))) {}
-        
-        auto start() & noexcept -> void { ex::start(this->op); }
-    };
+template <ex::sender Sndr, ex::receiver Rcvr>
+struct connector {
+    decltype(ex::connect(::std::declval<Sndr>(), ::std::declval<Rcvr>())) op;
+    connector(auto sndr, auto rcvr) : op(ex::connect(::std::move(sndr), ::std::move(rcvr))) {}
 
-    inline constexpr struct repeat_effect_unilt_t {
-        template <ex::sender Child, typename Fun>
-        struct sender {
-            using sender_concept        = ex::sender_t;
-            using completion_signatures
-                = ex::completion_signatures<ex::set_value_t(), ex::set_error_t(std::exception_ptr), ex::set_stopped_t()>;
-            
-            template <ex::receiver Receiver>
-            struct state {
-                using operation_state_concept = ex::operation_state_t;
-                struct own_receiver {
-                    using receiver_concept = ex::receiver_t;
-                    state* s;
-                    auto set_value() && noexcept -> void {
-                        static_assert(ex::receiver<own_receiver>);
-                        this->s->next();
-                    }
-                    auto set_error(std::exception_ptr error) && noexcept -> void {
-                        ex::set_error(::std::move(this->s->receiver), std::move(error));
-                    }
-                    auto set_stopped() && noexcept -> void {
-                        ex::set_stopped(::std::move(this->s->receiver));
-                    }
-                };
+    auto start() & noexcept -> void { ex::start(this->op); }
+};
 
-                std::remove_cvref_t<Child> child;
-                std::remove_cvref_t<Fun> fun;
-                std::remove_cvref_t<Receiver> receiver;
-                std::optional<tst::connector<std::remove_cvref_t<Child>, own_receiver>> child_op;
+inline constexpr struct repeat_effect_unilt_t {
+    template <ex::sender Child, typename Fun>
+    struct sender {
+        using sender_concept = ex::sender_t;
+        using completion_signatures =
+            ex::completion_signatures<ex::set_value_t(), ex::set_error_t(std::exception_ptr), ex::set_stopped_t()>;
 
-                auto start() & noexcept -> void {
-                    static_assert(ex::operation_state<state>);
-                    this->run_one();
+        template <ex::receiver Receiver>
+        struct state {
+            using operation_state_concept = ex::operation_state_t;
+            struct own_receiver {
+                using receiver_concept = ex::receiver_t;
+                state* s;
+                auto   set_value() && noexcept -> void {
+                    static_assert(ex::receiver<own_receiver>);
+                    this->s->next();
                 }
-                auto run_one() & noexcept -> void {
-                    this->child_op.emplace(this->child, own_receiver{this});
-                    this->child_op->start();
+                auto set_error(std::exception_ptr error) && noexcept -> void {
+                    ex::set_error(::std::move(this->s->receiver), std::move(error));
                 }
-                auto next() & noexcept -> void {
-                    if (this->fun()) {
-                        ex::set_value(::std::move(this->receiver));
-                    } else {
-                        this->run_one();
-                    }
-                }
+                auto set_stopped() && noexcept -> void { ex::set_stopped(::std::move(this->s->receiver)); }
             };
 
-            std::remove_cvref_t<Child> child;
-            std::remove_cvref_t<Fun> fun;
+            std::remove_cvref_t<Child>                                              child;
+            std::remove_cvref_t<Fun>                                                fun;
+            std::remove_cvref_t<Receiver>                                           receiver;
+            std::optional<tst::connector<std::remove_cvref_t<Child>, own_receiver>> child_op;
 
-            template <ex::receiver Receiver>
-            auto connect(Receiver&& receiver) const& noexcept -> state<Receiver> {
-                static_assert(ex::sender<sender>);
-                return state<Receiver>(this->child, this->fun, ::std::forward<Receiver>(receiver));
+            auto start() & noexcept -> void {
+                static_assert(ex::operation_state<state>);
+                this->run_one();
+            }
+            auto run_one() & noexcept -> void {
+                this->child_op.emplace(this->child, own_receiver{this});
+                this->child_op->start();
+            }
+            auto next() & noexcept -> void {
+                if (this->fun()) {
+                    ex::set_value(::std::move(this->receiver));
+                } else {
+                    this->run_one();
+                }
             }
         };
-        template <ex::sender Child, typename Pred>
-        auto operator()(Child&& child, Pred&& pred) const -> sender<Child, Pred> {
-            return {::std::forward<Child>(child), ::std::forward<Pred>(pred)};
+
+        std::remove_cvref_t<Child> child;
+        std::remove_cvref_t<Fun>   fun;
+
+        template <ex::receiver Receiver>
+        auto connect(Receiver&& receiver) const& noexcept -> state<Receiver> {
+            static_assert(ex::sender<sender>);
+            return state<Receiver>(this->child, this->fun, ::std::forward<Receiver>(receiver));
         }
-    } repeat_effect_until{};
-}
+    };
+    template <ex::sender Child, typename Pred>
+    auto operator()(Child&& child, Pred&& pred) const -> sender<Child, Pred> {
+        return {::std::forward<Child>(child), ::std::forward<Pred>(pred)};
+    }
+} repeat_effect_until{};
+} // namespace tst
 
 // ----------------------------------------------------------------------------
 
