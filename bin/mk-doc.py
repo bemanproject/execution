@@ -3,11 +3,12 @@
 import re
 import sys
 
-prestart_re = re.compile('\s*<pre name="([^\"]*)">')
+prestart_re = re.compile('\s*<pre name="([^"]*)">')
 preend_re = re.compile("\s*</pre>")
 append_re = re.compile("list\(APPEND EXAMPLES")
 appendp_re = re.compile("list\(APPEND EXAMPLES\)")
 paren_re = re.compile("\)")
+
 
 def update_cmake(list):
     text = ""
@@ -68,6 +69,7 @@ def process(root):
         text = input.readlines()
     with open(root + ".md", "w") as output:
         transform(text, output)
+
 
 sys.argv.pop(0)
 for file in sys.argv:
