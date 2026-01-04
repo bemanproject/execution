@@ -61,7 +61,7 @@ using just_error_t   = ::beman::execution::detail::just_t<::beman::execution::se
 using just_stopped_t = ::beman::execution::detail::just_t<::beman::execution::set_stopped_t>;
 
 /*!
- * \brief <code>just(_arg_...)</code>` yields a sender completing with <code>set_value_t(_Arg_...)</code>
+ * \brief <code>just(_arg_...)</code> yields a sender completing with <code>set_value_t(_Arg_...)</code>
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  *
  * \details
@@ -92,7 +92,7 @@ using just_stopped_t = ::beman::execution::detail::just_t<::beman::execution::se
  * their starting. The example below create a sender yielding three
  * values and awaits the completion using <code>sync_wait(_sender_)</code>:
  * for a value completion of <code>_sender_</code> it will yield an
- * <code>std::optional&lt;std::tuple&lt;_Args_...&gt;&gt;` with the
+ * <code>std::optional&lt;std::tuple&lt;_Args_...&gt;&gt;</code> with the
  * `tuple` containing the value copied/moved from the original arguments
  * (an `optional` is returned to indicate cancellation).
  *
@@ -170,7 +170,7 @@ inline constexpr ::beman::execution::just_t just{};
 inline constexpr ::beman::execution::just_error_t just_error{};
 
 /*!
- * \brief <code>just_stopped(_)</code> yields a sender completing with <code>set_stopped_t()</code>
+ * \brief <code>just_stopped()</code> yields a sender completing with <code>set_stopped_t()</code>
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  *
  * \details

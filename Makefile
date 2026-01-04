@@ -56,8 +56,8 @@ ifeq (${hostSystemName},Darwin)
   export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
 
   export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
-  export CXX:=g++-15
-  export CXXFLAGS:=-stdlib=libstdc++
+  # export CXX:=g++-15
+  # export CXXFLAGS:=-stdlib=libstdc++
   export GCOV="gcov"
 else ifeq (${hostSystemName},Linux)
   export LLVM_DIR=/usr/lib/llvm-20
@@ -105,6 +105,7 @@ run: test
 	./$(BUILD)/examples/$(EXAMPLE)
 
 doc:
+	./bin/mk-doc.py docs/*.mds
 	doxygen docs/Doxyfile
 
 # $(SANITIZERS):
@@ -171,14 +172,14 @@ cmake-format:
 	pre-commit run gersemi
 
 clang-format:
-	pre-commit run $@
-	# XXX TBD: git clang-format main
+	# pre-commit run $@
+	git clang-format main
 
 todo:
 	bin/mk-todo.py
 
 unstage:
-	git restore --staged tests/beman/execution/CMakeLists.txt
+	git restore --staged tests/beman/execution/CMakeLists.txt docs/code/CMakeLists.txt
 
 .PHONY: clean-doc
 clean-doc:

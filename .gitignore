@@ -49,3 +49,5 @@ CMakeFiles/
 *.log
 docs/html
 docs/latex
+docs/code/*.cpp
+docs/tutorial.md

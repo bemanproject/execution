@@ -105,6 +105,7 @@ endif()
 
 if(BEMAN_EXECUTION_BUILD_EXAMPLES)
     add_subdirectory(examples)
+    add_subdirectory(docs/code)
 endif()
 
 if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)

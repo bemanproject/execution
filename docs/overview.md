@@ -441,7 +441,7 @@ Note that the `get_env` member is both `const` and `noexcept`.
 <br/>
 The expression <code>get_allocator(<i>env</i>)</code> returns an <code><i>allocator</i></code> for any memory allocations in the respective context. If <code><i>env</i></code> doesn’t support this query any attempt to access it will result in a compilation error.  The value of the expression <code>get_allocator(<i>env</i>)</code> is the result of <code>as_const(<i>env</i>).query(get_allocator)</code> if
 <ul>
-   <li>the expression is valid</code>;</li>
+   <li>the expression is valid;</li>
    <li>the expression is <code>noexcept</code>;</li>
    <li>the result of the expression satisfies <code><i>simple-allocator</i></code>.</li>
 </ul>
@@ -464,7 +464,7 @@ struct alloc_env {
 </div>
 </details>
 <details>
-<summary><code>get_completion_scheduler&lt;<iTtag</i>&gt;(<i>env</i>) -> <i>scheduler</i></code></summary>
+<summary><code>get_completion_scheduler&lt;<i>Tag</i>&gt;(<i>env</i>) -> <i>scheduler</i></code></summary>
 **Default**: <i>none</i>
 <br/>
 The expression <code>get_complet_scheduler&lt;Tag&gt;(<i>env</i>)</code> yields the completion scheduler for the completion signal <code>Tag</code> associated with <code><i>env</i></code>. This query can be used to determine the scheduler a sender <code><i>sender</i></code> completes on for a given completion signal <code>Tag</code> by using <code>get_completion_scheduler&lt;Tag&gt;(get_env(<i>sender</i>))</code>. The value of the expression is equivalent to <code>as_const(<i>env</i>).query(get_completion_scheduler&lt;Tag&gt;)</code> if
@@ -485,7 +485,7 @@ To determine the result the <code><i>sender</i></code> is first transformed usin
     <li>the type of <code><i>new-sender</i>.get_completion_signatures(<i>env</i>)</code> if this expression is valid;</li>
     <li>the type <code>remove_cvref_t&lt;<i>New-Sender-Type</i>&gt;::completion_signatures</code> if this type exists;</li>
     <li><code>completion_signatures&lt;set_value_t(<i>T</i>), set_error_t(exception_ptr), set_stopped_t()&gt;</code> if <code><i>New-Sender-Type</i></code> is an awaitable type which would yield an object of type <code><i>T</i></code> when it is <code>co_await</code>ed;</li>
-    <li>invalid otherwise.</code>
+    <li>invalid otherwise.</li>
 </ol>
 <div>
 <details>
@@ -516,8 +516,7 @@ The expression <code>get_delegation_scheduler(<i>env</i>)</code> yields the sche
 Otherwise the expression is invalid.
 </details>
 <details>
-<summary><code>get_domain(<i>env</i>) -> <i>domain</i></code>
-</summary>
+<summary><code>get_domain(<i>env</i>) -> <i>domain</i></code></summary>
 The expression <code>get_domain(<i>env</i>)</code> yields the domain associated with <code><i>env</i></code>. The value of the expression is equivalent to <code>as_const(<i>env</i>).query(get_domain)</code> if
 <ol>
    <li>this expression is valid;</li>
@@ -595,7 +594,7 @@ The expression <code>just(<i>value...</i>)</code> creates a sender which sends <
 </ul>
 </details>
 <details>
-<summary><code>just_error(<i>error</i>) -> <i>sender-of</i>&lt;set_error_t(<i>Error</i>)&gt;</code></code></summary>
+<summary><code>just_error(<i>error</i>) -> <i>sender-of</i>&lt;set_error_t(<i>Error</i>)&gt;</code></summary>
 The expression <code>just_error(<i>error</i>)</code> creates a sender which sends <code><i>error</i></code> on the `set_error` (failure) channel when started.
 
 <b>Completions</b>
@@ -604,7 +603,7 @@ The expression <code>just_error(<i>error</i>)</code> creates a sender which send
 </ul>
 </details>
 <details>
-<summary><code>just_stopped() -> <i>sender-of</i>&lt;set_stopped_t()&gt;</code></code></summary>
+<summary><code>just_stopped() -> <i>sender-of</i>&lt;set_stopped_t()&gt;</code></summary>
 The expression <code>just_stopped()</code> creates a sender which sends a completion on the `set_stopped` (cancellation) channel when started.
 
 <b>Completions</b>
@@ -613,7 +612,7 @@ The expression <code>just_stopped()</code> creates a sender which sends a comple
 </ul>
 </details>
 <details>
-<summary><code>read_env(<i>query</i>) -> <i>sender-of</i>&lt;set_value_t(<i>query-result</i>)&gt;</code></code></summary>
+<summary><code>read_env(<i>query</i>) -> <i>sender-of</i>&lt;set_value_t(<i>query-result</i>)&gt;</code></summary>
 The expression <code>read_env(<i>query</i>)</code> creates a sender which sends the result of querying <code><i>query</i></code> the environment of the <code><i>receiver</i></code> it gets connected to on the `set_value` channel when started. Put differently, it calls <code>set_value(move(<i>receiver</i>), <i>query</i>(get_env(<i>receiver</i>)))</code>. For example, in a coroutine it may be useful to extra the stop token associated with the coroutine which can be done using <code>read_env</code>:
 
 ```c++\
@@ -626,7 +625,7 @@ auto token = co_await read_env(get_stop_token);
 </ul>
 </details>
 <details>
-<summary><code>schedule(<i>scheduler</i>) -> <i>sender-of</i>&lt;set_value_t()&gt;</code></code></summary>
+<summary><code>schedule(<i>scheduler</i>) -> <i>sender-of</i>&lt;set_value_t()&gt;</code></summary>
 The expression <code>schedule(<i>scheduler</i>)</code> creates a sender which upon success completes on the <code>set_value</code> channel without any arguments running on the execution context associated with <code><i>scheduler</i></code>. Depending on the scheduler it is possible that the sender can complete with an error if the scheduling fails or using `set_stopped()` if the operation gets cancelled before it is successful.
 
 <b>Completions</b>
@@ -667,7 +666,7 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 <summary><code>let_value(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
 </details>
 <details>
-<summary>`on`</summary>
+<summary><code>on(_sched_, _sndr_)</code></summary>
 </details>
 <details>
 <summary><code>schedule_from(<i>scheduler</i>, <i>sender</i>) -> <i>sender</i></code></summary>
