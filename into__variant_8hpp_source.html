@@ -152,22 +152,22 @@ $(document).ready(function(){initNavTree('into__variant_8hpp_source.html',''); i
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordflow">return</span> {};</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    };</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> complete = []&lt;<span class="keyword">typename</span> State, <span class="keyword">typename</span> Tag, <span class="keyword">typename</span>... Args&gt;(</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                                         <span class="keyword">auto</span>, State, <span class="keyword">auto</span>&amp; receiver, Tag, Args&amp;&amp;... args) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                                         <span class="keyword">auto</span>, State, <span class="keyword">auto</span>&amp; <a class="code hl_struct" href="structreceiver.html">receiver</a>, Tag, Args&amp;&amp;... args) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::std::same_as&lt;Tag, ::beman::execution::set_value_t&gt;) {</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            <span class="keyword">using </span>variant_type = <span class="keyword">typename</span> State::type;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <span class="keyword">using </span>tuple_type   = ::beman::execution::detail::decayed_tuple&lt;Args...&gt;;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">sizeof</span>...(Args) == 0u)</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                    <a class="code hl_variable" href="namespacebeman_1_1execution.html#a88ba134b297e5c0b06590a57ae9d5dfe">::beman::execution::set_value</a>(::std::move(receiver));</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                    <a class="code hl_variable" href="namespacebeman_1_1execution.html#a88ba134b297e5c0b06590a57ae9d5dfe">::beman::execution::set_value</a>(::std::move(<a class="code hl_struct" href="structreceiver.html">receiver</a>));</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                else</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                    ::beman::execution::set_value(::std::move(receiver),</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                    ::beman::execution::set_value(::std::move(<a class="code hl_struct" href="structreceiver.html">receiver</a>),</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                                                  variant_type(tuple_type{::std::forward&lt;Args&gt;(args)...}));</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>(::std::move(receiver), ::std::current_exception());</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>(::std::move(<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::current_exception());</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            }</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            Tag()(::std::move(receiver), ::std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            Tag()(::std::move(<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        }</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    };</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>};</div>
@@ -211,6 +211,7 @@ $(document).ready(function(){initNavTree('into__variant_8hpp_source.html',''); i
 <div class="ttc" id="astructbeman_1_1execution_1_1set__error__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__error__t.html">beman::execution::set_error_t</a></div><div class="ttdoc">Type of the customization point object for error completions.</div><div class="ttdef"><b>Definition:</b> set_error.hpp:19</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__stopped__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__stopped__t.html">beman::execution::set_stopped_t</a></div><div class="ttdoc">Type of the customization point object for cancellation completions.</div><div class="ttdef"><b>Definition:</b> set_stopped.hpp:19</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__value__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__value__t.html">beman::execution::set_value_t</a></div><div class="ttdoc">Type of the customization point object for successful completions.</div><div class="ttdef"><b>Definition:</b> set_value.hpp:19</div></div>
+<div class="ttc" id="astructreceiver_html"><div class="ttname"><a href="structreceiver.html">receiver</a></div><div class="ttdef"><b>Definition:</b> tst-basic-timer.cpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

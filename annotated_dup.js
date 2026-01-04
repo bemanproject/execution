@@ -42,5 +42,15 @@ var annotated_dup =
     [ "std", null, [
       [ "tuple_element< I, T >", "structstd_1_1tuple__element_3_01I_00_01T_01_4.html", null ],
       [ "tuple_size< T >", "structstd_1_1tuple__size_3_01T_01_4.html", null ]
-    ] ]
+    ] ],
+    [ "tst", null, [
+      [ "add_set_value", "structtst_1_1add__set__value.html", "structtst_1_1add__set__value" ],
+      [ "connector", "structtst_1_1connector.html", null ],
+      [ "just_error_t", "structtst_1_1just__error__t.html", null ],
+      [ "repeat_effect_unilt_t", "structtst_1_1repeat__effect__unilt__t.html", "structtst_1_1repeat__effect__unilt__t" ],
+      [ "resume_after_t", "structtst_1_1resume__after__t.html", null ],
+      [ "timer", "classtst_1_1timer.html", "classtst_1_1timer" ],
+      [ "when_all_t", "structtst_1_1when__all__t.html", null ]
+    ] ],
+    [ "receiver", "structreceiver.html", null ]
 ];

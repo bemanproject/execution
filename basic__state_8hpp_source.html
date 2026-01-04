@@ -119,11 +119,11 @@ $(document).ready(function(){initNavTree('basic__state_8hpp_source.html',''); in
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">struct </span>basic_state {</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    basic_state(Sender&amp;&amp; sender, Receiver&amp;&amp; rcvr) <span class="keyword">noexcept</span>(<span class="keyword">true</span>)</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        : receiver(::std::move(rcvr)),</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        : <a class="code hl_struct" href="structreceiver.html">receiver</a>(::std::move(rcvr)),</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>          state(::beman::execution::detail::impls_for&lt; ::beman::execution::tag_of_t&lt;Sender&gt; &gt;::get_state(</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>              ::std::forward&lt;Sender&gt;(sender), this-&gt;receiver)) {}</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>              ::std::forward&lt;Sender&gt;(sender), this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>)) {}</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    Receiver                                                 receiver;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    Receiver                                                 <a class="code hl_struct" href="structreceiver.html">receiver</a>;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    ::beman::execution::detail::state_type&lt;Sender, Receiver&gt; state;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>};</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt;</div>
@@ -133,6 +133,7 @@ $(document).ready(function(){initNavTree('basic__state_8hpp_source.html',''); in
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="astructreceiver_html"><div class="ttname"><a href="structreceiver.html">receiver</a></div><div class="ttdef"><b>Definition:</b> tst-basic-timer.cpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

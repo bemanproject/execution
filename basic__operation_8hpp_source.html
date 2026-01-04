@@ -152,7 +152,7 @@ $(document).ready(function(){initNavTree('basic__operation_8hpp_source.html','')
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        ::std::invoke(</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            [<span class="keyword">this</span>]&lt;::std::size_t... I&gt;(::std::index_sequence&lt;I...&gt;) {</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                ::beman::execution::detail::impls_for&lt;tag_t&gt;::start(</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                    this-&gt;state, this-&gt;receiver, this-&gt;inner_ops.template get&lt;I&gt;()...);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                    this-&gt;state, this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>, this-&gt;inner_ops.template get&lt;I&gt;()...);</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            },</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            ::std::make_index_sequence&lt;inner_ops_t::size()&gt;{});</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    }</div>
@@ -165,6 +165,7 @@ $(document).ready(function(){initNavTree('basic__operation_8hpp_source.html','')
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1operation__state__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1operation__state__t.html">beman::execution::operation_state_t</a></div><div class="ttdef"><b>Definition:</b> operation_state.hpp:14</div></div>
+<div class="ttc" id="astructreceiver_html"><div class="ttname"><a href="structreceiver.html">receiver</a></div><div class="ttdef"><b>Definition:</b> tst-basic-timer.cpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

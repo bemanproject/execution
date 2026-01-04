@@ -175,7 +175,7 @@ $(document).ready(function(){initNavTree('stop__when_8hpp_source.html',''); init
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            }</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        };</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">struct </span>receiver {</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">struct </span><a class="code hl_struct" href="structreceiver.html">receiver</a> {</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            <span class="keyword">using </span>receiver_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1receiver__t.html">::beman::execution::receiver_t</a>;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            base_state* st;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
@@ -203,7 +203,7 @@ $(document).ready(function(){initNavTree('stop__when_8hpp_source.html',''); init
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        state(S&amp;&amp; s, T&amp;&amp; t, R&amp;&amp; r)</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            : tok(::std::forward&lt;T&gt;(t)),</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>              base{::std::forward&lt;R&gt;(r)},</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>              inner_state(::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(::std::forward&lt;S&gt;(s), receiver{&amp;this-&gt;base})) {}</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>              inner_state(::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(::std::forward&lt;S&gt;(s), <a class="code hl_struct" href="structreceiver.html">receiver</a>{&amp;this-&gt;base})) {}</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keyword">auto</span> start() &amp; <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            this-&gt;cb1.emplace(this-&gt;tok, cb_t{this-&gt;base.source});</div>
@@ -244,6 +244,7 @@ $(document).ready(function(){initNavTree('stop__when_8hpp_source.html',''); init
 <div class="ttc" id="astructbeman_1_1execution_1_1operation__state__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1operation__state__t.html">beman::execution::operation_state_t</a></div><div class="ttdef"><b>Definition:</b> operation_state.hpp:14</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1receiver__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1receiver__t.html">beman::execution::receiver_t</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:15</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1sender__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1sender__t.html">beman::execution::sender_t</a></div><div class="ttdef"><b>Definition:</b> sender.hpp:18</div></div>
+<div class="ttc" id="astructreceiver_html"><div class="ttname"><a href="structreceiver.html">receiver</a></div><div class="ttdef"><b>Definition:</b> tst-basic-timer.cpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

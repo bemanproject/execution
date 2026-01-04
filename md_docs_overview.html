@@ -540,7 +540,7 @@ Example</summary>
 </div> </details>
 <details >
 <summary >
-<code>get_completion_scheduler&lt;&lt;iTtag&gt;(<em>env</em>) -&gt; <em>scheduler</em></code></summary>
+<code>get_completion_scheduler&lt;<em>Tag</em>&gt;(<em>env</em>) -&gt; <em>scheduler</em></code></summary>
 <p><b>Default</b>: <em>none</em> <br  />
  The expression <code>get_complet_scheduler&lt;Tag&gt;(<em>env</em>)</code> yields the completion scheduler for the completion signal <code>Tag</code> associated with <code><em>env</em></code>. This query can be used to determine the scheduler a sender <code><em>sender</em></code> completes on for a given completion signal <code>Tag</code> by using <code>get_completion_scheduler&lt;Tag&gt;(get_env(<em>sender</em>))</code>. The value of the expression is equivalent to <code>as_const(<em>env</em>).query(get_completion_scheduler&lt;Tag&gt;)</code> if </p><ol>
 <li>
@@ -599,7 +599,6 @@ the expression’s type satisfies <code>scheduler</code>. </li>
 <details >
 <summary >
 <code>get_domain(<em>env</em>) -&gt; <em>domain</em></code></summary>
-<p></p>
 <p>The expression <code>get_domain(<em>env</em>)</code> yields the domain associated with <code><em>env</em></code>. The value of the expression is equivalent to <code>as_const(<em>env</em>).query(get_domain)</code> if </p><ol>
 <li>
 this expression is valid; </li>
@@ -771,7 +770,7 @@ Sender Adaptors</h3>
 </details>
 <details >
 <summary >
-<code>on</code></summary>
+<code>on(<em>sched</em>, <em>sndr</em>)</code></summary>
 <p></p>
 </details>
 <details >

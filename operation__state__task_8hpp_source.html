@@ -130,25 +130,25 @@ $(document).ready(function(){initNavTree('operation__state__task_8hpp_source.htm
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Receiver&gt;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">struct </span>beman::execution::detail::connect_awaitable_promise</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    : ::beman::execution::detail::with_await_transform&lt;connect_awaitable_promise&lt;Receiver&gt;&gt; {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    connect_awaitable_promise(<span class="keyword">auto</span>&amp;&amp;, Receiver&amp; rcvr) noexcept : receiver(rcvr) {}</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    connect_awaitable_promise(<span class="keyword">auto</span>&amp;&amp;, Receiver&amp; rcvr) noexcept : <a class="code hl_struct" href="structreceiver.html">receiver</a>(rcvr) {}</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">auto</span>              initial_suspend() noexcept -&gt; ::std::suspend_always { <span class="keywordflow">return</span> {}; }</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    [[noreturn]] <span class="keyword">auto</span> final_suspend() noexcept -&gt; ::std::suspend_always { ::std::terminate(); }</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    [[noreturn]] <span class="keyword">auto</span> unhandled_exception() noexcept -&gt; <span class="keywordtype">void</span> { ::std::terminate(); }</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    [[noreturn]] <span class="keyword">auto</span> return_void() noexcept -&gt; <span class="keywordtype">void</span> { ::std::terminate(); }</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">auto</span> unhandled_stopped() noexcept -&gt; ::std::coroutine_handle&lt;&gt; {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <a class="code hl_variable" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187">::beman::execution::set_stopped</a>(::std::move(this-&gt;receiver));</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <a class="code hl_variable" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187">::beman::execution::set_stopped</a>(::std::move(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>));</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        return ::std::noop_coroutine();</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    }</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">auto</span> get_env() const noexcept -&gt; ::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_typedef" href="namespacebeman_1_1execution.html#adbf95c8f3480ba2c1d78b8c612a9f2f7">env_of_t</a>&lt;Receiver&gt; {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        return ::beman::execution::get_env(this-&gt;receiver);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        return ::beman::execution::get_env(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">auto</span> get_return_object() noexcept -&gt; ::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::detail::operation_state_task&lt;Receiver&gt;;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  private:</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    Receiver&amp; receiver;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    Receiver&amp; <a class="code hl_struct" href="structreceiver.html">receiver</a>;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>};</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
@@ -189,6 +189,7 @@ $(document).ready(function(){initNavTree('operation__state__task_8hpp_source.htm
 <div class="ttc" id="anamespacebeman_1_1execution_html_adbf95c8f3480ba2c1d78b8c612a9f2f7"><div class="ttname"><a href="namespacebeman_1_1execution.html#adbf95c8f3480ba2c1d78b8c612a9f2f7">beman::execution::env_of_t</a></div><div class="ttdeci">decltype(::beman::execution::get_env(::std::declval&lt; T &gt;())) env_of_t</div><div class="ttdoc">Determine the type of the environment associated with a type.</div><div class="ttdef"><b>Definition:</b> env_of_t.hpp:18</div></div>
 <div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> allocator_aware_move.hpp:16</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1operation__state__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1operation__state__t.html">beman::execution::operation_state_t</a></div><div class="ttdef"><b>Definition:</b> operation_state.hpp:14</div></div>
+<div class="ttc" id="astructreceiver_html"><div class="ttname"><a href="structreceiver.html">receiver</a></div><div class="ttdef"><b>Definition:</b> tst-basic-timer.cpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

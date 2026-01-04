@@ -196,7 +196,7 @@ $(document).ready(function(){initNavTree('schedule__from_8hpp_source.html',''); 
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    };</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Receiver, <span class="keyword">typename</span> Variant&gt;</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">struct </span>state_base {</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        Receiver receiver;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        Receiver <a class="code hl_struct" href="structreceiver.html">receiver</a>;</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        Variant  async_result{};</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    };</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Receiver, <span class="keyword">typename</span> Scheduler, <span class="keyword">typename</span> Variant&gt;</div>
@@ -221,7 +221,7 @@ $(document).ready(function(){initNavTree('schedule__from_8hpp_source.html',''); 
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            ::beman::execution::detail::fwd_env(::beman::execution::get_env(child)));</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    }};</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> get_state{</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        []&lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt;(Sender&amp;&amp; sender, Receiver&amp; receiver) <span class="comment">//-dk:TODO noexcept(see below)</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        []&lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt;(Sender&amp;&amp; sender, Receiver&amp; <a class="code hl_struct" href="structreceiver.html">receiver</a>) <span class="comment">//-dk:TODO noexcept(see below)</span></div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            requires ::beman::execution::sender_in&lt;::beman::execution::detail::child_type&lt;Sender&gt;,</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                                                   <a class="code hl_typedef" href="namespacebeman_1_1execution.html#adbf95c8f3480ba2c1d78b8c612a9f2f7">::beman::execution::env_of_t&lt;Receiver&gt;</a>&gt;</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        {</div>
@@ -242,10 +242,10 @@ $(document).ready(function(){initNavTree('schedule__from_8hpp_source.html',''); 
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                                                                 <a class="code hl_struct" href="structbeman_1_1execution_1_1set__error__t.html">::beman::execution::set_error_t</a>(::std::exception_ptr),</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                                                                 <a class="code hl_struct" href="structbeman_1_1execution_1_1set__stopped__t.html">::beman::execution::set_stopped_t</a>()&gt;&gt;&gt;&gt;&gt;&gt;;</div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>            <span class="keywordflow">return</span> state_type&lt;Receiver, sched_t, variant_t&gt;(sch, receiver);</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>            <span class="keywordflow">return</span> state_type&lt;Receiver, sched_t, variant_t&gt;(sch, <a class="code hl_struct" href="structreceiver.html">receiver</a>);</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        }};</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> complete{</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        []&lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span>... Args&gt;(<span class="keyword">auto</span>, <span class="keyword">auto</span>&amp; state, <span class="keyword">auto</span>&amp; receiver, Tag, Args&amp;&amp;... args) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        []&lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span>... Args&gt;(<span class="keyword">auto</span>, <span class="keyword">auto</span>&amp; state, <span class="keyword">auto</span>&amp; <a class="code hl_struct" href="structreceiver.html">receiver</a>, Tag, Args&amp;&amp;... args) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            <span class="keyword">using </span>result_t         = ::beman::execution::detail::decayed_tuple&lt;Tag, Args...&gt;;</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> nothrow = ::std::is_nothrow_constructible_v&lt;result_t, Tag, Args...&gt;;</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
@@ -255,7 +255,7 @@ $(document).ready(function(){initNavTree('schedule__from_8hpp_source.html',''); 
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                }();</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            } <span class="keywordflow">catch</span> (...) {</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (not nothrow)</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                    <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>(::std::move(receiver), ::std::current_exception());</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                    <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>(::std::move(<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::current_exception());</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            }</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keywordflow">if</span> (state.async_result.index() == 0)</div>
@@ -303,6 +303,7 @@ $(document).ready(function(){initNavTree('schedule__from_8hpp_source.html',''); 
 <div class="ttc" id="astructbeman_1_1execution_1_1receiver__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1receiver__t.html">beman::execution::receiver_t</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:15</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__error__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__error__t.html">beman::execution::set_error_t</a></div><div class="ttdoc">Type of the customization point object for error completions.</div><div class="ttdef"><b>Definition:</b> set_error.hpp:19</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__stopped__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__stopped__t.html">beman::execution::set_stopped_t</a></div><div class="ttdoc">Type of the customization point object for cancellation completions.</div><div class="ttdef"><b>Definition:</b> set_stopped.hpp:19</div></div>
+<div class="ttc" id="astructreceiver_html"><div class="ttname"><a href="structreceiver.html">receiver</a></div><div class="ttdef"><b>Definition:</b> tst-basic-timer.cpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

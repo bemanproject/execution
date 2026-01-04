@@ -114,17 +114,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad678297283a2180480e978811a8fd965"><td class="memTemplParams" colspan="2"><a id="ad678297283a2180480e978811a8fd965" name="ad678297283a2180480e978811a8fd965"></a>
 template&lt;typename Receiver , typename Error &gt; <br />
 requires the</td></tr>
-<tr class="memitem:ad678297283a2180480e978811a8fd965"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Receiver &amp;, Error &amp;&amp;) const -&gt; void=BEMAN_EXECUTION_DELETE(&quot;set_error  receiver to be passed as non- const rvalue&quot;)</td></tr>
+<tr class="memitem:ad678297283a2180480e978811a8fd965"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Receiver &amp;, Error &amp;&amp;) const -&gt; void=BEMAN_EXECUTION_DELETE(&quot;set_error  <a class="el" href="structreceiver.html">receiver</a> to be passed as non- const rvalue&quot;)</td></tr>
 <tr class="separator:ad678297283a2180480e978811a8fd965"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab52d2003ce686522269f7b936e79c561"><td class="memTemplParams" colspan="2"><a id="ab52d2003ce686522269f7b936e79c561" name="ab52d2003ce686522269f7b936e79c561"></a>
 template&lt;typename Receiver , typename Error &gt; <br />
 requires the</td></tr>
-<tr class="memitem:ab52d2003ce686522269f7b936e79c561"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (const Receiver &amp;&amp;, Error &amp;&amp;) const -&gt; void=BEMAN_EXECUTION_DELETE(&quot;set_error  receiver to be passed as non- const rvalue&quot;)</td></tr>
+<tr class="memitem:ab52d2003ce686522269f7b936e79c561"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (const Receiver &amp;&amp;, Error &amp;&amp;) const -&gt; void=BEMAN_EXECUTION_DELETE(&quot;set_error  <a class="el" href="structreceiver.html">receiver</a> to be passed as non- const rvalue&quot;)</td></tr>
 <tr class="separator:ab52d2003ce686522269f7b936e79c561"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17b1cc255acbba81c463c96a730d389c"><td class="memTemplParams" colspan="2"><a id="a17b1cc255acbba81c463c96a730d389c" name="a17b1cc255acbba81c463c96a730d389c"></a>
 template&lt;typename Receiver , typename Error &gt; <br />
 requires a</td></tr>
-<tr class="memitem:a17b1cc255acbba81c463c96a730d389c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Receiver &amp;&amp;, Error &amp;&amp;) const -&gt; void requires(not requires(Receiver &amp;&amp;receiver, Error &amp;&amp;error) { ::std::forward&lt; Receiver &gt;(receiver).<a class="el" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">set_error</a>(::std::forward&lt; Error &gt;(error));})=BEMAN_EXECUTION_DELETE(&quot;set_error  suitable member overload on the receiver&quot;)</td></tr>
+<tr class="memitem:a17b1cc255acbba81c463c96a730d389c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Receiver &amp;&amp;, Error &amp;&amp;) const -&gt; void requires(not requires(Receiver &amp;&amp;<a class="el" href="structreceiver.html">receiver</a>, Error &amp;&amp;error) { ::std::forward&lt; Receiver &gt;(<a class="el" href="structreceiver.html">receiver</a>).<a class="el" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">set_error</a>(::std::forward&lt; Error &gt;(error));})=BEMAN_EXECUTION_DELETE(&quot;set_error  suitable member overload on the receiver&quot;)</td></tr>
 <tr class="separator:a17b1cc255acbba81c463c96a730d389c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac674f6397eab789c6c06b0cf448a1aa1"><td class="memTemplParams" colspan="2"><a id="ac674f6397eab789c6c06b0cf448a1aa1" name="ac674f6397eab789c6c06b0cf448a1aa1"></a>
 template&lt;typename Receiver , typename Error &gt; <br />
@@ -133,7 +133,7 @@ requires (not noexcept(::std::declval&lt;Receiver&gt;().<a class="el" href="name
 <tr class="separator:ac674f6397eab789c6c06b0cf448a1aa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab49980ad5c25d2345ebcfff7a5037942"><td class="memTemplParams" colspan="2"><a id="ab49980ad5c25d2345ebcfff7a5037942" name="ab49980ad5c25d2345ebcfff7a5037942"></a>
 template&lt;typename Receiver , typename Error &gt; </td></tr>
-<tr class="memitem:ab49980ad5c25d2345ebcfff7a5037942"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Receiver &amp;&amp;receiver, Error &amp;&amp;error) const noexcept -&gt; void</td></tr>
+<tr class="memitem:ab49980ad5c25d2345ebcfff7a5037942"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Receiver &amp;&amp;<a class="el" href="structreceiver.html">receiver</a>, Error &amp;&amp;error) const noexcept -&gt; void</td></tr>
 <tr class="separator:ab49980ad5c25d2345ebcfff7a5037942"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>

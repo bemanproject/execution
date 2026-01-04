@@ -109,14 +109,14 @@ $(document).ready(function(){initNavTree('md_docs_questions.html',''); initResiz
 <li>done: [exec.snd.expos] uses query-or-default; it seems only query-with-default is defined.</li>
 <li>[exec.snd.concepts] "The type tag_of_t&lt;Sndr&gt; is +defined+ as follows:"</li>
 <li>[exec.sched] uses <code>auto(get_completion_scheduler&lt;set_value_t&gt;(...))</code> which is OK for clang but doesn't seem to compile for g++ os MSVC.</li>
-<li>[exec.just] p2.1: movable-value&lt;Ts&gt; doesn't seems right: movable-value&lt;decay_t&lt;Ts&gt;&gt;</li>
+<li>[exec.just] p2.1: <code>movable-value&lt;Ts&gt;</code> doesn't seems right: <code>movable-value&lt;decay_t&lt;Ts&gt;&gt;</code></li>
 <li>[exec.just] Otherwise after p2.3 is missing &lt;ts...&gt;</li>
 <li>[exec.run.loop.types] p9.1: "refers remains" -&gt; "refers to remains"</li>
 <li>[exec.run.loop.types] p9.2: "get_stop_token(REC(o))": REC is a receiver, any environment would be attached to get_env(REC(o)).</li>
 <li>[exec.into.variant] p2: the sender argument to into_variant really needs to have completion_signatures defined - should the constraint be sender_in instead of sender? oh, actually, only the result of transform_sender needs to be a sender_in!</li>
 <li>[exec.sync.wait] p4.2: what is "e"? probably apply_sender(...)</li>
 <li>[exec.sync.wait] p9 seems to be wrong: the sender needs to be scheduled somehow. Consider using sync_wait(execution::just()). The operation immediately completes, calling into sync_wait_receiver::set_value which in turn calls loop.finish(). When the loop then is run() it immediately std::terminate()s because the run_loop's state is finished not starting. I can see two potential fixes:<ol type="1">
-<li>connect(on(sender), sync-wait-receiver&lt;Sndr&gt;{&amp;state})</li>
+<li>connect(on(sender), <code>sync-wait-receiver&lt;Sndr&gt;{&amp;state})</code></li>
 <li>have run_loop::run() only terminate when the state is running; if the state is already finishing, leave it at that</li>
 </ol>
 </li>

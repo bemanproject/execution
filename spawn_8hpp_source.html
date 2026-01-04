@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('spawn_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">virtual</span> <span class="keyword">auto</span> complete() noexcept -&gt; <span class="keywordtype">void</span> = 0;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    };</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    struct receiver {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    struct <a class="code hl_struct" href="structreceiver.html">receiver</a> {</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keyword">using </span>receiver_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1receiver__t.html">::beman::execution::receiver_t</a>;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        state_base* state{};</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
@@ -142,7 +142,7 @@ $(document).ready(function(){initNavTree('spawn_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keyword">using </span>traits_t = ::std::allocator_traits&lt;alloc_t&gt;;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        state(Alloc a, Sndr&amp;&amp; sndr, Tok tok)</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            : alloc(a), op(::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(::std::forward&lt;Sndr&gt;(sndr), receiver{this})), token(tok) {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            : alloc(a), op(::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(::std::forward&lt;Sndr&gt;(sndr), <a class="code hl_struct" href="structreceiver.html">receiver</a>{this})), token(tok) {</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            <span class="keywordflow">if</span> (this-&gt;token.try_associate()) {</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                ::beman::execution::start(this-&gt;op);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            } <span class="keywordflow">else</span> {</div>
@@ -201,6 +201,7 @@ $(document).ready(function(){initNavTree('spawn_8hpp_source.html',''); initResiz
 <div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> allocator_aware_move.hpp:16</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1empty__env_html"><div class="ttname"><a href="structbeman_1_1execution_1_1empty__env.html">beman::execution::empty_env</a></div><div class="ttdoc">An empty type used as an environment when there is no environment available.</div><div class="ttdef"><b>Definition:</b> empty_env.hpp:16</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1receiver__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1receiver__t.html">beman::execution::receiver_t</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:15</div></div>
+<div class="ttc" id="astructreceiver_html"><div class="ttname"><a href="structreceiver.html">receiver</a></div><div class="ttdef"><b>Definition:</b> tst-basic-timer.cpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

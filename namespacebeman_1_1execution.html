@@ -301,12 +301,15 @@ template&lt;typename Sender &gt; </td></tr>
 <tr class="separator:adc3e3ee867e5b5dc46f2ae600029b969"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d128b0eb18329ca6d9dff7068eaf865"><td class="memItemLeft" align="right" valign="top"><a id="a4d128b0eb18329ca6d9dff7068eaf865" name="a4d128b0eb18329ca6d9dff7068eaf865"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>then_t</b> = ::beman::execution::detail::then_t&lt;<a class="el" href="structbeman_1_1execution_1_1set__value__t.html">::beman::execution::set_value_t</a> &gt;</td></tr>
+<tr class="memdesc:a4d128b0eb18329ca6d9dff7068eaf865"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>then_t</code> is the type of <code>then</code>. <br /></td></tr>
 <tr class="separator:a4d128b0eb18329ca6d9dff7068eaf865"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5edc31fa03580fefdec5ff9de774cd7b"><td class="memItemLeft" align="right" valign="top"><a id="a5edc31fa03580fefdec5ff9de774cd7b" name="a5edc31fa03580fefdec5ff9de774cd7b"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>upon_error_t</b> = ::beman::execution::detail::then_t&lt;<a class="el" href="structbeman_1_1execution_1_1set__error__t.html">::beman::execution::set_error_t</a> &gt;</td></tr>
+<tr class="memdesc:a5edc31fa03580fefdec5ff9de774cd7b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_error_t</code> is the type of <code>upon_error</code>. <br /></td></tr>
 <tr class="separator:a5edc31fa03580fefdec5ff9de774cd7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a724b0f844f19033a9aff2385c0c2532d"><td class="memItemLeft" align="right" valign="top"><a id="a724b0f844f19033a9aff2385c0c2532d" name="a724b0f844f19033a9aff2385c0c2532d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>upon_stopped_t</b> = ::beman::execution::detail::then_t&lt;<a class="el" href="structbeman_1_1execution_1_1set__stopped__t.html">::beman::execution::set_stopped_t</a> &gt;</td></tr>
+<tr class="memdesc:a724b0f844f19033a9aff2385c0c2532d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_stopped_t</code> is the type of <code>upon_stopped</code>. <br /></td></tr>
 <tr class="separator:a724b0f844f19033a9aff2385c0c2532d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab00b4048999529c02e3e9a5f384de7ed"><td class="memTemplParams" colspan="2"><a id="ab00b4048999529c02e3e9a5f384de7ed" name="ab00b4048999529c02e3e9a5f384de7ed"></a>
 template&lt;typename Sender , typename Env  = ::beman::execution::empty_env, template&lt; typename... &gt; class Tuple = ::beman::execution::detail::decayed_tuple, template&lt; typename... &gt; class Variant = ::beman::execution::detail::variant_or_empty&gt; </td></tr>
@@ -413,13 +416,13 @@ constexpr <a class="el" href="structbeman_1_1execution_1_1get__stop__token__t.ht
 constexpr into_variant_t&#160;</td><td class="memItemRight" valign="bottom"><b>into_variant</b> {}</td></tr>
 <tr class="separator:a7ce06d5f6ceb562a63b823973645d30a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdbad94bfa3d61a849a61c99a753d5da"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution::just_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">just</a> {}</td></tr>
-<tr class="memdesc:acdbad94bfa3d61a849a61c99a753d5da"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>just(<em>arg</em>...)</code>` yields a sender completing with <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)</code>  <br /></td></tr>
+<tr class="memdesc:acdbad94bfa3d61a849a61c99a753d5da"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>just(<em>arg</em>...)</code> yields a sender completing with <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)</code>  <br /></td></tr>
 <tr class="separator:acdbad94bfa3d61a849a61c99a753d5da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4043903f88f6bb02acdf1c1c369f4ead"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution::just_error_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead">just_error</a> {}</td></tr>
 <tr class="memdesc:a4043903f88f6bb02acdf1c1c369f4ead"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>just_error(<em>error</em>)</code> yields a sender completing with <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>Error</em>)</code>  <br /></td></tr>
 <tr class="separator:a4043903f88f6bb02acdf1c1c369f4ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6406f8f62cb941fe811fedeebf0b985f"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution::just_stopped_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f">just_stopped</a> {}</td></tr>
-<tr class="memdesc:a6406f8f62cb941fe811fedeebf0b985f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped(_)</a></code> yields a sender completing with <code>set_stopped_t()</code>  <br /></td></tr>
+<tr class="memdesc:a6406f8f62cb941fe811fedeebf0b985f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender completing with <code>set_stopped_t()</code>  <br /></td></tr>
 <tr class="separator:a6406f8f62cb941fe811fedeebf0b985f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a744276b9a2846e0b9df2e62998e57d00"><td class="memItemLeft" align="right" valign="top"><a id="a744276b9a2846e0b9df2e62998e57d00" name="a744276b9a2846e0b9df2e62998e57d00"></a>
 constexpr ::beman::execution::let_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>let_error</b> {}</td></tr>
@@ -475,17 +478,17 @@ constexpr <a class="el" href="structbeman_1_1execution_1_1start__t.html">start_t
 <tr class="memitem:a95377102421566b05cd68f612ce76c0d"><td class="memItemLeft" align="right" valign="top"><a id="a95377102421566b05cd68f612ce76c0d" name="a95377102421566b05cd68f612ce76c0d"></a>
 constexpr ::beman::execution::detail::starts_on_t&#160;</td><td class="memItemRight" valign="bottom"><b>starts_on</b> {}</td></tr>
 <tr class="separator:a95377102421566b05cd68f612ce76c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43774ecef52b77ef5d3f668bfcc51519"><td class="memItemLeft" align="right" valign="top"><a id="a43774ecef52b77ef5d3f668bfcc51519" name="a43774ecef52b77ef5d3f668bfcc51519"></a>
-constexpr ::beman::execution::sync_wait_t&#160;</td><td class="memItemRight" valign="bottom"><b>sync_wait</b> {}</td></tr>
+<tr class="memitem:a43774ecef52b77ef5d3f668bfcc51519"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution::sync_wait_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519">sync_wait</a> {}</td></tr>
+<tr class="memdesc:a43774ecef52b77ef5d3f668bfcc51519"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>sync_wait(<em>sender</em>)</code> starts <code><em>sender</em></code> and waits for its completion.  <br /></td></tr>
 <tr class="separator:a43774ecef52b77ef5d3f668bfcc51519"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67398f7901010156ad6b008f62fa9ba3"><td class="memItemLeft" align="right" valign="top"><a id="a67398f7901010156ad6b008f62fa9ba3" name="a67398f7901010156ad6b008f62fa9ba3"></a>
-constexpr ::beman::execution::then_t&#160;</td><td class="memItemRight" valign="bottom"><b>then</b> {}</td></tr>
+<tr class="memitem:a67398f7901010156ad6b008f62fa9ba3"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a4d128b0eb18329ca6d9dff7068eaf865">::beman::execution::then_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3">then</a> {}</td></tr>
+<tr class="memdesc:a67398f7901010156ad6b008f62fa9ba3"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>then(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>A</em>...)</code> completion  <br /></td></tr>
 <tr class="separator:a67398f7901010156ad6b008f62fa9ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe7e6d1b61436b69aa7fa70b1f653271"><td class="memItemLeft" align="right" valign="top"><a id="afe7e6d1b61436b69aa7fa70b1f653271" name="afe7e6d1b61436b69aa7fa70b1f653271"></a>
-constexpr ::beman::execution::upon_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>upon_error</b> {}</td></tr>
+<tr class="memitem:afe7e6d1b61436b69aa7fa70b1f653271"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a5edc31fa03580fefdec5ff9de774cd7b">::beman::execution::upon_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271">upon_error</a> {}</td></tr>
+<tr class="memdesc:afe7e6d1b61436b69aa7fa70b1f653271"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_error(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>E</em>)</code> completion  <br /></td></tr>
 <tr class="separator:afe7e6d1b61436b69aa7fa70b1f653271"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e12a82c294cbf0775945930a63025d4"><td class="memItemLeft" align="right" valign="top"><a id="a7e12a82c294cbf0775945930a63025d4" name="a7e12a82c294cbf0775945930a63025d4"></a>
-constexpr ::beman::execution::upon_stopped_t&#160;</td><td class="memItemRight" valign="bottom"><b>upon_stopped</b> {}</td></tr>
+<tr class="memitem:a7e12a82c294cbf0775945930a63025d4"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a724b0f844f19033a9aff2385c0c2532d">::beman::execution::upon_stopped_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a7e12a82c294cbf0775945930a63025d4">upon_stopped</a> {}</td></tr>
+<tr class="memdesc:a7e12a82c294cbf0775945930a63025d4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_stopped(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code>set_stopped_t()</code> completion  <br /></td></tr>
 <tr class="separator:a7e12a82c294cbf0775945930a63025d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada5b779202d31104b192afb6e1092ab2"><td class="memItemLeft" align="right" valign="top"><a id="ada5b779202d31104b192afb6e1092ab2" name="ada5b779202d31104b192afb6e1092ab2"></a>
 constexpr ::beman::execution::when_all_t&#160;</td><td class="memItemRight" valign="bottom"><b>when_all</b> {}</td></tr>
@@ -579,7 +582,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
 </table>
 </div><div class="memdoc">
 
-<p><code>just(<em>arg</em>...)</code>` yields a sender completing with <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)</code> </p>
+<p><code>just(<em>arg</em>...)</code> yields a sender completing with <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)</code> </p>
 <p><code>just</code> is a callable object of type <code>just_t</code>. Invoking <code>just(<em>arg</em>...)</code> yields a sender which stores its arguments and produces a value completion with these arguments when started. This sender completes synchronously when started.</p>
 <h4>Usage</h4>
 <pre>
@@ -591,20 +594,19 @@ just(<em>arg</em>...)
     <a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)
 &gt;;
 </pre><h4>Example</h4>
-<p>The normal use of <code>just(<em>args</em>...)</code> is as the starting point of a work graph. Various other examples will use <code>just</code> as their starting. The example below create a sender yielding three values and awaits the completion using <code>sync_wait(<em>sender</em>)</code>: for a value completion of <code><em>sender</em></code> it will yield an <code>std::optional&lt;std::tuple&lt;<em>Args</em>...&gt;&gt;<code>with the </code>tuple<code>containing the value copied/moved from the original arguments (an</code>optional` is returned to indicate cancellation).</code></p>
-<p><code></p><pre example="doc-just.cpp">
+<p>The normal use of <code>just(<em>args</em>...)</code> is as the starting point of a work graph. Various other examples will use <code>just</code> as their starting. The example below create a sender yielding three values and awaits the completion using <code>sync_wait(<em>sender</em>)</code>: for a value completion of <code><em>sender</em></code> it will yield an <code>std::optional&lt;std::tuple&lt;<em>Args</em>...&gt;&gt;</code> with the <code>tuple</code> containing the value copied/moved from the original arguments (an <code>optional</code> is returned to indicate cancellation).</p>
+<pre example="doc-just.cpp">
 #include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
 #include &lt;cassert&gt;
 #include &lt;string&gt;
 using namespace std::string_literals;
 
 int main() {
-    auto result = ex::sync_wait(ex::just(17, "hello"s, true));
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da" title="just(arg...) yields a sender completing with set_value_t(Arg...)">ex::just</a>(17, "hello"s, true));
     assert(result);
     assert(*result == std::tuple(17, "hello"s, true));
 }
-</pre><p> </code></p>
-
+</pre> 
 </div>
 </div>
 <a id="a4043903f88f6bb02acdf1c1c369f4ead" name="a4043903f88f6bb02acdf1c1c369f4ead"></a>
@@ -648,8 +650,8 @@ namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Name
 
 int main() {
     bool had_error{false};
-    auto result = ex::sync_wait(ex::just_error(std::error_code(17, std::system_category())) |
-                                ex::upon_error([&amp;](std::error_code ec) {
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead" title="just_error(error) yields a sender completing with set_error_t(Error)">ex::just_error</a>(std::error_code(17, std::system_category())) |
+                                <a class="el" href="namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271" title="upon_error(sender, fun) yields a sender transforming a set_error_t(E) completion">ex::upon_error</a>([&amp;](std::error_code ec) {
                                     assert(ec.value() == 17);
                                     had_error = true;
                                 }));
@@ -678,18 +680,18 @@ int main() {
 </table>
 </div><div class="memdoc">
 
-<p><code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped(_)</a></code> yields a sender completing with <code>set_stopped_t()</code> </p>
-<p><code>just_stopped</code> is a callable object of type <code>just_stopped_t</code>. Invoking <code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender which produces a cancellation completion when started. This sender completes synchronously when started.</p>
+<p><code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender completing with <code>set_stopped_t()</code> </p>
+<p><code>just_stopped</code> is a callable object of type <code>just_stopped_t</code>. Invoking <code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender which produces a cancellation completion when started. This sender completes synchronously when started.</p>
 <h4>Usage</h4>
 <pre>
-<a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped()</a>
+<a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a>
 </pre><h4>Completions Signatures</h4>
 <pre>
 <a class="el" href="structbeman_1_1execution_1_1completion__signatures.html" title="Class template used to a specify a list of completion signatures.">completion_signatures</a>&lt;
     set_stopped_t()
 &gt;;
 </pre><h4>Example</h4>
-<p>The normal use of <code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped()</a></code> is to report a cancellation as the result of some work in a work graph. It would, e.g., be used as the completion produced by <code>let_value</code>. The example below creates a sender yielding a completion on the cancellation channel and uses that as the input for <code>upon_stopped</code> consuming the cancellation and producing a value completion: using <code>sync_wait(just_stopped())</code> directly doesn't work because <code>sync_wait</code> requires exactly one value completion from its argument and <code>set_stopped</code> only has a cancellation completion. The function used with <code>upon_stopped</code> sets the flag <code>had_stopped</code> indicating it was called at all. This flag is checked after waiting for the result in <code>sync_wait</code>.</p>
+<p>The normal use of <code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> is to report a cancellation as the result of some work in a work graph. It would, e.g., be used as the completion produced by <code>let_value</code>. The example below creates a sender yielding a completion on the cancellation channel and uses that as the input for <code>upon_stopped</code> consuming the cancellation and producing a value completion: using <code><a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">sync_wait(just_stopped())</a></code> directly doesn't work because <code>sync_wait</code> requires exactly one value completion from its argument and <code>set_stopped</code> only has a cancellation completion. The function used with <code>upon_stopped</code> sets the flag <code>had_stopped</code> indicating it was called at all. This flag is checked after waiting for the result in <code>sync_wait</code>.</p>
 <pre example="doc-just_error.cpp">
 #include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
 #include &lt;system_error&gt;
@@ -698,8 +700,8 @@ namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Name
 
 int main() {
     bool had_stopped{false};
-    auto result = ex::sync_wait(ex::just_error(std::error_code(17, std::system_category())) |
-                                ex::upon_error([&amp;](std::error_code ec) {
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead" title="just_error(error) yields a sender completing with set_error_t(Error)">ex::just_error</a>(std::error_code(17, std::system_category())) |
+                                <a class="el" href="namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271" title="upon_error(sender, fun) yields a sender transforming a set_error_t(E) completion">ex::upon_error</a>([&amp;](std::error_code ec) {
                                     assert(ec.value() == 17);
                                     had_stopped = true;
                                 }));
@@ -738,6 +740,223 @@ template&lt;typename Sender , typename Env  = ::beman::execution::empty_env&gt; 
 <div class="ttc" id="anamespacebeman_1_1execution_html_a1e99e041850bb265a3bf47fac9ccd25d"><div class="ttname"><a href="namespacebeman_1_1execution.html#a1e99e041850bb265a3bf47fac9ccd25d">beman::execution::completion_signatures_of_t</a></div><div class="ttdeci">::beman::execution::detail::call_result_t&lt; ::beman::execution::get_completion_signatures_t, Sender, Env &gt; completion_signatures_of_t</div><div class="ttdoc">Alias to access the completion signatures of a sender.</div><div class="ttdef"><b>Definition:</b> completion_signatures_of_t.hpp:22</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__stopped__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__stopped__t.html">beman::execution::set_stopped_t</a></div><div class="ttdoc">Type of the customization point object for cancellation completions.</div><div class="ttdef"><b>Definition:</b> set_stopped.hpp:19</div></div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="a43774ecef52b77ef5d3f668bfcc51519" name="a43774ecef52b77ef5d3f668bfcc51519"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43774ecef52b77ef5d3f668bfcc51519">&#9670;&#160;</a></span>sync_wait</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr ::beman::execution::sync_wait_t beman::execution::sync_wait {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>sync_wait(<em>sender</em>)</code> starts <code><em>sender</em></code> and waits for its completion. </p>
+<p><code>sync_wait</code> is a callable object of type <code>sync_wait_t</code>. Invoking <code>sync_wait(<em>sender</em>)</code> starts <code><em>sender</em></code> and waits for its completion. This involves a few steps:</p><ol type="1">
+<li>A <code><a class="el" href="classbeman_1_1execution_1_1run__loop.html">run_loop</a></code> is created to provide a scheduler.</li>
+<li>The <code><em>sender</em></code> is <code>connect</code>ed to a receiver capturing the results and providing an environment with access to the <code><a class="el" href="classbeman_1_1execution_1_1run__loop.html">run_loop</a></code>'s scheduler.</li>
+<li>The operation state returned from <code>connect</code> is <code>start</code>ed.</li>
+<li>The <code><a class="el" href="classbeman_1_1execution_1_1run__loop.html">run_loop</a></code> is run to process any work scheduled.</li>
+</ol>
+<p>Once the <code><em>sender</em></code> completes, the result is provided by <code>sync_wait</code>:</p><ul>
+<li>If the <code><em>sender</em></code> completes with <code>set_value(<em>arg</em>...)</code>, <code>sync_wait</code> returns an <code>std::optional&lt;std::tuple&lt;<em>Arg</em>...&gt;&gt;</code> containing the results <code><em>arg</em>...</code>.</li>
+<li>If the <code><em>sender</em></code> completes with <code><a class="el" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187" title="Customization point object for cancellation completions.">set_stopped()</a></code>, <code>sync_wait</code> returns a disengaged <code>std::optional&lt;std::tuple&lt;<em>Arg</em>...&gt;&gt;</code>.</li>
+<li>If the <code><em>sender</em></code> completes with <code>set_error(<em>error</em>)</code>, <code>sync_wait</code> throw <code><em>error</em></code> or rethrows the exception if <code><em>error</em></code> is an <code>std::exception_ptr</code>.</li>
+</ul>
+<h4>Usage</h4>
+<pre>
+sync_wait(<em>sender</em>...)
+</pre><h4>Example</h4>
+<p>The use of <code>sync_wait(<em>sender</em>)</code> is in <code>main</code> to synchronously wait for the completion of the asynchronous work of the program represented by <code><em>sender</em></code>.</p>
+<pre example="doc-sync_wait.cpp">
+#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+#include &lt;cassert&gt;
+
+int main() {
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait(ex::just(17))</a>;
+    assert(result);
+    assert(*result == std::tuple(17));
+}
+</pre> 
+</div>
+</div>
+<a id="a67398f7901010156ad6b008f62fa9ba3" name="a67398f7901010156ad6b008f62fa9ba3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67398f7901010156ad6b008f62fa9ba3">&#9670;&#160;</a></span>then</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution.html#a4d128b0eb18329ca6d9dff7068eaf865">::beman::execution::then_t</a> beman::execution::then {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>then(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>A</em>...)</code> completion </p>
+<p><code>then</code> is a callable object of type <code>then_t</code>. Invoking <code>then(<em>sender</em>, <em>fun</em>)</code> or <code><em>sender</em> | then(<em>fun</em>)</code> yields a sender which, when <code>start</code>ed starts <code><em>sender</em></code> and awaits its completion. When <code><em>sender</em></code> completes <code>then</code> proceeds according to this completion:</p><ul>
+<li>If the completion is <code>set_value(<em>a</em>...)</code>, <code><em>fun</em>(<em>a</em>...)</code> is invoked:<ul>
+<li>if that invocation throws, <code>then</code> completes with <code>set_error(<em>r</em>, std::current_exception())</code>; otherwise</li>
+<li>if the invocation returns <code>void</code>, <code>then</code> completes with <code>set_value(<em>r</em>)</code>; otherwise</li>
+<li>if the invocation returns <code><em>v</em></code>, <code>then</code> completes with <code>set_value(<em>r</em>, <em>v</em>)</code>.</li>
+</ul>
+</li>
+<li>Otherwise, if the completion is <code>set_error(<em>e</em>)</code>, <code>then</code> completes with <code>set_error(<em>r</em>, <em>e</em>)</code></li>
+<li>Otherwise, if the completion is <code><a class="el" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187" title="Customization point object for cancellation completions.">set_stopped()</a></code>, <code>then</code> completes with <code>set_stopped(<em>r</em>)</code>.</li>
+</ul>
+<h4>Usage</h4>
+<pre>
+then(<em>sender</em>, <em>fun</em>)
+<em>sender</em> | then(<em>fun</em>)
+</pre><h4>Completions Signatures</h4>
+<p>The completion signatures depends on the completion signatures <code><em>CS</em></code> of <code><em>sender</em></code> (the completion signatures will be deduplicated):</p><ul>
+<li>For each <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>A</em>...)</code> in <code><em>CS</em></code>, there is a completion signature <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(decltype(<em>fun</em>(std::declval&lt;<em>A</em>&gt;()...)))</code>.</li>
+<li>If for any of the <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>A</em>...)</code> in <code><em>CS</em></code> the expression <code>noexcept(<em>fun</em>(std::declval&lt;<em>A</em>&gt;()...))</code> is <code>false</code> there is a completion signature <code>set_error_t(std::exception_ptr)</code>.</li>
+<li>Each <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>Error</em>)</code> in <code><em>CS</em></code> is copied.</li>
+<li>If <code>set_stopped_t()</code> is in <code><em>CS</em></code> it is copied.</li>
+</ul>
+<h4>Example</h4>
+<pre example="doc-then.cpp">
+#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+#include &lt;cassert&gt;
+namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
+
+int main() {
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da" title="just(arg...) yields a sender completing with set_value_t(Arg...)">ex::just(10)</a> | <a class="el" href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3" title="then(sender, fun) yields a sender transforming a set_value_t(A...) completion">ex::then</a>([](int v) { return v == 3; }));
+    assert(result);
+    assert(*result == std::tuple(false));
+}
+</pre> 
+</div>
+</div>
+<a id="afe7e6d1b61436b69aa7fa70b1f653271" name="afe7e6d1b61436b69aa7fa70b1f653271"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe7e6d1b61436b69aa7fa70b1f653271">&#9670;&#160;</a></span>upon_error</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution.html#a5edc31fa03580fefdec5ff9de774cd7b">::beman::execution::upon_error_t</a> beman::execution::upon_error {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>upon_error(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>E</em>)</code> completion </p>
+<p><code>upon_error</code> is a callable object of type <code>upon_error_t</code>. Invoking <code>upon_error(<em>sender</em>, <em>fun</em>)</code> or <code><em>sender</em> | upon_error(<em>fun</em>)</code> yields a sender which, when <code>start</code>ed starts <code><em>sender</em></code> and awaits its completion. When <code><em>sender</em></code> completes <code>upon_error</code> proceeds according to this completion:</p><ul>
+<li>If the completion is <code>set_error(<em>e</em>)</code>, <code><em>fun</em>(<em>e</em>)</code> is invoked:<ul>
+<li>if that invocation throws, <code>upon_error</code> completes with <code>set_error(<em>r</em>, std::current_exception())</code>; otherwise</li>
+<li>if the invocation returns <code>void</code>, <code>upon_error</code> completes with <code>set_value(<em>r</em>)</code>; otherwise</li>
+<li>if the invocation returns <code><em>v</em></code>, <code>upon_error</code> completes with <code>set_value(<em>r</em>, <em>v</em>)</code>.</li>
+</ul>
+</li>
+<li>Otherwise, if the completion is <code>set_value(<em>a</em>...)</code>, <code>upon_error</code> completes with <code>set_value(<em>r</em>, <em>a</em>...)</code></li>
+<li>Otherwise, if the completion is <code><a class="el" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187" title="Customization point object for cancellation completions.">set_stopped()</a></code>, <code>upon_error</code> completes with <code>set_stopped(<em>r</em>)</code>.</li>
+</ul>
+<h4>Usage</h4>
+<pre>
+upon_error(<em>sender</em>, <em>fun</em>)
+<em>sender</em> | upon_error(<em>fun</em>)
+</pre><h4>Completions Signatures</h4>
+<p>The completion signatures depend on the completion signatures <code><em>CS</em></code> of <code><em>sender</em></code> (the completion signatures will be deduplicated):</p><ul>
+<li>For each <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>E</em>)</code> in <code><em>CS</em></code>, there is a completion signature <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(decltype(<em>fun</em>(std::declval&lt;<em>E</em>&gt;())))</code>.</li>
+<li>If for any of the <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>E</em>)</code> in <code><em>CS</em></code> the expression <code>noexcept(<em>fun</em>(<em>std::declval&lt;E&gt;()</em>))</code> is <code>false</code> there is a completion signature <code>set_error_t(std::exception_ptr)</code>.</li>
+<li>Each <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>A</em>...)</code> in <code><em>CS</em></code> is copied.</li>
+<li>If <code>set_stopped_t()</code> is in <code><em>CS</em></code> it is copied.</li>
+</ul>
+<h4>Example</h4>
+<pre example="doc-upon_error.cpp">
+#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+#include &lt;cassert&gt;
+namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
+
+int main() {
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead" title="just_error(error) yields a sender completing with set_error_t(Error)">ex::just_error(10)</a> | <a class="el" href="namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271" title="upon_error(sender, fun) yields a sender transforming a set_error_t(E) completion">ex::upon_error</a>([](int v) { return v == 3; }));
+    assert(result);
+    assert(*result == std::tuple(false));
+}
+</pre> 
+</div>
+</div>
+<a id="a7e12a82c294cbf0775945930a63025d4" name="a7e12a82c294cbf0775945930a63025d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e12a82c294cbf0775945930a63025d4">&#9670;&#160;</a></span>upon_stopped</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution.html#a724b0f844f19033a9aff2385c0c2532d">::beman::execution::upon_stopped_t</a> beman::execution::upon_stopped {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>upon_stopped(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code>set_stopped_t()</code> completion </p>
+<p><code>upon_stopped</code> is a callable object of type <code>upon_stopped_t</code>. Invoking <code>upon_stopped(<em>sender</em>, <em>fun</em>)</code> or <code><em>sender</em> | upon_stopped(<em>fun</em>)</code> yields a sender which, when <code>start</code>ed starts <code><em>sender</em></code> and awaits its completion. When <code><em>sender</em></code> completes <code>upon_stopped</code> proceeds according to this completion:</p><ul>
+<li>If the completion is <code>set_stopped(<em>e</em>)</code>, <code><em>fun</em>(<em>e</em>)</code> is invoked:<ul>
+<li>if that invocation throws, <code>upon_stopped</code> completes with <code>set_error(<em>r</em>, std::current_exception())</code>; otherwise</li>
+<li>if the invocation returns <code>void</code>, <code>upon_stopped</code> completes with <code>set_value(<em>r</em>)</code>; otherwise</li>
+<li>if the invocation returns <code><em>v</em></code>, <code>upon_stopped</code> completes with <code>set_value(<em>r</em>, <em>v</em>)</code>.</li>
+</ul>
+</li>
+<li>Otherwise, if the completion is <code>set_value(<em>a</em>...)</code>, <code>upon_stopped</code> completes with <code>set_value(<em>r</em>, <em>a</em>...)</code></li>
+<li>Otherwise, if the completion is <code>set_error(<em>e</em>)</code>, <code>upon_stopped</code> completes with <code>set_error(<em>r</em>, <em>e</em>)</code>.</li>
+</ul>
+<h4>Usage</h4>
+<pre>
+upon_stopped(<em>sender</em>, <em>fun</em>)
+<em>sender</em> | upon_stopped(<em>fun</em>)
+</pre><h4>Completions Signatures</h4>
+<p>The completion signatures depend on the completion signatures <code><em>CS</em></code> of <code><em>sender</em></code> (the completion signatures will be deduplicated):</p><ul>
+<li>There is a completion signature <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(decltype(<em>fun</em>()))</code>.</li>
+<li>If the expression <code>noexcept(<em>fun</em>())</code> is <code>false</code> there is a completion signature <code>set_error_t(std::exception_ptr)</code>.</li>
+<li>Each <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>A</em>...)</code> in <code><em>CS</em></code> is copied.</li>
+<li>Each <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>A</em>...)</code> in <code><em>CS</em></code> is copied.</li>
+</ul>
+<h4>Example</h4>
+<pre example="doc-upon_stopped.cpp">
+#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+#include &lt;cassert&gt;
+namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
+
+int main() {
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">ex::just_stopped()</a> | <a class="el" href="namespacebeman_1_1execution.html#a7e12a82c294cbf0775945930a63025d4" title="upon_stopped(sender, fun) yields a sender transforming a set_stopped_t() completion">ex::upon_stopped</a>([]() { return true; }));
+    assert(result);
+    assert(*result == std::tuple(true));
+}
+</pre> 
 </div>
 </div>
 </div><!-- contents -->

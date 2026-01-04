@@ -49,6 +49,9 @@ var namespacebeman_1_1execution =
     [ "env_of_t", "namespacebeman_1_1execution.html#adbf95c8f3480ba2c1d78b8c612a9f2f7", null ],
     [ "error_types_of_t", "namespacebeman_1_1execution.html#a3ba1e76a1b163c494f5de40140a5f51d", null ],
     [ "forwarding_query_t", "namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6", null ],
+    [ "then_t", "namespacebeman_1_1execution.html#a4d128b0eb18329ca6d9dff7068eaf865", null ],
+    [ "upon_error_t", "namespacebeman_1_1execution.html#a5edc31fa03580fefdec5ff9de774cd7b", null ],
+    [ "upon_stopped_t", "namespacebeman_1_1execution.html#a724b0f844f19033a9aff2385c0c2532d", null ],
     [ "apply_sender", "namespacebeman_1_1execution.html#a14b1351ec5d8ea786854eb581fcb9ea8", null ],
     [ "apply_sender", "namespacebeman_1_1execution.html#a2237cec640f636800ac30b98d7c8a527", null ],
     [ "connect", "namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072", null ],
@@ -59,5 +62,9 @@ var namespacebeman_1_1execution =
     [ "just_stopped", "namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f", null ],
     [ "set_error", "namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80", null ],
     [ "set_stopped", "namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187", null ],
-    [ "set_value", "namespacebeman_1_1execution.html#a88ba134b297e5c0b06590a57ae9d5dfe", null ]
+    [ "set_value", "namespacebeman_1_1execution.html#a88ba134b297e5c0b06590a57ae9d5dfe", null ],
+    [ "sync_wait", "namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519", null ],
+    [ "then", "namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3", null ],
+    [ "upon_error", "namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271", null ],
+    [ "upon_stopped", "namespacebeman_1_1execution.html#a7e12a82c294cbf0775945930a63025d4", null ]
 ];
