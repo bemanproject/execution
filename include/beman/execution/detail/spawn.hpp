@@ -6,7 +6,7 @@
 
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/scope_token.hpp>
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
@@ -78,7 +78,7 @@ struct spawn_t {
     }
     template <::beman::execution::sender Sender, ::beman::execution::scope_token Token>
     auto operator()(Sender&& sender, Token&& token) const {
-        return (*this)(::std::forward<Sender>(sender), ::std::forward<Token>(token), ::beman::execution::empty_env{});
+        return (*this)(::std::forward<Sender>(sender), ::std::forward<Token>(token), ::beman::execution::env<>{});
     }
 };
 } // namespace beman::execution::detail

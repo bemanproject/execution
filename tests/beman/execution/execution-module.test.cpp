@@ -59,7 +59,7 @@ TEST(execution_modules) {
     //-dk:TODO test::use(test_stdex::get_forward_progress_guarantee);
     test::use(test_stdex::get_completion_scheduler<test_stdex::set_value_t>);
 
-    test::use_type<test_stdex::empty_env>();
+    test::use_type<test_stdex::env<>>();
     test::use_type<test_stdex::get_env_t>();
     test::use(test_stdex::get_env);
     test::use_template<test_stdex::env_of_t>();
@@ -108,7 +108,7 @@ TEST(execution_modules) {
     test_stdex::transform_sender(test_stdex::default_domain{}, test_stdex::just());
 
     // [exec.snd.transform.env], environment transformations
-    //-dk:TODO test_stdex::transform_env(test_stdex::default_domain{}, test_stdex::just(), test_stdex::empty_env{});
+    //-dk:TODO test_stdex::transform_env(test_stdex::default_domain{}, test_stdex::just(), test_stdex::env<>{});
 
     // [exec.snd.apply], sender algorithm application
     //-dk:TODO test_stdex::apply_sender(test_stdex::default_domain{}, test_stdex::just_t{}, test_stdex::just());

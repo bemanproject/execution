@@ -80,7 +80,7 @@ auto test_has(auto cpo, auto in_sender, auto fun) -> void {
 template <typename... Completions>
 auto test_then_type(auto sender) {
     static_assert(std::same_as<test_std::completion_signatures<Completions...>,
-                               test_std::completion_signatures_of_t<decltype(sender), test_std::empty_env>>);
+                               test_std::completion_signatures_of_t<decltype(sender), test_std::env<>>>);
 }
 
 auto test_then_type() -> void {

@@ -57,7 +57,7 @@ completion_signature set_stopped
 completion_signature set_value
 completion_signatures_for completion_signatures
 completion_signatures_of_t call_result_t
-completion_signatures_of_t empty_env
+completion_signatures_of_t env
 completion_signatures_of_t get_completion_signatures
 completion_signatures_of_t sender_in
 completion_tag set_error
@@ -98,7 +98,7 @@ default_domain queryable
 default_domain sender
 default_domain tag_of_t
 default_impls callable
-default_impls empty_env
+default_impls env
 default_impls fwd_env
 default_impls get_env
 default_impls start
@@ -107,7 +107,7 @@ default_set_error set_value
 default_set_value completion_signatures
 default_set_value set_value
 emplace_from call_result_t
-enable_sender empty_env
+enable_sender env
 enable_sender env_promise
 enable_sender is_awaitable
 enable_sender is_sender
@@ -153,7 +153,7 @@ get_domain_late get_domain
 get_domain_late get_scheduler
 get_domain_late query_with_default
 get_domain_late sender_for
-get_env empty_env
+get_env env
 get_env mandate_nothrow
 get_env queryable
 get_forward_progress_guarantee forward_progress_guarantee
@@ -201,7 +201,7 @@ let_error connect_result_t
 let_error decayed_tuple
 let_error decayed_typeof
 let_error default_impls
-let_error empty_env
+let_error env
 let_error fwd_env
 let_error get_completion_scheduler
 let_error get_domain
@@ -226,7 +226,7 @@ let_stopped connect_result_t
 let_stopped decayed_tuple
 let_stopped decayed_typeof
 let_stopped default_impls
-let_stopped empty_env
+let_stopped env
 let_stopped fwd_env
 let_stopped get_completion_scheduler
 let_stopped get_domain
@@ -251,7 +251,7 @@ let_value connect_result_t
 let_value decayed_tuple
 let_value decayed_typeof
 let_value default_impls
-let_value empty_env
+let_value env
 let_value fwd_env
 let_value get_completion_scheduler
 let_value get_domain
@@ -371,7 +371,7 @@ sender_in_of sender_in
 sender_in_of set_value
 sender_in_of value_signature
 sender_in_of value_types_of_t
-sender_of empty_env
+sender_of env
 sender_of sender_in_of
 sender_of tag_of_t
 sender_to completion_signatures_of_t
@@ -493,7 +493,7 @@ value_types_of_t variant_or_empty
 variant_or_empty empty_variant
 when_all default_domain
 when_all emplace_value
-when_all empty_env
+when_all env
 when_all env_of_t
 when_all get_domain
 when_all get_domain_early

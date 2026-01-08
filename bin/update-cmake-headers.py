@@ -23,13 +23,8 @@ def get_headers(dir):
     return result
 
 
-sections = {
-    "public": get_headers("include/beman/*"),
-    "detail": get_headers("include/beman/*/detail"),
-}
-
 file_set_re = re.compile(" *FILE_SET.*")
-section_re = re.compile(" *\${TARGET_NAME}_(?P<section>.*)_headers$")
+section_re = re.compile(" *FILE_SET *\${TARGET_NAME}_(?P<section>.*)_headers$")
 header_re = re.compile(" *\${PROJECT_SOURCE_DIR}/include/beman/.*/.*\.hpp")
 
 if len(sys.argv) != 2:
@@ -41,6 +36,10 @@ print(f"updating {cmake}")
 
 section = ""
 section_done = False
+sections = {
+    "public": get_headers("include/beman/*"),
+    "detail": get_headers("include/beman/*/detail"),
+}
 
 with open(cmake, "r") as input:
     lines = input.readlines()
@@ -58,7 +57,7 @@ with open(f"{cmake}", "w") as output:
                 section_done = True
                 project = "${PROJECT_SOURCE_DIR}"
                 for header in sections[section]:
-                    output.write(f"         {project}/include/{header}.hpp\n")
+                    output.write(f"                {project}/include/{header}.hpp\n")
         else:
             output.write(line)
             pass

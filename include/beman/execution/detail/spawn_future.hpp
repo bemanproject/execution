@@ -10,7 +10,7 @@
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/impls_for.hpp>
@@ -243,7 +243,7 @@ class spawn_future_t {
     }
     template <::beman::execution::sender Sndr, ::beman::execution::scope_token Tok>
     auto operator()(Sndr&& sndr, Tok&& tok) const {
-        return (*this)(::std::forward<Sndr>(sndr), ::std::forward<Tok>(tok), ::beman::execution::empty_env{});
+        return (*this)(::std::forward<Sndr>(sndr), ::std::forward<Tok>(tok), ::beman::execution::env<>{});
     }
 };
 

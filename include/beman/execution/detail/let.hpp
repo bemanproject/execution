@@ -21,7 +21,7 @@
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/make_env.hpp>
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/meta_filter.hpp>
@@ -77,7 +77,7 @@ struct let_t {
             return ::beman::execution::detail::make_env(
                 ::beman::execution::get_domain, ::beman::execution::get_domain(::beman::execution::get_env(sender)));
         else
-            return ::beman::execution::empty_env{};
+            return ::beman::execution::env<>{};
     }
     template <typename Sender, typename Env>
     static auto join_env(Sender&& sender, Env&& e) -> decltype(auto) {

@@ -6,7 +6,7 @@
 
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/gather_signatures.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/variant_or_empty.hpp>
@@ -15,7 +15,7 @@
 
 namespace beman::execution {
 template <typename Sender,
-          typename Env                         = ::beman::execution::empty_env,
+          typename Env                         = ::beman::execution::env<>,
           template <typename...> class Tuple   = ::beman::execution::detail::decayed_tuple,
           template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
     requires ::beman::execution::sender_in<Sender, Env>

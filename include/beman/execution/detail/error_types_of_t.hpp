@@ -5,7 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF
 
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/gather_signatures.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_error.hpp>
@@ -20,7 +20,7 @@ namespace beman::execution {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
 template <typename Sender,
-          typename Env                         = ::beman::execution::empty_env,
+          typename Env                         = ::beman::execution::env<>,
           template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
     requires ::beman::execution::sender_in<Sender, Env>
 using error_types_of_t =

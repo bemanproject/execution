@@ -4,29 +4,46 @@
 #ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_PROP
 #define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_PROP
 
+#include <beman/execution/detail/callable.hpp>
+#include <beman/execution/detail/non_assignable.hpp>
 #include <type_traits>
 
 // ----------------------------------------------------------------------------
 
+namespace beman::execution::detail {
+template <typename>
+struct prop_like;
+}
+
 namespace beman::execution {
 template <typename Query, typename Value>
-struct prop {
-    [[no_unique_address]] Query query_{};
-    Value                       value_;
-
-    template <typename Q, typename V>
-    prop(Q q, V&& v) : query_(q), value_(v) {}
-    prop(prop&&)                = default;
-    prop(const prop&)           = default;
-    auto operator=(prop&&)      = delete;
-    auto operator=(const prop&) = delete;
-
-    constexpr auto query(Query) const noexcept -> Value { return this->value_; }
-};
+struct prop;
 
 template <typename Query, typename Value>
 prop(Query, Value) -> prop<Query, ::std::unwrap_reference_t<Value>>;
 } // namespace beman::execution
+
+template <typename V>
+struct beman::execution::detail::prop_like {
+    V    value;
+    auto query(auto) const noexcept -> const V& { return this->value; }
+};
+
+template <typename Query, typename Value>
+struct beman::execution::prop {
+    static_assert(::beman::execution::detail::callable<Query, ::beman::execution::detail::prop_like<Value>>);
+
+    [[no_unique_address]] Query                                      query_{};
+    [[no_unique_address]] Value                                      value_{};
+    [[no_unique_address]] ::beman::execution::detail::non_assignable non_assignable_{};
+
+    // prop(prop&&)                = default;
+    // prop(const prop&)           = default;
+    // auto operator=(prop&&) -> prop&      = delete;
+    // auto operator=(const prop&) -> prop& = delete;
+
+    constexpr auto query(Query) const noexcept -> const Value& { return this->value_; }
+};
 
 // ----------------------------------------------------------------------------
 

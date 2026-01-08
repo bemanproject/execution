@@ -6,7 +6,7 @@
 
 #include <beman/execution/detail/allocator_aware_move.hpp>
 #include <beman/execution/detail/callable.hpp>
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
@@ -30,7 +30,7 @@ struct default_impls {
         if constexpr (1 == sizeof...(child))
             return (::beman::execution::detail::fwd_env(::beman::execution::get_env(child)), ...);
         else
-            return ::beman::execution::empty_env{};
+            return ::beman::execution::env<>{};
     };
     static constexpr auto get_env = [](auto, auto&, const auto& receiver) noexcept -> decltype(auto) {
         return ::beman::execution::detail::fwd_env(::beman::execution::get_env(receiver));

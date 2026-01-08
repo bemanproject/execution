@@ -389,7 +389,7 @@ auto test_query_with_default() -> void {
     static_assert(std::same_as<domain, decltype(result1)>);
     ASSERT(result1.value == 43);
 
-    auto result2{test_detail::query_with_default(test_std::get_domain, test_std::empty_env(), default_domain{74})};
+    auto result2{test_detail::query_with_default(test_std::get_domain, test_std::env<>(), default_domain{74})};
     static_assert(std::same_as<default_domain, decltype(result2)>);
     ASSERT(result2.default_value == 74);
 }
@@ -459,7 +459,7 @@ auto test_get_domain_late() -> void {
         using sender_concept = test_std::sender_t;
     };
     static_assert(test_std::sender<no_domain_sender>);
-    test_get_domain_late<test_std::default_domain>(no_domain_sender{}, test_std::empty_env{});
+    test_get_domain_late<test_std::default_domain>(no_domain_sender{}, test_std::env<>{});
 
     struct scheduler_env {
         auto query(const test_std::get_scheduler_t&) const noexcept -> get_domain_late_scheduler { return {}; }
@@ -486,7 +486,7 @@ auto test_get_domain_late() -> void {
     static_assert(std::same_as<get_domain_late_scheduler::env, decltype(test_std::get_env(scheduler_sender{}))>);
     static_assert(
         std::same_as<get_domain_late_scheduler::dom, decltype(test_detail::completion_domain(scheduler_sender{}))>);
-    test_get_domain_late<get_domain_late_scheduler::dom>(scheduler_sender{}, test_std::empty_env{});
+    test_get_domain_late<get_domain_late_scheduler::dom>(scheduler_sender{}, test_std::env<>{});
 
     struct env_sender {
         using sender_concept = test_std::sender_t;
@@ -495,7 +495,7 @@ auto test_get_domain_late() -> void {
     static_assert(test_std::sender<env_sender>);
     static_assert(std::same_as<get_domain_late_env::dom, decltype(test_std::get_domain(get_domain_late_env{}))>);
     static_assert(std::same_as<get_domain_late_env, decltype(test_std::get_env(env_sender{}))>);
-    test_get_domain_late<get_domain_late_env::dom>(env_sender{}, test_std::empty_env{});
+    test_get_domain_late<get_domain_late_env::dom>(env_sender{}, test_std::env<>{});
 }
 
 auto test_default_impls_get_attrs() -> void {
@@ -512,7 +512,7 @@ auto test_default_impls_get_attrs() -> void {
     static_assert(noexcept(test_detail::default_impls::get_attrs(0, child1{})));
     static_assert(
         std::same_as<test_detail::fwd_env<local_env>, decltype(test_detail::default_impls::get_attrs(0, child1{}))>);
-    // static_assert(std::same_as<test_std::empty_env,
+    // static_assert(std::same_as<test_std::env<>,
     //     decltype(test_detail::default_impls::get_attrs(0, child1{}, child2{}))>);
 }
 
@@ -723,9 +723,9 @@ auto test_env_type() -> void {
         auto get_env() const noexcept -> local_env { return {}; }
     };
 
-    static_assert(std::same_as<test_detail::fwd_env<test_std::empty_env>,
+    static_assert(std::same_as<test_detail::fwd_env<test_std::env<>>,
                                test_detail::env_type<index, local_sender, local_receiver>>);
-    static_assert(std::same_as<test_detail::fwd_env<test_std::empty_env>,
+    static_assert(std::same_as<test_detail::fwd_env<test_std::env<>>,
                                test_detail::env_type<index, sender_with_env, local_receiver>>);
     static_assert(
         std::same_as<test_detail::fwd_env<local_env>, test_detail::env_type<index, local_sender, receiver_with_env>>);
@@ -1025,18 +1025,18 @@ auto test_completion_signatures_for() -> void {
         using empty_env_sigs = test_std::completion_signatures<test_std::set_value_t(arg)>;
         using env_sigs       = test_std::completion_signatures<test_std::set_value_t(arg, arg)>;
 
-        auto get_completion_signatures(const test_std::empty_env&) -> empty_env_sigs { return {}; }
+        auto get_completion_signatures(const test_std::env<>&) -> empty_env_sigs { return {}; }
         auto get_completion_signatures(const local_env&) -> env_sigs { return {}; }
     };
 
-    static_assert(test_std::sender_in<sender, test_std::empty_env>);
+    static_assert(test_std::sender_in<sender, test_std::env<>>);
     static_assert(test_std::sender_in<sender, local_env>);
     static_assert(not test_std::sender_in<sender, bad_env>);
 
 #if 0
         //-dk:TODO restore completion_signatures_for tests
         static_assert(std::same_as<
-            test_detail::completion_signatures_for<sender, test_std::empty_env>,
+            test_detail::completion_signatures_for<sender, test_std::env<>>,
             sender::empty_env_sigs
         >);
         static_assert(std::same_as<
@@ -1252,9 +1252,9 @@ auto test_write_env() -> void {
 
     static_assert(std::same_as<test_detail::completion_signatures_for<decltype(we_sender), write_env_env>,
                                test_std::completion_signatures<test_std::set_value_t(bool)>>);
-    static_assert(std::same_as<test_detail::completion_signatures_for<decltype(we_sender), test_std::empty_env>,
+    static_assert(std::same_as<test_detail::completion_signatures_for<decltype(we_sender), test_std::env<>>,
                                test_std::completion_signatures<test_std::set_value_t(bool)>>);
-    static_assert(std::same_as<test_detail::completion_signatures_for<decltype(we_sender)&, test_std::empty_env>,
+    static_assert(std::same_as<test_detail::completion_signatures_for<decltype(we_sender)&, test_std::env<>>,
                                test_std::completion_signatures<test_std::set_value_t(bool)>>);
     static_assert(test_std::sender_in<decltype(we_sender)>);
     static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(bool)>,

@@ -43,7 +43,7 @@ auto test_when_all_breathing() -> void {
     auto s{test_std::when_all(test_std::just(), test_std::just(3, true), test_std::just(1.5))};
     static_assert(test_std::sender<decltype(s)>);
     test::check_type<test_std::completion_signatures<test_std::set_value_t(int, bool, double)>>(
-        test_std::get_completion_signatures(s, test_std::empty_env{}));
+        test_std::get_completion_signatures(s, test_std::env<>{}));
     auto res{test_std::sync_wait(s)};
     ASSERT(res.has_value());
     ASSERT((*res == std::tuple{3, true, 1.5}));

@@ -11,7 +11,7 @@ struct receiver {
 int main() {
     // ex::sync_wait(ex::just_stopped() | ex::then([]{}));
     auto then = ex::just_stopped() | ex::then([] {});
-    static_assert(std::same_as<void, decltype(ex::get_completion_signatures(then, ex::empty_env()))>);
+    static_assert(std::same_as<void, decltype(ex::get_completion_signatures(then, ex::env<>()))>);
 
     ex::connect(ex::just_stopped() | ex::then([] {}), receiver{});
 }

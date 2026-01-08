@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include <beman/execution/detail/queryable.hpp>
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>

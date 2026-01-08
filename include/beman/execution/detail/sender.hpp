@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER
 
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/is_awaitable.hpp>
@@ -25,7 +25,7 @@ template <typename Sender>
 concept enable_sender =
     ::beman::execution::detail::is_sender<Sender> ||
     ::beman::execution::detail::is_awaitable<Sender,
-                                             ::beman::execution::detail::env_promise<::beman::execution::empty_env>>;
+                                             ::beman::execution::detail::env_promise<::beman::execution::env<>>>;
 } // namespace beman::execution::detail
 namespace beman::execution {
 template <typename Sender>

@@ -5,7 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ENV
 
 #include <beman/execution/detail/queryable.hpp>
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -25,7 +25,7 @@ struct get_env_t {
                           "get_env requires the result type to be destructible");
             return obj.get_env();
         } else {
-            return ::beman::execution::empty_env{};
+            return ::beman::execution::env<>{};
         }
     }
 };

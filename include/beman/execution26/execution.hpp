@@ -28,7 +28,7 @@ using ::beman::execution::connect_t;
 using ::beman::execution::continues_on;
 using ::beman::execution::continues_on_t;
 using ::beman::execution::default_domain;
-using ::beman::execution::empty_env;
+using ::beman::execution::env;
 using ::beman::execution::env_of_t;
 using ::beman::execution::error_types_of_t;
 using ::beman::execution::forwarding_query;

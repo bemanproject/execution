@@ -73,7 +73,7 @@ auto test_constraints(Scheduler&& scheduler, Sender&& sender) {
         test::check_type<custom_domain&>(domain);
 
         auto s{test_std::continues_on(::std::forward<Sender>(sender), ::std::forward<Scheduler>(scheduler))};
-        auto late{test_detail::get_domain_late(s, test_std::empty_env{})};
+        auto late{test_detail::get_domain_late(s, test_std::env<>{})};
         test::check_type<custom_domain&>(late);
     }
 }
