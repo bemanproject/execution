@@ -69,7 +69,7 @@ auto test_read_env() -> void {
 auto test_read_env_completions() -> void {
     auto r{test_std::read_env(test_std::get_stop_token)};
     test::check_type<test_std::completion_signatures<test_std::set_value_t(test_std::never_stop_token)> >(
-        test_std::get_completion_signatures(r, test_std::empty_env{}));
+        test_std::get_completion_signatures(r, test_std::env<>{}));
     test::use(r);
 }
 } // namespace

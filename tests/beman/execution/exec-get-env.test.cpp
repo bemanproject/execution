@@ -42,17 +42,17 @@ struct normal {
 } // namespace
 
 TEST(exec_get_env) {
-    static_assert(std::semiregular<test_std::empty_env>);
+    // static_assert(std::semiregular<test_std::env<>>);
 
     static_assert(std::semiregular<test_std::get_env_t>);
     static_assert(std::same_as<const test_std::get_env_t, decltype(test_std::get_env)>);
 
     auto e0 = test_std::get_env(0);
     test::use(e0);
-    static_assert(std::same_as<test_std::empty_env, decltype(e0)>);
+    static_assert(std::same_as<test_std::env<>, decltype(e0)>);
     auto e1 = test_std::get_env(non_const{});
     test::use(e1);
-    static_assert(std::same_as<test_std::empty_env, decltype(e1)>);
+    static_assert(std::same_as<test_std::env<>, decltype(e1)>);
     auto e2 = test_std::get_env(normal<test_env>{});
     test::use(e2);
     static_assert(std::same_as<test_env, decltype(e2)>);

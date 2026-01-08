@@ -390,17 +390,17 @@ auto test_spawn_future() {
             ASSERT(handle != nullptr);
             ASSERT(result == 0);
 #if 0
-            using type = typename beman::execution::detail::completion_signatures_for_impl<decltype(sndr), test_std::empty_env>::type;
+            using type = typename beman::execution::detail::completion_signatures_for_impl<decltype(sndr), test_std::env<>>::type;
             static_assert(std::same_as<test_std::completion_signatures<test_std::set_stopped_t(), test_std::set_value_t(int), test_std::set_error_t(std::exception_ptr)>, type>);
             static_assert(std::same_as<
                 test_std::completion_signatures<test_std::set_stopped_t(), test_std::set_value_t(int), test_std::set_error_t(std::exception_ptr)>,
-                decltype(test_std::get_completion_signatures(sndr, test_std::empty_env{}))
+                decltype(test_std::get_completion_signatures(sndr, test_std::env<>{}))
             >);
 #endif
             using exp_type  = test_std::completion_signatures<test_std::set_stopped_t(),
                                                               test_std::set_value_t(int),
                                                               test_std::set_error_t(std::exception_ptr)>;
-            using comp_type = decltype(test_std::get_completion_signatures(std::move(sndr), test_std::empty_env{}));
+            using comp_type = decltype(test_std::get_completion_signatures(std::move(sndr), test_std::env<>{}));
             static_assert(test_detail::meta::contain_same<exp_type, comp_type>);
 
             handle->complete(17);

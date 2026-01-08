@@ -3,7 +3,7 @@
 
 #include <beman/execution/detail/get_delegation_scheduler.hpp>
 
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
@@ -64,7 +64,7 @@ TEST(exec_get_delegation_scheduler) {
         std::same_as<const test_std::get_delegation_scheduler_t, decltype(test_std::get_delegation_scheduler)>);
     static_assert(test_std::forwarding_query((test_std::get_delegation_scheduler)));
 
-    test_get_delegation_scheduler<false>(test_std::empty_env{});
+    test_get_delegation_scheduler<false>(test_std::env<>{});
     test_get_delegation_scheduler<false>(env<false, scheduler>{});
     test_get_delegation_scheduler<false>(env<true, scheduler::sender>{});
     test_get_delegation_scheduler<true>(env<true, scheduler>{17});

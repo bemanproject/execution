@@ -30,11 +30,15 @@ auto test_prop(Env&& env, Value&& value) {
     });
     ASSERT(test_query(env) == value);
 }
+
 } // namespace
 
 TEST(exec_prop) {
     test_prop(env{}, 42);
     test_prop(test_std::prop(test_query, 42), 42);
-    [[maybe_unused]] auto p{test_std::prop(test_query, 2.5)};
-    static_assert(not std::is_assignable_v<decltype(p), decltype(p)>);
+    auto                          p0{test_std::prop(test_query, 2.5)};
+    decltype(p0)                  p1 = test_std::prop(test_query, 2.5);
+    [[maybe_unused]] decltype(p0) p2(p0);
+    static_assert(not std::is_assignable_v<decltype(p0), decltype(p0)>);
+    static_assert(not std::is_assignable_v<decltype(p1), std::add_rvalue_reference_t<decltype(p0)>>);
 }

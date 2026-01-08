@@ -19,7 +19,7 @@ When an asynchronous operation completes it _signals_ its completion by calling 
 </details>
 <details>
 <summary>environment</summary>
-The term _enviroment_ refers to the bag of properties associated with an <code>_object_</code> by the call <code><a href=‘#get-env’>std::execution::get_env</a>(_object_)</code>. By default the environment for objects is empty (<code><a href=‘#empty-env’>std::execution::empty_env</a></code>). In particular, environments associated with <code><a href=‘#receiver’>receiver</a></code>s are used to provide access  to properties like the <a href=‘#get-stop-token’>stop token</a>, <a href=‘#get-scheduler’>scheduler</a>, or <a href=‘#get-allocator’>allocator</a> associated with the <code><a href=‘#receiver’>receiver</a></code>. The various properties associated with an object are accessed via <a href=‘#queries’>queries</a>.
+The term _enviroment_ refers to the bag of properties associated with an <code>_object_</code> by the call <code><a href=‘#get-env’>std::execution::get_env</a>(_object_)</code>. By default the environment for objects is empty (<code><a href=‘#env’>std::execution::env&lt;&gt;</a></code>). In particular, environments associated with <code><a href=‘#receiver’>receiver</a></code>s are used to provide access  to properties like the <a href=‘#get-stop-token’>stop token</a>, <a href=‘#get-scheduler’>scheduler</a>, or <a href=‘#get-allocator’>allocator</a> associated with the <code><a href=‘#receiver’>receiver</a></code>. The various properties associated with an object are accessed via <a href=‘#queries’>queries</a>.
 </details>
 
 ## Concepts
@@ -70,7 +70,7 @@ Required members for <code>_Receiver_</code>:
 - The type `receiver_concept` is an alias for `receiver_t` or a type derived thereof`.
 - Rvalues of type <code>_Receiver_</code> are movable.
 - Lvalues of type <code>_Receiver_</code> are copyable.
-- <code><a href=‘#get-env’>std::execution::get_env</a>(_receiver_)</code> returns an object. By default this operation returns <code><a href=‘empty-env’>std::execution::empty_env</a></code>.
+- <code><a href=‘#get-env’>std::execution::get_env</a>(_receiver_)</code> returns an object. By default this operation returns <code><a href=‘env’>std::execution::env&lt;&gt;</a></code>.
 
 Typical members for <code>_Receiver_</code>:
 
@@ -177,7 +177,7 @@ Senders represent asynchronous work. They may get composed from multiple senders
 
 Requirements for <code>_Sender_</code>:
 - The type <code>_Sender_::sender_concept</code> is an alias for `sender_t` or a type derived thereof or <code>_Sender_</code> is a suitable _awaitable_.
-- <code><a href='get_env'>std::execution::get_env</a>(_sender_)</code> is valid. By default this operation returns <code><a href=‘empty-env’>std::execution::empty_env</a></code>.
+- <code><a href='get_env'>std::execution::get_env</a>(_sender_)</code> is valid. By default this operation returns <code><a href=‘env’>std::execution::env&lt;&gt;</a></code>.
 - Rvalues of type <code>_Sender_</code> can be moved.
 - Lvalues of type <code>_Sender_</code> can be copied.
 
@@ -224,7 +224,7 @@ static_assert(std::execution::sender<example_sender>);
 </details>
 </details>
 <details>
-<summary><code>sender_in&lt;<i>Sender, Env</i> = std::execution::empty_env&gt;</code></summary>
+<summary><code>sender_in&lt;<i>Sender, Env</i> = std::execution::env&lt;&gt;&gt;</code></summary>
 
 The concept <code>sender_in&lt;<i>Sender, Env</i>&gt;</code> tests whether <code>_Sender_</code> is a <code><a href=‘#sender’>sender</a></code>, <code>_Env_</code> is a destructible type, and <code><a href=‘#get_completion_signatures’>std::execution::get_completion_signatures</a>(_sender_, _env_)</code> yields a specialization of <code><a href=‘#completion_signatures’>std::execution::completion_signatures</a></code>.
 </details>
@@ -236,7 +236,7 @@ The concept <code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code> tests if <code
 To determine if <code>_Receiver_</code> can receive all <a href=‘#completion-signals’>completion signals</a> from <code>_Sender_</code> it checks that for each <code>_Signature_</code> in <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, std::declval&lt;<a href='#env_of_t'>std::execution::env_of_t</a>&lt;_Receiver_&gt;&gt;())</code> the test <code><a href=‘#receiver_of’>std::execution::receiver_of</a>&lt;_Receiver_, _Signature_&gt;</code> yields true. To determine if <code>_Sender_</code> can be <code><a href=‘#connect’>connect</a></code>ed to <code>_Receiver_</code> the concept checks if <code><a href=‘#connect’>connect</a>(std::declval&lt;_Sender_&gt;(), std::declval&lt;_Receiver_&gt;)</code> is a valid expression.
 </details>
 <details>
-<summary><code>sends_stopped&lt;<i>Sender, Env</i> = std::execution::empty_env&gt;</code></summary>
+<summary><code>sends_stopped&lt;<i>Sender, Env</i> = std::execution::env&lt;&gt;&gt;</code></summary>
 
 The concept <code>sends_stopped&lt;<i>Sender, Env</i>&gt;</code> determines if <code>_Sender_</code> may send a <code><a href=‘#set_stopped’>stopped</a></code> <a href=‘#completion-signals’>completion signal</a>. To do so, the concepts determines if <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, _env_)</code> contains the signatures <code><a href=‘#set_stopped’>std::execution::set_stopped_t</a>()</code>.
 </details>
@@ -407,12 +407,12 @@ struct custom_t: forwarding_query_t {
 </details>
 <details>
 <summary><code>get_env(<i>queryable</i>) -> <i>env</i></code></summary>
-**Default**: <a href='#empty_env'>`empty_env`</a>
+**Default**: <a href='#env'>`env&lt;&gt;`</a>
 <br/>
-The expression <code>get_env(<i>queryable</i>)</code> is used to get the environment <code><i>env</i></code> associated with <code><i>queryable</i></code>. To provide a non-default environment for a <code><i>queryable</i></code> a `get_env` member needs to be defined. If <code><i>queryable</i></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href=‘#empty_env’>empty_env</a></code> is returned.
+The expression <code>get_env(<i>queryable</i>)</code> is used to get the environment <code><i>env</i></code> associated with <code><i>queryable</i></code>. To provide a non-default environment for a <code><i>queryable</i></code> a `get_env` member needs to be defined. If <code><i>queryable</i></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href=‘#env’>env&lt;&gt;</a></code> is returned.
 The value of the expression is <ol>
    <li>the result of <code>as_const(<i>queryable</i>).get_env()</code> if this expression is valid and <code>noexcept</code>.</li>
-   <li><code>empty_env</code> otherwise.
+   <li><code>env&lt;&gt;</code> otherwise.
 </ol>
 <div>
 <details>
@@ -712,7 +712,7 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 - `completion_signatures_t`
 - `connect_result_t`
 - `default_domain`
-- `empty_env`
+- `env&lt;T...&gt;`
 - `env_of_t`
 - `error_types_of_t`
 - `fwd_env`

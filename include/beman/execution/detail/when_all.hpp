@@ -9,7 +9,7 @@
 #include <beman/execution/detail/decayed_type_list.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/get_domain.hpp>
@@ -53,7 +53,7 @@ struct when_all_t {
         requires(0u != sizeof...(Sender)) &&
                 ((::beman::execution::detail::meta::size_v<
                       ::beman::execution::value_types_of_t<Sender,
-                                                           ::beman::execution::empty_env,
+                                                           ::beman::execution::env<>,
                                                            ::std::tuple,
                                                            ::beman::execution::detail::type_list>> == 1u) &&
                  ...) &&
@@ -81,7 +81,7 @@ struct impls_for<::beman::execution::detail::when_all_t> : ::beman::execution::d
         using common_t =
             typename ::std::common_type_t<decltype(::beman::execution::detail::get_domain_early(sender))...>;
         if constexpr (::std::same_as<common_t, ::beman::execution::default_domain>)
-            return ::beman::execution::empty_env{};
+            return ::beman::execution::env<>{};
         else
             return ::beman::execution::detail::make_env(::beman::execution::get_domain, common_t{});
     }};

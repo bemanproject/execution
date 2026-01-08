@@ -44,13 +44,13 @@ auto test_interface(Sch sch, Sndr sndr, Closure closure, Both both) -> void {
 
 template <test_detail::sender_for<test_std::on_t> OutSndr>
 auto test_transform_env(OutSndr out_sndr) -> void {
-    auto e{test_std::on.transform_env(out_sndr, test_std::empty_env{})};
+    auto e{test_std::on.transform_env(out_sndr, test_std::env<>{})};
     test::use(e);
 }
 
 template <test_detail::sender_for<test_std::on_t> OutSndr>
 auto test_transform_sender(OutSndr out_sndr) -> void {
-    auto s{test_std::on.transform_sender(std::move(out_sndr), test_std::empty_env{})};
+    auto s{test_std::on.transform_sender(std::move(out_sndr), test_std::env<>{})};
     static_assert(test_std::sender<decltype(s)>);
     auto ts{std::move(s) | test_std::then([](auto&&...) {})};
     static_assert(test_std::sender<decltype(ts)>);

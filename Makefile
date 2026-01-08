@@ -62,7 +62,7 @@ ifeq (${hostSystemName},Darwin)
 else ifeq (${hostSystemName},Linux)
   export LLVM_DIR=/usr/lib/llvm-20
   export PATH:=${LLVM_DIR}/bin:${PATH}
-  export CXX=clang++-20
+  # export CXX=clang++-20
 else
   export CXX=$(COMPILER)
 endif

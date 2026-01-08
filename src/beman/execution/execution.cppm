@@ -81,7 +81,7 @@ export using ::beman::execution::get_delegation_scheduler;
 //-dk:TODO export using ::beman::execution::get_forward_progress_guarantee;
 export using ::beman::execution::get_completion_scheduler;
 
-export using ::beman::execution::empty_env;
+export using ::beman::execution::env;
 export using ::beman::execution::get_env_t;
 export using ::beman::execution::get_env;
 

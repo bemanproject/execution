@@ -55,7 +55,7 @@ auto test_let_value() {
                                    test_std::set_error_t(char)>();
             })};
     static_assert(test_std::sender<decltype(s2)>);
-    using type = decltype(test_std::get_completion_signatures(s2, test_std::empty_env{}));
+    using type = decltype(test_std::get_completion_signatures(s2, test_std::env<>{}));
     static_assert(std::same_as<type, type>);
     // static_assert(std::same_as<void, type>);
 
@@ -104,7 +104,7 @@ auto test_let_value_allocator() -> void {
     auto             s{ex::just(std::span(values)) | ex::let_value(fun()) | ex::then([](auto&&) noexcept {})};
     static_assert(test_std::sender<decltype(s)>);
     static_assert(test_std::sender_in<decltype(s)>);
-    // static_assert(std::same_as<void, decltype(test_std::get_completion_signatures(s, test_std::empty_env{}))>);
+    // static_assert(std::same_as<void, decltype(test_std::get_completion_signatures(s, test_std::env<>{}))>);
     ex::sync_wait(s);
 }
 

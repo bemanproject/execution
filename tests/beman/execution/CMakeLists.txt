@@ -25,7 +25,9 @@ list(
     exec-scope-counting.test
     exec-spawn.test
     exec-stop-when.test
+    non_assignable.test
     exec-prop.test
+    exec-env.test
     exec-scope-simple-counting.test
     exec-spawn-future.test
     exec-scope-concepts.test

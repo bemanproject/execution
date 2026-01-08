@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN
 
-#include <beman/execution/detail/empty_env.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-template <typename Sender, typename Env = ::beman::execution::empty_env>
+template <typename Sender, typename Env = ::beman::execution::env<>>
 concept sender_in =
     ::beman::execution::sender<Sender> && ::beman::execution::detail::queryable<Env> &&
     requires(Sender&& sender, Env&& env) {
