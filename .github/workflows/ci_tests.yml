@@ -87,13 +87,6 @@ jobs:
                   ]
                 }
               ]
-            },
-            { "versions": ["18", "17"],
-              "tests": [
-                { "cxxversions": ["c++26", "c++23"],
-                  "tests": [{"stdlibs": ["libc++"], "tests": ["Release.Default"]}]
-                }
-              ]
             }
           ],
           "msvc": [
