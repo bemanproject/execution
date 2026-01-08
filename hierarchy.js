@@ -18,7 +18,9 @@ var hierarchy =
     [ "tst::connector< inner_sender, Receiver >", "structtst_1_1connector.html", null ],
     [ "tst::add_set_value< Sender >::contains_set_value< typename >", "structtst_1_1add__set__value_1_1contains__set__value.html", null ],
     [ "beman::execution::default_domain", "structbeman_1_1execution_1_1default__domain.html", null ],
-    [ "beman::execution::empty_env", "structbeman_1_1execution_1_1empty__env.html", null ],
+    [ "beman::execution::detail::env_base< Envs >", null, [
+      [ "beman::execution::env< Envs >", "structbeman_1_1execution_1_1env.html", null ]
+    ] ],
     [ "tst::timer::when_done_sender::state< Receiver >::execute", "structtst_1_1timer_1_1when__done__sender_1_1state_1_1execute.html", null ],
     [ "std::false_type", null, [
       [ "tst::add_set_value< Sender >::is_set_value< S >", "structtst_1_1add__set__value_1_1is__set__value.html", null ]

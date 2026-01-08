@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('conceptbeman_1_1execution_1_1sender__i
 </div><!--header-->
 <div class="contents">
 <h2 class="groupheader">Concept definition</h2>
-<div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Env ::beman::execution::empty_env&gt;</div>
+<div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Env ::beman::execution::env&lt;&gt;&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="conceptbeman_1_1execution_1_1sender__in.html">beman::execution::sender_in</a> = </div>
 <div class="line">    ::beman::execution::sender&lt;Sender&gt; &amp;&amp; ::beman::execution::detail::queryable&lt;Env&gt; &amp;&amp;</div>
 <div class="line">    <span class="keyword">requires</span>(Sender&amp;&amp; <a class="code hl_concept" href="conceptbeman_1_1execution_1_1sender.html">sender</a>, Env&amp;&amp; env) {</div>

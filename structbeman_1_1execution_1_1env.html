@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beman::execution: beman::execution::empty_env Struct Reference</title>
+<title>beman::execution: beman::execution::env&lt; Envs &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structbeman_1_1execution_1_1empty__env.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structbeman_1_1execution_1_1env.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -97,25 +97,56 @@ $(document).ready(function(){initNavTree('structbeman_1_1execution_1_1empty__env
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">beman::execution::empty_env Struct Reference</div></div>
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structbeman_1_1execution_1_1env-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">beman::execution::env&lt; Envs &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>An empty type used as an environment when there is no environment available.  
- <a href="structbeman_1_1execution_1_1empty__env.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;</code></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>An empty type used as an environment when there is no environment available. </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/beman/execution/detail/<a class="el" href="empty__env_8hpp_source.html">empty_env.hpp</a></li>
+<div class="dynheader">
+Inheritance diagram for beman::execution::env&lt; Envs &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structbeman_1_1execution_1_1env__inherit__graph.png" border="0" usemap="#abeman_1_1execution_1_1env_3_01Envs_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="abeman_1_1execution_1_1env_3_01Envs_01_4_inherit__map" id="abeman_1_1execution_1_1env_3_01Envs_01_4_inherit__map">
+<area shape="rect" title=" " alt="" coords="11,93,182,133"/>
+<area shape="rect" title=" " alt="" coords="5,5,188,45"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for beman::execution::env&lt; Envs &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structbeman_1_1execution_1_1env__coll__graph.png" border="0" usemap="#abeman_1_1execution_1_1env_3_01Envs_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="abeman_1_1execution_1_1env_3_01Envs_01_4_coll__map" id="abeman_1_1execution_1_1env_3_01Envs_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="264,37,435,77"/>
+<area shape="rect" title=" " alt="" coords="5,5,188,45"/>
+<area shape="rect" title=" " alt="" coords="5,69,188,109"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a7ea76d112e634d6177e5ad77114e1805"><td class="memTemplParams" colspan="2"><a id="a7ea76d112e634d6177e5ad77114e1805" name="a7ea76d112e634d6177e5ad77114e1805"></a>
+template&lt;typename Q &gt; <br />
+requires (::beman::execution::detail::has_query&lt;Envs, Q&gt; || ...)</td></tr>
+<tr class="memitem:a7ea76d112e634d6177e5ad77114e1805"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>query</b> (Q q) const noexcept -&gt; decltype(auto)</td></tr>
+<tr class="separator:a7ea76d112e634d6177e5ad77114e1805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a2464fd21252ffcb745287f4f2572d589"><td class="memItemLeft" align="right" valign="top"><a id="a2464fd21252ffcb745287f4f2572d589" name="a2464fd21252ffcb745287f4f2572d589"></a>
+::beman::execution::detail::non_assignable&#160;</td><td class="memItemRight" valign="bottom"><b>na_</b> {}</td></tr>
+<tr class="separator:a2464fd21252ffcb745287f4f2572d589"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>include/beman/execution/detail/<a class="el" href="env_8hpp_source.html">env.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespacebeman.html">beman</a></li><li class="navelem"><a class="el" href="namespacebeman_1_1execution.html">execution</a></li><li class="navelem"><a class="el" href="structbeman_1_1execution_1_1empty__env.html">empty_env</a></li>
+    <li class="navelem"><a class="el" href="namespacebeman.html">beman</a></li><li class="navelem"><a class="el" href="namespacebeman_1_1execution.html">execution</a></li><li class="navelem"><a class="el" href="structbeman_1_1execution_1_1env.html">env</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6 </li>
   </ul>
 </div>

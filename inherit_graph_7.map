@@ -1,3 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structbeman_1_1execution_1_1empty__env.html" title="An empty type used as an environment when there is no environment available." alt="" coords="5,5,224,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,134,200,189"/>
+<area shape="rect" id="node2" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="261,5,464,45"/>
+<area shape="rect" id="node3" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="267,69,458,109"/>
+<area shape="rect" id="node4" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="261,134,464,189"/>
+<area shape="rect" id="node5" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="267,213,458,267"/>
+<area shape="rect" id="node6" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="248,292,477,332"/>
 </map>

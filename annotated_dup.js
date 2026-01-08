@@ -6,7 +6,7 @@ var annotated_dup =
         [ "completion_signatures", "structbeman_1_1execution_1_1completion__signatures.html", null ],
         [ "counting_scope", "classbeman_1_1execution_1_1counting__scope.html", "classbeman_1_1execution_1_1counting__scope" ],
         [ "default_domain", "structbeman_1_1execution_1_1default__domain.html", null ],
-        [ "empty_env", "structbeman_1_1execution_1_1empty__env.html", null ],
+        [ "env", "structbeman_1_1execution_1_1env.html", null ],
         [ "get_allocator_t", "structbeman_1_1execution_1_1get__allocator__t.html", null ],
         [ "get_completion_scheduler_t", "structbeman_1_1execution_1_1get__completion__scheduler__t.html", null ],
         [ "get_completion_signatures_t", "structbeman_1_1execution_1_1get__completion__signatures__t.html", null ],

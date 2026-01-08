@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('default__impls_8hpp_source.html',''); 
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;beman/execution/detail/allocator_aware_move.hpp&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;beman/execution/detail/callable.hpp&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;beman/execution/detail/empty_env.hpp&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;beman/execution/detail/env.hpp&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;beman/execution/detail/forward_like.hpp&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;beman/execution/detail/fwd_env.hpp&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;beman/execution/detail/get_allocator.hpp&gt;</span></div>
@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('default__impls_8hpp_source.html',''); 
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (1 == <span class="keyword">sizeof</span>...(child))</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            <span class="keywordflow">return</span> (::beman::execution::detail::fwd_env(::beman::execution::get_env(child)), ...);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            return ::beman::execution::empty_env{};</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            return ::beman::execution::env&lt;&gt;{};</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    };</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> get_env = [](<span class="keyword">auto</span>, <span class="keyword">auto</span>&amp;, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; <a class="code hl_struct" href="structreceiver.html">receiver</a>) <span class="keyword">noexcept</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        return ::beman::execution::detail::fwd_env(::beman::execution::get_env(<a class="code hl_struct" href="structreceiver.html">receiver</a>));</div>

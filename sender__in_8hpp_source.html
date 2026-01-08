@@ -106,7 +106,7 @@ $(document).ready(function(){initNavTree('sender__in_8hpp_source.html',''); init
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;beman/execution/detail/empty_env.hpp&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;beman/execution/detail/env.hpp&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;beman/execution/detail/get_completion_signatures.hpp&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;beman/execution/detail/queryable.hpp&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;beman/execution/detail/sender.hpp&gt;</span></div>
@@ -115,7 +115,7 @@ $(document).ready(function(){initNavTree('sender__in_8hpp_source.html',''); init
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Env = ::beman::execution::empty_env&gt;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Env = ::beman::execution::env&lt;&gt;&gt;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="conceptbeman_1_1execution_1_1sender__in.html">   17</a></span><span class="keyword">concept </span><a class="code hl_concept" href="conceptbeman_1_1execution_1_1sender__in.html">sender_in</a> =</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    ::beman::execution::sender&lt;Sender&gt; &amp;&amp; ::beman::execution::detail::queryable&lt;Env&gt; &amp;&amp;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">requires</span>(Sender&amp;&amp; <a class="code hl_concept" href="conceptbeman_1_1execution_1_1sender.html">sender</a>, Env&amp;&amp; env) {</div>

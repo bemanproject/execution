@@ -107,7 +107,7 @@ $(document).ready(function(){initNavTree('get__env_8hpp_source.html',''); initRe
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ENV</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;beman/execution/detail/queryable.hpp&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;beman/execution/detail/empty_env.hpp&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;beman/execution/detail/env.hpp&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('get__env_8hpp_source.html',''); initRe
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                          <span class="stringliteral">&quot;get_env requires the result type to be destructible&quot;</span>);</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <span class="keywordflow">return</span> obj.get_env();</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            return ::beman::execution::empty_env{};</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            return ::beman::execution::env&lt;&gt;{};</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        }</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    }</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>};</div>
