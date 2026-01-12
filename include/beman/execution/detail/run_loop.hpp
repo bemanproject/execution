@@ -68,7 +68,7 @@ class run_loop {
     };
     struct sender {
         using sender_concept = ::beman::execution::sender_t;
-        template <typename Env = ::beman::execution::empty_env>
+        template <typename Env = ::beman::execution::env<>>
         auto get_completion_signatures(Env&& env) const noexcept {
             if constexpr (::beman::execution::unstoppable_token<decltype(::beman::execution::get_stop_token(env))>)
                 return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>{};
