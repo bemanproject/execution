@@ -640,6 +640,13 @@ The expression <code>schedule(<i>scheduler</i>)</code> creates a sender which up
 The sender adaptors take one or more senders and adapt their respective behavior to complete with a corresponding result. The description uses the informal function <code><i>completions-of</i>(<i>sender</i>)</code> to represent the completion signatures which <code><i>sender</i></code> produces. Also, completion signatures are combined using <code>+</code>: the result is the deduplicated set of the combined completion signatures.
 
 <details>
+<summary><code>affine_on(<i>sender</i>) -> <i>sender-of</i><<i>completions-of</i>(<i>sender</i>)></code></summary>
+The expression <code>affine_on(<i>sender</i>)</code> creates
+a sender which completes on the same scheduler it was started on, even if <code><i>sender</i></code> changes the scheduler. The scheduler to resume on is determined using <code>get_scheduler(get_env(<i>rcvr</i>))</code> where <code><i>rcvr</i></code> is the reciver the sender is <code>connect</code>ed to.
+
+The primary use of <code>affine_on</code> is implementing scheduler affinity for <code>task</code>.
+</details>
+<details>
 <summary>`bulk`</summary>
 </details>
 <details>
@@ -698,6 +705,10 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 <details>
 <summary><code>when_all_with_variant(<i>sender</i>...) -> <i>sender</i></code></summary>
 </details>
+<details>
+<summary><code>write_env(<i>sender</i>, <i>env</i>) -> <i>sender</i></code></summary>
+</details>
+
 
 ### Sender Consumers
 

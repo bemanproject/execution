@@ -16,32 +16,33 @@
 // ----------------------------------------------------------------------------
 
 namespace {
-    template <test_std::scheduler Sched>
-    struct receiver {
-        using receiver_concept = test_std::receiver_t;
-        Sched scheduler_;
-        auto set_value(auto&&...) && noexcept -> void {}
-        auto set_error(auto&&) && noexcept -> void {}
-        auto set_stopped() && noexcept -> void {}
+template <test_std::scheduler Sched>
+struct receiver {
+    using receiver_concept = test_std::receiver_t;
+    Sched scheduler_;
+    auto  set_value(auto&&...) && noexcept -> void {}
+    auto  set_error(auto&&) && noexcept -> void {}
+    auto  set_stopped() && noexcept -> void {}
 
-        auto get_env() const noexcept { return test_std::env{test_std::prop(test_std::get_scheduler, this->scheduler_)}; }
-    };
-    template <test_std::scheduler Sched>
-    receiver(Sched) -> receiver<Sched>;
-}
+    auto get_env() const noexcept { return test_std::env{test_std::prop(test_std::get_scheduler, this->scheduler_)}; }
+};
+template <test_std::scheduler Sched>
+receiver(Sched) -> receiver<Sched>;
+} // namespace
 
 auto main() -> int {
     static_assert(test_std::sender<decltype(test_std::affine_on(test_std::just(42)))>);
     static_assert(test_std::sender<decltype(test_std::just(42) | test_std::affine_on())>);
 
-    //static_assert(test_std::sender_in<decltype(test_std::affine_on(test_std::just(42))), test_std::env<>>);
+    static_assert(not test_std::sender_in<decltype(test_std::affine_on(test_std::just(42))), test_std::env<>>);
 
     test_std::run_loop loop;
-    auto r{receiver(loop.get_scheduler())};
+    auto               r{receiver(loop.get_scheduler())};
     static_assert(test_std::receiver<decltype(r)>);
     auto s{test_std::get_scheduler(test_std::get_env(r))};
     assert(s == loop.get_scheduler());
-    auto st{test_std::transform_sender(test_std::default_domain(), test_std::affine_on(test_std::just(42)), test_std::get_env(r))};
+    auto st{test_std::transform_sender(
+        test_std::default_domain(), test_std::affine_on(test_std::just(42)), test_std::get_env(r))};
     test_std::connect(std::move(st), std::move(r));
     auto s0{test_std::connect(test_std::affine_on(test_std::just(42)), receiver(loop.get_scheduler()))};
     return 0;

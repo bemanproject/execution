@@ -38,6 +38,7 @@
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/schedule.hpp>
 
+#include <beman/execution/detail/affine_on.hpp>
 #include <beman/execution/detail/bulk.hpp>
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/into_variant.hpp>
