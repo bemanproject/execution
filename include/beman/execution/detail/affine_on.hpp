@@ -20,6 +20,7 @@
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
+#include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/write_env.hpp>
@@ -81,7 +82,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
      * @return A transformed sender that is affined to the scheduler.
      */
     template <::beman::execution::sender Sender, typename Env>
-        requires requires(const Env& env) {
+        requires ::beman::execution::detail::sender_for<Sender, affine_on_t> && requires(const Env& env) {
             { ::beman::execution::get_scheduler(env) } -> ::beman::execution::scheduler;
             { ::beman::execution::schedule(::beman::execution::get_scheduler(env)) } -> ::beman::execution::sender;
             {
@@ -94,8 +95,8 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             } -> ::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>;
         }
     static auto transform_sender(Sender&& sender, const Env& env) {
-        auto& [tag, data, child] = sender;
-        using child_tag_t        = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
+        [[maybe_unused]] auto& [tag, data, child] = sender;
+        using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
 
         if constexpr (requires(const child_tag_t& t) {
                           {
