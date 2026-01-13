@@ -30,7 +30,23 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
+
+/**
+ * @brief The affine_on_t struct is a sender adaptor closure that transforms a sender
+ *        to complete on the scheduler obtained from the receiver's environment.
+ *
+ * This adaptor implements scheduler affinity to adapt a sender to complete on the
+ * scheduler obtained the receiver's environment. The get_scheduler query is used
+ * to obtain the scheduler on which the sender gets started.
+ */
 struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
+    /**
+     * @brief Adapt a sender with affine_on.
+     *
+     * @tparam Sender The deduced type of the sender to be transformed.
+     * @param sender The sender to be transformed.
+     * @return An adapted sender to complete on the scheduler it was started on.
+     */
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
         return ::beman::execution::detail::transform_sender(
@@ -38,8 +54,32 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             ::beman::execution::detail::make_sender(
                 *this, ::beman::execution::env<>{}, ::std::forward<Sender>(sender)));
     }
+
+    /**
+     * @brief Overload for creating a sender adaptor from affine_on.
+     *
+     * @return A sender adaptor for the affine_on_t.
+     */
     auto operator()() const { return ::beman::execution::detail::sender_adaptor{*this}; }
 
+    /**
+     * @brief affine_on is implemented by transforming it into a use of schedule_from.
+     *
+     * The constraints ensure that the environment provides a scheduler which is
+     * infallible and, thus, can be used to guarantee completion on the correct
+     * scheduler.
+     *
+     * The implementation first tries to see if the child sender's tag has a custom
+     * affine_on implementation. If it does, that is used. Otherwise, the default
+     * implementation gets a scheduler from the environment and uses schedule_from
+     * to adapt the sender to complete on that scheduler.
+     *
+     * @tparam Sender The type of the sender to be transformed.
+     * @tparam Env The type of the environment providing the scheduler.
+     * @param sender The sender to be transformed.
+     * @param env The environment providing the scheduler.
+     * @return A transformed sender that is affined to the scheduler.
+     */
     template <::beman::execution::sender Sender, typename Env>
         requires requires(const Env& env) {
             { ::beman::execution::get_scheduler(env) } -> ::beman::execution::scheduler;
@@ -75,9 +115,14 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
         }
     }
 };
+
 } // namespace beman::execution::detail
 
 namespace beman::execution {
+/**
+ * @brief affine_on is a CPO, used to adapt a sender to complete on the scheduler
+ *      it got started on which is derived from get_scheduler on the receiver's environment.
+ */
 using beman::execution::detail::affine_on_t;
 inline constexpr affine_on_t affine_on{};
 } // namespace beman::execution
