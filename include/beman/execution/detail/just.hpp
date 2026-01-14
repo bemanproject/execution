@@ -34,6 +34,10 @@ struct just_t {
         return ::beman::execution::detail::make_sender(
             *this, ::beman::execution::detail::product_type{::std::forward<T>(arg)...});
     }
+    template <::beman::execution::sender Sender>
+    static auto affine_on(Sender&& sndr, const auto&) noexcept {
+        return ::std::forward<Sender>(sndr);
+    }
 };
 
 template <typename Completion, typename... T, typename Env>
