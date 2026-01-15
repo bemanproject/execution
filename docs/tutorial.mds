@@ -469,7 +469,7 @@ pipe notation.
 
   int main() {
     int f{3};
-    try { *tst::sync_wait(ex::just(17) | ex::let_value([f](int i){ throw f * i; return ex::just(); })); }
+    try { tst::sync_wait(ex::just(17) | ex::let_value([f](int i){ throw f * i; return ex::just(); })); }
     catch (int e) {
       std::cout << "e=" << e << "\n";
     }

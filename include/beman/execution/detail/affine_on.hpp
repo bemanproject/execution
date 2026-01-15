@@ -21,6 +21,7 @@
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
+#include <beman/execution/detail/sender_has_affine_on.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/write_env.hpp>
@@ -98,11 +99,16 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
         [[maybe_unused]] auto& [tag, data, child] = sender;
         using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
 
+#if 0
         if constexpr (requires(const child_tag_t& t) {
                           {
                               t.affine_on(::beman::execution::detail::forward_like<Sender>(child), env)
                           } -> ::beman::execution::sender;
-                      }) {
+                      })
+#else
+        if constexpr (::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>)
+#endif
+        {
             return child_tag_t{}.affine_on(::beman::execution::detail::forward_like<Sender>(child), env);
         } else {
             return ::beman::execution::write_env(

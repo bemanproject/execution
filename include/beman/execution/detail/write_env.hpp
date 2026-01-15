@@ -11,6 +11,7 @@
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/nested_sender_has_affine_on.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -24,6 +25,11 @@ struct write_env_t {
             *this, ::std::forward<Env>(env), ::std::forward<Sender>(sender));
     }
     static auto name() { return "write_env_t"; }
+    template <::beman::execution::sender Sender, typename Env>
+        requires ::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>
+    static auto affine_on(Sender&& sndr, const Env&) noexcept {
+        return ::std::forward<Sender>(sndr);
+    }
 };
 
 template <typename NewEnv, typename Child, typename Env>
