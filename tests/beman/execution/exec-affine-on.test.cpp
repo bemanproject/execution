@@ -163,7 +163,7 @@ auto main() -> int {
     auto s0{test_std::connect(test_std::affine_on(test_std::just(42)), receiver(loop.get_scheduler()))};
 
     std::thread t{[&]() noexcept { loop.run(); }};
-    auto         r0 = test_std::sync_wait(test_std::affine_on(test_std::just(42)));
+    auto        r0 = test_std::sync_wait(test_std::affine_on(test_std::just(42)));
     assert(r0);
     auto [v0] = *r0;
     assert(v0 == 42);
