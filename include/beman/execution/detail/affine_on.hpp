@@ -5,7 +5,6 @@
 #define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_AFFINE_ON
 
 #include <beman/execution/detail/env.hpp>
-#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
