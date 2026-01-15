@@ -162,7 +162,7 @@ auto main() -> int {
     test_std::connect(std::move(st), std::move(r));
     auto s0{test_std::connect(test_std::affine_on(test_std::just(42)), receiver(loop.get_scheduler()))};
 
-    std::jthread t{[&]() noexcept { loop.run(); }};
+    std::thread t{[&]() noexcept { loop.run(); }};
     auto         r0 = test_std::sync_wait(test_std::affine_on(test_std::just(42)));
     assert(r0);
     auto [v0] = *r0;
@@ -197,6 +197,7 @@ auto main() -> int {
         test_std::upon_stopped(test_std::starts_on(loop.get_scheduler(), test_std::just_stopped()), [] {}), 1u);
 
     loop.finish();
+    t.join();
 
     return 0;
 }

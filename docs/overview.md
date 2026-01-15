@@ -642,7 +642,7 @@ The sender adaptors take one or more senders and adapt their respective behavior
 <details>
 <summary><code>affine_on(<i>sender</i>) -> <i>sender-of</i><<i>completions-of</i>(<i>sender</i>)></code></summary>
 The expression <code>affine_on(<i>sender</i>)</code> creates
-a sender which completes on the same scheduler it was started on, even if <code><i>sender</i></code> changes the scheduler. The scheduler to resume on is determined using <code>get_scheduler(get_env(<i>rcvr</i>))</code> where <code><i>rcvr</i></code> is the reciver the sender is <code>connect</code>ed to.
+a sender which completes on the same scheduler it was started on, even if <code><i>sender</i></code> changes the scheduler. The scheduler to resume on is determined using <code>get_scheduler(get_env(<i>rcvr</i>))</code> where <code><i>rcvr</i></code> is the receiver the sender is <code>connect</code>ed to.
 
 The primary use of <code>affine_on</code> is implementing scheduler affinity for <code>task</code>.
 </details>
