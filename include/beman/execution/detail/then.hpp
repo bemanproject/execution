@@ -16,6 +16,7 @@
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/movable_value.hpp>
+#include <beman/execution/detail/nested_sender_has_affine_on.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
@@ -45,6 +46,11 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
         return ::beman::execution::transform_sender(
             domain,
             ::beman::execution::detail::make_sender(*this, ::std::forward<Fun>(fun), ::std::forward<Sender>(sender)));
+    }
+    template <::beman::execution::sender Sender, typename Env>
+        requires ::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>
+    static auto affine_on(Sender&& sndr, const Env&) noexcept {
+        return ::std::forward<Sender>(sndr);
     }
 };
 

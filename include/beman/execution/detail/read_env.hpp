@@ -21,6 +21,10 @@
 namespace beman::execution::detail {
 struct read_env_t {
     auto operator()(auto&& query) const { return ::beman::execution::detail::make_sender(*this, query); }
+    template <::beman::execution::sender Sender>
+    static auto affine_on(Sender&& sndr, const auto&) noexcept {
+        return ::std::forward<Sender>(sndr);
+    }
 };
 
 template <>

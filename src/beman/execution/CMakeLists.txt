@@ -26,6 +26,7 @@ target_sources(
             TYPE HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}/include
             FILES
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/affine_on.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/allocator_aware_move.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/almost_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/apply_sender.hpp
@@ -118,6 +119,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_transform.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_unique.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/movable_value.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nested_sender_has_affine_on.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/never_stop_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/non_assignable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nostopstate.hpp
@@ -149,6 +151,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_awaitable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_decompose.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_for.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_has_affine_on.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_in.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sends_stopped.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/set_error.hpp
