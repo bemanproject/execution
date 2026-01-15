@@ -1,5 +1,6 @@
 var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
 [
+    [ "affine_on.hpp", "affine__on_8hpp_source.html", null ],
     [ "allocator_aware_move.hpp", "allocator__aware__move_8hpp_source.html", null ],
     [ "almost_scheduler.hpp", "almost__scheduler_8hpp_source.html", null ],
     [ "apply_sender.hpp", "apply__sender_8hpp_source.html", null ],
@@ -92,6 +93,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "meta_transform.hpp", "meta__transform_8hpp_source.html", null ],
     [ "meta_unique.hpp", "meta__unique_8hpp_source.html", null ],
     [ "movable_value.hpp", "movable__value_8hpp_source.html", null ],
+    [ "nested_sender_has_affine_on.hpp", "nested__sender__has__affine__on_8hpp_source.html", null ],
     [ "never_stop_token.hpp", "never__stop__token_8hpp_source.html", null ],
     [ "non_assignable.hpp", "non__assignable_8hpp_source.html", null ],
     [ "nostopstate.hpp", "nostopstate_8hpp_source.html", null ],
@@ -123,6 +125,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "sender_awaitable.hpp", "sender__awaitable_8hpp_source.html", null ],
     [ "sender_decompose.hpp", "sender__decompose_8hpp_source.html", null ],
     [ "sender_for.hpp", "sender__for_8hpp_source.html", null ],
+    [ "sender_has_affine_on.hpp", "sender__has__affine__on_8hpp_source.html", null ],
     [ "sender_in.hpp", "sender__in_8hpp_source.html", null ],
     [ "sends_stopped.hpp", "sends__stopped_8hpp_source.html", null ],
     [ "set_error.hpp", "set__error_8hpp_source.html", null ],

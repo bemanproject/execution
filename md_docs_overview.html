@@ -734,6 +734,12 @@ Sender Adaptors</h3>
 <p>The sender adaptors take one or more senders and adapt their respective behavior to complete with a corresponding result. The description uses the informal function <code><em>completions-of</em>(<em>sender</em>)</code> to represent the completion signatures which <code><em>sender</em></code> produces. Also, completion signatures are combined using <code>+</code>: the result is the deduplicated set of the combined completion signatures.</p>
 <details >
 <summary >
+<code>affine_on(<em>sender</em>) -&gt; <em>sender-of</em>&lt;<em>completions-of</em>(<em>sender</em>)&gt;</code></summary>
+<p>The expression <code>affine_on(<em>sender</em>)</code> creates a sender which completes on the same scheduler it was started on, even if <code><em>sender</em></code> changes the scheduler. The scheduler to resume on is determined using <code>get_scheduler(get_env(<em>rcvr</em>))</code> where <code><em>rcvr</em></code> is the receiver the sender is <code>connect</code>ed to.</p>
+<p>The primary use of <code>affine_on</code> is implementing scheduler affinity for <code>task</code>. </p>
+</details>
+<details >
+<summary >
 <code>bulk</code></summary>
 <p></p>
 </details>
@@ -821,6 +827,11 @@ Sender Adaptors</h3>
 <details >
 <summary >
 <code>when_all_with_variant(<em>sender</em>...) -&gt; <em>sender</em></code></summary>
+<p></p>
+</details>
+<details >
+<summary >
+<code>write_env(<em>sender</em>, <em>env</em>) -&gt; <em>sender</em></code></summary>
 <p></p>
 </details>
 <h3><a class="anchor" id="autotoc_md10"></a>

@@ -64,6 +64,7 @@ var hierarchy =
     [ "beman::execution::scheduler_t", "structbeman_1_1execution_1_1scheduler__t.html", null ],
     [ "tst::repeat_effect_unilt_t::sender< Child, Fun >", "structtst_1_1repeat__effect__unilt__t_1_1sender.html", null ],
     [ "beman::execution::detail::pipeable::sender_adaptor_closure_base", null, [
+      [ "beman::execution::sender_adaptor_closure< affine_on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< bulk_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< sender_adaptor< Adaptor, T... > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],

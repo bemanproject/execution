@@ -75,8 +75,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"allocator__aware__move_8hpp_source.html",
-"split_8hpp_source.html"
+"affine__on_8hpp_source.html",
+"spawn_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
