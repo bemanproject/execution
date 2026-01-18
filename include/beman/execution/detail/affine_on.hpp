@@ -111,7 +111,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
         if constexpr (::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>)
 #endif
         {
-            return child_tag_t{}.affine_on(::beman::execution::detail::forward_like<Sender>(child), env);
+            return child_tag_t().affine_on(::beman::execution::detail::forward_like<Sender>(child), env);
         } else {
             return ::beman::execution::write_env(
                 ::beman::execution::schedule_from(
