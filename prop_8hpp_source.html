@@ -122,7 +122,7 @@ $(document).ready(function(){initNavTree('prop_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">struct </span>prop;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Query, <span class="keyword">typename</span> Value&gt;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>prop(Query, Value) -&gt; prop&lt;Query, ::std::unwrap_reference_t&lt;Value&gt;&gt;;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>prop(Query, Value, ::beman::execution::detail::non_assignable = {}) -&gt; prop&lt;Query, ::std::unwrap_reference_t&lt;Value&gt;&gt;;</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>} <span class="comment">// namespace beman::execution</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
@@ -150,7 +150,7 @@ $(document).ready(function(){initNavTree('prop_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:33</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:35</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1prop_html"><div class="ttname"><a href="structbeman_1_1execution_1_1prop.html">beman::execution::prop</a></div><div class="ttdef"><b>Definition:</b> prop.hpp:33</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
