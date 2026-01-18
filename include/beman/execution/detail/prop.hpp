@@ -20,7 +20,7 @@ template <typename Query, typename Value>
 struct prop;
 
 template <typename Query, typename Value>
-prop(Query, Value) -> prop<Query, ::std::unwrap_reference_t<Value>>;
+prop(Query, Value, ::beman::execution::detail::non_assignable = {}) -> prop<Query, ::std::unwrap_reference_t<Value>>;
 } // namespace beman::execution
 
 template <typename V>
