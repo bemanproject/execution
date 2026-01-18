@@ -28,6 +28,8 @@
 #include <concepts>
 #include <type_traits>
 
+#include <beman/execution/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -90,7 +92,8 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
                     ::beman::execution::schedule(::beman::execution::get_scheduler(env)),
                     ::beman::execution::detail::join_env(
                         ::beman::execution::env{::beman::execution::prop{::beman::execution::get_stop_token,
-                                                                         ::beman::execution::never_stop_token{}}},
+                                                                         ::beman::execution::never_stop_token{},
+                                                                         {}}},
                         env))
             } -> ::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>;
         }
@@ -98,7 +101,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
         [[maybe_unused]] auto& [tag, data, child] = sender;
         using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
 
-#if 0
+#if 1
         if constexpr (requires(const child_tag_t& t) {
                           {
                               t.affine_on(::beman::execution::detail::forward_like<Sender>(child), env)
@@ -134,5 +137,7 @@ inline constexpr affine_on_t affine_on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution/detail/suppress_pop.hpp>
 
 #endif
