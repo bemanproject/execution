@@ -67,18 +67,18 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
 
     template <typename Ev>
     struct ao_env {
-        Ev ev_;
-        auto query(::beman::execution::get_stop_token_t const&) const noexcept  ->
-            ::beman::execution::never_stop_token {
+        Ev   ev_;
+        auto query(const ::beman::execution::get_stop_token_t&) const noexcept
+            -> ::beman::execution::never_stop_token {
             return ::beman::execution::never_stop_token();
         }
         template <typename Q>
-        auto query(Q const& q) const noexcept -> decltype(q(this->ev_)) {
+        auto query(const Q& q) const noexcept -> decltype(q(this->ev_)) {
             return q(this->ev_);
         }
     };
     template <typename Ev>
-    ao_env(Ev const&)->ao_env<Ev>;
+    ao_env(const Ev&) -> ao_env<Ev>;
 
     /**
      * @brief affine_on is implemented by transforming it into a use of schedule_from.
@@ -106,9 +106,8 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
                 ::beman::execution::get_completion_signatures(
                     ::beman::execution::schedule(::beman::execution::get_scheduler(env)),
                     ::beman::execution::detail::join_env(
-                        ::beman::execution::env{::beman::execution::prop{::beman::execution::get_stop_token,
-                                                                         ::beman::execution::never_stop_token{},
-                                                                         {}}},
+                        ::beman::execution::env{::beman::execution::prop{
+                            ::beman::execution::get_stop_token, ::beman::execution::never_stop_token{}, {}}},
                         env))
             } -> ::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>;
         }
@@ -128,8 +127,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
         {
             constexpr child_tag_t t{};
             return t.affine_on(::beman::execution::detail::forward_like<Sender>(child), ev);
-        } else
-        {
+        } else {
             return ::beman::execution::write_env(
                 ::beman::execution::schedule_from(
                     ::beman::execution::get_scheduler(ev),
