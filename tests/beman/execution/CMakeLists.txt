@@ -21,6 +21,7 @@ endif()
 list(
     APPEND execution_tests
     exec-affine-on.test
+    issue-200.test
     issue-174.test
     issue-186.test
     exec-scope-counting.test
