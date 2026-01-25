@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_TOKEN
 
 #include <beman/execution/detail/check_type_alias_exist.hpp>
+#include <beman/execution/detail/stop_token_traits.hpp>
 #include <concepts>
 
 // ----------------------------------------------------------------------------
@@ -12,7 +13,8 @@
 namespace beman::execution {
 template <typename Token>
 concept stoppable_token = requires(const Token& token) {
-    typename ::beman::execution::detail::check_type_alias_exist<Token::template callback_type>;
+    typename ::beman::execution::detail::check_type_alias_exist<
+        ::beman::execution::detail::stoppable_token_traits<Token>::template callback_type>;
     { token.stop_requested() } noexcept -> ::std::same_as<bool>;
     { token.stop_possible() } noexcept -> ::std::same_as<bool>;
     { Token(token) } noexcept;

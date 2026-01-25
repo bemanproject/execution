@@ -4,13 +4,15 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR
 
+#include <beman/execution/detail/stop_token_traits.hpp>
 #include <concepts>
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
 template <class Token, class CallbackFun>
-using stop_callback_for_t = typename Token::template callback_type<CallbackFun>;
+using stop_callback_for_t =
+    typename ::beman::execution::detail::stoppable_token_traits<Token>::template callback_type<CallbackFun>;
 }
 
 namespace beman::execution::detail {
