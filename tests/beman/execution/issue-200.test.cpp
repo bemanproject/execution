@@ -8,6 +8,8 @@
 // ----------------------------------------------------------------------------
 
 auto main() -> int {
+#if not defined(__clang__) || __clang_major__ > 19
     static_assert(test_std::stoppable_token<std::stop_token>);
+#endif
     return 0;
 }
