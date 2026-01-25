@@ -22,9 +22,9 @@ struct stoppable_token_traits<Token> {
 
 #if not defined(__clang__) || __clang_major__ > 19
 template <>
-struct stoppable_token_traits<std::stop_token> {
+struct stoppable_token_traits<::std::stop_token> {
     template <typename Fn>
-    using callback_type = std::stop_callback<Fn>;
+    using callback_type = ::std::stop_callback<Fn>;
 };
 #endif
 } // namespace beman::execution::detail
