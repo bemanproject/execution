@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/immovable.hpp>
 #include <atomic>
 #include <memory>

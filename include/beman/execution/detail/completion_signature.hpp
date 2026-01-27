@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>

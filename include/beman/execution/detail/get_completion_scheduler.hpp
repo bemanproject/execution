@@ -4,7 +4,6 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER
 
-#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/completion_tag.hpp>
 #include <beman/execution/detail/decayed_same_as.hpp>

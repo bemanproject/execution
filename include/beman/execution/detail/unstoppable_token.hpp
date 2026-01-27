@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_TOKEN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_TOKEN
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/stoppable_source.hpp>
 #include <type_traits>
 

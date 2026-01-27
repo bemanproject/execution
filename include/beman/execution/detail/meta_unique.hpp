@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_UNIQUE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_UNIQUE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/meta_contains.hpp>
 #include <beman/execution/detail/meta_prepend.hpp>
 #include <concepts>

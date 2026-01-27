@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/queryable.hpp>

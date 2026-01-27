@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_WRITE_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WRITE_ENV
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/impls_for.hpp>

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TYPEOF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TYPEOF
 
+#include <beman/execution/detail/common.hpp>
 #include <type_traits>
 
 // ----------------------------------------------------------------------------

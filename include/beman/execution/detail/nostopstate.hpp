@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NOSTOPSTATE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NOSTOPSTATE
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 
 // ----------------------------------------------------------------------------
 

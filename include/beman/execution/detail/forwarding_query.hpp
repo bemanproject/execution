@@ -4,7 +4,6 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARDING_QUERY
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARDING_QUERY
 
-#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <concepts>
 #include <type_traits>

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_SOURCE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_SOURCE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/stoppable_token.hpp>
 #include <concepts>
 

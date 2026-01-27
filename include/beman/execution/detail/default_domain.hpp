@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DEFAULT_DOMAIN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DEFAULT_DOMAIN
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>

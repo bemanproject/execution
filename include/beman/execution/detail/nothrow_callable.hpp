@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NOTHROW_CALLABLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NOTHROW_CALLABLE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/callable.hpp>
 
 // ----------------------------------------------------------------------------

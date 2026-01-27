@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_LET
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_LET
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/allocator_aware_move.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>

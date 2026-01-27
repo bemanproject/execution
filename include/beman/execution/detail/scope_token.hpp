@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>

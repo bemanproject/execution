@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ENV
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <type_traits>

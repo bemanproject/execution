@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_AWAITABLE_SENDERS
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_AWAITABLE_SENDERS
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/as_awaitable.hpp>
 #include <beman/execution/detail/class_type.hpp>
 #include <beman/execution/detail/call_result_t.hpp>

@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SYNC_WAIT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SYNC_WAIT
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/as_except_ptr.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_SENDER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/basic_operation.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/decays_to.hpp>

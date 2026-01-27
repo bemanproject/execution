@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_APPLY_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_APPLY_SENDER
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <utility>

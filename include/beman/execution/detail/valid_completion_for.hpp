@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_FOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_FOR
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/set_error.hpp>

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AS_TUPLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AS_TUPLE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 
 // ----------------------------------------------------------------------------

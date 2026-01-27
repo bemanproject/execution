@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_SENDER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/sender.hpp>

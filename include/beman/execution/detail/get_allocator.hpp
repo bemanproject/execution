@@ -4,7 +4,6 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ALLOCATOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ALLOCATOR
 
-#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/simple_allocator.hpp>

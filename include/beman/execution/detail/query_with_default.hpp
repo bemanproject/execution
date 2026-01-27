@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_QUERY_WITH_DEFAULT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_QUERY_WITH_DEFAULT
 
+#include <beman/execution/detail/common.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------

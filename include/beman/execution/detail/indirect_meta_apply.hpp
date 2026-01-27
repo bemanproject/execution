@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_INDIRECT_META_APPLY
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INDIRECT_META_APPLY
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {

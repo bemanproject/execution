@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_FROM
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_FROM
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>

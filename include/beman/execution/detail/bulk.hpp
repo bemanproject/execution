@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BULK
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BULK
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include "beman/execution/detail/sender_adaptor.hpp"
 #include "beman/execution/detail/sender_adaptor_closure.hpp"
 #include <beman/execution/detail/get_completion_signatures.hpp>

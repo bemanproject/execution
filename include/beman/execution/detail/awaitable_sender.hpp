@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AWAITABLE_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AWAITABLE_SENDER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/single_sender.hpp>
 

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_INDICES_FOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INDICES_FOR
 
+#include <beman/execution/detail/common.hpp>
 #include <type_traits>
 
 // ----------------------------------------------------------------------------

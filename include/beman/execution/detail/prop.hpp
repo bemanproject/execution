@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/non_assignable.hpp>
 #include <type_traits>

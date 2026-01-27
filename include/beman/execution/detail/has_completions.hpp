@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_HAS_COMPLETIONS
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_HAS_COMPLETIONS
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/valid_completion_for.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 

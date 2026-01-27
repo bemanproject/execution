@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_QUERYABLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_QUERYABLE
 
+#include <beman/execution/detail/common.hpp>
 #include <concepts>
 
 // ----------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_OF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_OF
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>

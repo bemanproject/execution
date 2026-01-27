@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_DOMAIN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_DOMAIN
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>

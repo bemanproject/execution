@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/scope_token.hpp>

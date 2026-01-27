@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_PROMISE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_PROMISE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/with_await_transform.hpp>
 #include <coroutine>
 

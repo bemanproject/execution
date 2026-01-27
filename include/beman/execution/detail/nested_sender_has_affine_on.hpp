@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NESTED_SENDER_HAS_AFFINE_ON
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NESTED_SENDER_HAS_AFFINE_ON
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender_has_affine_on.hpp>
 
 // ----------------------------------------------------------------------------

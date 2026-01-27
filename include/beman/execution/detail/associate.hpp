@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ASSOCIATE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ASSOCIATE
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/connect.hpp>

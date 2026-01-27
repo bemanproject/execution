@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NON_ASSIGNABLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NON_ASSIGNABLE
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {

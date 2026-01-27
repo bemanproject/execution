@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CLASS_TYPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CLASS_TYPE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/decays_to.hpp>
 #include <type_traits>
 

@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/queryable.hpp>

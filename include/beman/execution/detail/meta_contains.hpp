@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_CONTAINS
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_CONTAINS
 
+#include <beman/execution/detail/common.hpp>
 #include <concepts>
 
 // ----------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_COUNTING_SCOPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_COUNTING_SCOPE
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/counting_scope_base.hpp>
 #include <beman/execution/detail/counting_scope_join.hpp>
 #include <beman/execution/detail/sender.hpp>

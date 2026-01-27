@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DELEGATION_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DELEGATION_SCHEDULER
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <utility>

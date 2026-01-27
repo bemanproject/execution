@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CHILD_TYPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CHILD_TYPE
 
+#include <beman/execution/detail/common.hpp>
 #include <cstddef>
 #include <type_traits>
 

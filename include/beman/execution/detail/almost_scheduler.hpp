@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ALMOST_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ALMOST_SCHEDULER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/scheduler_t.hpp>

@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/schedule.hpp>
 #include <type_traits>

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_CONTAIN_SAME
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_CONTAIN_SAME
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/meta_contains.hpp>
 
 // ----------------------------------------------------------------------------

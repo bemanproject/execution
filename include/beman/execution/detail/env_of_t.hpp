@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_OF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_OF
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <type_traits>
 

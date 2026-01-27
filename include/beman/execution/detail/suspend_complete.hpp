@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE
 
+#include <beman/execution/detail/common.hpp>
 #include <exception>
 #include <coroutine>
 #include <utility>

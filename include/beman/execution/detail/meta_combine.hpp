@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_COMBINE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_COMBINE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/type_list.hpp>
 #include <type_traits>
 

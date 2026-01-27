@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_WHEN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_WHEN
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/stoppable_token.hpp>

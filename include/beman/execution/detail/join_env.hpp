@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_JOIN_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_JOIN_ENV
 
+#include <beman/execution/detail/common.hpp>
 #include <type_traits>
 #include <utility>
 

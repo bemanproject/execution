@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_FILTER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_FILTER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/meta_prepend.hpp>
 #include <type_traits>
 

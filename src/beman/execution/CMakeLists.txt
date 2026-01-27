@@ -55,7 +55,6 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures_of_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_tag.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/config.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect_all.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect_all_result.hpp

@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_RECEIVER_OF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_RECEIVER_OF
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/has_completions.hpp>
 #include <beman/execution/detail/receiver.hpp>
 

@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/almost_scheduler.hpp>
 #include <beman/execution/detail/decayed_same_as.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>

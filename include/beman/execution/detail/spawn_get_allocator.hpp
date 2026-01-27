@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_GET_ALLOCATOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_GET_ALLOCATOR
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/join_env.hpp>

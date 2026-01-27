@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDS_STOPPED
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDS_STOPPED
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/gather_signatures.hpp>

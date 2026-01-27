@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/immovable.hpp>
 #include <cstddef>
 #include <exception>

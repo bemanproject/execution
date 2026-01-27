@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/get_domain_late.hpp>
 #include <beman/execution/detail/get_env.hpp>

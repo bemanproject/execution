@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_RECEIVER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_RECEIVER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/basic_state.hpp>
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/env_type.hpp>

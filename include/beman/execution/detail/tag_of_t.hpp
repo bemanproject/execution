@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
 #include <type_traits>
 

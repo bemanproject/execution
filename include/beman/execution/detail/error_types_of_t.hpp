@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/gather_signatures.hpp>

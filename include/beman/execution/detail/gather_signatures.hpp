@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GATHER_SIGNATURES
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GATHER_SIGNATURES
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/meta_filter.hpp>
 #include <beman/execution/detail/indirect_meta_apply.hpp>
 #include <beman/execution/detail/valid_completion_signatures.hpp>

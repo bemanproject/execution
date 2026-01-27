@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/completion_signature.hpp>
 #include <concepts>
 #include <type_traits>

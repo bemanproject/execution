@@ -4,8 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TYPE_LIST
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TYPE_LIST
 
+#include <beman/execution/detail/common.hpp>
 #include "beman/execution/detail/type_list.hpp"
-
 #include <type_traits>
 
 // ----------------------------------------------------------------------------

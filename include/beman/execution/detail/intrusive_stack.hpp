@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_INTRUSIVE_QUEUE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INTRUSIVE_QUEUE
 
+#include <beman/execution/detail/common.hpp>
 #include <cassert>
 #include <utility>
 

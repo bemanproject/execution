@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NOTIFY
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NOTIFY
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/immovable.hpp>
 #include <mutex>

@@ -4,9 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE
 
-#include <beman/execution/detail/config.hpp>
-#include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/common.hpp>
+#include <beman/execution/detail/sender.hpp>
 #include <utility>
 
 #include <beman/execution/detail/suppress_push.hpp>

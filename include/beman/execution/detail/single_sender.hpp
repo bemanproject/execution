@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/single_sender_value_type.hpp>
 

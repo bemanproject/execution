@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_SIZE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_SIZE
 
+#include <beman/execution/detail/common.hpp>
 #include <cstddef>
 
 // ----------------------------------------------------------------------------

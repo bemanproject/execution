@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_STOP_TOKEN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_STOP_TOKEN
 
-#include <beman/execution/detail/config.hpp>
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/never_stop_token.hpp>
 #include <beman/execution/detail/stoppable_token.hpp>

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_DECOMPOSE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_DECOMPOSE
 
+#include <beman/execution/detail/common.hpp>
 #include <tuple>
 #include <type_traits>
 #include <utility>

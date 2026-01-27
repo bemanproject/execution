@@ -6,6 +6,8 @@
 
 // ----------------------------------------------------------------------------
 
+#define BEMAN_EXECUTION_EXPORT
+
 #if defined(disabled__cpp_deleted_function)
 #define BEMAN_EXECUTION_DELETE(msg) delete (msg)
 #else

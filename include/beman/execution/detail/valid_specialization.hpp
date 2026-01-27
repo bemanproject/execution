@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_SPECIALIZATION
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_SPECIALIZATION
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {

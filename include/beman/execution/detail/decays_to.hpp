@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYS_TO
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYS_TO
 
+#include <beman/execution/detail/common.hpp>
 #include <concepts>
 #include <type_traits>
 

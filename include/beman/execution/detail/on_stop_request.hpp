@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ON_STOP_REQUEST
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ON_STOP_REQUEST
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {

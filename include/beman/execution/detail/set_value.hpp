@@ -4,7 +4,6 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SET_VALUE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SET_VALUE
 
-#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <utility>
 

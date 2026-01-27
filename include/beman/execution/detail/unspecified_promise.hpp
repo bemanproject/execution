@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_UNSPECIFIED_PROMISE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_UNSPECIFIED_PROMISE
 
+#include <beman/execution/detail/common.hpp>
 #include <coroutine>
 
 namespace beman::execution::detail {

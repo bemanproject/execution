@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL_RESULT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL_RESULT
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/basic_state.hpp>
 #include <beman/execution/detail/connect_all.hpp>
 #include <beman/execution/detail/call_result_t.hpp>
