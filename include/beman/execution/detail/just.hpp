@@ -60,9 +60,9 @@ struct impls_for<just_t<Completion>> : ::beman::execution::detail::default_impls
 #include <beman/execution/detail/suppress_pop.hpp>
 
 namespace beman::execution {
-using just_t         = ::beman::execution::detail::just_t<::beman::execution::set_value_t>;
-using just_error_t   = ::beman::execution::detail::just_t<::beman::execution::set_error_t>;
-using just_stopped_t = ::beman::execution::detail::just_t<::beman::execution::set_stopped_t>;
+BEMAN_EXECUTION_EXPORT using just_t         = ::beman::execution::detail::just_t<::beman::execution::set_value_t>;
+BEMAN_EXECUTION_EXPORT using just_error_t   = ::beman::execution::detail::just_t<::beman::execution::set_error_t>;
+BEMAN_EXECUTION_EXPORT using just_stopped_t = ::beman::execution::detail::just_t<::beman::execution::set_stopped_t>;
 
 /*!
  * \brief <code>just(_arg_...)</code> yields a sender completing with <code>set_value_t(_Arg_...)</code>
@@ -113,7 +113,7 @@ using just_stopped_t = ::beman::execution::detail::just_t<::beman::execution::se
  * }
  * </pre>
  */
-inline constexpr ::beman::execution::just_t just{};
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::just_t just{};
 
 /*!
  * \brief <code>just_error(_error_)</code> yields a sender completing with <code>set_error_t(_Error_)</code>
@@ -171,7 +171,7 @@ inline constexpr ::beman::execution::just_t just{};
  * }
  * </pre>
  */
-inline constexpr ::beman::execution::just_error_t just_error{};
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::just_error_t just_error{};
 
 /*!
  * \brief <code>just_stopped()</code> yields a sender completing with <code>set_stopped_t()</code>
@@ -225,7 +225,7 @@ inline constexpr ::beman::execution::just_error_t just_error{};
  * }
  * </pre>
  */
-inline constexpr ::beman::execution::just_stopped_t just_stopped{};
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::just_stopped_t just_stopped{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER_T
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER_T
 
+#include <beman/execution/detail/config.hpp>
+;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -11,7 +13,7 @@ namespace beman::execution {
  * \brief Tag type to indicate a class is a scheduler.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-struct scheduler_t {};
+BEMAN_EXECUTION_EXPORT struct scheduler_t {};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

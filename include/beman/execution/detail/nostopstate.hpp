@@ -4,14 +4,16 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NOSTOPSTATE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NOSTOPSTATE
 
+#include <beman/execution/detail/config.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct nostopstate_t {
+BEMAN_EXECUTION_EXPORT struct nostopstate_t {
     explicit nostopstate_t() = default;
 };
 
-inline constexpr nostopstate_t nostopstate{};
+BEMAN_EXECUTION_EXPORT inline constexpr nostopstate_t nostopstate{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

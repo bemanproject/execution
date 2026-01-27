@@ -4,13 +4,14 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_SCHEDULER
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct get_scheduler_t : ::beman::execution::forwarding_query_t {
+BEMAN_EXECUTION_EXPORT struct get_scheduler_t : ::beman::execution::forwarding_query_t {
     template <typename Env>
         requires requires(const get_scheduler_t& self, Env&& env) { ::std::as_const(env).query(self); }
     auto operator()(Env&& env) const noexcept {
@@ -23,7 +24,7 @@ struct get_scheduler_t : ::beman::execution::forwarding_query_t {
     }
 };
 
-inline constexpr get_scheduler_t get_scheduler{};
+BEMAN_EXECUTION_EXPORT inline constexpr get_scheduler_t get_scheduler{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

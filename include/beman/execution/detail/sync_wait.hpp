@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SYNC_WAIT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SYNC_WAIT
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/as_except_ptr.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
@@ -107,7 +108,7 @@ struct sync_wait_t {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using sync_wait_t = ::beman::execution::detail::sync_wait_t;
+BEMAN_EXECUTION_EXPORT using sync_wait_t = ::beman::execution::detail::sync_wait_t;
 /*!
  * \brief <code>sync_wait(_sender_)</code> starts <code>_sender_</code> and waits for its completion.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
@@ -155,7 +156,7 @@ using sync_wait_t = ::beman::execution::detail::sync_wait_t;
  * }
  * </pre>
  */
-inline constexpr ::beman::execution::sync_wait_t sync_wait{};
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::sync_wait_t sync_wait{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

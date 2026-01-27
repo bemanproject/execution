@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/decayed_type_list.hpp>
@@ -260,8 +261,8 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using ::beman::execution::detail::when_all_t;
-inline constexpr ::beman::execution::when_all_t when_all{};
+BEMAN_EXECUTION_EXPORT using when_all_t = ::beman::execution::detail::when_all_t;
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::when_all_t when_all{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

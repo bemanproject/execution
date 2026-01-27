@@ -27,7 +27,7 @@ namespace beman::execution::detail {
  */
 template <typename Tag, typename Data, typename... Child>
 struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child...> {
-    friend struct ::beman::execution::connect_t;
+    friend struct ::beman::execution::detail::connect_t;
     friend struct ::beman::execution::get_completion_signatures_t;
     using sender_concept = ::beman::execution::sender_t;
     using indices_for    = ::std::index_sequence_for<Child...>;

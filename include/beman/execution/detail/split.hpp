@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SPLIT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPLIT
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/atomic_intrusive_stack.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -379,9 +380,9 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using split_t = ::beman::execution::detail::split_t;
+BEMAN_EXECUTION_EXPORT using split_t = ::beman::execution::detail::split_t;
 
-inline constexpr ::beman::execution::split_t split{};
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::split_t split{};
 } // namespace beman::execution
 
 #endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SPLIT

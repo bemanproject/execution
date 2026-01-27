@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/almost_scheduler.hpp>
 #include <beman/execution/detail/decayed_same_as.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
@@ -16,7 +17,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-template <typename Scheduler>
+BEMAN_EXECUTION_EXPORT template <typename Scheduler>
 concept scheduler = ::beman::execution::detail::almost_scheduler<Scheduler> && requires(Scheduler&& sched) {
     {
         ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(

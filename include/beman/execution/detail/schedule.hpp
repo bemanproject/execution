@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <utility>
@@ -13,7 +14,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct schedule_t {
+BEMAN_EXECUTION_EXPORT struct schedule_t {
     template <typename Scheduler>
         requires(not requires(Scheduler&& sched) {
                     { ::std::forward<Scheduler>(sched).schedule() } -> ::beman::execution::sender;
@@ -30,7 +31,7 @@ struct schedule_t {
     }
 };
 
-inline constexpr ::beman::execution::schedule_t schedule{};
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::schedule_t schedule{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

@@ -63,13 +63,18 @@ module_file = sys.argv[1]
 
 project_re = re.compile("(?P<project>(?P<beman>[bB]eman)/.*)/")
 define_re = re.compile("#define")
+export_re = re.compile("BEMAN_EXECUTION_EXPORT (.*)")
 
 
 def write_header(to, header):
     with open(f"include/{header}.hpp") as file:
         for line in file.readlines():
             if include_this_line(line):
-                to.write(line)
+                match = export_re.match(line)
+                if match:
+                    to.write(f"export {match.group(1)}\n")
+                else:
+                    to.write(line)
 
 
 deps = {}
@@ -84,6 +89,7 @@ def build_header(file, to, header):
 
 with open(module_file, "w") as to:
     to.write("// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception\n\n")
+    to.write("module;\n\n")
     to.write("#ifdef USE_STD_MODULE\n")
     to.write("import std;\n")
     to.write("#else\n")
@@ -92,12 +98,11 @@ with open(module_file, "w") as to:
         to.write(f"#include <{include}>\n")
     to.write("#endif\n\n")
 
-    to.write("module beman.execution;\n\n")
+    to.write("export module beman.execution;\n\n")
 
     for header in top:
         if re.match(".*execution26.*", header):
             continue
-        print(f"Building module for {header}")
 
         prolog_done = False
         with open(f"include/{header}.hpp") as file:

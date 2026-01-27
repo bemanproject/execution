@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ENV
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <type_traits>
@@ -12,7 +13,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct get_env_t {
+BEMAN_EXECUTION_EXPORT struct get_env_t {
     template <typename Object>
         requires(not requires(::std::add_const_t<::std::remove_cvref_t<Object>>& object) { object.get_env(); } ||
                  ::beman::execution::detail::queryable<
@@ -30,7 +31,7 @@ struct get_env_t {
     }
 };
 
-inline constexpr get_env_t get_env{};
+BEMAN_EXECUTION_EXPORT inline constexpr get_env_t get_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

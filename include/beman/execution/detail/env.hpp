@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/non_assignable.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <type_traits>
@@ -32,7 +33,7 @@ struct find_env<Q, E0, E...> {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-template <::beman::execution::detail::queryable... Envs>
+BEMAN_EXECUTION_EXPORT template <::beman::execution::detail::queryable... Envs>
 struct env;
 
 template <::beman::execution::detail::queryable... Envs>

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <utility>
@@ -13,7 +14,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct get_domain_t {
+BEMAN_EXECUTION_EXPORT struct get_domain_t {
     template <typename Object>
         requires(not requires(Object&& object, const get_domain_t& tag) {
                     ::std::forward<Object>(object).query(tag);
@@ -37,7 +38,7 @@ struct get_domain_t {
     constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
 };
 
-inline constexpr get_domain_t get_domain{};
+BEMAN_EXECUTION_EXPORT inline constexpr get_domain_t get_domain{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

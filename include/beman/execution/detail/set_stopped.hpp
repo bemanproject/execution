@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SET_STOPPED
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SET_STOPPED
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <utility>
 
@@ -16,7 +17,7 @@ namespace beman::execution {
  * \brief Type of the customization point object for cancellation completions.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-struct set_stopped_t {
+BEMAN_EXECUTION_EXPORT struct set_stopped_t {
     template <typename Receiver>
     auto operator()(Receiver&) const
         -> void = BEMAN_EXECUTION_DELETE("set_stopped requires the receiver to be passed as non-const rvalue");
@@ -42,7 +43,7 @@ struct set_stopped_t {
  * \brief Customization point object for cancellation completions.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-inline constexpr set_stopped_t set_stopped{};
+BEMAN_EXECUTION_EXPORT inline constexpr set_stopped_t set_stopped{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

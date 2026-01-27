@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARDING_QUERY
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARDING_QUERY
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <concepts>
 #include <type_traits>
@@ -37,7 +38,7 @@ namespace beman::execution {
  * \brief Type of the forwarding_query customization point object
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-using forwarding_query_t = beman::execution::detail::forwarding_query_t;
+BEMAN_EXECUTION_EXPORT using forwarding_query_t = beman::execution::detail::forwarding_query_t;
 /*!
  * \brief The customization point object to determine whether queries should be forwarded
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
@@ -50,7 +51,7 @@ using forwarding_query_t = beman::execution::detail::forwarding_query_t;
  * * If the type of `q` is derived from `forwarding_query_t`.
  * * `false` otherwise.
  */
-inline constexpr forwarding_query_t forwarding_query{};
+BEMAN_EXECUTION_EXPORT inline constexpr forwarding_query_t forwarding_query{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

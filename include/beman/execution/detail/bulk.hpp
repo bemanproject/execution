@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BULK
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BULK
 
+#include <beman/execution/detail/config.hpp>
 #include "beman/execution/detail/sender_adaptor.hpp"
 #include "beman/execution/detail/sender_adaptor_closure.hpp"
 #include <beman/execution/detail/get_completion_signatures.hpp>
@@ -133,8 +134,8 @@ struct completion_signatures_for_impl<
 
 namespace beman::execution {
 
-using ::beman::execution::detail::bulk_t;
-inline constexpr ::beman::execution::bulk_t bulk{};
+BEMAN_EXECUTION_EXPORT using bulk_t = ::beman::execution::detail::bulk_t;
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::bulk_t bulk{};
 
 } // namespace beman::execution
 

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR_CLOSURE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR_CLOSURE
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <concepts>
 #include <type_traits>
@@ -17,7 +18,7 @@ struct sender_adaptor_closure_base {};
 
 namespace beman::execution {
 // NOLINTBEGIN(bugprone-crtp-constructor-accessibility)
-template <typename>
+BEMAN_EXECUTION_EXPORT template <typename>
 struct sender_adaptor_closure : ::beman::execution::detail::pipeable::sender_adaptor_closure_base {};
 // NOLINTEND(bugprone-crtp-constructor-accessibility)
 

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/env.hpp>
@@ -84,8 +85,8 @@ struct spawn_t {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using spawn_t = ::beman::execution::detail::spawn_t;
-inline constexpr spawn_t spawn{};
+BEMAN_EXECUTION_EXPORT using spawn_t = ::beman::execution::detail::spawn_t;
+BEMAN_EXECUTION_EXPORT inline constexpr spawn_t spawn{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE_ON
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE_ON
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
@@ -135,8 +136,8 @@ namespace beman::execution {
  * @brief affine_on is a CPO, used to adapt a sender to complete on the scheduler
  *      it got started on which is derived from get_scheduler on the receiver's environment.
  */
-using beman::execution::detail::affine_on_t;
-inline constexpr affine_on_t affine_on{};
+BEMAN_EXECUTION_EXPORT using affine_on_t = beman::execution::detail::affine_on_t;
+BEMAN_EXECUTION_EXPORT inline constexpr affine_on_t affine_on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/non_assignable.hpp>
 #include <type_traits>
@@ -16,7 +17,7 @@ struct prop_like;
 }
 
 namespace beman::execution {
-template <typename Query, typename Value>
+BEMAN_EXECUTION_EXPORT template <typename Query, typename Value>
 struct prop;
 
 template <typename Query, typename Value>

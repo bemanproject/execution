@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_READ_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_READ_ENV
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -53,8 +54,8 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using read_env_t = beman::execution::detail::read_env_t;
-inline constexpr read_env_t read_env{};
+BEMAN_EXECUTION_EXPORT using read_env_t = beman::execution::detail::read_env_t;
+BEMAN_EXECUTION_EXPORT inline constexpr read_env_t read_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

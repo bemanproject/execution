@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_APPLY_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_APPLY_SENDER
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <utility>
@@ -15,7 +16,7 @@ namespace beman::execution {
  * \brief Function used to transform a sender and its arguments for a domain.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
+BEMAN_EXECUTION_EXPORT template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
     requires requires(Domain domain, Tag tag, Sender&& sender, Args&&... args) {
         domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
     }

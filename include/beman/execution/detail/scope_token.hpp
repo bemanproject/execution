@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
@@ -28,7 +29,7 @@ static_assert(::beman::execution::sender_in<::beman::execution::detail::token_te
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-template <typename Token>
+BEMAN_EXECUTION_EXPORT template <typename Token>
 concept scope_token = ::std::copyable<Token> && requires(Token token) {
     { token.try_associate() } -> ::std::same_as<bool>;
     { token.disassociate() } noexcept;

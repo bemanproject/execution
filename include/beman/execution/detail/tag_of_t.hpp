@@ -4,13 +4,14 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
 #include <type_traits>
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-template <typename Sender>
+BEMAN_EXECUTION_EXPORT template <typename Sender>
 using tag_of_t = typename decltype(::beman::execution::detail::get_sender_meta(::std::declval<Sender&&>()))::tag_type;
 }
 

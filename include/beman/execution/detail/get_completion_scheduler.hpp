@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/completion_tag.hpp>
 #include <beman/execution/detail/decayed_same_as.hpp>
@@ -23,7 +24,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-template <typename Tag>
+BEMAN_EXECUTION_EXPORT template <typename Tag>
 struct get_completion_scheduler_t;
 
 template <typename Tag>
@@ -78,7 +79,7 @@ struct get_completion_scheduler_t : ::beman::execution::forwarding_query_t {
     }
 };
 
-template <::beman::execution::detail::completion_tag Tag>
+BEMAN_EXECUTION_EXPORT template <::beman::execution::detail::completion_tag Tag>
 inline constexpr get_completion_scheduler_t<Tag> get_completion_scheduler{};
 } // namespace beman::execution
 

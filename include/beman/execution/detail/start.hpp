@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_START
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_START
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/common.hpp>
 
 #include <beman/execution/detail/suppress_push.hpp>
@@ -11,7 +12,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct start_t {
+BEMAN_EXECUTION_EXPORT struct start_t {
     template <typename State>
     auto operator()(State&&) const -> void = BEMAN_EXECUTION_DELETE("start(obj) requires an lvalue argument");
     template <typename State>
@@ -44,7 +45,7 @@ struct start_t {
     // NOLINTEND(misc-no-recursion)
 };
 
-inline constexpr start_t start{};
+BEMAN_EXECUTION_EXPORT inline constexpr start_t start{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

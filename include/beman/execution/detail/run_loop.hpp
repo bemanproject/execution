@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_RUN_LOOP
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_RUN_LOOP
 
+#include <beman/execution/detail/config.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -25,7 +26,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-class run_loop {
+BEMAN_EXECUTION_EXPORT class run_loop {
   private:
     struct scheduler;
 
