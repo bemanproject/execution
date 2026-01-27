@@ -2,11 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
-#if 0
-#include <beman/execution/execution.hpp>
-#else
-import beman_execution;
-#endif
+import beman.execution;
 
 // ----------------------------------------------------------------------------
 

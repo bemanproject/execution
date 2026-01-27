@@ -4,7 +4,6 @@
 #ifndef INCLUDED_TEST_EXECUTION
 #define INCLUDED_TEST_EXECUTION
 
-#include <beman/execution/stop_token.hpp>
 #include <concepts>
 #include <cstddef>
 #ifndef _MSC_VER
@@ -22,7 +21,7 @@
 #define ASSERT_UNREACHABLE() assert(::test::unreachable_helper())
 #define TEST(name) auto main() -> int
 
-namespace beman::execution {}
+namespace beman::execution::detail {}
 
 namespace test_std    = ::beman::execution;
 namespace test_detail = ::beman::execution::detail;

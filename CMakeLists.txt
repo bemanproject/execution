@@ -112,11 +112,6 @@ if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
     return()
 endif()
 
-set(CMAKE_CXX_SCAN_FOR_MODULES ON)
-add_library(beman_execution)
-target_sources(beman_execution PUBLIC FILE_SET modules_public TYPE CXX_MODULES
-    FILES modules/execution.cppm)
-
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(

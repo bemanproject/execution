@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "test/execution.hpp"
+#include <beman/execution/stop_token.hpp>
 
 namespace {
 auto test_inplace_stop_token_swap() -> void {
