@@ -55,4 +55,4 @@ using single_sender_value_type = typename single_sender_value_type_helper<Sender
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER_VALUE_TYPE

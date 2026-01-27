@@ -66,4 +66,4 @@ basic_operation(Sender&&, Receiver&&) -> basic_operation<Sender&&, Receiver>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_OPERATION

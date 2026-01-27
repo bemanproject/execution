@@ -48,4 +48,4 @@ fwd_env(Env&&) -> fwd_env<Env>;
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_FWD_ENV

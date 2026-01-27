@@ -33,4 +33,4 @@ decltype(auto) as_except_ptr(Error&& error) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AS_EXCEPT_PTR

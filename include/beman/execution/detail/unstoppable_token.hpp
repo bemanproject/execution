@@ -17,4 +17,4 @@ concept unstoppable_token = ::beman::execution::stoppable_token<Token> &&
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_TOKEN

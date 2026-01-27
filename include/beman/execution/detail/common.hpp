@@ -60,4 +60,4 @@ namespace detail {}
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMMON

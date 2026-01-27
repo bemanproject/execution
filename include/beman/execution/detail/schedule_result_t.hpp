@@ -17,4 +17,4 @@ using schedule_result_t = decltype(::beman::execution::schedule(::std::declval<S
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT

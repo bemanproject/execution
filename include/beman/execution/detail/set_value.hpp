@@ -51,4 +51,4 @@ inline constexpr set_value_t set_value{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SET_VALUE

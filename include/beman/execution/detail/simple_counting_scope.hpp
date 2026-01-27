@@ -52,4 +52,4 @@ inline auto beman::execution::simple_counting_scope::get_token() noexcept
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_COUNTING_SCOPE

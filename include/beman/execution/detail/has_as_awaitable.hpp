@@ -18,4 +18,4 @@ concept has_as_awaitable = requires(T&& obj, Promise& promise) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_HAS_AS_AWAITABLE

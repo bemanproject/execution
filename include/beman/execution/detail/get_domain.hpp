@@ -44,4 +44,4 @@ inline constexpr get_domain_t get_domain{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN

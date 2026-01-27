@@ -21,4 +21,4 @@ concept callable = requires(Fun&& fun, Args&&... args) { ::std::forward<Fun>(fun
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CALLABLE

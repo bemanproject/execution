@@ -43,4 +43,4 @@ inline constexpr ::beman::execution::as_awaitable_t as_awaitable{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AS_AWAITABLE

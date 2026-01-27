@@ -35,4 +35,4 @@ basic_state(Sender&&, Receiver&&) -> basic_state<Sender&&, Receiver>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_STATE

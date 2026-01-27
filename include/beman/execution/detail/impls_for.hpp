@@ -15,4 +15,4 @@ struct impls_for : ::beman::execution::detail::default_impls {};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_IMPLS_FOR

@@ -27,4 +27,4 @@ inline constexpr bool sends_stopped{!::std::same_as<
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDS_STOPPED

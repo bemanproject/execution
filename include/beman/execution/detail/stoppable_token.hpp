@@ -21,4 +21,4 @@ concept stoppable_token = requires(const Token& token) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_TOKEN

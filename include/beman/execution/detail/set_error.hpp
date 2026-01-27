@@ -53,4 +53,4 @@ inline constexpr set_error_t set_error{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SET_ERROR

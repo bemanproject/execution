@@ -25,4 +25,4 @@ constexpr auto get_domain_early(const Sender& sender) noexcept {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_EARLY

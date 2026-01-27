@@ -80,4 +80,4 @@ using gather_signatures = typename ::beman::execution::detail::gather_signatures
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GATHER_SIGNATURES

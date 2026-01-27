@@ -49,4 +49,4 @@ inline constexpr set_stopped_t set_stopped{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SET_STOPPED

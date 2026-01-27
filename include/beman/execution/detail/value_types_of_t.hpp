@@ -27,4 +27,4 @@ using value_types_of_t =
 }
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_VALUE_TYPE_OF

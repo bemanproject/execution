@@ -1,8 +1,8 @@
 // include/beman/execution/detail/associate.hpp                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ASSOCIATE
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ASSOCIATE
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ASSOCIATE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_ASSOCIATE
 
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
@@ -160,4 +160,4 @@ inline constexpr associate_t associate{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ASSOCIATE

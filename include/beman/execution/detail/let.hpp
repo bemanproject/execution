@@ -246,4 +246,4 @@ inline constexpr ::beman::execution::let_value_t   let_value{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_LET

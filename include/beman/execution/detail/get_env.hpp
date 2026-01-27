@@ -35,4 +35,4 @@ inline constexpr get_env_t get_env{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ENV

@@ -82,4 +82,4 @@ auto beman::execution::detail::connect_awaitable_promise<Receiver>::get_return_o
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE_TASK

@@ -26,4 +26,4 @@ inline constexpr bool matching_sig =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_MATCHING_SIG

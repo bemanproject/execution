@@ -255,4 +255,4 @@ inline auto beman::execution::stop_source::request_stop() noexcept -> bool {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE

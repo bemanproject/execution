@@ -26,4 +26,4 @@ struct completion_signatures {};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES

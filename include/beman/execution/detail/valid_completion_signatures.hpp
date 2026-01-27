@@ -21,4 +21,4 @@ concept valid_completion_signatures = valid_completion_signatures_helper<Signatu
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_SIGNATURES

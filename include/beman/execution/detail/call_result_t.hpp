@@ -20,4 +20,4 @@ using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CALL_RESULT

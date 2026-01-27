@@ -50,4 +50,4 @@ struct with_awaitable_senders {
 
 } // namespace beman::execution
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_AWAITABLE_SENDERS

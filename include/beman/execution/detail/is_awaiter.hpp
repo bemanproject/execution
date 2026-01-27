@@ -20,4 +20,4 @@ concept is_awaiter = requires(Awaiter& awaiter, ::std::coroutine_handle<Promise>
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_IS_AWAITER

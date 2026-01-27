@@ -76,4 +76,4 @@ auto forward_like(U&& u) noexcept -> decltype(auto) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARD_LIKE

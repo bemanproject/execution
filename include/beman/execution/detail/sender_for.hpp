@@ -18,4 +18,4 @@ concept sender_for = ::beman::execution::sender<Sender> && ::std::same_as<::bema
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_FOR

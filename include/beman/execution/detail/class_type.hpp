@@ -21,4 +21,4 @@ concept class_type = ::beman::execution::detail::decays_to<Tp, Tp> && ::std::is_
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CLASS_TYPE

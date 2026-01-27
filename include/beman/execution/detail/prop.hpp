@@ -1,8 +1,8 @@
 // include/beman/execution/detail/prop.hpp                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_PROP
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_PROP
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
 
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/non_assignable.hpp>
@@ -47,4 +47,4 @@ struct beman::execution::prop {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_PROP

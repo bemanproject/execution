@@ -22,4 +22,4 @@ using state_type = ::std::decay_t< ::beman::execution::detail::call_result_t<
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STATE_TYPE

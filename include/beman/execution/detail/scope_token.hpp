@@ -1,8 +1,8 @@
 // include/beman/execution/detail/scope_token.hpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
 
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
@@ -40,4 +40,4 @@ concept scope_token = ::std::copyable<Token> && requires(Token token) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN

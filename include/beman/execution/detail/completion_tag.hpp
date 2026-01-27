@@ -25,4 +25,4 @@ concept completion_tag =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_TAG

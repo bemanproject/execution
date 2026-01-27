@@ -17,4 +17,4 @@ concept single_sender = ::beman::execution::sender_in<Sender, Env> &&
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER

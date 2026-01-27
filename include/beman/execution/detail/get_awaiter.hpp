@@ -30,4 +30,4 @@ auto get_awaiter(Expr&& expr, Promise& promise) -> decltype(auto) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_AWAITER

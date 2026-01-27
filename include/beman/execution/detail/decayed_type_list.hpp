@@ -17,4 +17,4 @@ using decayed_type_list = ::beman::execution::detail::type_list<::std::decay_t<A
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TYPE_LIST

@@ -88,4 +88,4 @@ auto connect_awaitable(Awaiter awaiter, Receiver receiver)
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_AWAITABLE

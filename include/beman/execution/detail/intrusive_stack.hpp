@@ -44,4 +44,4 @@ class intrusive_stack<Next> {
 
 } // namespace beman::execution::detail
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_INTRUSIVE_QUEUE

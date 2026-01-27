@@ -37,4 +37,4 @@ sched_env(Scheduler&&) -> sched_env<::std::remove_cvref_t<Scheduler>>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ENV

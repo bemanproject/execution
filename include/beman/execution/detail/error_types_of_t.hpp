@@ -32,4 +32,4 @@ using error_types_of_t =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF

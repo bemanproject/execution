@@ -15,4 +15,4 @@ inline constexpr bool contains{(::std::same_as<T, S> || ...)};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_CONTAINS

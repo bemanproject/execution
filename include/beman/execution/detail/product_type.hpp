@@ -93,12 +93,8 @@ struct product_type : ::beman::execution::detail::product_type_base<::std::index
     }
     template <typename Fun, ::std::size_t... I>
     constexpr auto apply_elements(::std::index_sequence<I...>, Fun&& fun) -> decltype(auto) {
-#if 0
-        return ::std::forward<Fun>(fun)(this->template get<I>()...);
-#else
         //-dk:TODO provide rvalue, lvalue, const lvalue overloads?
         return ::std::forward<Fun>(fun)(std::move(this->template get<I>())...);
-#endif
     }
     template <typename Fun>
     constexpr auto apply(Fun&& fun) -> decltype(auto) {
@@ -149,4 +145,4 @@ struct tuple_element<I, T> {
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_PRODUCT_TYPE

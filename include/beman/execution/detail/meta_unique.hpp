@@ -42,4 +42,4 @@ using unique = typename ::beman::execution::detail::meta::detail::unique<T>::typ
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_UNIQUE

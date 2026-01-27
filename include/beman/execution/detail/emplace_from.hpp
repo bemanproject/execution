@@ -32,4 +32,4 @@ emplace_from(Fun&&) -> emplace_from<::std::remove_cvref_t<Fun>>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_EMPLACE_FROM

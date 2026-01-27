@@ -95,4 +95,4 @@ inline constexpr connect_t connect{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT

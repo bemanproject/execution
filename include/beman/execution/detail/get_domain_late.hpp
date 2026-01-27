@@ -58,4 +58,4 @@ constexpr auto get_domain_late(const Sender& sender, const Env& env) noexcept {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_LATE

@@ -44,4 +44,4 @@ auto operator|(Sender&& sender, Adaptor&& adaptor) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR_CLOSURE

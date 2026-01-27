@@ -230,4 +230,4 @@ inline constexpr ::beman::execution::just_stopped_t just_stopped{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_JUST

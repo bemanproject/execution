@@ -46,4 +46,4 @@ inline constexpr ::beman::execution::when_all_with_variant_t when_all_with_varia
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL_WITH_VARIANT

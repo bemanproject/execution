@@ -46,4 +46,4 @@ concept completion_signature =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURE

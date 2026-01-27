@@ -17,4 +17,4 @@ concept nothrow_callable = ::beman::execution::detail::callable<Fun, Args...> &&
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_NOTHROW_CALLABLE

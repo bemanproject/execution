@@ -18,4 +18,4 @@ concept receiver_of =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_RECEIVER_OF

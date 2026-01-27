@@ -28,4 +28,4 @@ inline constexpr get_scheduler_t get_scheduler{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_SCHEDULER

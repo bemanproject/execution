@@ -54,4 +54,4 @@ using filter_tag = typename ::beman::execution::detail::meta::detail::filter_tag
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_FILTER

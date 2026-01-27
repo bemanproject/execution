@@ -34,4 +34,4 @@ concept almost_scheduler = ::std::derived_from<typename ::std::remove_cvref_t<Sc
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ALMOST_SCHEDULER

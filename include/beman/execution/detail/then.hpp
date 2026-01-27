@@ -321,4 +321,4 @@ inline constexpr ::beman::execution::upon_stopped_t upon_stopped{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_THEN

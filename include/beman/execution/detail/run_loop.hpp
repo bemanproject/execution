@@ -158,4 +158,4 @@ class run_loop {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_RUN_LOOP

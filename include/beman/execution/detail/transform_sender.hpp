@@ -124,4 +124,4 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_TRANSFORM_SENDER

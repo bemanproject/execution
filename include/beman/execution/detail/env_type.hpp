@@ -28,4 +28,4 @@ using env_type = ::beman::execution::detail::call_result_t<
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_TYPE

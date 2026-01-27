@@ -21,4 +21,4 @@ using child_type = decltype(::std::declval<Sender>().template get<I + 2>());
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CHILD_TYPE

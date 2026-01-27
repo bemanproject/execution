@@ -37,4 +37,4 @@ inline constexpr ::beman::execution::schedule_t schedule{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE

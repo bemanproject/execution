@@ -1,8 +1,8 @@
 // include/beman/execution/detail/spawn.hpp                           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SPAWN
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SPAWN
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN
 
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/scope_token.hpp>
@@ -90,4 +90,4 @@ inline constexpr spawn_t spawn{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN

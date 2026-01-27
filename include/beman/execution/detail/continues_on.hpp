@@ -96,4 +96,4 @@ inline constexpr continues_on_t continues_on{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON

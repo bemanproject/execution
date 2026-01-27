@@ -38,4 +38,4 @@ concept sender = ::beman::execution::detail::enable_sender<::std::remove_cvref_t
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER

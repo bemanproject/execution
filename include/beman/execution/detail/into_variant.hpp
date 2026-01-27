@@ -99,4 +99,4 @@ inline constexpr into_variant_t into_variant{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_INTO_VARIANT

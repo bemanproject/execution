@@ -188,4 +188,4 @@ inline auto beman::execution::inplace_stop_callback<CallbackFun>::call() -> void
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE

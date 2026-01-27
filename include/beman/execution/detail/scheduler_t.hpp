@@ -16,4 +16,4 @@ struct scheduler_t {};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER_T

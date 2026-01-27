@@ -18,4 +18,4 @@ on_stop_request(T&) -> on_stop_request<T>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ON_STOP_REQUEST

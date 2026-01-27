@@ -15,4 +15,4 @@ concept queryable = ::std::destructible<T>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_QUERYABLE

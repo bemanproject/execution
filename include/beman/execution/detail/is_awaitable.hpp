@@ -21,4 +21,4 @@ concept is_awaitable = requires(Promise& promise) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_IS_AWAITABLE

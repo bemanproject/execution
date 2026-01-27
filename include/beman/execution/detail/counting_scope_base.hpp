@@ -1,8 +1,8 @@
 // include/beman/execution/detail/counting_scope_base.hpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
 
 #include <beman/execution/detail/immovable.hpp>
 #include <cstddef>
@@ -164,4 +164,4 @@ inline auto beman::execution::detail::counting_scope_base::start_node(node* n) -
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE

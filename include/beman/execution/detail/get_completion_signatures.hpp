@@ -65,4 +65,4 @@ inline constexpr get_completion_signatures_t get_completion_signatures{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SIGNATURES

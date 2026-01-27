@@ -23,4 +23,4 @@ concept operation_state =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE

@@ -1,8 +1,8 @@
 // include/beman/execution/detail/stop_when.hpp                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_STOP_WHEN
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_STOP_WHEN
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_WHEN
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_WHEN
 
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
@@ -132,4 +132,4 @@ inline auto beman::execution::detail::stop_when_t::operator()(Sndr&& sndr, Tok&&
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_WHEN

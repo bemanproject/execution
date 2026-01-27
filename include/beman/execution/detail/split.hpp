@@ -384,4 +384,4 @@ using split_t = ::beman::execution::detail::split_t;
 inline constexpr ::beman::execution::split_t split{};
 } // namespace beman::execution
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SPLIT

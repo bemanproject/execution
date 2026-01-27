@@ -82,4 +82,4 @@ template <typename Sender, typename Receiver, typename Index>
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_RECEIVER

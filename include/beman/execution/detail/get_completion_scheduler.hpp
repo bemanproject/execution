@@ -86,4 +86,4 @@ inline constexpr get_completion_scheduler_t<Tag> get_completion_scheduler{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER

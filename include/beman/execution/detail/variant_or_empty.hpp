@@ -34,4 +34,4 @@ using variant_or_empty = typename ::beman::execution::detail::variant_or_empty_h
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_VARIANT_OR_EMPTY

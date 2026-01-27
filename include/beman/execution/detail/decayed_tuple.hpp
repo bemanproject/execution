@@ -21,4 +21,4 @@ using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TUPLE

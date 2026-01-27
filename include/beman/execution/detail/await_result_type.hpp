@@ -22,4 +22,4 @@ using await_result_type =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_RESULT_TYPE

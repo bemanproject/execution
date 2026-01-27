@@ -31,4 +31,4 @@ auto suspend_complete(Fun fun, Args&&... args) noexcept {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE

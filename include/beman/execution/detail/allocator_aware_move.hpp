@@ -41,4 +41,4 @@ auto allocator_aware_move(T&& obj, Context&& context) noexcept -> decltype(auto)
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ALLOCATOR_AWARE_MOVE

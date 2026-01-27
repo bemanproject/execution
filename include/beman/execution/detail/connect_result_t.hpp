@@ -20,4 +20,4 @@ using connect_result_t = decltype(::beman::execution::connect(::std::declval<Sen
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT

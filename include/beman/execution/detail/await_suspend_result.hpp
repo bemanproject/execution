@@ -38,4 +38,4 @@ concept await_suspend_result =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_SUSPEND_RESULT

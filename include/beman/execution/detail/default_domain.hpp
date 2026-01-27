@@ -83,4 +83,4 @@ struct default_domain {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DEFAULT_DOMAIN

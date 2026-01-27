@@ -25,4 +25,4 @@ concept stoppable_callback_for =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR

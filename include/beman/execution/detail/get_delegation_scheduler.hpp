@@ -27,4 +27,4 @@ inline constexpr get_delegation_scheduler_t get_delegation_scheduler{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DELEGATION_SCHEDULER

@@ -1,8 +1,8 @@
 // include/beman/execution/detail/non_assignable.hpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_NON_ASSIGNABLE
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_NON_ASSIGNABLE
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NON_ASSIGNABLE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_NON_ASSIGNABLE
 
 // ----------------------------------------------------------------------------
 
@@ -22,4 +22,4 @@ struct beman::execution::detail::non_assignable {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_NON_ASSIGNABLE

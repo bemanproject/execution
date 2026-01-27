@@ -34,4 +34,4 @@ using combine = typename ::beman::execution::detail::meta::detail::combine<L...>
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_COMBINE

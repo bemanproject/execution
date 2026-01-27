@@ -128,4 +128,4 @@ inline constexpr connect_all_t connect_all{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL

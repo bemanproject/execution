@@ -138,4 +138,4 @@ inline constexpr ::beman::execution::bulk_t bulk{};
 
 } // namespace beman::execution
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_BULK

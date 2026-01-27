@@ -21,4 +21,4 @@ concept stoppable_source = requires(Source& source, const Source& csource) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_SOURCE

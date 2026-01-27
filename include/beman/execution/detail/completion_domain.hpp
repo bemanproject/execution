@@ -65,4 +65,4 @@ constexpr auto completion_domain(const Sender& sender) noexcept {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_DOMAIN

@@ -55,4 +55,4 @@ inline constexpr forwarding_query_t forwarding_query{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARDING_QUERY

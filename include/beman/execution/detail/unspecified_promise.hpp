@@ -17,4 +17,4 @@ struct unspecified_promise {
 };
 } // namespace beman::execution::detail
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_UNSPECIFIED_PROMISE

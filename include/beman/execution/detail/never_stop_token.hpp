@@ -28,4 +28,4 @@ class beman::execution::never_stop_token {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_NEVER_STOP_TOKEN

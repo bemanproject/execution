@@ -83,4 +83,4 @@ struct completion_signatures_for_impl<
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_NOTIFY

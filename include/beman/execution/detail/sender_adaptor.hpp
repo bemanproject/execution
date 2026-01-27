@@ -41,4 +41,4 @@ sender_adaptor(T&&...) -> sender_adaptor<T...>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR

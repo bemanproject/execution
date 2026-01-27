@@ -21,4 +21,4 @@ concept decays_to = ::std::same_as<::std::decay_t<From>, To>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYS_TO

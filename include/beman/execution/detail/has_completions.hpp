@@ -34,4 +34,4 @@ concept has_completions = has_completions_aux<Receiver, Completions>::value;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_HAS_COMPLETIONS

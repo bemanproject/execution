@@ -13,4 +13,4 @@ struct type_list {};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_TYPE_LIST

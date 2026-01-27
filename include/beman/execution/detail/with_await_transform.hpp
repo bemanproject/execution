@@ -30,4 +30,4 @@ struct with_await_transform {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_AWAIT_TRANSFORM

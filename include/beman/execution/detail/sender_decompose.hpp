@@ -84,4 +84,4 @@ auto get_sender_meta(Sender&& sender) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_DECOMPOSE

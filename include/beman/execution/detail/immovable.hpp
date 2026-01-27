@@ -31,4 +31,4 @@ struct beman::execution::detail::virtual_immovable {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_IMMOVABLE

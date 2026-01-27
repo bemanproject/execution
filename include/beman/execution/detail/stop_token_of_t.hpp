@@ -16,4 +16,4 @@ using stop_token_of_t = ::std::remove_cvref_t<decltype(::beman::execution::get_s
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_TOKEN_OF

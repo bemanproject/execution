@@ -160,4 +160,4 @@ inline constexpr ::beman::execution::sync_wait_t sync_wait{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SYNC_WAIT

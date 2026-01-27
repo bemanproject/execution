@@ -59,4 +59,4 @@ inline constexpr ::beman::execution::detail::starts_on_t starts_on{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STARTS_ON

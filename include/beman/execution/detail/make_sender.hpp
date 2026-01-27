@@ -30,4 +30,4 @@ constexpr auto make_sender(Tag tag, Data&& data, Child&&... child) {
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_SENDER

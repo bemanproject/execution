@@ -186,4 +186,4 @@ inline constexpr ::beman::execution::schedule_from_t schedule_from{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_FROM

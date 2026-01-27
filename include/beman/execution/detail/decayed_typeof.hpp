@@ -20,4 +20,4 @@ using decayed_typeof = ::std::decay_t<decltype(Tag)>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TYPEOF

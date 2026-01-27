@@ -45,4 +45,4 @@ using completion_signatures_for = ::std::conditional_t<
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_FOR

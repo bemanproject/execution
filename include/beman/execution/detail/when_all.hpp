@@ -266,4 +266,4 @@ inline constexpr ::beman::execution::when_all_t when_all{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL

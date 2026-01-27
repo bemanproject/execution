@@ -13,4 +13,4 @@ concept valid_specialization = requires { typename T<Args...>; };
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_SPECIALIZATION

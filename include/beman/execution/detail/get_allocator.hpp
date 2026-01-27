@@ -57,4 +57,4 @@ inline constexpr get_allocator_t get_allocator{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ALLOCATOR

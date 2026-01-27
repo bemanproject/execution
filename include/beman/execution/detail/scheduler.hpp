@@ -27,4 +27,4 @@ concept scheduler = ::beman::execution::detail::almost_scheduler<Scheduler> && r
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER

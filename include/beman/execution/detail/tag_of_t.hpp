@@ -16,4 +16,4 @@ using tag_of_t = typename decltype(::beman::execution::detail::get_sender_meta(:
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF

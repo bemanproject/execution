@@ -47,4 +47,4 @@ constexpr auto apply_sender(Domain, Tag, Sender&& sender, Args&&... args) noexce
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_APPLY_SENDER

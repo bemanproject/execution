@@ -39,4 +39,4 @@ inline constexpr get_stop_token_t get_stop_token{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_STOP_TOKEN

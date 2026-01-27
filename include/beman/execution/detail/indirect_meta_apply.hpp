@@ -16,4 +16,4 @@ struct indirect_meta_apply {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_INDIRECT_META_APPLY

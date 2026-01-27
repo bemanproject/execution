@@ -27,4 +27,4 @@ make_env(Query&&, Value&& value) -> make_env<::std::remove_cvref_t<Query>, ::std
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_ENV

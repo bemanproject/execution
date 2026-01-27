@@ -21,4 +21,4 @@ inline constexpr ::std::size_t size_v{::beman::execution::detail::meta::size<T>:
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_SIZE

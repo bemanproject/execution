@@ -18,4 +18,4 @@ struct check_type_alias_exist;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CHECK_TYPE_ALIAS_EXIST

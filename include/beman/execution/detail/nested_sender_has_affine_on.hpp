@@ -1,8 +1,8 @@
 // include/beman/execution/detail/nested_sender_has_affine_on.hpp     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_NESTED_SENDER_HAS_AFFINE_ON
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_NESTED_SENDER_HAS_AFFINE_ON
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NESTED_SENDER_HAS_AFFINE_ON
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_NESTED_SENDER_HAS_AFFINE_ON
 
 #include <beman/execution/detail/sender_has_affine_on.hpp>
 
@@ -17,4 +17,4 @@ concept nested_sender_has_affine_on = requires(Sender&& sndr, const Env& env) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_NESTED_SENDER_HAS_AFFINE_ON

@@ -20,4 +20,4 @@ using env_of_t = decltype(::beman::execution::get_env(::std::declval<T>()));
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_OF
