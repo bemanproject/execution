@@ -3,13 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-if(NOT TARGET ${TARGET_NAME})
-    add_library(${TARGET_NAME} STATIC)
-endif()
-add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
-
 target_sources(
-    ${TARGET_NAME}
+    ${TARGET_LIBRARY}
     PRIVATE execution.cpp
     PUBLIC
         FILE_SET ${TARGET_NAME}_public_headers
@@ -198,23 +193,19 @@ target_sources(
 
 if(BEMAN_USE_MODULES)
     target_sources(
-        ${TARGET_NAME}
-        PUBLIC
-            FILE_SET CXX_MODULES
-                # BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
-                # FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
-                FILES execution.cppm
+        ${TARGET_LIBRARY}
+        PUBLIC FILE_SET CXX_MODULES FILES execution.cppm
     )
 else()
     set_target_properties(
-        ${TARGET_NAME}
+        ${TARGET_LIBRARY}
         PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON
     )
 endif()
 
 get_property(
     DETAIL_HEADER_FILES
-    TARGET ${TARGET_NAME}
+    TARGET ${TARGET_LIBRARY}
     PROPERTY HEADER_SET_${TARGET_NAME}_detail_headers
 )
 source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
@@ -224,7 +215,7 @@ if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
 endif()
 
 install(
-    TARGETS ${TARGET_NAME}
+    TARGETS ${TARGET_LIBRARY}
     EXPORT ${TARGETS_EXPORT_NAME}
     ARCHIVE DESTINATION lib/$<CONFIG>
     FILE_SET ${TARGET_NAME}_public_headers

@@ -3,10 +3,10 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-list(APPEND EXAMPLES)
+set(EXAMPLES)
 
 # if(BEMAN_USE_MODULES)
-#     list(APPEND EXAMPLES modules) # missing modules.cpp
+#     list(APPEND EXAMPLES modules) # TODO(CK): missing modules.cpp?
 # endif()
 
 foreach(EXAMPLE ${EXAMPLES})

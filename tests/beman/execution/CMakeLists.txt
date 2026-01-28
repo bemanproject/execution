@@ -1,12 +1,5 @@
 # src/beman/execution/tests/CMakeLists.txt
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-cmake_minimum_required(VERSION 3.25...4.2)
-
-project(beman_execution_tests LANGUAGES CXX)
-
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-    message(FATAL_ERROR "In-source builds are not allowed!")
-endif()
 
 list(APPEND todo exec-associate.test)
 
@@ -124,3 +117,33 @@ foreach(test ${execution_tests})
     target_link_libraries(${TEST_EXE} PRIVATE beman::execution)
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
+
+if(BEMAN_EXECUTION_ENABLE_INSTALL)
+    # test if the targets are usable from the install directory
+    add_test(
+        NAME install-to-stagedir
+        COMMAND
+            ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR} --prefix
+            ${CMAKE_BINARY_DIR}/stagedir --config $<CONFIG>
+    )
+    add_test(
+        NAME find-package-test
+        COMMAND
+            ${CMAKE_CTEST_COMMAND} # --verbose
+            --output-on-failure -C $<CONFIG> #
+            --build-and-test "${CMAKE_SOURCE_DIR}/examples"
+            "${CMAKE_CURRENT_BINARY_DIR}/find-package-test" #
+            --build-generator ${CMAKE_GENERATOR} #
+            --build-makeprogram ${CMAKE_MAKE_PROGRAM} #
+            --build-options #
+            "-D BEMAN_HAS_MODULES=${BEMAN_HAS_MODULES}"
+            "-D CMAKE_BUILD_TYPE=$<CONFIG>"
+            "-D CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+            "-D CMAKE_CXX_EXTENSIONS=${CMAKE_CXX_EXTENSIONS}"
+            "-D CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}"
+            "-D CMAKE_CXX_SCAN_FOR_MODULES=${CMAKE_CXX_SCAN_FOR_MODULES}"
+            "-D CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}"
+            "-D CMAKE_CXX_STANDARD_REQUIRED=${CMAKE_CXX_STANDARD_REQUIRED}"
+            "-D CMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/stagedir"
+    )
+endif()

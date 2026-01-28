@@ -3,6 +3,24 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
+cmake_minimum_required(VERSION 3.30...4.2)
+
+include(../cmake/prelude.cmake)
+
+project(beman.execution.example LANGUAGES CXX)
+
+if(PROJECT_IS_TOP_LEVEL)
+    include(../cmake/cxx-modules-rules.cmake)
+
+    if(NOT DEFINED BEMAN_HAS_MODULES)
+        set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+    endif()
+
+    find_package(beman.execution REQUIRED)
+
+    enable_testing()
+endif()
+
 list(
     APPEND EXAMPLES
     stackoverflow
@@ -26,11 +44,9 @@ if(BEMAN_USE_MODULES)
 endif()
 
 foreach(EXAMPLE ${EXAMPLES})
-    set(EXAMPLE_TARGET ${TARGET_PREFIX}.examples.${EXAMPLE})
+    set(EXAMPLE_TARGET beman.execution.examples.${EXAMPLE})
     add_executable(${EXAMPLE_TARGET})
     target_sources(${EXAMPLE_TARGET} PRIVATE ${EXAMPLE}.cpp)
-    target_link_libraries(
-        ${EXAMPLE_TARGET}
-        PRIVATE ${TARGET_NAMESPACE}::${TARGET_NAME}
-    )
+    target_link_libraries(${EXAMPLE_TARGET} PRIVATE beman::execution)
+    add_test(NAME ${EXAMPLE_TARGET} COMMAND ${EXAMPLE_TARGET})
 endforeach()
