@@ -1,6 +1,10 @@
 // examples/modules.cpp                                               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+// FIXME: does not compile with g++-15 on OSX! CK
+#if defined(__APPLE__) && defined(__GNUC__)
+#undef BEMAN_HAS_IMPORT_STD
+#endif
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
