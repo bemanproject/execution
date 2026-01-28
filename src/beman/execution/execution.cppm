@@ -28,14 +28,6 @@ import std;
 
 export module beman.execution;
 
-
-
-
-
-
-
-
-
 // ----------------------------------------------------------------------------
 
 #define BEMAN_EXECUTION_EXPORT
@@ -94,7 +86,6 @@ namespace detail {}
 
 // ----------------------------------------------------------------------------
 
-
 // ----------------------------------------------------------------------------
 
 #if defined(__GNUC__)
@@ -124,8 +115,6 @@ namespace detail {}
 #undef BEMAN_EXECUTION_DIAGNOSTIC_PUSHED
 #endif // #ifdef BEMAN_EXECUTION_DIAGNOSTIC_PUSHED
 
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -134,9 +123,6 @@ concept queryable = ::std::destructible<T>;
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -184,9 +170,6 @@ export inline constexpr forwarding_query_t forwarding_query{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -197,9 +180,6 @@ concept movable_value =
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -220,9 +200,6 @@ inline constexpr bool matching_sig =
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -245,10 +222,6 @@ decltype(auto) as_except_ptr(Error&& error) {
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -289,11 +262,6 @@ export inline constexpr set_value_t set_value{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -337,11 +305,6 @@ export inline constexpr set_error_t set_error{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -379,11 +342,6 @@ export inline constexpr set_stopped_t set_stopped{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -426,10 +384,6 @@ export inline constexpr start_t start{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -448,9 +402,6 @@ struct beman::execution::detail::non_assignable {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -464,9 +415,6 @@ concept simple_allocator =
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -492,9 +440,6 @@ class beman::execution::never_stop_token {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -510,9 +455,6 @@ concept decayed_same_as = ::std::same_as<::std::remove_cvref_t<T0>, ::std::remov
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -527,9 +469,6 @@ concept callable = requires(Fun&& fun, Args&&... args) { ::std::forward<Fun>(fun
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 // std::forward_like() doesn't work on some compilers, yet. This header
@@ -600,9 +539,6 @@ auto forward_like(U&& u) noexcept -> decltype(auto) {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -651,10 +587,6 @@ join_env(Env1&&, Env2&&) -> join_env<::std::remove_cvref_t<Env1>, ::std::remove_
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -790,10 +722,6 @@ struct tuple_element<I, T> {
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -813,9 +741,6 @@ query_with_default(Tag, const Env&, Value&& value) noexcept(noexcept(static_cast
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -830,9 +755,6 @@ using child_type = decltype(::std::declval<Sender>().template get<I + 2>());
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -846,9 +768,6 @@ using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -870,9 +789,6 @@ make_env(Query&&, Value&& value) -> make_env<::std::remove_cvref_t<Query>, ::std
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail::meta::detail {
@@ -892,9 +808,6 @@ using prepend = typename ::beman::execution::detail::meta::detail::prepend<H, Ta
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail::meta {
@@ -910,9 +823,6 @@ using to = typename ::beman::execution::detail::meta::to_type_list<To, T>::type;
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -921,9 +831,6 @@ struct type_list {};
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -944,9 +851,6 @@ concept stoppable_callback_for =
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -960,9 +864,6 @@ using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -979,9 +880,6 @@ inline constexpr ::std::size_t size_v{::beman::execution::detail::meta::size<T>:
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -995,9 +893,6 @@ on_stop_request(T&) -> on_stop_request<T>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1013,9 +908,6 @@ struct check_type_alias_exist;
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -1027,9 +919,6 @@ export struct scheduler_t {};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1054,9 +943,6 @@ auto get_awaiter(Expr&& expr, Promise& promise) -> decltype(auto) {
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1134,9 +1020,6 @@ auto get_sender_meta(Sender&& sender) {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -1160,9 +1043,6 @@ auto suspend_complete(Fun fun, Args&&... args) noexcept {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail::meta {
@@ -1171,9 +1051,6 @@ inline constexpr bool contains{(::std::same_as<T, S> || ...)};
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1188,9 +1065,6 @@ concept decays_to = ::std::same_as<::std::decay_t<From>, To>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 namespace beman::execution::detail {
 
@@ -1229,9 +1103,6 @@ class intrusive_stack<Next> {
 
 } // namespace beman::execution::detail
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -1259,9 +1130,6 @@ struct beman::execution::detail::virtual_immovable {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 namespace beman::execution::detail {
 struct unspecified_promise {
     auto get_return_object() noexcept -> unspecified_promise;
@@ -1272,9 +1140,6 @@ struct unspecified_promise {
     auto unhandled_stopped() noexcept -> ::std::coroutine_handle<>;
 };
 } // namespace beman::execution::detail
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1306,9 +1171,6 @@ concept await_suspend_result =
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -1317,9 +1179,6 @@ concept valid_specialization = requires { typename T<Args...>; };
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1333,9 +1192,6 @@ struct indirect_meta_apply {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -1344,9 +1200,6 @@ using indices_for = typename ::std::remove_reference_t<Sender>::indices_for;
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1362,9 +1215,6 @@ using decayed_typeof = ::std::decay_t<decltype(Tag)>;
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -1376,9 +1226,6 @@ export inline constexpr nostopstate_t nostopstate{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1432,10 +1279,6 @@ struct beman::execution::env : ::beman::execution::detail::env_base<Envs>... {
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -1479,11 +1322,6 @@ export inline constexpr get_allocator_t get_allocator{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -1516,10 +1354,6 @@ export inline constexpr get_domain_t get_domain{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -1541,9 +1375,6 @@ export inline constexpr get_scheduler_t get_scheduler{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -1558,9 +1389,6 @@ concept operation_state =
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1589,9 +1417,6 @@ concept valid_completion_for = requires(Signature* signature) {
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1629,9 +1454,6 @@ concept completion_signature =
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1672,9 +1494,6 @@ struct beman::execution::prop {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -1688,9 +1507,6 @@ concept stoppable_token = requires(const Token& token) {
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1708,9 +1524,6 @@ concept completion_tag =
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -1725,10 +1538,6 @@ using await_result_type =
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1765,10 +1574,6 @@ fwd_env(Env&&) -> fwd_env<Env>;
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -1777,9 +1582,6 @@ using tag_of_t = typename decltype(::beman::execution::detail::get_sender_meta(:
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1807,9 +1609,6 @@ using combine = typename ::beman::execution::detail::meta::detail::combine<L...>
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1843,9 +1642,6 @@ using unique = typename ::beman::execution::detail::meta::detail::unique<T>::typ
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1894,9 +1690,6 @@ using filter_tag = typename ::beman::execution::detail::meta::detail::filter_tag
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail::meta::detail {
@@ -1915,9 +1708,6 @@ using transform = typename ::beman::execution::detail::meta::detail::transform<T
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -1942,10 +1732,6 @@ using as_tuple_t = typename ::beman::execution::detail::as_tuple<T>::type;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 namespace beman::execution::detail {
 
@@ -2021,9 +1807,6 @@ class atomic_intrusive_stack<Next> {
 };
 
 } // namespace beman::execution::detail
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2202,9 +1985,6 @@ inline auto beman::execution::inplace_stop_callback<CallbackFun>::call() -> void
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -2213,9 +1993,6 @@ using decayed_type_list = ::beman::execution::detail::type_list<::std::decay_t<A
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2230,9 +2007,6 @@ concept class_type = ::beman::execution::detail::decays_to<Tp, Tp> && ::std::is_
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2388,9 +2162,6 @@ inline auto beman::execution::detail::counting_scope_base::start_node(node* n) -
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -2404,9 +2175,6 @@ concept is_awaiter = requires(Awaiter& awaiter, ::std::coroutine_handle<Promise>
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -2417,9 +2185,6 @@ concept nothrow_callable = ::beman::execution::detail::callable<Fun, Args...> &&
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2664,9 +2429,6 @@ inline auto beman::execution::stop_source::request_stop() noexcept -> bool {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -2696,9 +2458,6 @@ export inline constexpr get_stop_token_t get_stop_token{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -2725,9 +2484,6 @@ export inline constexpr get_env_t get_env{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -2746,9 +2502,6 @@ struct completion_signatures {};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -2761,9 +2514,6 @@ concept is_awaitable = requires(Promise& promise) {
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2787,9 +2537,6 @@ emplace_from(Fun&&) -> emplace_from<::std::remove_cvref_t<Fun>>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2817,9 +2564,6 @@ using variant_or_empty = typename ::beman::execution::detail::variant_or_empty_h
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -2833,9 +2577,6 @@ concept stoppable_source = requires(Source& source, const Source& csource) {
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2853,9 +2594,6 @@ concept receiver =
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -2870,9 +2608,6 @@ concept valid_completion_signatures = valid_completion_signatures_helper<Signatu
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -2885,9 +2620,6 @@ using env_of_t = decltype(::beman::execution::get_env(::std::declval<T>()));
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2919,9 +2651,6 @@ auto allocator_aware_move(T&& obj, Context&& context) noexcept -> decltype(auto)
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -2930,9 +2659,6 @@ using stop_token_of_t = ::std::remove_cvref_t<decltype(::beman::execution::get_s
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2944,9 +2670,6 @@ concept unstoppable_token = ::beman::execution::stoppable_token<Token> &&
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -2957,9 +2680,6 @@ concept has_as_awaitable = requires(T&& obj, Promise& promise) {
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -2987,10 +2707,6 @@ concept has_completions = has_completions_aux<Receiver, Completions>::value;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3040,9 +2756,6 @@ struct default_impls {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3065,9 +2778,6 @@ struct with_await_transform {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -3077,9 +2787,6 @@ concept receiver_of =
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3152,9 +2859,6 @@ using gather_signatures = typename ::beman::execution::detail::gather_signatures
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3177,9 +2881,6 @@ struct env_promise : ::beman::execution::detail::with_await_transform<Env> {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3188,9 +2889,6 @@ struct impls_for : ::beman::execution::detail::default_impls {};
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3261,9 +2959,6 @@ auto beman::execution::detail::connect_awaitable_promise<Receiver>::get_return_o
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -3289,10 +2984,6 @@ concept sender = ::beman::execution::detail::enable_sender<::std::remove_cvref_t
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3323,9 +3014,9 @@ struct awaiter_set_value<void> {
  */
 template <typename Awaiter, typename Receiver>
 using awaiter_completion_signatures = ::beman::execution::completion_signatures<
-    typename ::beman::execution::detail::awaiter_set_value< ::beman::execution::detail::await_result_type<
+    typename ::beman::execution::detail::awaiter_set_value<::beman::execution::detail::await_result_type<
         Awaiter,
-        ::beman::execution::detail::connect_awaitable_promise<Receiver> > >::type,
+        ::beman::execution::detail::connect_awaitable_promise<Receiver>>>::type,
     ::beman::execution::set_error_t(::std::exception_ptr),
     ::beman::execution::set_stopped_t()>;
 
@@ -3338,12 +3029,13 @@ template <typename Awaiter, ::beman::execution::receiver Receiver>
 auto connect_awaitable(Awaiter awaiter, Receiver receiver)
     -> ::beman::execution::detail::operation_state_task<Receiver>
     requires ::beman::execution::
-        receiver_of<Receiver, ::beman::execution::detail::awaiter_completion_signatures<Awaiter, Receiver> >
+        receiver_of<Receiver, ::beman::execution::detail::awaiter_completion_signatures<Awaiter, Receiver>>
 {
     // NOTE: suspened_complete(...) is co_await to make sure that the
     //    coroutine is suspended at the point when set_*(...) is called.
-    using result_type = ::beman::execution::detail::
-        await_result_type<Awaiter, ::beman::execution::detail::connect_awaitable_promise<Receiver> >;
+    using result_type =
+        ::beman::execution::detail::await_result_type<Awaiter,
+                                                      ::beman::execution::detail::connect_awaitable_promise<Receiver>>;
 
     ::std::exception_ptr ep;
     try {
@@ -3364,24 +3056,17 @@ auto connect_awaitable(Awaiter awaiter, Receiver receiver)
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
 template <typename Sender, typename Receiver>
-using state_type = ::std::decay_t< ::beman::execution::detail::call_result_t<
-    decltype(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_state),
+using state_type = ::std::decay_t<::beman::execution::detail::call_result_t<
+    decltype(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_state),
     Sender,
-    Receiver&> >;
+    Receiver&>>;
 }
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3407,10 +3092,6 @@ export inline constexpr ::beman::execution::schedule_t schedule{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3447,9 +3128,6 @@ auto operator|(Sender&& sender, Adaptor&& adaptor) {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3458,9 +3136,6 @@ concept sender_for = ::beman::execution::sender<Sender> && ::std::same_as<::bema
 }
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3474,9 +3149,6 @@ concept sender_has_affine_on =
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3550,9 +3222,6 @@ export struct default_domain {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3574,9 +3243,6 @@ auto spawn_get_allocator(const Sndr& sndr, const Ev& ev) {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3589,7 +3255,7 @@ template <typename Sender, typename Receiver>
 struct basic_state {
     basic_state(Sender&& sender, Receiver&& rcvr) noexcept(true)
         : receiver(::std::move(rcvr)),
-          state(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_state(
+          state(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_state(
               ::std::forward<Sender>(sender), this->receiver)) {}
 
     Receiver                                                 receiver;
@@ -3601,9 +3267,6 @@ basic_state(Sender&&, Receiver&&) -> basic_state<Sender&&, Receiver>;
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3614,16 +3277,13 @@ namespace beman::execution::detail {
  */
 template <typename Index, typename Sender, typename Receiver>
 using env_type = ::beman::execution::detail::call_result_t<
-    decltype(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_env),
+    decltype(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_env),
     Index,
     ::beman::execution::detail::state_type<Sender, Receiver>&,
     const Receiver&>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3647,9 +3307,6 @@ concept almost_scheduler = ::std::derived_from<typename ::std::remove_cvref_t<Sc
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3742,10 +3399,9 @@ export template <typename Domain, ::beman::execution::sender Sender, typename...
             ::std::same_as<::std::remove_cvref_t<Sender>,
                            ::std::remove_cvref_t<decltype(::beman::execution::default_domain{}.transform_sender(
                                ::std::declval<Sender>(), ::std::declval<Env>()...))>>
-constexpr auto transform_sender(Domain,
-                                Sender&& sender,
-                                const Env&...) noexcept(noexcept(::std::forward<Sender>(sender)))
-    -> ::beman::execution::sender decltype(auto) {
+constexpr auto
+    transform_sender(Domain, Sender&& sender, const Env&...) noexcept(noexcept(::std::forward<Sender>(sender)))
+        -> ::beman::execution::sender decltype(auto) {
     return ::std::forward<Sender>(sender);
 }
 
@@ -3767,9 +3423,6 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3800,9 +3453,6 @@ sender_adaptor(T&&...) -> sender_adaptor<T...>;
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3829,9 +3479,6 @@ sched_env(Scheduler&&) -> sched_env<::std::remove_cvref_t<Scheduler>>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -3872,9 +3519,6 @@ constexpr auto apply_sender(Domain, Tag, Sender&& sender, Args&&... args) noexce
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3886,9 +3530,6 @@ concept nested_sender_has_affine_on = requires(Sender&& sndr, const Env& env) {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3899,7 +3540,7 @@ namespace beman::execution::detail {
  */
 template <typename Sender, typename Receiver, typename Index>
     requires ::beman::execution::detail::
-        valid_specialization< ::beman::execution::detail::env_type, Index, Sender, Receiver>
+        valid_specialization<::beman::execution::detail::env_type, Index, Sender, Receiver>
     struct basic_receiver {
     friend struct ::beman::execution::get_env_t;
     friend struct ::beman::execution::set_error_t;
@@ -3951,10 +3592,6 @@ template <typename Sender, typename Receiver, typename Index>
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4020,10 +3657,6 @@ inline constexpr get_completion_scheduler_t<Tag> get_completion_scheduler{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -4037,9 +3670,6 @@ concept scheduler = ::beman::execution::detail::almost_scheduler<Scheduler> && r
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4072,9 +3702,6 @@ sched_attrs(Scheduler&&) -> sched_attrs<::std::remove_cvref_t<Scheduler>>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4124,14 +3751,11 @@ constexpr auto completion_domain(const Sender& sender) noexcept {
         typename completion_domain_merge<decltype(get(::beman::execution::set_error, sender)),
                                          decltype(get(::beman::execution::set_stopped, sender))>::type,
         decltype(get(::beman::execution::set_value, sender))>::type;
-    return ::std::conditional_t< ::std::same_as<type, completion_domain_undefined>, Default, type>();
+    return ::std::conditional_t<::std::same_as<type, completion_domain_undefined>, Default, type>();
 }
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4151,9 +3775,6 @@ export inline constexpr get_delegation_scheduler_t get_delegation_scheduler{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4200,9 +3821,6 @@ constexpr auto get_domain_late(const Sender& sender, const Env& env) noexcept {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -4219,9 +3837,6 @@ constexpr auto get_domain_early(const Sender& sender) noexcept {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -4230,10 +3845,6 @@ using schedule_result_t = decltype(::beman::execution::schedule(::std::declval<S
 }
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4371,10 +3982,6 @@ export class run_loop {
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -4423,9 +4030,6 @@ export inline constexpr get_completion_signatures_t get_completion_signatures{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4510,9 +4114,6 @@ export inline constexpr connect_t connect{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -4528,9 +4129,6 @@ concept sender_in =
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -4543,9 +4141,6 @@ using connect_result_t = decltype(::beman::execution::connect(::std::declval<Sen
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4656,9 +4251,6 @@ inline auto beman::execution::detail::stop_when_t::operator()(Sndr&& sndr, Tok&&
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -4689,9 +4281,6 @@ concept scope_token = ::std::copyable<Token> && requires(Token token) {
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -4721,14 +4310,11 @@ template <typename Sender, typename Env>
 using completion_signatures_for = ::std::conditional_t<
     ::std::same_as<beman::execution::detail::no_completion_signatures_defined_in_sender,
                    typename ::beman::execution::detail::completion_signatures_for_impl<Sender, Env>::type>,
-    typename ::beman::execution::detail::completion_signatures_for_impl< ::std::remove_cvref_t<Sender>, Env>::type,
+    typename ::beman::execution::detail::completion_signatures_for_impl<::std::remove_cvref_t<Sender>, Env>::type,
     typename ::beman::execution::detail::completion_signatures_for_impl<Sender, Env>::type>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4745,11 +4331,7 @@ using completion_signatures_of_t =
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
-
 
 namespace beman::execution::detail {
 /*!
@@ -4856,11 +4438,7 @@ struct connect_all_t {
 inline constexpr connect_all_t connect_all{};
 } // namespace beman::execution::detail
 
-
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4870,20 +4448,17 @@ namespace beman::execution {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
 export template <typename Sender,
-                                 typename Env                         = ::beman::execution::env<>,
-                                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
+                 typename Env                         = ::beman::execution::env<>,
+                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
     requires ::beman::execution::sender_in<Sender, Env>
 using error_types_of_t =
-    ::beman::execution::detail::gather_signatures< ::beman::execution::set_error_t,
-                                                   ::beman::execution::completion_signatures_of_t<Sender, Env>,
-                                                   ::std::type_identity_t,
-                                                   Variant>;
+    ::beman::execution::detail::gather_signatures<::beman::execution::set_error_t,
+                                                  ::beman::execution::completion_signatures_of_t<Sender, Env>,
+                                                  ::std::type_identity_t,
+                                                  Variant>;
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4900,27 +4475,21 @@ inline constexpr bool sends_stopped{!::std::same_as<
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
 export template <typename Sender,
-                                 typename Env                         = ::beman::execution::env<>,
-                                 template <typename...> class Tuple   = ::beman::execution::detail::decayed_tuple,
-                                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
+                 typename Env                         = ::beman::execution::env<>,
+                 template <typename...> class Tuple   = ::beman::execution::detail::decayed_tuple,
+                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
     requires ::beman::execution::sender_in<Sender, Env>
 using value_types_of_t =
-    ::beman::execution::detail::gather_signatures< ::beman::execution::set_value_t,
-                                                   ::beman::execution::completion_signatures_of_t<Sender, Env>,
-                                                   Tuple,
-                                                   Variant>;
+    ::beman::execution::detail::gather_signatures<::beman::execution::set_value_t,
+                                                  ::beman::execution::completion_signatures_of_t<Sender, Env>,
+                                                  Tuple,
+                                                  Variant>;
 }
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -4935,13 +4504,10 @@ using connect_all_result =
     ::beman::execution::detail::call_result_t<decltype(::beman::execution::detail::connect_all),
                                               ::beman::execution::detail::basic_state<Sender, Receiver>*,
                                               Sender,
-                                              ::beman::execution::detail::indices_for<Sender> >;
+                                              ::beman::execution::detail::indices_for<Sender>>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -5081,9 +4647,6 @@ export inline constexpr ::beman::execution::sync_wait_t sync_wait{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -5134,9 +4697,6 @@ basic_operation(Sender&&, Receiver&&) -> basic_operation<Sender&&, Receiver>;
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -5180,10 +4740,6 @@ using single_sender_value_type = typename single_sender_value_type_helper<Sender
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -5274,10 +4830,6 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -5287,10 +4839,6 @@ concept single_sender = ::beman::execution::sender_in<Sender, Env> &&
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -5308,11 +4856,6 @@ constexpr auto make_sender(Tag tag, Data&& data, Child&&... child) {
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
-
 namespace beman::execution::detail {
 template <class Sndr, class Promise>
 concept awaitable_sender =
@@ -5320,10 +4863,6 @@ concept awaitable_sender =
         { prom.unhandled_stopped() } -> ::std::convertible_to<::std::coroutine_handle<>>;
     };
 } // namespace beman::execution::detail
-
-
-
-
 
 namespace beman::execution::detail {
 template <class Sndr, class Promise>
@@ -5409,9 +4948,6 @@ class sender_awaitable {
     }
 };
 } // namespace beman::execution::detail
-
-
-
 
 namespace beman::execution::detail {
 
@@ -5513,17 +5049,12 @@ struct completion_signatures_for_impl<
 
 } // namespace beman::execution::detail
 
-
 namespace beman::execution {
 
 export using bulk_t = ::beman::execution::detail::bulk_t;
 export inline constexpr ::beman::execution::bulk_t bulk{};
 
 } // namespace beman::execution
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -5598,11 +5129,7 @@ export inline constexpr into_variant_t into_variant{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
-
 
 namespace beman::execution::detail {
 template <typename Completion, typename... T>
@@ -5639,7 +5166,6 @@ struct impls_for<just_t<Completion>> : ::beman::execution::detail::default_impls
     };
 };
 } // namespace beman::execution::detail
-
 
 namespace beman::execution {
 export using just_t         = ::beman::execution::detail::just_t<::beman::execution::set_value_t>;
@@ -5812,11 +5338,7 @@ export inline constexpr ::beman::execution::just_stopped_t just_stopped{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
-
 
 namespace beman::execution::detail {
 template <typename Completion>
@@ -6005,7 +5527,6 @@ struct completion_signatures_for_impl<
 };
 } // namespace beman::execution::detail
 
-
 namespace beman::execution {
 export using let_error_t   = ::beman::execution::detail::let_t<::beman::execution::set_error_t>;
 export using let_stopped_t = ::beman::execution::detail::let_t<::beman::execution::set_stopped_t>;
@@ -6017,9 +5538,6 @@ export inline constexpr ::beman::execution::let_value_t   let_value{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -6063,10 +5581,6 @@ export inline constexpr read_env_t read_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -6212,10 +5726,6 @@ export inline constexpr ::beman::execution::schedule_from_t schedule_from{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -6568,11 +6078,7 @@ export using split_t = ::beman::execution::detail::split_t;
 export inline constexpr ::beman::execution::split_t split{};
 } // namespace beman::execution
 
-
-
-
 // ----------------------------------------------------------------------------
-
 
 namespace beman::execution::detail {
 template <typename Completion>
@@ -6682,7 +6188,6 @@ struct completion_signatures_for_impl<
             ::beman::execution::completion_signatures<>>>>;
 };
 } // namespace beman::execution::detail
-
 
 namespace beman::execution {
 /*!
@@ -6860,10 +6365,6 @@ export inline constexpr ::beman::execution::upon_stopped_t upon_stopped{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -7086,9 +6587,6 @@ export inline constexpr ::beman::execution::when_all_t when_all{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -7131,9 +6629,6 @@ export inline constexpr write_env_t write_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -7278,10 +6773,6 @@ export inline constexpr associate_t associate{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -7311,10 +6802,6 @@ export inline constexpr ::beman::execution::as_awaitable_t as_awaitable{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -7379,11 +6866,6 @@ struct impls_for<::beman::execution::detail::counting_scope_join_t> : ::beman::e
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
-
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -7496,13 +6978,7 @@ export inline constexpr affine_on_t affine_on{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
-
 // ----------------------------------------------------------------------------
-
 
 namespace beman::execution::detail {
 // specialize default_domain appropriately
@@ -7559,7 +7035,6 @@ auto get_domain_late(Sender&& sender, Env&&) {
 }
 } // namespace beman::execution::detail
 
-
 namespace beman::execution {
 export using continues_on_t = ::beman::execution::detail::continues_on_t;
 /*!
@@ -7570,9 +7045,6 @@ export inline constexpr continues_on_t continues_on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -7613,10 +7085,6 @@ export inline constexpr ::beman::execution::detail::starts_on_t starts_on{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -7646,10 +7114,6 @@ export inline constexpr ::beman::execution::when_all_with_variant_t when_all_wit
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 namespace beman::execution {
 export template <::beman::execution::detail::class_type Promise>
@@ -7690,9 +7154,6 @@ struct with_awaitable_senders {
 };
 
 } // namespace beman::execution
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -7740,9 +7201,6 @@ inline auto beman::execution::counting_scope::get_token() noexcept -> beman::exe
     return beman::execution::counting_scope::token(this);
 }
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -7784,10 +7242,6 @@ inline auto beman::execution::simple_counting_scope::get_token() noexcept
 }
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -8019,9 +7473,6 @@ export inline constexpr spawn_future_t spawn_future{};
 
 // ----------------------------------------------------------------------------
 
-
-
-
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -8095,10 +7546,6 @@ export inline constexpr spawn_t spawn{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-
-
-
 
 // ----------------------------------------------------------------------------
 
@@ -8214,5 +7661,3 @@ export inline constexpr ::beman::execution::on_t on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
-
-

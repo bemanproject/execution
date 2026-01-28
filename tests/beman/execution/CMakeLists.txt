@@ -11,11 +11,7 @@ endif()
 list(APPEND todo exec-associate.test)
 
 if(BEMAN_USE_MODULES)
-    list(
-        APPEND execution_tests
-        execution-module.test
-        stop-token-module.test
-    )
+    list(APPEND execution_tests execution-module.test stop-token-module.test)
 endif()
 
 list(

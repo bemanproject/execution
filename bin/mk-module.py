@@ -26,14 +26,19 @@ for detail in glob.glob("include/?eman/*/?etail/*.hpp"):
 headers = {}
 beman_re = re.compile('#include ["<](?P<name>[bB]eman/.*)\.hpp[">]')
 other_re = re.compile('#include ["<](?P<name>.*)[">]')
-included_re = re.compile('.*INCLUDED_BEMAN.*')
-file_re = re.compile('// include/beman\S*\s*-.-C..-.-')
-spdx_re = re.compile('.*SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception.*')
-
+included_re = re.compile(".*INCLUDED_BEMAN.*")
+file_re = re.compile("// include/beman\S*\s*-.-C..-.-")
+spdx_re = re.compile(".*SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception.*")
 
 
 def include_this_line(line):
-    return not beman_re.match(line) and not other_re.match(line) and not included_re.match(line) and not file_re.match(line) and not spdx_re.match(line)
+    return (
+        not beman_re.match(line)
+        and not other_re.match(line)
+        and not included_re.match(line)
+        and not file_re.match(line)
+        and not spdx_re.match(line)
+    )
 
 
 def get_dependencies(component):
@@ -78,6 +83,8 @@ def write_header(to, header):
 
 
 deps = {}
+
+
 def build_header(file, to, header):
     todo = dependencies[header].copy()
     while 0 < len(todo):
@@ -86,6 +93,7 @@ def build_header(file, to, header):
             for new in dependencies[todo[0]]:
                 todo.append(new)
         todo = todo[1:]
+
 
 with open(module_file, "w") as to:
     to.write("// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception\n\n")

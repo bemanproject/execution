@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.25...4.2)
 
 #========================== pre project settings ===============================
 # gersemi: off
-if(CMAKE_VERSION VERSION_EQUAL 4.2)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
     set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 
     if(CMAKE_CXX_STDLIB_MODULES_JSON)
@@ -45,6 +45,7 @@ if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
     message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
 endif()
 
+# gersemi: off
 if(CMAKE_CXX_SCAN_FOR_MODULES AND ${CMAKE_GENERATOR} STREQUAL Ninja)
     set(BEMAN_USE_MODULES ON)
     message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
@@ -52,7 +53,6 @@ else()
     message(WARNING "Missing support for CMAKE_CXX_SCAN_FOR_MODULES!")
 endif()
 
-# gersemi: off
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
     set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
     message(
@@ -62,10 +62,12 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
 endif()
 # gersemi: on
 
-# CMake requires the language standard to be specified as compile feature
-# when a target provides C++23 modules and the target will be installed
-add_library(${TARGET_NAME} STATIC)
-target_compile_features(${TARGET_NAME} PUBLIC cxx_std_23)
+if(BEMAN_USE_MODULES)
+    # CMake requires the language standard to be specified as compile feature
+    # when a target provides C++23 modules and the target will be installed
+    add_library(${TARGET_NAME} STATIC)
+    target_compile_features(${TARGET_NAME} PUBLIC cxx_std_${CMAKE_CXX_STANDARD})
+endif()
 
 if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
     target_compile_definitions(${TARGET_NAME} PUBLIC BEMAN_HAS_IMPORT_STD)
