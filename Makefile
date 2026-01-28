@@ -52,12 +52,14 @@ ifeq (${hostSystemName},Darwin)
   # export GCOV="llvm-cov gcov"
 
   ### TODO: to test g++-15:
-  export GCC_PREFIX:=$(shell brew --prefix gcc)
-  export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
+  #  export GCC_PREFIX:=$(shell brew --prefix gcc)
+  #  export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
 
   # XXX export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
-  export CXX=g++-15
-  export CXXFLAGS=-stdlib=libstdc++
+  ifeq ($(CXX),)
+    export CXX=g++-15
+    export CXXFLAGS=-stdlib=libstdc++
+  endif
   export GCOV="gcov"
 else ifeq (${hostSystemName},Linux)
   export LLVM_DIR=/usr/lib/llvm-20
@@ -120,8 +122,9 @@ build:
 	  -D CMAKE_CXX_STANDARD_REQUIRED=ON \
 	  -D CMAKE_CXX_SCAN_FOR_MODULES=ON \
 	  -D CMAKE_BUILD_TYPE=Release \
-	  -D CMAKE_CXX_COMPILER=$(CXX) # XXX --fresh -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	  -D CMAKE_CXX_COMPILER=$(CXX)
 	cmake --build $(BUILD)
+# XXX --fresh -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 
 # NOTE: without install, see CMAKE_SKIP_INSTALL_RULES! CK
 test: build
