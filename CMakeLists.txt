@@ -28,11 +28,11 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "In-source builds are not allowed!")
 endif()
 
-set(TARGET_NAME execution)
+set(TARGET_NAME execution_headers)
 set(TARGET_NAMESPACE beman)
 set(TARGET_PREFIX ${TARGET_NAMESPACE}.${TARGET_NAME})
-set(TARGET_LIBRARY ${PROJECT_NAME})
-set(TARGET_ALIAS ${TARGET_NAMESPACE}::${TARGET_NAME})
+# XXX unused! set(TARGET_LIBRARY ${PROJECT_NAME})
+# XXX unused! set(TARGET_ALIAS ${TARGET_NAMESPACE}::${TARGET_NAME})
 set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
 set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-config-targets)
 
@@ -41,13 +41,14 @@ set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-config-targets)
 # This will initialize the property on all targets declared after this to 1
 message(STATUS "CMAKE_CXX_COMPILER_IMPORT_STD=${CMAKE_CXX_COMPILER_IMPORT_STD}")
 if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
+    set(BEMAN_USE_MODULES ON)
     set(CMAKE_CXX_MODULE_STD ON)
+    set(CMAKE_CXX_SCAN_FOR_MODULES ON)
     message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
 endif()
 
 # gersemi: off
 if(CMAKE_CXX_SCAN_FOR_MODULES AND ${CMAKE_GENERATOR} STREQUAL Ninja)
-    set(BEMAN_USE_MODULES ON)
     message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
 else()
     message(WARNING "Missing support for CMAKE_CXX_SCAN_FOR_MODULES!")
@@ -68,28 +69,33 @@ if(BEMAN_USE_MODULES)
 
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
-    add_library(${TARGET_NAME} STATIC)
-    target_compile_features(${TARGET_NAME} PUBLIC cxx_std_${CMAKE_CXX_STANDARD})
+    add_library(beman_execution STATIC)
+    add_library(beman::execution ALIAS beman_execution)
+    target_compile_features(
+        beman_execution
+        PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
+    )
 
     include(GenerateExportHeader)
 
     generate_export_header(
-        ${TARGET_NAME}
-        BASE_NAME beman.execution
+        beman_execution
+        BASE_NAME beman_execution
         EXPORT_FILE_NAME beman/execution/modules_export.hpp
     )
     target_sources(
-        ${TARGET_NAME}
+        beman_execution
         PUBLIC
             FILE_SET HEADERS
                 BASE_DIRS include ${CMAKE_CURRENT_BINARY_DIR}
                 FILES
                     ${CMAKE_CURRENT_BINARY_DIR}/beman/execution/modules_export.hpp
     )
+    target_compile_definitions(beman_execution PUBLIC BEMAN_USE_MODULES)
 endif()
 
 if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
-    target_compile_definitions(${TARGET_NAME} PUBLIC BEMAN_HAS_IMPORT_STD)
+    target_compile_definitions(beman_execution PUBLIC BEMAN_HAS_IMPORT_STD)
 else()
     message(WARNING "Missing support for CMAKE_CXX_MODULE_STD!")
 endif()
@@ -132,6 +138,10 @@ endif()
 if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
     return()
 endif()
+
+include(infra/cmake/beman-install-library-config.cmake)
+# FIXME: install TARGETS target beman.execution is exported but not all of its interface file sets are installed
+# TODO: beman_install_library(beman_execution beman_execution_headers)
 
 include(CMakePackageConfigHelpers)
 

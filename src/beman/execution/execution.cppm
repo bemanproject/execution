@@ -7,6 +7,8 @@
 
 module;
 
+#include <beman/execution/modules_export.hpp>
+
 #include <cassert>
 
 #if defined(__APPLE__) && defined(__GNUC__)
@@ -40,7 +42,9 @@ export module beman.execution;
 
 // ----------------------------------------------------------------------------
 
+#ifndef BEMAN_EXECUTION_EXPORT
 #define BEMAN_EXECUTION_EXPORT
+#endif
 
 #if defined(disabled__cpp_deleted_function)
 #define BEMAN_EXECUTION_DELETE(msg) delete (msg)
