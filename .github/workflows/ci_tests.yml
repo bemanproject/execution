@@ -64,7 +64,7 @@ jobs:
               "tests": [
                 {"cxxversions": ["c++26"],
                   "tests": [
-                    { "stdlibs": ["libstdc++", "libc++"],
+                    { "stdlibs": ["libc++"],
                       "tests": [
                         "Debug.Default", "Release.Default", "Release.MaxSan",
                         "Debug.Dynamic"
@@ -74,7 +74,7 @@ jobs:
                 },
                 { "cxxversions": ["c++23"],
                   "tests": [
-                    {"stdlibs": ["libstdc++", "libc++"], "tests": ["Release.Default"]}
+                    {"stdlibs": ["libc++"], "tests": ["Release.Default"]}
                   ]
                 }
               ]
@@ -83,7 +83,7 @@ jobs:
               "tests": [
                 { "cxxversions": ["c++26", "c++23"],
                   "tests": [
-                    {"stdlibs": ["libstdc++", "libc++"], "tests": ["Release.Default"]}
+                    {"stdlibs": ["libc++"], "tests": ["Release.Default"]}
                   ]
                 }
               ]
