@@ -191,7 +191,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/write_env.hpp
 )
 
-if(BEMAN_USE_MODULES)
+if(BEMAN_HAS_MODULES)
     target_sources(
         ${TARGET_LIBRARY}
         PUBLIC FILE_SET CXX_MODULES FILES execution.cppm
@@ -218,6 +218,7 @@ install(
     TARGETS ${TARGET_LIBRARY}
     EXPORT ${TARGETS_EXPORT_NAME}
     ARCHIVE DESTINATION lib/$<CONFIG>
+    # TODO(CK): check this if is confirm to beman standard!
     FILE_SET ${TARGET_NAME}_public_headers
     FILE_SET ${TARGET_NAME}_detail_headers
     FILE_SET CXX_MODULES DESTINATION ${INSTALL_CONFIGDIR}/cxx-modules
@@ -229,7 +230,7 @@ install(
 install(
     EXPORT ${TARGETS_EXPORT_NAME}
     FILE ${TARGETS_EXPORT_NAME}.cmake
-    DESTINATION "${INSTALL_CONFIGDIR}"
+    DESTINATION ${INSTALL_CONFIGDIR}
     NAMESPACE ${TARGET_NAMESPACE}::
     CXX_MODULES_DIRECTORY
     .

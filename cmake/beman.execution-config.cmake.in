@@ -1,0 +1,11 @@
+include(CMakeFindDependencyMacro)
+
+# TODO(CK): set if needed! find_dependency(beman.inplace_vector)
+
+set(BEMAN_EXECUTION_VERSION @PROJECT_VERSION@)
+
+@PACKAGE_INIT@
+
+include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
+
+check_required_components(@PROJECT_NAME@)

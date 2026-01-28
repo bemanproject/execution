@@ -13,6 +13,7 @@ project(beman.execution VERSION 0.0.1 LANGUAGES CXX)
 # Modules opt in only on compilers that support it: msvc, g++-15 and clang-20+
 include(cxx-modules-rules)
 
+# TODO(CK): check this if is confirm to beman standard!
 set(TARGET_NAME execution)
 set(TARGET_NAMESPACE beman)
 set(TARGET_PREFIX ${TARGET_NAMESPACE}.${TARGET_NAME})
@@ -24,9 +25,14 @@ set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets)
 add_library(${TARGET_LIBRARY} STATIC)
 add_library(${TARGET_ALIAS} ALIAS ${TARGET_LIBRARY})
 
-# CMake requires the language standard to be specified as compile feature
-# when a target provides C++23 modules and the target will be installed
-target_compile_features(${TARGET_LIBRARY} PUBLIC cxx_std_23)
+if(BEMAN_HAS_MODULES)
+    # CMake requires the language standard to be specified as compile feature
+    # when a target provides C++23 modules and the target will be installed
+    target_compile_features(
+        ${TARGET_LIBRARY}
+        PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
+    )
+endif()
 
 option(
     BEMAN_EXECUTION_ENABLE_TESTING
@@ -67,7 +73,7 @@ if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
 endif()
 
 include(beman-install-library-config)
-# TODO(CK): beman_install_library(${TARGET_LIBRARY})
+# FIXME(CK): beman_install_library(beman.execution)
 
 include(CMakePackageConfigHelpers)
 
