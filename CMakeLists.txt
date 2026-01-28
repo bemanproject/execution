@@ -63,10 +63,29 @@ endif()
 # gersemi: on
 
 if(BEMAN_USE_MODULES)
+    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
     add_library(${TARGET_NAME} STATIC)
     target_compile_features(${TARGET_NAME} PUBLIC cxx_std_${CMAKE_CXX_STANDARD})
+
+    include(GenerateExportHeader)
+
+    generate_export_header(
+        ${TARGET_NAME}
+        BASE_NAME beman.execution
+        EXPORT_FILE_NAME beman/execution/modules_export.hpp
+    )
+    target_sources(
+        ${TARGET_NAME}
+        PUBLIC
+            FILE_SET HEADERS
+                BASE_DIRS include ${CMAKE_CURRENT_BINARY_DIR}
+                FILES
+                    ${CMAKE_CURRENT_BINARY_DIR}/beman/execution/modules_export.hpp
+    )
 endif()
 
 if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
