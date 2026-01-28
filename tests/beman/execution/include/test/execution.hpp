@@ -47,6 +47,10 @@ auto check_type(T1&&) {
 }
 
 auto use(auto&&...) noexcept -> void {}
+template <typename>
+auto use_type() noexcept -> void {}
+template <template <typename...> class>
+auto use_template() noexcept -> void {}
 
 struct throws {
     throws()                                                 = default;

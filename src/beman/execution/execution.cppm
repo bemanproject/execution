@@ -28,93 +28,17 @@ import std;
 
 export module beman.execution;
 
-// ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename T>
-concept queryable = ::std::destructible<T>;
-}
 
-// ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename T>
-concept movable_value =
-    ::std::move_constructible<::std::decay_t<T>> && ::std::constructible_from<::std::decay_t<T>, T> &&
-    (!::std::is_array_v<::std::remove_reference_t<T>>);
-}
 
-// ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename Fun>
-struct matching_sig_transform {
-    using type = Fun;
-};
-template <typename Return, typename... Args>
-struct matching_sig_transform<Return(Args...)> {
-    using type = Return(Args&&...);
-};
-
-template <typename Fun1, typename Fun2>
-inline constexpr bool matching_sig =
-    ::std::same_as<typename ::beman::execution::detail::matching_sig_transform<Fun1>::type,
-                   typename ::beman::execution::detail::matching_sig_transform<Fun2>::type>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Turn an error into a suitable exception_ptr.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename Error>
-decltype(auto) as_except_ptr(Error&& error) {
-    if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>) {
-        return ::std::forward<Error>(error);
-    } else if constexpr (::std::same_as<::std::error_code, ::std::decay_t<Error>>) {
-        return ::std::make_exception_ptr(::std::system_error(error));
-    } else {
-        return ::std::make_exception_ptr(::std::forward<Error>(error));
-    }
-}
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 
 #define BEMAN_EXECUTION_EXPORT
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-struct non_assignable;
-}
-
-// ----------------------------------------------------------------------------
-
-struct beman::execution::detail::non_assignable {
-    non_assignable()                                         = default;
-    non_assignable(non_assignable&&)                         = default;
-    non_assignable(const non_assignable&)                    = default;
-    auto operator=(non_assignable&&) -> non_assignable&      = delete;
-    auto operator=(const non_assignable&) -> non_assignable& = delete;
-};
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
 
 #if defined(disabled__cpp_deleted_function)
 #define BEMAN_EXECUTION_DELETE(msg) delete (msg)
@@ -170,19 +94,6 @@ namespace detail {}
 
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Alloc>
-concept simple_allocator =
-    requires(::std::remove_cvref_t<Alloc> alloc, ::std::size_t n) {
-        { *alloc.allocate(n) } -> ::std::same_as<typename ::std::remove_cvref_t<Alloc>::value_type&>;
-        alloc.deallocate(alloc.allocate(n), n);
-    } && ::std::copy_constructible<::std::remove_cvref_t<Alloc>> &&
-    ::std::equality_comparable<::std::remove_cvref_t<Alloc>>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 
@@ -213,6 +124,377 @@ concept simple_allocator =
 #undef BEMAN_EXECUTION_DIAGNOSTIC_PUSHED
 #endif // #ifdef BEMAN_EXECUTION_DIAGNOSTIC_PUSHED
 
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename T>
+concept queryable = ::std::destructible<T>;
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Actual implementation of the forwarding_query customization point object
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+struct forwarding_query_t {
+    template <typename Object>
+        requires requires(Object&& object, const forwarding_query_t& query) {
+            { ::std::forward<Object>(object).query(query) } noexcept -> ::std::same_as<bool>;
+        }
+    constexpr auto operator()(Object&& object) const noexcept -> bool {
+        return ::std::forward<Object>(object).query(*this);
+    }
+    template <typename Object>
+    constexpr auto operator()(Object&&) const noexcept -> bool {
+        return ::std::derived_from<::std::remove_cvref_t<Object>, ::beman::execution::detail::forwarding_query_t>;
+    }
+};
+} // namespace beman::execution::detail
+
+namespace beman::execution {
+/*!
+ * \brief Type of the forwarding_query customization point object
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ */
+export using forwarding_query_t = beman::execution::detail::forwarding_query_t;
+/*!
+ * \brief The customization point object to determine whether queries should be forwarded
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ *
+ * \details
+ * The `constexpr` call `forwarding_query(q)` determines whether the query `q` passed
+ * as argument should be forwarded. The result is determined as follows:
+ *
+ * * If the `q.query(forwarding_query)` is a `noexcept` expression of type `bool` the result of this call.
+ * * If the type of `q` is derived from `forwarding_query_t`.
+ * * `false` otherwise.
+ */
+export inline constexpr forwarding_query_t forwarding_query{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename T>
+concept movable_value =
+    ::std::move_constructible<::std::decay_t<T>> && ::std::constructible_from<::std::decay_t<T>, T> &&
+    (!::std::is_array_v<::std::remove_reference_t<T>>);
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Fun>
+struct matching_sig_transform {
+    using type = Fun;
+};
+template <typename Return, typename... Args>
+struct matching_sig_transform<Return(Args...)> {
+    using type = Return(Args&&...);
+};
+
+template <typename Fun1, typename Fun2>
+inline constexpr bool matching_sig =
+    ::std::same_as<typename ::beman::execution::detail::matching_sig_transform<Fun1>::type,
+                   typename ::beman::execution::detail::matching_sig_transform<Fun2>::type>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Turn an error into a suitable exception_ptr.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename Error>
+decltype(auto) as_except_ptr(Error&& error) {
+    if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>) {
+        return ::std::forward<Error>(error);
+    } else if constexpr (::std::same_as<::std::error_code, ::std::decay_t<Error>>) {
+        return ::std::make_exception_ptr(::std::system_error(error));
+    } else {
+        return ::std::make_exception_ptr(::std::forward<Error>(error));
+    }
+}
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+/*!
+ * \brief Type of the customization point object for successful completions.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ */
+export struct set_value_t {
+    template <typename Receiver, typename... Args>
+    auto operator()(Receiver&, Args&&...) const
+        -> void = BEMAN_EXECUTION_DELETE("set_value requires the receiver to be passed as non-const rvalue");
+    template <typename Receiver, typename... Args>
+    auto operator()(const Receiver&&, Args&&...) const
+        -> void = BEMAN_EXECUTION_DELETE("set_value requires the receiver to be passed as non-const rvalue");
+    template <typename Receiver, typename... Args>
+    auto operator()(Receiver&&, Args&&...) const -> void
+        requires(not requires(Receiver&& receiver, Args&&... args) {
+                    ::std::forward<Receiver>(receiver).set_value(::std::forward<Args>(args)...);
+                })
+    = BEMAN_EXECUTION_DELETE("set_value requires a suitable member overload on the receiver");
+    template <typename Receiver, typename... Args>
+        requires(not noexcept(::std::declval<Receiver>().set_value(::std::declval<Args>()...)))
+    auto operator()(Receiver&&, Args&&...) const
+        -> void = BEMAN_EXECUTION_DELETE("the call to receiver.set_value(args...) has to be noexcept");
+
+    template <typename Receiver, typename... Args>
+    auto operator()(Receiver&& receiver, Args&&... args) const noexcept -> void {
+        ::std::forward<Receiver>(receiver).set_value(::std::forward<Args>(args)...);
+    }
+};
+/*!
+ * \var set_value
+ * \brief Customization point object for successful completions.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ */
+export inline constexpr set_value_t set_value{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+/*!
+ * \brief Type of the customization point object for error completions.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ */
+export struct set_error_t {
+    template <typename Receiver, typename Error>
+    auto operator()(Receiver&, Error&&) const
+        -> void = BEMAN_EXECUTION_DELETE("set_error requires the receiver to be passed as non-const rvalue");
+    template <typename Receiver, typename Error>
+    auto operator()(const Receiver&&, Error&&) const
+        -> void = BEMAN_EXECUTION_DELETE("set_error requires the receiver to be passed as non-const rvalue");
+    template <typename Receiver, typename Error>
+    auto operator()(Receiver&&, Error&&) const -> void
+        requires(not requires(Receiver&& receiver, Error&& error) {
+                    ::std::forward<Receiver>(receiver).set_error(::std::forward<Error>(error));
+                })
+    = BEMAN_EXECUTION_DELETE("set_error requires a suitable member overload on the receiver");
+    template <typename Receiver, typename Error>
+        requires(not noexcept(::std::declval<Receiver>().set_error(::std::declval<Error>())))
+    auto operator()(Receiver&&, Error&&) const
+        -> void = BEMAN_EXECUTION_DELETE("the call to receiver.set_error(error) has to be noexcept");
+
+    // NOLINTBEGIN(misc-no-recursion)
+    template <typename Receiver, typename Error>
+    auto operator()(Receiver&& receiver, Error&& error) const noexcept -> void {
+        ::std::forward<Receiver>(receiver).set_error(::std::forward<Error>(error));
+    }
+    // NOLINTEND(misc-no-recursion)
+};
+
+/*!
+ * \brief Customization point object for error completions.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ */
+export inline constexpr set_error_t set_error{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+/*!
+ * \brief Type of the customization point object for cancellation completions.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ */
+export struct set_stopped_t {
+    template <typename Receiver>
+    auto operator()(Receiver&) const
+        -> void = BEMAN_EXECUTION_DELETE("set_stopped requires the receiver to be passed as non-const rvalue");
+    template <typename Receiver>
+    auto operator()(const Receiver&&) const
+        -> void = BEMAN_EXECUTION_DELETE("set_stopped requires the receiver to be passed as non-const rvalue");
+    template <typename Receiver>
+    auto operator()(Receiver&&) const -> void
+        requires(not requires(Receiver&& receiver) { ::std::forward<Receiver>(receiver).set_stopped(); })
+    = BEMAN_EXECUTION_DELETE("set_stopped requires a suitable member overload on the receiver");
+    template <typename Receiver>
+        requires(not noexcept(::std::declval<Receiver>().set_stopped()))
+    auto operator()(Receiver&&) const
+        -> void = BEMAN_EXECUTION_DELETE("the call to receiver.set_stopped() has to be noexcept");
+
+    template <typename Receiver>
+    auto operator()(Receiver&& receiver) const noexcept -> void {
+        ::std::forward<Receiver>(receiver).set_stopped();
+    }
+};
+
+/*!
+ * \brief Customization point object for cancellation completions.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ */
+export inline constexpr set_stopped_t set_stopped{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export struct start_t {
+    template <typename State>
+    auto operator()(State&&) const -> void = BEMAN_EXECUTION_DELETE("start(obj) requires an lvalue argument");
+    template <typename State>
+        requires(not requires(State& state) { state.start(); })
+    auto operator()(State&) const -> void = BEMAN_EXECUTION_DELETE("state needs to have a start() member");
+    template <typename State>
+        requires(not requires(const State& state) { state.start(); })
+    auto operator()(const State&) const -> void = BEMAN_EXECUTION_DELETE("state needs to have a start() member");
+
+    template <typename State>
+        requires(not requires(State& state) {
+                    { state.start() } noexcept;
+                })
+    auto operator()(State&) const -> void = BEMAN_EXECUTION_DELETE("state start() member has to be noexcept");
+    template <typename State>
+        requires(not requires(const State& state) {
+                    { state.start() } noexcept;
+                })
+    auto operator()(const State&) const -> void = BEMAN_EXECUTION_DELETE("state start() member has to be noexcept");
+
+    template <typename State>
+    auto operator()(const State& state) const noexcept -> void {
+        state.start();
+    }
+    // NOLINTBEGIN(misc-no-recursion)
+    template <typename State>
+    auto operator()(State& state) const noexcept -> void {
+        state.start();
+    }
+    // NOLINTEND(misc-no-recursion)
+};
+
+export inline constexpr start_t start{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+struct non_assignable;
+}
+
+// ----------------------------------------------------------------------------
+
+struct beman::execution::detail::non_assignable {
+    non_assignable()                                         = default;
+    non_assignable(non_assignable&&)                         = default;
+    non_assignable(const non_assignable&)                    = default;
+    auto operator=(non_assignable&&) -> non_assignable&      = delete;
+    auto operator=(const non_assignable&) -> non_assignable& = delete;
+};
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Alloc>
+concept simple_allocator =
+    requires(::std::remove_cvref_t<Alloc> alloc, ::std::size_t n) {
+        { *alloc.allocate(n) } -> ::std::same_as<typename ::std::remove_cvref_t<Alloc>::value_type&>;
+        alloc.deallocate(alloc.allocate(n), n);
+    } && ::std::copy_constructible<::std::remove_cvref_t<Alloc>> &&
+    ::std::equality_comparable<::std::remove_cvref_t<Alloc>>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export class never_stop_token;
+}
+
+// ----------------------------------------------------------------------------
+
+class beman::execution::never_stop_token {
+    struct private_callback_type {
+        explicit private_callback_type(never_stop_token, auto&&) noexcept {}
+    };
+
+  public:
+    template <typename>
+    using callback_type = private_callback_type;
+
+    static constexpr auto stop_requested() noexcept -> bool { return {}; }
+    static constexpr auto stop_possible() noexcept -> bool { return {}; }
+    auto                  operator==(const never_stop_token&) const -> bool = default;
+};
+
+// ----------------------------------------------------------------------------
+
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -228,6 +510,9 @@ concept decayed_same_as = ::std::same_as<::std::remove_cvref_t<T0>, ::std::remov
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -242,6 +527,9 @@ concept callable = requires(Fun&& fun, Args&&... args) { ::std::forward<Fun>(fun
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 // std::forward_like() doesn't work on some compilers, yet. This header
@@ -312,6 +600,9 @@ auto forward_like(U&& u) noexcept -> decltype(auto) {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -361,850 +652,9 @@ join_env(Env1&&, Env2&&) -> join_env<::std::remove_cvref_t<Env1>, ::std::remove_
 
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename Tag, typename Env, typename Value>
-    requires requires(const Tag& tag, const Env& env) { tag(env); }
-constexpr auto query_with_default(Tag, const Env& env, Value&&) noexcept(noexcept(Tag()(env))) -> decltype(auto) {
-    return Tag()(env);
-}
 
-template <typename Tag, typename Env, typename Value>
-constexpr auto
-query_with_default(Tag, const Env&, Value&& value) noexcept(noexcept(static_cast<Value>(std::forward<Value>(value))))
-    -> decltype(auto) {
-    return static_cast<Value>(std::forward<Value>(value));
-}
-} // namespace beman::execution::detail
 
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Auxiliary type alias used to determine the type of a child sender.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename Sender, ::std::size_t I = 0u>
-using child_type = decltype(::std::declval<Sender>().template get<I + 2>());
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Helper type alias to get type type of a tuple after decaying the argument types
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename... T>
-using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Query, typename Value>
-class make_env {
-  private:
-    Value value;
-
-  public:
-    template <typename V>
-    make_env(const Query&, V&& v) : value(::std::forward<V>(v)) {}
-    constexpr auto query(const Query&) const noexcept -> const Value& { return this->value; }
-    constexpr auto query(const Query&) noexcept -> Value& { return this->value; }
-};
-template <typename Query, typename Value>
-make_env(Query&&, Value&& value) -> make_env<::std::remove_cvref_t<Query>, ::std::remove_cvref_t<Value>>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail::meta::detail {
-template <typename, typename>
-struct prepend;
-
-template <template <typename...> class List, typename H, typename... T>
-struct prepend<H, List<T...>> {
-    using type = List<H, T...>;
-};
-} // namespace beman::execution::detail::meta::detail
-
-namespace beman::execution::detail::meta {
-template <typename H, typename Tail>
-using prepend = typename ::beman::execution::detail::meta::detail::prepend<H, Tail>::type;
-}
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail::meta {
-template <template <typename...> class To, typename>
-struct to_type_list;
-template <template <typename...> class To, template <typename...> class List, typename... T>
-struct to_type_list<To, List<T...>> {
-    using type = To<T...>;
-};
-template <template <typename...> class To, typename T>
-using to = typename ::beman::execution::detail::meta::to_type_list<To, T>::type;
-} // namespace beman::execution::detail::meta
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename...>
-struct type_list {};
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Fun, typename... Args>
-/*!
- * \brief Type alias used determine the result of function [object] call.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
-}
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail::meta {
-template <typename>
-struct size;
-template <template <typename...> class L, typename... T>
-struct size<L<T...>> {
-    static constexpr ::std::size_t value{sizeof...(T)};
-};
-template <typename T>
-inline constexpr ::std::size_t size_v{::beman::execution::detail::meta::size<T>::value};
-} // namespace beman::execution::detail::meta
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename St>
-struct on_stop_request {
-    St&  st;
-    auto operator()() const -> void { this->st.request_stop(); }
-};
-template <typename T>
-on_stop_request(T&) -> on_stop_request<T>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Auxiliary class template used to detect whether a type alias exist within a class.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <template <typename> class>
-struct check_type_alias_exist;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Expr, typename Promise>
-auto get_awaiter(Expr&& expr, Promise& promise) -> decltype(auto) {
-    auto transform{[&]() -> decltype(auto) {
-        if constexpr (requires { promise.await_transform(::std::forward<Expr>(expr)); })
-            return promise.await_transform(::std::forward<Expr>(expr));
-        else
-            return ::std::forward<Expr>(expr);
-    }};
-    if constexpr (requires { operator co_await(transform()); }) {
-
-        static_assert(not requires { transform().operator co_await(); }, "only one operator co_await is allowed");
-        return operator co_await(transform());
-    } else if constexpr (requires { transform().operator co_await(); })
-        return transform().operator co_await();
-    else
-        return transform();
-}
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-struct sender_convert_to_any_t {
-    template <typename T>
-    constexpr operator T() const; // NOLINT(hicpp-explicit-conversions)
-};
-
-template <typename Tag, typename Data, typename Children>
-struct sender_meta {
-    using tag_type      = ::std::remove_cvref_t<Tag>;
-    using data_type     = ::std::remove_cvref_t<Data>;
-    using children_type = ::std::remove_cvref_t<Children>;
-};
-
-template <typename Tag, typename Data, typename Children>
-struct sender_data {
-    using tag_type      = ::std::remove_cvref_t<Tag>;
-    using data_type     = ::std::remove_cvref_t<Data>;
-    using children_type = ::std::remove_cvref_t<Children>;
-
-    tag_type tag;
-    Data&    data;
-    Children children;
-};
-template <typename Tag, typename Data, typename Children>
-sender_data(Tag&&, Data&, Children&&) -> sender_data<Tag, Data, Children>;
-
-template <typename Sender>
-auto get_sender_data(Sender&& sender) {
-#if 0
-        //-dk:TODO should use a dynamic/language approach:
-        auto&& [tag, data, ... children] = sender;
-        return sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(children)...>>;
-#else
-    using sender_type = ::std::remove_cvref_t<Sender>;
-    static constexpr ::beman::execution::detail::sender_convert_to_any_t at{};
-
-    if constexpr (requires {
-                      sender.template get<0>();
-                      sender.size();
-                  })
-        return [&sender]<::std::size_t... I>(::std::index_sequence<I...>) {
-            return ::beman::execution::detail::sender_data{
-                sender.template get<0>(), sender.template get<1>(), ::std::tie(sender.template get<2 + I>()...)};
-        }(::std::make_index_sequence<::std::decay_t<decltype(sender)>::size() - 2u>{});
-    else if constexpr (requires { sender_type{at, at, at, at, at, at}; }) {
-        auto&& [tag, data, c0, c1, c2, c3] = sender;
-        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1, c2, c3)};
-    } else if constexpr (requires { sender_type{at, at, at, at, at}; }) {
-        auto&& [tag, data, c0, c1, c2] = sender;
-        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1, c2)};
-    } else if constexpr (requires { sender_type{at, at, at, at}; }) {
-        auto&& [tag, data, c0, c1] = sender;
-        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1)};
-    } else if constexpr (requires { sender_type{at, at, at}; }) {
-        auto&& [tag, data, c0] = sender;
-        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0)};
-    } else if constexpr (requires { sender_type{at, at}; }) {
-        auto&& [tag, data] = sender;
-        return ::beman::execution::detail::sender_data{tag, data, ::std::tuple<>{}};
-    } else {
-        return ::beman::execution::detail::sender_meta<void, void, void>{};
-    }
-#endif
-}
-
-template <typename Sender>
-auto get_sender_meta(Sender&& sender) {
-    using type = decltype(get_sender_data(sender));
-    return sender_meta<typename type::tag_type, typename type::data_type, typename type::children_type>{};
-}
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Fun, typename... Args>
-auto suspend_complete(Fun fun, Args&&... args) noexcept {
-    auto f{[&, fun]() noexcept { fun(::std::forward<Args>(args)...); }};
-    struct awaiter {
-        decltype(f) fun;
-
-        static constexpr auto await_ready() noexcept -> bool { return false; }
-        auto                  await_suspend(::std::coroutine_handle<>) noexcept { this->fun(); }
-#if __cpp_lib_unreachable < 202202L
-        [[noreturn]] auto await_resume() noexcept -> void { ::std::terminate(); }
-#else
-        [[noreturn]] auto await_resume() noexcept -> void { ::std::unreachable(); }
-#endif
-    };
-    return awaiter{f};
-}
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail::meta {
-template <typename T, typename... S>
-inline constexpr bool contains{(::std::same_as<T, S> || ...)};
-}
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Helper concept to determine if the first argument decays to the second argument
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename From, typename To>
-concept decays_to = ::std::same_as<::std::decay_t<From>, To>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-struct immovable;
-struct virtual_immovable;
-} // namespace beman::execution::detail
-
-struct beman::execution::detail::immovable {
-    constexpr immovable()                          = default;
-    immovable(immovable&&)                         = delete;
-    immovable(const immovable&)                    = delete;
-    ~immovable()                                   = default;
-    auto operator=(immovable&&) -> immovable&      = delete;
-    auto operator=(const immovable&) -> immovable& = delete;
-};
-
-struct beman::execution::detail::virtual_immovable {
-    constexpr virtual_immovable()                                  = default;
-    virtual_immovable(virtual_immovable&&)                         = delete;
-    virtual_immovable(const virtual_immovable&)                    = delete;
-    virtual ~virtual_immovable()                                   = default;
-    auto operator=(virtual_immovable&&) -> virtual_immovable&      = delete;
-    auto operator=(const virtual_immovable&) -> virtual_immovable& = delete;
-};
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-struct unspecified_promise {
-    auto get_return_object() noexcept -> unspecified_promise;
-    auto initial_suspend() noexcept -> ::std::suspend_never;
-    auto final_suspend() noexcept -> ::std::suspend_never;
-    void unhandled_exception() noexcept;
-    void return_void() noexcept;
-    auto unhandled_stopped() noexcept -> ::std::coroutine_handle<>;
-};
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Auxiliary type trait used to detect specializations of `std::coroutine_handle`.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename>
-struct is_coroutine_handle : ::std::false_type {};
-/*!
- * \brief The actual partial specialization detecting `std::coroutine_handle`.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename T>
-struct is_coroutine_handle<::std::coroutine_handle<T>> : ::std::true_type {};
-
-/*!
- * \brief A concept used to identify valid results for `await_suspend`.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename T>
-concept await_suspend_result =
-    ::std::same_as<T, void> || ::std::same_as<T, bool> || ::beman::execution::detail::is_coroutine_handle<T>::value;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <template <typename...> class T, typename... Args>
-concept valid_specialization = requires { typename T<Args...>; };
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <bool>
-struct indirect_meta_apply {
-    template <template <typename...> class T, class... A>
-    using meta_apply = T<A...>;
-};
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Sender>
-using indices_for = typename ::std::remove_reference_t<Sender>::indices_for;
-}
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Helper type alias to get the type after decaying the argument
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <auto&& Tag>
-using decayed_typeof = ::std::decay_t<decltype(Tag)>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <::beman::execution::detail::queryable>
-struct env_base;
-
-template <typename E, typename Q>
-concept has_query = requires(const E& e) { e.query(::std::declval<Q>()); };
-
-template <typename Q, typename... E>
-struct find_env;
-template <typename Q, typename E0, typename... E>
-    requires has_query<E0, Q>
-struct find_env<Q, E0, E...> {
-    using type = E0;
-};
-template <typename Q, typename E0, typename... E>
-    requires(not has_query<E0, Q>)
-struct find_env<Q, E0, E...> {
-    using type = typename find_env<Q, E...>::type;
-};
-} // namespace beman::execution::detail
-
-namespace beman::execution {
-export template <::beman::execution::detail::queryable... Envs>
-struct env;
-
-template <::beman::execution::detail::queryable... Envs>
-env(Envs...) -> env<::std::unwrap_reference_t<Envs>...>;
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-template <::beman::execution::detail::queryable Env>
-struct beman::execution::detail::env_base {
-    Env env_;
-};
-
-template <::beman::execution::detail::queryable... Envs>
-struct beman::execution::env : ::beman::execution::detail::env_base<Envs>... {
-    [[no_unique_address]] ::beman::execution::detail::non_assignable na_{};
-
-    template <typename Q>
-        requires(::beman::execution::detail::has_query<Envs, Q> || ...)
-    constexpr auto query(Q q) const noexcept -> decltype(auto) {
-        using E = typename ::beman::execution::detail::find_env<Q, Envs...>::type;
-        return q(static_cast<const ::beman::execution::detail::env_base<E>&>(*this).env_);
-    }
-};
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Actual implementation of the forwarding_query customization point object
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-struct forwarding_query_t {
-    template <typename Object>
-        requires requires(Object&& object, const forwarding_query_t& query) {
-            { ::std::forward<Object>(object).query(query) } noexcept -> ::std::same_as<bool>;
-        }
-    constexpr auto operator()(Object&& object) const noexcept -> bool {
-        return ::std::forward<Object>(object).query(*this);
-    }
-    template <typename Object>
-    constexpr auto operator()(Object&&) const noexcept -> bool {
-        return ::std::derived_from<::std::remove_cvref_t<Object>, ::beman::execution::detail::forwarding_query_t>;
-    }
-};
-} // namespace beman::execution::detail
-
-namespace beman::execution {
-/*!
- * \brief Type of the forwarding_query customization point object
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- */
-export using forwarding_query_t = beman::execution::detail::forwarding_query_t;
-/*!
- * \brief The customization point object to determine whether queries should be forwarded
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- *
- * \details
- * The `constexpr` call `forwarding_query(q)` determines whether the query `q` passed
- * as argument should be forwarded. The result is determined as follows:
- *
- * * If the `q.query(forwarding_query)` is a `noexcept` expression of type `bool` the result of this call.
- * * If the type of `q` is derived from `forwarding_query_t`.
- * * `false` otherwise.
- */
-export inline constexpr forwarding_query_t forwarding_query{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-/*!
- * \brief Type of the customization point object for successful completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- */
-export struct set_value_t {
-    template <typename Receiver, typename... Args>
-    auto operator()(Receiver&, Args&&...) const
-        -> void = BEMAN_EXECUTION_DELETE("set_value requires the receiver to be passed as non-const rvalue");
-    template <typename Receiver, typename... Args>
-    auto operator()(const Receiver&&, Args&&...) const
-        -> void = BEMAN_EXECUTION_DELETE("set_value requires the receiver to be passed as non-const rvalue");
-    template <typename Receiver, typename... Args>
-    auto operator()(Receiver&&, Args&&...) const -> void
-        requires(not requires(Receiver&& receiver, Args&&... args) {
-                    ::std::forward<Receiver>(receiver).set_value(::std::forward<Args>(args)...);
-                })
-    = BEMAN_EXECUTION_DELETE("set_value requires a suitable member overload on the receiver");
-    template <typename Receiver, typename... Args>
-        requires(not noexcept(::std::declval<Receiver>().set_value(::std::declval<Args>()...)))
-    auto operator()(Receiver&&, Args&&...) const
-        -> void = BEMAN_EXECUTION_DELETE("the call to receiver.set_value(args...) has to be noexcept");
-
-    template <typename Receiver, typename... Args>
-    auto operator()(Receiver&& receiver, Args&&... args) const noexcept -> void {
-        ::std::forward<Receiver>(receiver).set_value(::std::forward<Args>(args)...);
-    }
-};
-/*!
- * \var set_value
- * \brief Customization point object for successful completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- */
-export inline constexpr set_value_t set_value{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-/*!
- * \brief Type of the customization point object for error completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- */
-export struct set_error_t {
-    template <typename Receiver, typename Error>
-    auto operator()(Receiver&, Error&&) const
-        -> void = BEMAN_EXECUTION_DELETE("set_error requires the receiver to be passed as non-const rvalue");
-    template <typename Receiver, typename Error>
-    auto operator()(const Receiver&&, Error&&) const
-        -> void = BEMAN_EXECUTION_DELETE("set_error requires the receiver to be passed as non-const rvalue");
-    template <typename Receiver, typename Error>
-    auto operator()(Receiver&&, Error&&) const -> void
-        requires(not requires(Receiver&& receiver, Error&& error) {
-                    ::std::forward<Receiver>(receiver).set_error(::std::forward<Error>(error));
-                })
-    = BEMAN_EXECUTION_DELETE("set_error requires a suitable member overload on the receiver");
-    template <typename Receiver, typename Error>
-        requires(not noexcept(::std::declval<Receiver>().set_error(::std::declval<Error>())))
-    auto operator()(Receiver&&, Error&&) const
-        -> void = BEMAN_EXECUTION_DELETE("the call to receiver.set_error(error) has to be noexcept");
-
-    // NOLINTBEGIN(misc-no-recursion)
-    template <typename Receiver, typename Error>
-    auto operator()(Receiver&& receiver, Error&& error) const noexcept -> void {
-        ::std::forward<Receiver>(receiver).set_error(::std::forward<Error>(error));
-    }
-    // NOLINTEND(misc-no-recursion)
-};
-
-/*!
- * \brief Customization point object for error completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- */
-export inline constexpr set_error_t set_error{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-/*!
- * \brief Type of the customization point object for cancellation completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- */
-export struct set_stopped_t {
-    template <typename Receiver>
-    auto operator()(Receiver&) const
-        -> void = BEMAN_EXECUTION_DELETE("set_stopped requires the receiver to be passed as non-const rvalue");
-    template <typename Receiver>
-    auto operator()(const Receiver&&) const
-        -> void = BEMAN_EXECUTION_DELETE("set_stopped requires the receiver to be passed as non-const rvalue");
-    template <typename Receiver>
-    auto operator()(Receiver&&) const -> void
-        requires(not requires(Receiver&& receiver) { ::std::forward<Receiver>(receiver).set_stopped(); })
-    = BEMAN_EXECUTION_DELETE("set_stopped requires a suitable member overload on the receiver");
-    template <typename Receiver>
-        requires(not noexcept(::std::declval<Receiver>().set_stopped()))
-    auto operator()(Receiver&&) const
-        -> void = BEMAN_EXECUTION_DELETE("the call to receiver.set_stopped() has to be noexcept");
-
-    template <typename Receiver>
-    auto operator()(Receiver&& receiver) const noexcept -> void {
-        ::std::forward<Receiver>(receiver).set_stopped();
-    }
-};
-
-/*!
- * \brief Customization point object for cancellation completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- */
-export inline constexpr set_stopped_t set_stopped{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-export struct start_t {
-    template <typename State>
-    auto operator()(State&&) const -> void = BEMAN_EXECUTION_DELETE("start(obj) requires an lvalue argument");
-    template <typename State>
-        requires(not requires(State& state) { state.start(); })
-    auto operator()(State&) const -> void = BEMAN_EXECUTION_DELETE("state needs to have a start() member");
-    template <typename State>
-        requires(not requires(const State& state) { state.start(); })
-    auto operator()(const State&) const -> void = BEMAN_EXECUTION_DELETE("state needs to have a start() member");
-
-    template <typename State>
-        requires(not requires(State& state) {
-                    { state.start() } noexcept;
-                })
-    auto operator()(State&) const -> void = BEMAN_EXECUTION_DELETE("state start() member has to be noexcept");
-    template <typename State>
-        requires(not requires(const State& state) {
-                    { state.start() } noexcept;
-                })
-    auto operator()(const State&) const -> void = BEMAN_EXECUTION_DELETE("state start() member has to be noexcept");
-
-    template <typename State>
-    auto operator()(const State& state) const noexcept -> void {
-        state.start();
-    }
-    // NOLINTBEGIN(misc-no-recursion)
-    template <typename State>
-    auto operator()(State& state) const noexcept -> void {
-        state.start();
-    }
-    // NOLINTEND(misc-no-recursion)
-};
-
-export inline constexpr start_t start{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename>
-struct prop_like;
-}
-
-namespace beman::execution {
-export template <typename Query, typename Value>
-struct prop;
-
-template <typename Query, typename Value>
-prop(Query, Value, ::beman::execution::detail::non_assignable = {}) -> prop<Query, ::std::unwrap_reference_t<Value>>;
-} // namespace beman::execution
-
-template <typename V>
-struct beman::execution::detail::prop_like {
-    V    value;
-    auto query(auto) const noexcept -> const V& { return this->value; }
-};
-
-template <typename Query, typename Value>
-struct beman::execution::prop {
-    static_assert(::beman::execution::detail::callable<Query, ::beman::execution::detail::prop_like<Value>>);
-
-    [[no_unique_address]] Query                                      query_{};
-    [[no_unique_address]] Value                                      value_{};
-    [[no_unique_address]] ::beman::execution::detail::non_assignable non_assignable_{};
-
-    // prop(prop&&)                = default;
-    // prop(const prop&)           = default;
-    // auto operator=(prop&&) -> prop&      = delete;
-    // auto operator=(const prop&) -> prop& = delete;
-
-    constexpr auto query(Query) const noexcept -> const Value& { return this->value_; }
-};
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-export class never_stop_token;
-}
-
-// ----------------------------------------------------------------------------
-
-class beman::execution::never_stop_token {
-    struct private_callback_type {
-        explicit private_callback_type(never_stop_token, auto&&) noexcept {}
-    };
-
-  public:
-    template <typename>
-    using callback_type = private_callback_type;
-
-    static constexpr auto stop_requested() noexcept -> bool { return {}; }
-    static constexpr auto stop_possible() noexcept -> bool { return {}; }
-    auto                  operator==(const never_stop_token&) const -> bool = default;
-};
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-export template <typename Token>
-concept stoppable_token = requires(const Token& token) {
-    typename ::beman::execution::detail::check_type_alias_exist<Token::template callback_type>;
-    { token.stop_requested() } noexcept -> ::std::same_as<bool>;
-    { token.stop_possible() } noexcept -> ::std::same_as<bool>;
-    { Token(token) } noexcept;
-} && ::std::copyable<Token> && ::std::equality_comparable<Token> && ::std::swappable<Token>;
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Auxiliary type alias to get the result type of an awaiter.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename T, typename Promise>
-using await_result_type =
-    decltype(::beman::execution::detail::get_awaiter(::std::declval<T>(), ::std::declval<Promise&>()).await_resume());
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-export template <typename Sender>
-using tag_of_t = typename decltype(::beman::execution::detail::get_sender_meta(::std::declval<Sender&&>()))::tag_type;
-}
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail::meta::detail {
-template <typename...>
-struct combine;
-
-template <template <typename...> class L0, typename... T0>
-struct combine<L0<T0...>> {
-    using type = L0<T0...>;
-};
-template <template <typename...> class L0,
-          typename... T0,
-          template <typename...> class L1,
-          typename... T1,
-          typename... L>
-struct combine<L0<T0...>, L1<T1...>, L...> {
-    using type = typename combine<L0<T0..., T1...>, L...>::type;
-};
-} // namespace beman::execution::detail::meta::detail
-
-namespace beman::execution::detail::meta {
-template <typename... L>
-using combine = typename ::beman::execution::detail::meta::detail::combine<L...>::type;
-}
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail::meta::detail {
-template <typename, typename>
-struct make_unique;
-template <typename>
-struct unique;
-
-template <template <typename...> class List, typename... R>
-struct make_unique<List<R...>, List<>> {
-    using type = List<R...>;
-};
-
-template <template <typename...> class List, typename... R, typename H, typename... T>
-struct make_unique<List<R...>, List<H, T...>> {
-    using type = typename ::beman::execution::detail::meta::detail::make_unique<
-        ::std::conditional_t<::beman::execution::detail::meta::contains<H, R...>, List<R...>, List<R..., H>>,
-        List<T...>>::type;
-};
-
-template <template <typename...> class List, typename... T>
-struct unique<List<T...>> {
-    using type = typename ::beman::execution::detail::meta::detail::make_unique<List<>, List<T...>>::type;
-};
-} // namespace beman::execution::detail::meta::detail
-
-namespace beman::execution::detail::meta {
-template <typename T>
-using unique = typename ::beman::execution::detail::meta::detail::unique<T>::type;
-}
-
-// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 
@@ -1340,6 +790,1063 @@ struct tuple_element<I, T> {
 
 // ----------------------------------------------------------------------------
 
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Tag, typename Env, typename Value>
+    requires requires(const Tag& tag, const Env& env) { tag(env); }
+constexpr auto query_with_default(Tag, const Env& env, Value&&) noexcept(noexcept(Tag()(env))) -> decltype(auto) {
+    return Tag()(env);
+}
+
+template <typename Tag, typename Env, typename Value>
+constexpr auto
+query_with_default(Tag, const Env&, Value&& value) noexcept(noexcept(static_cast<Value>(std::forward<Value>(value))))
+    -> decltype(auto) {
+    return static_cast<Value>(std::forward<Value>(value));
+}
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Auxiliary type alias used to determine the type of a child sender.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename Sender, ::std::size_t I = 0u>
+using child_type = decltype(::std::declval<Sender>().template get<I + 2>());
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Helper type alias to get type type of a tuple after decaying the argument types
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename... T>
+using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Query, typename Value>
+class make_env {
+  private:
+    Value value;
+
+  public:
+    template <typename V>
+    make_env(const Query&, V&& v) : value(::std::forward<V>(v)) {}
+    constexpr auto query(const Query&) const noexcept -> const Value& { return this->value; }
+    constexpr auto query(const Query&) noexcept -> Value& { return this->value; }
+};
+template <typename Query, typename Value>
+make_env(Query&&, Value&& value) -> make_env<::std::remove_cvref_t<Query>, ::std::remove_cvref_t<Value>>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail::meta::detail {
+template <typename, typename>
+struct prepend;
+
+template <template <typename...> class List, typename H, typename... T>
+struct prepend<H, List<T...>> {
+    using type = List<H, T...>;
+};
+} // namespace beman::execution::detail::meta::detail
+
+namespace beman::execution::detail::meta {
+template <typename H, typename Tail>
+using prepend = typename ::beman::execution::detail::meta::detail::prepend<H, Tail>::type;
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail::meta {
+template <template <typename...> class To, typename>
+struct to_type_list;
+template <template <typename...> class To, template <typename...> class List, typename... T>
+struct to_type_list<To, List<T...>> {
+    using type = To<T...>;
+};
+template <template <typename...> class To, typename T>
+using to = typename ::beman::execution::detail::meta::to_type_list<To, T>::type;
+} // namespace beman::execution::detail::meta
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename...>
+struct type_list {};
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export template <class Token, class CallbackFun>
+using stop_callback_for_t = typename Token::template callback_type<CallbackFun>;
+}
+
+namespace beman::execution::detail {
+template <typename CallbackFun, typename Token, typename Initializer = CallbackFun>
+concept stoppable_callback_for =
+    ::std::invocable<CallbackFun> && ::std::constructible_from<CallbackFun, Initializer> &&
+    requires { typename ::beman::execution::stop_callback_for_t<Token, CallbackFun>; } &&
+    ::std::constructible_from<::beman::execution::stop_callback_for_t<Token, CallbackFun>, Token, Initializer> &&
+    ::std::constructible_from<::beman::execution::stop_callback_for_t<Token, CallbackFun>, Token&, Initializer> &&
+    ::std::constructible_from<::beman::execution::stop_callback_for_t<Token, CallbackFun>, const Token&, Initializer>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Fun, typename... Args>
+/*!
+ * \brief Type alias used determine the result of function [object] call.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail::meta {
+template <typename>
+struct size;
+template <template <typename...> class L, typename... T>
+struct size<L<T...>> {
+    static constexpr ::std::size_t value{sizeof...(T)};
+};
+template <typename T>
+inline constexpr ::std::size_t size_v{::beman::execution::detail::meta::size<T>::value};
+} // namespace beman::execution::detail::meta
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename St>
+struct on_stop_request {
+    St&  st;
+    auto operator()() const -> void { this->st.request_stop(); }
+};
+template <typename T>
+on_stop_request(T&) -> on_stop_request<T>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Auxiliary class template used to detect whether a type alias exist within a class.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <template <typename> class>
+struct check_type_alias_exist;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+/*!
+ * \brief Tag type to indicate a class is a scheduler.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ */
+export struct scheduler_t {};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Expr, typename Promise>
+auto get_awaiter(Expr&& expr, Promise& promise) -> decltype(auto) {
+    auto transform{[&]() -> decltype(auto) {
+        if constexpr (requires { promise.await_transform(::std::forward<Expr>(expr)); })
+            return promise.await_transform(::std::forward<Expr>(expr));
+        else
+            return ::std::forward<Expr>(expr);
+    }};
+    if constexpr (requires { operator co_await(transform()); }) {
+
+        static_assert(not requires { transform().operator co_await(); }, "only one operator co_await is allowed");
+        return operator co_await(transform());
+    } else if constexpr (requires { transform().operator co_await(); })
+        return transform().operator co_await();
+    else
+        return transform();
+}
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+struct sender_convert_to_any_t {
+    template <typename T>
+    constexpr operator T() const; // NOLINT(hicpp-explicit-conversions)
+};
+
+template <typename Tag, typename Data, typename Children>
+struct sender_meta {
+    using tag_type      = ::std::remove_cvref_t<Tag>;
+    using data_type     = ::std::remove_cvref_t<Data>;
+    using children_type = ::std::remove_cvref_t<Children>;
+};
+
+template <typename Tag, typename Data, typename Children>
+struct sender_data {
+    using tag_type      = ::std::remove_cvref_t<Tag>;
+    using data_type     = ::std::remove_cvref_t<Data>;
+    using children_type = ::std::remove_cvref_t<Children>;
+
+    tag_type tag;
+    Data&    data;
+    Children children;
+};
+template <typename Tag, typename Data, typename Children>
+sender_data(Tag&&, Data&, Children&&) -> sender_data<Tag, Data, Children>;
+
+template <typename Sender>
+auto get_sender_data(Sender&& sender) {
+#if 0
+        //-dk:TODO should use a dynamic/language approach:
+        auto&& [tag, data, ... children] = sender;
+        return sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(children)...>>;
+#else
+    using sender_type = ::std::remove_cvref_t<Sender>;
+    static constexpr ::beman::execution::detail::sender_convert_to_any_t at{};
+
+    if constexpr (requires {
+                      sender.template get<0>();
+                      sender.size();
+                  })
+        return [&sender]<::std::size_t... I>(::std::index_sequence<I...>) {
+            return ::beman::execution::detail::sender_data{
+                sender.template get<0>(), sender.template get<1>(), ::std::tie(sender.template get<2 + I>()...)};
+        }(::std::make_index_sequence<::std::decay_t<decltype(sender)>::size() - 2u>{});
+    else if constexpr (requires { sender_type{at, at, at, at, at, at}; }) {
+        auto&& [tag, data, c0, c1, c2, c3] = sender;
+        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1, c2, c3)};
+    } else if constexpr (requires { sender_type{at, at, at, at, at}; }) {
+        auto&& [tag, data, c0, c1, c2] = sender;
+        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1, c2)};
+    } else if constexpr (requires { sender_type{at, at, at, at}; }) {
+        auto&& [tag, data, c0, c1] = sender;
+        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1)};
+    } else if constexpr (requires { sender_type{at, at, at}; }) {
+        auto&& [tag, data, c0] = sender;
+        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0)};
+    } else if constexpr (requires { sender_type{at, at}; }) {
+        auto&& [tag, data] = sender;
+        return ::beman::execution::detail::sender_data{tag, data, ::std::tuple<>{}};
+    } else {
+        return ::beman::execution::detail::sender_meta<void, void, void>{};
+    }
+#endif
+}
+
+template <typename Sender>
+auto get_sender_meta(Sender&& sender) {
+    using type = decltype(get_sender_data(sender));
+    return sender_meta<typename type::tag_type, typename type::data_type, typename type::children_type>{};
+}
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Fun, typename... Args>
+auto suspend_complete(Fun fun, Args&&... args) noexcept {
+    auto f{[&, fun]() noexcept { fun(::std::forward<Args>(args)...); }};
+    struct awaiter {
+        decltype(f) fun;
+
+        static constexpr auto await_ready() noexcept -> bool { return false; }
+        auto                  await_suspend(::std::coroutine_handle<>) noexcept { this->fun(); }
+#if __cpp_lib_unreachable < 202202L
+        [[noreturn]] auto await_resume() noexcept -> void { ::std::terminate(); }
+#else
+        [[noreturn]] auto await_resume() noexcept -> void { ::std::unreachable(); }
+#endif
+    };
+    return awaiter{f};
+}
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail::meta {
+template <typename T, typename... S>
+inline constexpr bool contains{(::std::same_as<T, S> || ...)};
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Helper concept to determine if the first argument decays to the second argument
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename From, typename To>
+concept decays_to = ::std::same_as<::std::decay_t<From>, To>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+namespace beman::execution::detail {
+
+template <auto Next>
+class atomic_intrusive_stack;
+
+template <auto Next>
+class intrusive_stack;
+
+//! @brief  This data structure is an intrusive queue that is not thread-safe.
+template <class Item, Item* Item::* Next>
+class intrusive_stack<Next> {
+  public:
+    //! @brief  Pushes an item to the queue.
+    auto push(Item* item) noexcept -> void { item->*Next = std::exchange(head_, item); }
+
+    //! @brief  Pops one item from the queue.
+    //!
+    //! @return  The item that was popped from the queue, or nullptr if the queue is empty.
+    auto pop() noexcept -> Item* {
+        if (head_) {
+            auto item = head_;
+            head_     = std::exchange(item->*Next, nullptr);
+            return item;
+        }
+        return nullptr;
+    }
+
+    //! @brief  Tests if the queue is empty.
+    auto empty() const noexcept -> bool { return !head_; }
+
+  private:
+    friend class atomic_intrusive_stack<Next>;
+    Item* head_{nullptr};
+};
+
+} // namespace beman::execution::detail
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+struct immovable;
+struct virtual_immovable;
+} // namespace beman::execution::detail
+
+struct beman::execution::detail::immovable {
+    constexpr immovable()                          = default;
+    immovable(immovable&&)                         = delete;
+    immovable(const immovable&)                    = delete;
+    ~immovable()                                   = default;
+    auto operator=(immovable&&) -> immovable&      = delete;
+    auto operator=(const immovable&) -> immovable& = delete;
+};
+
+struct beman::execution::detail::virtual_immovable {
+    constexpr virtual_immovable()                                  = default;
+    virtual_immovable(virtual_immovable&&)                         = delete;
+    virtual_immovable(const virtual_immovable&)                    = delete;
+    virtual ~virtual_immovable()                                   = default;
+    auto operator=(virtual_immovable&&) -> virtual_immovable&      = delete;
+    auto operator=(const virtual_immovable&) -> virtual_immovable& = delete;
+};
+
+// ----------------------------------------------------------------------------
+
+
+
+
+namespace beman::execution::detail {
+struct unspecified_promise {
+    auto get_return_object() noexcept -> unspecified_promise;
+    auto initial_suspend() noexcept -> ::std::suspend_never;
+    auto final_suspend() noexcept -> ::std::suspend_never;
+    void unhandled_exception() noexcept;
+    void return_void() noexcept;
+    auto unhandled_stopped() noexcept -> ::std::coroutine_handle<>;
+};
+} // namespace beman::execution::detail
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Auxiliary type trait used to detect specializations of `std::coroutine_handle`.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename>
+struct is_coroutine_handle : ::std::false_type {};
+/*!
+ * \brief The actual partial specialization detecting `std::coroutine_handle`.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename T>
+struct is_coroutine_handle<::std::coroutine_handle<T>> : ::std::true_type {};
+
+/*!
+ * \brief A concept used to identify valid results for `await_suspend`.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename T>
+concept await_suspend_result =
+    ::std::same_as<T, void> || ::std::same_as<T, bool> || ::beman::execution::detail::is_coroutine_handle<T>::value;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <template <typename...> class T, typename... Args>
+concept valid_specialization = requires { typename T<Args...>; };
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <bool>
+struct indirect_meta_apply {
+    template <template <typename...> class T, class... A>
+    using meta_apply = T<A...>;
+};
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Sender>
+using indices_for = typename ::std::remove_reference_t<Sender>::indices_for;
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Helper type alias to get the type after decaying the argument
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <auto&& Tag>
+using decayed_typeof = ::std::decay_t<decltype(Tag)>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export struct nostopstate_t {
+    explicit nostopstate_t() = default;
+};
+
+export inline constexpr nostopstate_t nostopstate{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <::beman::execution::detail::queryable>
+struct env_base;
+
+template <typename E, typename Q>
+concept has_query = requires(const E& e) { e.query(::std::declval<Q>()); };
+
+template <typename Q, typename... E>
+struct find_env;
+template <typename Q, typename E0, typename... E>
+    requires has_query<E0, Q>
+struct find_env<Q, E0, E...> {
+    using type = E0;
+};
+template <typename Q, typename E0, typename... E>
+    requires(not has_query<E0, Q>)
+struct find_env<Q, E0, E...> {
+    using type = typename find_env<Q, E...>::type;
+};
+} // namespace beman::execution::detail
+
+namespace beman::execution {
+export template <::beman::execution::detail::queryable... Envs>
+struct env;
+
+template <::beman::execution::detail::queryable... Envs>
+env(Envs...) -> env<::std::unwrap_reference_t<Envs>...>;
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+template <::beman::execution::detail::queryable Env>
+struct beman::execution::detail::env_base {
+    Env env_;
+};
+
+template <::beman::execution::detail::queryable... Envs>
+struct beman::execution::env : ::beman::execution::detail::env_base<Envs>... {
+    [[no_unique_address]] ::beman::execution::detail::non_assignable na_{};
+
+    template <typename Q>
+        requires(::beman::execution::detail::has_query<Envs, Q> || ...)
+    constexpr auto query(Q q) const noexcept -> decltype(auto) {
+        using E = typename ::beman::execution::detail::find_env<Q, Envs...>::type;
+        return q(static_cast<const ::beman::execution::detail::env_base<E>&>(*this).env_);
+    }
+};
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export struct get_allocator_t {
+    template <typename Object>
+        requires(not requires(Object&& object, const get_allocator_t& tag) { ::std::as_const(object).query(tag); })
+    auto
+    operator()(Object&&) const = BEMAN_EXECUTION_DELETE("the object requires a const query(get_allocator_t) overload");
+    template <typename Object>
+        requires(
+                    not requires(const Object& object, const get_allocator_t& tag) { object.query(tag); } &&
+                    not requires(Object&& object, const get_allocator_t& tag) { ::std::as_const(object).query(tag); })
+    auto operator()(Object&&) const = BEMAN_EXECUTION_DELETE("the object requires a query(get_allocator_t) overload");
+    template <typename Object>
+        requires(not requires(const Object& object, const get_allocator_t& tag) {
+                    { object.query(tag) } noexcept;
+                })
+    auto
+    operator()(Object&&) const = BEMAN_EXECUTION_DELETE("the query(get_allocator_t) overload needs to be noexcept");
+
+    template <typename Object>
+        requires(not requires(const Object& object, const get_allocator_t& tag) {
+                    { object.query(tag) } noexcept -> ::beman::execution::detail::simple_allocator<>;
+                })
+    auto
+    operator()(Object&&) const = BEMAN_EXECUTION_DELETE("the query(get_allocator_t) overload needs to be noexcept");
+
+    template <typename Object>
+        requires(requires(const Object& object, const get_allocator_t& tag) {
+            { object.query(tag) } noexcept -> ::beman::execution::detail::simple_allocator<>;
+        })
+    auto operator()(Object&& object) const noexcept {
+        return ::std::as_const(object).query(*this);
+    }
+
+    constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
+};
+
+export inline constexpr get_allocator_t get_allocator{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export struct get_domain_t {
+    template <typename Object>
+        requires(not requires(Object&& object, const get_domain_t& tag) {
+                    ::std::forward<Object>(object).query(tag);
+                }) && (not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
+    auto operator()(Object&&) const noexcept = BEMAN_EXECUTION_DELETE("object needs a query(get_domain_t) overload");
+    template <typename Object>
+        requires(not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
+    auto
+    operator()(Object&&) const noexcept = BEMAN_EXECUTION_DELETE("query(get_domain_t) overload needs to be const");
+    template <typename Object>
+        requires(not requires(Object&& object, const get_domain_t& tag) {
+                    { ::std::as_const(object).query(tag) } noexcept;
+                })
+    auto
+    operator()(Object&&) const noexcept = BEMAN_EXECUTION_DELETE("query(get_domain_t) overload needs to be noexcept");
+
+    template <typename Object>
+    constexpr auto operator()(Object&& object) const noexcept {
+        return ::std::as_const(object).query(*this);
+    }
+    constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
+};
+
+export inline constexpr get_domain_t get_domain{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export struct get_scheduler_t : ::beman::execution::forwarding_query_t {
+    template <typename Env>
+        requires requires(const get_scheduler_t& self, Env&& env) { ::std::as_const(env).query(self); }
+    auto operator()(Env&& env) const noexcept {
+        static_assert(noexcept(::std::as_const(env).query(*this)));
+        //-dk:TODO mandate that the result is a scheduler
+        // static_assert(::beman::execution::scheduler<
+        //     decltype(::std::as_const(env).query(*this))
+        // >)
+        return ::std::as_const(env).query(*this);
+    }
+};
+
+export inline constexpr get_scheduler_t get_scheduler{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export struct operation_state_t {};
+
+export template <typename State>
+concept operation_state =
+    ::std::derived_from<typename State::operation_state_concept, ::beman::execution::operation_state_t> &&
+    ::std::is_object_v<State> && requires(State& state) {
+        { ::beman::execution::start(state) } noexcept;
+    };
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename, typename>
+struct valid_completion_for_aux;
+
+template <typename Rcvr, typename Tag, typename... Args>
+struct valid_completion_for_aux<Rcvr, Tag (*)(Args...)> {
+    static auto test(Tag (*)(Args...)) -> void
+        requires ::beman::execution::detail::callable<Tag, ::std::remove_cvref_t<Rcvr>, Args...>
+    {}
+};
+
+template <typename Signature, typename Rcvr>
+concept valid_completion_for = requires(Signature* signature) {
+#if 1
+    valid_completion_for_aux<Rcvr, Signature*>::test(signature);
+#else
+    // This definition crashes some versions of clang.
+    []<typename Tag, typename... Args>(Tag (*)(Args...))
+        requires ::beman::execution::detail::callable<Tag, ::std::remove_cvref_t<Rcvr>, Args...>
+    {}(signature);
+#endif
+};
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename>
+struct is_set_error : ::std::false_type {};
+template <typename Error>
+struct is_set_error<::beman::execution::set_error_t(Error)> : ::std::true_type {};
+
+template <typename Fun>
+using is_set_stopped = ::std::is_same<Fun, ::beman::execution::set_stopped_t()>;
+
+template <typename>
+struct is_set_value : ::std::false_type {};
+template <typename... Args>
+struct is_set_value<::beman::execution::set_value_t(Args...)> : ::std::true_type {};
+
+/*!
+ * \brief Detect if a type is a completion signature.
+ *
+ * \details
+ * The three completion signatures are
+ * - set_error_t(E) for completion with an error.
+ * - set_stopped_t() to indicate that operation was cancelled.
+ * - set_value_t(A...) for successful completion with a set of argument.
+ *
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \concept copmletion_signature
+ * \internal
+ */
+template <typename Fun>
+concept completion_signature =
+    ::beman::execution::detail::is_set_error<Fun>::value || ::beman::execution::detail::is_set_stopped<Fun>::value ||
+    ::beman::execution::detail::is_set_value<Fun>::value;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename>
+struct prop_like;
+}
+
+namespace beman::execution {
+export template <typename Query, typename Value>
+struct prop;
+
+template <typename Query, typename Value>
+prop(Query, Value, ::beman::execution::detail::non_assignable = {}) -> prop<Query, ::std::unwrap_reference_t<Value>>;
+} // namespace beman::execution
+
+template <typename V>
+struct beman::execution::detail::prop_like {
+    V    value;
+    auto query(auto) const noexcept -> const V& { return this->value; }
+};
+
+template <typename Query, typename Value>
+struct beman::execution::prop {
+    static_assert(::beman::execution::detail::callable<Query, ::beman::execution::detail::prop_like<Value>>);
+
+    [[no_unique_address]] Query                                      query_{};
+    [[no_unique_address]] Value                                      value_{};
+    [[no_unique_address]] ::beman::execution::detail::non_assignable non_assignable_{};
+
+    // prop(prop&&)                = default;
+    // prop(const prop&)           = default;
+    // auto operator=(prop&&) -> prop&      = delete;
+    // auto operator=(const prop&) -> prop& = delete;
+
+    constexpr auto query(Query) const noexcept -> const Value& { return this->value_; }
+};
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export template <typename Token>
+concept stoppable_token = requires(const Token& token) {
+    typename ::beman::execution::detail::check_type_alias_exist<Token::template callback_type>;
+    { token.stop_requested() } noexcept -> ::std::same_as<bool>;
+    { token.stop_possible() } noexcept -> ::std::same_as<bool>;
+    { Token(token) } noexcept;
+} && ::std::copyable<Token> && ::std::equality_comparable<Token> && ::std::swappable<Token>;
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief A helper concept used to determine if a type is one of the completion tags.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename Tag>
+concept completion_tag =
+    ::std::same_as<Tag, ::beman::execution::set_error_t> || ::std::same_as<Tag, ::beman::execution::set_stopped_t> ||
+    ::std::same_as<Tag, ::beman::execution::set_value_t>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Auxiliary type alias to get the result type of an awaiter.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename T, typename Promise>
+using await_result_type =
+    decltype(::beman::execution::detail::get_awaiter(::std::declval<T>(), ::std::declval<Promise&>()).await_resume());
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief A helper class to create environments and taking forwarding_query into account
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename Env>
+class fwd_env {
+  private:
+    Env env;
+
+  public:
+    explicit fwd_env(Env&& e) : env(::std::forward<Env>(e)) {}
+
+    template <typename Query, typename... Args>
+        requires(!::beman::execution::forwarding_query(::std::remove_cvref_t<Query>()))
+    constexpr auto query(Query&& q,
+                         Args&&... args) const = BEMAN_EXECUTION_DELETE("the used query is not forwardable");
+
+    template <typename Query, typename... Args>
+        requires(::beman::execution::forwarding_query(::std::remove_cvref_t<Query>())) &&
+                requires(const Env& e, Query&& q, Args&&... args) { e.query(q, ::std::forward<Args>(args)...); }
+    constexpr auto query(Query&& q, Args&&... args) const
+        noexcept(noexcept(env.query(q, ::std::forward<Args>(args)...))) {
+        return env.query(q, ::std::forward<Args>(args)...);
+    }
+};
+template <typename Env>
+fwd_env(Env&&) -> fwd_env<Env>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export template <typename Sender>
+using tag_of_t = typename decltype(::beman::execution::detail::get_sender_meta(::std::declval<Sender&&>()))::tag_type;
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail::meta::detail {
+template <typename...>
+struct combine;
+
+template <template <typename...> class L0, typename... T0>
+struct combine<L0<T0...>> {
+    using type = L0<T0...>;
+};
+template <template <typename...> class L0,
+          typename... T0,
+          template <typename...> class L1,
+          typename... T1,
+          typename... L>
+struct combine<L0<T0...>, L1<T1...>, L...> {
+    using type = typename combine<L0<T0..., T1...>, L...>::type;
+};
+} // namespace beman::execution::detail::meta::detail
+
+namespace beman::execution::detail::meta {
+template <typename... L>
+using combine = typename ::beman::execution::detail::meta::detail::combine<L...>::type;
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail::meta::detail {
+template <typename, typename>
+struct make_unique;
+template <typename>
+struct unique;
+
+template <template <typename...> class List, typename... R>
+struct make_unique<List<R...>, List<>> {
+    using type = List<R...>;
+};
+
+template <template <typename...> class List, typename... R, typename H, typename... T>
+struct make_unique<List<R...>, List<H, T...>> {
+    using type = typename ::beman::execution::detail::meta::detail::make_unique<
+        ::std::conditional_t<::beman::execution::detail::meta::contains<H, R...>, List<R...>, List<R..., H>>,
+        List<T...>>::type;
+};
+
+template <template <typename...> class List, typename... T>
+struct unique<List<T...>> {
+    using type = typename ::beman::execution::detail::meta::detail::make_unique<List<>, List<T...>>::type;
+};
+} // namespace beman::execution::detail::meta::detail
+
+namespace beman::execution::detail::meta {
+template <typename T>
+using unique = typename ::beman::execution::detail::meta::detail::unique<T>::type;
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail::meta::detail {
@@ -1387,6 +1894,9 @@ using filter_tag = typename ::beman::execution::detail::meta::detail::filter_tag
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail::meta::detail {
@@ -1405,6 +1915,9 @@ using transform = typename ::beman::execution::detail::meta::detail::transform<T
 }
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -1430,14 +1943,87 @@ using as_tuple_t = typename ::beman::execution::detail::as_tuple<T>::type;
 
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
+
+
+
 
 namespace beman::execution::detail {
-template <class... Args>
-using decayed_type_list = ::beman::execution::detail::type_list<::std::decay_t<Args>...>;
+
+template <auto Next>
+class atomic_intrusive_stack;
+
+//! @brief  This data structure is an intrusive stack that can be used in a lock-free manner.
+//!
+//! The stack is implemented as a singly linked list where the head is an atomic pointer to the first item in
+//! the stack.
+//! try_push() is a lock-free operation that tries to push an item to the stack. If the stack is empty, it
+//! returns nullptr and the item is pushed to the stack.
+//! This stack has a closed state, which is indicated by the head pointing to the stack itself. In this state,
+//! try_push() returns std::nullopt and the stack is not modified.
+//! pop_all_and_shutdown() is a lock-free operation that pops all items from the stack and returns them in a
+//! queue. If the stack is empty, it returns an empty queue.
+//!
+//! We use this stack in the split implementation to store the listeners that are waiting for the operation to
+//! complete.
+//!
+//! @tparam Item  The type of the item in the stack.
+//! @tparam Next  The pointer to the next item in the stack.
+template <class Item, Item* Item::* Next>
+class atomic_intrusive_stack<Next> {
+  public:
+    atomic_intrusive_stack() = default;
+    ~atomic_intrusive_stack() { assert(!head_ || head_ == this); }
+    atomic_intrusive_stack(const atomic_intrusive_stack&)                        = delete;
+    auto operator=(const atomic_intrusive_stack&) -> atomic_intrusive_stack&     = delete;
+    atomic_intrusive_stack(atomic_intrusive_stack&&) noexcept                    = delete;
+    auto operator=(atomic_intrusive_stack&&) noexcept -> atomic_intrusive_stack& = delete;
+
+    //! @brief  Tries to push an item to the stack.
+    //!
+    //! @param item  The item to push to the stack.
+    //!
+    //! @return  If the stack is empty, returns nullptr and pushes the item to the stack.
+    //!          If the stack is in the closed state, returns std::nullopt.
+    auto try_push(Item* item) noexcept -> std::optional<Item*> {
+        void* ptr = head_.load();
+        if (ptr == this) {
+            return std::nullopt;
+        }
+        item->*Next = static_cast<Item*>(ptr);
+        while (!head_.compare_exchange_weak(ptr, item)) {
+            if (ptr == this) {
+                return std::nullopt;
+            }
+            item->*Next = static_cast<Item*>(ptr);
+        }
+        return static_cast<Item*>(ptr);
+    }
+
+    //! @brief  Tests if the stack is empty and not in the closed state.
+    auto empty_and_not_shutdown() const noexcept -> bool { return head_.load() == nullptr; }
+
+    //! @brief  Pops all items from the stack, returns them and puts this stack into the closed state.
+    //!
+    //! @return  If the stack is empty, returns an empty stack.
+    auto pop_all_and_shutdown() noexcept -> ::beman::execution::detail::intrusive_stack<Next> {
+        auto  stack = ::beman::execution::detail::intrusive_stack<Next>{};
+        void* ptr   = head_.exchange(this);
+        if (ptr == this) {
+            return stack;
+        }
+        auto item   = static_cast<Item*>(ptr);
+        stack.head_ = item;
+        return stack;
+    }
+
+  private:
+    ::std::atomic<void*> head_{nullptr};
+};
+
 } // namespace beman::execution::detail
 
-// ----------------------------------------------------------------------------
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -1616,24 +2202,20 @@ inline auto beman::execution::inplace_stop_callback<CallbackFun>::call() -> void
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
-namespace beman::execution {
-export template <class Token, class CallbackFun>
-using stop_callback_for_t = typename Token::template callback_type<CallbackFun>;
-}
-
 namespace beman::execution::detail {
-template <typename CallbackFun, typename Token, typename Initializer = CallbackFun>
-concept stoppable_callback_for =
-    ::std::invocable<CallbackFun> && ::std::constructible_from<CallbackFun, Initializer> &&
-    requires { typename ::beman::execution::stop_callback_for_t<Token, CallbackFun>; } &&
-    ::std::constructible_from<::beman::execution::stop_callback_for_t<Token, CallbackFun>, Token, Initializer> &&
-    ::std::constructible_from<::beman::execution::stop_callback_for_t<Token, CallbackFun>, Token&, Initializer> &&
-    ::std::constructible_from<::beman::execution::stop_callback_for_t<Token, CallbackFun>, const Token&, Initializer>;
+template <class... Args>
+using decayed_type_list = ::beman::execution::detail::type_list<::std::decay_t<Args>...>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -1648,6 +2230,9 @@ concept class_type = ::beman::execution::detail::decays_to<Tp, Tp> && ::std::is_
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -1803,18 +2388,8 @@ inline auto beman::execution::detail::counting_scope_base::start_node(node* n) -
 
 // ----------------------------------------------------------------------------
 
-;
-// ----------------------------------------------------------------------------
 
-namespace beman::execution {
-/*!
- * \brief Tag type to indicate a class is a scheduler.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- */
-export struct scheduler_t {};
-} // namespace beman::execution
 
-// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 
@@ -1829,6 +2404,9 @@ concept is_awaiter = requires(Awaiter& awaiter, ::std::coroutine_handle<Promise>
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -1840,375 +2418,8 @@ concept nothrow_callable = ::beman::execution::detail::callable<Fun, Args...> &&
 
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
 
-namespace beman::execution {
-export struct nostopstate_t {
-    explicit nostopstate_t() = default;
-};
 
-export inline constexpr nostopstate_t nostopstate{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-export struct get_allocator_t {
-    template <typename Object>
-        requires(not requires(Object&& object, const get_allocator_t& tag) { ::std::as_const(object).query(tag); })
-    auto
-    operator()(Object&&) const = BEMAN_EXECUTION_DELETE("the object requires a const query(get_allocator_t) overload");
-    template <typename Object>
-        requires(
-                    not requires(const Object& object, const get_allocator_t& tag) { object.query(tag); } &&
-                    not requires(Object&& object, const get_allocator_t& tag) { ::std::as_const(object).query(tag); })
-    auto operator()(Object&&) const = BEMAN_EXECUTION_DELETE("the object requires a query(get_allocator_t) overload");
-    template <typename Object>
-        requires(not requires(const Object& object, const get_allocator_t& tag) {
-                    { object.query(tag) } noexcept;
-                })
-    auto
-    operator()(Object&&) const = BEMAN_EXECUTION_DELETE("the query(get_allocator_t) overload needs to be noexcept");
-
-    template <typename Object>
-        requires(not requires(const Object& object, const get_allocator_t& tag) {
-                    { object.query(tag) } noexcept -> ::beman::execution::detail::simple_allocator<>;
-                })
-    auto
-    operator()(Object&&) const = BEMAN_EXECUTION_DELETE("the query(get_allocator_t) overload needs to be noexcept");
-
-    template <typename Object>
-        requires(requires(const Object& object, const get_allocator_t& tag) {
-            { object.query(tag) } noexcept -> ::beman::execution::detail::simple_allocator<>;
-        })
-    auto operator()(Object&& object) const noexcept {
-        return ::std::as_const(object).query(*this);
-    }
-
-    constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
-};
-
-export inline constexpr get_allocator_t get_allocator{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Token>
-concept decayed_stoppable_token = ::beman::execution::stoppable_token<::std::decay_t<Token>>;
-}
-namespace beman::execution {
-export struct get_stop_token_t {
-    template <typename Object>
-        requires requires(Object&& object, const get_stop_token_t& tag) {
-            { ::std::as_const(object).query(tag) } noexcept -> ::beman::execution::detail::decayed_stoppable_token;
-        }
-    auto operator()(Object&& object) const noexcept {
-        return ::std::as_const(object).query(*this);
-    }
-
-    template <typename Object>
-    auto operator()(Object&&) const noexcept -> ::beman::execution::never_stop_token {
-        return {};
-    }
-
-    constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
-};
-
-export inline constexpr get_stop_token_t get_stop_token{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-export struct get_env_t {
-    template <typename Object>
-        requires(not requires(::std::add_const_t<::std::remove_cvref_t<Object>>& object) { object.get_env(); } ||
-                 ::beman::execution::detail::queryable<
-                     std::remove_cvref_t<decltype(::std::declval<const ::std::remove_cvref_t<Object>&>().get_env())>>)
-    auto operator()(Object&& object) const noexcept -> decltype(auto) {
-        ::std::add_const_t<::std::remove_cvref_t<Object>>& obj{object};
-        if constexpr (requires { obj.get_env(); }) {
-            static_assert(noexcept(obj.get_env()), "get_env requires the expression to be noexcept");
-            static_assert(::beman::execution::detail::queryable<std::remove_cvref_t<decltype(obj.get_env())>>,
-                          "get_env requires the result type to be destructible");
-            return obj.get_env();
-        } else {
-            return ::beman::execution::env<>{};
-        }
-    }
-};
-
-export inline constexpr get_env_t get_env{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-export struct get_domain_t {
-    template <typename Object>
-        requires(not requires(Object&& object, const get_domain_t& tag) {
-                    ::std::forward<Object>(object).query(tag);
-                }) && (not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
-    auto operator()(Object&&) const noexcept = BEMAN_EXECUTION_DELETE("object needs a query(get_domain_t) overload");
-    template <typename Object>
-        requires(not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
-    auto
-    operator()(Object&&) const noexcept = BEMAN_EXECUTION_DELETE("query(get_domain_t) overload needs to be const");
-    template <typename Object>
-        requires(not requires(Object&& object, const get_domain_t& tag) {
-                    { ::std::as_const(object).query(tag) } noexcept;
-                })
-    auto
-    operator()(Object&&) const noexcept = BEMAN_EXECUTION_DELETE("query(get_domain_t) overload needs to be noexcept");
-
-    template <typename Object>
-    constexpr auto operator()(Object&& object) const noexcept {
-        return ::std::as_const(object).query(*this);
-    }
-    constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
-};
-
-export inline constexpr get_domain_t get_domain{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-export struct get_scheduler_t : ::beman::execution::forwarding_query_t {
-    template <typename Env>
-        requires requires(const get_scheduler_t& self, Env&& env) { ::std::as_const(env).query(self); }
-    auto operator()(Env&& env) const noexcept {
-        static_assert(noexcept(::std::as_const(env).query(*this)));
-        //-dk:TODO mandate that the result is a scheduler
-        // static_assert(::beman::execution::scheduler<
-        //     decltype(::std::as_const(env).query(*this))
-        // >)
-        return ::std::as_const(env).query(*this);
-    }
-};
-
-export inline constexpr get_scheduler_t get_scheduler{};
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution {
-export struct operation_state_t {};
-
-export template <typename State>
-concept operation_state =
-    ::std::derived_from<typename State::operation_state_concept, ::beman::execution::operation_state_t> &&
-    ::std::is_object_v<State> && requires(State& state) {
-        { ::beman::execution::start(state) } noexcept;
-    };
-} // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename, typename>
-struct valid_completion_for_aux;
-
-template <typename Rcvr, typename Tag, typename... Args>
-struct valid_completion_for_aux<Rcvr, Tag (*)(Args...)> {
-    static auto test(Tag (*)(Args...)) -> void
-        requires ::beman::execution::detail::callable<Tag, ::std::remove_cvref_t<Rcvr>, Args...>
-    {}
-};
-
-template <typename Signature, typename Rcvr>
-concept valid_completion_for = requires(Signature* signature) {
-#if 1
-    valid_completion_for_aux<Rcvr, Signature*>::test(signature);
-#else
-    // This definition crashes some versions of clang.
-    []<typename Tag, typename... Args>(Tag (*)(Args...))
-        requires ::beman::execution::detail::callable<Tag, ::std::remove_cvref_t<Rcvr>, Args...>
-    {}(signature);
-#endif
-};
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename>
-struct is_set_error : ::std::false_type {};
-template <typename Error>
-struct is_set_error<::beman::execution::set_error_t(Error)> : ::std::true_type {};
-
-template <typename Fun>
-using is_set_stopped = ::std::is_same<Fun, ::beman::execution::set_stopped_t()>;
-
-template <typename>
-struct is_set_value : ::std::false_type {};
-template <typename... Args>
-struct is_set_value<::beman::execution::set_value_t(Args...)> : ::std::true_type {};
-
-/*!
- * \brief Detect if a type is a completion signature.
- *
- * \details
- * The three completion signatures are
- * - set_error_t(E) for completion with an error.
- * - set_stopped_t() to indicate that operation was cancelled.
- * - set_value_t(A...) for successful completion with a set of argument.
- *
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \concept copmletion_signature
- * \internal
- */
-template <typename Fun>
-concept completion_signature =
-    ::beman::execution::detail::is_set_error<Fun>::value || ::beman::execution::detail::is_set_stopped<Fun>::value ||
-    ::beman::execution::detail::is_set_value<Fun>::value;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief A helper concept used to determine if a type is one of the completion tags.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename Tag>
-concept completion_tag =
-    ::std::same_as<Tag, ::beman::execution::set_error_t> || ::std::same_as<Tag, ::beman::execution::set_stopped_t> ||
-    ::std::same_as<Tag, ::beman::execution::set_value_t>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename T, typename Promise>
-concept is_awaitable = requires(Promise& promise) {
-    {
-        ::beman::execution::detail::get_awaiter(::std::declval<T>(), promise)
-    } -> ::beman::execution::detail::is_awaiter<Promise>;
-};
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief A helper class to create environments and taking forwarding_query into account
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename Env>
-class fwd_env {
-  private:
-    Env env;
-
-  public:
-    explicit fwd_env(Env&& e) : env(::std::forward<Env>(e)) {}
-
-    template <typename Query, typename... Args>
-        requires(!::beman::execution::forwarding_query(::std::remove_cvref_t<Query>()))
-    constexpr auto query(Query&& q,
-                         Args&&... args) const = BEMAN_EXECUTION_DELETE("the used query is not forwardable");
-
-    template <typename Query, typename... Args>
-        requires(::beman::execution::forwarding_query(::std::remove_cvref_t<Query>())) &&
-                requires(const Env& e, Query&& q, Args&&... args) { e.query(q, ::std::forward<Args>(args)...); }
-    constexpr auto query(Query&& q, Args&&... args) const
-        noexcept(noexcept(env.query(q, ::std::forward<Args>(args)...))) {
-        return env.query(q, ::std::forward<Args>(args)...);
-    }
-};
-template <typename Env>
-fwd_env(Env&&) -> fwd_env<Env>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief Helper class to get the result of a function which may be only called once.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename Fun>
-struct emplace_from {
-    using type = ::beman::execution::detail::call_result_t<Fun>;
-    Fun fun;
-
-    explicit constexpr operator type() && noexcept(::beman::execution::detail::nothrow_callable<Fun>) {
-        return ::std::move(fun)();
-    }
-};
-template <typename Fun>
-emplace_from(Fun&&) -> emplace_from<::std::remove_cvref_t<Fun>>;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-struct empty_variant {
-    empty_variant() = delete;
-};
-
-template <typename... T>
-struct variant_or_empty_helper;
-
-template <>
-struct variant_or_empty_helper<> {
-    using type = ::beman::execution::detail::empty_variant;
-};
-
-template <typename... T>
-struct variant_or_empty_helper {
-    using type = ::beman::execution::detail::meta::unique<::std::variant<::std::decay_t<T>...>>;
-};
-
-template <typename... T>
-using variant_or_empty = typename ::beman::execution::detail::variant_or_empty_helper<T...>::type;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Source>
-concept stoppable_source = requires(Source& source, const Source& csource) {
-    { csource.get_token() } -> ::beman::execution::stoppable_token;
-    { csource.stop_possible() } noexcept -> ::std::same_as<bool>;
-    { csource.stop_requested() } noexcept -> ::std::same_as<bool>;
-    { source.request_stop() } -> ::std::same_as<bool>;
-};
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 
@@ -2453,21 +2664,69 @@ inline auto beman::execution::stop_source::request_stop() noexcept -> bool {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
+namespace beman::execution::detail {
+template <typename Token>
+concept decayed_stoppable_token = ::beman::execution::stoppable_token<::std::decay_t<Token>>;
+}
 namespace beman::execution {
-export struct receiver_t {};
+export struct get_stop_token_t {
+    template <typename Object>
+        requires requires(Object&& object, const get_stop_token_t& tag) {
+            { ::std::as_const(object).query(tag) } noexcept -> ::beman::execution::detail::decayed_stoppable_token;
+        }
+    auto operator()(Object&& object) const noexcept {
+        return ::std::as_const(object).query(*this);
+    }
 
-export template <typename Rcvr>
-concept receiver =
-    ::std::derived_from<typename ::std::remove_cvref_t<Rcvr>::receiver_concept, ::beman::execution::receiver_t> &&
-    requires(const ::std::remove_cvref_t<Rcvr>& rcvr) {
-        { ::beman::execution::get_env(rcvr) } -> ::beman::execution::detail::queryable;
-    } && ::std::move_constructible<::std::remove_cvref_t<Rcvr>> &&
-    ::std::constructible_from<::std::remove_cvref_t<Rcvr>, Rcvr> && (!::std::is_final_v<::std::remove_cvref_t<Rcvr>>);
+    template <typename Object>
+    auto operator()(Object&&) const noexcept -> ::beman::execution::never_stop_token {
+        return {};
+    }
+
+    constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
+};
+
+export inline constexpr get_stop_token_t get_stop_token{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export struct get_env_t {
+    template <typename Object>
+        requires(not requires(::std::add_const_t<::std::remove_cvref_t<Object>>& object) { object.get_env(); } ||
+                 ::beman::execution::detail::queryable<
+                     std::remove_cvref_t<decltype(::std::declval<const ::std::remove_cvref_t<Object>&>().get_env())>>)
+    auto operator()(Object&& object) const noexcept -> decltype(auto) {
+        ::std::add_const_t<::std::remove_cvref_t<Object>>& obj{object};
+        if constexpr (requires { obj.get_env(); }) {
+            static_assert(noexcept(obj.get_env()), "get_env requires the expression to be noexcept");
+            static_assert(::beman::execution::detail::queryable<std::remove_cvref_t<decltype(obj.get_env())>>,
+                          "get_env requires the result type to be destructible");
+            return obj.get_env();
+        } else {
+            return ::beman::execution::env<>{};
+        }
+    }
+};
+
+export inline constexpr get_env_t get_env{};
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -2487,6 +2746,133 @@ struct completion_signatures {};
 
 // ----------------------------------------------------------------------------
 
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename T, typename Promise>
+concept is_awaitable = requires(Promise& promise) {
+    {
+        ::beman::execution::detail::get_awaiter(::std::declval<T>(), promise)
+    } -> ::beman::execution::detail::is_awaiter<Promise>;
+};
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief Helper class to get the result of a function which may be only called once.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename Fun>
+struct emplace_from {
+    using type = ::beman::execution::detail::call_result_t<Fun>;
+    Fun fun;
+
+    explicit constexpr operator type() && noexcept(::beman::execution::detail::nothrow_callable<Fun>) {
+        return ::std::move(fun)();
+    }
+};
+template <typename Fun>
+emplace_from(Fun&&) -> emplace_from<::std::remove_cvref_t<Fun>>;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+struct empty_variant {
+    empty_variant() = delete;
+};
+
+template <typename... T>
+struct variant_or_empty_helper;
+
+template <>
+struct variant_or_empty_helper<> {
+    using type = ::beman::execution::detail::empty_variant;
+};
+
+template <typename... T>
+struct variant_or_empty_helper {
+    using type = ::beman::execution::detail::meta::unique<::std::variant<::std::decay_t<T>...>>;
+};
+
+template <typename... T>
+using variant_or_empty = typename ::beman::execution::detail::variant_or_empty_helper<T...>::type;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Source>
+concept stoppable_source = requires(Source& source, const Source& csource) {
+    { csource.get_token() } -> ::beman::execution::stoppable_token;
+    { csource.stop_possible() } noexcept -> ::std::same_as<bool>;
+    { csource.stop_requested() } noexcept -> ::std::same_as<bool>;
+    { source.request_stop() } -> ::std::same_as<bool>;
+};
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+export struct receiver_t {};
+
+export template <typename Rcvr>
+concept receiver =
+    ::std::derived_from<typename ::std::remove_cvref_t<Rcvr>::receiver_concept, ::beman::execution::receiver_t> &&
+    requires(const ::std::remove_cvref_t<Rcvr>& rcvr) {
+        { ::beman::execution::get_env(rcvr) } -> ::beman::execution::detail::queryable;
+    } && ::std::move_constructible<::std::remove_cvref_t<Rcvr>> &&
+    ::std::constructible_from<::std::remove_cvref_t<Rcvr>, Rcvr> && (!::std::is_final_v<::std::remove_cvref_t<Rcvr>>);
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename>
+struct valid_completion_signatures_helper : ::std::false_type {};
+template <typename... Sigs>
+struct valid_completion_signatures_helper<::beman::execution::completion_signatures<Sigs...>> : ::std::true_type {};
+
+template <typename Signatures>
+concept valid_completion_signatures = valid_completion_signatures_helper<Signatures>::value;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -2499,6 +2885,9 @@ using env_of_t = decltype(::beman::execution::get_env(::std::declval<T>()));
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -2530,6 +2919,9 @@ auto allocator_aware_move(T&& obj, Context&& context) noexcept -> decltype(auto)
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -2538,6 +2930,9 @@ using stop_token_of_t = ::std::remove_cvref_t<decltype(::beman::execution::get_s
 }
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -2548,6 +2943,9 @@ concept unstoppable_token = ::beman::execution::stoppable_token<Token> &&
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -2560,19 +2958,39 @@ concept has_as_awaitable = requires(T&& obj, Promise& promise) {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <typename>
-struct valid_completion_signatures_helper : ::std::false_type {};
-template <typename... Sigs>
-struct valid_completion_signatures_helper<::beman::execution::completion_signatures<Sigs...>> : ::std::true_type {};
+#if not defined(__clang__)
+// The version of clang current (2024-09-01) installed on my Mac crashes
+// with this code - thus, there is a work-around.
+template <typename Receiver, typename Completions>
+concept has_completions = requires(Completions* completions) {
+    []<::beman::execution::detail::valid_completion_for<Receiver>... Signatures>(
+        ::beman::execution::completion_signatures<Signatures...>*) {}(completions);
+};
+#else
+template <typename, typename>
+struct has_completions_aux;
+template <typename Receiver, typename... Signature>
+struct has_completions_aux<Receiver, ::beman::execution::completion_signatures<Signature...>> {
+    static constexpr bool value =
+        (::beman::execution::detail::valid_completion_for<Signature, Receiver> && ... && true);
+};
 
-template <typename Signatures>
-concept valid_completion_signatures = valid_completion_signatures_helper<Signatures>::value;
+template <typename Receiver, typename Completions>
+concept has_completions = has_completions_aux<Receiver, Completions>::value;
+#endif
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -2622,6 +3040,9 @@ struct default_impls {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -2644,132 +3065,8 @@ struct with_await_transform {
 
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-#if not defined(__clang__)
-// The version of clang current (2024-09-01) installed on my Mac crashes
-// with this code - thus, there is a work-around.
-template <typename Receiver, typename Completions>
-concept has_completions = requires(Completions* completions) {
-    []<::beman::execution::detail::valid_completion_for<Receiver>... Signatures>(
-        ::beman::execution::completion_signatures<Signatures...>*) {}(completions);
-};
-#else
-template <typename, typename>
-struct has_completions_aux;
-template <typename Receiver, typename... Signature>
-struct has_completions_aux<Receiver, ::beman::execution::completion_signatures<Signature...>> {
-    static constexpr bool value =
-        (::beman::execution::detail::valid_completion_for<Signature, Receiver> && ... && true);
-};
 
-template <typename Receiver, typename Completions>
-concept has_completions = has_completions_aux<Receiver, Completions>::value;
-#endif
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
- * \brief A helper promise type with an associated environment
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <typename Env>
-struct env_promise : ::beman::execution::detail::with_await_transform<Env> {
-    auto get_return_object() noexcept -> void;
-    auto initial_suspend() noexcept -> ::std::suspend_always;
-    auto final_suspend() noexcept -> ::std::suspend_always;
-    auto unhandled_exception() noexcept -> void;
-    auto return_void() noexcept -> void;
-    auto unhandled_stopped() noexcept -> ::std::coroutine_handle<>;
-    auto get_env() const noexcept -> const Env&;
-};
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Tag>
-struct impls_for : ::beman::execution::detail::default_impls {};
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Receiver>
-struct operation_state_task;
-
-template <typename Receiver>
-struct connect_awaitable_promise;
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-template <typename Receiver>
-struct beman::execution::detail::connect_awaitable_promise
-    : ::beman::execution::detail::with_await_transform<connect_awaitable_promise<Receiver>> {
-    connect_awaitable_promise(auto&&, Receiver& rcvr) noexcept : receiver(rcvr) {}
-    auto              initial_suspend() noexcept -> ::std::suspend_always { return {}; }
-    [[noreturn]] auto final_suspend() noexcept -> ::std::suspend_always { ::std::terminate(); }
-    [[noreturn]] auto unhandled_exception() noexcept -> void { ::std::terminate(); }
-    [[noreturn]] auto return_void() noexcept -> void { ::std::terminate(); }
-
-    auto unhandled_stopped() noexcept -> ::std::coroutine_handle<> {
-        ::beman::execution::set_stopped(::std::move(this->receiver));
-        return ::std::noop_coroutine();
-    }
-
-    auto get_env() const noexcept -> ::beman::execution::env_of_t<Receiver> {
-        return ::beman::execution::get_env(this->receiver);
-    }
-
-    auto get_return_object() noexcept -> ::beman::execution::detail::operation_state_task<Receiver>;
-
-  private:
-    Receiver& receiver;
-};
-
-// ----------------------------------------------------------------------------
-
-template <typename Receiver>
-struct beman::execution::detail::operation_state_task {
-    using operation_state_concept = ::beman::execution::operation_state_t;
-    using promise_type            = ::beman::execution::detail::connect_awaitable_promise<Receiver>;
-
-    explicit operation_state_task(::std::coroutine_handle<> hndl) noexcept : handle(hndl) {}
-    operation_state_task(const operation_state_task&) = delete;
-    operation_state_task(operation_state_task&& other) noexcept : handle(::std::exchange(other.handle, {})) {}
-    ~operation_state_task() {
-        if (this->handle)
-            this->handle.destroy();
-    }
-    auto operator=(operation_state_task&&) -> operation_state_task&      = delete;
-    auto operator=(const operation_state_task&) -> operation_state_task& = delete;
-
-    auto start() & noexcept -> void { this->handle.resume(); }
-
-    ::std::coroutine_handle<> handle;
-};
-
-// ----------------------------------------------------------------------------
-
-template <typename Receiver>
-auto beman::execution::detail::connect_awaitable_promise<Receiver>::get_return_object() noexcept
-    -> ::beman::execution::detail::operation_state_task<Receiver> {
-    return ::beman::execution::detail::operation_state_task<Receiver>(
-        std::coroutine_handle<connect_awaitable_promise>::from_promise(*this));
-}
-
-// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 
@@ -2780,6 +3077,9 @@ concept receiver_of =
 }
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -2852,6 +3152,118 @@ using gather_signatures = typename ::beman::execution::detail::gather_signatures
 
 // ----------------------------------------------------------------------------
 
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+/*!
+ * \brief A helper promise type with an associated environment
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+template <typename Env>
+struct env_promise : ::beman::execution::detail::with_await_transform<Env> {
+    auto get_return_object() noexcept -> void;
+    auto initial_suspend() noexcept -> ::std::suspend_always;
+    auto final_suspend() noexcept -> ::std::suspend_always;
+    auto unhandled_exception() noexcept -> void;
+    auto return_void() noexcept -> void;
+    auto unhandled_stopped() noexcept -> ::std::coroutine_handle<>;
+    auto get_env() const noexcept -> const Env&;
+};
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Tag>
+struct impls_for : ::beman::execution::detail::default_impls {};
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+template <typename Receiver>
+struct operation_state_task;
+
+template <typename Receiver>
+struct connect_awaitable_promise;
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+template <typename Receiver>
+struct beman::execution::detail::connect_awaitable_promise
+    : ::beman::execution::detail::with_await_transform<connect_awaitable_promise<Receiver>> {
+    connect_awaitable_promise(auto&&, Receiver& rcvr) noexcept : receiver(rcvr) {}
+    auto              initial_suspend() noexcept -> ::std::suspend_always { return {}; }
+    [[noreturn]] auto final_suspend() noexcept -> ::std::suspend_always { ::std::terminate(); }
+    [[noreturn]] auto unhandled_exception() noexcept -> void { ::std::terminate(); }
+    [[noreturn]] auto return_void() noexcept -> void { ::std::terminate(); }
+
+    auto unhandled_stopped() noexcept -> ::std::coroutine_handle<> {
+        ::beman::execution::set_stopped(::std::move(this->receiver));
+        return ::std::noop_coroutine();
+    }
+
+    auto get_env() const noexcept -> ::beman::execution::env_of_t<Receiver> {
+        return ::beman::execution::get_env(this->receiver);
+    }
+
+    auto get_return_object() noexcept -> ::beman::execution::detail::operation_state_task<Receiver>;
+
+  private:
+    Receiver& receiver;
+};
+
+// ----------------------------------------------------------------------------
+
+template <typename Receiver>
+struct beman::execution::detail::operation_state_task {
+    using operation_state_concept = ::beman::execution::operation_state_t;
+    using promise_type            = ::beman::execution::detail::connect_awaitable_promise<Receiver>;
+
+    explicit operation_state_task(::std::coroutine_handle<> hndl) noexcept : handle(hndl) {}
+    operation_state_task(const operation_state_task&) = delete;
+    operation_state_task(operation_state_task&& other) noexcept : handle(::std::exchange(other.handle, {})) {}
+    ~operation_state_task() {
+        if (this->handle)
+            this->handle.destroy();
+    }
+    auto operator=(operation_state_task&&) -> operation_state_task&      = delete;
+    auto operator=(const operation_state_task&) -> operation_state_task& = delete;
+
+    auto start() & noexcept -> void { this->handle.resume(); }
+
+    ::std::coroutine_handle<> handle;
+};
+
+// ----------------------------------------------------------------------------
+
+template <typename Receiver>
+auto beman::execution::detail::connect_awaitable_promise<Receiver>::get_return_object() noexcept
+    -> ::beman::execution::detail::operation_state_task<Receiver> {
+    return ::beman::execution::detail::operation_state_task<Receiver>(
+        std::coroutine_handle<connect_awaitable_promise>::from_promise(*this));
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -2877,6 +3289,10 @@ concept sender = ::beman::execution::detail::enable_sender<::std::remove_cvref_t
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -2907,9 +3323,9 @@ struct awaiter_set_value<void> {
  */
 template <typename Awaiter, typename Receiver>
 using awaiter_completion_signatures = ::beman::execution::completion_signatures<
-    typename ::beman::execution::detail::awaiter_set_value<::beman::execution::detail::await_result_type<
+    typename ::beman::execution::detail::awaiter_set_value< ::beman::execution::detail::await_result_type<
         Awaiter,
-        ::beman::execution::detail::connect_awaitable_promise<Receiver>>>::type,
+        ::beman::execution::detail::connect_awaitable_promise<Receiver> > >::type,
     ::beman::execution::set_error_t(::std::exception_ptr),
     ::beman::execution::set_stopped_t()>;
 
@@ -2922,13 +3338,12 @@ template <typename Awaiter, ::beman::execution::receiver Receiver>
 auto connect_awaitable(Awaiter awaiter, Receiver receiver)
     -> ::beman::execution::detail::operation_state_task<Receiver>
     requires ::beman::execution::
-        receiver_of<Receiver, ::beman::execution::detail::awaiter_completion_signatures<Awaiter, Receiver>>
+        receiver_of<Receiver, ::beman::execution::detail::awaiter_completion_signatures<Awaiter, Receiver> >
 {
     // NOTE: suspened_complete(...) is co_await to make sure that the
     //    coroutine is suspended at the point when set_*(...) is called.
-    using result_type =
-        ::beman::execution::detail::await_result_type<Awaiter,
-                                                      ::beman::execution::detail::connect_awaitable_promise<Receiver>>;
+    using result_type = ::beman::execution::detail::
+        await_result_type<Awaiter, ::beman::execution::detail::connect_awaitable_promise<Receiver> >;
 
     ::std::exception_ptr ep;
     try {
@@ -2949,17 +3364,24 @@ auto connect_awaitable(Awaiter awaiter, Receiver receiver)
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
 template <typename Sender, typename Receiver>
-using state_type = ::std::decay_t<::beman::execution::detail::call_result_t<
-    decltype(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_state),
+using state_type = ::std::decay_t< ::beman::execution::detail::call_result_t<
+    decltype(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_state),
     Sender,
-    Receiver&>>;
+    Receiver&> >;
 }
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -2985,6 +3407,10 @@ export inline constexpr ::beman::execution::schedule_t schedule{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3021,6 +3447,9 @@ auto operator|(Sender&& sender, Adaptor&& adaptor) {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3029,6 +3458,9 @@ concept sender_for = ::beman::execution::sender<Sender> && ::std::same_as<::bema
 }
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3042,6 +3474,9 @@ concept sender_has_affine_on =
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3115,6 +3550,9 @@ export struct default_domain {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3136,6 +3574,9 @@ auto spawn_get_allocator(const Sndr& sndr, const Ev& ev) {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3148,7 +3589,7 @@ template <typename Sender, typename Receiver>
 struct basic_state {
     basic_state(Sender&& sender, Receiver&& rcvr) noexcept(true)
         : receiver(::std::move(rcvr)),
-          state(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_state(
+          state(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_state(
               ::std::forward<Sender>(sender), this->receiver)) {}
 
     Receiver                                                 receiver;
@@ -3160,6 +3601,9 @@ basic_state(Sender&&, Receiver&&) -> basic_state<Sender&&, Receiver>;
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3170,13 +3614,16 @@ namespace beman::execution::detail {
  */
 template <typename Index, typename Sender, typename Receiver>
 using env_type = ::beman::execution::detail::call_result_t<
-    decltype(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_env),
+    decltype(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_env),
     Index,
     ::beman::execution::detail::state_type<Sender, Receiver>&,
     const Receiver&>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3200,6 +3647,9 @@ concept almost_scheduler = ::std::derived_from<typename ::std::remove_cvref_t<Sc
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3237,8 +3687,8 @@ template <typename Domain, ::beman::execution::sender Sender, typename... Env>
                                  ::std::remove_cvref_t<decltype(::beman::execution::default_domain{}.transform_sender(
                                      ::std::declval<Sender>(), ::std::declval<Env>()...))>>
 constexpr auto
-transform_sender(Domain, Sender&& sender, const Env&...) noexcept(noexcept(::std::forward<Sender>(sender)))
-    -> ::beman::execution::sender auto {
+    transform_sender(Domain, Sender&& sender, const Env&...) noexcept(noexcept(::std::forward<Sender>(sender)))
+        -> ::beman::execution::sender auto {
     return sender;
 }
 
@@ -3318,6 +3768,9 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3347,6 +3800,9 @@ sender_adaptor(T&&...) -> sender_adaptor<T...>;
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3373,6 +3829,9 @@ sched_env(Scheduler&&) -> sched_env<::std::remove_cvref_t<Scheduler>>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3413,6 +3872,9 @@ constexpr auto apply_sender(Domain, Tag, Sender&& sender, Args&&... args) noexce
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3424,6 +3886,9 @@ concept nested_sender_has_affine_on = requires(Sender&& sndr, const Env& env) {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3434,7 +3899,7 @@ namespace beman::execution::detail {
  */
 template <typename Sender, typename Receiver, typename Index>
     requires ::beman::execution::detail::
-        valid_specialization<::beman::execution::detail::env_type, Index, Sender, Receiver>
+        valid_specialization< ::beman::execution::detail::env_type, Index, Sender, Receiver>
     struct basic_receiver {
     friend struct ::beman::execution::get_env_t;
     friend struct ::beman::execution::set_error_t;
@@ -3486,6 +3951,10 @@ template <typename Sender, typename Receiver, typename Index>
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3551,6 +4020,10 @@ inline constexpr get_completion_scheduler_t<Tag> get_completion_scheduler{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -3564,6 +4037,9 @@ concept scheduler = ::beman::execution::detail::almost_scheduler<Scheduler> && r
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3596,6 +4072,9 @@ sched_attrs(Scheduler&&) -> sched_attrs<::std::remove_cvref_t<Scheduler>>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3645,11 +4124,14 @@ constexpr auto completion_domain(const Sender& sender) noexcept {
         typename completion_domain_merge<decltype(get(::beman::execution::set_error, sender)),
                                          decltype(get(::beman::execution::set_stopped, sender))>::type,
         decltype(get(::beman::execution::set_value, sender))>::type;
-    return ::std::conditional_t<::std::same_as<type, completion_domain_undefined>, Default, type>();
+    return ::std::conditional_t< ::std::same_as<type, completion_domain_undefined>, Default, type>();
 }
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3669,6 +4151,9 @@ export inline constexpr get_delegation_scheduler_t get_delegation_scheduler{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3715,6 +4200,9 @@ constexpr auto get_domain_late(const Sender& sender, const Env& env) noexcept {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -3731,6 +4219,9 @@ constexpr auto get_domain_early(const Sender& sender) noexcept {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -3739,6 +4230,10 @@ using schedule_result_t = decltype(::beman::execution::schedule(::std::declval<S
 }
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -3876,6 +4371,10 @@ export class run_loop {
 
 // ----------------------------------------------------------------------------
 
+
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -3924,6 +4423,9 @@ export inline constexpr get_completion_signatures_t get_completion_signatures{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -4008,6 +4510,9 @@ export inline constexpr connect_t connect{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -4022,6 +4527,25 @@ concept sender_in =
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution {
+/*!
+ * \brief Type alias to determine the operation state type returned from `connect()`.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ */
+export template <typename Sender, typename Receiver>
+using connect_result_t = decltype(::beman::execution::connect(::std::declval<Sender>(), ::std::declval<Receiver>()));
+} // namespace beman::execution
+
+// ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -4132,18 +4656,8 @@ inline auto beman::execution::detail::stop_when_t::operator()(Sndr&& sndr, Tok&&
 
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
 
-namespace beman::execution {
-/*!
- * \brief Type alias to determine the operation state type returned from `connect()`.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- */
-export template <typename Sender, typename Receiver>
-using connect_result_t = decltype(::beman::execution::connect(::std::declval<Sender>(), ::std::declval<Receiver>()));
-} // namespace beman::execution
 
-// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 
@@ -4175,6 +4689,9 @@ concept scope_token = ::std::copyable<Token> && requires(Token token) {
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -4204,11 +4721,14 @@ template <typename Sender, typename Env>
 using completion_signatures_for = ::std::conditional_t<
     ::std::same_as<beman::execution::detail::no_completion_signatures_defined_in_sender,
                    typename ::beman::execution::detail::completion_signatures_for_impl<Sender, Env>::type>,
-    typename ::beman::execution::detail::completion_signatures_for_impl<::std::remove_cvref_t<Sender>, Env>::type,
+    typename ::beman::execution::detail::completion_signatures_for_impl< ::std::remove_cvref_t<Sender>, Env>::type,
     typename ::beman::execution::detail::completion_signatures_for_impl<Sender, Env>::type>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -4225,7 +4745,11 @@ using completion_signatures_of_t =
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
+
 
 namespace beman::execution::detail {
 /*!
@@ -4332,7 +4856,11 @@ struct connect_all_t {
 inline constexpr connect_all_t connect_all{};
 } // namespace beman::execution::detail
 
+
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -4342,17 +4870,20 @@ namespace beman::execution {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
 export template <typename Sender,
-                 typename Env                         = ::beman::execution::env<>,
-                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
+                                 typename Env                         = ::beman::execution::env<>,
+                                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
     requires ::beman::execution::sender_in<Sender, Env>
 using error_types_of_t =
-    ::beman::execution::detail::gather_signatures<::beman::execution::set_error_t,
-                                                  ::beman::execution::completion_signatures_of_t<Sender, Env>,
-                                                  ::std::type_identity_t,
-                                                  Variant>;
+    ::beman::execution::detail::gather_signatures< ::beman::execution::set_error_t,
+                                                   ::beman::execution::completion_signatures_of_t<Sender, Env>,
+                                                   ::std::type_identity_t,
+                                                   Variant>;
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -4369,21 +4900,27 @@ inline constexpr bool sends_stopped{!::std::same_as<
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
 export template <typename Sender,
-                 typename Env                         = ::beman::execution::env<>,
-                 template <typename...> class Tuple   = ::beman::execution::detail::decayed_tuple,
-                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
+                                 typename Env                         = ::beman::execution::env<>,
+                                 template <typename...> class Tuple   = ::beman::execution::detail::decayed_tuple,
+                                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
     requires ::beman::execution::sender_in<Sender, Env>
 using value_types_of_t =
-    ::beman::execution::detail::gather_signatures<::beman::execution::set_value_t,
-                                                  ::beman::execution::completion_signatures_of_t<Sender, Env>,
-                                                  Tuple,
-                                                  Variant>;
+    ::beman::execution::detail::gather_signatures< ::beman::execution::set_value_t,
+                                                   ::beman::execution::completion_signatures_of_t<Sender, Env>,
+                                                   Tuple,
+                                                   Variant>;
 }
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -4398,10 +4935,13 @@ using connect_all_result =
     ::beman::execution::detail::call_result_t<decltype(::beman::execution::detail::connect_all),
                                               ::beman::execution::detail::basic_state<Sender, Receiver>*,
                                               Sender,
-                                              ::beman::execution::detail::indices_for<Sender>>;
+                                              ::beman::execution::detail::indices_for<Sender> >;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -4541,6 +5081,9 @@ export inline constexpr ::beman::execution::sync_wait_t sync_wait{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -4591,6 +5134,9 @@ basic_operation(Sender&&, Receiver&&) -> basic_operation<Sender&&, Receiver>;
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -4634,6 +5180,10 @@ using single_sender_value_type = typename single_sender_value_type_helper<Sender
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -4724,6 +5274,10 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
 
 // ----------------------------------------------------------------------------
 
+
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -4733,6 +5287,10 @@ concept single_sender = ::beman::execution::sender_in<Sender, Env> &&
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -4750,6 +5308,11 @@ constexpr auto make_sender(Tag tag, Data&& data, Child&&... child) {
 
 // ----------------------------------------------------------------------------
 
+
+
+
+
+
 namespace beman::execution::detail {
 template <class Sndr, class Promise>
 concept awaitable_sender =
@@ -4757,6 +5320,10 @@ concept awaitable_sender =
         { prom.unhandled_stopped() } -> ::std::convertible_to<::std::coroutine_handle<>>;
     };
 } // namespace beman::execution::detail
+
+
+
+
 
 namespace beman::execution::detail {
 template <class Sndr, class Promise>
@@ -4842,6 +5409,9 @@ class sender_awaitable {
     }
 };
 } // namespace beman::execution::detail
+
+
+
 
 namespace beman::execution::detail {
 
@@ -4943,12 +5513,17 @@ struct completion_signatures_for_impl<
 
 } // namespace beman::execution::detail
 
+
 namespace beman::execution {
 
 export using bulk_t = ::beman::execution::detail::bulk_t;
 export inline constexpr ::beman::execution::bulk_t bulk{};
 
 } // namespace beman::execution
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -5023,7 +5598,11 @@ export inline constexpr into_variant_t into_variant{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
+
 
 namespace beman::execution::detail {
 template <typename Completion, typename... T>
@@ -5060,6 +5639,7 @@ struct impls_for<just_t<Completion>> : ::beman::execution::detail::default_impls
     };
 };
 } // namespace beman::execution::detail
+
 
 namespace beman::execution {
 export using just_t         = ::beman::execution::detail::just_t<::beman::execution::set_value_t>;
@@ -5232,7 +5812,11 @@ export inline constexpr ::beman::execution::just_stopped_t just_stopped{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
+
 
 namespace beman::execution::detail {
 template <typename Completion>
@@ -5421,6 +6005,7 @@ struct completion_signatures_for_impl<
 };
 } // namespace beman::execution::detail
 
+
 namespace beman::execution {
 export using let_error_t   = ::beman::execution::detail::let_t<::beman::execution::set_error_t>;
 export using let_stopped_t = ::beman::execution::detail::let_t<::beman::execution::set_stopped_t>;
@@ -5432,6 +6017,9 @@ export inline constexpr ::beman::execution::let_value_t   let_value{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -5475,6 +6063,10 @@ export inline constexpr read_env_t read_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -5621,7 +6213,366 @@ export inline constexpr ::beman::execution::schedule_from_t schedule_from{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
+
 // ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
+
+struct split_impl_t {};
+template <>
+struct impls_for<split_impl_t> : ::beman::execution::detail::default_impls {
+
+    template <class Sndr>
+    struct shared_state;
+
+    struct split_env {
+        ::beman::execution::inplace_stop_source* stop_source;
+
+        ::beman::execution::inplace_stop_token query(::beman::execution::get_stop_token_t) const noexcept {
+            return stop_source->get_token();
+        }
+    };
+
+    struct local_state_base {
+        local_state_base* next{nullptr};
+        virtual auto      notify() noexcept -> void = 0;
+
+        local_state_base() noexcept                                  = default;
+        local_state_base(const local_state_base&)                    = delete;
+        local_state_base(local_state_base&&)                         = delete;
+        auto operator=(const local_state_base&) -> local_state_base& = delete;
+        auto operator=(local_state_base&&) -> local_state_base&      = delete;
+
+      protected:
+        ~local_state_base() = default;
+    };
+
+    template <class Sndr>
+    struct split_receiver {
+        using receiver_concept = ::beman::execution::receiver_t;
+
+        explicit split_receiver(shared_state<Sndr>* state) noexcept : sh_state(state) {
+            if (sh_state) {
+                sh_state->inc_ref();
+            }
+        }
+
+        ~split_receiver() noexcept {
+            if (sh_state) {
+                sh_state->dec_ref();
+            }
+        }
+
+        split_receiver(split_receiver&& other) noexcept : sh_state(::std::exchange(other.sh_state, nullptr)) {}
+        split_receiver& operator=(split_receiver&& other) noexcept {
+            sh_state = ::std::exchange(other.sh_state, nullptr);
+            return *this;
+        }
+
+        split_receiver(const split_receiver&)            = delete;
+        split_receiver& operator=(const split_receiver&) = delete;
+
+        template <class Tag, class... Args>
+        void complete(Tag, Args&&... args) noexcept {
+            using tuple_t = ::beman::execution::detail::decayed_tuple<Tag, Args...>;
+            try {
+                sh_state->result.template emplace<tuple_t>(Tag(), ::std::forward<Args>(args)...);
+            } catch (...) {
+                using tuple_err = ::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>;
+                sh_state->result.template emplace<tuple_err>(::beman::execution::set_error,
+                                                             ::std::current_exception());
+            }
+            sh_state->notify();
+        }
+
+        template <class... Args>
+        void set_value(Args&&... args) && noexcept {
+            complete(::beman::execution::set_value, ::std::forward<Args>(args)...);
+        }
+
+        template <class Error>
+        void set_error(Error&& err) && noexcept {
+            complete(::beman::execution::set_error, ::std::forward<Error>(err));
+        }
+
+        void set_stopped() && noexcept { complete(::beman::execution::set_stopped); }
+
+        split_env get_env() const noexcept { return split_env{&sh_state->stop_src}; }
+
+        shared_state<Sndr>* sh_state;
+    };
+
+    // [exec.split-10]
+    template <class Sndr>
+    struct shared_state {
+        template <class... Args>
+        using value_tuple = ::std::tuple<::beman::execution::set_value_t, ::std::decay_t<Args>...>;
+
+        template <class... Args>
+        using error_tuples = ::std::variant<::std::tuple<::beman::execution::set_error_t, ::std::decay_t<Args>>...>;
+
+        using variant_type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
+            ::std::variant<::std::monostate>,
+            ::std::variant<::std::tuple<::beman::execution::set_stopped_t>>,
+            ::std::variant<::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>>,
+            ::beman::execution::error_types_of_t<Sndr, split_env, error_tuples>,
+            ::beman::execution::value_types_of_t<Sndr, split_env, value_tuple>>>;
+
+        using state_list_type = ::beman::execution::detail::atomic_intrusive_stack<&local_state_base::next>;
+
+        using child_operation_state = ::beman::execution::connect_result_t<Sndr, split_receiver<Sndr>>;
+
+        explicit shared_state(Sndr&& sndr) {
+            try {
+                op_state.emplace(::beman::execution::detail::emplace_from{[&] {
+                    return ::beman::execution::connect(::std::forward<Sndr>(sndr), split_receiver<Sndr>{this});
+                }});
+            } catch (...) {
+                using error_tuple_t = ::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>;
+                result.template emplace<error_tuple_t>(::beman::execution::set_error, ::std::current_exception());
+                [[maybe_unused]] auto queue = waiting_states.pop_all_and_shutdown();
+                assert(queue.empty());
+            }
+        }
+
+        // We use an intrusive list to store the listeners that are waiting for the operation to complete.
+        // if the intrusive list is empty, we start the operation
+        // if the intrusive list is not empty, we push the listener to the intrusive list
+        // if the intrusive list is shutdown, we immediately notify the listener
+        void add_listener(local_state_base* listener) noexcept {
+            // try to push the listener to the intrusive list, if the intrusive list is empty and not shutdown, start
+            // the operation
+            if (auto maybe_ptr = waiting_states.try_push(listener); !maybe_ptr) {
+                // the queue is shutdown, immediately notify the listener
+                listener->notify();
+            } else if (!(*maybe_ptr)) {
+                // the operation was not started yet, we are first, and we start it
+                assert(op_state);
+                if (op_state)
+                    ::beman::execution::start(*op_state);
+                else
+                    std::terminate();
+            }
+        }
+
+        void notify() noexcept {
+            // note: this is different from stdexec.
+            // we discussed lifetime durations of operation at LEWG and haven't decided yet
+            // whether we should keep the operation alive as long as possible
+            op_state.reset();
+            auto listeners = waiting_states.pop_all_and_shutdown();
+            while (auto listener = listeners.pop()) {
+                listener->notify();
+            }
+        }
+
+        void inc_ref() noexcept { ref_count.fetch_add(1); }
+
+        // This is the most complicated part of the split implementation.
+        // On construction, the operation state increments the ref count.
+        // Before the operation is started, at least one listener is added to the queue.
+        // If the ref count is decreased to one and the there are no listeners in the queue
+        // the operation state is the last object holding the shared state and we can safely
+        // destroy it
+        //
+        // it is not thread safe to destroy a split-sender and copy it at the same time
+        // this is similar to how a shared_ptr is not thread safe to copy and destroy at the same time
+        void dec_ref() noexcept {
+            std::size_t count = ref_count.load();
+            if (count == 2 && waiting_states.empty_and_not_shutdown()) {
+                assert(op_state);
+                [[maybe_unused]] auto listeners = waiting_states.pop_all_and_shutdown();
+                assert(listeners.empty());
+                op_state.reset();
+            }
+            if (ref_count.fetch_sub(1) == 1) {
+                delete this;
+            }
+        }
+
+        ::beman::execution::inplace_stop_source stop_src{};
+        variant_type                            result{};
+        state_list_type                         waiting_states{};
+        ::std::atomic<::std::size_t>            ref_count{0};
+        ::std::optional<child_operation_state>  op_state{};
+    };
+
+    template <class Sndr, class Receiver>
+    struct local_state final : local_state_base {
+        using stop_token_type = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Receiver>>;
+
+        struct on_stop_type {
+            shared_state<Sndr>* sh_state;
+            void                operator()() noexcept { sh_state->stop_src.request_stop(); }
+        };
+
+        using on_stop_callback = ::beman::execution::stop_callback_for_t<stop_token_type, on_stop_type>;
+
+        explicit local_state(shared_state<Sndr>* state, Receiver& rcvr) noexcept
+            : sh_state(state), receiver{std::addressof(rcvr)} {
+            sh_state->inc_ref();
+        }
+
+        ~local_state() noexcept { sh_state->dec_ref(); }
+
+        local_state(const local_state&)            = delete;
+        local_state& operator=(const local_state&) = delete;
+        local_state(local_state&&)                 = delete;
+        local_state& operator=(local_state&&)      = delete;
+
+        auto notify() noexcept -> void override {
+            on_stop.reset();
+            auto stop_token = ::beman::execution::get_stop_token(::beman::execution::get_env(receiver));
+            if (stop_token.stop_requested()) {
+                ::beman::execution::set_stopped(std::move(*receiver));
+            } else {
+                assert(sh_state->result.index() > 0);
+                assert(!sh_state->result.valueless_by_exception());
+                try {
+                    ::std::visit(
+                        [&]<class Arg>(const Arg& arg) noexcept -> void {
+                            if constexpr (!::std::same_as<::std::decay_t<Arg>, ::std::monostate>) {
+                                ::std::apply(
+                                    [&](auto tag, const auto&... args) noexcept -> void {
+                                        tag(::std::move(*receiver), args...);
+                                    },
+                                    arg);
+                            }
+                        },
+                        sh_state->result);
+                } catch (...) {
+                    // required by clang-tidy although it is not necessary here
+                    // see valueless_by_exception() check above
+                    std::terminate();
+                }
+            }
+        }
+
+        void start() noexcept {
+            on_stop.emplace(::beman::execution::get_stop_token(::beman::execution::get_env(*receiver)),
+                            on_stop_type{sh_state});
+            sh_state->add_listener(this);
+        }
+
+        std::optional<on_stop_callback> on_stop;
+        shared_state<Sndr>*             sh_state;
+        Receiver*                       receiver;
+    };
+
+    static constexpr auto get_state = []<typename Sender, typename Receiver>(Sender&&  sender,
+                                                                             Receiver& receiver) noexcept {
+        auto&& wrapper = sender.template get<1>();
+        return local_state(wrapper.sh_state, receiver);
+    };
+
+    static constexpr auto start = []<class Sndr, class Rcvr>(local_state<Sndr, Rcvr>& state, Rcvr&) noexcept {
+        state.start();
+    };
+};
+
+template <class Sndr>
+struct shared_wrapper {
+    explicit shared_wrapper(impls_for<split_impl_t>::shared_state<Sndr>* state) noexcept : sh_state(state) {
+        if (sh_state) {
+            sh_state->inc_ref();
+        }
+    }
+
+    ~shared_wrapper() noexcept {
+        if (sh_state) {
+            sh_state->dec_ref();
+        }
+    }
+
+    shared_wrapper(const shared_wrapper& other) noexcept : sh_state(other.sh_state) {
+        if (sh_state) {
+            sh_state->inc_ref();
+        }
+    }
+
+    shared_wrapper(shared_wrapper&& other) noexcept : sh_state(::std::exchange(other.sh_state, nullptr)) {}
+
+    shared_wrapper& operator=(const shared_wrapper& other) noexcept {
+        // check for self-assignment was required by clang-tidy
+        // although it is not necessary here
+        if (this == &other) {
+            return *this;
+        }
+        auto tmp = other;
+        ::std::swap(sh_state, tmp.sh_state);
+        return *this;
+    }
+
+    shared_wrapper& operator=(shared_wrapper&& other) noexcept {
+        auto tmp = ::std::move(other);
+        ::std::swap(sh_state, tmp.sh_state);
+        return *this;
+    }
+
+    impls_for<split_impl_t>::shared_state<Sndr>* sh_state;
+};
+
+struct split_t {
+    template <class Sndr>
+    auto transform_sender(Sndr&& sndr) const {
+        auto&& child       = ::std::forward<Sndr>(sndr).template get<2>();
+        using child_type   = decltype(child);
+        using shared_state = ::beman::execution::detail::impls_for<split_impl_t>::shared_state<child_type>;
+        auto* sh_state     = new shared_state{::beman::execution::detail::forward_like<Sndr>(child)};
+        return ::beman::execution::detail::make_sender(split_impl_t{}, shared_wrapper<child_type>{sh_state});
+    }
+
+    template <class Sender>
+        requires beman::execution::sender_in<Sender, impls_for<split_impl_t>::split_env>
+    auto operator()(Sender&& sender) const {
+        auto domain{::beman::execution::detail::get_domain_early(sender)};
+        return ::beman::execution::transform_sender(
+            domain, ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)));
+    }
+};
+
+template <class Sndr, class Env>
+struct completion_signatures_for_impl<
+    ::beman::execution::detail::basic_sender<::beman::execution::detail::split_impl_t,
+                                             ::beman::execution::detail::shared_wrapper<Sndr>>,
+    Env> {
+    template <class... Args>
+    using make_value_completions =
+        ::beman::execution::completion_signatures<::beman::execution::set_value_t(const std::decay_t<Args>&...)>;
+
+    template <class... Args>
+    using make_error_completions =
+        ::beman::execution::completion_signatures<::beman::execution::set_error_t(const std::decay_t<Args>&)...>;
+
+    using value_completions = ::beman::execution::
+        value_types_of_t<Sndr, Env, make_value_completions, ::beman::execution::detail::meta::combine>;
+
+    using error_completions = ::beman::execution::error_types_of_t<Sndr, Env, make_error_completions>;
+
+    using fixed_completions =
+        ::beman::execution::completion_signatures<::beman::execution::set_stopped_t(),
+                                                  ::beman::execution::set_error_t(std::exception_ptr)>;
+
+    using type = ::beman::execution::detail::meta::unique<
+        ::beman::execution::detail::meta::combine<fixed_completions, value_completions, error_completions>>;
+};
+
+} // namespace beman::execution::detail
+
+namespace beman::execution {
+export using split_t = ::beman::execution::detail::split_t;
+
+export inline constexpr ::beman::execution::split_t split{};
+} // namespace beman::execution
+
+
+
+
+// ----------------------------------------------------------------------------
+
 
 namespace beman::execution::detail {
 template <typename Completion>
@@ -5731,6 +6682,7 @@ struct completion_signatures_for_impl<
             ::beman::execution::completion_signatures<>>>>;
 };
 } // namespace beman::execution::detail
+
 
 namespace beman::execution {
 /*!
@@ -5908,6 +6860,10 @@ export inline constexpr ::beman::execution::upon_stopped_t upon_stopped{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -6130,6 +7086,9 @@ export inline constexpr ::beman::execution::when_all_t when_all{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -6172,6 +7131,9 @@ export inline constexpr write_env_t write_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -6316,6 +7278,10 @@ export inline constexpr associate_t associate{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -6345,6 +7311,10 @@ export inline constexpr ::beman::execution::as_awaitable_t as_awaitable{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -6409,6 +7379,11 @@ struct impls_for<::beman::execution::detail::counting_scope_join_t> : ::beman::e
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
+
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -6521,7 +7496,13 @@ export inline constexpr affine_on_t affine_on{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
+
+
 // ----------------------------------------------------------------------------
+
 
 namespace beman::execution::detail {
 // specialize default_domain appropriately
@@ -6578,6 +7559,7 @@ auto get_domain_late(Sender&& sender, Env&&) {
 }
 } // namespace beman::execution::detail
 
+
 namespace beman::execution {
 export using continues_on_t = ::beman::execution::detail::continues_on_t;
 /*!
@@ -6588,6 +7570,9 @@ export inline constexpr continues_on_t continues_on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -6628,6 +7613,10 @@ export inline constexpr ::beman::execution::detail::starts_on_t starts_on{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -6657,6 +7646,10 @@ export inline constexpr ::beman::execution::when_all_with_variant_t when_all_wit
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 namespace beman::execution {
 export template <::beman::execution::detail::class_type Promise>
@@ -6697,6 +7690,9 @@ struct with_awaitable_senders {
 };
 
 } // namespace beman::execution
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -6744,6 +7740,9 @@ inline auto beman::execution::counting_scope::get_token() noexcept -> beman::exe
     return beman::execution::counting_scope::token(this);
 }
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -6785,6 +7784,10 @@ inline auto beman::execution::simple_counting_scope::get_token() noexcept
 }
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -7016,6 +8019,9 @@ export inline constexpr spawn_future_t spawn_future{};
 
 // ----------------------------------------------------------------------------
 
+
+
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -7089,6 +8095,10 @@ export inline constexpr spawn_t spawn{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
+
+
 
 // ----------------------------------------------------------------------------
 
@@ -7204,3 +8214,5 @@ export inline constexpr ::beman::execution::on_t on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
+
+
