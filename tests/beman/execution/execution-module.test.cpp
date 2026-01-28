@@ -2,11 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
-#if 1
-#include <beman/execution/execution.hpp>
+
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
 #else
-import beman_execution;
+#include <execution>
 #endif
+
+import beman_execution;
 
 // ----------------------------------------------------------------------------
 
@@ -22,11 +25,11 @@ using error_types_of_t = test_stdex::error_types_of_t<S>;
 
 TEST(execution_modules) {
 #if 0
-    //-dk:TOD enable execution policies
-    test::use_type<test_std::sequenced_policy>();
-    test::use_type<test_std::parallel_policy>();
-    test::use_type<test_std::parallel_unsequenced_policy>();
-    test::use_type<test_std::unsequenced_policy>();
+    //-dk:TODO enable execution policies
+    test::check_type<test_std::sequenced_policy>();
+    test::check_type<test_std::parallel_policy>();
+    test::check_type<test_std::parallel_unsequenced_policy>();
+    test::check_type<test_std::unsequenced_policy>();
 
     test::use(test_std::seq);
     test::use(test_std::par);

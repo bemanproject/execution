@@ -64,19 +64,21 @@ function(beman_install_library name)
     set(package_name "${name}")
     list(GET name_parts -1 component_name)
 
+    include(GNUInstallDirs)
+
     install(
         TARGETS "${target_name}"
         COMPONENT "${install_component_name}"
         EXPORT "${export_name}"
         FILE_SET HEADERS
+        FILE_SET CXX_MODULES
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${package_name}/modules
     )
 
     set_target_properties(
         "${target_name}"
         PROPERTIES EXPORT_NAME "${component_name}"
     )
-
-    include(GNUInstallDirs)
 
     # Determine the prefix for project-specific variables
     string(TOUPPER "${name}" project_prefix)
@@ -158,6 +160,8 @@ function(beman_install_library name)
             DESTINATION "${package_install_dir}"
             NAMESPACE beman::
             FILE "${config_targets_file}"
+            CXX_MODULES_DIRECTORY
+            cxx-modules
             COMPONENT "${install_component_name}"
         )
     else()
