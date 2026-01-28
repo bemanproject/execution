@@ -98,7 +98,11 @@ def build_header(file, to, header):
 with open(module_file, "w") as to:
     to.write("// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception\n\n")
     to.write("module;\n\n")
-    to.write("#ifdef USE_STD_MODULE\n")
+    to.write("#include <cassert>\n\n")
+    to.write("#if defined(__APPLE__) && defined(__GNUC__)\n")
+    to.write("#undef BEMAN_HAS_IMPORT_STD\n")
+    to.write("#endif\n")
+    to.write("#ifdef BEMAN_HAS_IMPORT_STD\n")
     to.write("import std;\n")
     to.write("#else\n")
     includes = list(headers.keys())

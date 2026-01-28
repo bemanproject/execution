@@ -2,7 +2,12 @@
 
 module;
 
-#ifdef USE_STD_MODULE
+#include <cassert>
+
+#if defined(__APPLE__) && defined(__GNUC__)
+#undef BEMAN_HAS_IMPORT_STD
+#endif
+#ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
 #include <algorithm>
@@ -2011,6 +2016,17 @@ concept class_type = ::beman::execution::detail::decays_to<Tp, Tp> && ::std::is_
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
+template <typename Fun, typename... Args>
+concept nothrow_callable = ::beman::execution::detail::callable<Fun, Args...> && requires(Fun&& fun, Args&&... args) {
+    { ::std::forward<Fun>(fun)(::std::forward<Args>(args)...) } noexcept;
+};
+} // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+
+namespace beman::execution::detail {
 class counting_scope_base;
 }
 
@@ -2170,17 +2186,6 @@ concept is_awaiter = requires(Awaiter& awaiter, ::std::coroutine_handle<Promise>
     awaiter.await_ready() ? 1 : 0;
     { awaiter.await_suspend(handle) } -> ::beman::execution::detail::await_suspend_result;
     awaiter.await_resume();
-};
-} // namespace beman::execution::detail
-
-// ----------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <typename Fun, typename... Args>
-concept nothrow_callable = ::beman::execution::detail::callable<Fun, Args...> && requires(Fun&& fun, Args&&... args) {
-    { ::std::forward<Fun>(fun)(::std::forward<Args>(args)...) } noexcept;
 };
 } // namespace beman::execution::detail
 
@@ -3114,7 +3119,7 @@ concept is_sender_adaptor_closure =
 }
 
 namespace beman::execution::detail::pipeable {
-template <::beman::execution::sender Sender, typename Adaptor>
+export template <::beman::execution::sender Sender, typename Adaptor>
     requires(!::beman::execution::sender<Adaptor>) &&
             ::std::derived_from<::std::decay_t<Adaptor>,
                                 ::beman::execution::sender_adaptor_closure<::std::decay_t<Adaptor>>> &&
@@ -4392,13 +4397,13 @@ struct connect_all_t {
         auto operator()(::std::index_sequence<J...>, C&&... c) noexcept(
             (noexcept(::beman::execution::connect(
                  ::beman::execution::detail::forward_like<Sender>(c),
-                 ::beman::execution::detail::basic_receiver<Sender, Receiver, ::std::integral_constant<::size_t, J>>{
-                     this->op})) &&
+                 ::beman::execution::detail::
+                     basic_receiver<Sender, Receiver, ::std::integral_constant<::std::size_t, J>>{this->op})) &&
              ... && true)) -> decltype(auto) {
             return ::beman::execution::detail::product_type{::beman::execution::connect(
                 ::beman::execution::detail::forward_like<Sender>(c),
-                ::beman::execution::detail::basic_receiver<Sender, Receiver, ::std::integral_constant<::size_t, J>>{
-                    this->op})...};
+                ::beman::execution::detail::
+                    basic_receiver<Sender, Receiver, ::std::integral_constant<::std::size_t, J>>{this->op})...};
         }
     };
 
@@ -6488,7 +6493,7 @@ struct impls_for<::beman::execution::detail::when_all_t> : ::beman::execution::d
         }
 
         Receiver*                               receiver{};
-        ::std::atomic<size_t>                   count{sizeof...(Sender)};
+        ::std::atomic<::std::size_t>            count{sizeof...(Sender)};
         ::beman::execution::inplace_stop_source stop_src{};
         ::std::atomic<disposition>              disp{disposition::started};
         errors_variant                          errors{};

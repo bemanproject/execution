@@ -33,6 +33,7 @@
 #include <optional>
 #include <variant>
 #include <tuple>
+#include <cassert>
 
 // ----------------------------------------------------------------------------
 

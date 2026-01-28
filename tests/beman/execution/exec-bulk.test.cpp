@@ -63,7 +63,7 @@ auto test_bulk() {
     // Expected results: element-wise multiplication of a and b
     std::vector<int> expected{9, 20, 33, 52, 70, 90, 112, 136};
 
-    for (size_t i = 0; i < results.size(); ++i) {
+    for (::std::size_t i = 0; i < results.size(); ++i) {
         ASSERT(results[i] == expected[i]);
     }
 }
@@ -140,7 +140,7 @@ auto test_bulk_pipeable() {
     // Expected results: element-wise multiplication of a and b
     std::vector<int> expected{9, 20, 33, 52, 70, 90, 112, 136};
 
-    for (size_t i = 0; i < results.size(); ++i) {
+    for (::std::size_t i = 0; i < results.size(); ++i) {
         ASSERT(results[i] == expected[i]);
     }
 }

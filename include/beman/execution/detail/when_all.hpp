@@ -168,7 +168,7 @@ struct impls_for<::beman::execution::detail::when_all_t> : ::beman::execution::d
         }
 
         Receiver*                               receiver{};
-        ::std::atomic<size_t>                   count{sizeof...(Sender)};
+        ::std::atomic<::std::size_t>            count{sizeof...(Sender)};
         ::beman::execution::inplace_stop_source stop_src{};
         ::std::atomic<disposition>              disp{disposition::started};
         errors_variant                          errors{};
