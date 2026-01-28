@@ -3,8 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-list(
-    APPEND EXAMPLES
+set(EXAMPLES
     stackoverflow
     inspect
     playground
@@ -29,8 +28,12 @@ foreach(EXAMPLE ${EXAMPLES})
     set(EXAMPLE_TARGET ${TARGET_PREFIX}.examples.${EXAMPLE})
     add_executable(${EXAMPLE_TARGET})
     target_sources(${EXAMPLE_TARGET} PRIVATE ${EXAMPLE}.cpp)
-    target_link_libraries(
-        ${EXAMPLE_TARGET}
-        PRIVATE ${TARGET_NAMESPACE}::${TARGET_NAME}
-    )
+    if(BEMAN_USE_MODULES)
+        target_link_libraries(${EXAMPLE_TARGET} PRIVATE beman::execution)
+    else()
+        target_link_libraries(
+            ${EXAMPLE_TARGET}
+            PRIVATE beman::execution_headers
+        )
+    endif()
 endforeach()

@@ -1,12 +1,5 @@
 # src/beman/execution/tests/CMakeLists.txt
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-cmake_minimum_required(VERSION 3.25...4.2)
-
-project(beman_execution_tests LANGUAGES CXX)
-
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-    message(FATAL_ERROR "In-source builds are not allowed!")
-endif()
 
 list(APPEND todo exec-associate.test)
 
@@ -121,8 +114,9 @@ foreach(test ${execution_tests})
     set(TEST_EXE ${TARGET_PREFIX}.${test})
     add_executable(${TEST_EXE} ${test}.cpp)
     if(BEMAN_USE_MODULES)
-        target_compile_definitions(${TARGET_NAME} PUBLIC BEMAN_USE_MODULES)
+        target_link_libraries(${TEST_EXE} PRIVATE beman::execution)
+    else()
+        target_link_libraries(${TEST_EXE} PRIVATE beman::execution_headers)
     endif()
-    target_link_libraries(${TEST_EXE} PRIVATE beman::execution)
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
