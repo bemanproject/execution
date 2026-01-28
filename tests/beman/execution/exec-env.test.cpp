@@ -1,11 +1,15 @@
 // tests/beman/execution/exec-env.test.cpp                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/prop.hpp>
+#endif
 #include <type_traits>
 #include <test/execution.hpp>
 

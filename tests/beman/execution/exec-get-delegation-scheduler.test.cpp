@@ -1,13 +1,15 @@
 // src/beman/execution/tests/exec-get-delegation-scheduler.test.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include <beman/execution/detail/get_delegation_scheduler.hpp>
-
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
-
+#endif
 #include <test/execution.hpp>
 #include <concepts>
 

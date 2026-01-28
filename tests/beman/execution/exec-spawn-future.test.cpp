@@ -390,7 +390,7 @@ auto test_spawn_future() {
             ASSERT(handle != nullptr);
             ASSERT(result == 0);
 #if 0
-            using type = typename beman::execution::detail::completion_signatures_for_impl<decltype(sndr), test_std::env<>>::type;
+            using type = typename test_detail::completion_signatures_for_impl<decltype(sndr), test_std::env<>>::type;
             static_assert(std::same_as<test_std::completion_signatures<test_std::set_stopped_t(), test_std::set_value_t(int), test_std::set_error_t(std::exception_ptr)>, type>);
             static_assert(std::same_as<
                 test_std::completion_signatures<test_std::set_stopped_t(), test_std::set_value_t(int), test_std::set_error_t(std::exception_ptr)>,

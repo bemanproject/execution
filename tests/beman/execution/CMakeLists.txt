@@ -13,8 +13,8 @@ list(APPEND todo exec-associate.test)
 if(BEMAN_USE_MODULES)
     list(
         APPEND execution_tests
-        execution-module.test # execution-module.test.cpp
-        stop-token-module.test # stop-token-module.test.cpp
+        execution-module.test
+        stop-token-module.test
     )
 endif()
 
@@ -124,6 +124,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 foreach(test ${execution_tests})
     set(TEST_EXE ${TARGET_PREFIX}.${test})
     add_executable(${TEST_EXE} ${test}.cpp)
+    if(BEMAN_USE_MODULES)
+        target_compile_definitions(${TARGET_NAME} PUBLIC BEMAN_USE_MODULES)
+    endif()
     target_link_libraries(${TEST_EXE} PRIVATE beman::execution)
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()

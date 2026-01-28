@@ -1,9 +1,13 @@
 // src/beman/execution/tests/exec-bulk.test.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include "beman/execution/detail/get_completion_signatures.hpp"
 #include "beman/execution/detail/get_env.hpp"
 #include "beman/execution/detail/sync_wait.hpp"
+#endif
 #include <cstdlib>
 #include <test/execution.hpp>
 #include <beman/execution/detail/bulk.hpp>

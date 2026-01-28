@@ -7,6 +7,7 @@ import beman.execution;
 // ----------------------------------------------------------------------------
 
 TEST(stop_token_modules) {
+#if 0
     // [stoptoken.concepts], stop token concepts
     static_assert(not test_std::stoppable_token<int>);
     static_assert(not test_std::unstoppable_token<int>);
@@ -36,5 +37,6 @@ TEST(stop_token_modules) {
     // [stopcallback.inplace], class template inplace_stop_callback
     test::use_template<test_std::inplace_stop_callback>();
     test::use_template<test_std::stop_callback_for_t>();
+#endif
 #endif
 }

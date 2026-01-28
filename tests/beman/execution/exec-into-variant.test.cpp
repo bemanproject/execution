@@ -1,13 +1,16 @@
 // src/beman/execution/tests/exec-into-variant.test.cpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include <beman/execution/detail/into_variant.hpp>
-
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/sender.hpp>
+#endif
 #include <test/execution.hpp>
 
 #include <concepts>

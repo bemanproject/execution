@@ -1,6 +1,9 @@
 // src/beman/execution/tests/exec-get-compl-sched.test.cpp          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/schedule.hpp>
@@ -9,6 +12,7 @@
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
+#endif
 #include <concepts>
 #include <test/execution.hpp>
 

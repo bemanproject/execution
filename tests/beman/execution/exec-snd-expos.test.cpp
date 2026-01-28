@@ -186,7 +186,7 @@ auto test_fwd_env_helper() -> void {
 }
 auto test_fwd_env() -> void {
     env e{42};
-    static_assert(test_std::detail::queryable<decltype(test_detail::fwd_env(e))>);
+    static_assert(test_detail::queryable<decltype(test_detail::fwd_env(e))>);
     test_fwd_env_helper<true, test_std::get_domain_t>();
     test_fwd_env_helper<false, non_forwardable_t>();
     ASSERT(129 == test_detail::fwd_env(e).query(forwardable, 1, 3));
@@ -195,7 +195,7 @@ auto test_fwd_env() -> void {
 auto test_make_env() -> void {
     auto       env{test_detail::make_env(custom_query<0>, custom_result{43})};
     const auto cenv{env};
-    static_assert(test_std::detail::queryable<decltype(env)>);
+    static_assert(test_detail::queryable<decltype(env)>);
     ASSERT(env.query(custom_query<0>) == custom_result{43});
     ASSERT(cenv.query(custom_query<0>) == custom_result{43});
 }
@@ -230,7 +230,7 @@ auto test_join_env() -> void {
     auto        env{test_detail::join_env(e1, e2)};
     const auto& cenv{env};
 
-    static_assert(test_std::detail::queryable<decltype(env)>);
+    static_assert(test_detail::queryable<decltype(env)>);
     test_join_env<true, custom_query_t<0>>(env);
     test_join_env<true, custom_query_t<0>>(cenv);
     test_join_env<true, custom_query_t<1>>(env);

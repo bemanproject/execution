@@ -1,10 +1,11 @@
 // src/beman/execution/tests/exec-with-awaitable-senders.test.cpp   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/with_awaitable_senders.hpp>
-
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include <beman/execution/execution.hpp>
-
+#endif
 #include <test/execution.hpp>
 
 #include <coroutine>
