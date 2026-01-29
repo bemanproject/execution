@@ -4,13 +4,12 @@
 # gersemi: on
 
 if(NOT TARGET ${TARGET_NAME})
-    add_library(${TARGET_NAME} STATIC)
+    add_library(${TARGET_NAME} INTERFACE)
 endif()
-add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
+add_library(beman::${TARGET_NAME} ALIAS ${TARGET_NAME})
 
 target_sources(
     ${TARGET_NAME}
-    PRIVATE execution.cpp
     PUBLIC
         FILE_SET ${TARGET_NAME}_public_headers
             TYPE HEADERS
@@ -196,14 +195,19 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/write_env.hpp
 )
 
+set(TARGET_LIST ${TARGET_NAME})
+
 if(BEMAN_USE_MODULES)
     target_sources(
-        ${TARGET_NAME}
+        beman_execution
+        PRIVATE execution.cpp
         PUBLIC
             FILE_SET CXX_MODULES
                 BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
                 FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
     )
+    target_link_libraries(beman_execution PUBLIC ${TARGET_NAME})
+    list(APPEND TARGET_LIST beman_execution)
 endif()
 
 get_property(
@@ -220,8 +224,8 @@ if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
 endif()
 
 install(
-    TARGETS ${TARGET_NAME}
-    EXPORT ${TARGETS_EXPORT_NAME}1
+    TARGETS ${TARGET_LIST}
+    EXPORT ${TARGETS_EXPORT_NAME}
     ARCHIVE DESTINATION lib/$<CONFIG>
     FILE_SET HEADERS
     FILE_SET ${TARGET_NAME}_public_headers
@@ -233,10 +237,10 @@ install(
 )
 
 install(
-    EXPORT ${TARGETS_EXPORT_NAME}1
+    EXPORT ${TARGETS_EXPORT_NAME}
     FILE ${TARGETS_EXPORT_NAME}.cmake
     DESTINATION "${INSTALL_CONFIGDIR}"
-    NAMESPACE ${TARGET_NAMESPACE}::
+    NAMESPACE beman::
     CXX_MODULES_DIRECTORY
     .
 )
