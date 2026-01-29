@@ -3,30 +3,16 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-cmake_minimum_required(VERSION 3.25...4.2)
+cmake_minimum_required(VERSION 3.30...4.2)
 
-#========================== pre project settings ===============================
-# gersemi: off
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
-    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
-
-    if(CMAKE_CXX_STDLIB_MODULES_JSON)
-        message(
-            STATUS
-            "CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
-        )
-    endif()
-endif()
-# gersemi: on
-#===============================================================================
+include(cmake/prelude.cmake)
 
 #===================================================
 project(beman_execution VERSION 0.0.1 LANGUAGES CXX)
 #===================================================
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-    message(FATAL_ERROR "In-source builds are not allowed!")
-endif()
+# Modules opt in only on compilers that support it: msvc, g++-15 and clang-20+
+include(cxx-modules-rules)
 
 set(TARGET_NAME execution_headers)
 set(TARGET_NAMESPACE beman)
@@ -36,33 +22,7 @@ set(TARGET_PREFIX ${TARGET_NAMESPACE}.${TARGET_NAME})
 set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
 set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-config-targets)
 
-#========================== post project settings ==============================
-# Tell CMake that we explicitly want `import std`.
-# This will initialize the property on all targets declared after this to 1
-message(STATUS "CMAKE_CXX_COMPILER_IMPORT_STD=${CMAKE_CXX_COMPILER_IMPORT_STD}")
-if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
-    set(BEMAN_USE_MODULES ON)
-    set(CMAKE_CXX_MODULE_STD ON)
-    set(CMAKE_CXX_SCAN_FOR_MODULES ON)
-    message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
-endif()
-
-# gersemi: off
-if(CMAKE_CXX_SCAN_FOR_MODULES AND ${CMAKE_GENERATOR} STREQUAL Ninja)
-    message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
-else()
-    message(WARNING "Missing support for CMAKE_CXX_SCAN_FOR_MODULES!")
-endif()
-
-if(CMAKE_EXPORT_COMPILE_COMMANDS)
-    set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
-    message(
-        STATUS
-        "CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}"
-    )
-endif()
-# gersemi: on
-
+#===============================================================================
 if(BEMAN_USE_MODULES)
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)

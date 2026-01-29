@@ -11,9 +11,6 @@ module;
 
 #include <cassert>
 
-#if defined(__APPLE__) && defined(__GNUC__)
-#undef BEMAN_HAS_IMPORT_STD
-#endif
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
