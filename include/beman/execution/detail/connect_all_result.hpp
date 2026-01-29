@@ -1,9 +1,10 @@
 // include/beman/execution/detail/connect_all_result.hpp            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_CONNECT_ALL_RESULT
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_CONNECT_ALL_RESULT
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL_RESULT
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL_RESULT
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/basic_state.hpp>
 #include <beman/execution/detail/connect_all.hpp>
 #include <beman/execution/detail/call_result_t.hpp>
@@ -27,4 +28,4 @@ using connect_all_result =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL_RESULT

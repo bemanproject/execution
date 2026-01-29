@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_SIGNATURES
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_SIGNATURES
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <type_traits>
 
@@ -21,4 +22,4 @@ concept valid_completion_signatures = valid_completion_signatures_helper<Signatu
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_SIGNATURES

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_OPERATION
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_OPERATION
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/basic_state.hpp>
 #include <beman/execution/detail/state_type.hpp>
@@ -66,4 +67,4 @@ basic_operation(Sender&&, Receiver&&) -> basic_operation<Sender&&, Receiver>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_OPERATION

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_RESULT_TYPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_RESULT_TYPE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/get_awaiter.hpp>
 #include <type_traits>
 
@@ -22,4 +23,4 @@ using await_result_type =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_RESULT_TYPE

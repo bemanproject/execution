@@ -6,6 +6,8 @@
 
 // ----------------------------------------------------------------------------
 
+#define BEMAN_EXECUTION_EXPORT
+
 #if defined(disabled__cpp_deleted_function)
 #define BEMAN_EXECUTION_DELETE(msg) delete (msg)
 #else
@@ -60,4 +62,4 @@ namespace detail {}
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMMON

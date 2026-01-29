@@ -91,17 +91,17 @@ struct receiver1 {
 
 auto test_valid_completions_for_concept() -> void {
     test_std::set_value(receiver1{}, arg_t<0>());
-    static_assert(test_std::detail::callable<test_std::set_value_t, receiver1, arg_t<0>>);
-    static_assert(not test_std::detail::callable<test_std::set_value_t, receiver1, int>);
-    static_assert(not test_std::detail::callable<test_std::set_value_t, receiver1, arg_t<1>>);
-    static_assert(test_std::detail::valid_completion_for<auto(arg_t<0>)->test_std::set_value_t, receiver1>);
-    static_assert(not test_std::detail::valid_completion_for<auto(arg_t<1>)->test_std::set_value_t, receiver1>);
-    static_assert(not test_std::detail::valid_completion_for<auto(arg_t<2>)->test_std::set_value_t, receiver1>);
+    static_assert(test_detail::callable<test_std::set_value_t, receiver1, arg_t<0>>);
+    static_assert(not test_detail::callable<test_std::set_value_t, receiver1, int>);
+    static_assert(not test_detail::callable<test_std::set_value_t, receiver1, arg_t<1>>);
+    static_assert(test_detail::valid_completion_for<auto(arg_t<0>)->test_std::set_value_t, receiver1>);
+    static_assert(not test_detail::valid_completion_for<auto(arg_t<1>)->test_std::set_value_t, receiver1>);
+    static_assert(not test_detail::valid_completion_for<auto(arg_t<2>)->test_std::set_value_t, receiver1>);
 
-    static_assert(test_std::detail::valid_completion_for<auto(arg_t<1>)->test_std::set_error_t, receiver1>);
-    static_assert(not test_std::detail::valid_completion_for<auto(int)->test_std::set_error_t, receiver1>);
+    static_assert(test_detail::valid_completion_for<auto(arg_t<1>)->test_std::set_error_t, receiver1>);
+    static_assert(not test_detail::valid_completion_for<auto(int)->test_std::set_error_t, receiver1>);
 
-    static_assert(test_std::detail::valid_completion_for<auto()->test_std::set_stopped_t, receiver1>);
+    static_assert(test_detail::valid_completion_for<auto()->test_std::set_stopped_t, receiver1>);
 }
 } // namespace
 

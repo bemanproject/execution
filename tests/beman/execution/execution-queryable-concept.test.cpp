@@ -8,7 +8,7 @@
 
 namespace {
 template <typename T>
-concept has_foo = test_std::detail::queryable<T> && requires(T t) { t.foo; };
+concept has_foo = test_detail::queryable<T> && requires(T t) { t.foo; };
 
 struct non_destructible {
     non_destructible()                                           = default;
@@ -37,8 +37,8 @@ struct bar {
 } // namespace
 
 TEST(queryable) {
-    static_assert(test_std::detail::queryable<int>);
-    static_assert(not test_std::detail::queryable<non_destructible>);
+    static_assert(test_detail::queryable<int>);
+    static_assert(not test_detail::queryable<non_destructible>);
 
     ASSERT(f(0) == 0);
     ASSERT(f(bar{}) == 1);

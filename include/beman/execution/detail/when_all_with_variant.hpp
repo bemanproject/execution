@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL_WITH_VARIANT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL_WITH_VARIANT
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/make_sender.hpp>
@@ -40,10 +41,10 @@ struct when_all_with_variant_t {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using ::beman::execution::detail::when_all_with_variant_t;
-inline constexpr ::beman::execution::when_all_with_variant_t when_all_with_variant{};
+BEMAN_EXECUTION_EXPORT using when_all_with_variant_t = ::beman::execution::detail::when_all_with_variant_t;
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::when_all_with_variant_t when_all_with_variant{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL_WITH_VARIANT

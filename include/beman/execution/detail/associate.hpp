@@ -1,13 +1,15 @@
 // include/beman/execution/detail/associate.hpp                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ASSOCIATE
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ASSOCIATE
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ASSOCIATE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_ASSOCIATE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
+#include <beman/execution/detail/nothrow_callable.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -15,7 +17,6 @@
 #include <type_traits>
 #include <optional>
 #include <utility>
-#include <iostream> //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
@@ -154,10 +155,10 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using associate_t = ::beman::execution::detail::associate_t;
-inline constexpr associate_t associate{};
+BEMAN_EXECUTION_EXPORT using associate_t = ::beman::execution::detail::associate_t;
+BEMAN_EXECUTION_EXPORT inline constexpr associate_t associate{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ASSOCIATE

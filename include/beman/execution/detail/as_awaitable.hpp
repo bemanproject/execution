@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AS_AWAITABLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AS_AWAITABLE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/awaitable_sender.hpp>
 #include <beman/execution/detail/is_awaitable.hpp>
 #include <beman/execution/detail/sender_awaitable.hpp>
@@ -20,7 +21,7 @@ namespace beman::execution {
  * \brief Turn an entity, e.g., a sender, into an awaitable.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-struct as_awaitable_t {
+BEMAN_EXECUTION_EXPORT struct as_awaitable_t {
     template <typename Expr, typename Promise>
     auto operator()(Expr&& expr, Promise& promise) const {
         if constexpr (requires { ::std::forward<Expr>(expr).as_awaitable(promise); }) {
@@ -38,9 +39,9 @@ struct as_awaitable_t {
         }
     }
 };
-inline constexpr ::beman::execution::as_awaitable_t as_awaitable{};
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::as_awaitable_t as_awaitable{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AS_AWAITABLE

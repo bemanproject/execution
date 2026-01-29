@@ -4,12 +4,13 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR
 
+#include <beman/execution/detail/common.hpp>
 #include <concepts>
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-template <class Token, class CallbackFun>
+BEMAN_EXECUTION_EXPORT template <class Token, class CallbackFun>
 using stop_callback_for_t = typename Token::template callback_type<CallbackFun>;
 }
 
@@ -25,4 +26,4 @@ concept stoppable_callback_for =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR

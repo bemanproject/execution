@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/queryable.hpp>
@@ -13,7 +14,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-template <typename Sender, typename Env = ::beman::execution::env<>>
+BEMAN_EXECUTION_EXPORT template <typename Sender, typename Env = ::beman::execution::env<>>
 concept sender_in =
     ::beman::execution::sender<Sender> && ::beman::execution::detail::queryable<Env> &&
     requires(Sender&& sender, Env&& env) {
@@ -25,4 +26,4 @@ concept sender_in =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN

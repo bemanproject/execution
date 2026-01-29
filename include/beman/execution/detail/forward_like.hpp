@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARD_LIKE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARD_LIKE
 
+#include <beman/execution/detail/common.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -76,4 +77,4 @@ auto forward_like(U&& u) noexcept -> decltype(auto) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARD_LIKE

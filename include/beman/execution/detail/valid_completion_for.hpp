@@ -4,7 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_FOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_FOR
 
-#include <beman/execution/functional.hpp>
+#include <beman/execution/detail/common.hpp>
+#include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
@@ -38,4 +39,4 @@ concept valid_completion_for = requires(Signature* signature) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_FOR

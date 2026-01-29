@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_COUNTING_SCOPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_COUNTING_SCOPE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/counting_scope_base.hpp>
 #include <beman/execution/detail/counting_scope_join.hpp>
 #include <beman/execution/detail/sender.hpp>
@@ -13,7 +14,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-class simple_counting_scope;
+BEMAN_EXECUTION_EXPORT class simple_counting_scope;
 }
 
 // ----------------------------------------------------------------------------
@@ -52,4 +53,4 @@ inline auto beman::execution::simple_counting_scope::get_token() noexcept
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_COUNTING_SCOPE

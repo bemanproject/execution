@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_ENV
 
+#include <beman/execution/detail/common.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -27,4 +28,4 @@ make_env(Query&&, Value&& value) -> make_env<::std::remove_cvref_t<Query>, ::std
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_ENV

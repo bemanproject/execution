@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/immovable.hpp>
 #include <atomic>
 #include <memory>
@@ -14,11 +15,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-class inplace_stop_token;
-class inplace_stop_source;
-template <typename CallbackFun>
+BEMAN_EXECUTION_EXPORT class inplace_stop_token;
+BEMAN_EXECUTION_EXPORT class inplace_stop_source;
+BEMAN_EXECUTION_EXPORT template <typename CallbackFun>
 class inplace_stop_callback;
-template <typename CallbackFun>
+BEMAN_EXECUTION_EXPORT template <typename CallbackFun>
 inplace_stop_callback(::beman::execution::inplace_stop_token, CallbackFun) -> inplace_stop_callback<CallbackFun>;
 } // namespace beman::execution
 
@@ -188,4 +189,4 @@ inline auto beman::execution::inplace_stop_callback<CallbackFun>::call() -> void
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE

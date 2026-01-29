@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_INTO_VARIANT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INTO_VARIANT
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -29,7 +30,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-struct into_variant_t {
+BEMAN_EXECUTION_EXPORT struct into_variant_t {
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
         auto domain{::beman::execution::detail::get_domain_early(sender)};
@@ -93,10 +94,10 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using into_variant_t = ::beman::execution::detail::into_variant_t;
-inline constexpr into_variant_t into_variant{};
+BEMAN_EXECUTION_EXPORT using into_variant_t = ::beman::execution::detail::into_variant_t;
+BEMAN_EXECUTION_EXPORT inline constexpr into_variant_t into_variant{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_INTO_VARIANT

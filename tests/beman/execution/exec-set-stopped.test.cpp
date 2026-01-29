@@ -1,7 +1,11 @@
 // src/beman/execution/tests/exec-set-stopped.test.cpp              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include <beman/execution/execution.hpp>
+#endif
 #include "test/execution.hpp"
 #include <concepts>
 #include <utility>

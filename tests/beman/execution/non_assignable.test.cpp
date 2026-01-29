@@ -7,7 +7,7 @@
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int {
+TEST(non_assignable) {
     test_detail::non_assignable na0;
     test_detail::non_assignable na1{};
     test_detail::non_assignable na2{na1};

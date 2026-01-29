@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER_VALUE_TYPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER_VALUE_TYPE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <concepts>
@@ -55,4 +56,4 @@ using single_sender_value_type = typename single_sender_value_type_helper<Sender
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER_VALUE_TYPE

@@ -6,9 +6,9 @@
 #ifdef BEMAN_EXECUTION_DIAGNOSTIC_PUSHED
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
-#endif
+#endif // #if defined(__GNUC__)
 #if defined(__clang__)
 #pragma clang diagnostic pop
-#endif
+#endif // #if defined(__clang__)
 #undef BEMAN_EXECUTION_DIAGNOSTIC_PUSHED
-#endif
+#endif // #ifdef BEMAN_EXECUTION_DIAGNOSTIC_PUSHED

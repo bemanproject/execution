@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_INDICES_FOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INDICES_FOR
 
+#include <beman/execution/detail/common.hpp>
 #include <type_traits>
 
 // ----------------------------------------------------------------------------
@@ -15,4 +16,4 @@ using indices_for = typename ::std::remove_reference_t<Sender>::indices_for;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_INDICES_FOR

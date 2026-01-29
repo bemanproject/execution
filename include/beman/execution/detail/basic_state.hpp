@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_STATE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_STATE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
@@ -35,4 +36,4 @@ basic_state(Sender&&, Receiver&&) -> basic_state<Sender&&, Receiver>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_STATE

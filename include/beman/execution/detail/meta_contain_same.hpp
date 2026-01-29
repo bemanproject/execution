@@ -1,9 +1,10 @@
 // include/beman/execution/detail/meta_contain_same.hpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_META_CONTAIN_SAME
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_META_CONTAIN_SAME
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_CONTAIN_SAME
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_META_CONTAIN_SAME
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/meta_contains.hpp>
 
 // ----------------------------------------------------------------------------
@@ -24,4 +25,4 @@ inline constexpr bool contain_same = contain_same_t<S0, S1>::value;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_CONTAIN_SAME

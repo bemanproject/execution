@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct get_allocator_t {
+BEMAN_EXECUTION_EXPORT struct get_allocator_t {
     template <typename Object>
         requires(not requires(Object&& object, const get_allocator_t& tag) { ::std::as_const(object).query(tag); })
     auto
@@ -50,11 +50,11 @@ struct get_allocator_t {
     constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
 };
 
-inline constexpr get_allocator_t get_allocator{};
+BEMAN_EXECUTION_EXPORT inline constexpr get_allocator_t get_allocator{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ALLOCATOR

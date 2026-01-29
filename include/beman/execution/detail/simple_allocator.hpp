@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_ALLOCATOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_ALLOCATOR
 
+#include <beman/execution/detail/common.hpp>
 #include <cstddef>
 #include <concepts>
 
@@ -21,4 +22,4 @@ concept simple_allocator =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_ALLOCATOR

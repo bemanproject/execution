@@ -133,8 +133,8 @@ void test_destroy_two_unused_split() {
     static_assert(beman::execution::sender_in<split_sender_type, test_std::env<>>);
 }
 
-using beman::execution::detail::type_list;
-using beman::execution::detail::meta::combine;
+using test_detail::type_list;
+using test_detail::meta::combine;
 
 template <class... Args>
 using to_set_value_t = type_list<beman::execution::set_value_t(Args...)>;

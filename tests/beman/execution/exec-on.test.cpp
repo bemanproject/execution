@@ -76,16 +76,12 @@ TEST(exec_on) {
     test_interface(pool.get_scheduler(), test_std::just(), test_std::then([] {}), both{});
 
     test_transform_env(test_detail::make_sender(test_std::on, pool.get_scheduler(), test_std::just()));
-    test_transform_env(
-        test_detail::make_sender(test_std::on,
-                                 ::beman::execution::detail::product_type{pool.get_scheduler(), test_std::then([] {})},
-                                 test_std::just()));
+    test_transform_env(test_detail::make_sender(
+        test_std::on, test_detail::product_type{pool.get_scheduler(), test_std::then([] {})}, test_std::just()));
 
     test_transform_sender(test_detail::make_sender(test_std::on, pool.get_scheduler(), test_std::just()));
-    test_transform_sender(
-        test_detail::make_sender(test_std::on,
-                                 ::beman::execution::detail::product_type{pool.get_scheduler(), test_std::then([] {})},
-                                 test_std::just()));
+    test_transform_sender(test_detail::make_sender(
+        test_std::on, test_detail::product_type{pool.get_scheduler(), test_std::then([] {})}, test_std::just()));
 
     std::thread::id on_id{};
     std::thread::id pool_id{};

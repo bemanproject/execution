@@ -1,9 +1,13 @@
 // src/beman/execution/tests/exec-bulk.test.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include "beman/execution/detail/get_completion_signatures.hpp"
 #include "beman/execution/detail/get_env.hpp"
 #include "beman/execution/detail/sync_wait.hpp"
+#endif
 #include <cstdlib>
 #include <test/execution.hpp>
 #include <beman/execution/detail/bulk.hpp>
@@ -59,7 +63,7 @@ auto test_bulk() {
     // Expected results: element-wise multiplication of a and b
     std::vector<int> expected{9, 20, 33, 52, 70, 90, 112, 136};
 
-    for (size_t i = 0; i < results.size(); ++i) {
+    for (::std::size_t i = 0; i < results.size(); ++i) {
         ASSERT(results[i] == expected[i]);
     }
 }
@@ -136,7 +140,7 @@ auto test_bulk_pipeable() {
     // Expected results: element-wise multiplication of a and b
     std::vector<int> expected{9, 20, 33, 52, 70, 90, 112, 136};
 
-    for (size_t i = 0; i < results.size(); ++i) {
+    for (::std::size_t i = 0; i < results.size(); ++i) {
         ASSERT(results[i] == expected[i]);
     }
 }

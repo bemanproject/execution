@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CALL_RESULT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CALL_RESULT
 
+#include <beman/execution/detail/common.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -20,4 +21,4 @@ using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CALL_RESULT

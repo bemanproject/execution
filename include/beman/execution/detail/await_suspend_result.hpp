@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_SUSPEND_RESULT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_SUSPEND_RESULT
 
+#include <beman/execution/detail/common.hpp>
 #include <concepts>
 #include <coroutine>
 #include <type_traits>
@@ -38,4 +39,4 @@ concept await_suspend_result =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_SUSPEND_RESULT

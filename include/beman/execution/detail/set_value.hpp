@@ -16,7 +16,7 @@ namespace beman::execution {
  * \brief Type of the customization point object for successful completions.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-struct set_value_t {
+BEMAN_EXECUTION_EXPORT struct set_value_t {
     template <typename Receiver, typename... Args>
     auto operator()(Receiver&, Args&&...) const
         -> void = BEMAN_EXECUTION_DELETE("set_value requires the receiver to be passed as non-const rvalue");
@@ -44,11 +44,11 @@ struct set_value_t {
  * \brief Customization point object for successful completions.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-inline constexpr set_value_t set_value{};
+BEMAN_EXECUTION_EXPORT inline constexpr set_value_t set_value{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SET_VALUE

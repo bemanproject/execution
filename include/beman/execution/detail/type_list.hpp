@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TYPE_LIST
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TYPE_LIST
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -13,4 +15,4 @@ struct type_list {};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_TYPE_LIST

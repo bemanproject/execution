@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_IMPLS_FOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_IMPLS_FOR
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 
 // ----------------------------------------------------------------------------
@@ -15,4 +16,4 @@ struct impls_for : ::beman::execution::detail::default_impls {};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_IMPLS_FOR

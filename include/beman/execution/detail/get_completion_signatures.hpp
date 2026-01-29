@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SIGNATURES
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SIGNATURES
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/await_result_type.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/env_promise.hpp>
@@ -19,7 +20,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct get_completion_signatures_t {
+BEMAN_EXECUTION_EXPORT struct get_completion_signatures_t {
   private:
     template <typename Sender, typename Env>
     static auto get(Sender&& sender, Env&& env) noexcept {
@@ -60,9 +61,9 @@ struct get_completion_signatures_t {
         return this->get(::std::forward<Sender>(sender), ::std::forward<Env>(env));
     }
 };
-inline constexpr get_completion_signatures_t get_completion_signatures{};
+BEMAN_EXECUTION_EXPORT inline constexpr get_completion_signatures_t get_completion_signatures{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SIGNATURES

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_TYPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_TYPE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
@@ -28,4 +29,4 @@ using env_type = ::beman::execution::detail::call_result_t<
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_TYPE

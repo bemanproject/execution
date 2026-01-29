@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DELEGATION_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DELEGATION_SCHEDULER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <utility>
@@ -11,7 +12,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct get_delegation_scheduler_t {
+BEMAN_EXECUTION_EXPORT struct get_delegation_scheduler_t {
     template <typename Env>
         requires requires(Env&& env, const get_delegation_scheduler_t& g) {
             { ::std::as_const(env).query(g) } noexcept -> ::beman::execution::scheduler;
@@ -22,9 +23,9 @@ struct get_delegation_scheduler_t {
     constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
 };
 
-inline constexpr get_delegation_scheduler_t get_delegation_scheduler{};
+BEMAN_EXECUTION_EXPORT inline constexpr get_delegation_scheduler_t get_delegation_scheduler{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DELEGATION_SCHEDULER

@@ -8,7 +8,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-braces"
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-#endif
+#endif // #if defined(__GNUC__)
 
 #if defined(__clang__)
 #define BEMAN_EXECUTION_DIAGNOSTIC_PUSHED
@@ -16,4 +16,4 @@
 #pragma clang diagnostic ignored "-Wunknown-warning-option"
 #pragma clang diagnostic ignored "-Wmissing-braces"
 #pragma clang diagnostic ignored "-Wc++26-extensions"
-#endif
+#endif // #if defined(__clang__)

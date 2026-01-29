@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_TRANSFORM
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_TRANSFORM
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/meta_contains.hpp>
 
 // ----------------------------------------------------------------------------
@@ -25,4 +26,4 @@ using transform = typename ::beman::execution::detail::meta::detail::transform<T
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_TRANSFORM

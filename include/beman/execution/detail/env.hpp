@@ -1,9 +1,10 @@
 // include/beman/execution/detail/env.hpp                             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ENV
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ENV
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ENV
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/non_assignable.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <type_traits>
@@ -32,7 +33,7 @@ struct find_env<Q, E0, E...> {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-template <::beman::execution::detail::queryable... Envs>
+BEMAN_EXECUTION_EXPORT template <::beman::execution::detail::queryable... Envs>
 struct env;
 
 template <::beman::execution::detail::queryable... Envs>
@@ -60,4 +61,4 @@ struct beman::execution::env : ::beman::execution::detail::env_base<Envs>... {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ENV

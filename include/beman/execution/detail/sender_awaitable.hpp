@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_AWAITABLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_AWAITABLE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/as_except_ptr.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/connect.hpp>
@@ -110,4 +111,4 @@ class sender_awaitable {
 };
 } // namespace beman::execution::detail
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_AWAITABLE

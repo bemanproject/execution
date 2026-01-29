@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE_TASK
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE_TASK
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/with_await_transform.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
@@ -82,4 +83,4 @@ auto beman::execution::detail::connect_awaitable_promise<Receiver>::get_return_o
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE_TASK

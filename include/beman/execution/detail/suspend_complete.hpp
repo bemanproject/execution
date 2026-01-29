@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE
 
+#include <beman/execution/detail/common.hpp>
 #include <exception>
 #include <coroutine>
 #include <utility>
@@ -31,4 +32,4 @@ auto suspend_complete(Fun fun, Args&&... args) noexcept {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE

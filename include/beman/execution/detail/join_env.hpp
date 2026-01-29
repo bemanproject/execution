@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_JOIN_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_JOIN_ENV
 
+#include <beman/execution/detail/common.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -56,4 +57,4 @@ join_env(Env1&&, Env2&&) -> join_env<::std::remove_cvref_t<Env1>, ::std::remove_
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_JOIN_ENV

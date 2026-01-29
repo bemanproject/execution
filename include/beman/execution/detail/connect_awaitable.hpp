@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_AWAITABLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_AWAITABLE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/await_result_type.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/operation_state_task.hpp>
@@ -88,4 +89,4 @@ auto connect_awaitable(Awaiter awaiter, Receiver receiver)
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_AWAITABLE

@@ -1,9 +1,10 @@
 // include/beman/execution/detail/spawn_future.hpp                    -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/scope_token.hpp>
@@ -262,10 +263,10 @@ struct impls_for<spawn_future_t> : ::beman::execution::detail::default_impls {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using spawn_future_t = ::beman::execution::detail::spawn_future_t;
-inline constexpr spawn_future_t spawn_future{};
+BEMAN_EXECUTION_EXPORT using spawn_future_t = ::beman::execution::detail::spawn_future_t;
+BEMAN_EXECUTION_EXPORT inline constexpr spawn_future_t spawn_future{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE

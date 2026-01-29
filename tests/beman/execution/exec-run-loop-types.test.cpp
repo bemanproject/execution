@@ -1,8 +1,10 @@
 // src/beman/execution/tests/exec-run-loop-types.test.cpp           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include <beman/execution/detail/run_loop.hpp>
-
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/connect.hpp>
@@ -13,7 +15,7 @@
 #include <beman/execution/detail/receiver_of.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
-
+#endif
 #include <test/execution.hpp>
 #include <concepts>
 #include <exception>

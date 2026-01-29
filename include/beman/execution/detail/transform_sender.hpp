@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TRANSFORM_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TRANSFORM_SENDER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <concepts>
@@ -65,7 +66,7 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-template <typename Domain, ::beman::execution::sender Sender, typename... Env>
+BEMAN_EXECUTION_EXPORT template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(sizeof...(Env) < 2) &&
             requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
@@ -78,7 +79,7 @@ constexpr auto transform_sender(Domain, Sender&& sender, const Env&...) noexcept
     return ::std::forward<Sender>(sender);
 }
 
-template <typename Domain, ::beman::execution::sender Sender, typename... Env>
+BEMAN_EXECUTION_EXPORT template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(sizeof...(Env) < 2) &&
             requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
@@ -92,7 +93,7 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
         dom, dom.transform_sender(::std::forward<Sender>(sender), env...), env...);
 }
 
-template <typename Domain, ::beman::execution::sender Sender, typename... Env>
+BEMAN_EXECUTION_EXPORT template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(sizeof...(Env) < 2) && (not requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
             }) &&
@@ -105,7 +106,7 @@ constexpr auto
     return ::std::forward<Sender>(sender);
 }
 
-template <typename Domain, ::beman::execution::sender Sender, typename... Env>
+BEMAN_EXECUTION_EXPORT template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(sizeof...(Env) < 2) && (not requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
             }) &&
@@ -124,4 +125,4 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_TRANSFORM_SENDER

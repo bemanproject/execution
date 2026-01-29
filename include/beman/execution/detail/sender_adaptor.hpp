@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
@@ -41,4 +42,4 @@ sender_adaptor(T&&...) -> sender_adaptor<T...>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR

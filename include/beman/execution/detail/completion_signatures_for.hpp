@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_FOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_FOR
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <functional>
@@ -45,4 +46,4 @@ using completion_signatures_for = ::std::conditional_t<
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_FOR

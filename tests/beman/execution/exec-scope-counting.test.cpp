@@ -1,10 +1,14 @@
 // tests/beman/execution/exec-scope-counting.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include <beman/execution/detail/counting_scope.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
+#endif
 #include <test/execution.hpp>
 #include <test/inline_scheduler.hpp>
 #include <concepts>

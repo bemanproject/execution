@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_PREPEND
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_PREPEND
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail::meta::detail {
@@ -23,4 +25,4 @@ using prepend = typename ::beman::execution::detail::meta::detail::prepend<H, Ta
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_PREPEND

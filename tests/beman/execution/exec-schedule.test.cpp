@@ -1,7 +1,11 @@
 // src/beman/execution/tests/exec-schedule.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_USE_MODULE
+import beman.execution;
+#else
 #include <beman/execution/detail/schedule.hpp>
+#endif
 #include <test/execution.hpp>
 #include <concepts>
 #include <utility>
