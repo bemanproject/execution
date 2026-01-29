@@ -92,8 +92,10 @@ endif()
 option(
     BEMAN_USE_STD_MODULE
     "Check if 'import std;' is possible with the toolchain"
-    ON
+    OFF
 )
+message(STATUS "BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}")
+
 if(BEMAN_USE_STD_MODULE)
     # -------------------------------------------------------------------------
     # Tell CMake that we explicitly want `import std`.
@@ -111,18 +113,19 @@ if(BEMAN_USE_STD_MODULE)
             "Build with import std; possible"
             ${CMAKE_CXX_MODULE_STD}
         )
+        message(STATUS "BEMAN_HAS_IMPORT_STD=${BEMAN_HAS_IMPORT_STD}")
         message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
     else()
         set(CMAKE_CXX_MODULE_STD OFF)
         message(WARNING "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
     endif()
 endif()
-
 message(STATUS "CMAKE_CXX_SCAN_FOR_MODULES=${CMAKE_CXX_SCAN_FOR_MODULES}")
 
 if(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
     option(BEMAN_USE_MODULES "Build CXX_MODULES" ${CMAKE_CXX_SCAN_FOR_MODULES})
 endif()
+message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
 
 # ------------------------------------------------------------------------------
 # Avoid creating CMAKE_..._OUTPUT_DIRECTORY as cache variables, they should not

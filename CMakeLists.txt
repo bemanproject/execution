@@ -8,17 +8,15 @@ cmake_minimum_required(VERSION 3.30...4.2)
 include(cmake/prelude.cmake)
 
 #===================================================
-project(beman_execution VERSION 0.0.1 LANGUAGES CXX)
+project(beman_execution VERSION 0.1.0 LANGUAGES CXX)
 #===================================================
 
 # Modules opt in only on compilers that support it: msvc, g++-15 and clang-20+
 include(cxx-modules-rules)
 
-set(TARGET_NAME execution_headers)
-set(TARGET_NAMESPACE beman)
-set(TARGET_PREFIX ${TARGET_NAMESPACE}.${TARGET_NAME})
-# XXX unused! set(TARGET_LIBRARY ${PROJECT_NAME})
-# XXX unused! set(TARGET_ALIAS ${TARGET_NAMESPACE}::${TARGET_NAME})
+set(TARGET_NAME beman_execution_headers) # used in src, and docs
+set(TARGET_NAMESPACE beman) # NOTE: only still used in docs?
+set(TARGET_PREFIX ${PROJECT_NAME}) # NOTE: only still used in docs?
 set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
 set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-config-targets)
 
@@ -30,7 +28,7 @@ if(BEMAN_USE_MODULES)
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
     add_library(beman_execution STATIC)
-    add_library(beman::execution ALIAS beman_execution)
+    add_library(beman::beman_execution ALIAS beman_execution)
     target_compile_features(
         beman_execution
         PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
