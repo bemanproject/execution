@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+// *****************************************************;
+// *** WARNING: this file is generated: do not edit! ***;
+// *****************************************************;
+
 module;
 
 #include <cassert>
