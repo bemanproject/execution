@@ -89,7 +89,8 @@ int main() {
                                         })});
     });
 
-    std::cin.get();
+    // std::cin.get();
+    std::this_thread::sleep_for(3s);
     std::cout << "requesting stop\n";
     source.request_stop();
 

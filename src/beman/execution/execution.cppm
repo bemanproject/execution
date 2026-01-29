@@ -8,7 +8,6 @@
 module;
 
 #include <beman/execution/modules_export.hpp>
-
 #include <cassert>
 
 #ifdef BEMAN_HAS_IMPORT_STD
