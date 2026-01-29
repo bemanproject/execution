@@ -6,10 +6,11 @@ import beman.execution;
 #else
 #include <beman/execution/execution.hpp>
 #endif
+#include <test/execution.hpp>
 
 namespace bex = beman::execution;
 
-int main() {
+TEST(issue144) {
     double d = 19.0;
     bex::just([d](auto) { return d; });
 }

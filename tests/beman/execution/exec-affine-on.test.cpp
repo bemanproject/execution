@@ -149,7 +149,7 @@ auto test_affine_on_specializations(Sender&& sender, std::size_t count = 0u) -> 
 }
 } // namespace
 
-auto main() -> int {
+TEST(affine_on) {
     static_assert(test_std::sender<decltype(test_std::affine_on(test_std::just(42)))>);
     static_assert(test_std::sender<decltype(test_std::just(42) | test_std::affine_on())>);
 

@@ -4,8 +4,9 @@
 #ifdef BEMAN_USE_MODULE
 import beman.execution;
 #else
-#include <test/execution.hpp>
+#include <beman/execution/execution.hpp>
 #endif
+#include <test/execution.hpp>
 
 TEST(function_objects) {
     // section [function.objects] is empty
