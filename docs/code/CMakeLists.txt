@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-list(APPEND EXAMPLES)
+set(EXAMPLES)
 
 # if(BEMAN_USE_MODULES)
 #     list(APPEND EXAMPLES modules) # modules.cpp

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/modules_export.hpp>
+
 module;
 
 #include <cassert>
@@ -35,7 +37,9 @@ export module beman.execution;
 
 // ----------------------------------------------------------------------------
 
+#ifndef BEMAN_EXECUTION_EXPORT
 #define BEMAN_EXECUTION_EXPORT
+#endif
 
 #if defined(disabled__cpp_deleted_function)
 #define BEMAN_EXECUTION_DELETE(msg) delete (msg)

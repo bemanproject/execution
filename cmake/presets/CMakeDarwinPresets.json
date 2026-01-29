@@ -8,7 +8,8 @@
       "name": "debug-base-Darwin",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_STDLIB_MODULES_JSON": "$env{CMAKE_CXX_STDLIB_MODULES_JSON}",
+        "BEMAN_USE_MODULES": false,
+        "CMAKE_CXX_SCAN_FOR_MODULES": false,
         "CMAKE_BUILD_TYPE": "Debug"
       },
       "condition": {
@@ -21,7 +22,8 @@
       "name": "release-base-Darwin",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_STDLIB_MODULES_JSON": "$env{CMAKE_CXX_STDLIB_MODULES_JSON}",
+        "BEMAN_USE_MODULES": false,
+        "CMAKE_CXX_SCAN_FOR_MODULES": false,
         "CMAKE_BUILD_TYPE": "RelWithDebInfo"
       },
       "condition": {
@@ -34,16 +36,16 @@
       "name": "debug",
       "displayName": "Debug Build",
       "inherits": [
-        "root-config",
-        "debug-base-Darwin"
+        "debug-base-Darwin",
+        "root-config"
       ]
     },
     {
       "name": "release",
       "displayName": "Release Build",
       "inherits": [
-        "root-config",
-        "release-base-Darwin"
+        "release-base-Darwin",
+        "root-config"
       ]
     }
   ]
