@@ -114,17 +114,14 @@ foreach(test ${execution_tests})
     set(TEST_EXE ${PROJECT_NAME}.${test})
     add_executable(${TEST_EXE} ${test}.cpp)
     if(BEMAN_USE_MODULES)
-        target_link_libraries(${TEST_EXE} PRIVATE beman::beman_execution)
+        target_link_libraries(${TEST_EXE} PRIVATE beman::execution)
     else()
-        target_link_libraries(
-            ${TEST_EXE}
-            PRIVATE beman::beman_execution_headers
-        )
+        target_link_libraries(${TEST_EXE} PRIVATE beman::execution_headers)
     endif()
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
-if(BEMAN_EXECUTION_ENABLE_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
+if(BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE AND NOT CMAKE_SKIP_INSTALL_RULES)
     # test if the targets are usable from the install directory
     add_test(
         NAME install-to-stagedir

@@ -44,11 +44,11 @@ foreach(EXAMPLE ${EXAMPLES})
     add_executable(${EXAMPLE_TARGET})
     target_sources(${EXAMPLE_TARGET} PRIVATE ${EXAMPLE}.cpp)
     if(BEMAN_USE_MODULES)
-        target_link_libraries(${EXAMPLE_TARGET} PRIVATE beman::beman_execution)
+        target_link_libraries(${EXAMPLE_TARGET} PRIVATE beman::execution)
     else()
         target_link_libraries(
             ${EXAMPLE_TARGET}
-            PRIVATE beman::beman_execution_headers
+            PRIVATE beman::execution_headers
         )
     endif()
     add_test(NAME ${EXAMPLE_TARGET} COMMAND ${EXAMPLE_TARGET})

@@ -17,8 +17,11 @@ include(cxx-modules-rules)
 set(TARGET_NAME beman_execution_headers) # used in src, and docs
 set(TARGET_NAMESPACE beman) # NOTE: only still used in docs?
 set(TARGET_PREFIX ${PROJECT_NAME}) # NOTE: only still used in docs?
-set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
-set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-config-targets)
+
+# XXX set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
+# XXX set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-config-targets)
+
+set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets)
 
 #===============================================================================
 if(BEMAN_USE_MODULES)
@@ -28,7 +31,7 @@ if(BEMAN_USE_MODULES)
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
     add_library(beman_execution STATIC)
-    add_library(beman::beman_execution ALIAS beman_execution)
+    add_library(beman::execution ALIAS beman_execution)
     target_compile_features(
         beman_execution
         PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
@@ -72,13 +75,13 @@ option(
 )
 
 option(
-    BEMAN_EXECUTION_ENABLE_INSTALL
+    BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE
     "Install the project components. Values: { ON, OFF }."
     ${PROJECT_IS_TOP_LEVEL}
 )
 
-include(GNUInstallDirs)
-set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+# include(GNUInstallDirs)
+# set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 add_subdirectory(src/beman/execution)
 
@@ -93,34 +96,33 @@ if(BEMAN_EXECUTION_BUILD_EXAMPLES)
     add_subdirectory(docs/code)
 endif()
 
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
+if(NOT BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE OR CMAKE_SKIP_INSTALL_RULES)
     return()
 endif()
 
-include(infra/cmake/beman-install-library-config.cmake)
-# FIXME: install TARGETS target beman.execution is exported but not all of its interface file sets are installed
-# TODO: beman_install_library(beman_execution beman_execution_headers)
+include(./cmake/beman-install-library-config.cmake)
+beman_install_library(beman_execution headers)
 
-include(CMakePackageConfigHelpers)
-
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}-version.cmake
-    VERSION ${CMAKE_PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
-
-configure_package_config_file(
-    "cmake/Config.cmake.in"
-    ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}.cmake
-    INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
-)
-
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}-version.cmake
-    DESTINATION ${INSTALL_CONFIGDIR}
-)
+# include(CMakePackageConfigHelpers)
+#
+# write_basic_package_version_file(
+#     ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}-version.cmake
+#     VERSION ${CMAKE_PROJECT_VERSION}
+#     COMPATIBILITY AnyNewerVersion
+# )
+#
+# configure_package_config_file(
+#     "cmake/Config.cmake.in"
+#     ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}.cmake
+#     INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+# )
+#
+# install(
+#     FILES
+#         ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}.cmake
+#         ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}-version.cmake
+#     DESTINATION ${INSTALL_CONFIGDIR}
+# )
 
 set(CPACK_GENERATOR TGZ)
 include(CPack)
