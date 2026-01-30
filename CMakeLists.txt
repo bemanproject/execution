@@ -49,7 +49,7 @@ if(BEMAN_USE_MODULES)
                 FILES
                     ${CMAKE_CURRENT_BINARY_DIR}/beman/execution/modules_export.hpp
     )
-    target_compile_definitions(beman_execution PUBLIC BEMAN_HAS_MODULES)
+    # FIXME: target_compile_definitions(beman_execution PUBLIC BEMAN_HAS_MODULES)
 endif()
 
 if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
