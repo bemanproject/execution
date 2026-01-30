@@ -36,7 +36,7 @@ struct default_impls {
         }
     };
     static constexpr auto get_attrs = get_attrs_impl{};
-    static constexpr auto get_env = [](auto, auto&, const auto& receiver) noexcept -> decltype(auto) {
+    static constexpr auto get_env   = [](auto, auto&, const auto& receiver) noexcept -> decltype(auto) {
         return ::beman::execution::detail::fwd_env(::beman::execution::get_env(receiver));
     };
     static constexpr auto get_state =

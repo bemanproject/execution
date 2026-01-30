@@ -153,6 +153,7 @@ TEST(exec_bulk) {
 
         test_bulk();
         test_bulk_noexept();
+        test_bulk_pipeable();
 
     } catch (...) {
 
