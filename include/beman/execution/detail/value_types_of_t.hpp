@@ -21,10 +21,10 @@ BEMAN_EXECUTION_EXPORT template <typename Sender,
                                  template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
     requires ::beman::execution::sender_in<Sender, Env>
 using value_types_of_t =
-    ::beman::execution::detail::gather_signatures< ::beman::execution::set_value_t,
-                                                   ::beman::execution::completion_signatures_of_t<Sender, Env>,
-                                                   Tuple,
-                                                   Variant>;
+    ::beman::execution::detail::gather_signatures<::beman::execution::set_value_t,
+                                                  ::beman::execution::completion_signatures_of_t<Sender, Env>,
+                                                  Tuple,
+                                                  Variant>;
 }
 // ----------------------------------------------------------------------------
 

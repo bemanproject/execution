@@ -30,7 +30,7 @@ namespace beman::execution::detail {
  */
 template <typename Sender, typename Receiver, typename Index>
     requires ::beman::execution::detail::
-        valid_specialization< ::beman::execution::detail::env_type, Index, Sender, Receiver>
+        valid_specialization<::beman::execution::detail::env_type, Index, Sender, Receiver>
     struct basic_receiver {
     friend struct ::beman::execution::get_env_t;
     friend struct ::beman::execution::set_error_t;

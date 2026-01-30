@@ -23,7 +23,7 @@ using connect_all_result =
     ::beman::execution::detail::call_result_t<decltype(::beman::execution::detail::connect_all),
                                               ::beman::execution::detail::basic_state<Sender, Receiver>*,
                                               Sender,
-                                              ::beman::execution::detail::indices_for<Sender> >;
+                                              ::beman::execution::detail::indices_for<Sender>>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------

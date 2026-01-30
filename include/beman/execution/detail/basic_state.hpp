@@ -24,7 +24,7 @@ template <typename Sender, typename Receiver>
 struct basic_state {
     basic_state(Sender&& sender, Receiver&& rcvr) noexcept(true)
         : receiver(::std::move(rcvr)),
-          state(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_state(
+          state(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_state(
               ::std::forward<Sender>(sender), this->receiver)) {}
 
     Receiver                                                 receiver;

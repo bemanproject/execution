@@ -40,7 +40,7 @@ template <typename Sender, typename Env>
 using completion_signatures_for = ::std::conditional_t<
     ::std::same_as<beman::execution::detail::no_completion_signatures_defined_in_sender,
                    typename ::beman::execution::detail::completion_signatures_for_impl<Sender, Env>::type>,
-    typename ::beman::execution::detail::completion_signatures_for_impl< ::std::remove_cvref_t<Sender>, Env>::type,
+    typename ::beman::execution::detail::completion_signatures_for_impl<::std::remove_cvref_t<Sender>, Env>::type,
     typename ::beman::execution::detail::completion_signatures_for_impl<Sender, Env>::type>;
 } // namespace beman::execution::detail
 

@@ -24,7 +24,7 @@ auto test_bulk() {
     static_assert(
         std::is_same_v<decltype(b0_completions),
                        beman::execution::completion_signatures<beman::execution::set_value_t(),
-                                                               beman::execution::set_error_t(std::exception_ptr)> >,
+                                                               beman::execution::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
 
     int counter = 0;
@@ -37,7 +37,7 @@ auto test_bulk() {
     static_assert(
         std::is_same_v<decltype(b1_completions),
                        beman::execution::completion_signatures<beman::execution::set_value_t(),
-                                                               beman::execution::set_error_t(std::exception_ptr)> >,
+                                                               beman::execution::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
     test_std::sync_wait(b1);
     ASSERT(counter == 10);
@@ -56,7 +56,7 @@ auto test_bulk() {
     static_assert(
         std::is_same_v<decltype(b2_completions),
                        beman::execution::completion_signatures<beman::execution::set_value_t(std::vector<int>),
-                                                               beman::execution::set_error_t(std::exception_ptr)> >,
+                                                               beman::execution::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
     test_std::sync_wait(b2);
 
@@ -73,7 +73,7 @@ auto test_bulk_noexept() {
     auto b0_env         = test_std::get_env(b0);
     auto b0_completions = test_std::get_completion_signatures(b0, b0_env);
     static_assert(std::is_same_v<decltype(b0_completions),
-                                 beman::execution::completion_signatures<beman::execution::set_value_t()> >,
+                                 beman::execution::completion_signatures<beman::execution::set_value_t()>>,
                   "Completion signatures do not match!");
     static_assert(test_std::sender<decltype(b0)>);
 
@@ -85,7 +85,7 @@ auto test_bulk_noexept() {
     auto b1_env         = test_std::get_env(b0);
     auto b1_completions = test_std::get_completion_signatures(b1, b1_env);
     static_assert(std::is_same_v<decltype(b1_completions),
-                                 beman::execution::completion_signatures<beman::execution::set_value_t()> >,
+                                 beman::execution::completion_signatures<beman::execution::set_value_t()>>,
                   "Completion signatures do not match!");
     test_std::sync_wait(b1);
     ASSERT(counter == 10);
@@ -100,7 +100,7 @@ auto test_bulk_pipeable() {
     static_assert(
         std::is_same_v<decltype(b0_completions),
                        beman::execution::completion_signatures<beman::execution::set_value_t(),
-                                                               beman::execution::set_error_t(std::exception_ptr)> >,
+                                                               beman::execution::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
 
     int counter = 0;
@@ -113,7 +113,7 @@ auto test_bulk_pipeable() {
     static_assert(
         std::is_same_v<decltype(b1_completions),
                        beman::execution::completion_signatures<beman::execution::set_value_t(),
-                                                               beman::execution::set_error_t(std::exception_ptr)> >,
+                                                               beman::execution::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
     test_std::sync_wait(b1);
     ASSERT(counter == 10);
@@ -133,7 +133,7 @@ auto test_bulk_pipeable() {
     static_assert(
         std::is_same_v<decltype(b2_completions),
                        beman::execution::completion_signatures<beman::execution::set_value_t(std::vector<int>),
-                                                               beman::execution::set_error_t(std::exception_ptr)> >,
+                                                               beman::execution::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
     test_std::sync_wait(b2);
 

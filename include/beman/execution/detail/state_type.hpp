@@ -15,10 +15,10 @@
 
 namespace beman::execution::detail {
 template <typename Sender, typename Receiver>
-using state_type = ::std::decay_t< ::beman::execution::detail::call_result_t<
-    decltype(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_state),
+using state_type = ::std::decay_t<::beman::execution::detail::call_result_t<
+    decltype(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_state),
     Sender,
-    Receiver&> >;
+    Receiver&>>;
 }
 
 // ----------------------------------------------------------------------------
