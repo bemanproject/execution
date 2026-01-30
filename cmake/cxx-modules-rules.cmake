@@ -91,7 +91,7 @@ endif()
 
 option(
     BEMAN_USE_STD_MODULE
-    "Check if 'import std;' is possible with the toolchain"
+    "Check if 'import std;' is possible with the toolchain?"
     OFF
 )
 message(STATUS "BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}")
@@ -110,7 +110,7 @@ if(BEMAN_USE_STD_MODULE)
         set(CMAKE_CXX_SCAN_FOR_MODULES ON)
         option(
             BEMAN_HAS_IMPORT_STD
-            "Build with import std; possible"
+            "Build with import std; is possible and used!"
             ${CMAKE_CXX_MODULE_STD}
         )
         message(STATUS "BEMAN_HAS_IMPORT_STD=${BEMAN_HAS_IMPORT_STD}")

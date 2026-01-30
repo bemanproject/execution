@@ -124,7 +124,7 @@ foreach(test ${execution_tests})
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
-if(BEMAN_EXECUTION_ENABLE_INSTALL)
+if(BEMAN_EXECUTION_ENABLE_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
     # test if the targets are usable from the install directory
     add_test(
         NAME install-to-stagedir

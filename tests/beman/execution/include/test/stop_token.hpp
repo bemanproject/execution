@@ -5,7 +5,7 @@
 #ifndef INCLUDED_TEST_STOP_TOKEN
 #define INCLUDED_TEST_STOP_TOKEN
 
-#ifdef BEMAN_USE_MODULE
+#ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>
