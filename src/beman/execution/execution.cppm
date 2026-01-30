@@ -2727,13 +2727,16 @@ namespace beman::execution::detail {
  * \internal
  */
 struct default_impls {
-    static constexpr auto get_attrs = [](const auto&, const auto&... child) noexcept -> decltype(auto) {
-        if constexpr (1 == sizeof...(child))
-            return (::beman::execution::detail::fwd_env(::beman::execution::get_env(child)), ...);
-        else
-            return ::beman::execution::env<>{};
+    struct get_attrs_impl {
+        auto operator()(const auto&, const auto&... child) const noexcept -> decltype(auto) {
+            if constexpr (1 == sizeof...(child))
+                return (::beman::execution::detail::fwd_env(::beman::execution::get_env(child)), ...);
+            else
+                return ::beman::execution::env<>{};
+        }
     };
-    static constexpr auto get_env = [](auto, auto&, const auto& receiver) noexcept -> decltype(auto) {
+    static constexpr auto get_attrs = get_attrs_impl{};
+    static constexpr auto get_env   = [](auto, auto&, const auto& receiver) noexcept -> decltype(auto) {
         return ::beman::execution::detail::fwd_env(::beman::execution::get_env(receiver));
     };
     static constexpr auto get_state =

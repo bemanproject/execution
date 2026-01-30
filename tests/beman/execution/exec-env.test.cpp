@@ -19,7 +19,7 @@ namespace {}
 
 TEST(env) {
     test_std::inplace_stop_source  source{};
-    test_std::env<>                e0{};
+    [[maybe_unused]] test_std::env<> e0{};
     [[maybe_unused]] test_std::env e1{test_std::prop(test_std::get_allocator, std::allocator<int>{})};
     [[maybe_unused]] test_std::env e2{test_std::prop(test_std::get_allocator, std::allocator<int>{}),
                                       test_std::prop(test_std::get_stop_token, source.get_token())};
