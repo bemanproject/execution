@@ -39,7 +39,8 @@ set(EXAMPLES
 )
 
 if(BEMAN_USE_MODULES)
-    # FIXME: not yet! list(APPEND EXAMPLES modules) # modules.cpp
+    # FIXME: not yet!
+    list(APPEND EXAMPLES modules) # modules.cpp
 endif()
 
 foreach(EXAMPLE ${EXAMPLES})
