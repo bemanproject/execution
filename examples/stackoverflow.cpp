@@ -19,7 +19,7 @@ struct task {
         struct final_awaiter {
             base* data;
             bool  await_ready() noexcept { return false; }
-            auto  await_suspend(auto h) noexcept { this->data->complete_value(); };
+            auto  await_suspend(auto) noexcept { this->data->complete_value(); };
             void  await_resume() noexcept {}
         };
         std::suspend_always     initial_suspend() const noexcept { return {}; }
