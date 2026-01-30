@@ -113,19 +113,23 @@ if(BEMAN_USE_STD_MODULE)
             "Build with import std; is possible and used!"
             ${CMAKE_CXX_MODULE_STD}
         )
-        message(STATUS "BEMAN_HAS_IMPORT_STD=${BEMAN_HAS_IMPORT_STD}")
         message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
     else()
         set(CMAKE_CXX_MODULE_STD OFF)
         message(WARNING "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
     endif()
+    message(STATUS "BEMAN_HAS_IMPORT_STD=${BEMAN_HAS_IMPORT_STD}")
 endif()
-message(STATUS "CMAKE_CXX_SCAN_FOR_MODULES=${CMAKE_CXX_SCAN_FOR_MODULES}")
 
 if(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
     option(BEMAN_USE_MODULES "Build CXX_MODULES" ${CMAKE_CXX_SCAN_FOR_MODULES})
 endif()
 message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
+
+if(NOT BEMAN_USE_MODULES)
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+endif()
+message(STATUS "CMAKE_CXX_SCAN_FOR_MODULES=${CMAKE_CXX_SCAN_FOR_MODULES}")
 
 # ------------------------------------------------------------------------------
 # Avoid creating CMAKE_..._OUTPUT_DIRECTORY as cache variables, they should not

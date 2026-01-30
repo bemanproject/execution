@@ -12,10 +12,6 @@ project(beman_execution.example LANGUAGES CXX)
 if(PROJECT_IS_TOP_LEVEL)
     include(../cmake/cxx-modules-rules.cmake)
 
-    if(NOT DEFINED BEMAN_USE_MODULES)
-        set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
-    endif()
-
     find_package(beman_execution 0.1.0 EXACT REQUIRED)
 
     enable_testing()
