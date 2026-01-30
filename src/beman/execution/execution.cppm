@@ -4049,7 +4049,8 @@ namespace beman::execution::detail {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-struct connect_t {
+export //-dk:TODO this seems to needed for MSVC++ (2026-01-30)
+    struct connect_t {
   private:
     template <typename Sender, typename Receiver>
     static auto make_new_sender(Sender&& sender, Receiver&& receiver)

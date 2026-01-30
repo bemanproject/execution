@@ -125,7 +125,7 @@ auto mem() -> void {
 auto token() -> void {
     test_std::counting_scope scope;
     const auto               tok{scope.get_token()};
-    auto                     sndr{tok.wrap(test_std::just(10))};
+    [[maybe_unused]] auto    sndr{tok.wrap(test_std::just(10))};
 
     ASSERT(true == tok.try_associate());
     bool called{false};
