@@ -72,6 +72,10 @@ function(beman_install_library name interface)
     set(package_name "${name}")
     # XXX list(GET name_parts -1 component_name)
 
+    include(GNUInstallDirs)
+
+    set(package_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${package_name}")
+
     set(target_list)
     if(TARGET "${target_name}")
         set_target_properties(
@@ -83,6 +87,24 @@ function(beman_install_library name interface)
             "beman-install-library: COMPONENT ${component_name} for TARGET '${target_name}'"
         )
         list(APPEND target_list "${target_name}")
+
+        get_target_property(
+            INTERFACE_CXX_MODULE_SETS
+            ${target_name}
+            INTERFACE_CXX_MODULE_SETS
+        )
+        if(INTERFACE_CXX_MODULE_SETS)
+            message(
+                VERBOSE
+                "beman-install-library: '${target_name}' has INTERFACE_CXX_MODULE_SETS=${INTERFACE_CXX_MODULE_SETS}"
+            )
+            set(__INSTALL_CXX_MODULES
+                FILE_SET
+                ${INTERFACE_CXX_MODULE_SETS}
+                DESTINATION
+                ${package_install_dir}/modules
+            )
+        endif()
     endif()
 
     if(interface AND TARGET "${target_name}_${interface}")
@@ -92,21 +114,48 @@ function(beman_install_library name interface)
         )
         message(
             VERBOSE
-            "beman-install-library: COMPONENT ${component_name}_${interface} for TARGET '${name}_${interface}'"
+            "beman-install-library: COMPONENT ${component_name} for TARGET '${name}_${interface}'"
         )
         list(APPEND target_list "${target_name}_${interface}")
+
+        get_target_property(
+            INTERFACE_HEADER_SETS
+            ${target_name}_${interface}
+            INTERFACE_HEADER_SETS
+        )
+        if(INTERFACE_HEADER_SETS)
+            message(
+                VERBOSE
+                "beman-install-library: '${target_name}_${interface}' has INTERFACE_HEADER_SETS=${INTERFACE_HEADER_SETS}"
+            )
+            set(__INSTALL_HEADER_SETS FILE_SET ${INTERFACE_HEADER_SETS})
+        endif()
     endif()
 
-    include(GNUInstallDirs)
+    if(CMAKE_SKIP_INSTALL_RULES)
+        message(
+            DEBUG
+            "beman-install-library: not installing targets '${target_list}' due to CMAKE_SKIP_INSTALL_RULES"
+        )
+        return()
+    endif()
 
+    # ============================================================
     install(
         TARGETS ${target_list}
         COMPONENT "${install_component_name}"
         EXPORT "${export_name}"
         FILE_SET HEADERS
-        FILE_SET CXX_MODULES
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${package_name}/modules
+            ${__INSTALL_HEADER_SETS}
+            # FILE_SET CXX_MODULES
+            #     DESTINATION ${package_install_dir}/modules
+            ${__INSTALL_CXX_MODULES}
+        # There's currently no convention for this location
+        CXX_MODULES_BMI
+            DESTINATION
+                ${package_install_dir}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
     )
+    # ============================================================
 
     # Determine the prefix for project-specific variables
     string(TOUPPER "${name}" project_prefix)
@@ -143,7 +192,7 @@ function(beman_install_library name interface)
     if(install_config_package)
         message(
             VERBOSE
-            "beman-install-library: Installing a config package for '${name}'"
+            "beman-install-library: Export cmake config to ${package_install_dir} for '${name}'"
         )
 
         include(CMakePackageConfigHelpers)
@@ -159,7 +208,6 @@ function(beman_install_library name interface)
         set(config_package_file
             "${CMAKE_CURRENT_BINARY_DIR}/${package_name}-config.cmake"
         )
-        set(package_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${package_name}")
         configure_package_config_file(
             "${config_file_template}"
             "${config_package_file}"

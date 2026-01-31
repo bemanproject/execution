@@ -9,7 +9,7 @@ add_library(beman::execution_headers ALIAS ${TARGET_NAME})
 target_sources(
     ${TARGET_NAME}
     PUBLIC
-        FILE_SET # ${TARGET_NAME}_public_headers TYPE
+        FILE_SET # public_headers TYPE
             HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}/include
             FILES
@@ -19,7 +19,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution26/execution.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution26/stop_token.hpp
                 # PUBLIC
-                #     FILE_SET ${TARGET_NAME}_detail_headers
+                #     FILE_SET detail_headers
                 #         TYPE HEADERS
                 #         BASE_DIRS ${PROJECT_SOURCE_DIR}/include
                 #         FILES
@@ -211,7 +211,7 @@ endif()
 # get_property(
 #     DETAIL_HEADER_FILES
 #     TARGET ${TARGET_NAME}
-#     PROPERTY HEADER_SET_${TARGET_NAME}_detail_headers
+#     PROPERTY HEADER_SET_detail_headers
 # )
 # source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
