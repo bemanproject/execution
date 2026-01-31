@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_RECEIVER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_RECEIVER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/basic_state.hpp>
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/env_type.hpp>
@@ -29,7 +30,7 @@ namespace beman::execution::detail {
  */
 template <typename Sender, typename Receiver, typename Index>
     requires ::beman::execution::detail::
-        valid_specialization< ::beman::execution::detail::env_type, Index, Sender, Receiver>
+        valid_specialization<::beman::execution::detail::env_type, Index, Sender, Receiver>
     struct basic_receiver {
     friend struct ::beman::execution::get_env_t;
     friend struct ::beman::execution::set_error_t;
@@ -82,4 +83,4 @@ template <typename Sender, typename Receiver, typename Index>
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_RECEIVER

@@ -55,7 +55,7 @@ contains some links for general information about the sender/receivers and `std:
 ## Preconditions
 
 - cmake v3.30 or newer
-- ninja v1.11.1 or newer
+- ninja v1.13.0 or newer
 - A compiler that supports at least C++23
 
 

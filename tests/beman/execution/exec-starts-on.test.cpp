@@ -1,8 +1,12 @@
 // src/beman/execution/tests/exec-starts-on.test.cpp                -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/starts_on.hpp>
 #include <beman/execution/execution.hpp>
+#endif
 #include <test/execution.hpp>
 #include <concepts>
 

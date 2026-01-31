@@ -1,9 +1,10 @@
 // include/beman/execution/detail/counting_scope_join.hpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_JOIN
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_JOIN
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_JOIN
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_JOIN
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/connect.hpp>
@@ -84,4 +85,4 @@ struct impls_for<::beman::execution::detail::counting_scope_join_t> : ::beman::e
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_JOIN

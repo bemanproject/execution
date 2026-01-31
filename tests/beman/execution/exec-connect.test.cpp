@@ -161,22 +161,21 @@ auto test_connect_awaitable_promise() -> void {
 }
 
 auto test_operation_state_task() -> void {
-    using state_t = ::beman::execution::detail::operation_state_task<receiver>;
+    using state_t = test_detail::operation_state_task<receiver>;
     static_assert(std::same_as<::beman::execution::operation_state_t, state_t::operation_state_concept>);
-    static_assert(
-        std::same_as<::beman::execution::detail::connect_awaitable_promise<receiver>, state_t::promise_type>);
+    static_assert(std::same_as<test_detail::connect_awaitable_promise<receiver>, state_t::promise_type>);
     static_assert(noexcept(state_t(std::coroutine_handle<>{})));
     state_t state(::std::coroutine_handle<>{});
     static_assert(noexcept(state.start()));
 }
 
 auto test_suspend_complete() -> void {
-    static_assert(noexcept(::beman::execution::detail::suspend_complete([](int) {}, 17)));
+    static_assert(noexcept(test_detail::suspend_complete([](int) {}, 17)));
     int  iv{};
     bool bv{};
     int  ip{17};
     bool bp{true};
-    auto awaiter{::beman::execution::detail::suspend_complete(
+    auto awaiter{test_detail::suspend_complete(
         [&](int i, bool b) {
             iv = i;
             bv = b;

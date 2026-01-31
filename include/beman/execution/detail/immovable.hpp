@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_IMMOVABLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_IMMOVABLE
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -31,4 +33,4 @@ struct beman::execution::detail::virtual_immovable {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_IMMOVABLE

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_AWAIT_TRANSFORM
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_AWAIT_TRANSFORM
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/has_as_awaitable.hpp>
 #include <utility>
 #include <type_traits>
@@ -30,4 +31,4 @@ struct with_await_transform {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_AWAIT_TRANSFORM

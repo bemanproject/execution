@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/get_domain_late.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -20,7 +21,8 @@ namespace beman::execution::detail {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-struct connect_t {
+//-dk:TODO this seems to needed for MSVC++ (2026-01-30)
+BEMAN_EXECUTION_EXPORT struct connect_t {
   private:
     template <typename Sender, typename Receiver>
     static auto make_new_sender(Sender&& sender, Receiver&& receiver)
@@ -81,7 +83,7 @@ namespace beman::execution {
  * \brief Type of the connect customization point object.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-using beman::execution::detail::connect_t;
+BEMAN_EXECUTION_EXPORT using connect_t = beman::execution::detail::connect_t;
 /*!
  * \brief Customization point object used to connect a sender and a receiver.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
@@ -90,9 +92,9 @@ using beman::execution::detail::connect_t;
  * `connect(sender, receiver)` returns the result of calling `sender.connect(receiver)`.
  * The returned object `state` is an `operation_state` object.
  */
-inline constexpr connect_t connect{};
+BEMAN_EXECUTION_EXPORT inline constexpr connect_t connect{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT

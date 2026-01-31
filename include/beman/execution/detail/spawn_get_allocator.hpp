@@ -1,9 +1,10 @@
 // include/beman/execution/detail/spawn_get_allocator.hpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SPAWN_GET_ALLOCATOR
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_SPAWN_GET_ALLOCATOR
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_GET_ALLOCATOR
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_GET_ALLOCATOR
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/join_env.hpp>
@@ -33,4 +34,4 @@ auto spawn_get_allocator(const Sndr& sndr, const Ev& ev) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_GET_ALLOCATOR

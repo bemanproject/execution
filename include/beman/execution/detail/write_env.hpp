@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_WRITE_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WRITE_ENV
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/impls_for.hpp>
@@ -52,10 +53,10 @@ inline constexpr write_env_t write_env{};
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using write_env_t = ::beman::execution::detail::write_env_t;
-inline constexpr write_env_t write_env{};
+BEMAN_EXECUTION_EXPORT using write_env_t = ::beman::execution::detail::write_env_t;
+BEMAN_EXECUTION_EXPORT inline constexpr write_env_t write_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_WRITE_ENV

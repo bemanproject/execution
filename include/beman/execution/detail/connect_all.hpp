@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/basic_receiver.hpp>
@@ -78,13 +79,13 @@ struct connect_all_t {
         auto operator()(::std::index_sequence<J...>, C&&... c) noexcept(
             (noexcept(::beman::execution::connect(
                  ::beman::execution::detail::forward_like<Sender>(c),
-                 ::beman::execution::detail::basic_receiver<Sender, Receiver, ::std::integral_constant<::size_t, J>>{
-                     this->op})) &&
+                 ::beman::execution::detail::
+                     basic_receiver<Sender, Receiver, ::std::integral_constant<::std::size_t, J>>{this->op})) &&
              ... && true)) -> decltype(auto) {
             return ::beman::execution::detail::product_type{::beman::execution::connect(
                 ::beman::execution::detail::forward_like<Sender>(c),
-                ::beman::execution::detail::basic_receiver<Sender, Receiver, ::std::integral_constant<::size_t, J>>{
-                    this->op})...};
+                ::beman::execution::detail::
+                    basic_receiver<Sender, Receiver, ::std::integral_constant<::std::size_t, J>>{this->op})...};
         }
     };
 
@@ -128,4 +129,4 @@ inline constexpr connect_all_t connect_all{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL

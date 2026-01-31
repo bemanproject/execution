@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_STATE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_STATE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
@@ -23,7 +24,7 @@ template <typename Sender, typename Receiver>
 struct basic_state {
     basic_state(Sender&& sender, Receiver&& rcvr) noexcept(true)
         : receiver(::std::move(rcvr)),
-          state(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_state(
+          state(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_state(
               ::std::forward<Sender>(sender), this->receiver)) {}
 
     Receiver                                                 receiver;
@@ -35,4 +36,4 @@ basic_state(Sender&&, Receiver&&) -> basic_state<Sender&&, Receiver>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_STATE

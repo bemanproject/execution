@@ -1,10 +1,14 @@
 // src/beman/execution/tests/exec-when-all.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/when_all.hpp>
 #include <beman/execution/detail/stop_callback_for_t.hpp>
 #include <beman/execution/detail/when_all_with_variant.hpp>
 #include <beman/execution/execution.hpp>
+#endif
 #include <test/execution.hpp>
 #include <concepts>
 #include <optional>

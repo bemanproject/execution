@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
@@ -86,14 +87,14 @@ auto get_domain_late(Sender&& sender, Env&&) {
 #include <beman/execution/detail/suppress_pop.hpp>
 
 namespace beman::execution {
-using ::beman::execution::detail::continues_on_t;
+BEMAN_EXECUTION_EXPORT using continues_on_t = ::beman::execution::detail::continues_on_t;
 /*!
  * \brief Customization point object to create a `continues_on` sender.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-inline constexpr continues_on_t continues_on{};
+BEMAN_EXECUTION_EXPORT inline constexpr continues_on_t continues_on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON

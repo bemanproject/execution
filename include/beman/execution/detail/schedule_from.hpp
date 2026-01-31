@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_FROM
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_FROM
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
@@ -180,10 +181,10 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using schedule_from_t = beman::execution::detail::schedule_from_t;
-inline constexpr ::beman::execution::schedule_from_t schedule_from{};
+BEMAN_EXECUTION_EXPORT using schedule_from_t = beman::execution::detail::schedule_from_t;
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::schedule_from_t schedule_from{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_FROM

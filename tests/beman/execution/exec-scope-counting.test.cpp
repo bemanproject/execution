@@ -1,10 +1,14 @@
 // tests/beman/execution/exec-scope-counting.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/counting_scope.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
+#endif
 #include <test/execution.hpp>
 #include <test/inline_scheduler.hpp>
 #include <concepts>
@@ -121,7 +125,7 @@ auto mem() -> void {
 auto token() -> void {
     test_std::counting_scope scope;
     const auto               tok{scope.get_token()};
-    auto                     sndr{tok.wrap(test_std::just(10))};
+    [[maybe_unused]] auto    sndr{tok.wrap(test_std::just(10))};
 
     ASSERT(true == tok.try_associate());
     bool called{false};

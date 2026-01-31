@@ -1,8 +1,8 @@
 // include/beman/execution26/execution.hpp                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION26_EXECUTION
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION26_EXECUTION
+#ifndef INCLUDED_BEMAN_EXECUTION26_EXECUTION
+#define INCLUDED_BEMAN_EXECUTION26_EXECUTION
 
 #include <beman/execution/execution.hpp>
 
@@ -114,4 +114,4 @@ using ::beman::execution::with_awaitable_senders;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION26_EXECUTION

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ENV
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
@@ -37,4 +38,4 @@ sched_env(Scheduler&&) -> sched_env<::std::remove_cvref_t<Scheduler>>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ENV

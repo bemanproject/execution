@@ -75,5 +75,5 @@ auto main() -> int {
            })};
 
     inline_resource<1024> state_resource("state");
-    ex::sync_wait(ex::detail::write_env(std::move(s), allocator_env{&state_resource}));
+    ex::sync_wait(ex::write_env(std::move(s), allocator_env{&state_resource}));
 }

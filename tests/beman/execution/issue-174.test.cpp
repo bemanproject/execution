@@ -1,7 +1,12 @@
 // tests/beman/execution/issue-174.test.cpp                            *-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/execution.hpp>
+#endif
+#include <test/execution.hpp>
 #include <thread>
 #include <utility>
 
@@ -17,7 +22,7 @@ struct thread_loop : ex::run_loop {
 };
 } // namespace
 
-int main() {
+TEST(issue174) {
     thread_loop ex_context1;
     thread_loop ex_context2;
 

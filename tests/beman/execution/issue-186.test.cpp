@@ -1,5 +1,12 @@
+// tests/beman/execution/issue-186.test.cpp                            *-C++-*-
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/execution.hpp>
-#include <cassert>
+#endif
+#include <test/execution.hpp>
 
 namespace ex = beman::execution;
 
@@ -18,7 +25,7 @@ struct move_only_type {
 };
 } // namespace
 
-int main() {
+TEST(issue186) {
     auto snd = ex::just(move_only_type(1))                                      //
                | ex::then([](move_only_type v) noexcept { return v.val * 2; })  //
                | ex::let_value([](int v) noexcept { return ex::just(v * 3); }); // int

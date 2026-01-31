@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_LATE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_LATE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/completion_domain.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -58,4 +59,4 @@ constexpr auto get_domain_late(const Sender& sender, const Env& env) noexcept {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_LATE

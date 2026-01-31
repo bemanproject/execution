@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR_CLOSURE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR_CLOSURE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <concepts>
 #include <type_traits>
@@ -17,7 +18,7 @@ struct sender_adaptor_closure_base {};
 
 namespace beman::execution {
 // NOLINTBEGIN(bugprone-crtp-constructor-accessibility)
-template <typename>
+BEMAN_EXECUTION_EXPORT template <typename>
 struct sender_adaptor_closure : ::beman::execution::detail::pipeable::sender_adaptor_closure_base {};
 // NOLINTEND(bugprone-crtp-constructor-accessibility)
 
@@ -30,7 +31,7 @@ concept is_sender_adaptor_closure =
 }
 
 namespace beman::execution::detail::pipeable {
-template <::beman::execution::sender Sender, typename Adaptor>
+BEMAN_EXECUTION_EXPORT template <::beman::execution::sender Sender, typename Adaptor>
     requires(!::beman::execution::sender<Adaptor>) &&
             ::std::derived_from<::std::decay_t<Adaptor>,
                                 ::beman::execution::sender_adaptor_closure<::std::decay_t<Adaptor>>> &&
@@ -44,4 +45,4 @@ auto operator|(Sender&& sender, Adaptor&& adaptor) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR_CLOSURE

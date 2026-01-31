@@ -54,90 +54,88 @@ struct overloaded {
 };
 
 auto test_callable() -> void {
-    static_assert(test_std::detail::callable<auto()->void>);
-    static_assert(not test_std::detail::callable<auto()->void, int>);
-    static_assert(test_std::detail::callable<auto(int)->void, short>);
+    static_assert(test_detail::callable<auto()->void>);
+    static_assert(not test_detail::callable<auto()->void, int>);
+    static_assert(test_detail::callable<auto(int)->void, short>);
 
-    static_assert(not test_std::detail::callable<auto()->non_destructible>);
+    static_assert(not test_detail::callable<auto()->non_destructible>);
 
-    static_assert(test_std::detail::callable<auto() noexcept -> void>);
-    static_assert(not test_std::detail::callable<auto() noexcept -> void, int>);
-    static_assert(test_std::detail::callable<auto(int) noexcept -> void, short>);
+    static_assert(test_detail::callable<auto() noexcept -> void>);
+    static_assert(not test_detail::callable<auto() noexcept -> void, int>);
+    static_assert(test_detail::callable<auto(int) noexcept -> void, short>);
 
-    static_assert(not test_std::detail::callable<auto() noexcept -> non_destructible>);
+    static_assert(not test_detail::callable<auto() noexcept -> non_destructible>);
 
-    static_assert(test_std::detail::callable<fun<true>>);
-    static_assert(test_std::detail::callable<const fun<true>>);
-    static_assert(test_std::detail::callable<fun<true>, int>);
-    static_assert(not test_std::detail::callable<const fun<true>, int>);
+    static_assert(test_detail::callable<fun<true>>);
+    static_assert(test_detail::callable<const fun<true>>);
+    static_assert(test_detail::callable<fun<true>, int>);
+    static_assert(not test_detail::callable<const fun<true>, int>);
 
-    static_assert(test_std::detail::callable<fun<true>, non_copyable>);
-    static_assert(test_std::detail::callable<fun<true>, arg>);
-    static_assert(test_std::detail::callable<fun<true>, throws>);
+    static_assert(test_detail::callable<fun<true>, non_copyable>);
+    static_assert(test_detail::callable<fun<true>, arg>);
+    static_assert(test_detail::callable<fun<true>, throws>);
 
-    static_assert(test_std::detail::callable<fun<false>>);
-    static_assert(test_std::detail::callable<const fun<false>>);
-    static_assert(test_std::detail::callable<fun<false>, int>);
-    static_assert(not test_std::detail::callable<const fun<false>, int>);
+    static_assert(test_detail::callable<fun<false>>);
+    static_assert(test_detail::callable<const fun<false>>);
+    static_assert(test_detail::callable<fun<false>, int>);
+    static_assert(not test_detail::callable<const fun<false>, int>);
 
-    static_assert(test_std::detail::callable<fun<false>, non_copyable>);
-    static_assert(test_std::detail::callable<fun<false>, arg>);
-    static_assert(test_std::detail::callable<fun<false>, throws>);
+    static_assert(test_detail::callable<fun<false>, non_copyable>);
+    static_assert(test_detail::callable<fun<false>, arg>);
+    static_assert(test_detail::callable<fun<false>, throws>);
 }
 
 auto test_nothrow_callable() -> void {
-    static_assert(not test_std::detail::nothrow_callable<auto()->void>);
-    static_assert(not test_std::detail::nothrow_callable<auto()->void, int>);
-    static_assert(not test_std::detail::nothrow_callable<auto(int)->void, short>);
+    static_assert(not test_detail::nothrow_callable<auto()->void>);
+    static_assert(not test_detail::nothrow_callable<auto()->void, int>);
+    static_assert(not test_detail::nothrow_callable<auto(int)->void, short>);
 
-    static_assert(not test_std::detail::nothrow_callable<auto()->non_destructible>);
+    static_assert(not test_detail::nothrow_callable<auto()->non_destructible>);
 
-    static_assert(test_std::detail::nothrow_callable<auto() noexcept -> void>);
-    static_assert(not test_std::detail::nothrow_callable<auto() noexcept -> void, int>);
-    static_assert(test_std::detail::nothrow_callable<auto(int) noexcept -> void, short>);
+    static_assert(test_detail::nothrow_callable<auto() noexcept -> void>);
+    static_assert(not test_detail::nothrow_callable<auto() noexcept -> void, int>);
+    static_assert(test_detail::nothrow_callable<auto(int) noexcept -> void, short>);
 
-    static_assert(not test_std::detail::nothrow_callable<auto() noexcept -> non_destructible>);
+    static_assert(not test_detail::nothrow_callable<auto() noexcept -> non_destructible>);
 
-    static_assert(test_std::detail::nothrow_callable<fun<true>>);
-    static_assert(test_std::detail::nothrow_callable<const fun<true>>);
-    static_assert(test_std::detail::nothrow_callable<fun<true>, int>);
-    static_assert(not test_std::detail::nothrow_callable<const fun<true>, int>);
+    static_assert(test_detail::nothrow_callable<fun<true>>);
+    static_assert(test_detail::nothrow_callable<const fun<true>>);
+    static_assert(test_detail::nothrow_callable<fun<true>, int>);
+    static_assert(not test_detail::nothrow_callable<const fun<true>, int>);
 
-    static_assert(test_std::detail::nothrow_callable<fun<true>, non_copyable>);
-    static_assert(test_std::detail::nothrow_callable<fun<true>, arg>);
-    static_assert(not test_std::detail::nothrow_callable<fun<true>, throws>);
+    static_assert(test_detail::nothrow_callable<fun<true>, non_copyable>);
+    static_assert(test_detail::nothrow_callable<fun<true>, arg>);
+    static_assert(not test_detail::nothrow_callable<fun<true>, throws>);
 
-    static_assert(not test_std::detail::nothrow_callable<fun<false>>);
-    static_assert(not test_std::detail::nothrow_callable<const fun<false>>);
-    static_assert(not test_std::detail::nothrow_callable<fun<false>, int>);
-    static_assert(not test_std::detail::nothrow_callable<const fun<false>, int>);
+    static_assert(not test_detail::nothrow_callable<fun<false>>);
+    static_assert(not test_detail::nothrow_callable<const fun<false>>);
+    static_assert(not test_detail::nothrow_callable<fun<false>, int>);
+    static_assert(not test_detail::nothrow_callable<const fun<false>, int>);
 
-    static_assert(not test_std::detail::nothrow_callable<fun<false>, non_copyable>);
-    static_assert(not test_std::detail::nothrow_callable<fun<false>, arg>);
-    static_assert(not test_std::detail::nothrow_callable<fun<false>, throws>);
+    static_assert(not test_detail::nothrow_callable<fun<false>, non_copyable>);
+    static_assert(not test_detail::nothrow_callable<fun<false>, arg>);
+    static_assert(not test_detail::nothrow_callable<fun<false>, throws>);
 }
 
 auto test_call_result_t() -> void {
-    static_assert(std::same_as<void, test_std::detail::call_result_t<auto()->void>>);
-    static_assert(std::same_as<int, test_std::detail::call_result_t<auto()->int>>);
-    static_assert(std::same_as<int&, test_std::detail::call_result_t<auto()->int&>>);
-    static_assert(std::same_as<const int&, test_std::detail::call_result_t<auto()->const int&>>);
+    static_assert(std::same_as<void, test_detail::call_result_t<auto()->void>>);
+    static_assert(std::same_as<int, test_detail::call_result_t<auto()->int>>);
+    static_assert(std::same_as<int&, test_detail::call_result_t<auto()->int&>>);
+    static_assert(std::same_as<const int&, test_detail::call_result_t<auto()->const int&>>);
 
-    static_assert(std::same_as<bool, test_std::detail::call_result_t<overloaded>>);
-    static_assert(std::same_as<int, test_std::detail::call_result_t<const overloaded>>);
-    static_assert(std::same_as<double, test_std::detail::call_result_t<overloaded&>>);
+    static_assert(std::same_as<bool, test_detail::call_result_t<overloaded>>);
+    static_assert(std::same_as<int, test_detail::call_result_t<const overloaded>>);
+    static_assert(std::same_as<double, test_detail::call_result_t<overloaded&>>);
 
-    static_assert(std::same_as<bool, test_std::detail::call_result_t<overloaded, int>>);
-    static_assert(std::same_as<int, test_std::detail::call_result_t<overloaded, const int>>);
-    static_assert(std::same_as<double, test_std::detail::call_result_t<overloaded, int&>>);
+    static_assert(std::same_as<bool, test_detail::call_result_t<overloaded, int>>);
+    static_assert(std::same_as<int, test_detail::call_result_t<overloaded, const int>>);
+    static_assert(std::same_as<double, test_detail::call_result_t<overloaded, int&>>);
 }
 
 struct test_tag {};
 constexpr test_tag test_object{};
 
-auto test_decayed_typeof() -> void {
-    static_assert(std::same_as<test_tag, test_std::detail::decayed_typeof<test_object>>);
-}
+auto test_decayed_typeof() -> void { static_assert(std::same_as<test_tag, test_detail::decayed_typeof<test_object>>); }
 } // namespace
 
 // ----------------------------------------------------------------------------

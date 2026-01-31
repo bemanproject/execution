@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DEFAULT_IMPLS
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DEFAULT_IMPLS
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/allocator_aware_move.hpp>
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/env.hpp>
@@ -26,13 +27,16 @@ namespace beman::execution::detail {
  * \internal
  */
 struct default_impls {
-    static constexpr auto get_attrs = [](const auto&, const auto&... child) noexcept -> decltype(auto) {
-        if constexpr (1 == sizeof...(child))
-            return (::beman::execution::detail::fwd_env(::beman::execution::get_env(child)), ...);
-        else
-            return ::beman::execution::env<>{};
+    struct get_attrs_impl {
+        auto operator()(const auto&, const auto&... child) const noexcept -> decltype(auto) {
+            if constexpr (1 == sizeof...(child))
+                return (::beman::execution::detail::fwd_env(::beman::execution::get_env(child)), ...);
+            else
+                return ::beman::execution::env<>{};
+        }
     };
-    static constexpr auto get_env = [](auto, auto&, const auto& receiver) noexcept -> decltype(auto) {
+    static constexpr auto get_attrs = get_attrs_impl{};
+    static constexpr auto get_env   = [](auto, auto&, const auto& receiver) noexcept -> decltype(auto) {
         return ::beman::execution::detail::fwd_env(::beman::execution::get_env(receiver));
     };
     static constexpr auto get_state =
@@ -65,4 +69,4 @@ struct default_impls {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DEFAULT_IMPLS

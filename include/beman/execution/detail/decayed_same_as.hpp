@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_SAME_AS
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_SAME_AS
 
+#include <beman/execution/detail/common.hpp>
 #include <concepts>
 
 // ----------------------------------------------------------------------------
@@ -21,4 +22,4 @@ concept decayed_same_as = ::std::same_as<::std::remove_cvref_t<T0>, ::std::remov
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_SAME_AS

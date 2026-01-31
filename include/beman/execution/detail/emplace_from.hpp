@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_EMPLACE_FROM
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_EMPLACE_FROM
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/nothrow_callable.hpp>
 #include <type_traits>
@@ -32,4 +33,4 @@ emplace_from(Fun&&) -> emplace_from<::std::remove_cvref_t<Fun>>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_EMPLACE_FROM

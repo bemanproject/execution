@@ -1,6 +1,9 @@
 // src/beman/execution/tests/exec-awaitable.test.cpp                -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/await_suspend_result.hpp>
 #include <beman/execution/detail/is_awaiter.hpp>
 #include <beman/execution/detail/is_awaitable.hpp>
@@ -10,7 +13,7 @@
 #include <beman/execution/detail/with_await_transform.hpp>
 #include <beman/execution/detail/env_promise.hpp>
 #include <test/execution.hpp>
-
+#endif
 #include <coroutine>
 #include <concepts>
 

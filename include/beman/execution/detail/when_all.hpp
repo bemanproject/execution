@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/decayed_type_list.hpp>
@@ -167,7 +168,7 @@ struct impls_for<::beman::execution::detail::when_all_t> : ::beman::execution::d
         }
 
         Receiver*                               receiver{};
-        ::std::atomic<size_t>                   count{sizeof...(Sender)};
+        ::std::atomic<::std::size_t>            count{sizeof...(Sender)};
         ::beman::execution::inplace_stop_source stop_src{};
         ::std::atomic<disposition>              disp{disposition::started};
         errors_variant                          errors{};
@@ -260,10 +261,10 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using ::beman::execution::detail::when_all_t;
-inline constexpr ::beman::execution::when_all_t when_all{};
+BEMAN_EXECUTION_EXPORT using when_all_t = ::beman::execution::detail::when_all_t;
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::when_all_t when_all{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL

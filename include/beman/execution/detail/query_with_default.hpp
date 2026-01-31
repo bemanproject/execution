@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_QUERY_WITH_DEFAULT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_QUERY_WITH_DEFAULT
 
+#include <beman/execution/detail/common.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -25,4 +26,4 @@ query_with_default(Tag, const Env&, Value&& value) noexcept(noexcept(static_cast
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_QUERY_WITH_DEFAULT

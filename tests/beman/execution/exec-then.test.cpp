@@ -1,8 +1,10 @@
 // src/beman/execution/tests/exec-then.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/then.hpp>
-
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
@@ -12,6 +14,7 @@
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
+#endif
 #include <concepts>
 #include <memory_resource>
 #include <test/execution.hpp>

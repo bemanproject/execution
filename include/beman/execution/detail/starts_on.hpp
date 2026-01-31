@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STARTS_ON
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STARTS_ON
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
@@ -53,10 +54,10 @@ struct starts_on_t {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using ::beman::execution::detail::starts_on_t;
-inline constexpr ::beman::execution::detail::starts_on_t starts_on{};
+BEMAN_EXECUTION_EXPORT using starts_on_t = ::beman::execution::detail::starts_on_t;
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::detail::starts_on_t starts_on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STARTS_ON

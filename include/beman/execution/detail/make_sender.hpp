@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_SENDER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/sender.hpp>
@@ -30,4 +31,4 @@ constexpr auto make_sender(Tag tag, Data&& data, Child&&... child) {
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_SENDER

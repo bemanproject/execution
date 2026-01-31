@@ -48,6 +48,7 @@
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/schedule_from.hpp>
+#include <beman/execution/detail/split.hpp>
 #include <beman/execution/detail/starts_on.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #include <beman/execution/detail/then.hpp>
@@ -65,4 +66,4 @@
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_EXECUTION

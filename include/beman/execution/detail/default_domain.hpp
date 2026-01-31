@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DEFAULT_DOMAIN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DEFAULT_DOMAIN
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
@@ -24,7 +25,7 @@ namespace beman::execution {
  * tag type of the passed sender. If there is no corresponding member function
  * no transformation is applied.
  */
-struct default_domain {
+BEMAN_EXECUTION_EXPORT struct default_domain {
     template <::beman::execution::sender Sender, ::beman::execution::detail::queryable... Env>
         requires(sizeof...(Env) <= 1) && requires(Sender&& sender, Env&&... env) {
             ::beman::execution::tag_of_t<Sender>().transform_sender(::std::forward<Sender>(sender),
@@ -83,4 +84,4 @@ struct default_domain {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DEFAULT_DOMAIN

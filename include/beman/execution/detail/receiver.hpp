@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_RECEIVER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_RECEIVER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <concepts>
@@ -12,9 +13,9 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct receiver_t {};
+BEMAN_EXECUTION_EXPORT struct receiver_t {};
 
-template <typename Rcvr>
+BEMAN_EXECUTION_EXPORT template <typename Rcvr>
 concept receiver =
     ::std::derived_from<typename ::std::remove_cvref_t<Rcvr>::receiver_concept, ::beman::execution::receiver_t> &&
     requires(const ::std::remove_cvref_t<Rcvr>& rcvr) {
@@ -25,4 +26,4 @@ concept receiver =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_RECEIVER

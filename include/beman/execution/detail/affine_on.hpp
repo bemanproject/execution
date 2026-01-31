@@ -1,9 +1,10 @@
 // include/beman/execution/detail/affine_on.hpp                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_AFFINE_ON
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_AFFINE_ON
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE_ON
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE_ON
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
@@ -115,16 +116,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
         [[maybe_unused]] auto& [tag, data, child] = sender;
         using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
 
-#if 0
-        if constexpr (requires(const child_tag_t& t) {
-                          {
-                              t.affine_on(::beman::execution::detail::forward_like<Sender>(child), ev)
-                          } -> ::beman::execution::sender;
-                      })
-#else
-        if constexpr (::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>)
-#endif
-        {
+        if constexpr (::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>) {
             constexpr child_tag_t t{};
             return t.affine_on(::beman::execution::detail::forward_like<Sender>(child), ev);
         } else {
@@ -144,12 +136,12 @@ namespace beman::execution {
  * @brief affine_on is a CPO, used to adapt a sender to complete on the scheduler
  *      it got started on which is derived from get_scheduler on the receiver's environment.
  */
-using beman::execution::detail::affine_on_t;
-inline constexpr affine_on_t affine_on{};
+BEMAN_EXECUTION_EXPORT using affine_on_t = beman::execution::detail::affine_on_t;
+BEMAN_EXECUTION_EXPORT inline constexpr affine_on_t affine_on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE_ON

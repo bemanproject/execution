@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CHECK_TYPE_ALIAS_EXIST
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CHECK_TYPE_ALIAS_EXIST
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
@@ -18,4 +20,4 @@ struct check_type_alias_exist;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CHECK_TYPE_ALIAS_EXIST

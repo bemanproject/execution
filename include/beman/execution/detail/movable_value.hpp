@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_MOVABLE_VALUE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_MOVABLE_VALUE
 
+#include <beman/execution/detail/common.hpp>
 #include <concepts>
 #include <type_traits>
 
@@ -18,4 +19,4 @@ concept movable_value =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_MOVABLE_VALUE

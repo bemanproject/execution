@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_EARLY
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_EARLY
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/completion_domain.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/get_domain.hpp>
@@ -25,4 +26,4 @@ constexpr auto get_domain_early(const Sender& sender) noexcept {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_EARLY

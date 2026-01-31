@@ -4,10 +4,12 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NEVER_STOP_TOKEN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NEVER_STOP_TOKEN
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-class never_stop_token;
+BEMAN_EXECUTION_EXPORT class never_stop_token;
 }
 
 // ----------------------------------------------------------------------------
@@ -28,4 +30,4 @@ class beman::execution::never_stop_token {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_NEVER_STOP_TOKEN

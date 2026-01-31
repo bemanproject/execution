@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_TYPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_TYPE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
@@ -20,7 +21,7 @@ namespace beman::execution::detail {
  */
 template <typename Index, typename Sender, typename Receiver>
 using env_type = ::beman::execution::detail::call_result_t<
-    decltype(::beman::execution::detail::impls_for< ::beman::execution::tag_of_t<Sender> >::get_env),
+    decltype(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_env),
     Index,
     ::beman::execution::detail::state_type<Sender, Receiver>&,
     const Receiver&>;
@@ -28,4 +29,4 @@ using env_type = ::beman::execution::detail::call_result_t<
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_TYPE

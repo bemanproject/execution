@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TUPLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TUPLE
 
+#include <beman/execution/detail/common.hpp>
 #include <tuple>
 #include <type_traits>
 
@@ -21,4 +22,4 @@ using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TUPLE

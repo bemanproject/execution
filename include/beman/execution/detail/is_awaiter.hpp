@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_IS_AWAITER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_IS_AWAITER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/await_suspend_result.hpp>
 #include <coroutine>
 
@@ -20,4 +21,4 @@ concept is_awaiter = requires(Awaiter& awaiter, ::std::coroutine_handle<Promise>
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_IS_AWAITER

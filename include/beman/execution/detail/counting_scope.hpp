@@ -1,9 +1,10 @@
 // include/beman/execution/detail/counting_scope.hpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/counting_scope_base.hpp>
 #include <beman/execution/detail/counting_scope_join.hpp>
 #include <beman/execution/detail/scope_token.hpp>
@@ -16,7 +17,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-class counting_scope;
+BEMAN_EXECUTION_EXPORT class counting_scope;
 }
 
 // ----------------------------------------------------------------------------
@@ -59,4 +60,4 @@ inline auto beman::execution::counting_scope::get_token() noexcept -> beman::exe
     return beman::execution::counting_scope::token(this);
 }
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE

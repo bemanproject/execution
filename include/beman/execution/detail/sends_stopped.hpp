@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDS_STOPPED
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDS_STOPPED
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/gather_signatures.hpp>
@@ -15,7 +16,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-template <typename Sender, typename Env = ::beman::execution::env<>>
+BEMAN_EXECUTION_EXPORT template <typename Sender, typename Env = ::beman::execution::env<>>
     requires ::beman::execution::sender_in<Sender, Env>
 inline constexpr bool sends_stopped{!::std::same_as<
     ::beman::execution::detail::type_list<>,
@@ -27,4 +28,4 @@ inline constexpr bool sends_stopped{!::std::same_as<
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SENDS_STOPPED

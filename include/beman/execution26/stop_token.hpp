@@ -1,8 +1,8 @@
 // include/beman/execution26/stop_token.hpp                           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION26_STOP_TOKEN
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION26_STOP_TOKEN
+#ifndef INCLUDED_BEMAN_EXECUTION26_STOP_TOKEN
+#define INCLUDED_BEMAN_EXECUTION26_STOP_TOKEN
 
 #include <beman/execution/stop_token.hpp>
 
@@ -25,4 +25,4 @@ using ::beman::execution::unstoppable_token;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION26_STOP_TOKEN

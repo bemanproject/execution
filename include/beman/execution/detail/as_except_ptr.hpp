@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AS_EXCEPT_PTR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AS_EXCEPT_PTR
 
+#include <beman/execution/detail/common.hpp>
 #include <cassert>
 #include <concepts>
 #include <exception>
@@ -33,4 +34,4 @@ decltype(auto) as_except_ptr(Error&& error) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AS_EXCEPT_PTR

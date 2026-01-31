@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_AWAITER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_AWAITER
 
+#include <beman/execution/detail/common.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -30,4 +31,4 @@ auto get_awaiter(Expr&& expr, Promise& promise) -> decltype(auto) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_AWAITER

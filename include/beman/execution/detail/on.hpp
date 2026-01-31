@@ -1,9 +1,10 @@
 // include/beman/execution/detail/on.hpp                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ON
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ON
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ON
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_ON
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
@@ -132,37 +133,15 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     }
 };
 
-#if 0
-template <typename Data, typename Sender, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Data, Sender>,
-    Env> {
-        //-dk:TODO pick up scheduler errors and merge them in?
-    using type =
-#if 0
-    ::beman::execution::detail::meta::combine<
-        ::beman::execution::completion_signatures_of_t<Sender, Env>,
-        ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>
-        >
-#else
-        ::beman::execution::completion_signatures<
-            ::beman::execution::set_value_t(),
-            ::beman::execution::set_error_t(::std::exception_ptr)
-            >
-#endif
-        ;
-};
-#endif
-
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-using on_t = ::beman::execution::detail::on_t;
-inline constexpr ::beman::execution::on_t on{};
+BEMAN_EXECUTION_EXPORT using on_t = ::beman::execution::detail::on_t;
+BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::on_t on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ON

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ALLOCATOR_AWARE_MOVE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ALLOCATOR_AWARE_MOVE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -41,4 +42,4 @@ auto allocator_aware_move(T&& obj, Context&& context) noexcept -> decltype(auto)
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ALLOCATOR_AWARE_MOVE

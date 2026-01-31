@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_SENDER
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/basic_operation.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/decays_to.hpp>
@@ -27,7 +28,7 @@ namespace beman::execution::detail {
  */
 template <typename Tag, typename Data, typename... Child>
 struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child...> {
-    friend struct ::beman::execution::connect_t;
+    friend struct ::beman::execution::detail::connect_t;
     friend struct ::beman::execution::get_completion_signatures_t;
     using sender_concept = ::beman::execution::sender_t;
     using indices_for    = ::std::index_sequence_for<Child...>;
@@ -108,4 +109,4 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_SENDER

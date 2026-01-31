@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/nostopstate.hpp>
 #include <atomic>
 #include <memory>
@@ -15,11 +16,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-class stop_token;
-class stop_source;
-template <typename CallbackFun>
+BEMAN_EXECUTION_EXPORT class stop_token;
+BEMAN_EXECUTION_EXPORT class stop_source;
+BEMAN_EXECUTION_EXPORT template <typename CallbackFun>
 class stop_callback;
-template <typename CallbackFun>
+BEMAN_EXECUTION_EXPORT template <typename CallbackFun>
 stop_callback(::beman::execution::stop_token, CallbackFun) -> stop_callback<CallbackFun>;
 } // namespace beman::execution
 
@@ -255,4 +256,4 @@ inline auto beman::execution::stop_source::request_stop() noexcept -> bool {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE

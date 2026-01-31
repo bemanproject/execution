@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_MATCHING_SIG
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_MATCHING_SIG
 
+#include <beman/execution/detail/common.hpp>
 #include <concepts>
 
 // ----------------------------------------------------------------------------
@@ -26,4 +27,4 @@ inline constexpr bool matching_sig =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_MATCHING_SIG

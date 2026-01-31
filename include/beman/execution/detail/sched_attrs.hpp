@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ATTRS
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ATTRS
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/set_error.hpp>
@@ -45,4 +46,4 @@ sched_attrs(Scheduler&&) -> sched_attrs<::std::remove_cvref_t<Scheduler>>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ATTRS

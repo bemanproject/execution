@@ -1,9 +1,10 @@
 // include/beman/execution/detail/prop.hpp                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_PROP
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_PROP
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/non_assignable.hpp>
 #include <type_traits>
@@ -16,7 +17,7 @@ struct prop_like;
 }
 
 namespace beman::execution {
-template <typename Query, typename Value>
+BEMAN_EXECUTION_EXPORT template <typename Query, typename Value>
 struct prop;
 
 template <typename Query, typename Value>
@@ -47,4 +48,4 @@ struct beman::execution::prop {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_PROP

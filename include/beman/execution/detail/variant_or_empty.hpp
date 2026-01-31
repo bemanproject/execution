@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_VARIANT_OR_EMPTY
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_VARIANT_OR_EMPTY
 
+#include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <type_traits>
 #include <variant>
@@ -34,4 +35,4 @@ using variant_or_empty = typename ::beman::execution::detail::variant_or_empty_h
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_VARIANT_OR_EMPTY
