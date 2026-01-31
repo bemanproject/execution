@@ -21,8 +21,12 @@ def make_loc(file, number):
 class common_writer:
     def write(self, loc, line):
         self.do_write(loc, line)
+
+
     def write_same(self, line):
         self.do_write(self.loc, line)
+
+
     def write_next(self, line):
         self.do_next()
         self.do_write(self.do_get_loc(), line)
@@ -45,7 +49,10 @@ headers = {}
 beman_re = re.compile('#include ["<](?P<name>[bB]eman/.*)\.hpp[">]')
 other_re = re.compile('#include ["<](?P<name>.*)[">]')
 
+
 class comment_writer(common_writer):
+    comment_re = re.compile("(.*)/\*.*\*/(.*)")
+    export_re = re.compile(".*export.*")
     start_re = re.compile("(.*)/\*.*")
     end_re = re.compile(".*\*/\s*(.*)")
     def __init__(self, to):
@@ -54,39 +61,56 @@ class comment_writer(common_writer):
 
     def do_get_loc(self):
         return self.to.do_get_loc()
+
+
     def do_next(self):
         self.to.do_next()
+
+
     def do_write(self, loc, line):
         if self.in_comment:
             match = self.end_re.match(line)
             if match:
                 self.in_comment = False
                 self.to.write(loc, match.group(1))
-        else:
-            match = self.start_re.match(line)
-            if match:
-                self.in_comment = True
-                line = match.group(1).rstrip()
-            self.to.write(loc, line)
+            return
+        match = self.comment_re.match(line)
+        if match:
+            if not self.export_re.match(match.group(1)):
+                self.to.write(loc, (match.group(1) + " " + match.group(2)).rstrip())
+            else:
+                self.to.write(loc, line)
+            return
+        match = self.start_re.match(line)
+        if match:
+            self.in_comment = True
+            line = match.group(1).rstrip()
+        self.to.write(loc, line)
 
 class filter_writer(common_writer):
     included_re = re.compile(".*INCLUDED_BEMAN.*")
     file_re = re.compile("// include/beman\S*\s*-.-C..-.-")
     spdx_re = re.compile(".*SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception.*")
     namespace_re = re.compile(".*// namespace.*")
+    nolint_re = re.compile(".*// NOLINT.*")
     comment_re = re.compile("(.*)//.*")
     close_re = re.compile("^\s*}\s*$")
     public_re = re.compile("^\s*public:\s*$")
     else_re = re.compile("^\s*#\s*else\s*$")
 
+
     def __init__(self, to):
         self.to = to
         self.previous_line_empty = False
 
+
     def do_get_loc(self):
         return self.to.do_get_loc()
+
+
     def do_next(self):
         self.to.do_next()
+
 
     def include_this_line(self, line):
         return (
@@ -97,11 +121,12 @@ class filter_writer(common_writer):
             and not self.spdx_re.match(line)
         )
 
+
     def do_write(self, loc, line):
         if not self.include_this_line(line):
             return
         match = self.comment_re.match(line)
-        if match and not self.namespace_re.match(line):
+        if match and not self.namespace_re.match(line) and not self.nolint_re.match(line):
             line = match.group(1).rstrip()
         if line != "" or not self.previous_line_empty:
             self.previous_line_empty = (
@@ -152,7 +177,7 @@ def write_header(to, header):
             match = export_re.match(line)
             loc = make_loc(filename, number)
             if match:
-                to.write(loc, f"export {match.group(1)}")
+                to.write(loc, f"export /* --------- */ {match.group(1)}")
             else:
                 to.write(loc, line.rstrip())
 
@@ -171,35 +196,39 @@ def build_header(file, header):
 
 class file_writer(common_writer):
     def __init__(self, to):
+        self.first_line = True
         self.to = to
         self.loc = make_loc("", 0)
 
     def do_get_loc(self):
         return self.loc
+
+
     def do_next(self):
         self.loc["number"] += 1
+
+
     def do_write(self, loc, line):
         #self.to.write(f"loc={loc} self.loc={self.loc}")
-        if loc["file"] != self.loc["file"] or loc["number"] != self.loc["number"]:
+        if not self.first_line and (loc["file"] != self.loc["file"] or loc["number"] != self.loc["number"]):
             self.to.write(f"#line {loc['number']} \"{loc['file']}\"\n")
         self.to.write(f"{line}\n")
         self.loc = loc
         self.loc["number"] += 1
+        self.first_line = False
 
 
 with open(module_file, "w") as file:
-    #file = sys.stdout
     file_to = file_writer(file)
     to = filter_writer(file_to)
     to = comment_writer(to)
 
-    file_to.write(make_loc(sys.argv[0], inspect.currentframe().f_lineno), "// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception")
+    file_to.write(make_loc(sys.argv[0],inspect.currentframe().f_lineno), "module;")
+    file_to.write_next("// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception")
     file_to.write_next("// *****************************************************;")
     file_to.write_next("// *** WARNING: this file is generated: do not edit! ***;")
     file_to.write_next("// *****************************************************;")
     file_to.write_next(f"// generated by {sys.argv[0]} {sys.argv[1]}")
-    file_to.write_next("")
-    file_to.write_next("module;")
     file_to.write_next("")
     file_to.write_next("#include <beman/execution/modules_export.hpp>")
     file_to.write_next("#include <cassert>")
@@ -209,7 +238,10 @@ with open(module_file, "w") as file:
     file_to.write_next("#else")
     includes = list(headers.keys())
     for include in sorted(includes):
-        file_to.write(make_loc(sys.argv[0], inspect.currentframe().f_lineno), f"#include <{include}>")
+        file_to.write(
+            make_loc(sys.argv[0], inspect.currentframe().f_lineno),
+            f"#include <{include}>"
+        )
     file_to.write_next("#endif")
     file_to.write_next("")
     file_to.write_next("export module beman.execution;")
