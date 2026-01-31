@@ -12,7 +12,7 @@ project(beman_execution.example LANGUAGES CXX)
 if(PROJECT_IS_TOP_LEVEL)
     include(../cmake/cxx-modules-rules.cmake)
 
-    find_package(beman_execution 0.1.0 EXACT REQUIRED)
+    find_package(beman.execution 0.2.0 EXACT REQUIRED)
 
     enable_testing()
 endif()
@@ -35,7 +35,6 @@ set(EXAMPLES
 )
 
 if(BEMAN_USE_MODULES)
-    # FIXME: not yet!
     list(APPEND EXAMPLES modules) # modules.cpp
 endif()
 

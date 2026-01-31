@@ -9,8 +9,8 @@ add_library(beman::execution_headers ALIAS ${TARGET_NAME})
 target_sources(
     ${TARGET_NAME}
     PUBLIC
-        FILE_SET # public_headers TYPE
-            HEADERS
+        FILE_SET public_headers
+            TYPE HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}/include
             FILES
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/execution.hpp
@@ -193,19 +193,17 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/write_env.hpp
 )
 
-set(TARGET_LIST ${TARGET_NAME})
-
 if(BEMAN_USE_MODULES)
     target_sources(
-        beman_execution
-        PRIVATE execution.cpp
+        ${TARGET_PREFIX}
+        PRIVATE
+            execution.cpp # TODO(CK): check if really needed!
         PUBLIC
             FILE_SET CXX_MODULES
                 BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
                 FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
     )
-    target_link_libraries(beman_execution PUBLIC ${TARGET_NAME})
-    list(APPEND TARGET_LIST beman_execution)
+    target_link_libraries(${TARGET_PREFIX} PUBLIC ${TARGET_NAME})
 endif()
 
 # get_property(
@@ -216,29 +214,3 @@ endif()
 # source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
-
-# if(NOT BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE OR CMAKE_SKIP_INSTALL_RULES)
-#     return()
-# endif()
-#
-# install(
-#     TARGETS ${TARGET_LIST}
-#     EXPORT ${TARGETS_EXPORT_NAME}
-#     ARCHIVE DESTINATION lib/$<CONFIG>
-#     FILE_SET HEADERS
-#     FILE_SET ${TARGET_NAME}_public_headers
-#     FILE_SET ${TARGET_NAME}_detail_headers
-#     FILE_SET CXX_MODULES DESTINATION ${INSTALL_CONFIGDIR}/module
-#     # There's currently no convention for this location
-#     CXX_MODULES_BMI
-#         DESTINATION ${INSTALL_CONFIGDIR}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
-# )
-#
-# install(
-#     EXPORT ${TARGETS_EXPORT_NAME}
-#     FILE ${TARGETS_EXPORT_NAME}.cmake
-#     DESTINATION "${INSTALL_CONFIGDIR}"
-#     NAMESPACE beman::
-#     CXX_MODULES_DIRECTORY
-#     .
-# )

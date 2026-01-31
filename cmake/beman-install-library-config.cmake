@@ -36,6 +36,7 @@ function(beman_install_library name interface)
     #      The prefix `<PREFIX>` is the uppercased name of the library with dots
     #      replaced by underscores.
     #
+
     # if(NOT TARGET "${name}")
     #     message(FATAL_ERROR "Target '${name}' does not exist.")
     # endif()
@@ -47,19 +48,16 @@ function(beman_install_library name interface)
     #     )
     # endif()
 
-    # XXX Given foo.bar, the component name is bar
-    # string(REPLACE "." ";" name_parts "${name}")
-    # XXX fail if the name doesn't look like foo.bar
-    # list(LENGTH name_parts name_parts_length)
-    # if(NOT name_parts_length EQUAL 2)
-    #     message(
-    #         FATAL_ERROR
-    #         "beman_install_library expects a name of the form 'beman.<name>', got '${name}'"
-    #     )
-    # endif()
-
-    string(REPLACE "beman_" "" name_parts "${name}")
-    set(component_name ${name_parts})
+    # Given foo.bar, the component name is bar
+    string(REPLACE "." ";" name_parts "${name}")
+    # fail if the name doesn't look like foo.bar
+    list(LENGTH name_parts name_parts_length)
+    if(NOT name_parts_length EQUAL 2)
+        message(
+            FATAL_ERROR
+            "beman_install_library expects a name of the form 'beman.<name>', got '${name}'"
+        )
+    endif()
 
     set(target_name "${name}")
 
@@ -70,7 +68,7 @@ function(beman_install_library name interface)
 
     set(export_name "${name}")
     set(package_name "${name}")
-    # XXX list(GET name_parts -1 component_name)
+    list(GET name_parts -1 component_name)
 
     include(GNUInstallDirs)
 
@@ -134,7 +132,7 @@ function(beman_install_library name interface)
 
     if(CMAKE_SKIP_INSTALL_RULES)
         message(
-            DEBUG
+            WARNING
             "beman-install-library: not installing targets '${target_list}' due to CMAKE_SKIP_INSTALL_RULES"
         )
         return()
@@ -159,7 +157,7 @@ function(beman_install_library name interface)
 
     # Determine the prefix for project-specific variables
     string(TOUPPER "${name}" project_prefix)
-    # XXX string(REPLACE "." "_" project_prefix "${project_prefix}")
+    string(REPLACE "." "_" project_prefix "${project_prefix}")
 
     option(
         ${project_prefix}_INSTALL_CONFIG_FILE_PACKAGE
@@ -248,3 +246,6 @@ function(beman_install_library name interface)
         )
     endif()
 endfunction()
+
+set(CPACK_GENERATOR TGZ)
+include(CPack)
