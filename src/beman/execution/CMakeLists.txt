@@ -3,15 +3,13 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-if(NOT TARGET ${TARGET_NAME})
-    add_library(${TARGET_NAME} INTERFACE)
-endif()
-add_library(beman::${TARGET_NAME} ALIAS ${TARGET_NAME})
+add_library(${TARGET_NAME} INTERFACE)
+add_library(beman::execution_headers ALIAS ${TARGET_NAME})
 
 target_sources(
     ${TARGET_NAME}
     PUBLIC
-        FILE_SET ${TARGET_NAME}_public_headers
+        FILE_SET public_headers
             TYPE HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}/include
             FILES
@@ -20,11 +18,11 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/stop_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution26/execution.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution26/stop_token.hpp
-    PUBLIC
-        FILE_SET ${TARGET_NAME}_detail_headers
-            TYPE HEADERS
-            BASE_DIRS ${PROJECT_SOURCE_DIR}/include
-            FILES
+                # PUBLIC
+                #     FILE_SET detail_headers
+                #         TYPE HEADERS
+                #         BASE_DIRS ${PROJECT_SOURCE_DIR}/include
+                #         FILES
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/affine_on.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/allocator_aware_move.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/almost_scheduler.hpp
@@ -195,52 +193,24 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/write_env.hpp
 )
 
-set(TARGET_LIST ${TARGET_NAME})
-
 if(BEMAN_USE_MODULES)
     target_sources(
-        beman_execution
-        PRIVATE execution.cpp
+        ${TARGET_PREFIX}
+        PRIVATE
+            execution.cpp # TODO(CK): check if really needed!
         PUBLIC
             FILE_SET CXX_MODULES
                 BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
                 FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
     )
-    target_link_libraries(beman_execution PUBLIC ${TARGET_NAME})
-    list(APPEND TARGET_LIST beman_execution)
+    target_link_libraries(${TARGET_PREFIX} PUBLIC ${TARGET_NAME})
 endif()
 
-get_property(
-    DETAIL_HEADER_FILES
-    TARGET ${TARGET_NAME}
-    PROPERTY HEADER_SET_${TARGET_NAME}_detail_headers
-)
-source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
+# get_property(
+#     DETAIL_HEADER_FILES
+#     TARGET ${TARGET_NAME}
+#     PROPERTY HEADER_SET_detail_headers
+# )
+# source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
-
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
-    return()
-endif()
-
-install(
-    TARGETS ${TARGET_LIST}
-    EXPORT ${TARGETS_EXPORT_NAME}
-    ARCHIVE DESTINATION lib/$<CONFIG>
-    FILE_SET HEADERS
-    FILE_SET ${TARGET_NAME}_public_headers
-    FILE_SET ${TARGET_NAME}_detail_headers
-    FILE_SET CXX_MODULES DESTINATION ${INSTALL_CONFIGDIR}/module
-    # There's currently no convention for this location
-    CXX_MODULES_BMI
-        DESTINATION ${INSTALL_CONFIGDIR}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
-)
-
-install(
-    EXPORT ${TARGETS_EXPORT_NAME}
-    FILE ${TARGETS_EXPORT_NAME}.cmake
-    DESTINATION "${INSTALL_CONFIGDIR}"
-    NAMESPACE beman::
-    CXX_MODULES_DIRECTORY
-    .
-)
