@@ -205,7 +205,6 @@ class file_writer(common_writer):
         self.loc["number"] += 1
 
     def do_write(self, loc, line):
-        #self.to.write(f"loc={loc} self.loc={self.loc}")
         if not self.first_line and (
             loc["file"] != self.loc["file"] or loc["number"] != self.loc["number"]
         ):
