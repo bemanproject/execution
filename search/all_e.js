@@ -10,9 +10,9 @@ var searchData=
   ['sender_5fadaptor_5fclosure_3c_20sender_5fadaptor_3c_20adaptor_2c_20t_2e_2e_2e_20_3e_20_3e_7',['sender_adaptor_closure&lt; sender_adaptor&lt; Adaptor, T... &gt; &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5fadaptor_5fclosure_3c_20then_5ft_3c_20completion_20_3e_20_3e_8',['sender_adaptor_closure&lt; then_t&lt; Completion &gt; &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5ft_9',['sender_t',['../structbeman_1_1execution_1_1sender__t.html',1,'beman::execution']]],
-  ['set_5ferror_10',['set_error',['../namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80',1,'beman::execution']]],
+  ['set_5ferror_10',['set_error',['../namespacebeman_1_1execution.html#a9e16f19c0b4ba21ee43d1c23e0f1cff3',1,'beman::execution']]],
   ['set_5ferror_5ft_11',['set_error_t',['../structbeman_1_1execution_1_1set__error__t.html',1,'beman::execution']]],
-  ['set_5fstopped_12',['set_stopped',['../namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187',1,'beman::execution']]],
+  ['set_5fstopped_12',['set_stopped',['../namespacebeman_1_1execution.html#a8244f7fb2c9f716d9602e260a8d91c4c',1,'beman::execution']]],
   ['set_5fstopped_5ft_13',['set_stopped_t',['../structbeman_1_1execution_1_1set__stopped__t.html',1,'beman::execution']]],
   ['set_5fvalue_14',['set_value',['../namespacebeman_1_1execution.html#a88ba134b297e5c0b06590a57ae9d5dfe',1,'beman::execution']]],
   ['set_5fvalue_5ft_15',['set_value_t',['../structbeman_1_1execution_1_1set__value__t.html',1,'beman::execution']]],
@@ -22,5 +22,5 @@ var searchData=
   ['stop_5fcallback_19',['stop_callback',['../classbeman_1_1execution_1_1stop__callback.html',1,'beman::execution']]],
   ['stop_5fsource_20',['stop_source',['../classbeman_1_1execution_1_1stop__source.html',1,'beman::execution']]],
   ['stop_5ftoken_21',['stop_token',['../classbeman_1_1execution_1_1stop__token.html',1,'beman::execution']]],
-  ['sync_5fwait_22',['sync_wait',['../namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519',1,'beman::execution']]]
+  ['sync_5fwait_22',['sync_wait',['../namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51',1,'beman::execution']]]
 ];

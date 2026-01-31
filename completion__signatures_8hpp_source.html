@@ -106,22 +106,23 @@ $(document).ready(function(){initNavTree('completion__signatures_8hpp_source.htm
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;beman/execution/detail/completion_signature.hpp&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;concepts&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">template</span> &lt;::beman::execution::detail::completion_signature...&gt;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="structbeman_1_1execution_1_1completion__signatures.html">   24</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structbeman_1_1execution_1_1completion__signatures.html">completion_signatures</a> {};</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:35</div></div>
-<div class="ttc" id="astructbeman_1_1execution_1_1completion__signatures_html"><div class="ttname"><a href="structbeman_1_1execution_1_1completion__signatures.html">beman::execution::completion_signatures</a></div><div class="ttdoc">Class template used to a specify a list of completion signatures.</div><div class="ttdef"><b>Definition:</b> completion_signatures.hpp:24</div></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;beman/execution/detail/common.hpp&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;beman/execution/detail/completion_signature.hpp&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;concepts&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>BEMAN_EXECUTION_EXPORT <span class="keyword">template</span> &lt;::beman::execution::detail::completion_signature...&gt;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structbeman_1_1execution_1_1completion__signatures.html">   25</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structbeman_1_1execution_1_1completion__signatures.html">completion_signatures</a> {};</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>} <span class="comment">// namespace beman::execution</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES</span></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:36</div></div>
+<div class="ttc" id="astructbeman_1_1execution_1_1completion__signatures_html"><div class="ttname"><a href="structbeman_1_1execution_1_1completion__signatures.html">beman::execution::completion_signatures</a></div><div class="ttdoc">Class template used to a specify a list of completion signatures.</div><div class="ttdef"><b>Definition:</b> completion_signatures.hpp:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

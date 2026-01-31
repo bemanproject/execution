@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"single__sender_8hpp_source.html":[10,0,1,0,0,0,133],
+"single__sender__value__type_8hpp_source.html":[10,0,1,0,0,0,134],
 "spawn_8hpp_source.html":[10,0,1,0,0,0,135],
 "spawn__future_8hpp_source.html":[10,0,1,0,0,0,136],
 "spawn__get__allocator_8hpp_source.html":[10,0,1,0,0,0,137],

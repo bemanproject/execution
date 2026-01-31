@@ -106,83 +106,84 @@ $(document).ready(function(){initNavTree('continues__on_8hpp_source.html',''); i
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#define INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;beman/execution/detail/sender.hpp&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;beman/execution/detail/scheduler.hpp&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;beman/execution/detail/sender_adaptor.hpp&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;beman/execution/detail/get_domain_early.hpp&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;beman/execution/detail/transform_sender.hpp&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;beman/execution/detail/make_sender.hpp&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;beman/execution/detail/sender_for.hpp&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;beman/execution/detail/schedule_from.hpp&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;beman/execution/detail/join_env.hpp&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;beman/execution/detail/fwd_env.hpp&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;beman/execution/detail/get_env.hpp&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;beman/execution/detail/sched_attrs.hpp&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;beman/execution/detail/impls_for.hpp&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;beman/execution/detail/default_impls.hpp&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;beman/execution/detail/get_domain_late.hpp&gt;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;beman/execution/detail/default_domain.hpp&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;beman/execution/detail/query_with_default.hpp&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_push.hpp&gt;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span>beman::execution::detail {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// specialize default_domain appropriately</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment"></span><span class="keyword">struct </span>continues_on_t {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">template</span> &lt;::beman::execution::detail::sender_for&lt;continues_on_t&gt; Sender, <span class="keyword">typename</span>... Env&gt;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">static</span> <span class="keyword">auto</span> transform_sender(Sender&amp;&amp; sender, Env&amp;&amp;...) {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">auto</span>&amp;&amp; data{sender.template get&lt;1&gt;()};</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keyword">auto</span>&amp;&amp; child{sender.template get&lt;2&gt;()};</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        return ::beman::execution::schedule_from(std::move(data), std::move(child));</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">template</span> &lt;::beman::execution::scheduler Scheduler&gt;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">auto</span> operator()(Scheduler&amp;&amp; scheduler)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        return ::beman::execution::detail::sender_adaptor{*<span class="keyword">this</span>, ::std::forward&lt;Scheduler&gt;(scheduler)};</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">template</span> &lt;::beman::execution::sender Sender, ::beman::execution::scheduler Scheduler&gt;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">auto</span> operator()(Sender&amp;&amp; sender, Scheduler&amp;&amp; scheduler)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">auto</span> domain(::beman::execution::detail::get_domain_early(sender));</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        return ::beman::execution::transform_sender(</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            domain,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            ::beman::execution::detail::make_sender(</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                *<span class="keyword">this</span>, std::forward&lt;Scheduler&gt;(scheduler), ::std::forward&lt;Sender&gt;(sender)));</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">struct </span>impls_for&lt;::beman::execution::detail::continues_on_t&gt; : ::beman::execution::detail::default_impls {</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> get_attrs{[](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; data, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; child) <span class="keyword">noexcept</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        return ::beman::execution::detail::join_env(</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            ::beman::execution::detail::sched_attrs(data),</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            ::beman::execution::detail::fwd_env(::beman::execution::get_env(child)));</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    }};</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>};</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">template</span> &lt;::beman::execution::detail::sender_for&lt;::beman::execution::detail::continues_on_t&gt; Sender, <span class="keyword">typename</span> Env&gt;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">auto</span> get_domain_late(Sender&amp;&amp; sender, Env&amp;&amp;) {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">auto</span> scheduler{sender.template get&lt;1&gt;()};</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    return ::beman::execution::detail::query_with_default(</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        ::beman::execution::get_domain, scheduler, <a class="code hl_struct" href="structbeman_1_1execution_1_1default__domain.html">::beman::execution::default_domain</a>{});</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>}</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>using ::beman::execution::detail::continues_on_t;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#ac82cc62b2a581cacd988ddc78cbc3bef">   94</a></span><span class="keyword">inline</span> <span class="keyword">constexpr</span> continues_on_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#ac82cc62b2a581cacd988ddc78cbc3bef">continues_on</a>{};</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:35</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_ac82cc62b2a581cacd988ddc78cbc3bef"><div class="ttname"><a href="namespacebeman_1_1execution.html#ac82cc62b2a581cacd988ddc78cbc3bef">beman::execution::continues_on</a></div><div class="ttdeci">constexpr continues_on_t continues_on</div><div class="ttdoc">Customization point object to create a continues_on sender.</div><div class="ttdef"><b>Definition:</b> continues_on.hpp:94</div></div>
-<div class="ttc" id="astructbeman_1_1execution_1_1default__domain_html"><div class="ttname"><a href="structbeman_1_1execution_1_1default__domain.html">beman::execution::default_domain</a></div><div class="ttdoc">Domain type used when no domain is specified explicitly.</div><div class="ttdef"><b>Definition:</b> default_domain.hpp:27</div></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;beman/execution/detail/common.hpp&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;beman/execution/detail/sender.hpp&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;beman/execution/detail/scheduler.hpp&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;beman/execution/detail/sender_adaptor.hpp&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;beman/execution/detail/get_domain_early.hpp&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;beman/execution/detail/transform_sender.hpp&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;beman/execution/detail/make_sender.hpp&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;beman/execution/detail/sender_for.hpp&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;beman/execution/detail/schedule_from.hpp&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;beman/execution/detail/join_env.hpp&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;beman/execution/detail/fwd_env.hpp&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;beman/execution/detail/get_env.hpp&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;beman/execution/detail/sched_attrs.hpp&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;beman/execution/detail/impls_for.hpp&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;beman/execution/detail/default_impls.hpp&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;beman/execution/detail/get_domain_late.hpp&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;beman/execution/detail/default_domain.hpp&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;beman/execution/detail/query_with_default.hpp&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_push.hpp&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span>beman::execution::detail {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">// specialize default_domain appropriately</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"></span><span class="keyword">struct </span>continues_on_t {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">template</span> &lt;::beman::execution::detail::sender_for&lt;continues_on_t&gt; Sender, <span class="keyword">typename</span>... Env&gt;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">static</span> <span class="keyword">auto</span> transform_sender(Sender&amp;&amp; sender, Env&amp;&amp;...) {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keyword">auto</span>&amp;&amp; data{sender.template get&lt;1&gt;()};</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keyword">auto</span>&amp;&amp; child{sender.template get&lt;2&gt;()};</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        return ::beman::execution::schedule_from(std::move(data), std::move(child));</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    }</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">template</span> &lt;::beman::execution::scheduler Scheduler&gt;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">auto</span> operator()(Scheduler&amp;&amp; scheduler)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        return ::beman::execution::detail::sender_adaptor{*<span class="keyword">this</span>, ::std::forward&lt;Scheduler&gt;(scheduler)};</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">template</span> &lt;::beman::execution::sender Sender, ::beman::execution::scheduler Scheduler&gt;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">auto</span> operator()(Sender&amp;&amp; sender, Scheduler&amp;&amp; scheduler)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keyword">auto</span> domain(::beman::execution::detail::get_domain_early(sender));</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        return ::beman::execution::transform_sender(</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            domain,</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            ::beman::execution::detail::make_sender(</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                *<span class="keyword">this</span>, std::forward&lt;Scheduler&gt;(scheduler), ::std::forward&lt;Sender&gt;(sender)));</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>};</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">struct </span>impls_for&lt;::beman::execution::detail::continues_on_t&gt; : ::beman::execution::detail::default_impls {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> get_attrs{[](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; data, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; child) <span class="keyword">noexcept</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        return ::beman::execution::detail::join_env(</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            ::beman::execution::detail::sched_attrs(data),</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            ::beman::execution::detail::fwd_env(::beman::execution::get_env(child)));</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    }};</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>};</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">template</span> &lt;::beman::execution::detail::sender_for&lt;::beman::execution::detail::continues_on_t&gt; Sender, <span class="keyword">typename</span> Env&gt;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword">auto</span> get_domain_late(Sender&amp;&amp; sender, Env&amp;&amp;) {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keyword">auto</span> scheduler{sender.template get&lt;1&gt;()};</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    return ::beman::execution::detail::query_with_default(</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        ::beman::execution::get_domain, scheduler, <a class="code hl_struct" href="structbeman_1_1execution_1_1default__domain.html">::beman::execution::default_domain</a>{});</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>}</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>BEMAN_EXECUTION_EXPORT <span class="keyword">using </span>continues_on_t = ::beman::execution::detail::continues_on_t;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#a4966cdd647477ec6958ddafcb60835e7">   95</a></span>BEMAN_EXECUTION_EXPORT <span class="keyword">inline</span> <span class="keyword">constexpr</span> continues_on_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#a4966cdd647477ec6958ddafcb60835e7">continues_on</a>{};</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>} <span class="comment">// namespace beman::execution</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON</span></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:36</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_a4966cdd647477ec6958ddafcb60835e7"><div class="ttname"><a href="namespacebeman_1_1execution.html#a4966cdd647477ec6958ddafcb60835e7">beman::execution::continues_on</a></div><div class="ttdeci">BEMAN_EXECUTION_EXPORT constexpr continues_on_t continues_on</div><div class="ttdoc">Customization point object to create a continues_on sender.</div><div class="ttdef"><b>Definition:</b> continues_on.hpp:95</div></div>
+<div class="ttc" id="astructbeman_1_1execution_1_1default__domain_html"><div class="ttname"><a href="structbeman_1_1execution_1_1default__domain.html">beman::execution::default_domain</a></div><div class="ttdoc">Domain type used when no domain is specified explicitly.</div><div class="ttdef"><b>Definition:</b> default_domain.hpp:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
