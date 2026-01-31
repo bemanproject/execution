@@ -5,14 +5,14 @@
 
 cmake_minimum_required(VERSION 3.30...4.2)
 
-include(cmake/prelude.cmake)
+include(./cmake/prelude.cmake)
 
 #===================================================
 project(beman_execution VERSION 0.1.0 LANGUAGES CXX)
 #===================================================
 
 # Modules opt in only on compilers that support it: msvc, g++-15 and clang-20+
-include(cxx-modules-rules)
+include(./cmake/cxx-modules-rules.cmake)
 
 set(TARGET_NAME beman_execution_headers) # used in src, and docs
 set(TARGET_NAMESPACE beman) # NOTE: only still used in docs?

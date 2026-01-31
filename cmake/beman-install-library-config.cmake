@@ -36,9 +36,9 @@ function(beman_install_library name interface)
     #      The prefix `<PREFIX>` is the uppercased name of the library with dots
     #      replaced by underscores.
     #
-    if(NOT TARGET "${name}")
-        message(FATAL_ERROR "Target '${name}' does not exist.")
-    endif()
+    # if(NOT TARGET "${name}")
+    #     message(FATAL_ERROR "Target '${name}' does not exist.")
+    # endif()
 
     # if(NOT ARGN STREQUAL "")
     #     message(
@@ -62,15 +62,28 @@ function(beman_install_library name interface)
     set(component_name ${name_parts})
 
     set(target_name "${name}")
-    set(install_component_name "${name}")
+
+    # COMPONENT <component>
+    # Specify an installation component name with which the install rule is associated,
+    # such as Runtime or Development.
+    set(install_component_name "${name}") # TODO(CK): this is not common name!
+
     set(export_name "${name}")
     set(package_name "${name}")
     # XXX list(GET name_parts -1 component_name)
-    message(
-        VERBOSE
-        "beman-install-library: COMPONENT ${component_name} for TARGET '${name}'"
-    )
-    set(target_list "${target_name}")
+
+    set(target_list)
+    if(TARGET "${target_name}")
+        set_target_properties(
+            "${target_name}"
+            PROPERTIES EXPORT_NAME "${component_name}"
+        )
+        message(
+            VERBOSE
+            "beman-install-library: COMPONENT ${component_name} for TARGET '${target_name}'"
+        )
+        list(APPEND target_list "${target_name}")
+    endif()
 
     if(interface AND TARGET "${target_name}_${interface}")
         set_target_properties(
@@ -93,11 +106,6 @@ function(beman_install_library name interface)
         FILE_SET HEADERS
         FILE_SET CXX_MODULES
             DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${package_name}/modules
-    )
-
-    set_target_properties(
-        "${target_name}"
-        PROPERTIES EXPORT_NAME "${component_name}"
     )
 
     # Determine the prefix for project-specific variables

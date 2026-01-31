@@ -4,7 +4,7 @@
 # gersemi: on
 
 add_library(${TARGET_NAME} INTERFACE)
-add_library(beman::${TARGET_NAME} ALIAS ${TARGET_NAME})
+add_library(beman::execution_headers ALIAS ${TARGET_NAME})
 
 target_sources(
     ${TARGET_NAME}
