@@ -22,10 +22,8 @@ class common_writer:
     def write(self, loc, line):
         self.do_write(loc, line)
 
-
     def write_same(self, line):
         self.do_write(self.loc, line)
-
 
     def write_next(self, line):
         self.do_next()
@@ -55,6 +53,7 @@ class comment_writer(common_writer):
     export_re = re.compile(".*export.*")
     start_re = re.compile("(.*)/\*.*")
     end_re = re.compile(".*\*/\s*(.*)")
+
     def __init__(self, to):
         self.to = to
         self.in_comment = False
@@ -62,10 +61,8 @@ class comment_writer(common_writer):
     def do_get_loc(self):
         return self.to.do_get_loc()
 
-
     def do_next(self):
         self.to.do_next()
-
 
     def do_write(self, loc, line):
         if self.in_comment:
@@ -87,6 +84,7 @@ class comment_writer(common_writer):
             line = match.group(1).rstrip()
         self.to.write(loc, line)
 
+
 class filter_writer(common_writer):
     included_re = re.compile(".*INCLUDED_BEMAN.*")
     file_re = re.compile("// include/beman\S*\s*-.-C..-.-")
@@ -98,19 +96,15 @@ class filter_writer(common_writer):
     public_re = re.compile("^\s*public:\s*$")
     else_re = re.compile("^\s*#\s*else\s*$")
 
-
     def __init__(self, to):
         self.to = to
         self.previous_line_empty = False
 
-
     def do_get_loc(self):
         return self.to.do_get_loc()
 
-
     def do_next(self):
         self.to.do_next()
-
 
     def include_this_line(self, line):
         return (
@@ -121,12 +115,15 @@ class filter_writer(common_writer):
             and not self.spdx_re.match(line)
         )
 
-
     def do_write(self, loc, line):
         if not self.include_this_line(line):
             return
         match = self.comment_re.match(line)
-        if match and not self.namespace_re.match(line) and not self.nolint_re.match(line):
+        if (
+            match
+            and not self.namespace_re.match(line)
+            and not self.nolint_re.match(line)
+        ):
             line = match.group(1).rstrip()
         if line != "" or not self.previous_line_empty:
             self.previous_line_empty = (
@@ -194,6 +191,7 @@ def build_header(file, header):
                 todo.append(new)
         todo = todo[1:]
 
+
 class file_writer(common_writer):
     def __init__(self, to):
         self.first_line = True
@@ -203,14 +201,14 @@ class file_writer(common_writer):
     def do_get_loc(self):
         return self.loc
 
-
     def do_next(self):
         self.loc["number"] += 1
 
-
     def do_write(self, loc, line):
         #self.to.write(f"loc={loc} self.loc={self.loc}")
-        if not self.first_line and (loc["file"] != self.loc["file"] or loc["number"] != self.loc["number"]):
+        if not self.first_line and (
+            loc["file"] != self.loc["file"] or loc["number"] != self.loc["number"]
+        ):
             self.to.write(f"#line {loc['number']} \"{loc['file']}\"\n")
         self.to.write(f"{line}\n")
         self.loc = loc
@@ -223,7 +221,7 @@ with open(module_file, "w") as file:
     to = filter_writer(file_to)
     to = comment_writer(to)
 
-    file_to.write(make_loc(sys.argv[0],inspect.currentframe().f_lineno), "module;")
+    file_to.write(make_loc(sys.argv[0], inspect.currentframe().f_lineno), "module;")
     file_to.write_next("// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception")
     file_to.write_next("// *****************************************************;")
     file_to.write_next("// *** WARNING: this file is generated: do not edit! ***;")
@@ -240,7 +238,7 @@ with open(module_file, "w") as file:
     for include in sorted(includes):
         file_to.write(
             make_loc(sys.argv[0], inspect.currentframe().f_lineno),
-            f"#include <{include}>"
+            f"#include <{include}>",
         )
     file_to.write_next("#endif")
     file_to.write_next("")
