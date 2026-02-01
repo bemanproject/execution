@@ -711,7 +711,7 @@ template <typename Fun, typename... Args>
 
 #line 19 "include/beman/execution/detail/call_result_t.hpp"
 using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
-} // namespace beman::execution::detail
+}
 #line 12 "include/beman/execution/detail/meta_size.hpp"
 namespace beman::execution::detail::meta {
 template <typename>
@@ -1044,6 +1044,7 @@ struct env : ::beman::execution::detail::env_base<Envs>... {
 template <::beman::execution::detail::queryable... Envs>
 env(Envs...) -> env<::std::unwrap_reference_t<Envs>...>;
 } // namespace beman::execution
+
 #line 17 "include/beman/execution/detail/get_allocator.hpp"
 namespace beman::execution {
 export /* --------- */ struct get_allocator_t {
@@ -1245,7 +1246,7 @@ concept completion_tag =
 namespace beman::execution::detail {
 
 #line 19 "include/beman/execution/detail/await_result_type.hpp"
-template <typename T, typename Promise>
+export /* --------- */ template <typename T, typename Promise>
 using await_result_type =
     decltype(::beman::execution::detail::get_awaiter(::std::declval<T>(), ::std::declval<Promise&>()).await_resume());
 } // namespace beman::execution::detail
@@ -2154,7 +2155,7 @@ using variant_or_empty = typename ::beman::execution::detail::variant_or_empty_h
 
 #line 13 "include/beman/execution/detail/stoppable_source.hpp"
 namespace beman::execution::detail {
-template <typename Source>
+export /* --------- */ template <typename Source>
 concept stoppable_source = requires(Source& source, const Source& csource) {
     { csource.get_token() } -> ::beman::execution::stoppable_token;
     { csource.stop_possible() } noexcept -> ::std::same_as<bool>;
@@ -2947,7 +2948,7 @@ constexpr auto apply_sender(Domain domain, Tag, Sender&& sender, Args&&... args)
     return domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
 }
 #line 32 "include/beman/execution/detail/apply_sender.hpp"
-template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
+export /* --------- */ template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
     requires(not requires(Domain domain, Tag tag, Sender&& sender, Args&&... args) {
                 domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
             }) && requires(Tag tag, Sender&& sender, Args&&... args) {
@@ -3836,21 +3837,21 @@ using connect_all_result =
 
 #line 28 "include/beman/execution/detail/sync_wait.hpp"
 namespace beman::execution::detail {
-struct sync_wait_env {
+export /* --------- */ struct sync_wait_env {
     ::beman::execution::run_loop* loop{};
 
     auto query(::beman::execution::get_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
     auto query(::beman::execution::get_delegation_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
 };
 
-template <::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender>
+export /* --------- */ template <::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender>
 using sync_wait_result_type =
     ::std::optional<::beman::execution::value_types_of_t<Sender,
                                                          ::beman::execution::detail::sync_wait_env,
                                                          ::beman::execution::detail::decayed_tuple,
                                                          ::std::type_identity_t>>;
 
-template <typename Sender>
+export /* --------- */ template <typename Sender>
 struct sync_wait_state {
     ::beman::execution::run_loop loop{};
     ::std::exception_ptr         error{};
@@ -3858,7 +3859,7 @@ struct sync_wait_state {
     ::beman::execution::detail::sync_wait_result_type<Sender> result{};
 };
 
-template <typename Sender>
+export /* --------- */ template <typename Sender>
 struct sync_wait_receiver {
     using receiver_concept = ::beman::execution::receiver_t;
 
@@ -3931,8 +3932,8 @@ namespace beman::execution::detail {
 export /* --------- */ template <typename Sender, typename Receiver>
     requires ::beman::execution::detail::
 
-        valid_specialization<::beman::execution::detail::state_type, std::remove_cvref_t<Sender>, Receiver>
-    struct basic_operation : ::beman::execution::detail::basic_state<Sender, Receiver> {
+    valid_specialization<::beman::execution::detail::state_type, std::remove_cvref_t<Sender>, Receiver>
+struct basic_operation : ::beman::execution::detail::basic_state<Sender, Receiver> {
 
     friend struct ::beman::execution::start_t;
     using operation_state_concept = ::beman::execution::operation_state_t;
@@ -4030,7 +4031,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
         requires(!::beman::execution::receiver<Receiver>)
     auto connect(Receiver receiver) = BEMAN_EXECUTION_DELETE("the passed receiver doesn't model receiver");
 
-#line 47 "include/beman/execution/detail/basic_sender.hpp"
+private:
 #if __cpp_explicit_this_parameter < 302110L
     template <::beman::execution::receiver Receiver>
     auto connect(Receiver receiver) & noexcept(
@@ -4807,7 +4808,9 @@ struct completion_signatures_for_impl<
     using type         = ::beman::execution::detail::meta::combine<
                 decltype(::beman::execution::get_completion_signatures(::std::declval<Sender>(), ::std::declval<Env>())),
                 ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
-                ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
+                ::beman::execution::completion_signatures<::beman::execution::set_error_t(
+            ::std::exception_ptr)>
+                >;
 };
 } // namespace beman::execution::detail
 
@@ -6477,3 +6480,4 @@ namespace beman::execution {
 export /* --------- */ using on_t = ::beman::execution::detail::on_t;
 export /* --------- */ inline constexpr ::beman::execution::on_t on{};
 } // namespace beman::execution
+

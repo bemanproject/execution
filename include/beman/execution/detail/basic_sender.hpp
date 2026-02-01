@@ -43,7 +43,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
         requires(!::beman::execution::receiver<Receiver>)
     auto connect(Receiver receiver) = BEMAN_EXECUTION_DELETE("the passed receiver doesn't model receiver");
 
-    // private:
+private:
 #if __cpp_explicit_this_parameter < 302110L //-dk:TODO need to figure out how to use explicit this with forwarding
     template <::beman::execution::receiver Receiver>
     auto connect(Receiver receiver) & noexcept(

@@ -14,11 +14,7 @@ import std;
 
 #endif
 
-#ifdef BEMAN_USE_MODULES
 import beman.execution;
-#else
-#include <beman/execution/execution.hpp>
-#endif
 
 namespace ex = beman::execution;
 

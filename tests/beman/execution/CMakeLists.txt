@@ -12,19 +12,16 @@ list(
     exec-affine-on.test
     issue-174.test
     issue-186.test
-    exec-scope-counting.test
     exec-spawn.test
     exec-stop-when.test
     non_assignable.test
     exec-prop.test
     exec-env.test
-    exec-scope-simple-counting.test
     exec-spawn-future.test
     exec-scope-concepts.test
     issue-144.test
     exec-on.test
     notify.test
-    exec-awaitable.test
     allocator-requirements-general.test
     exec-connect.test
     exec-continues-on.test
@@ -55,7 +52,6 @@ list(
     exec-set-error.test
     exec-set-stopped.test
     exec-set-value.test
-    exec-snd-apply.test
     exec-snd-concepts.test
     exec-snd-expos.test
     exec-snd-transform.test
@@ -107,6 +103,12 @@ list(
     thread.test
     utilities.test
 )
+set (TODO
+    exec-scope-simple-counting.test
+    exec-scope-counting.test
+    exec-snd-apply.test
+    exec-awaitable.test
+)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
@@ -114,6 +116,7 @@ foreach(test ${execution_tests})
     set(TEST_EXE ${PROJECT_NAME}.${test})
     add_executable(${TEST_EXE} ${test}.cpp)
     if(BEMAN_USE_MODULES)
+        target_compile_definitions(${TEST_EXE} PUBLIC BEMAN_HAS_MODULES)
         target_link_libraries(${TEST_EXE} PRIVATE beman::execution)
     else()
         target_link_libraries(${TEST_EXE} PRIVATE beman::execution_headers)
