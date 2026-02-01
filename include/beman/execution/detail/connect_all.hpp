@@ -122,7 +122,8 @@ struct connect_all_t {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-inline constexpr connect_all_t connect_all{};
+//-dk:TODO the export below shouldn't be needed, but MSVC++ seems to require it (2026-02-01)
+BEMAN_EXECUTION_EXPORT constexpr connect_all_t connect_all{};
 } // namespace beman::execution::detail
 
 #include <beman/execution/detail/suppress_pop.hpp>
