@@ -1,8 +1,8 @@
 // src/beman/execution/tests/thread-stoptoken-syn.compile.test.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/stop_token.hpp>
 #include <test/execution.hpp>
+#include <beman/execution/stop_token.hpp>
 
 namespace {
 template <typename>

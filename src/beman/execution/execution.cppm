@@ -328,7 +328,7 @@ struct beman::execution::detail::non_assignable {
 
 #line 13 "include/beman/execution/detail/simple_allocator.hpp"
 namespace beman::execution::detail {
-template <typename Alloc>
+export /* --------- */ template <typename Alloc>
 concept simple_allocator =
     requires(::std::remove_cvref_t<Alloc> alloc, ::std::size_t n) {
         { *alloc.allocate(n) } -> ::std::same_as<typename ::std::remove_cvref_t<Alloc>::value_type&>;
@@ -5777,10 +5777,10 @@ struct affine_on_env {
 template <typename Ev>
 affine_on_env(const Ev&) -> affine_on_env<Ev>;
 
-#line 60 "include/beman/execution/detail/affine_on.hpp"
+#line 59 "include/beman/execution/detail/affine_on.hpp"
 struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
 
-#line 68 "include/beman/execution/detail/affine_on.hpp"
+#line 67 "include/beman/execution/detail/affine_on.hpp"
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
         return ::beman::execution::detail::transform_sender(
@@ -5788,10 +5788,10 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             ::beman::execution::detail::make_sender(
                 *this, ::beman::execution::env<>{}, ::std::forward<Sender>(sender)));
     }
-#line 81 "include/beman/execution/detail/affine_on.hpp"
+#line 80 "include/beman/execution/detail/affine_on.hpp"
     auto operator()() const { return ::beman::execution::detail::sender_adaptor{*this}; }
 
-#line 102 "include/beman/execution/detail/affine_on.hpp"
+#line 100 "include/beman/execution/detail/affine_on.hpp"
     template <::beman::execution::sender Sender, typename Env>
         requires ::beman::execution::detail::sender_for<Sender, affine_on_t> && requires(const Env& env) {
             { ::beman::execution::get_scheduler(env) } -> ::beman::execution::scheduler;
@@ -5826,7 +5826,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
 
 namespace beman::execution {
 
-#line 139 "include/beman/execution/detail/affine_on.hpp"
+#line 137 "include/beman/execution/detail/affine_on.hpp"
 export /* --------- */ using affine_on_t = beman::execution::detail::affine_on_t;
 export /* --------- */ inline constexpr affine_on_t affine_on{};
 } // namespace beman::execution

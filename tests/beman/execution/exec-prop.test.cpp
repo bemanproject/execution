@@ -1,15 +1,15 @@
 // tests/beman/execution/exec-prop.test.cpp                           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <concepts>
+#include <type_traits>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #endif
-#include <type_traits>
-#include <concepts>
-#include <test/execution.hpp>
 
 // ----------------------------------------------------------------------------
 

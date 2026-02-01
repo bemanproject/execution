@@ -102,7 +102,7 @@ list(
     thread.test
     utilities.test
 )
-#set(execution_tests exec-affine-on.test)
+#set(execution_tests stopsource-general.test)
 set(TODO
     exec-scope-simple-counting.test
     exec-scope-counting.test

@@ -1,6 +1,12 @@
 // src/beman/execution/tests/exec-then.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <concepts>
+#include <memory_resource>
+#include <optional>
+#include <tuple>
+#include <utility>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -15,9 +21,6 @@ import beman.execution;
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #endif
-#include <concepts>
-#include <memory_resource>
-#include <test/execution.hpp>
 
 // ----------------------------------------------------------------------------
 

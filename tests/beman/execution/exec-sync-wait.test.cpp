@@ -6,7 +6,6 @@
 #include <concepts>
 #include <utility>
 #include <tuple>
-
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
