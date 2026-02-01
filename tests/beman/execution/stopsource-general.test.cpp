@@ -6,8 +6,8 @@ import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>
 #endif
-#include "test/execution.hpp"
-#include "test/stop_token.hpp"
+#include <test/execution.hpp>
+#include <test/stop_token.hpp>
 #include <cassert>
 
 TEST(stopsource_general) {

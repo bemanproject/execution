@@ -6,7 +6,7 @@ import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>
 #endif
-#include "test/execution.hpp"
+#include <test/execution.hpp>
 #include <cassert>
 
 TEST(stopsource_inplace_cons) {

@@ -83,7 +83,6 @@ list(
     stopsource-cons.test
     stopsource-general.test
     stopsource-inplace-cons.test
-    stopsource-inplace-general.test
     stopsource-inplace-mem.test
     stopsource-inplace.test
     stopsource-mem.test
@@ -108,6 +107,7 @@ set (TODO
     exec-scope-counting.test
     exec-snd-apply.test
     exec-awaitable.test
+    stopsource-inplace-general.test
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)

@@ -6,7 +6,7 @@ import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>
 #endif
-#include "test/execution.hpp"
+#include <test/execution.hpp>
 
 TEST(stoptoken_never_general) {
     // Reference: [stoptoken.never.general]

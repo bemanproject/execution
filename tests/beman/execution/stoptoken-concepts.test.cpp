@@ -3,7 +3,7 @@
 
 #include <beman/execution/stop_token.hpp>
 #include <type_traits>
-#include "test/execution.hpp"
+#include <test/execution.hpp>
 
 namespace {
 namespace detail_stopppable_callback_for {

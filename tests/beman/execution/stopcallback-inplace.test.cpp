@@ -6,7 +6,7 @@ import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>
 #endif
-#include "test/execution.hpp"
+#include <test/execution.hpp>
 
 TEST(stopcallback_inplace) {
     // section [stopcallback.inplace] is empty

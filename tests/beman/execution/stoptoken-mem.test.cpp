@@ -3,8 +3,8 @@
 
 #include <array>
 #include <memory>
-#include "test/execution.hpp"
-#include "test/stop_token.hpp"
+#include <test/execution.hpp>
+#include <test/stop_token.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
