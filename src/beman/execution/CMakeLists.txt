@@ -9,8 +9,8 @@ add_library(beman::execution_headers ALIAS ${TARGET_NAME})
 target_sources(
     ${TARGET_NAME}
     PUBLIC
-        FILE_SET public_headers
-            TYPE HEADERS
+        FILE_SET # public_headers TYPE
+            HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}/include
             FILES
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/execution.hpp
@@ -200,8 +200,8 @@ if(BEMAN_USE_MODULES)
             execution.cpp # TODO(CK): check if really needed!
         PUBLIC
             FILE_SET CXX_MODULES
-                BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
-                FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
+                BASE_DIRS ${CURRRENT_SOURCE_DIR}
+                FILES execution.cppm
     )
     target_link_libraries(${TARGET_PREFIX} PUBLIC ${TARGET_NAME})
 endif()

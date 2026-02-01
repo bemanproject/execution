@@ -1,9 +1,11 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+cmake_minimum_required(VERSION 4.0)
+
 include_guard(GLOBAL)
 
 # This file defines the function `beman_install_library` which is used to
-# install a library target and its headers, along with optional CMake
-# configuration files.
+# install a library target and its headers and modules, along with optional
+# CMake configuration files.
 #
 # The function is designed to be reusable across different Beman libraries.
 
@@ -11,13 +13,17 @@ function(beman_install_library name interface)
     # Usage
     # -----
     #
-    #     beman_install_library(NAME INTERFACE)
+    # beman_install_library(project_name TARGETS ... DESTINATION)
     #
     # Brief
     # -----
     #
-    # This function installs the specified library target and its headers.
-    # It also handles the installation of the CMake configuration files if needed.
+    # This function installs the specified project TARGETS and its FILE_SET
+    # HEADERS to the default CMAKE install Destination.
+    #
+    # It also handles the installation of the CMake config package files if
+    # needed.  If the given targets has FILE_SET CXX_MODULE, it will also
+    # installed to the given DESTINATION
     #
     # CMake variables
     # ---------------
@@ -37,6 +43,7 @@ function(beman_install_library name interface)
     #      replaced by underscores.
     #
 
+    # NOTE: in case of an interface only, the name is the project name! CK
     # if(NOT TARGET "${name}")
     #     message(FATAL_ERROR "Target '${name}' does not exist.")
     # endif()
@@ -58,14 +65,11 @@ function(beman_install_library name interface)
             "beman_install_library expects a name of the form 'beman.<name>', got '${name}'"
         )
     endif()
-
     set(target_name "${name}")
-
     # COMPONENT <component>
     # Specify an installation component name with which the install rule is associated,
     # such as Runtime or Development.
     set(install_component_name "${name}") # TODO(CK): this is not common name!
-
     set(export_name "${name}")
     set(package_name "${name}")
     list(GET name_parts -1 component_name)
@@ -106,25 +110,27 @@ function(beman_install_library name interface)
     endif()
 
     if(interface AND TARGET "${target_name}_${interface}")
+        set(target "${target_name}_${interface}")
+
         set_target_properties(
-            "${target_name}_${interface}"
+            "${target}"
             PROPERTIES EXPORT_NAME "${component_name}_${interface}"
         )
         message(
             VERBOSE
             "beman-install-library: COMPONENT ${component_name} for TARGET '${name}_${interface}'"
         )
-        list(APPEND target_list "${target_name}_${interface}")
+        list(APPEND target_list "${target}")
 
         get_target_property(
             INTERFACE_HEADER_SETS
-            ${target_name}_${interface}
+            ${target}
             INTERFACE_HEADER_SETS
         )
         if(INTERFACE_HEADER_SETS)
             message(
                 VERBOSE
-                "beman-install-library: '${target_name}_${interface}' has INTERFACE_HEADER_SETS=${INTERFACE_HEADER_SETS}"
+                "beman-install-library: '${target}' has INTERFACE_HEADER_SETS=${INTERFACE_HEADER_SETS}"
             )
             set(__INSTALL_HEADER_SETS FILE_SET ${INTERFACE_HEADER_SETS})
         endif()
@@ -143,11 +149,11 @@ function(beman_install_library name interface)
         TARGETS ${target_list}
         COMPONENT "${install_component_name}"
         EXPORT "${export_name}"
-        FILE_SET HEADERS
-            ${__INSTALL_HEADER_SETS}
-            # FILE_SET CXX_MODULES
-            #     DESTINATION ${package_install_dir}/modules
-            ${__INSTALL_CXX_MODULES}
+        # FILE_SET HEADERS
+        ${__INSTALL_HEADER_SETS}
+        # FILE_SET CXX_MODULES
+        #     DESTINATION ${package_install_dir}/modules
+        ${__INSTALL_CXX_MODULES}
         # There's currently no convention for this location
         CXX_MODULES_BMI
             DESTINATION

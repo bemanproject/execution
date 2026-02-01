@@ -26,33 +26,32 @@ if(BEMAN_USE_MODULES)
 
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
-    add_library(beman.execution STATIC)
-    add_library(beman::execution ALIAS beman.execution)
+    add_library(${TARGET_PREFIX} STATIC)
+    add_library(beman::execution ALIAS ${TARGET_PREFIX})
     target_compile_features(
-        beman.execution
+        ${TARGET_PREFIX}
         PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
     )
 
     include(GenerateExportHeader)
-
     generate_export_header(
-        beman.execution
-        BASE_NAME beman.execution
+        ${TARGET_PREFIX}
+        BASE_NAME ${TARGET_PREFIX}
         EXPORT_FILE_NAME beman/execution/modules_export.hpp
     )
     target_sources(
-        beman.execution
+        ${TARGET_PREFIX}
         PUBLIC
             FILE_SET HEADERS
                 BASE_DIRS include ${CMAKE_CURRENT_BINARY_DIR}
                 FILES
                     ${CMAKE_CURRENT_BINARY_DIR}/beman/execution/modules_export.hpp
     )
-    # FIXME: target_compile_definitions(beman.execution PUBLIC BEMAN_HAS_MODULES)
+    target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_MODULES)
 endif()
 
 if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
-    target_compile_definitions(beman.execution PUBLIC BEMAN_HAS_IMPORT_STD)
+    target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_IMPORT_STD)
 else()
     message(WARNING "Missing support for CMAKE_CXX_MODULE_STD!")
 endif()
@@ -72,9 +71,14 @@ option(
 
 add_subdirectory(src/beman/execution)
 
+#===============================================================================
 # NOTE: this must be done before tests! CK
-include(./cmake/beman-install-library-config.cmake)
-beman_install_library(${TARGET_PREFIX} headers)
+# XXX include(./cmake/beman-install-library-config.cmake)
+# XXX beman_install_library(${TARGET_PREFIX} INTERFACE)
+# TODO: include(./cmake/beman-install-project-targets.cmake)
+include(./cmake/beman-install-library.cmake)
+beman_install_library(${TARGET_PREFIX} TARGETS ${TARGET_NAME} ${TARGET_PREFIX})
+#===============================================================================
 
 if(BEMAN_EXECUTION_ENABLE_TESTING)
     enable_testing()
