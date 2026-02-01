@@ -183,6 +183,12 @@ function(beman_install_library name)
     string(TOUPPER "${name}" _pkg_upper)
     string(REPLACE "." "_" _pkg_prefix "${_pkg_upper}")
 
+    option(
+        ${_pkg_prefix}_INSTALL_CONFIG_FILE_PACKAGE
+        "Enable creating and installing a CMake config-file package. Default: ON. Values: { ON, OFF }."
+        ON
+    )
+
     set(_pkg_var "${_pkg_prefix}_INSTALL_CONFIG_FILE_PACKAGE")
 
     if(NOT DEFINED ${_pkg_var})
