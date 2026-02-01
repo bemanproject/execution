@@ -5,6 +5,7 @@
 #include <concepts>
 #include <optional>
 #include <utility>
+#include <tuple>
 #include <variant>
 // #include <beman/execution/detail/suppress_push.hpp>
 #ifdef BEMAN_HAS_MODULES

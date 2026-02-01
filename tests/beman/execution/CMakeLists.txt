@@ -102,7 +102,8 @@ list(
     thread.test
     utilities.test
 )
-set (TODO
+#set(execution_tests exec-affine-on.test)
+set(TODO
     exec-scope-simple-counting.test
     exec-scope-counting.test
     exec-snd-apply.test

@@ -157,13 +157,13 @@ CMakeUserPresets.json:: cmake/CMakeUserPresets.json
 	ln -s $< $@
 
 # ==========================================================
-release: CMakeUserPresets.json
+appleclang-release llvm-release release: #-dk: I'm not sure why that is needed: CMakeUserPresets.json
 	cmake --preset $@ --log-level=TRACE # XXX --fresh
 	ln -fs $(BUILDROOT)/$@/compile_commands.json .
 	cmake --workflow --preset $@
 
 # ==========================================================
-debug: CMakeUserPresets.json
+appleclang-debug llvm-debug debug: #-dk: I'm not sure why that is needed: CMakeUserPresets.json
 	cmake --preset $@ --log-level=TRACE # XXX --fresh
 	ln -fs $(BUILDROOT)build/$@/compile_commands.json .
 	cmake --workflow --preset $@

@@ -24,7 +24,7 @@ struct valid_completion_for_aux<Rcvr, Tag (*)(Args...)> {
     {}
 };
 
-template <typename Signature, typename Rcvr>
+BEMAN_EXECUTION_EXPORT template <typename Signature, typename Rcvr>
 concept valid_completion_for = requires(Signature* signature) {
 #if 1
     valid_completion_for_aux<Rcvr, Signature*>::test(signature);

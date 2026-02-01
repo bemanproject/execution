@@ -432,7 +432,7 @@ auto forward_like(U&& u) noexcept -> decltype(auto) {
 
 #line 13 "include/beman/execution/detail/join_env.hpp"
 namespace beman::execution::detail {
-template <typename Env1, typename Env2>
+export /* --------- */ template <typename Env1, typename Env2>
 class join_env {
   private:
     Env1 env1;
@@ -443,32 +443,38 @@ class join_env {
     join_env(E1&& e1, E2&& e2) : env1(::std::forward<E1>(e1)), env2(::std::forward<E2>(e2)) {}
 
     template <typename Query, typename... Args>
-        requires(
-            requires(Env1&, const Query& query, Args&&... args) {
-                env1.query(query, ::std::forward<Args>(args)...);
-            } ||
-            requires(Env2& e2, const Query& query, Args&&... args) { e2.query(query, ::std::forward<Args>(args)...); })
-    auto query(const Query& query, Args&&... args) noexcept -> decltype(auto) {
-        if constexpr (requires { env1.query(query, ::std::forward<Args>(args)...); }) {
-            return env1.query(query, ::std::forward<Args>(args)...);
-        } else {
-            return env2.query(query, ::std::forward<Args>(args)...);
+        requires requires(Env1&, const Query& query, Args&&... args) {
+            env1.query(query, ::std::forward<Args>(args)...);
         }
+    auto query(const Query& query, Args&&... args) noexcept -> decltype(auto) {
+        return this->env1.query(query, ::std::forward<Args>(args)...);
     }
     template <typename Query, typename... Args>
         requires(
-            requires(const Env1&, const Query& query, Args&&... args) {
+            not requires(Env1&, const Query& query, Args&&... args) {
                 env1.query(query, ::std::forward<Args>(args)...);
-            } ||
+            } &&
+            requires(Env2& e2, const Query& query, Args&&... args) { e2.query(query, ::std::forward<Args>(args)...); })
+    auto query(const Query& query, Args&&... args) noexcept -> decltype(auto) {
+        return this->env2.query(query, ::std::forward<Args>(args)...);
+    }
+    template <typename Query, typename... Args>
+        requires requires(const Env1& e1, const Query& query, Args&&... args) {
+            { e1.query(query, ::std::forward<Args>(args)...) } noexcept;
+        }
+    auto query(const Query& query, Args&&... args) const noexcept -> decltype(auto) {
+        return this->env1.query(query, ::std::forward<Args>(args)...);
+    }
+    template <typename Query, typename... Args>
+        requires(
+            not requires(const Env1& e1, const Query& query, Args&&... args) {
+                { e1.query(query, ::std::forward<Args>(args)...) } noexcept;
+            } &&
             requires(const Env2& e2, const Query& query, Args&&... args) {
-                e2.query(query, ::std::forward<Args>(args)...);
+                { e2.query(query, ::std::forward<Args>(args)...) } noexcept;
             })
     auto query(const Query& query, Args&&... args) const noexcept -> decltype(auto) {
-        if constexpr (requires { env1.query(query, ::std::forward<Args>(args)...); }) {
-            return env1.query(query, ::std::forward<Args>(args)...);
-        } else {
-            return env2.query(query, ::std::forward<Args>(args)...);
-        }
+        return this->env2.query(query, ::std::forward<Args>(args)...);
     }
 };
 
@@ -711,7 +717,7 @@ template <typename Fun, typename... Args>
 
 #line 19 "include/beman/execution/detail/call_result_t.hpp"
 using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
-}
+} // namespace beman::execution::detail
 #line 12 "include/beman/execution/detail/meta_size.hpp"
 namespace beman::execution::detail::meta {
 template <typename>
@@ -1154,7 +1160,7 @@ struct valid_completion_for_aux<Rcvr, Tag (*)(Args...)> {
     {}
 };
 
-template <typename Signature, typename Rcvr>
+export /* --------- */ template <typename Signature, typename Rcvr>
 concept valid_completion_for = requires(Signature* signature) {
 #if 1
     valid_completion_for_aux<Rcvr, Signature*>::test(signature);
@@ -1255,7 +1261,7 @@ using await_result_type =
 namespace beman::execution::detail {
 
 #line 22 "include/beman/execution/detail/fwd_env.hpp"
-template <typename Env>
+export /* --------- */ template <typename Env>
 class fwd_env {
   private:
     Env env;
@@ -2242,26 +2248,11 @@ concept has_as_awaitable = requires(T&& obj, Promise& promise) {
 
 #line 13 "include/beman/execution/detail/has_completions.hpp"
 namespace beman::execution::detail {
-#if not defined(__clang__)
-
-#line 17 "include/beman/execution/detail/has_completions.hpp"
 template <typename Receiver, typename Completions>
 concept has_completions = requires(Completions* completions) {
     []<::beman::execution::detail::valid_completion_for<Receiver>... Signatures>(
         ::beman::execution::completion_signatures<Signatures...>*) {}(completions);
 };
-#else
-template <typename, typename>
-struct has_completions_aux;
-template <typename Receiver, typename... Signature>
-struct has_completions_aux<Receiver, ::beman::execution::completion_signatures<Signature...>> {
-    static constexpr bool value =
-        (::beman::execution::detail::valid_completion_for<Signature, Receiver> && ... && true);
-};
-
-template <typename Receiver, typename Completions>
-concept has_completions = has_completions_aux<Receiver, Completions>::value;
-#endif
 } // namespace beman::execution::detail
 
 #line 23 "include/beman/execution/detail/default_impls.hpp"
@@ -2305,14 +2296,16 @@ struct default_impls {
     struct start_impl {
         auto operator()(auto&, auto&, auto&... ops) const noexcept -> void { (::beman::execution::start(ops), ...); }
     };
-    static constexpr auto start    = start_impl{};
-    static constexpr auto complete = []<typename Index, typename Receiver, typename Tag, typename... Args>(
-                                         Index, auto&, Receiver& receiver, Tag, Args&&... args) noexcept -> void
-        requires ::beman::execution::detail::callable<Tag, Receiver, Args...>
-    {
-        static_assert(Index::value == 0);
-        Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+    static constexpr auto start = start_impl{};
+    struct complete_impl {
+        template <typename Index, typename Receiver, typename Tag, typename... Args>
+            requires ::beman::execution::detail::callable<Tag, Receiver, Args...>
+        auto operator()(Index, auto&, Receiver& receiver, Tag, Args&&... args) const noexcept -> void {
+            static_assert(Index::value == 0);
+            Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+        }
     };
+    static constexpr auto complete = complete_impl{};
 };
 } // namespace beman::execution::detail
 
@@ -3932,8 +3925,8 @@ namespace beman::execution::detail {
 export /* --------- */ template <typename Sender, typename Receiver>
     requires ::beman::execution::detail::
 
-    valid_specialization<::beman::execution::detail::state_type, std::remove_cvref_t<Sender>, Receiver>
-struct basic_operation : ::beman::execution::detail::basic_state<Sender, Receiver> {
+        valid_specialization<::beman::execution::detail::state_type, std::remove_cvref_t<Sender>, Receiver>
+    struct basic_operation : ::beman::execution::detail::basic_state<Sender, Receiver> {
 
     friend struct ::beman::execution::start_t;
     using operation_state_concept = ::beman::execution::operation_state_t;
@@ -4031,7 +4024,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
         requires(!::beman::execution::receiver<Receiver>)
     auto connect(Receiver receiver) = BEMAN_EXECUTION_DELETE("the passed receiver doesn't model receiver");
 
-private:
+  private:
 #if __cpp_explicit_this_parameter < 302110L
     template <::beman::execution::receiver Receiver>
     auto connect(Receiver receiver) & noexcept(
@@ -4808,9 +4801,7 @@ struct completion_signatures_for_impl<
     using type         = ::beman::execution::detail::meta::combine<
                 decltype(::beman::execution::get_completion_signatures(::std::declval<Sender>(), ::std::declval<Env>())),
                 ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
-                ::beman::execution::completion_signatures<::beman::execution::set_error_t(
-            ::std::exception_ptr)>
-                >;
+                ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
 };
 } // namespace beman::execution::detail
 
@@ -5772,11 +5763,24 @@ struct impls_for<::beman::execution::detail::counting_scope_join_t> : ::beman::e
 
 #line 36 "include/beman/execution/detail/affine_on.hpp"
 namespace beman::execution::detail {
+template <typename Ev>
+struct affine_on_env {
+    Ev   ev_;
+    auto query(const ::beman::execution::get_stop_token_t&) const noexcept -> ::beman::execution::never_stop_token {
+        return ::beman::execution::never_stop_token();
+    }
+    template <typename Q>
+    auto query(const Q& q) const noexcept -> decltype(q(this->ev_)) {
+        return q(this->ev_);
+    }
+};
+template <typename Ev>
+affine_on_env(const Ev&) -> affine_on_env<Ev>;
 
-#line 46 "include/beman/execution/detail/affine_on.hpp"
+#line 60 "include/beman/execution/detail/affine_on.hpp"
 struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
 
-#line 54 "include/beman/execution/detail/affine_on.hpp"
+#line 68 "include/beman/execution/detail/affine_on.hpp"
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
         return ::beman::execution::detail::transform_sender(
@@ -5784,23 +5788,8 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             ::beman::execution::detail::make_sender(
                 *this, ::beman::execution::env<>{}, ::std::forward<Sender>(sender)));
     }
-#line 67 "include/beman/execution/detail/affine_on.hpp"
+#line 81 "include/beman/execution/detail/affine_on.hpp"
     auto operator()() const { return ::beman::execution::detail::sender_adaptor{*this}; }
-
-    template <typename Ev>
-    struct ao_env {
-        Ev   ev_;
-        auto query(const ::beman::execution::get_stop_token_t&) const noexcept
-            -> ::beman::execution::never_stop_token {
-            return ::beman::execution::never_stop_token();
-        }
-        template <typename Q>
-        auto query(const Q& q) const noexcept -> decltype(q(this->ev_)) {
-            return q(this->ev_);
-        }
-    };
-    template <typename Ev>
-    ao_env(const Ev&) -> ao_env<Ev>;
 
 #line 102 "include/beman/execution/detail/affine_on.hpp"
     template <::beman::execution::sender Sender, typename Env>
@@ -5828,7 +5817,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
                 ::beman::execution::schedule_from(
                     ::beman::execution::get_scheduler(ev),
                     ::beman::execution::write_env(::beman::execution::detail::forward_like<Sender>(child), ev)),
-                ao_env(ev));
+                beman::execution::detail::affine_on_env(ev));
         }
     }
 };
@@ -6480,4 +6469,3 @@ namespace beman::execution {
 export /* --------- */ using on_t = ::beman::execution::detail::on_t;
 export /* --------- */ inline constexpr ::beman::execution::on_t on{};
 } // namespace beman::execution
-

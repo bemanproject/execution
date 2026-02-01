@@ -63,14 +63,16 @@ struct default_impls {
     struct start_impl {
         auto operator()(auto&, auto&, auto&... ops) const noexcept -> void { (::beman::execution::start(ops), ...); }
     };
-    static constexpr auto start    = start_impl{};
-    static constexpr auto complete = []<typename Index, typename Receiver, typename Tag, typename... Args>(
-                                         Index, auto&, Receiver& receiver, Tag, Args&&... args) noexcept -> void
-        requires ::beman::execution::detail::callable<Tag, Receiver, Args...>
-    {
-        static_assert(Index::value == 0);
-        Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+    static constexpr auto start = start_impl{};
+    struct complete_impl {
+        template <typename Index, typename Receiver, typename Tag, typename... Args>
+            requires ::beman::execution::detail::callable<Tag, Receiver, Args...>
+        auto operator()(Index, auto&, Receiver& receiver, Tag, Args&&... args) const noexcept -> void {
+            static_assert(Index::value == 0);
+            Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+        }
     };
+    static constexpr auto complete = complete_impl{};
 };
 } // namespace beman::execution::detail
 
