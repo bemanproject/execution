@@ -1,31 +1,22 @@
 # src/beman/execution/tests/CMakeLists.txt
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-list(APPEND todo exec-associate.test)
-
 if(BEMAN_USE_MODULES)
     list(APPEND execution_tests execution-module.test stop-token-module.test)
 endif()
 
+set(execution_tests_todo exec-associate.test) #-dk:TODO
+
 list(
     APPEND execution_tests
-    exec-affine-on.test
-    issue-174.test
-    issue-186.test
-    exec-spawn.test
-    exec-stop-when.test
-    non_assignable.test
-    exec-prop.test
-    exec-env.test
-    exec-spawn-future.test
-    exec-scope-concepts.test
-    issue-144.test
-    exec-on.test
-    notify.test
     allocator-requirements-general.test
+    exec-affine-on.test
+    exec-awaitable.test
+    exec-bulk.test
     exec-connect.test
     exec-continues-on.test
     exec-domain-default.test
+    exec-env.test
     exec-fwd-env.test
     exec-general.test
     exec-get-allocator.test
@@ -39,8 +30,10 @@ list(
     exec-into-variant.test
     exec-just.test
     exec-let.test
+    exec-on.test
     exec-opstate-start.test
     exec-opstate.test
+    exec-prop.test
     exec-read-env.test
     exec-recv-concepts.test
     exec-recv.test
@@ -49,31 +42,42 @@ list(
     exec-sched.test
     exec-schedule-from.test
     exec-schedule.test
+    exec-scope-concepts.test
+    exec-scope-counting.test
+    exec-scope-simple-counting.test
     exec-set-error.test
     exec-set-stopped.test
     exec-set-value.test
+    exec-snd-apply.test
     exec-snd-concepts.test
     exec-snd-expos.test
     exec-snd-transform.test
-    exec-starts-on.test
+    exec-spawn-future.test
+    exec-spawn.test
     exec-split.test
+    exec-starts-on.test
+    exec-stop-when.test
     exec-sync-wait.test
     exec-then.test
     exec-utils-cmplsigs.test
     exec-when-all.test
     exec-with-awaitable-senders.test
     execution-queryable-concept.test
-    exec-bulk.test
     execution-syn.test
     forward-like.test
     function-objects.test
     functional-syn.test
+    issue-144.test
+    issue-174.test
+    issue-186.test
     meta-combine.test
     meta-contains.test
     meta-filter.test
     meta-prepend.test
     meta-transform.test
     meta-unique.test
+    non_assignable.test
+    notify.test
     stopcallback-cons.test
     stopcallback-general.test
     stopcallback-inplace-cons.test
@@ -83,6 +87,7 @@ list(
     stopsource-cons.test
     stopsource-general.test
     stopsource-inplace-cons.test
+    stopsource-inplace-general.test
     stopsource-inplace-mem.test
     stopsource-inplace.test
     stopsource-mem.test
@@ -102,14 +107,7 @@ list(
     thread.test
     utilities.test
 )
-#set(execution_tests stopsource-general.test)
-set(TODO
-    exec-scope-simple-counting.test
-    exec-scope-counting.test
-    exec-snd-apply.test
-    exec-awaitable.test
-    stopsource-inplace-general.test
-)
+# set(execution_tests <test>.test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

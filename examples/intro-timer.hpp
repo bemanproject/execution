@@ -1,16 +1,8 @@
 // examples/intro-timer.hpp                                           -*-C++-*-
-// ----------------------------------------------------------------------------
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-// ----------------------------------------------------------------------------
 
 #ifndef INCLUDED_EXAMPLES_INTRO_TIMER
 #define INCLUDED_EXAMPLES_INTRO_TIMER
-
-#include <beman/execution/execution.hpp>
-#include <chrono>
-#include <queue>
-#include <thread>
-#include <tuple>
 
 // ----------------------------------------------------------------------------
 

@@ -1,7 +1,6 @@
 // examples/intro-5-consumer.cpp                                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/execution.hpp>
 #include <beman/execution/detail/suppress_push.hpp>
 #include <chrono>
 //-dk:TODO restore if that actually works #include <expected>
@@ -10,6 +9,11 @@
 #include <tuple>
 #include <variant>
 #include <cinttypes>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#endif
 
 namespace ex = ::beman::execution;
 using namespace std::string_literals;

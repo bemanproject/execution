@@ -1,13 +1,21 @@
 // examples/when_all-cancel.cpp                                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/execution.hpp>
-#include <beman/execution/stop_token.hpp>
+#include <exception>
 #include <iostream>
 #include <optional>
+#include <string>
+#include <tuple>
 #include <type_traits>
 #include <utility>
+#include <variant>
 #include <cassert>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#include <beman/execution/stop_token.hpp>
+#endif
 
 namespace ex = beman::execution;
 

@@ -1,6 +1,10 @@
 // tests/beman/execution/exec-associate.test.cpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <concepts>
+#include <type_traits>
+#include <utility>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -12,10 +16,6 @@ import beman.execution;
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #endif
-#include <test/execution.hpp>
-#include <concepts>
-#include <type_traits>
-#include <utility>
 
 // ----------------------------------------------------------------------------
 
@@ -139,7 +139,7 @@ static_assert(test_std::receiver<receiver>);
 
 template <test_std::sender Sender, test_std::scope_token Token>
 auto test_associate(Sender&& sender, Token&& token) -> void {
-    [[maybe_unused]] auto sndr = test_std::associate(std::forward<Sender>(sender), std::forward<Token>(token));
+    auto sndr = test_std::associate(std::forward<Sender>(sender), std::forward<Token>(token));
     static_assert(test_std::sender<decltype(sndr)>);
     test_std::sync_wait(std::move(sndr));
 }

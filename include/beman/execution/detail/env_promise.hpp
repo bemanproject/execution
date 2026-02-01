@@ -16,7 +16,7 @@ namespace beman::execution::detail {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename Env>
+BEMAN_EXECUTION_EXPORT template <typename Env> //-dk:TODO detail export
 struct env_promise : ::beman::execution::detail::with_await_transform<Env> {
     auto get_return_object() noexcept -> void;
     auto initial_suspend() noexcept -> ::std::suspend_always;

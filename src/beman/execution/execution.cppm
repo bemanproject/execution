@@ -647,7 +647,7 @@ using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
 
 #line 13 "include/beman/execution/detail/make_env.hpp"
 namespace beman::execution::detail {
-template <typename Query, typename Value>
+export /* --------- */ template <typename Query, typename Value>
 class make_env {
   private:
     Value value;
@@ -2406,7 +2406,7 @@ using gather_signatures = typename ::beman::execution::detail::gather_signatures
 namespace beman::execution::detail {
 
 #line 19 "include/beman/execution/detail/env_promise.hpp"
-template <typename Env>
+export /* --------- */ template <typename Env>
 struct env_promise : ::beman::execution::detail::with_await_transform<Env> {
     auto get_return_object() noexcept -> void;
     auto initial_suspend() noexcept -> ::std::suspend_always;
@@ -2880,7 +2880,7 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
 
 #line 18 "include/beman/execution/detail/sender_adaptor.hpp"
 namespace beman::execution::detail {
-template <typename Adaptor, typename... T>
+export /* --------- */ template <typename Adaptor, typename... T>
 struct sender_adaptor : ::beman::execution::detail::product_type<::std::decay_t<Adaptor>, ::std::decay_t<T>...>,
                         ::beman::execution::sender_adaptor_closure<sender_adaptor<Adaptor, T...>> {
     template <::beman::execution::sender Sender, typename Self>
@@ -5539,7 +5539,7 @@ export /* --------- */ inline constexpr write_env_t write_env{};
 
 #line 23 "include/beman/execution/detail/associate.hpp"
 namespace beman::execution::detail {
-template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
+export /* --------- */ template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
 struct associate_data {
     using wrap_sender = ::std::remove_cvref_t<decltype(::std::declval<Token&>().wrap(::std::declval<Sender>()))>;
 
@@ -5571,18 +5571,18 @@ struct associate_data {
             this->token.disassociate();
         }
     }
-#line 57 "include/beman/execution/detail/associate.hpp"
+#line 58 "include/beman/execution/detail/associate.hpp"
     auto release() -> ::std::optional<::std::pair<Token, wrap_sender>> {
         return this->sender ? (std::unique_ptr<std::optional<wrap_sender>, decltype([](auto* opt) { opt->reset(); })>(
                                    &this->sender),
                                ::std::optional{::std::pair{::std::move(this->token), ::std::move(*this->sender)}})
                             : ::std::optional<::std::pair<Token, wrap_sender>>{};
     }
-#line 64 "include/beman/execution/detail/associate.hpp"
+#line 65 "include/beman/execution/detail/associate.hpp"
     Token                        token;
     ::std::optional<wrap_sender> sender;
 };
-template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
+export /* --------- */ template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
 associate_data(Token, Sender&&) -> associate_data<Token, Sender>;
 
 struct associate_t {

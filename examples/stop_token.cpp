@@ -1,13 +1,17 @@
 // examples/stop_token.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/stop_token.hpp>
 #include <condition_variable>
 #include <iostream>
 #include <exception>
 #include <latch>
 #include <mutex>
 #include <thread>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#endif
 
 namespace exec = beman::execution;
 

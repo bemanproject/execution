@@ -4,11 +4,6 @@
 #ifndef INCLUDED_EXAMPLES_META
 #define INCLUDED_EXAMPLES_META
 
-#include <beman/execution/execution.hpp>
-#include <ostream>
-#include <string>
-#include <typeinfo>
-
 // ----------------------------------------------------------------------------
 
 namespace meta {
