@@ -122,6 +122,13 @@ foreach(test ${execution_tests})
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    return()
+endif()
+
+#======================================================================
+# NOTE: Only for Release build with enabled install rules useful! CK
+#======================================================================
 if(BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE AND NOT CMAKE_SKIP_INSTALL_RULES)
     # test if the targets are usable from the install directory
     add_test(
