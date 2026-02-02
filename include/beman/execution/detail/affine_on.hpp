@@ -34,6 +34,19 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
+template <typename Ev>
+struct affine_on_env {
+    Ev   ev_;
+    auto query(const ::beman::execution::get_stop_token_t&) const noexcept -> ::beman::execution::never_stop_token {
+        return ::beman::execution::never_stop_token();
+    }
+    template <typename Q>
+    auto query(const Q& q) const noexcept -> decltype(q(this->ev_)) {
+        return q(this->ev_);
+    }
+};
+template <typename Ev>
+affine_on_env(const Ev&) -> affine_on_env<Ev>;
 
 /**
  * @brief The affine_on_t struct is a sender adaptor closure that transforms a sender
@@ -65,21 +78,6 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
      * @return A sender adaptor for the affine_on_t.
      */
     auto operator()() const { return ::beman::execution::detail::sender_adaptor{*this}; }
-
-    template <typename Ev>
-    struct ao_env {
-        Ev   ev_;
-        auto query(const ::beman::execution::get_stop_token_t&) const noexcept
-            -> ::beman::execution::never_stop_token {
-            return ::beman::execution::never_stop_token();
-        }
-        template <typename Q>
-        auto query(const Q& q) const noexcept -> decltype(q(this->ev_)) {
-            return q(this->ev_);
-        }
-    };
-    template <typename Ev>
-    ao_env(const Ev&) -> ao_env<Ev>;
 
     /**
      * @brief affine_on is implemented by transforming it into a use of schedule_from.
@@ -124,7 +122,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
                 ::beman::execution::schedule_from(
                     ::beman::execution::get_scheduler(ev),
                     ::beman::execution::write_env(::beman::execution::detail::forward_like<Sender>(child), ev)),
-                ao_env(ev));
+                beman::execution::detail::affine_on_env(ev));
         }
     }
 };

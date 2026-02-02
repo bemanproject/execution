@@ -12,8 +12,10 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <::beman::execution::detail::queryable>
-struct env_base;
+template <::beman::execution::detail::queryable Env>
+struct env_base {
+    Env env_;
+};
 
 template <typename E, typename Q>
 concept has_query = requires(const E& e) { e.query(::std::declval<Q>()); };
@@ -32,23 +34,11 @@ struct find_env<Q, E0, E...> {
 };
 } // namespace beman::execution::detail
 
-namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <::beman::execution::detail::queryable... Envs>
-struct env;
-
-template <::beman::execution::detail::queryable... Envs>
-env(Envs...) -> env<::std::unwrap_reference_t<Envs>...>;
-} // namespace beman::execution
-
 // ----------------------------------------------------------------------------
 
-template <::beman::execution::detail::queryable Env>
-struct beman::execution::detail::env_base {
-    Env env_;
-};
-
-template <::beman::execution::detail::queryable... Envs>
-struct beman::execution::env : ::beman::execution::detail::env_base<Envs>... {
+namespace beman::execution {
+BEMAN_EXECUTION_EXPORT template <::beman::execution::detail::queryable... Envs>
+struct env : ::beman::execution::detail::env_base<Envs>... {
     [[no_unique_address]] ::beman::execution::detail::non_assignable na_{};
 
     template <typename Q>
@@ -58,6 +48,10 @@ struct beman::execution::env : ::beman::execution::detail::env_base<Envs>... {
         return q(static_cast<const ::beman::execution::detail::env_base<E>&>(*this).env_);
     }
 };
+
+template <::beman::execution::detail::queryable... Envs>
+env(Envs...) -> env<::std::unwrap_reference_t<Envs>...>;
+} // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 

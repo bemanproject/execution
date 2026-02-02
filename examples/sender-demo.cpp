@@ -1,9 +1,17 @@
-#include <beman/execution/execution.hpp>
-#include <type_traits>
-#include <string>
-#include <memory_resource>
-#include <utility>
+// examples/sender-demo.cpp                                           -*-C++-*-
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
 #include <iostream>
+#include <memory_resource>
+#include <string>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#endif
 
 namespace ex = beman::execution;
 
@@ -50,8 +58,8 @@ int main() {
         auto j = just_sender<std::pmr::string>{std::pmr::string("value")};
         auto t = std::move(j) | ex::then([](const std::pmr::string& v) { return v + " then"; });
         auto w = ex::when_all(std::move(t));
-        auto e = ex::detail::write_env(std::move(w),
-                                       ex::detail::make_env(ex::get_allocator, std::pmr::polymorphic_allocator<>()));
+        auto e =
+            ex::write_env(std::move(w), ex::detail::make_env(ex::get_allocator, std::pmr::polymorphic_allocator<>()));
 
         std::cout << "before start\n";
         auto r = ex::sync_wait(std::move(e));

@@ -1,6 +1,9 @@
 // tests/beman/execution/exec-env.test.cpp                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <memory>
+#include <type_traits>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -10,8 +13,6 @@ import beman.execution;
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/prop.hpp>
 #endif
-#include <type_traits>
-#include <test/execution.hpp>
 
 namespace {}
 

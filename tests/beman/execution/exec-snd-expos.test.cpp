@@ -70,14 +70,14 @@ struct env {
 
 struct env1 {
     int  value{};
-    auto query(custom_query_t<0>, int a) const { return this->value + a; }
-    auto query(custom_query_t<1>, int a) const { return this->value + a; }
+    auto query(custom_query_t<0>, int a) const noexcept { return this->value + a; }
+    auto query(custom_query_t<1>, int a) const noexcept { return this->value + a; }
 };
 
 struct env2 {
     int  value{};
-    auto query(custom_query_t<0>, int a) const { return this->value + a; }
-    auto query(custom_query_t<2>, int a) const { return this->value + a; }
+    auto query(custom_query_t<0>, int a) const noexcept { return this->value + a; }
+    auto query(custom_query_t<2>, int a) const noexcept { return this->value + a; }
 };
 
 struct test_sender {

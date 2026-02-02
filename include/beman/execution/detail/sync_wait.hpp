@@ -26,21 +26,22 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-struct sync_wait_env {
+BEMAN_EXECUTION_EXPORT struct sync_wait_env { // dk:TODO detail export
     ::beman::execution::run_loop* loop{};
 
     auto query(::beman::execution::get_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
     auto query(::beman::execution::get_delegation_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
 };
 
-template <::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender>
+BEMAN_EXECUTION_EXPORT template <
+    ::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender> // dk:TODO detail export
 using sync_wait_result_type =
     ::std::optional<::beman::execution::value_types_of_t<Sender,
                                                          ::beman::execution::detail::sync_wait_env,
                                                          ::beman::execution::detail::decayed_tuple,
                                                          ::std::type_identity_t>>;
 
-template <typename Sender>
+BEMAN_EXECUTION_EXPORT template <typename Sender> // dk:TODO detail export
 struct sync_wait_state {
     ::beman::execution::run_loop loop{};
     ::std::exception_ptr         error{};
@@ -48,7 +49,7 @@ struct sync_wait_state {
     ::beman::execution::detail::sync_wait_result_type<Sender> result{};
 };
 
-template <typename Sender>
+BEMAN_EXECUTION_EXPORT template <typename Sender> // dk:TODO detail export
 struct sync_wait_receiver {
     using receiver_concept = ::beman::execution::receiver_t;
 

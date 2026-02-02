@@ -1,6 +1,9 @@
 // tests/beman/execution/exec-scope-concepts.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <concepts>
+#include <utility>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -10,9 +13,6 @@ import beman.execution;
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #endif
-#include <test/execution.hpp>
-#include <concepts>
-#include <utility>
 
 // ----------------------------------------------------------------------------
 

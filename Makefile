@@ -14,7 +14,7 @@ SANITIZERS := run
 #     SANITIZERS += asan # TODO: tsan msan
 # endif
 
-.PHONY: default release debug doc run update check ce todo distclean clean codespell clang-tidy build test install all format unstage $(SANITIZERS)
+.PHONY: default release debug doc run update check ce todo distclean clean codespell clang-tidy build test install all format unstage $(SANITIZERS) module build-module test-module
 
 SYSROOT   ?=
 TOOLCHAIN ?=
@@ -134,6 +134,22 @@ build:
 test: build
 	ctest --test-dir $(BUILD) --rerun-failed --output-on-failure
 
+module build-module:
+	cmake -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
+	  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
+	  -D CMAKE_SKIP_INSTALL_RULES=ON \
+	  -D CMAKE_CXX_STANDARD=23 \
+	  -D CMAKE_CXX_EXTENSIONS=ON \
+	  -D CMAKE_CXX_STANDARD_REQUIRED=ON \
+	  -D CMAKE_CXX_SCAN_FOR_MODULES=ON \
+	  -D BEMAN_USE_MODULES=ON \
+	  -D CMAKE_BUILD_TYPE=Release \
+	  -D CMAKE_CXX_COMPILER=$(CXX) --log-level=VERBOSE
+	cmake --build $(BUILD)
+
+test-module: build-module
+	ctest --test-dir $(BUILD) --rerun-failed --output-on-failure
+
 install: test
 	cmake --install $(BUILD) --prefix /opt/local
 
@@ -141,13 +157,13 @@ CMakeUserPresets.json:: cmake/CMakeUserPresets.json
 	ln -s $< $@
 
 # ==========================================================
-release: CMakeUserPresets.json
+appleclang-release llvm-release release: #-dk: I'm not sure why that is needed: CMakeUserPresets.json
 	cmake --preset $@ --log-level=TRACE # XXX --fresh
 	ln -fs $(BUILDROOT)/$@/compile_commands.json .
 	cmake --workflow --preset $@
 
 # ==========================================================
-debug: CMakeUserPresets.json
+appleclang-debug llvm-debug debug: #-dk: I'm not sure why that is needed: CMakeUserPresets.json
 	cmake --preset $@ --log-level=TRACE # XXX --fresh
 	ln -fs $(BUILDROOT)build/$@/compile_commands.json .
 	cmake --workflow --preset $@

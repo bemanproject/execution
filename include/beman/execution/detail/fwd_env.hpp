@@ -19,7 +19,7 @@ namespace beman::execution::detail {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename Env>
+BEMAN_EXECUTION_EXPORT template <typename Env> //-dk:TODO detail export
 class fwd_env {
   private:
     Env env;

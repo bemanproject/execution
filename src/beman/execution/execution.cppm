@@ -11,43 +11,43 @@ module;
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <algorithm>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <atomic>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <cassert>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <concepts>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <condition_variable>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <coroutine>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <cstddef>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <cstdlib>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <exception>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <functional>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <memory>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <mutex>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <optional>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <system_error>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <thread>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <tuple>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <type_traits>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <utility>
-#line 240 "./bin/mk-module.py"
+#line 239 "./bin/mk-module.py"
 #include <variant>
 #endif
 
@@ -328,7 +328,7 @@ struct beman::execution::detail::non_assignable {
 
 #line 13 "include/beman/execution/detail/simple_allocator.hpp"
 namespace beman::execution::detail {
-template <typename Alloc>
+export /* --------- */ template <typename Alloc>
 concept simple_allocator =
     requires(::std::remove_cvref_t<Alloc> alloc, ::std::size_t n) {
         { *alloc.allocate(n) } -> ::std::same_as<typename ::std::remove_cvref_t<Alloc>::value_type&>;
@@ -443,32 +443,38 @@ class join_env {
     join_env(E1&& e1, E2&& e2) : env1(::std::forward<E1>(e1)), env2(::std::forward<E2>(e2)) {}
 
     template <typename Query, typename... Args>
-        requires(
-            requires(Env1&, const Query& query, Args&&... args) {
-                env1.query(query, ::std::forward<Args>(args)...);
-            } ||
-            requires(Env2& e2, const Query& query, Args&&... args) { e2.query(query, ::std::forward<Args>(args)...); })
-    auto query(const Query& query, Args&&... args) noexcept -> decltype(auto) {
-        if constexpr (requires { env1.query(query, ::std::forward<Args>(args)...); }) {
-            return env1.query(query, ::std::forward<Args>(args)...);
-        } else {
-            return env2.query(query, ::std::forward<Args>(args)...);
+        requires requires(Env1&, const Query& query, Args&&... args) {
+            env1.query(query, ::std::forward<Args>(args)...);
         }
+    auto query(const Query& query, Args&&... args) noexcept -> decltype(auto) {
+        return this->env1.query(query, ::std::forward<Args>(args)...);
     }
     template <typename Query, typename... Args>
         requires(
-            requires(const Env1&, const Query& query, Args&&... args) {
+            not requires(Env1&, const Query& query, Args&&... args) {
                 env1.query(query, ::std::forward<Args>(args)...);
-            } ||
+            } &&
+            requires(Env2& e2, const Query& query, Args&&... args) { e2.query(query, ::std::forward<Args>(args)...); })
+    auto query(const Query& query, Args&&... args) noexcept -> decltype(auto) {
+        return this->env2.query(query, ::std::forward<Args>(args)...);
+    }
+    template <typename Query, typename... Args>
+        requires requires(const Env1& e1, const Query& query, Args&&... args) {
+            { e1.query(query, ::std::forward<Args>(args)...) } noexcept;
+        }
+    auto query(const Query& query, Args&&... args) const noexcept -> decltype(auto) {
+        return this->env1.query(query, ::std::forward<Args>(args)...);
+    }
+    template <typename Query, typename... Args>
+        requires(
+            not requires(const Env1& e1, const Query& query, Args&&... args) {
+                { e1.query(query, ::std::forward<Args>(args)...) } noexcept;
+            } &&
             requires(const Env2& e2, const Query& query, Args&&... args) {
-                e2.query(query, ::std::forward<Args>(args)...);
+                { e2.query(query, ::std::forward<Args>(args)...) } noexcept;
             })
     auto query(const Query& query, Args&&... args) const noexcept -> decltype(auto) {
-        if constexpr (requires { env1.query(query, ::std::forward<Args>(args)...); }) {
-            return env1.query(query, ::std::forward<Args>(args)...);
-        } else {
-            return env2.query(query, ::std::forward<Args>(args)...);
-        }
+        return this->env2.query(query, ::std::forward<Args>(args)...);
     }
 };
 
@@ -641,7 +647,7 @@ using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
 
 #line 13 "include/beman/execution/detail/make_env.hpp"
 namespace beman::execution::detail {
-template <typename Query, typename Value>
+export /* --------- */ template <typename Query, typename Value>
 class make_env {
   private:
     Value value;
@@ -982,7 +988,8 @@ struct indirect_meta_apply {
 
 #line 12 "include/beman/execution/detail/indices_for.hpp"
 namespace beman::execution::detail {
-template <typename Sender>
+
+export /* --------- */ template <typename Sender>
 using indices_for = typename ::std::remove_reference_t<Sender>::indices_for;
 }
 #line 12 "include/beman/execution/detail/decayed_typeof.hpp"
@@ -1004,8 +1011,10 @@ export /* --------- */ inline constexpr nostopstate_t nostopstate{};
 
 #line 14 "include/beman/execution/detail/env.hpp"
 namespace beman::execution::detail {
-template <::beman::execution::detail::queryable>
-struct env_base;
+template <::beman::execution::detail::queryable Env>
+struct env_base {
+    Env env_;
+};
 
 template <typename E, typename Q>
 concept has_query = requires(const E& e) { e.query(::std::declval<Q>()); };
@@ -1024,22 +1033,10 @@ struct find_env<Q, E0, E...> {
 };
 } // namespace beman::execution::detail
 
+#line 39 "include/beman/execution/detail/env.hpp"
 namespace beman::execution {
 export /* --------- */ template <::beman::execution::detail::queryable... Envs>
-struct env;
-
-template <::beman::execution::detail::queryable... Envs>
-env(Envs...) -> env<::std::unwrap_reference_t<Envs>...>;
-} // namespace beman::execution
-
-#line 45 "include/beman/execution/detail/env.hpp"
-template <::beman::execution::detail::queryable Env>
-struct beman::execution::detail::env_base {
-    Env env_;
-};
-
-template <::beman::execution::detail::queryable... Envs>
-struct beman::execution::env : ::beman::execution::detail::env_base<Envs>... {
+struct env : ::beman::execution::detail::env_base<Envs>... {
     [[no_unique_address]] ::beman::execution::detail::non_assignable na_{};
 
     template <typename Q>
@@ -1049,6 +1046,10 @@ struct beman::execution::env : ::beman::execution::detail::env_base<Envs>... {
         return q(static_cast<const ::beman::execution::detail::env_base<E>&>(*this).env_);
     }
 };
+
+template <::beman::execution::detail::queryable... Envs>
+env(Envs...) -> env<::std::unwrap_reference_t<Envs>...>;
+} // namespace beman::execution
 
 #line 17 "include/beman/execution/detail/get_allocator.hpp"
 namespace beman::execution {
@@ -1159,7 +1160,7 @@ struct valid_completion_for_aux<Rcvr, Tag (*)(Args...)> {
     {}
 };
 
-template <typename Signature, typename Rcvr>
+export /* --------- */ template <typename Signature, typename Rcvr>
 concept valid_completion_for = requires(Signature* signature) {
 #if 1
     valid_completion_for_aux<Rcvr, Signature*>::test(signature);
@@ -1251,7 +1252,7 @@ concept completion_tag =
 namespace beman::execution::detail {
 
 #line 19 "include/beman/execution/detail/await_result_type.hpp"
-template <typename T, typename Promise>
+export /* --------- */ template <typename T, typename Promise>
 using await_result_type =
     decltype(::beman::execution::detail::get_awaiter(::std::declval<T>(), ::std::declval<Promise&>()).await_resume());
 } // namespace beman::execution::detail
@@ -1260,7 +1261,7 @@ using await_result_type =
 namespace beman::execution::detail {
 
 #line 22 "include/beman/execution/detail/fwd_env.hpp"
-template <typename Env>
+export /* --------- */ template <typename Env>
 class fwd_env {
   private:
     Env env;
@@ -2160,7 +2161,7 @@ using variant_or_empty = typename ::beman::execution::detail::variant_or_empty_h
 
 #line 13 "include/beman/execution/detail/stoppable_source.hpp"
 namespace beman::execution::detail {
-template <typename Source>
+export /* --------- */ template <typename Source>
 concept stoppable_source = requires(Source& source, const Source& csource) {
     { csource.get_token() } -> ::beman::execution::stoppable_token;
     { csource.stop_possible() } noexcept -> ::std::same_as<bool>;
@@ -2247,26 +2248,11 @@ concept has_as_awaitable = requires(T&& obj, Promise& promise) {
 
 #line 13 "include/beman/execution/detail/has_completions.hpp"
 namespace beman::execution::detail {
-#if not defined(__clang__)
-
-#line 17 "include/beman/execution/detail/has_completions.hpp"
 template <typename Receiver, typename Completions>
 concept has_completions = requires(Completions* completions) {
     []<::beman::execution::detail::valid_completion_for<Receiver>... Signatures>(
         ::beman::execution::completion_signatures<Signatures...>*) {}(completions);
 };
-#else
-template <typename, typename>
-struct has_completions_aux;
-template <typename Receiver, typename... Signature>
-struct has_completions_aux<Receiver, ::beman::execution::completion_signatures<Signature...>> {
-    static constexpr bool value =
-        (::beman::execution::detail::valid_completion_for<Signature, Receiver> && ... && true);
-};
-
-template <typename Receiver, typename Completions>
-concept has_completions = has_completions_aux<Receiver, Completions>::value;
-#endif
 } // namespace beman::execution::detail
 
 #line 23 "include/beman/execution/detail/default_impls.hpp"
@@ -2283,34 +2269,43 @@ struct default_impls {
         }
     };
     static constexpr auto get_attrs = get_attrs_impl{};
-    static constexpr auto get_env   = [](auto, auto&, const auto& receiver) noexcept -> decltype(auto) {
-        return ::beman::execution::detail::fwd_env(::beman::execution::get_env(receiver));
+    struct get_env_impl {
+        auto operator()(auto, auto&, const auto& receiver) const noexcept -> decltype(auto) {
+            return ::beman::execution::detail::fwd_env(::beman::execution::get_env(receiver));
+        }
     };
-    static constexpr auto get_state =
-        []<typename Sender, typename Receiver>(Sender&& sender, Receiver& receiver) noexcept -> decltype(auto) {
-        auto&& data{[&sender]() -> decltype(auto) {
-            if constexpr (requires {
-                              sender.size();
-                              sender.template get<1>();
-                          })
-                return sender.template get<1>();
-            else
-                return ::beman::execution::detail::get_sender_data(::std::forward<Sender>(sender)).data;
-        }()};
+    static constexpr auto get_env = get_env_impl{};
+    struct get_state_impl {
+        template <typename Sender, typename Receiver>
+        auto operator()(Sender&& sender, Receiver& receiver) const noexcept -> decltype(auto) {
+            auto&& data{[&sender]() -> decltype(auto) {
+                if constexpr (requires {
+                                  sender.size();
+                                  sender.template get<1>();
+                              })
+                    return sender.template get<1>();
+                else
+                    return ::beman::execution::detail::get_sender_data(::std::forward<Sender>(sender)).data;
+            }()};
 
-        return ::beman::execution::detail::allocator_aware_move(::beman::execution::detail::forward_like<Sender>(data),
-                                                                receiver);
+            return ::beman::execution::detail::allocator_aware_move(
+                ::beman::execution::detail::forward_like<Sender>(data), receiver);
+        }
     };
-    static constexpr auto start = [](auto&, auto&, auto&... ops) noexcept -> void {
-        (::beman::execution::start(ops), ...);
+    static constexpr auto get_state = get_state_impl{};
+    struct start_impl {
+        auto operator()(auto&, auto&, auto&... ops) const noexcept -> void { (::beman::execution::start(ops), ...); }
     };
-    static constexpr auto complete = []<typename Index, typename Receiver, typename Tag, typename... Args>(
-                                         Index, auto&, Receiver& receiver, Tag, Args&&... args) noexcept -> void
-        requires ::beman::execution::detail::callable<Tag, Receiver, Args...>
-    {
-        static_assert(Index::value == 0);
-        Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+    static constexpr auto start = start_impl{};
+    struct complete_impl {
+        template <typename Index, typename Receiver, typename Tag, typename... Args>
+            requires ::beman::execution::detail::callable<Tag, Receiver, Args...>
+        auto operator()(Index, auto&, Receiver& receiver, Tag, Args&&... args) const noexcept -> void {
+            static_assert(Index::value == 0);
+            Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+        }
     };
+    static constexpr auto complete = complete_impl{};
 };
 } // namespace beman::execution::detail
 
@@ -2411,7 +2406,7 @@ using gather_signatures = typename ::beman::execution::detail::gather_signatures
 namespace beman::execution::detail {
 
 #line 19 "include/beman/execution/detail/env_promise.hpp"
-template <typename Env>
+export /* --------- */ template <typename Env>
 struct env_promise : ::beman::execution::detail::with_await_transform<Env> {
     auto get_return_object() noexcept -> void;
     auto initial_suspend() noexcept -> ::std::suspend_always;
@@ -2727,8 +2722,8 @@ auto spawn_get_allocator(const Sndr& sndr, const Ev& ev) {
 #line 17 "include/beman/execution/detail/basic_state.hpp"
 namespace beman::execution::detail {
 
-#line 23 "include/beman/execution/detail/basic_state.hpp"
-template <typename Sender, typename Receiver>
+#line 24 "include/beman/execution/detail/basic_state.hpp"
+export /* --------- */ template <typename Sender, typename Receiver>
 struct basic_state {
     basic_state(Sender&& sender, Receiver&& rcvr) noexcept(true)
         : receiver(::std::move(rcvr)),
@@ -2885,7 +2880,7 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
 
 #line 18 "include/beman/execution/detail/sender_adaptor.hpp"
 namespace beman::execution::detail {
-template <typename Adaptor, typename... T>
+export /* --------- */ template <typename Adaptor, typename... T>
 struct sender_adaptor : ::beman::execution::detail::product_type<::std::decay_t<Adaptor>, ::std::decay_t<T>...>,
                         ::beman::execution::sender_adaptor_closure<sender_adaptor<Adaptor, T...>> {
     template <::beman::execution::sender Sender, typename Self>
@@ -2946,7 +2941,7 @@ constexpr auto apply_sender(Domain domain, Tag, Sender&& sender, Args&&... args)
     return domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
 }
 #line 32 "include/beman/execution/detail/apply_sender.hpp"
-template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
+export /* --------- */ template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
     requires(not requires(Domain domain, Tag tag, Sender&& sender, Args&&... args) {
                 domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
             }) && requires(Tag tag, Sender&& sender, Args&&... args) {
@@ -3778,8 +3773,8 @@ struct connect_all_t {
     }
 };
 
-#line 125 "include/beman/execution/detail/connect_all.hpp"
-inline constexpr connect_all_t connect_all{};
+#line 126 "include/beman/execution/detail/connect_all.hpp"
+export /* --------- */ constexpr connect_all_t connect_all{};
 } // namespace beman::execution::detail
 
 #line 18 "include/beman/execution/detail/error_types_of_t.hpp"
@@ -3835,21 +3830,21 @@ using connect_all_result =
 
 #line 28 "include/beman/execution/detail/sync_wait.hpp"
 namespace beman::execution::detail {
-struct sync_wait_env {
+export /* --------- */ struct sync_wait_env {
     ::beman::execution::run_loop* loop{};
 
     auto query(::beman::execution::get_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
     auto query(::beman::execution::get_delegation_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
 };
 
-template <::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender>
+export /* --------- */ template <::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender>
 using sync_wait_result_type =
     ::std::optional<::beman::execution::value_types_of_t<Sender,
                                                          ::beman::execution::detail::sync_wait_env,
                                                          ::beman::execution::detail::decayed_tuple,
                                                          ::std::type_identity_t>>;
 
-template <typename Sender>
+export /* --------- */ template <typename Sender>
 struct sync_wait_state {
     ::beman::execution::run_loop loop{};
     ::std::exception_ptr         error{};
@@ -3857,7 +3852,7 @@ struct sync_wait_state {
     ::beman::execution::detail::sync_wait_result_type<Sender> result{};
 };
 
-template <typename Sender>
+export /* --------- */ template <typename Sender>
 struct sync_wait_receiver {
     using receiver_concept = ::beman::execution::receiver_t;
 
@@ -3926,8 +3921,8 @@ export /* --------- */ inline constexpr ::beman::execution::sync_wait_t sync_wai
 #line 22 "include/beman/execution/detail/basic_operation.hpp"
 namespace beman::execution::detail {
 
-#line 28 "include/beman/execution/detail/basic_operation.hpp"
-template <typename Sender, typename Receiver>
+#line 29 "include/beman/execution/detail/basic_operation.hpp"
+export /* --------- */ template <typename Sender, typename Receiver>
     requires ::beman::execution::detail::
 
         valid_specialization<::beman::execution::detail::state_type, std::remove_cvref_t<Sender>, Receiver>
@@ -5544,7 +5539,7 @@ export /* --------- */ inline constexpr write_env_t write_env{};
 
 #line 23 "include/beman/execution/detail/associate.hpp"
 namespace beman::execution::detail {
-template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
+export /* --------- */ template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
 struct associate_data {
     using wrap_sender = ::std::remove_cvref_t<decltype(::std::declval<Token&>().wrap(::std::declval<Sender>()))>;
 
@@ -5576,18 +5571,18 @@ struct associate_data {
             this->token.disassociate();
         }
     }
-#line 57 "include/beman/execution/detail/associate.hpp"
+#line 58 "include/beman/execution/detail/associate.hpp"
     auto release() -> ::std::optional<::std::pair<Token, wrap_sender>> {
         return this->sender ? (std::unique_ptr<std::optional<wrap_sender>, decltype([](auto* opt) { opt->reset(); })>(
                                    &this->sender),
                                ::std::optional{::std::pair{::std::move(this->token), ::std::move(*this->sender)}})
                             : ::std::optional<::std::pair<Token, wrap_sender>>{};
     }
-#line 64 "include/beman/execution/detail/associate.hpp"
+#line 65 "include/beman/execution/detail/associate.hpp"
     Token                        token;
     ::std::optional<wrap_sender> sender;
 };
-template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
+export /* --------- */ template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
 associate_data(Token, Sender&&) -> associate_data<Token, Sender>;
 
 struct associate_t {
@@ -5768,11 +5763,24 @@ struct impls_for<::beman::execution::detail::counting_scope_join_t> : ::beman::e
 
 #line 36 "include/beman/execution/detail/affine_on.hpp"
 namespace beman::execution::detail {
+template <typename Ev>
+struct affine_on_env {
+    Ev   ev_;
+    auto query(const ::beman::execution::get_stop_token_t&) const noexcept -> ::beman::execution::never_stop_token {
+        return ::beman::execution::never_stop_token();
+    }
+    template <typename Q>
+    auto query(const Q& q) const noexcept -> decltype(q(this->ev_)) {
+        return q(this->ev_);
+    }
+};
+template <typename Ev>
+affine_on_env(const Ev&) -> affine_on_env<Ev>;
 
-#line 46 "include/beman/execution/detail/affine_on.hpp"
+#line 59 "include/beman/execution/detail/affine_on.hpp"
 struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
 
-#line 54 "include/beman/execution/detail/affine_on.hpp"
+#line 67 "include/beman/execution/detail/affine_on.hpp"
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
         return ::beman::execution::detail::transform_sender(
@@ -5780,25 +5788,10 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             ::beman::execution::detail::make_sender(
                 *this, ::beman::execution::env<>{}, ::std::forward<Sender>(sender)));
     }
-#line 67 "include/beman/execution/detail/affine_on.hpp"
+#line 80 "include/beman/execution/detail/affine_on.hpp"
     auto operator()() const { return ::beman::execution::detail::sender_adaptor{*this}; }
 
-    template <typename Ev>
-    struct ao_env {
-        Ev   ev_;
-        auto query(const ::beman::execution::get_stop_token_t&) const noexcept
-            -> ::beman::execution::never_stop_token {
-            return ::beman::execution::never_stop_token();
-        }
-        template <typename Q>
-        auto query(const Q& q) const noexcept -> decltype(q(this->ev_)) {
-            return q(this->ev_);
-        }
-    };
-    template <typename Ev>
-    ao_env(const Ev&) -> ao_env<Ev>;
-
-#line 102 "include/beman/execution/detail/affine_on.hpp"
+#line 100 "include/beman/execution/detail/affine_on.hpp"
     template <::beman::execution::sender Sender, typename Env>
         requires ::beman::execution::detail::sender_for<Sender, affine_on_t> && requires(const Env& env) {
             { ::beman::execution::get_scheduler(env) } -> ::beman::execution::scheduler;
@@ -5824,7 +5817,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
                 ::beman::execution::schedule_from(
                     ::beman::execution::get_scheduler(ev),
                     ::beman::execution::write_env(::beman::execution::detail::forward_like<Sender>(child), ev)),
-                ao_env(ev));
+                beman::execution::detail::affine_on_env(ev));
         }
     }
 };
@@ -5833,7 +5826,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
 
 namespace beman::execution {
 
-#line 139 "include/beman/execution/detail/affine_on.hpp"
+#line 137 "include/beman/execution/detail/affine_on.hpp"
 export /* --------- */ using affine_on_t = beman::execution::detail::affine_on_t;
 export /* --------- */ inline constexpr affine_on_t affine_on{};
 } // namespace beman::execution

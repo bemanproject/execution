@@ -5,11 +5,6 @@
 #ifndef INCLUDED_TEST_STOP_TOKEN
 #define INCLUDED_TEST_STOP_TOKEN
 
-#ifdef BEMAN_HAS_MODULES
-import beman.execution;
-#else
-#include <beman/execution/stop_token.hpp>
-#endif
 #include <beman/execution/detail/immovable.hpp>
 #include <test/execution.hpp>
 
@@ -25,6 +20,11 @@ import beman.execution;
 #include <mutex>
 #include <ranges>
 #include <thread>
+#if false && defined(BEMAN_HAS_MODULES)
+import beman.execution;
+#else
+#include <beman/execution/stop_token.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -1,6 +1,8 @@
 // src/beman/execution/tests/exec-get-compl-sched.test.cpp          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -13,8 +15,6 @@ import beman.execution;
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #endif
-#include <concepts>
-#include <test/execution.hpp>
 
 // ----------------------------------------------------------------------------
 

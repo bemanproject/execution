@@ -1,17 +1,16 @@
 // src/beman/execution/tests/exec-sync-wait.test.cpp                -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <exception>
+#include <concepts>
+#include <utility>
+#include <tuple>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
 #include <beman/execution/execution.hpp>
 #endif
-#include <beman/execution/detail/sync_wait.hpp>
-#include <test/execution.hpp>
-
-#include <exception>
-#include <concepts>
-#include <utility>
 
 // ----------------------------------------------------------------------------
 

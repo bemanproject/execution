@@ -14,7 +14,7 @@ import std;
 
 #endif
 
-#ifdef BEMAN_USE_MODULES
+#ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
 #include <beman/execution/execution.hpp>

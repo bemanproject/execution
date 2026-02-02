@@ -21,7 +21,8 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
+BEMAN_EXECUTION_EXPORT template <::beman::execution::scope_token Token,
+                                 ::beman::execution::sender      Sender> //-dk:TODO detail export
 struct associate_data {
     using wrap_sender = ::std::remove_cvref_t<decltype(::std::declval<Token&>().wrap(::std::declval<Sender>()))>;
 
@@ -64,7 +65,7 @@ struct associate_data {
     Token                        token;
     ::std::optional<wrap_sender> sender;
 };
-template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
+BEMAN_EXECUTION_EXPORT template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
 associate_data(Token, Sender&&) -> associate_data<Token, Sender>;
 
 struct associate_t {

@@ -20,7 +20,8 @@ namespace beman::execution::detail {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename Sender, typename Receiver>
+//-dk:TODO the export below shouldn't be needed, but MSVC++ seems to require it (2026-02-01)
+BEMAN_EXECUTION_EXPORT template <typename Sender, typename Receiver> //-dk:TODO detail export
 struct basic_state {
     basic_state(Sender&& sender, Receiver&& rcvr) noexcept(true)
         : receiver(::std::move(rcvr)),
