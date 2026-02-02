@@ -110,10 +110,16 @@ Introduction by Example</h1>
 <p>Code: [<code>examples/intro-1-hello-world.cpp</code>]() </p><div class="fragment"><div class="line"><span class="comment">// examples/intro-1-hello-world.cpp                                   -*-C++-*-</span></div>
 <div class="line"><span class="comment">// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception</span></div>
 <div class="line"> </div>
-<div class="line"><span class="preprocessor">#include &lt;beman/execution/execution.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;optional&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;variant&gt;</span></div>
+<div class="line"><span class="preprocessor">#ifdef BEMAN_HAS_MODULES</span></div>
+<div class="line"><span class="keyword">import</span> <a class="code hl_namespace" href="namespacebeman.html">beman</a>.<a class="code hl_namespace" href="namespacebeman_1_1execution.html">execution</a>;</div>
+<div class="line"><span class="preprocessor">#else</span></div>
+<div class="line"><span class="preprocessor">#include &lt;beman/execution/execution.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">ex</a> = ::beman::execution;</div>
 <div class="line"><span class="keyword">using namespace </span>std::string_literals;</div>
@@ -123,21 +129,23 @@ Introduction by Example</h1>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    <span class="comment">// clang-format off</span></div>
-<div class="line">     <span class="keyword">auto</span> [result] = <a class="code hl_variable" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51">ex::sync_wait</a>(</div>
-<div class="line">         ex::when_all(</div>
-<div class="line">             <a class="code hl_variable" href="namespacebeman_1_1execution.html#a86a95402660a39f0f4737aa2444e0993">ex::just</a>(<span class="stringliteral">&quot;hello, &quot;</span>s),</div>
-<div class="line">             <a class="code hl_variable" href="namespacebeman_1_1execution.html#a86a95402660a39f0f4737aa2444e0993">ex::just</a>(<span class="stringliteral">&quot;world&quot;</span>s)</div>
-<div class="line">         ) | <a class="code hl_variable" href="namespacebeman_1_1execution.html#a42194e9663efb60f2ed04d4a16641247">ex::then</a>([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; s1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; s2) { <span class="keywordflow">return</span> s1 + s2; })</div>
-<div class="line">         ).value_or(std::tuple(<span class="stringliteral">&quot;&quot;</span>s)</div>
-<div class="line">     );</div>
+<div class="line">    <span class="keyword">auto</span> [result] =</div>
+<div class="line">    <a class="code hl_variable" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51">ex::sync_wait</a>(</div>
+<div class="line">        ex::when_all(</div>
+<div class="line">            <a class="code hl_variable" href="namespacebeman_1_1execution.html#a86a95402660a39f0f4737aa2444e0993">ex::just</a>(<span class="stringliteral">&quot;hello, &quot;</span>s),</div>
+<div class="line">            <a class="code hl_variable" href="namespacebeman_1_1execution.html#a86a95402660a39f0f4737aa2444e0993">ex::just</a>(<span class="stringliteral">&quot;world&quot;</span>s)</div>
+<div class="line">        ) | <a class="code hl_variable" href="namespacebeman_1_1execution.html#a42194e9663efb60f2ed04d4a16641247">ex::then</a>([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; s1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; s2) { <span class="keywordflow">return</span> s1 + s2; })</div>
+<div class="line">        ) .value_or(std::tuple(<span class="stringliteral">&quot;&quot;</span>s))</div>
+<div class="line">        ;</div>
 <div class="line">    <span class="comment">// clang-format on</span></div>
 <div class="line"> </div>
 <div class="line">    std::cout &lt;&lt; result &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
 <div class="line">}</div>
 <div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:36</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html_a42194e9663efb60f2ed04d4a16641247"><div class="ttname"><a href="namespacebeman_1_1execution.html#a42194e9663efb60f2ed04d4a16641247">beman::execution::then</a></div><div class="ttdeci">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::then_t then</div><div class="ttdoc">then(sender, fun) yields a sender transforming a set_value_t(A...) completion</div><div class="ttdef"><b>Definition:</b> then.hpp:215</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_a4c7b4c1bdad6f6f4ea09c03de8e89a51"><div class="ttname"><a href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51">beman::execution::sync_wait</a></div><div class="ttdeci">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::sync_wait_t sync_wait</div><div class="ttdoc">sync_wait(sender) starts sender and waits for its completion.</div><div class="ttdef"><b>Definition:</b> sync_wait.hpp:159</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_a4c7b4c1bdad6f6f4ea09c03de8e89a51"><div class="ttname"><a href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51">beman::execution::sync_wait</a></div><div class="ttdeci">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::sync_wait_t sync_wait</div><div class="ttdoc">sync_wait(sender) starts sender and waits for its completion.</div><div class="ttdef"><b>Definition:</b> sync_wait.hpp:160</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html_a86a95402660a39f0f4737aa2444e0993"><div class="ttname"><a href="namespacebeman_1_1execution.html#a86a95402660a39f0f4737aa2444e0993">beman::execution::just</a></div><div class="ttdeci">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::just_t just</div><div class="ttdoc">just(arg...) yields a sender completing with set_value_t(Arg...)</div><div class="ttdef"><b>Definition:</b> just.hpp:117</div></div>
+<div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:36</div></div>
 </div><!-- fragment --><p>The first example is a very complicated way to a version of <code>"Hello,
 world"</code>: it uses components for dealing with asynchronous work to synchronously produce the result. The intention is to show a basic use of some involved components to build up a feeling of how things work.</p>
 <p>The components for <code>std::execution</code> are declared in the header <code>&lt;execution&gt;</code>. This particular implementation implements the cmponents in namespace <code><a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a></code> declared in the header <code>&lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;</code>:</p>
@@ -180,12 +188,18 @@ world"</code>: it uses components for dealing with asynchronous work to synchron
 <p>Code: [<code>examples/intro-2-hello-async.cpp</code>]() </p><div class="fragment"><div class="line"><span class="comment">// examples/intro-2-hello-async.cpp                                   -*-C++-*-</span></div>
 <div class="line"><span class="comment">// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception</span></div>
 <div class="line"> </div>
-<div class="line"><span class="preprocessor">#include &lt;beman/execution/execution.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &quot;intro-timer.hpp&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;chrono&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;queue&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><span class="preprocessor">#ifdef BEMAN_HAS_MODULES</span></div>
+<div class="line"><span class="keyword">import</span> <a class="code hl_namespace" href="namespacebeman.html">beman</a>.<a class="code hl_namespace" href="namespacebeman_1_1execution.html">execution</a>;</div>
+<div class="line"><span class="preprocessor">#else</span></div>
+<div class="line"><span class="preprocessor">#include &lt;beman/execution/execution.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="preprocessor">#include &quot;intro-timer.hpp&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">ex</a> = ::beman::execution;</div>
 <div class="line"><span class="keyword">using namespace </span>std::string_literals;</div>

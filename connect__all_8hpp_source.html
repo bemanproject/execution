@@ -214,14 +214,15 @@ $(document).ready(function(){initNavTree('connect__all_8hpp_source.html',''); in
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    }</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>};</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> connect_all_t connect_all{};</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment">//-dk:TODO the export below shouldn&#39;t be needed, but MSVC++ seems to require it (2026-02-01)</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>BEMAN_EXECUTION_EXPORT <span class="keyword">constexpr</span> connect_all_t connect_all{}; <span class="comment">//-dk:TODO detail export</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL</span></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html_af3ca0aa23afbd3f71811787934127535"><div class="ttname"><a href="namespacebeman_1_1execution.html#af3ca0aa23afbd3f71811787934127535">beman::execution::connect</a></div><div class="ttdeci">BEMAN_EXECUTION_EXPORT constexpr connect_t connect</div><div class="ttdoc">Customization point object used to connect a sender and a receiver.</div><div class="ttdef"><b>Definition:</b> connect.hpp:95</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

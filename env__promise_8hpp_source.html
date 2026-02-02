@@ -113,7 +113,7 @@ $(document).ready(function(){initNavTree('env__promise_8hpp_source.html',''); in
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span>beman::execution::detail {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Env&gt;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>BEMAN_EXECUTION_EXPORT <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Env&gt; <span class="comment">//-dk:TODO detail export</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">struct </span>env_promise : ::beman::execution::detail::with_await_transform&lt;Env&gt; {</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">auto</span> get_return_object() noexcept -&gt; <span class="keywordtype">void</span>;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    auto initial_suspend() noexcept -&gt; ::std::suspend_always;</div>
