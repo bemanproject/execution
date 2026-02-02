@@ -73,9 +73,6 @@ add_subdirectory(src/beman/execution)
 
 #===============================================================================
 # NOTE: this must be done before tests! CK
-# XXX include(./cmake/beman-install-library-config.cmake)
-# XXX beman_install_library(${TARGET_PREFIX} INTERFACE)
-# TODO: include(./cmake/beman-install-project-targets.cmake)
 include(./cmake/beman-install-library.cmake)
 beman_install_library(${TARGET_PREFIX} TARGETS ${TARGET_NAME} ${TARGET_PREFIX})
 #===============================================================================

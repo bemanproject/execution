@@ -39,7 +39,7 @@ include(GNUInstallDirs)
 #   Defaults to "<name>-targets".
 #
 # DESTINATION (optional)
-#   Base install destination.
+#   The install destination for CXX_MODULES.
 #   Defaults to CMAKE_INSTALL_INCLUDEDIR/beman/modules.
 #
 # Brief
@@ -107,6 +107,8 @@ function(beman_install_library name)
         return()
     endif()
 
+    string(REPLACE "beman." "" install_component_name "${name}")
+
     # --------------------------------------------------
     # Install each target with all of its file sets
     # --------------------------------------------------
@@ -139,29 +141,44 @@ function(beman_install_library name)
             "beman_install_library(${name}): COMPONENT ${component_name} for TARGET '${_tgt}'"
         )
 
-        # Detect presence of C++ module file sets
-        get_target_property(_module_sets "${_tgt}" CXX_MODULE_SETS)
+        # Get the list of interface header sets, exact one expected!
+        get_target_property(_header_sets ${_tgt} INTERFACE_HEADER_SETS)
+        if(_header_sets)
+            message(
+                VERBOSE
+                "beman-install-library(${name}): '${_tgt}' has INTERFACE_HEADER_SETS=${_header_sets}"
+            )
+            # XXX set(__INSTALL_HEADER_SETS FILE_SET ${_header_sets})
+        endif()
 
+        # Detect presence of C++ module file sets, exact one expected!
+        get_target_property(_module_sets "${_tgt}" CXX_MODULE_SETS)
         if(_module_sets)
+            message(
+                VERBOSE
+                "beman-install-library(${name}): '${_tgt}' has CXX_MODULE_SETS=${_module_sets}"
+            )
             install(
                 TARGETS "${_tgt}"
+                COMPONENT "${install_component_name}"
                 EXPORT ${BEMAN_EXPORT_NAME}
                 ARCHIVE # DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 LIBRARY # DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 RUNTIME # DESTINATION ${CMAKE_INSTALL_BINDIR}
                 FILE_SET
-                    HEADERS # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+                    ${_header_sets} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
                 FILE_SET CXX_MODULES DESTINATION "${BEMAN_DESTINATION}"
             )
         else()
             install(
                 TARGETS "${_tgt}"
+                COMPONENT "${install_component_name}"
                 EXPORT ${BEMAN_EXPORT_NAME}
                 ARCHIVE # DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 LIBRARY # DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 RUNTIME # DESTINATION ${CMAKE_INSTALL_BINDIR}
                 FILE_SET
-                    HEADERS # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+                    ${_header_sets} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
             )
         endif()
     endforeach()
@@ -175,6 +192,7 @@ function(beman_install_library name)
         CXX_MODULES_DIRECTORY
         cxx-modules
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${name}
+        COMPONENT "${install_component_name}"
     )
 
     # ----------------------------------------
@@ -233,6 +251,7 @@ function(beman_install_library name)
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config.cmake"
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config-version.cmake"
             DESTINATION ${_config_install_dir}
+            COMPONENT "${install_component_name}"
         )
     else()
         message(
