@@ -72,7 +72,7 @@ struct await_cancel {
         using stop_callback = test_std::stop_callback_for_t<token, callback>;
 
         Receiver                     receiver;
-        std::optional<stop_callback> cb;
+        std::optional<stop_callback> cb{};
         auto                         start() & noexcept {
             cb.emplace(test_std::get_stop_token(test_std::get_env(this->receiver)), &this->receiver);
         }

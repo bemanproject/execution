@@ -32,7 +32,6 @@ set(EXAMPLES
     stop_token
     stopping
     when_all-cancel
-
 )
 
 if(BEMAN_USE_MODULES)
