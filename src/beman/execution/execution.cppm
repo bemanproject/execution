@@ -432,7 +432,7 @@ auto forward_like(U&& u) noexcept -> decltype(auto) {
 
 #line 13 "include/beman/execution/detail/join_env.hpp"
 namespace beman::execution::detail {
-export /* --------- */ template <typename Env1, typename Env2>
+template <typename Env1, typename Env2>
 class join_env {
   private:
     Env1 env1;

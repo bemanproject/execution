@@ -18,20 +18,21 @@ if(PROJECT_IS_TOP_LEVEL)
 endif()
 
 set(EXAMPLES
-    stackoverflow
-    inspect
-    playground
-    sender-demo
-    when_all-cancel
-    stop_token
-    stopping
     allocator
-    intro-1-hello-world
-    intro-2-hello-async
-    intro-5-consumer
     doc-just
     doc-just_error
     doc-just_stopped
+    inspect
+    intro-1-hello-world
+    intro-2-hello-async
+    intro-5-consumer
+    playground
+    sender-demo
+    stackoverflow
+    stop_token
+    stopping
+    when_all-cancel
+
 )
 
 if(BEMAN_USE_MODULES)
@@ -43,8 +44,8 @@ foreach(EXAMPLE ${EXAMPLES})
     set(EXAMPLE_TARGET ${PROJECT_NAME}.${EXAMPLE})
     add_executable(${EXAMPLE_TARGET})
     target_sources(${EXAMPLE_TARGET} PRIVATE ${EXAMPLE}.cpp)
-    target_compile_definitions(${EXAMPLE_TARGET} PUBLIC BEMAN_HAS_MODULES)
     if(BEMAN_USE_MODULES)
+        # target_compile_definitions(${EXAMPLE_TARGET} PUBLIC BEMAN_HAS_MODULES)
         target_link_libraries(${EXAMPLE_TARGET} PRIVATE beman::execution)
     else()
         target_link_libraries(

@@ -26,7 +26,7 @@ namespace beman::execution::detail {
  * \internal
  */
 //-dk:TODO the export below shouldn't be needed, but MSVC++ seems to require it (2026-02-01)
-BEMAN_EXECUTION_EXPORT template <typename Sender, typename Receiver>
+BEMAN_EXECUTION_EXPORT template <typename Sender, typename Receiver> //-dk:TODO detail export
     requires ::beman::execution::detail::
         //-dk:TODO why is the remove_cvref_t needed...?
     valid_specialization<::beman::execution::detail::state_type, std::remove_cvref_t<Sender>, Receiver>

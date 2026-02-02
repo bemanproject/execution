@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-BEMAN_EXECUTION_EXPORT template <typename Source>
+BEMAN_EXECUTION_EXPORT template <typename Source> //-dk:TODO detail export
 concept stoppable_source = requires(Source& source, const Source& csource) {
     { csource.get_token() } -> ::beman::execution::stoppable_token;
     { csource.stop_possible() } noexcept -> ::std::same_as<bool>;

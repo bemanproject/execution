@@ -11,6 +11,7 @@
 import beman.execution;
 #else
 #include <beman/execution/execution.hpp>
+#include <beman/execution/stop_token.hpp>
 #endif
 
 namespace exec = beman::execution;

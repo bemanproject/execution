@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-BEMAN_EXECUTION_EXPORT template <typename Env1, typename Env2>
+template <typename Env1, typename Env2>
 class join_env {
   private:
     Env1 env1;
