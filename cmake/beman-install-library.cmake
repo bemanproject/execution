@@ -234,5 +234,13 @@ function(beman_install_library name)
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config-version.cmake"
             DESTINATION ${_config_install_dir}
         )
+    else()
+        message(
+            WARNING
+            "beman-install-library(${name}): Not installing a config package for '${name}'"
+        )
     endif()
 endfunction()
+
+set(CPACK_GENERATOR TGZ)
+include(CPack)

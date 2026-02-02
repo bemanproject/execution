@@ -42,6 +42,16 @@ include(GNUInstallDirs)
 #   Base install destination.
 #   Defaults to CMAKE_INSTALL_INCLUDEDIR/beman/modules.
 #
+# Brief
+# -----
+#
+# This function installs the specified project TARGETS and its FILE_SET
+# HEADERS to the default CMAKE install Destination.
+#
+# It also handles the installation of the CMake config package files if
+# needed.  If the given targets has FILE_SET CXX_MODULE, it will also
+# installed to the given DESTINATION
+#
 # Cache variables:
 # ----------------
 # BEMAN_INSTALL_CONFIG_FILE_PACKAGES
@@ -128,6 +138,12 @@ function(beman_install_library name)
     string(TOUPPER "${name}" _pkg_upper)
     string(REPLACE "." "_" _pkg_prefix "${_pkg_upper}")
 
+    option(
+        ${_pkg_prefix}_INSTALL_CONFIG_FILE_PACKAGE
+        "Enable creating and installing a CMake config-file package. Default: ON. Values: { ON, OFF }."
+        ON
+    )
+
     set(_pkg_var "${_pkg_prefix}_INSTALL_CONFIG_FILE_PACKAGE")
 
     if(NOT DEFINED ${_pkg_var})
@@ -173,5 +189,13 @@ function(beman_install_library name)
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config-version.cmake"
             DESTINATION ${_config_install_dir}
         )
+    else()
+        message(
+            WARNING
+            "beman-install-library(${name}): Not installing a config package for '${name}'"
+        )
     endif()
 endfunction()
+
+set(CPACK_GENERATOR TGZ)
+include(CPack)
