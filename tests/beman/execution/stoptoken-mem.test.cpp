@@ -5,7 +5,7 @@
 #include <memory>
 #include <test/execution.hpp>
 #include <test/stop_token.hpp>
-#if false && defined(BEMAN_HAS_MODULES)
+#if false && defined(BEMAN_HAS_MODULES) //-dk:TODO module disabled
 import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>

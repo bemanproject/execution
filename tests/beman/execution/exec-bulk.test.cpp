@@ -7,11 +7,11 @@
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include "beman/execution/detail/bulk.hpp"
-#include "beman/execution/detail/just.hpp"
-#include "beman/execution/detail/get_completion_signatures.hpp"
-#include "beman/execution/detail/get_env.hpp"
-#include "beman/execution/detail/sync_wait.hpp"
+#include <beman/execution/detail/bulk.hpp>
+#include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/sync_wait.hpp>
 #endif
 
 namespace {
