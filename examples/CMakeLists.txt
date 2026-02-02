@@ -33,6 +33,7 @@ set(EXAMPLES
     stopping
     when_all-cancel
 )
+set(EXAMPLES)
 
 if(BEMAN_USE_MODULES)
     list(APPEND EXAMPLES modules) # modules.cpp

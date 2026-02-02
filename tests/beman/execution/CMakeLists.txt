@@ -107,6 +107,7 @@ list(
     thread.test
     utilities.test
 )
+set(execution_tests exec-then.test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
