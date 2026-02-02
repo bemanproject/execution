@@ -1,4 +1,4 @@
-// examples/allocator.cpp                                             -*-C++-*-
+// examples/stackoverflow.cpp                                         -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <coroutine>

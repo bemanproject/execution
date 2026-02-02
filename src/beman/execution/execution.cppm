@@ -991,7 +991,8 @@ namespace beman::execution::detail {
 
 export /* --------- */ template <typename Sender>
 using indices_for = typename ::std::remove_reference_t<Sender>::indices_for;
-}
+} // namespace beman::execution::detail
+
 #line 12 "include/beman/execution/detail/decayed_typeof.hpp"
 namespace beman::execution::detail {
 
@@ -3873,7 +3874,7 @@ struct sync_wait_receiver {
         }
         this->state->loop.finish();
     }
-#line 73 "include/beman/execution/detail/sync_wait.hpp"
+#line 74 "include/beman/execution/detail/sync_wait.hpp"
     auto get_env() const noexcept -> ::beman::execution::detail::sync_wait_env {
         return ::beman::execution::detail::sync_wait_env{&this->state->loop};
     }
@@ -3893,7 +3894,7 @@ struct sync_wait_t {
         }
         return ::std::move(state.result);
     }
-#line 93 "include/beman/execution/detail/sync_wait.hpp"
+#line 94 "include/beman/execution/detail/sync_wait.hpp"
     template <::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender>
         requires requires(Sender&& sender, const sync_wait_t& self) {
             typename ::beman::execution::detail::sync_wait_result_type<Sender>;
@@ -3914,7 +3915,7 @@ struct sync_wait_t {
 namespace beman::execution {
 export /* --------- */ using sync_wait_t = ::beman::execution::detail::sync_wait_t;
 
-#line 159 "include/beman/execution/detail/sync_wait.hpp"
+#line 160 "include/beman/execution/detail/sync_wait.hpp"
 export /* --------- */ inline constexpr ::beman::execution::sync_wait_t sync_wait{};
 } // namespace beman::execution
 

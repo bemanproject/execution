@@ -37,7 +37,6 @@ set(EXAMPLES
 if(BEMAN_USE_MODULES)
     list(APPEND EXAMPLES modules) # modules.cpp
 endif()
-# set(EXAMPLES)
 
 foreach(EXAMPLE ${EXAMPLES})
     set(EXAMPLE_TARGET ${PROJECT_NAME}.${EXAMPLE})
