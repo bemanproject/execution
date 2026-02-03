@@ -39,7 +39,7 @@ include(GNUInstallDirs)
 #   Defaults to "<name>-targets".
 #
 # DESTINATION (optional)
-#   Base install destination.
+#   The install destination for CXX_MODULES.
 #   Defaults to CMAKE_INSTALL_INCLUDEDIR/beman/modules.
 #
 # Brief
@@ -107,6 +107,8 @@ function(beman_install_library name)
         return()
     endif()
 
+    string(REPLACE "beman." "" install_component_name "${name}")
+
     # ----------------------------------------
     # Install targets and headers (always)
     # ----------------------------------------
@@ -130,6 +132,7 @@ function(beman_install_library name)
         CXX_MODULES_DIRECTORY
         cxx-modules
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${name}
+        COMPONENT "${install_component_name}"
     )
 
     # ----------------------------------------
@@ -188,6 +191,7 @@ function(beman_install_library name)
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config.cmake"
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config-version.cmake"
             DESTINATION ${_config_install_dir}
+            COMPONENT "${install_component_name}"
         )
     else()
         message(

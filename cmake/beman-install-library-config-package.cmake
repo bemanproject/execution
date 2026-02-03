@@ -39,8 +39,18 @@ include(GNUInstallDirs)
 #   Defaults to "<name>-targets".
 #
 # DESTINATION (optional)
-#   Base install destination.
+#   The install destination for CXX_MODULES.
 #   Defaults to CMAKE_INSTALL_INCLUDEDIR/beman/modules.
+#
+# Brief
+# -----
+#
+# This function installs the specified project TARGETS and its FILE_SET
+# HEADERS to the default CMAKE install Destination.
+#
+# It also handles the installation of the CMake config package files if
+# needed.  If the given targets has FILE_SET CXX_MODULE, it will also
+# installed to the given DESTINATION
 #
 # Cache variables:
 # ----------------
@@ -97,6 +107,8 @@ function(beman_install_library name)
         return()
     endif()
 
+    string(REPLACE "beman." "" install_component_name "${name}")
+
     # ----------------------------------------
     # Install targets and headers (always)
     # ----------------------------------------
@@ -121,6 +133,7 @@ function(beman_install_library name)
             )
         endif()
 
+        # Detect presence of C++ module file sets, exact one expected!
         get_target_property(_module_sets "${_tgt}" CXX_MODULE_SETS)
 
         if(_module_sets)
@@ -140,6 +153,7 @@ function(beman_install_library name)
         CXX_MODULES_DIRECTORY
         cxx-modules
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${name}
+        COMPONENT "${install_component_name}"
     )
 
     # ----------------------------------------
@@ -147,6 +161,12 @@ function(beman_install_library name)
     # ----------------------------------------
     string(TOUPPER "${name}" _pkg_upper)
     string(REPLACE "." "_" _pkg_prefix "${_pkg_upper}")
+
+    option(
+        ${_pkg_prefix}_INSTALL_CONFIG_FILE_PACKAGE
+        "Enable creating and installing a CMake config-file package. Default: ON. Values: { ON, OFF }."
+        ON
+    )
 
     set(_pkg_var "${_pkg_prefix}_INSTALL_CONFIG_FILE_PACKAGE")
 
@@ -192,6 +212,15 @@ function(beman_install_library name)
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config.cmake"
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config-version.cmake"
             DESTINATION ${_config_install_dir}
+            COMPONENT "${install_component_name}"
+        )
+    else()
+        message(
+            WARNING
+            "beman-install-library(${name}): Not installing a config package for '${name}'"
         )
     endif()
 endfunction()
+
+set(CPACK_GENERATOR TGZ)
+include(CPack)

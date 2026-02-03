@@ -14,7 +14,7 @@ SANITIZERS := run
 #     SANITIZERS += asan # TODO: tsan msan
 # endif
 
-.PHONY: default release debug doc run update check ce todo distclean clean codespell clang-tidy build test install all format unstage $(SANITIZERS) module build-module test-module
+.PHONY: default release debug doc run update check ce todo distclean clean codespell clang-tidy build test install all format unstage $(SANITIZERS) module build-module test-module build-interface
 
 SYSROOT   ?=
 TOOLCHAIN ?=
@@ -99,7 +99,7 @@ endif
 # TODO: beman.execution.examples.modules
 # FIXME: beman.execution.execution-module.test beman.execution.stop-token-module.test
 
-default: release
+default: module
 
 all: $(SANITIZERS)
 
@@ -116,7 +116,7 @@ doc:
 # ==========================================================
 # NOTE: cmake configure to only test without modules! CK
 # ==========================================================
-build:
+build build-interface:
 	cmake -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
 	  -D CMAKE_SKIP_INSTALL_RULES=ON \
@@ -126,9 +126,11 @@ build:
 	  -D CMAKE_CXX_SCAN_FOR_MODULES=OFF \
 	  -D BEMAN_USE_MODULES=OFF \
 	  -D CMAKE_BUILD_TYPE=Release \
+	  -D CMAKE_SKIP_TEST_ALL_DEPENDENCY=OFF \
 	  -D CMAKE_CXX_COMPILER=$(CXX) --log-level=VERBOSE
-	cmake --build $(BUILD)
-# XXX --fresh -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	# XXX --fresh -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	cmake --build $(BUILD) --target all_verify_interface_header_sets
+	cmake --build $(BUILD) --target all
 
 # NOTE: without install, see CMAKE_SKIP_INSTALL_RULES! CK
 test: build
@@ -137,12 +139,14 @@ test: build
 module build-module:
 	cmake -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
-	  -D CMAKE_SKIP_INSTALL_RULES=ON \
+	  -D CMAKE_SKIP_INSTALL_RULES=OFF \
 	  -D CMAKE_CXX_STANDARD=23 \
 	  -D CMAKE_CXX_EXTENSIONS=ON \
 	  -D CMAKE_CXX_STANDARD_REQUIRED=ON \
 	  -D CMAKE_CXX_SCAN_FOR_MODULES=ON \
 	  -D BEMAN_USE_MODULES=ON \
+	  -D CMAKE_BUILD_TYPE=Release \
+	  -D CMAKE_INSTALL_MESSAGE=LAZY \
 	  -D CMAKE_BUILD_TYPE=Release \
 	  -D CMAKE_CXX_COMPILER=$(CXX) --log-level=VERBOSE
 	cmake --build $(BUILD)
