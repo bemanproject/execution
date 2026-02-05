@@ -48,7 +48,7 @@ The following modules are expected to live in `infra/cmake`:
   High-level helper to install libraries, headers, module interface units, and CMake package files.
 
 - `Config.cmake.in`
-  Template used to generate the `<Package>Config.cmake` file for consumers.
+  Template used to generate the `<package>-config.cmake` file for consumers.
 
 ---
 

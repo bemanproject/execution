@@ -22,19 +22,9 @@ if(PROJECT_NAME)
     )
 endif()
 
-# gersemi: off
-# ---------------------------------------------------------------------------
-# use ccache if found
-# ---------------------------------------------------------------------------
-find_program(CCACHE_EXECUTABLE "ccache" HINTS /usr/local/bin /opt/local/bin)
-if(CCACHE_EXECUTABLE)
-    message(STATUS "use ccache")
-    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_EXECUTABLE}" CACHE PATH "ccache")
-    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_EXECUTABLE}" CACHE PATH "ccache")
-endif()
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
+# gersemi: off
 # ---------------------------------------------------------------------------
 # check if import std; is supported by CMAKE_CXX_COMPILER
 # ---------------------------------------------------------------------------
@@ -42,6 +32,10 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
     set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 endif()
 # gersemi: on
+
+if(NOT APPLE)
+    return()
+endif()
 
 # FIXME: on APPLE with clang++ still needs to export CXX=clang++
 if("$ENV{CXX}" STREQUAL "" AND CMAKE_CXX_COMPILER)
