@@ -179,8 +179,9 @@ struct impls_for<::beman::execution::detail::let_t<Completion>> : ::beman::execu
         ::beman::execution::start(
             state.ops2.template emplace<decltype(mkop())>(beman::execution::detail::emplace_from{mkop}));
     }
-    static constexpr auto complete{
-        []<class Tag, class... Args>(auto, auto& state, auto& receiver, Tag, Args&&... args) {
+    struct complete_impl {
+        template <class Tag, class... Args>
+        auto operator()(auto, auto& state, auto& receiver, Tag, Args&&... args) const {
             if constexpr (::std::same_as<Tag, Completion>) {
                 try {
                     let_bind(state, receiver, ::std::forward<Args>(args)...);
@@ -191,7 +192,9 @@ struct impls_for<::beman::execution::detail::let_t<Completion>> : ::beman::execu
             } else {
                 Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
             }
-        }};
+        }
+    };
+    static constexpr auto complete{complete_impl{}};
 };
 
 template <typename Completion, typename Fun, typename Sender, typename Env>

@@ -75,11 +75,19 @@ struct beman::execution::detail::counting_scope_join_t::state : ::beman::executi
 namespace beman::execution::detail {
 template <>
 struct impls_for<::beman::execution::detail::counting_scope_join_t> : ::beman::execution::detail::default_impls {
-    static constexpr auto get_state = []<typename Receiver>(auto&& sender, Receiver& receiver) noexcept(false) {
-        auto [_, self] = sender;
-        return ::beman::execution::detail::counting_scope_join_t::state<Receiver>(self, receiver);
+    struct get_state_impl {
+
+        template <typename Receiver>
+        auto operator()(auto&& sender, Receiver& receiver) const noexcept(false) {
+            auto [_, self] = sender;
+            return ::beman::execution::detail::counting_scope_join_t::state<Receiver>(self, receiver);
+        }
     };
-    static constexpr auto start = [](auto& s, auto&) noexcept { s.start(); };
+    static constexpr auto get_state{get_state_impl{}};
+    struct start_impl {
+        auto operator()(auto& s, auto&) const noexcept { s.start(); }
+    };
+    static constexpr auto start{start_impl{}};
 };
 } // namespace beman::execution::detail
 

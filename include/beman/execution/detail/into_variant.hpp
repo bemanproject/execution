@@ -45,30 +45,37 @@ BEMAN_EXECUTION_EXPORT struct into_variant_t {
 
 template <>
 struct impls_for<::beman::execution::detail::into_variant_t> : ::beman::execution::detail::default_impls {
-    static constexpr auto get_state = []<typename Sender, typename Receiver>(Sender&&, Receiver&&) noexcept
-        -> ::std::type_identity<::beman::execution::value_types_of_t<::beman::execution::detail::child_type<Sender>,
-                                                                     ::beman::execution::env_of_t<Receiver>>> {
-        return {};
-    };
-    static constexpr auto complete = []<typename State, typename Tag, typename... Args>(
-                                         auto, State, auto& receiver, Tag, Args&&... args) noexcept -> void {
-        if constexpr (::std::same_as<Tag, ::beman::execution::set_value_t>) {
-            using variant_type = typename State::type;
-            using tuple_type   = ::beman::execution::detail::decayed_tuple<Args...>;
-            try {
-                if constexpr (sizeof...(Args) == 0u)
-                    ::beman::execution::set_value(::std::move(receiver));
-                else
-                    ::beman::execution::set_value(::std::move(receiver),
-                                                  variant_type(tuple_type{::std::forward<Args>(args)...}));
-            } catch (...) {
-                ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
-            }
-
-        } else {
-            Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+    struct get_state_impl {
+        template <typename Sender, typename Receiver>
+        auto operator()(Sender&&, Receiver&&) const noexcept -> ::std::type_identity<
+            ::beman::execution::value_types_of_t<::beman::execution::detail::child_type<Sender>,
+                                                 ::beman::execution::env_of_t<Receiver>>> {
+            return {};
         }
     };
+    static constexpr auto get_state{get_state_impl{}};
+    struct complete_impl {
+        template <typename State, typename Tag, typename... Args>
+        auto operator()(auto, State, auto& receiver, Tag, Args&&... args) const noexcept -> void {
+            if constexpr (::std::same_as<Tag, ::beman::execution::set_value_t>) {
+                using variant_type = typename State::type;
+                using tuple_type   = ::beman::execution::detail::decayed_tuple<Args...>;
+                try {
+                    if constexpr (sizeof...(Args) == 0u)
+                        ::beman::execution::set_value(::std::move(receiver));
+                    else
+                        ::beman::execution::set_value(::std::move(receiver),
+                                                      variant_type(tuple_type{::std::forward<Args>(args)...}));
+                } catch (...) {
+                    ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                }
+
+            } else {
+                Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+            }
+        }
+    };
+    static constexpr auto complete{complete_impl{}};
 };
 
 template <typename Sender, typename State, typename Env>

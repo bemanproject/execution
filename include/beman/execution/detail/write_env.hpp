@@ -44,9 +44,12 @@ struct completion_signatures_for_impl<
 
 template <>
 struct impls_for<write_env_t> : ::beman::execution::detail::default_impls {
-    static constexpr auto get_env = [](auto, const auto& state, const auto& receiver) noexcept {
-        return ::beman::execution::detail::join_env(state, ::beman::execution::get_env(receiver));
+    struct get_env_impl {
+        auto operator()(auto, const auto& state, const auto& receiver) const noexcept {
+            return ::beman::execution::detail::join_env(state, ::beman::execution::get_env(receiver));
+        }
     };
+    static constexpr auto get_env = get_env_impl{};
 };
 
 inline constexpr write_env_t write_env{};

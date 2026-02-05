@@ -58,31 +58,34 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
 template <typename Completion>
 struct impls_for<then_t<Completion>> : ::beman::execution::detail::default_impls {
     // NOLINTBEGIN(bugprone-exception-escape)
-    static constexpr auto complete =
-        []<typename Tag, typename... Args>(auto, auto& fun, auto& receiver, Tag, Args&&... args) noexcept -> void {
-        if constexpr (::std::same_as<Completion, Tag>) {
-            try {
-                auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
-                if constexpr (::std::same_as<void, decltype(invoke())>) {
-                    invoke();
-                    ::beman::execution::set_value(::std::move(receiver));
-                } else {
-                    ::beman::execution::set_value(::std::move(receiver), invoke());
-                }
-            } catch (...) {
-                if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
+    struct complete_impl {
+        template <typename Tag, typename... Args>
+        auto operator()(auto, auto& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
+            if constexpr (::std::same_as<Completion, Tag>) {
+                try {
+                    auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
+                    if constexpr (::std::same_as<void, decltype(invoke())>) {
+                        invoke();
+                        ::beman::execution::set_value(::std::move(receiver));
+                    } else {
+                        ::beman::execution::set_value(::std::move(receiver), invoke());
+                    }
+                } catch (...) {
+                    if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
 
-                                               )) {
-                    static_assert(
-                        noexcept(::beman::execution::set_error(::std::move(receiver), ::std::current_exception())));
-                    ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                                                   )) {
+                        static_assert(noexcept(
+                            ::beman::execution::set_error(::std::move(receiver), ::std::current_exception())));
+                        ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                    }
                 }
+            } else {
+                static_assert(noexcept(Tag()(::std::move(receiver), ::std::forward<Args>(args)...)));
+                Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
             }
-        } else {
-            static_assert(noexcept(Tag()(::std::move(receiver), ::std::forward<Args>(args)...)));
-            Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
         }
     };
+    static constexpr auto complete{complete_impl{}};
     // NOLINTEND(bugprone-exception-escape)
 };
 

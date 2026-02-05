@@ -64,11 +64,14 @@ struct continues_on_t {
  */
 template <>
 struct impls_for<::beman::execution::detail::continues_on_t> : ::beman::execution::detail::default_impls {
-    static constexpr auto get_attrs{[](const auto& data, const auto& child) noexcept -> decltype(auto) {
-        return ::beman::execution::detail::join_env(
-            ::beman::execution::detail::sched_attrs(data),
-            ::beman::execution::detail::fwd_env(::beman::execution::get_env(child)));
-    }};
+    struct get_attrs_impl {
+        auto operator()(const auto& data, const auto& child) const noexcept -> decltype(auto) {
+            return ::beman::execution::detail::join_env(
+                ::beman::execution::detail::sched_attrs(data),
+                ::beman::execution::detail::fwd_env(::beman::execution::get_env(child)));
+        }
+    };
+    static constexpr auto get_attrs{get_attrs_impl{}};
 };
 
 /*!

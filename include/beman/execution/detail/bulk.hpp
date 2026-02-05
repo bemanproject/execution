@@ -57,38 +57,40 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
 template <>
 struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
 
-    static constexpr auto complete = []<class Index, class Shape, class Fun, class Rcvr, class Tag, class... Args>(
-                                         Index,
-                                         ::beman::execution::detail::product_type<Shape, Fun>& state,
-                                         Rcvr&                                                 rcvr,
-                                         Tag,
-                                         Args&&... args) noexcept -> void
-        requires(!::std::same_as<Tag, set_value_t> || std::is_invocable_v<Fun, Shape, Args...>)
-    {
-        if constexpr (std::same_as<Tag, set_value_t>) {
-            auto& [shape, f] = state;
+    struct complete_impl {
+        template <class Index, class Shape, class Fun, class Rcvr, class Tag, class... Args>
+            requires(!::std::same_as<Tag, set_value_t> || std::is_invocable_v<Fun, Shape, Args...>)
+        auto operator()(Index,
+                        ::beman::execution::detail::product_type<Shape, Fun>& state,
+                        Rcvr&                                                 rcvr,
+                        Tag,
+                        Args&&... args) const noexcept -> void {
+            if constexpr (std::same_as<Tag, set_value_t>) {
+                auto& [shape, f] = state;
 
-            using s_type = std::remove_cvref_t<decltype(shape)>;
+                using s_type = std::remove_cvref_t<decltype(shape)>;
 
-            constexpr bool nothrow = noexcept(f(s_type(shape), args...));
+                constexpr bool nothrow = noexcept(f(s_type(shape), args...));
 
-            try {
-                [&]() noexcept(nothrow) {
-                    for (decltype(s_type(shape)) i = 0; i < shape; i++) {
-                        f(s_type(i), args...);
+                try {
+                    [&]() noexcept(nothrow) {
+                        for (decltype(s_type(shape)) i = 0; i < shape; i++) {
+                            f(s_type(i), args...);
+                        }
+                        Tag()(std::move(rcvr), std::forward<Args>(args)...);
+                    }();
+
+                } catch (...) {
+                    if constexpr (not nothrow) {
+                        ::beman::execution::set_error(std::move(rcvr), std::current_exception());
                     }
-                    Tag()(std::move(rcvr), std::forward<Args>(args)...);
-                }();
-
-            } catch (...) {
-                if constexpr (not nothrow) {
-                    ::beman::execution::set_error(std::move(rcvr), std::current_exception());
                 }
+            } else {
+                Tag()(std::move(rcvr), std::forward<Args>(args)...);
             }
-        } else {
-            Tag()(std::move(rcvr), std::forward<Args>(args)...);
         }
     };
+    static constexpr auto complete{complete_impl{}};
 };
 
 template <typename, typename, typename>

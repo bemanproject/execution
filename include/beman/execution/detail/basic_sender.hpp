@@ -28,8 +28,8 @@ namespace beman::execution::detail {
  */
 template <typename Tag, typename Data, typename... Child>
 struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child...> {
-    friend struct ::beman::execution::detail::connect_t;
-    friend struct ::beman::execution::get_completion_signatures_t;
+    //-dk:TODO friend struct ::beman::execution::detail::connect_t;
+    //-dk:TODO friend struct ::beman::execution::get_completion_signatures_t;
     using sender_concept = ::beman::execution::sender_t;
     using indices_for    = ::std::index_sequence_for<Child...>;
 
@@ -43,7 +43,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
         requires(!::beman::execution::receiver<Receiver>)
     auto connect(Receiver receiver) = BEMAN_EXECUTION_DELETE("the passed receiver doesn't model receiver");
 
-  private:
+    //-dk:TODO private:
 #if __cpp_explicit_this_parameter < 302110L //-dk:TODO need to figure out how to use explicit this with forwarding
     template <::beman::execution::receiver Receiver>
     auto connect(Receiver receiver) & noexcept(

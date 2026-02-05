@@ -93,10 +93,11 @@ struct impls_for<associate_t> : ::beman::execution::detail::default_impls {
                                                       typename ::std::remove_cvref_t<Data>::wrap_sender,
                                                       Receiver>> {};
 
-    static constexpr auto get_state =
-        []<typename Sender, typename Receiver>(Sender&& sender, Receiver& receiver) noexcept(
-            ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>&&
-                get_noexcept<::std::remove_cvref_t<Sender>, Receiver>::value) {
+    struct get_state_impl {
+        template <typename Sender, typename Receiver>
+        auto operator()(Sender&& sender, Receiver& receiver) const
+            noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
+                     get_noexcept<::std::remove_cvref_t<Sender>, Receiver>::value) {
             auto [_, data] = ::std::forward<Sender>(sender);
             auto dataParts{data.release()};
 
@@ -143,8 +144,13 @@ struct impls_for<associate_t> : ::beman::execution::detail::default_impls {
             };
             return dataParts ? op_state(::std::move(dataParts->first), ::std::move(dataParts->second), receiver)
                              : op_state(receiver);
-        };
-    static constexpr auto start = [](auto& state, auto&&) noexcept -> void { state.run(); };
+        }
+    };
+    static constexpr auto get_state{get_state_impl{}};
+    struct start_impl {
+        auto operator()(auto& state, auto&&) const noexcept -> void { state.run(); }
+    };
+    static constexpr auto start{start_impl{}};
 };
 
 template <typename Data, typename Env>

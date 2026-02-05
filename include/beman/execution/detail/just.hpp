@@ -50,11 +50,15 @@ struct completion_signatures_for_impl<
 
 template <typename Completion>
 struct impls_for<just_t<Completion>> : ::beman::execution::detail::default_impls {
-    static constexpr auto start = []<typename State>(State& state, auto& receiver) noexcept -> void {
-        [&state, &receiver]<::std::size_t... I>(::std::index_sequence<I...>) {
-            Completion()(::std::move(receiver), ::std::move(state.template get<I>())...);
-        }(::std::make_index_sequence<State::size()>{});
+    struct start_impl {
+        template <typename State>
+        auto operator()(State& state, auto& receiver) const noexcept -> void {
+            [&state, &receiver]<::std::size_t... I>(::std::index_sequence<I...>) {
+                Completion()(::std::move(receiver), ::std::move(state.template get<I>())...);
+            }(::std::make_index_sequence<State::size()>{});
+        }
     };
+    static constexpr auto start{start_impl{}};
 };
 } // namespace beman::execution::detail
 
