@@ -74,12 +74,15 @@ add_subdirectory(src/beman/execution)
 #===============================================================================
 # NOTE: this must be done before tests! CK
 include(./cmake/beman-install-library.cmake)
-beman_install_library(${TARGET_PREFIX} TARGETS ${TARGET_NAME} ${TARGET_PREFIX})
+beman_install_library(${TARGET_PREFIX} TARGETS ${TARGET_NAME} ${TARGET_PREFIX}
+    # FIXME: DEPENDENCIES [===[beman.inplace_vector 1.0.0]===] [===[beman.scope 0.0.1 EXACT]===] fmt
+    # TODO(CK): XXX OR XXX DEPENDENCIES "beman.inplace_vector 1.0.0;beman.scope 0.0.1 EXACT"
+)
 #===============================================================================
 
-if(BEMAN_EXECUTION_ENABLE_TESTING)
-    enable_testing()
+enable_testing()
 
+if(BEMAN_EXECUTION_ENABLE_TESTING)
     add_subdirectory(tests/beman/execution)
 endif()
 

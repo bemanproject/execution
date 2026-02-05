@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
 cmake_minimum_required(VERSION 3.30)
 
 include_guard(GLOBAL)
@@ -16,6 +17,7 @@ include(GNUInstallDirs)
 # ------
 #   beman_install_library(<name>
 #     TARGETS target1 [target2 ...]
+#     DEPENDENCIES dependency1 [dependency2 ...]
 #     [NAMESPACE <namespace>]
 #     [EXPORT_NAME <export-name>]
 #     [DESTINATION <install-prefix>]
@@ -29,6 +31,12 @@ include(GNUInstallDirs)
 #
 # TARGETS (required)
 #   List of CMake targets to install.
+#
+# DEPENDENCIES (optional)
+#   Semicolon-separated list, one dependency per entry.
+#   Each entry is a valid find_dependency() argument list.
+#   Note: you must use the bracket form for quoting if not only a package name is used!
+#   "[===[beman.inplace_vector 1.0.0]===] [===[beman.scope 0.0.1 EXACT]===] fmt"
 #
 # NAMESPACE (optional)
 #   Namespace for exported targets.
@@ -67,7 +75,7 @@ function(beman_install_library name)
     # ----------------------------
     set(options)
     set(oneValueArgs NAMESPACE EXPORT_NAME DESTINATION)
-    set(multiValueArgs TARGETS)
+    set(multiValueArgs TARGETS DEPENDENCIES)
 
     cmake_parse_arguments(
         BEMAN
@@ -84,6 +92,16 @@ function(beman_install_library name)
         )
     endif()
 
+    if(CMAKE_SKIP_INSTALL_RULES)
+        message(
+            WARNING
+            "beman_install_library(${name}): not installing targets '${BEMAN_TARGETS}' due to CMAKE_SKIP_INSTALL_RULES"
+        )
+        return()
+    endif()
+
+    set(_config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${name}")
+
     # ----------------------------
     # Defaults
     # ----------------------------
@@ -96,15 +114,8 @@ function(beman_install_library name)
     endif()
 
     if(NOT BEMAN_DESTINATION)
-        set(BEMAN_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/beman/modules")
-    endif()
-
-    if(CMAKE_SKIP_INSTALL_RULES)
-        message(
-            WARNING
-            "beman_install_library(${name}): not installing targets '${BEMAN_TARGETS}' due to CMAKE_SKIP_INSTALL_RULES"
-        )
-        return()
+        # XXX set(BEMAN_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/beman/modules")
+        set(BEMAN_DESTINATION "${_config_install_dir}/modules")
     endif()
 
     string(REPLACE "beman." "" install_component_name "${name}")
@@ -149,6 +160,8 @@ function(beman_install_library name)
                 "beman-install-library(${name}): '${_tgt}' has INTERFACE_HEADER_SETS=${_header_sets}"
             )
             # XXX set(__INSTALL_HEADER_SETS FILE_SET ${_header_sets})
+        else()
+            set(_header_sets HEADERS) # Note: empty FILE_SET in this case! CK
         endif()
 
         # Detect presence of C++ module file sets, exact one expected!
@@ -168,6 +181,9 @@ function(beman_install_library name)
                 FILE_SET
                     ${_header_sets} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
                 FILE_SET CXX_MODULES DESTINATION "${BEMAN_DESTINATION}"
+                # NOTE: There's currently no convention for this location! CK
+                CXX_MODULES_BMI
+                # TODO(CK): DESTINATION ${_config_install_dir}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
             )
         else()
             install(
@@ -229,13 +245,21 @@ function(beman_install_library name)
     endif()
 
     # ----------------------------------------
+    # expand dependencies
+    # ----------------------------------------
+    set(_beman_find_deps "")
+    foreach(dep IN ITEMS ${BEMAN_DEPENDENCIES})
+        message(VERBOSE "Add find_dependency(${dep})")
+        string(APPEND _beman_find_deps "find_dependency(${dep})\n")
+    endforeach()
+    set(BEMAN_FIND_DEPENDENCIES "${_beman_find_deps}")
+
+    # ----------------------------------------
     # Generate + install config files
     # ----------------------------------------
     if(_install_config)
-        set(_config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${name}")
-
         configure_package_config_file(
-            "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/${name}-config.cmake.in"
+            "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/Config.cmake.in"
             "${CMAKE_CURRENT_BINARY_DIR}/${name}-config.cmake"
             INSTALL_DESTINATION ${_config_install_dir}
         )

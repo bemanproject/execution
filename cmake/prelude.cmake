@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #
 # This file must be included/used as CMAKE_PROJECT_TOP_LEVEL_INCLUDES -> before project() is called!
 #

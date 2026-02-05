@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #
 # A CMake language file to be included as the last step of all project() command calls.
 # This file must be included/used as CMAKE_PROJECT_INCLUDE -> after project()
