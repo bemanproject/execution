@@ -1,6 +1,7 @@
 # Supporting Modules
 
 Author: Dietmar Kühl dietmar.kuehl@me.com
+Date: 2026-02-05
 
 Originally [`beman.execution`](https://github.com/bemanproject/execution)
 was implemented with out `module` support. Eventually, `module`
