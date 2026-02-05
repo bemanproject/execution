@@ -1,22 +1,58 @@
 <!-- SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception -->
 
-# Create and install an interface library and the `CXX_MODULE` if possible
+# CMake Support for Header-Only Libraries and C++ Modules
 
-To be able to compile a project with and without MODULES, the project needs at least 2 targets:
+This directory provides a small set of CMake helper modules that make it easier
+to **build and install a library that works both with and without C++20
+modules**.
 
-- an interface library (header only) with one `PUBLIC FILE_SET HEADERS`
-- a library (static and/or dynamic) with one `PUBLIC FILE_SET CXX_MODULE`
+The helpers wrap CMake’s evolving support for `FILE_SET CXX_MODULE` and package
+installation so that:
 
+- consumers can use the library in **classic header-only mode**, or
 
-## NEW CMAKE modules intended to be in infra/cmake:
+- consumers with a compatible toolchain can use **C++ modules**, including
+  optional `import std;` support.
 
-- prelude.cmake
-- cxx-modules-rules.cmake
-- beman-install-library.cmake
-- Config.cmake.in
+The goal is to keep project `CMakeLists.txt` files readable while hiding most of
+the platform- and compiler-specific complexity.
 
+---
 
-## NEW added related CMake options:
+## Motivation
+
+Today, supporting C++ modules often requires duplicating targets and custom
+install logic:
+
+- one target for headers only,
+- another target that owns module interface units,
+- conditional logic depending on compiler and CMake version,
+- non-trivial install/export rules.
+
+The helpers in this directory centralize that logic and provide a single,
+consistent API for projects that want to offer both usage models.
+
+---
+
+## Provided CMake Modules
+
+The following modules are expected to live in `infra/cmake`:
+
+- `prelude.cmake`
+  Common project setup and option handling.
+
+- `cxx-modules-rules.cmake`
+  Compiler and CMake feature checks related to C++ modules.
+
+- `beman-install-library.cmake`
+  High-level helper to install libraries, headers, module interface units, and CMake package files.
+
+- `Config.cmake.in`
+  Template used to generate the `<Package>Config.cmake` file for consumers.
+
+---
+
+## New Configuration Options
 
     * BEMAN_USE_MODULES:BOOL=ON
     * BEMAN_USE_STD_MODULE:BOOL=OFF
@@ -40,50 +76,58 @@ if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
 endif()
 ```
 
+Typical projects will only toggle `BEMAN_USE_MODULES`; the remaining options are
+detected automatically.
 
-### beman_install_library
+---
 
-Installs a library (or set of targets) along with headers, C++ modules,
-and optional CMake package configuration files.
+## Installing a Library
 
-#### Usage:
+Installation is handled by the `beman_install_library()` helper.
 
-  beman_install_library(<name>
+### Function Signature
+
+```cmake
+beman_install_library(
+    name
     TARGETS target1 [target2 ...]
-    DEPENDENCIES dependency1 [dependency2 ...]
+    [DEPENDENCIES dep1 [dep2 ...]]
     [NAMESPACE <namespace>]
     [EXPORT_NAME <export-name>]
-    [DESTINATION <install-prefix>]
-  )
+    [DESTINATION <module-destination>]
+)
+```
 
-#### Arguments:
+### Arguments
 
-name
+- **name**
   Logical package name (e.g. "beman.utility").
   Used to derive config file names and cache variable prefixes.
 
-TARGETS (required)
-  List of CMake targets to install.
+- **TARGETS**
+  Targets to install and export.
 
-DEPENDENCIES (optional)
+- **DEPENDENCIES (optional)**
   Semicolon-separated list, one dependency per entry.
-  Each entry is a valid find_dependency() argument list.
-  Note: you must use the bracket form for quoting if not only a package name is used!
-  "[===[beman.inplace_vector 1.0.0]===] [===[beman.scope 0.0.1 EXACT]===] fmt"
+  Each entry is a valid `find_dependency()` argument list.
 
-NAMESPACE (optional)
-  Namespace for exported targets.
+  **NOTE:** you must use the bracket form for quoting if not only a package name is used!
+
+  `"[===[beman.inplace_vector 1.0.0]===] [===[beman.scope 0.0.1 EXACT]===] fmt"`
+
+- **NAMESPACE (optional)**
+  Namespace for imported targets.
   Defaults to "beman::".
 
-EXPORT_NAME (optional)
-  Name of the CMake export set.
+- **EXPORT_NAME (optional)**
+  Name of the generated CMake export set.
   Defaults to "<name>-targets".
 
-DESTINATION (optional)
-  The install destination for CXX_MODULES.
-  Defaults to CMAKE_INSTALL_INCLUDEDIR/beman/modules.
+- **DESTINATION (optional)**
+  Installation directory for C++ module interface units.
+  Defaults to `${CMAKE_INSTALL_INCLUDEDIR}/beman/modules`.
 
-#### Brief
+The helper installs:
 
 This function installs the specified project TARGETS and its FILE_SET
 HEADERS to the default CMAKE install Destination.
@@ -92,7 +136,7 @@ It also handles the installation of the CMake config package files if
 needed.  If the given targets has FILE_SET CXX_MODULE, it will also
 installed to the given DESTINATION
 
-#### Cache variables:
+- ***Used Cache variables**
 
 BEMAN_INSTALL_CONFIG_FILE_PACKAGES
   List of package names for which config files should be installed.
@@ -101,6 +145,7 @@ BEMAN_INSTALL_CONFIG_FILE_PACKAGES
   Per-package override to enable/disable config file installation.
   <PREFIX> is the uppercased package name with dots replaced by underscores.
 
+---
 
 ## The possible usage in CMakeLists.txt
 
@@ -160,8 +205,12 @@ beman_install_library(${PROJECT_NAME} TARGETS ${TARGET_PREFIX} beman.exemplar_he
 )
 ```
 
+---
 
 ## Possible cmake config output
+
+**NOTE:** Exact output depend on the build host, used toolchain, and
+whether module support is enabled and supported.
 
 ```bash
 bash-5.3$ make test-module
@@ -212,8 +261,12 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 bash-5.3$
 ```
 
+---
 
 ## Possible cmake export config package
+
+**NOTE:** Exact contents depend on the build host, used toolchain, and
+whether module support is enabled.
 
 ```bash
 cmake --install build/Darwin/default --prefix $PWD/stagedir
@@ -247,6 +300,7 @@ lib/
 bash-5.3$
 ```
 
+---
 
 ## The recommended usage in implementation
 
@@ -276,6 +330,7 @@ struct identity {
 } // namespace beman::exemplar
 ```
 
+---
 
 ## The possible usage in user code
 
@@ -304,3 +359,29 @@ int main() {
     return 0;
 }
 ```
+
+---
+
+## Notes on CMake and Modules
+
+- `FILE_SET CXX_MODULE` support is still evolving and depends on the compiler
+  and CMake version.
+
+- Not all toolchains support installing or consuming prebuilt module interface
+  units yet.
+
+- These helpers aim to provide a pragmatic, forward-compatible structure rather
+  than a final standard solution.
+
+---
+
+## Summary
+
+The helpers in this directory provide a structured way to:
+
+- build header-only and module-based libraries side by side,
+- hide compiler- and platform-specific complexity,
+- install and export targets in a consistent, consumer-friendly way.
+
+They are intended for projects that want to experiment with C++ modules today
+while remaining usable on traditional toolchains.
