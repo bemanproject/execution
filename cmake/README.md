@@ -88,8 +88,7 @@ Installation is handled by the `beman_install_library()` helper.
 ### Function Signature
 
 ```cmake
-beman_install_library(
-    name
+beman_install_library(name
     TARGETS target1 [target2 ...]
     [DEPENDENCIES dep1 [dep2 ...]]
     [NAMESPACE <namespace>]
@@ -129,19 +128,19 @@ beman_install_library(
 
 The helper installs:
 
-This function installs the specified project TARGETS and its FILE_SET
-HEADERS to the default CMAKE install Destination.
+This function installs the specified project TARGETS and its `FILE_SET
+HEADERS` to the default CMAKE install destination.
 
 It also handles the installation of the CMake config package files if
-needed.  If the given targets has FILE_SET CXX_MODULE, it will also
+needed.  If the given targets has `FILE_SET CXX_MODULE`, it will also
 installed to the given DESTINATION
 
 - ***Used Cache variables**
 
-BEMAN_INSTALL_CONFIG_FILE_PACKAGES
+`BEMAN_INSTALL_CONFIG_FILE_PACKAGES`
   List of package names for which config files should be installed.
 
-<PREFIX>_INSTALL_CONFIG_FILE_PACKAGE
+`<PREFIX>_INSTALL_CONFIG_FILE_PACKAGE`
   Per-package override to enable/disable config file installation.
   <PREFIX> is the uppercased package name with dots replaced by underscores.
 

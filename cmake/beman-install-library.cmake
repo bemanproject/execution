@@ -16,8 +16,8 @@ include(GNUInstallDirs)
 # Usage:
 # ------
 #   beman_install_library(<name>
-#     TARGETS target1 [target2 ...]
-#     DEPENDENCIES dependency1 [dependency2 ...]
+#     TARGETS <target1> [<target2> ...]
+#     [DEPENDENCIES <dependency1> [<dependency2> ...]]
 #     [NAMESPACE <namespace>]
 #     [EXPORT_NAME <export-name>]
 #     [DESTINATION <install-prefix>]
@@ -48,13 +48,13 @@ include(GNUInstallDirs)
 #
 # DESTINATION (optional)
 #   The install destination for CXX_MODULES.
-#   Defaults to CMAKE_INSTALL_INCLUDEDIR/beman/modules.
+#   Defaults to ${CMAKE_INSTALL_LIBDIR}/cmake/${name}/modules.
 #
 # Brief
 # -----
 #
 # This function installs the specified project TARGETS and its FILE_SET
-# HEADERS to the default CMAKE install Destination.
+# HEADERS to the default CMAKE install destination.
 #
 # It also handles the installation of the CMake config package files if
 # needed.  If the given targets has FILE_SET CXX_MODULE, it will also
@@ -114,7 +114,6 @@ function(beman_install_library name)
     endif()
 
     if(NOT BEMAN_DESTINATION)
-        # XXX set(BEMAN_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/beman/modules")
         set(BEMAN_DESTINATION "${_config_install_dir}/modules")
     endif()
 
@@ -159,7 +158,6 @@ function(beman_install_library name)
                 VERBOSE
                 "beman-install-library(${name}): '${_tgt}' has INTERFACE_HEADER_SETS=${_header_sets}"
             )
-            # XXX set(__INSTALL_HEADER_SETS FILE_SET ${_header_sets})
         else()
             set(_header_sets HEADERS) # Note: empty FILE_SET in this case! CK
         endif()
@@ -180,7 +178,7 @@ function(beman_install_library name)
                 RUNTIME # DESTINATION ${CMAKE_INSTALL_BINDIR}
                 FILE_SET
                     ${_header_sets} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-                FILE_SET CXX_MODULES DESTINATION "${BEMAN_DESTINATION}"
+                FILE_SET ${_module_sets} DESTINATION "${BEMAN_DESTINATION}"
                 # NOTE: There's currently no convention for this location! CK
                 CXX_MODULES_BMI
                 # TODO(CK): DESTINATION ${_config_install_dir}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
