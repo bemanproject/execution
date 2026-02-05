@@ -5,7 +5,7 @@ Author: Dietmar Kühl dietmar.kuehl@me.com
 Originally [`beman.execution`](https://github.com/bemanproject/execution)
 was implemented with out `module` support. Eventually, `module`
 support in all compilers and in [`cmake`](https://cmake.org/) made
-it reaonable to add `module` support. This document describes some
+it reasonable to add `module` support. This document describes some
 of the experiences of the journey adding `module` support for
 [`beman.execution`](https://github.com/bemanproject/execution). It is
 likely that my attempts on how to support `module`s were misguided and
@@ -20,7 +20,7 @@ implementation which had no `module` support. It had tests and some
 examples and the `CMakeLists.txt` built these. The default build
 procedure run from the `Makefile` was already set up to use `ninja`.
 
-Claus Klein had started to land `cmake` support fo `module`s. In
+Claus Klein had started to land `cmake` support of `module`s. In
 particular there were `cmake` rules to detect whether there is a
 dependency scanner and whether `import std;` is supported. The
 statement from Claus was that using `import std;` would be the
@@ -56,7 +56,7 @@ it.  I tried it. There were a bunch of errors which I could work
 out easily but eventually I got stuck with unscruitible errors.
 Since I never planned to write about the experience I don't recall
 what the errors were.  When I asked about it the message was that
-neither `cmake` nor the compilers are quite there. So I abondoned
+neither `cmake` nor the compilers are quite there. So I abandoned
 this first attempt.
 
 Time passed and in the beginning of 2026 some `cmake` support for
@@ -131,7 +131,7 @@ compilers:
 </ol>
 
 To still achieve the objective of `export`ing a name when it first
-gets declared, the structure needs to be change. However, the componets
+gets declared, the structure needs to be changed. However, the components
 are organized in a consistent structure. So the idea is to use this structure
 to reorganize the files for `module` builds:
 
@@ -230,7 +230,7 @@ template and the relevant `tuple_size` and `tuple_element`
 specializations I could resolve this problem, too.
 
 Once I got past that I encountered a problem which is probably quite
-common: following the specificaton of exposition-only `impls_for`
+common: following the specification of exposition-only `impls_for`
 class template I used lambda functions for the various "overrides".
 One compiler complained about undefined symbols about these! Of
 course, using lambda functions in a header is problematic because
@@ -257,7 +257,7 @@ the headers.
 ## Changes Needed to Support Modules
 
 When enabling modules I needed to apply quite a few, mostly
-rather simple changes. Some of teh necessary changes did take
+rather simple changes. Some of the necessary changes did take
 me a bit to actually discover. Here is broadly what I needed
 to change:
 
@@ -318,7 +318,7 @@ to change:
     However, the compiler insisted in the definition of the function
     that neither of the two expressions from the `requires` clause
     was valid. Eventually I just turned the `query` into two
-    overloads, the first requring that `q(e1)` is valid and the
+    overloads, the first requiring that `q(e1)` is valid and the
     second requiring that `q(e1)` is not valid but `q(e2)` is valid.
     I think it was only one compiler causing this issue.
 
@@ -337,7 +337,7 @@ changed multiple tests needed to be built.
 
 The promise of `module`s was that builds get faster. I don't have
 objective measurements but it seems the development actually got
-slower. While concentrating on fixing a particular componenent I
+slower. While concentrating on fixing a particular component I
 often removed all other tests and the examples from the build.
 
 ## Modules vs. Testing
