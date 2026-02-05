@@ -33,7 +33,7 @@ including the standard library headers.
 
 I had tried to create a `module` right after the Hagenberg meeting
 at the end of 2025. Since I was clueless how to go about that I had
-asked peolple who worked on the `module` specification and implemented
+asked people who worked on the `module` specification and implemented
 the corresponding support in compilers. The recommendation was to
 create a `module` file, include all the headers, start the `module`,
 and have `export using <name>;` declarations. That is, something
@@ -54,7 +54,7 @@ namespace beman::execution {
 
 Creating a file like that was fairly mechanical work and I just did
 it.  I tried it. There were a bunch of errors which I could work
-out easily but eventually I got stuck with unscruitible errors.
+out easily but eventually I got stuck with inscrutable errors.
 Since I never planned to write about the experience I don't recall
 what the errors were.  When I asked about it the message was that
 neither `cmake` nor the compilers are quite there. So I abandoned
@@ -110,7 +110,7 @@ compilers:
 
 <ol>
   <li>
-  The first 7 charactesr of a `module` file shall be `module;`
+  The first 7 characters of a `module` file shall be `module;`
   without anything preceding them.  [`g++`](https://gcc.gnu.org/)
   and [`clang++`](https://llvm.org/) are somewhat relaxed about
   this requirement but some compiler is rather strict. This, however,
@@ -127,14 +127,14 @@ compilers:
   is, all headers really need to be included before the name
   declaration. That is pretty much _not_ how the components in
   [`beman.execution`](https://github.com/bemanproject/execution) are
-  organized.
+  organised.
   </li>
 </ol>
 
 To still achieve the objective of `export`ing a name when it first
 gets declared, the structure needs to be changed. However, the components
-are organized in a consistent structure. So the idea is to use this structure
-to reorganize the files for `module` builds:
+are organised in a consistent structure. So the idea is to use this structure
+to reorganise the files for `module` builds:
 
 <ol>
   <li>
@@ -175,7 +175,7 @@ suitable `#line` directives to find the actual source. Compiling
 the resulting still didn't quite work, of course. There was a bunch
 of silly errors in the component headers which could be quickly
 resolved, though. That wasn't quite as true for the test files,
-though (more [ruminations on tests](#modules-vs-testing) below):
+though (more [rumination on tests](#modules-vs-testing) below):
 
 - Many tests didn't include all standard library headers they
   dependent on. Since the corresponding header were actually included
@@ -228,7 +228,7 @@ One compiler put up a fight, though! I'm using the an exposition-only
 compiler error about using <code>std::get&lt;N&gt;(<i>sender</i>)</code>.
 After some experimentation I found that `export`ing the `product_type`
 template and the relevant `tuple_size` and `tuple_element`
-specializations I could resolve this problem, too.
+specialisations I could resolve this problem, too.
 
 Once I got past that I encountered a problem which is probably quite
 common: following the specification of exposition-only `impls_for`
@@ -245,7 +245,7 @@ need to rewrite an implementation just to make it a `module`. I
 should also get away not needing any macros to insert/remove the
 `export` keywords from declarations. Instead, the `export`ed names
 are just listed in the module definition file. What is currently
-missing is a bit of a clean-up to remove some of the artifacts.
+missing is a bit of a clean-up to remove some of the artefacts.
 Also, there may be more implementation details exported than is
 actually necessary.
 
@@ -288,7 +288,7 @@ to change:
     Removing `#include <tuple>` causes a compilation failure:
     `sync_wait` return an `std::optional<std::tuple<T...>>` and the
     structured binding needs to know about the `std::tuple`. Oddly,
-    the `std::optional` can be deferenced.
+    the `std::optional` can be dereferenced.
 
 - My biggest blocker was the definition of `join_env`: the original
     definition used a `requires` clause which checked whether at
@@ -383,7 +383,7 @@ main sticking points are:
 2. The "scan deps" step seems to take quite long.
 3. So far I haven't managed to avoid `export`ing some of the implementation
     details. However, that _may_ be due to some uses actually requiring them.
-4. There is different behavior between different compilers.
+4. There is different behaviour between different compilers.
 
 Some of the issues I encountered are likely due to ignorance: probably
 all issues can be resolved with a bit of adjusted practices.
