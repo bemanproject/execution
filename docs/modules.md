@@ -126,7 +126,7 @@ compilers:
   is, all headers really need to be included before the name
   declaration. That is pretty much _not_ how the components in
   [`beman.execution`](https://github.com/bemanproject/execution) are
-  orgnaized.
+  organized.
   </li>
 </ol>
 
@@ -175,6 +175,41 @@ the resulting still didn't quite work, of course. There was a bunch
 of silly errors in the component headers which could be quickly
 resolved, though. That wasn't quite as true for the test files,
 though (more [ruminations on tests](#modules-vs-testing) below):
+
+- Many tests didn't include all standard library headers they
+  dependent on. Since the corresponding header were actually included
+  by a component header things still worked. So, the corresponding
+  headers needed to be added.
+- Instead of `#include <beman/execution/execution.hpp>` the tests
+  now use `import beman.execution;` (well, the test really use
+  conditional compilation to either use a header or an `import`
+  statement). Including any standard library header _after_ the
+  `import` statement again confuses the compiler, i.e., some
+  reordering in the files was needed: the test files deliberately
+  included the component's header first (to make sure all needed
+  headers are included by the component header) but this include
+  statement is now replaced by the `import` statement.
+- The tests actually use some of the implementation-defined entities
+  which were not meant to be `export`ed. To still have these tests
+  I ended up `export`ing the necessary implementation-defined names.
+  That needs to be corrected eventually (assuming that is actually
+  possible which isn't quite as clear).
+- Of course, the tests actually used the various names and it turned
+  out that quite a few names, e.g., the `operator|`, were missing.
+
+That worked OK with one compiler. Then I tried a different compiler
+and lots of issues emerged:
+
+- More names needed to be `export`ed for the tests.
+- Some things just didn't compile at all and needed to be changed
+  (I managed to avoid the problems but I haven't quite understood why).
+- Symbols were undefined.
+
+I ended up spending quite a bit of time reshuffling where headers
+go, fixing some actual bugs, and working around what looks like
+compiler problems. Most of that was, however, fairly mechanical
+and eventually I got a `module` declaration working with all major
+C++ compilers (using recent versions of each).
 
 -dk:TODO `export using`
 -dk:TODO `import std;`
