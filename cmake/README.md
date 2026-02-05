@@ -104,15 +104,61 @@ BEMAN_INSTALL_CONFIG_FILE_PACKAGES
 
 ## The possible usage in CMakeLists.txt
 
-    include(./cmake/prelude.cmake)
-    project(beman.execution VERSION 0.2.0 LANGUAGES CXX)
-    include(./cmake/cxx-modules-rules.cmake)
+```cmake
+cmake_minimum_required(VERSION 3.30...4.2)
 
-    # NOTE: this must be done before tests! CK
-    include(beman-install-library)
-    beman_install_library(${PROJECT_NAME} TARGETS ${PROJECT_NAME} beman.exemplar_headers #
-        # TODO(add): DEPENDENCIES [===[beman.inplace_vector 1.0.0]===] [===[beman.scope 0.0.1 EXACT]===] fmt
+include(./cmake/prelude.cmake)
+project(beman.execution VERSION 0.2.0 LANGUAGES CXX)
+include(./cmake/cxx-modules-rules.cmake)
+
+set(TARGET_PREFIX ${PROJECT_NAME})
+
+#===============================================================================
+if(BEMAN_USE_MODULES)
+    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+
+    # CMake requires the language standard to be specified as compile feature
+    # when a target provides C++23 modules and the target will be installed
+    add_library(${TARGET_PREFIX} STATIC)
+    add_library(beman::execution ALIAS ${TARGET_PREFIX})
+    target_compile_features(
+        ${TARGET_PREFIX}
+        PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
     )
+
+    include(GenerateExportHeader)
+    generate_export_header(
+        ${TARGET_PREFIX}
+        BASE_NAME ${TARGET_PREFIX}
+        EXPORT_FILE_NAME beman/execution/modules_export.hpp
+    )
+    target_sources(
+        ${TARGET_PREFIX}
+        PUBLIC
+            FILE_SET HEADERS
+                BASE_DIRS include ${CMAKE_CURRENT_BINARY_DIR}
+                FILES
+                    ${CMAKE_CURRENT_BINARY_DIR}/beman/execution/modules_export.hpp
+    )
+    target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_MODULES)
+endif()
+
+if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
+    target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_IMPORT_STD)
+else()
+    message(WARNING "Missing support for CMAKE_CXX_MODULE_STD!")
+endif()
+#===============================================================================
+
+# ...
+
+# NOTE: this must be done before tests! CK
+include(beman-install-library)
+beman_install_library(${PROJECT_NAME} TARGETS ${TARGET_PREFIX} beman.exemplar_headers #
+    # TODO(add): DEPENDENCIES [===[beman.inplace_vector 1.0.0]===] [===[beman.scope 0.0.1 EXACT]===] fmt
+)
+```
 
 
 ## Possible cmake config output
