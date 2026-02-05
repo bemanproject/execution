@@ -127,14 +127,14 @@ compilers:
   is, all headers really need to be included before the name
   declaration. That is pretty much _not_ how the components in
   [`beman.execution`](https://github.com/bemanproject/execution) are
-  organised.
+  organized.
   </li>
 </ol>
 
 To still achieve the objective of `export`ing a name when it first
 gets declared, the structure needs to be changed. However, the components
-are organised in a consistent structure. So the idea is to use this structure
-to reorganise the files for `module` builds:
+are organized in a consistent structure. So the idea is to use this structure
+to reorganize the files for `module` builds:
 
 <ol>
   <li>
@@ -228,7 +228,7 @@ One compiler put up a fight, though! I'm using the an exposition-only
 compiler error about using <code>std::get&lt;N&gt;(<i>sender</i>)</code>.
 After some experimentation I found that `export`ing the `product_type`
 template and the relevant `tuple_size` and `tuple_element`
-specialisations I could resolve this problem, too.
+specialization I could resolve this problem, too.
 
 Once I got past that I encountered a problem which is probably quite
 common: following the specification of exposition-only `impls_for`
@@ -245,7 +245,7 @@ need to rewrite an implementation just to make it a `module`. I
 should also get away not needing any macros to insert/remove the
 `export` keywords from declarations. Instead, the `export`ed names
 are just listed in the module definition file. What is currently
-missing is a bit of a clean-up to remove some of the artefacts.
+missing is a bit of a clean-up to remove some of the artifacts.
 Also, there may be more implementation details exported than is
 actually necessary.
 
@@ -383,7 +383,7 @@ main sticking points are:
 2. The "scan deps" step seems to take quite long.
 3. So far I haven't managed to avoid `export`ing some of the implementation
     details. However, that _may_ be due to some uses actually requiring them.
-4. There is different behaviour between different compilers.
+4. There is different behavior between different compilers.
 
 Some of the issues I encountered are likely due to ignorance: probably
 all issues can be resolved with a bit of adjusted practices.
