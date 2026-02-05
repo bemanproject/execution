@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct start_t {
+struct start_t {
     template <typename State>
     auto operator()(State&&) const -> void = BEMAN_EXECUTION_DELETE("start(obj) requires an lvalue argument");
     template <typename State>
@@ -44,7 +44,7 @@ BEMAN_EXECUTION_EXPORT struct start_t {
     // NOLINTEND(misc-no-recursion)
 };
 
-BEMAN_EXECUTION_EXPORT inline constexpr start_t start{};
+inline constexpr start_t start{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

@@ -21,7 +21,7 @@ namespace beman::execution {
  * \brief Turn an entity, e.g., a sender, into an awaitable.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT struct as_awaitable_t {
+struct as_awaitable_t {
     template <typename Expr, typename Promise>
     auto operator()(Expr&& expr, Promise& promise) const {
         if constexpr (requires { ::std::forward<Expr>(expr).as_awaitable(promise); }) {
@@ -39,7 +39,7 @@ BEMAN_EXECUTION_EXPORT struct as_awaitable_t {
         }
     }
 };
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::as_awaitable_t as_awaitable{};
+inline constexpr ::beman::execution::as_awaitable_t as_awaitable{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

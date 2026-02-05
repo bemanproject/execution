@@ -21,8 +21,8 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-BEMAN_EXECUTION_EXPORT template <::beman::execution::scope_token Token,
-                                 ::beman::execution::sender      Sender> //-dk:TODO detail export
+template <::beman::execution::scope_token Token,
+          ::beman::execution::sender      Sender> //-dk:TODO detail export
 struct associate_data {
     using wrap_sender = ::std::remove_cvref_t<decltype(::std::declval<Token&>().wrap(::std::declval<Sender>()))>;
 
@@ -65,7 +65,7 @@ struct associate_data {
     Token                        token;
     ::std::optional<wrap_sender> sender;
 };
-BEMAN_EXECUTION_EXPORT template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
+template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
 associate_data(Token, Sender&&) -> associate_data<Token, Sender>;
 
 struct associate_t {
@@ -162,8 +162,8 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using associate_t = ::beman::execution::detail::associate_t;
-BEMAN_EXECUTION_EXPORT inline constexpr associate_t associate{};
+using associate_t = ::beman::execution::detail::associate_t;
+inline constexpr associate_t associate{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

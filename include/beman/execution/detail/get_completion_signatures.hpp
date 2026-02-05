@@ -20,7 +20,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct get_completion_signatures_t {
+struct get_completion_signatures_t {
   private:
     template <typename Sender, typename Env>
     static auto get(Sender&& sender, Env&& env) noexcept {
@@ -61,7 +61,7 @@ BEMAN_EXECUTION_EXPORT struct get_completion_signatures_t {
         return this->get(::std::forward<Sender>(sender), ::std::forward<Env>(env));
     }
 };
-BEMAN_EXECUTION_EXPORT inline constexpr get_completion_signatures_t get_completion_signatures{};
+inline constexpr get_completion_signatures_t get_completion_signatures{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

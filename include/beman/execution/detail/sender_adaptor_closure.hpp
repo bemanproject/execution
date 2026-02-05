@@ -18,7 +18,7 @@ struct sender_adaptor_closure_base {};
 
 namespace beman::execution {
 // NOLINTBEGIN(bugprone-crtp-constructor-accessibility)
-BEMAN_EXECUTION_EXPORT template <typename>
+template <typename>
 struct sender_adaptor_closure : ::beman::execution::detail::pipeable::sender_adaptor_closure_base {};
 // NOLINTEND(bugprone-crtp-constructor-accessibility)
 
@@ -31,7 +31,7 @@ concept is_sender_adaptor_closure =
 }
 
 namespace beman::execution::detail::pipeable {
-BEMAN_EXECUTION_EXPORT template <::beman::execution::sender Sender, typename Adaptor>
+template <::beman::execution::sender Sender, typename Adaptor>
     requires(!::beman::execution::sender<Adaptor>) &&
             ::std::derived_from<::std::decay_t<Adaptor>,
                                 ::beman::execution::sender_adaptor_closure<::std::decay_t<Adaptor>>> &&

@@ -276,8 +276,8 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using when_all_t = ::beman::execution::detail::when_all_t;
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::when_all_t when_all{};
+using when_all_t = ::beman::execution::detail::when_all_t;
+inline constexpr ::beman::execution::when_all_t when_all{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

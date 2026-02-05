@@ -15,10 +15,10 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Sender,
-                                 typename Env                         = ::beman::execution::env<>,
-                                 template <typename...> class Tuple   = ::beman::execution::detail::decayed_tuple,
-                                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
+template <typename Sender,
+          typename Env                         = ::beman::execution::env<>,
+          template <typename...> class Tuple   = ::beman::execution::detail::decayed_tuple,
+          template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
     requires ::beman::execution::sender_in<Sender, Env>
 using value_types_of_t =
     ::beman::execution::detail::gather_signatures<::beman::execution::set_value_t,

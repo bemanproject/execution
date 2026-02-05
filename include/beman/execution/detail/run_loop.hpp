@@ -26,7 +26,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT class run_loop {
+class run_loop {
   private:
     struct scheduler;
 

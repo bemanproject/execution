@@ -12,9 +12,9 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct operation_state_t {};
+struct operation_state_t {};
 
-BEMAN_EXECUTION_EXPORT template <typename State>
+template <typename State>
 concept operation_state =
     ::std::derived_from<typename State::operation_state_concept, ::beman::execution::operation_state_t> &&
     ::std::is_object_v<State> && requires(State& state) {

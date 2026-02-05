@@ -71,7 +71,7 @@ immediately. So I abandoned that particular approach, again.
 ### Generate Module Friendly Code: `mk-module.py`
 
 The attempts up to this point had indicated a few things which
-were somewhat misaligned with the way the code in 
+were somewhat misaligned with the way the code in
 [`beman.execution`](https://github.com/bemanproject/execution)
 is laid out. The code is structured into lots of small _components_
 (loosely based on John Lakos's idea of components in his 1996 version
@@ -211,16 +211,178 @@ compiler problems. Most of that was, however, fairly mechanical
 and eventually I got a `module` declaration working with all major
 C++ compilers (using recent versions of each).
 
--dk:TODO `export using`
--dk:TODO `import std;`
+### Retry `export using`
+
+Using a script to generate a `module` file restructured to better
+match the `module` needs did get me a working `module` definition.
+However, that shouldn't really be necessary. While fixing various
+minor bugs I did fix a few things which looked as if they may have
+had an impact when trying to use `export using <name>`. So tried
+that approach again and this time it worked, at least, for some of
+the compilers.  That looked promising!
+
+One compiler put up a fight, though! I'm using the an exposition-only
+`product_type` class template as is described in
+[[exec]](https://eel.is/c++draft/exec#snd.expos-17) and I got a
+compiler error about using <code>std::get&lt;N&gt;(<i>sender</i>)</code>.
+After some experimentation I found that `export`ing the `product_type`
+template and the relevant `tuple_size` and `tuple_element`
+specializations I could resolve this problem, too.
+
+Once I got past that I encountered a problem which is probably quite
+common: following the specificaton of exposition-only `impls_for`
+class template I used lambda functions for the various "overrides".
+One compiler complained about undefined symbols about these! Of
+course, using lambda functions in a header is problematic because
+each instance of a lambda function has a different type, even if
+they are spelled identical! So I replaced all of these lambda functions
+by `struct`s which only have one member which is an `operator()`.
+
+With that I also got a working `module` definition. While I'm quite
+fond of my generator I prefer this approach! There shouldn't be a
+need to rewrite an implementation just to make it a `module`. I
+should also get away not needing any macros to insert/remove the
+`export` keywords from declarations. Instead, the `export`ed names
+are just listed in the module definition file. What is currently
+missing is a bit of a clean-up to remove some of the artifacts.
+Also, there may be more implementation details exported than is
+actually necessary.
+
+### `import std;`
+
+Currently, `import std;` is _not_, yet, used. It should be straight
+forward to conditionally choose between `import std;` and including
+the headers.
 
 ## Changes Needed to Support Modules
 
--dk:TODO order of headers vs. import
--dk:TODO fixes for join_env
--dk:TODO requires declaration of variant, optional, etc.
+When enabling modules I needed to apply quite a few, mostly
+rather simple changes. Some of teh necessary changes did take
+me a bit to actually discover. Here is broadly what I needed
+to change:
 
-## Scanning
+- I had slotted and `import beman.execution;` in where the
+    the project header(s) were included. Some headers came
+    before, others came after. It seems that doesn't work:
+    any header should preceded the `import` statements or
+    the `module` name declaration.
+
+- Especially in the tests I hadn't always included all headers
+    for standard library components which may be potentially
+    used. However, these are necessary, even if the standard
+    library component isn't even named and just used. For
+    example:
+
+    ```c++
+    #include <tuple>
+    import beman.execution;
+    namespace ex = beman::execution;
+
+    int main() {
+        auto[rc] = *ex::sync_wait(ex::just(0));
+        return rc;
+    }
+    ```
+
+    Removing `#include <tuple>` causes a compilation failure:
+    `sync_wait` return an `std::optional<std::tuple<T...>>` and the
+    structured binding needs to know about the `std::tuple`. Oddly,
+    the `std::optional` can be deferenced.
+
+- My biggest blocker was the definition of `join_env`: the original
+    definition used a `requires` clause which checked whether at
+    least one of two expressions were values. Implementation used
+    an `if constexpr` to decide whether the first of the two
+    expression is value and used that and otherwise the other
+    expression would be used. That is, something like this:
+
+    ```c++
+    template <typename E1, typename E2>
+    struct join_env {
+        E1 e1;
+        E2 e2;
+        template <typename Q>
+            requires(
+                requires(Q q, const E1& e){ q(e); } ||
+                requires(Q q, const E2& e){ q(e); }
+            )
+        auto query(Q q) const noexcept {
+            if constexpr (requires(Q q, const E1& e){ q(e); })
+                return q(this->e1);
+            else
+                return q(this->e2);
+        }
+    };
+    ```
+
+    However, the compiler insisted in the definition of the function
+    that neither of the two expressions from the `requires` clause
+    was valid. Eventually I just turned the `query` into two
+    overloads, the first requring that `q(e1)` is valid and the
+    second requiring that `q(e1)` is not valid but `q(e2)` is valid.
+    I think it was only one compiler causing this issue.
+
+## Scanning and Building
+
+One of the things which seems odd is that each time `beman.execution`
+is built, the files are scanned for dependencies. That scanning
+often takes longer than the actual build of the respective object
+file.  Also, since the `module` gets rebuild, all the tests `import`ing
+the `module` get built again. When developing with including headers
+only the tests which included modified headers (possibly indirectly)
+needed to be rebuilt. Since the components and tests were created
+in dependency order, that normally meant that only one test needed
+to be rebuilt. Only if an already tested component needed to be
+changed multiple tests needed to be built.
+
+The promise of `module`s was that builds get faster. I don't have
+objective measurements but it seems the development actually got
+slower. While concentrating on fixing a particular componenent I
+often removed all other tests and the examples from the build.
 
 ## Modules vs. Testing
 
+Testing the `module` components is, yet, another issue! There are
+a few issues and I haven't worked out all of them, yet:
+
+1. There are quite a few classes and functions which are implementation
+    details. I like to test these. In fact, I normally don't use `private`
+    member functions because I can't test them. Instead, this functionality
+    would become `public` members of an implementation class which then
+    becomes a `private` member of the actual component. The implementation
+    class can be tested separately. However, anything which isn't `export`ed
+    isn't accessible from outside the `module`.
+
+    I still want to test that the `module` works, including all the
+    implementation details. Currently, the implementation details
+    are tested by just using the headers to get the declarations.
+    That doesn't seem quite right, though. Maybe the way to is to
+    have a second `module` for the implementation details, say,
+    `beman.execution.detail`, and use that to test the implementation
+    details.
+
+2. Some tests would benefit from common tools. For example, there could be
+    a `test::scheduler` which is used to verify that the various scheduling
+    operations do the right thing. A `test::scheduler` would be defined in
+    a header and included into each test. Of course, the `test::scheduler`
+    would need the declarations of some `module` components, e.g., of
+    `set_value_t` and, thus, use `import beman.execution`.
+
+    That didn't quite occur to me but it _seems_ that may actually work!
+    An initial test seems to show that the compilers do not get upset about
+    multiple `import beman.execution` statements.
+
+## Conclusion
+
+So far it isn't clear to me whether `module`s do provide a benefit. The
+main sticking points are:
+
+1. I don't known, yet, how to test implementation details without `export`ing
+    them.
+2. The "scan deps" step seems to take quite long.
+3. So far I haven't managed to avoid `export`ing some of the implementation
+    details. However, that _may_ be due to some uses actually requiring them.
+4. There is different behavior between different compilers.
+
+Some of the issues I encountered are likely due to ignorance: probably
+all issues can be resolved with a bit of adjusted practices.

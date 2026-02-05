@@ -25,7 +25,7 @@ namespace beman::execution {
  * tag type of the passed sender. If there is no corresponding member function
  * no transformation is applied.
  */
-BEMAN_EXECUTION_EXPORT struct default_domain {
+struct default_domain {
     template <::beman::execution::sender Sender, ::beman::execution::detail::queryable... Env>
         requires(sizeof...(Env) <= 1) && requires(Sender&& sender, Env&&... env) {
             ::beman::execution::tag_of_t<Sender>().transform_sender(::std::forward<Sender>(sender),

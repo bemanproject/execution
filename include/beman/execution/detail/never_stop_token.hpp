@@ -9,7 +9,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT class never_stop_token;
+class never_stop_token;
 }
 
 // ----------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Token>
+template <typename Token>
 concept unstoppable_token = ::beman::execution::stoppable_token<Token> &&
                             requires() { requires ::std::bool_constant<not Token::stop_possible()>::value; };
 } // namespace beman::execution

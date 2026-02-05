@@ -30,7 +30,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-BEMAN_EXECUTION_EXPORT struct into_variant_t {
+struct into_variant_t {
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
         auto domain{::beman::execution::detail::get_domain_early(sender)};
@@ -101,8 +101,8 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using into_variant_t = ::beman::execution::detail::into_variant_t;
-BEMAN_EXECUTION_EXPORT inline constexpr into_variant_t into_variant{};
+using into_variant_t = ::beman::execution::detail::into_variant_t;
+inline constexpr into_variant_t into_variant{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

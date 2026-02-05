@@ -381,9 +381,9 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using split_t = ::beman::execution::detail::split_t;
+using split_t = ::beman::execution::detail::split_t;
 
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::split_t split{};
+inline constexpr ::beman::execution::split_t split{};
 } // namespace beman::execution
 
 #endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SPLIT

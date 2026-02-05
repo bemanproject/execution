@@ -153,17 +153,17 @@ namespace beman::execution {
  * \brief <code>then_t</code> is the type of <code>then</code>.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT using then_t = ::beman::execution::detail::then_t<::beman::execution::set_value_t>;
+using then_t = ::beman::execution::detail::then_t<::beman::execution::set_value_t>;
 /*!
  * \brief <code>upon_error_t</code> is the type of <code>upon_error</code>.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT using upon_error_t = ::beman::execution::detail::then_t<::beman::execution::set_error_t>;
+using upon_error_t = ::beman::execution::detail::then_t<::beman::execution::set_error_t>;
 /*!
  * \brief <code>upon_stopped_t</code> is the type of <code>upon_stopped</code>.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT using upon_stopped_t = ::beman::execution::detail::then_t<::beman::execution::set_stopped_t>;
+using upon_stopped_t = ::beman::execution::detail::then_t<::beman::execution::set_stopped_t>;
 
 /*!
  * \brief <code>then(_sender_, _fun_)</code> yields a sender transforming a <code>set_value_t(_A_...)</code> completion
@@ -215,7 +215,7 @@ BEMAN_EXECUTION_EXPORT using upon_stopped_t = ::beman::execution::detail::then_t
  * }
  * </pre>
  */
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::then_t then{};
+inline constexpr ::beman::execution::then_t then{};
 
 /*!
  * \brief <code>upon_error(_sender_, _fun_)</code> yields a sender transforming a <code>set_error_t(_E_)</code>
@@ -269,7 +269,7 @@ BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::then_t then{};
  * }
  * </pre>
  */
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::upon_error_t upon_error{};
+inline constexpr ::beman::execution::upon_error_t upon_error{};
 
 /*!
  * \brief <code>upon_stopped(_sender_, _fun_)</code> yields a sender transforming a <code>set_stopped_t()</code>
@@ -320,7 +320,7 @@ BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::upon_error_t upon_er
  * }
  * </pre>
  */
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::upon_stopped_t upon_stopped{};
+inline constexpr ::beman::execution::upon_stopped_t upon_stopped{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

@@ -14,7 +14,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Sender, typename Env = ::beman::execution::env<>>
+template <typename Sender, typename Env = ::beman::execution::env<>>
 concept sender_in =
     ::beman::execution::sender<Sender> && ::beman::execution::detail::queryable<Env> &&
     requires(Sender&& sender, Env&& env) {

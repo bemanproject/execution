@@ -201,7 +201,7 @@ if(BEMAN_USE_MODULES)
         PUBLIC
             FILE_SET CXX_MODULES
                 BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
-                FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution-using.cppm
+                FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
     )
     target_link_libraries(${TARGET_PREFIX} PUBLIC ${TARGET_NAME})
 endif()

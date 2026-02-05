@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct schedule_t {
+struct schedule_t {
     template <typename Scheduler>
         requires(not requires(Scheduler&& sched) {
                     { ::std::forward<Scheduler>(sched).schedule() } -> ::beman::execution::sender;
@@ -30,7 +30,7 @@ BEMAN_EXECUTION_EXPORT struct schedule_t {
     }
 };
 
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::schedule_t schedule{};
+inline constexpr ::beman::execution::schedule_t schedule{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

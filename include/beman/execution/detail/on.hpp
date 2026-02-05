@@ -136,8 +136,8 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using on_t = ::beman::execution::detail::on_t;
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::on_t on{};
+using on_t = ::beman::execution::detail::on_t;
+inline constexpr ::beman::execution::on_t on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

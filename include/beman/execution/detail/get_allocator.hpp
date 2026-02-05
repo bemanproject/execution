@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct get_allocator_t {
+struct get_allocator_t {
     template <typename Object>
         requires(not requires(Object&& object, const get_allocator_t& tag) { ::std::as_const(object).query(tag); })
     auto
@@ -50,7 +50,7 @@ BEMAN_EXECUTION_EXPORT struct get_allocator_t {
     constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
 };
 
-BEMAN_EXECUTION_EXPORT inline constexpr get_allocator_t get_allocator{};
+inline constexpr get_allocator_t get_allocator{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

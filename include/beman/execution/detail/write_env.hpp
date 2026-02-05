@@ -56,8 +56,8 @@ inline constexpr write_env_t write_env{};
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using write_env_t = ::beman::execution::detail::write_env_t;
-BEMAN_EXECUTION_EXPORT inline constexpr write_env_t write_env{};
+using write_env_t = ::beman::execution::detail::write_env_t;
+inline constexpr write_env_t write_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

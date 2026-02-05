@@ -16,7 +16,7 @@ namespace beman::execution::detail {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-BEMAN_EXECUTION_EXPORT template <typename T, typename Promise> //-dk:TODO detail export
+template <typename T, typename Promise> //-dk:TODO detail export
 using await_result_type =
     decltype(::beman::execution::detail::get_awaiter(::std::declval<T>(), ::std::declval<Promise&>()).await_resume());
 } // namespace beman::execution::detail

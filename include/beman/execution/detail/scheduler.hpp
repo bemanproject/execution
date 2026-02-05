@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Scheduler>
+template <typename Scheduler>
 concept scheduler = ::beman::execution::detail::almost_scheduler<Scheduler> && requires(Scheduler&& sched) {
     {
         ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(

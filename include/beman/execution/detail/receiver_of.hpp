@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Receiver, typename Completions>
+template <typename Receiver, typename Completions>
 concept receiver_of =
     beman::execution::receiver<Receiver> && beman::execution::detail::has_completions<Receiver, Completions>;
 }

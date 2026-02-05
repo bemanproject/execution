@@ -136,8 +136,8 @@ struct completion_signatures_for_impl<
 
 namespace beman::execution {
 
-BEMAN_EXECUTION_EXPORT using bulk_t = ::beman::execution::detail::bulk_t;
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::bulk_t bulk{};
+using bulk_t = ::beman::execution::detail::bulk_t;
+inline constexpr ::beman::execution::bulk_t bulk{};
 
 } // namespace beman::execution
 

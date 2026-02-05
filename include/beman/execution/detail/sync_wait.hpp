@@ -26,22 +26,21 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-BEMAN_EXECUTION_EXPORT struct sync_wait_env { // dk:TODO detail export
+struct sync_wait_env { // dk:TODO detail export
     ::beman::execution::run_loop* loop{};
 
     auto query(::beman::execution::get_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
     auto query(::beman::execution::get_delegation_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
 };
 
-BEMAN_EXECUTION_EXPORT template <
-    ::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender> // dk:TODO detail export
+template <::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender> // dk:TODO detail export
 using sync_wait_result_type =
     ::std::optional<::beman::execution::value_types_of_t<Sender,
                                                          ::beman::execution::detail::sync_wait_env,
                                                          ::beman::execution::detail::decayed_tuple,
                                                          ::std::type_identity_t>>;
 
-BEMAN_EXECUTION_EXPORT template <typename Sender> // dk:TODO detail export
+template <typename Sender> // dk:TODO detail export
 struct sync_wait_state {
     ::beman::execution::run_loop loop{};
     ::std::exception_ptr         error{};
@@ -49,7 +48,7 @@ struct sync_wait_state {
     ::beman::execution::detail::sync_wait_result_type<Sender> result{};
 };
 
-BEMAN_EXECUTION_EXPORT template <typename Sender> // dk:TODO detail export
+template <typename Sender> // dk:TODO detail export
 struct sync_wait_receiver {
     using receiver_concept = ::beman::execution::receiver_t;
 
@@ -109,7 +108,7 @@ struct sync_wait_t {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using sync_wait_t = ::beman::execution::detail::sync_wait_t;
+using sync_wait_t = ::beman::execution::detail::sync_wait_t;
 /*!
  * \brief <code>sync_wait(_sender_)</code> starts <code>_sender_</code> and waits for its completion.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
@@ -157,7 +156,7 @@ BEMAN_EXECUTION_EXPORT using sync_wait_t = ::beman::execution::detail::sync_wait
  * }
  * </pre>
  */
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::sync_wait_t sync_wait{};
+inline constexpr ::beman::execution::sync_wait_t sync_wait{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

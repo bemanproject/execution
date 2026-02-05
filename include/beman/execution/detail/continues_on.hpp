@@ -90,12 +90,12 @@ auto get_domain_late(Sender&& sender, Env&&) {
 #include <beman/execution/detail/suppress_pop.hpp>
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using continues_on_t = ::beman::execution::detail::continues_on_t;
+using continues_on_t = ::beman::execution::detail::continues_on_t;
 /*!
  * \brief Customization point object to create a `continues_on` sender.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT inline constexpr continues_on_t continues_on{};
+inline constexpr continues_on_t continues_on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

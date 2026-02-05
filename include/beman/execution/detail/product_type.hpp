@@ -6,6 +6,7 @@
 
 #include <beman/execution/detail/common.hpp>
 #include <memory>
+#include <tuple>
 #include <cstddef>
 
 #include <beman/execution/detail/suppress_push.hpp>
