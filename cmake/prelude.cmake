@@ -33,15 +33,16 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
 endif()
 # gersemi: on
 
-if(NOT APPLE)
-    return()
-endif()
+# TODO(CK): not yet!
+## if(NOT APPLE)
+##     return()
+## endif()
 
-# FIXME: on APPLE with clang++ still needs to export CXX=clang++
-# if("$ENV{CXX}" STREQUAL "" AND CMAKE_CXX_COMPILER)
-#     message(WARNING "\$CXX is not set")
-#     set(ENV{CXX} ${CMAKE_CXX_COMPILER})
-# endif()
+# FIXME: clang++ we still needs to export CXX=clang++
+if("$ENV{CXX}" STREQUAL "" AND CMAKE_CXX_COMPILER)
+    message(WARNING "\$CXX is not set")
+    set(ENV{CXX} ${CMAKE_CXX_COMPILER})
+endif()
 
 # ---------------------------------------------------------------------------
 # Workaround needed for CMAKE and clang++ to find the libc++.modules.json file
@@ -52,8 +53,8 @@ if(
 )
     # NOTE: Always use libc++
     # see https://releases.llvm.org/19.1.0/projects/libcxx/docs/index.html
-    # FIXME: set(ENV{CXXFLAGS} -stdlib=libc++)
-    # message(STATUS "CXXFLAGS=-stdlib=libc++")
+    set(ENV{CXXFLAGS} -stdlib=libc++)
+    message(STATUS "CXXFLAGS=-stdlib=libc++")
 
     if(APPLE)
         execute_process(
@@ -102,7 +103,7 @@ if(
         # gersemi: on
     else()
         message(
-            WARNING
+            FATAL_ERROR
             "File does NOT EXISTS! ${CMAKE_CXX_STDLIB_MODULES_JSON}"
         )
     endif()
