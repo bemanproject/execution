@@ -28,6 +28,9 @@ ifeq ($(CXX_BASE),clang++)
     COMPILER=clang++
 endif
 
+# NOTE default gmake use this flags!
+# COMPILE.cc = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+# LINK.cc = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 LDFLAGS   ?=
 SAN_FLAGS ?=
 CXX_FLAGS ?= -g
@@ -56,7 +59,8 @@ ifeq (${hostSystemName},Darwin)
   #  export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
 
   # XXX export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
-  ifeq ($(CXX),)
+  ifeq ($(origin CXX),default)
+    $(info CXX is using the built-in default: $(CXX))
     export CXX=g++-15
     export CXXFLAGS=-stdlib=libstdc++
   endif
@@ -123,12 +127,12 @@ build build-interface:
 	  -D CMAKE_CXX_STANDARD=23 \
 	  -D CMAKE_CXX_EXTENSIONS=ON \
 	  -D CMAKE_CXX_STANDARD_REQUIRED=ON \
-	  -D CMAKE_CXX_SCAN_FOR_MODULES=OFF \
 	  -D BEMAN_USE_MODULES=OFF \
+	  -D BEMAN_USE_STD_MODULE=OFF \
 	  -D CMAKE_BUILD_TYPE=Release \
 	  -D CMAKE_SKIP_TEST_ALL_DEPENDENCY=OFF \
-	  -D CMAKE_CXX_COMPILER=$(CXX) --log-level=VERBOSE
-	# XXX --fresh -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	  -D CMAKE_CXX_COMPILER=$(CXX) --log-level=VERBOSE --fresh
+	# XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD) --target all_verify_interface_header_sets
 	cmake --build $(BUILD) --target all
 
@@ -143,8 +147,8 @@ module build-module:
 	  -D CMAKE_CXX_STANDARD=23 \
 	  -D CMAKE_CXX_EXTENSIONS=ON \
 	  -D CMAKE_CXX_STANDARD_REQUIRED=ON \
-	  -D CMAKE_CXX_SCAN_FOR_MODULES=ON \
 	  -D BEMAN_USE_MODULES=ON \
+	  -D BEMAN_USE_STD_MODULE=ON \
 	  -D CMAKE_BUILD_TYPE=Release \
 	  -D CMAKE_INSTALL_MESSAGE=LAZY \
 	  -D CMAKE_BUILD_TYPE=Release \

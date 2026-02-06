@@ -90,6 +90,11 @@ if(NOT DEFINED CMAKE_CXX_MODULE_STD)
     set(CMAKE_CXX_MODULE_STD OFF)
 endif()
 
+if(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
+    option(BEMAN_USE_MODULES "Build CXX_MODULES" ${CMAKE_CXX_SCAN_FOR_MODULES})
+endif()
+message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
+
 option(
     BEMAN_USE_STD_MODULE
     "Check if 'import std;' is possible with the toolchain?"
@@ -97,7 +102,7 @@ option(
 )
 message(STATUS "BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}")
 
-if(BEMAN_USE_STD_MODULE)
+if(BEMAN_USE_MODULES AND BEMAN_USE_STD_MODULE)
     # -------------------------------------------------------------------------
     # Tell CMake that we explicitly want `import std`.
     # This will initialize the property on all targets declared after this to 1
@@ -121,11 +126,6 @@ if(BEMAN_USE_STD_MODULE)
     endif()
     message(STATUS "BEMAN_HAS_IMPORT_STD=${BEMAN_HAS_IMPORT_STD}")
 endif()
-
-if(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
-    option(BEMAN_USE_MODULES "Build CXX_MODULES" ${CMAKE_CXX_SCAN_FOR_MODULES})
-endif()
-message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
 
 if(NOT BEMAN_USE_MODULES)
     set(CMAKE_CXX_SCAN_FOR_MODULES OFF)

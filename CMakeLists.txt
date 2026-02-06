@@ -21,8 +21,9 @@ set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets) # NOTE: must be set, is importa
 
 #===============================================================================
 if(BEMAN_USE_MODULES)
+    set(CMAKE_CXX_SCAN_FOR_MODULES ON)
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-    set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
@@ -48,12 +49,14 @@ if(BEMAN_USE_MODULES)
                     ${CMAKE_CURRENT_BINARY_DIR}/beman/execution/modules_export.hpp
     )
     target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_MODULES)
+else()
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 endif()
 
 if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
     target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_IMPORT_STD)
-else()
-    message(WARNING "Missing support for CMAKE_CXX_MODULE_STD!")
+elseif(BEMAN_USE_MODULES)
+    message(WARNING "Missing or disabled support for CMAKE_CXX_MODULE_STD!")
 endif()
 #===============================================================================
 
