@@ -19,6 +19,17 @@
     {
       "name": "_debug-base",
       "hidden": true,
+      "warnings": {
+        "dev": true,
+        "deprecated": true,
+        "uninitialized": true,
+        "unusedCli": true,
+        "systemVars": false
+      },
+      "errors": {
+        "dev": false,
+        "deprecated": false
+      },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "BEMAN_BUILDSYS_SANITIZER": "MaxSan"
@@ -62,6 +73,10 @@
       ],
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/llvm-libc++-toolchain.cmake"
+      },
+      "environment": {
+        "CXX": "clang++",
+        "CMAKE_CXX_FLAGS": "-stdlib=libc++"
       }
     },
     {
@@ -73,6 +88,10 @@
       ],
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/llvm-libc++-toolchain.cmake"
+      },
+      "environment": {
+        "CXX": "clang++",
+        "CMAKE_CXX_FLAGS": "-stdlib=libc++"
       }
     },
     {

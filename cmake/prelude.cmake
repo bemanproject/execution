@@ -15,25 +15,31 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     )
 endif()
 
-if(PROJECT_NAME)
-    message(
-        WARNING
-        "This CMake file has to be included before first project() command call!"
-    )
-endif()
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+
+# ---------------------------------------------------------------------------
+if(NOT BEMAN_USE_STD_MODULE OR CMAKE_VERSION VERSION_GREATER_EQUAL 4.3)
+    return()
+endif()
+# ---------------------------------------------------------------------------
 
 # gersemi: off
 # ---------------------------------------------------------------------------
 # check if import std; is supported by CMAKE_CXX_COMPILER
 # ---------------------------------------------------------------------------
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
+    if(PROJECT_NAME)
+        message(
+            WARNING
+            "This CMake file has to be included before first project() command call!"
+        )
+    endif()
+
     set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 endif()
 # gersemi: on
 
-# FIXME: we need this for linux too! CK
+# TODO(CK): Do we need this HACK for linux too?
 # if(NOT APPLE)
 #     return()
 # endif()
