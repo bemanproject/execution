@@ -89,8 +89,8 @@ Installation is handled by the `beman_install_library()` helper.
 
 ```cmake
 beman_install_library(name
-    TARGETS target1 [target2 ...]
-    [DEPENDENCIES dep1 [dep2 ...]]
+    TARGETS <target1> [<target2> ...]
+    [DEPENDENCIES <dep1> [<dep2> ...]]
     [NAMESPACE <namespace>]
     [EXPORT_NAME <export-name>]
     [DESTINATION <module-destination>]
@@ -126,13 +126,11 @@ beman_install_library(name
   Installation directory for C++ module interface units.
   Defaults to `${CMAKE_INSTALL_INCLUDEDIR}/beman/modules`.
 
-The helper installs:
-
 This function installs the specified project TARGETS and its `FILE_SET
-HEADERS` to the default CMAKE install destination.
+TYPE HEADERS` to the default CMAKE install destination.
 
 It also handles the installation of the CMake config package files if
-needed.  If the given targets has `FILE_SET CXX_MODULE`, it will also
+needed.  If the given targets has `FILE_SET TYPE CXX_MODULE`, it will also
 installed to the given DESTINATION
 
 - ***Used Cache variables**
@@ -143,6 +141,10 @@ installed to the given DESTINATION
 `<PREFIX>_INSTALL_CONFIG_FILE_PACKAGE`
   Per-package override to enable/disable config file installation.
   <PREFIX> is the uppercased package name with dots replaced by underscores.
+
+### Caveats
+
+**Only one `FILE_SET of each TYPE` is supported to install with this function yet!**
 
 ---
 

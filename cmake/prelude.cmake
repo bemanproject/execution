@@ -17,7 +17,7 @@ endif()
 
 if(PROJECT_NAME)
     message(
-        FATAL_ERROR
+        WARNING
         "This CMake file has to be included before first project() command call!"
     )
 endif()
@@ -38,10 +38,10 @@ if(NOT APPLE)
 endif()
 
 # FIXME: on APPLE with clang++ still needs to export CXX=clang++
-if("$ENV{CXX}" STREQUAL "" AND CMAKE_CXX_COMPILER)
-    message(WARNING "\$CXX is not set")
-    set(ENV{CXX} ${CMAKE_CXX_COMPILER})
-endif()
+# if("$ENV{CXX}" STREQUAL "" AND CMAKE_CXX_COMPILER)
+#     message(WARNING "\$CXX is not set")
+#     set(ENV{CXX} ${CMAKE_CXX_COMPILER})
+# endif()
 
 # ---------------------------------------------------------------------------
 # Workaround needed for CMAKE and clang++ to find the libc++.modules.json file
@@ -52,8 +52,8 @@ if(
 )
     # NOTE: Always use libc++
     # see https://releases.llvm.org/19.1.0/projects/libcxx/docs/index.html
-    set(ENV{CXXFLAGS} -stdlib=libc++)
-    message(STATUS "CXXFLAGS=-stdlib=libc++")
+    # FIXME: set(ENV{CXXFLAGS} -stdlib=libc++)
+    # message(STATUS "CXXFLAGS=-stdlib=libc++")
 
     if(APPLE)
         execute_process(
