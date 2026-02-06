@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <typename Alloc> //-dk:TODO detail export
+template <typename Alloc>
 concept simple_allocator =
     requires(::std::remove_cvref_t<Alloc> alloc, ::std::size_t n) {
         { *alloc.allocate(n) } -> ::std::same_as<typename ::std::remove_cvref_t<Alloc>::value_type&>;

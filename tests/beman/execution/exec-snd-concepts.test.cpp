@@ -1,15 +1,21 @@
 // src/beman/execution/tests/exec-snd-concepts.test.cpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/sender_for.hpp>
-#include <beman/execution/detail/product_type.hpp>
-#include <beman/execution/detail/sender_decompose.hpp>
-#include <beman/execution/detail/tag_of_t.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/sender_in.hpp>
-#include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
 #include <tuple>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_decompose.hpp>
+#include <beman/execution/detail/sender_for.hpp>
+#include <beman/execution/detail/sender_in.hpp>
+#include <beman/execution/detail/tag_of_t.hpp>
+
+#include <beman/execution/execution.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -1,17 +1,18 @@
 // src/beman/execution/tests/exec-general.test.cpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <test/execution.hpp>
-#include <beman/execution/detail/movable_value.hpp>
-#include <beman/execution/detail/matching_sig.hpp>
-#include <beman/execution/detail/as_except_ptr.hpp>
 #include <concepts>
 #include <exception>
 #include <system_error>
+#include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail;
 #else
 #include <beman/execution/execution.hpp>
+#include <beman/execution/detail/movable_value.hpp>
+#include <beman/execution/detail/matching_sig.hpp>
+#include <beman/execution/detail/as_except_ptr.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

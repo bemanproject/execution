@@ -240,19 +240,18 @@ export using ::beman::execution::spawn;
 export using ::beman::execution::spawn_future;
 
 namespace detail {
+export using ::beman::execution::detail::await_result_type;
 export using ::beman::execution::detail::basic_sender;
+export using ::beman::execution::detail::connect_all;
+export using ::beman::execution::detail::connect_all_t;
+export using ::beman::execution::detail::env_promise;
+export using ::beman::execution::detail::is_product_type_c;
 export using ::beman::execution::detail::product_type;
 export using ::beman::execution::detail::product_type_base;
-export using ::beman::execution::detail::is_product_type_c;
-export using ::beman::execution::detail::env_promise;
-export using ::beman::execution::detail::await_result_type;
-export using ::beman::execution::detail::simple_allocator;
 export using ::beman::execution::detail::sync_wait_env;
+export using ::beman::execution::detail::sync_wait_receiver;
 export using ::beman::execution::detail::sync_wait_result_type;
 export using ::beman::execution::detail::sync_wait_state;
-export using ::beman::execution::detail::sync_wait_receiver;
-export using ::beman::execution::detail::connect_all_t;
-export using ::beman::execution::detail::connect_all;
 } // namespace detail
 
 } // namespace beman::execution

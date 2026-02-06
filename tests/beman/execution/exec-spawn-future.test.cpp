@@ -1,6 +1,13 @@
 // tests/beman/execution/exec-spawn-future.test.cpp                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <variant>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/spawn_future.hpp>
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/queryable.hpp>
@@ -16,8 +23,7 @@
 #include <beman/execution/detail/then.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/meta_contain_same.hpp>
-#include <test/execution.hpp>
-#include <concepts>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -424,6 +430,7 @@ auto test_spawn_future() {
             ASSERT(handle != nullptr);
             ASSERT(result == 0);
 #if 0
+            //-dk:TODO
             using type = typename test_detail::completion_signatures_for_impl<decltype(sndr), test_std::env<>>::type;
             static_assert(std::same_as<test_std::completion_signatures<test_std::set_stopped_t(), test_std::set_value_t(int), test_std::set_error_t(std::exception_ptr)>, type>);
             static_assert(std::same_as<

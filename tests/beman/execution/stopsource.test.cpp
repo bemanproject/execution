@@ -9,5 +9,5 @@ import beman.execution;
 #endif
 
 TEST(stopsource) {
-    // section [thread] is empty
+    // section [stopsource] is empty
 }

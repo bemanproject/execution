@@ -5,6 +5,7 @@
 #include <concepts>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail;
 #else
 #include <beman/execution/execution.hpp>
 #endif

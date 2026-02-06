@@ -1,8 +1,12 @@
 // src/beman/execution/tests/allocator-requirements-general.test.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/simple_allocator.hpp>
 #include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/simple_allocator.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -72,7 +76,7 @@ struct not_copy_constructible {
     auto operator=(not_copy_constructible&&) -> not_copy_constructible      = delete;
     auto operator=(const not_copy_constructible&) -> not_copy_constructible = delete;
     auto allocate(::std::size_t n) -> int* { return new int[n]; }
-    auto deallocate(/*long*/ int*, ::std::size_t) -> void {}
+    auto deallocate(int*, ::std::size_t) -> void {}
 
     auto operator==(const not_copy_constructible&) const -> bool = default;
 };

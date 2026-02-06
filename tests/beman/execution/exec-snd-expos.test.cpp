@@ -1,6 +1,12 @@
 // src/beman/execution/tests/exec-snd-expos.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/write_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
@@ -32,10 +38,9 @@
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/execution.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
-#include <test/execution.hpp>
-#include <concepts>
 
 #include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -512,7 +517,7 @@ auto test_default_impls_get_attrs() -> void {
     static_assert(noexcept(test_detail::default_impls::get_attrs(0, child1{})));
     static_assert(
         std::same_as<test_detail::fwd_env<local_env>, decltype(test_detail::default_impls::get_attrs(0, child1{}))>);
-    // static_assert(std::same_as<test_std::env<>,
+    //-dk:TODO static_assert(std::same_as<test_std::env<>,
     //     decltype(test_detail::default_impls::get_attrs(0, child1{}, child2{}))>);
 }
 
