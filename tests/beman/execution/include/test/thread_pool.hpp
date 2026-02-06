@@ -5,13 +5,18 @@
 #ifndef INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_THREAD_POOL
 #define INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_THREAD_POOL
 
-#include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
-
-#include <mutex>
 #include <condition_variable>
-#include <thread>
 #include <memory>
+#include <mutex>
+#include <thread>
+#include <utility>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#endif
+
 // ----------------------------------------------------------------------------
 
 namespace test {

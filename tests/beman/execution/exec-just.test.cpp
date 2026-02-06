@@ -1,16 +1,23 @@
 // src/beman/execution/tests/exec-just.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/just.hpp>
+#include <string>
+#include <memory>
+#include <memory_resource>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
-#include <test/execution.hpp>
-#include <string>
-#include <memory_resource>
-
 #include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

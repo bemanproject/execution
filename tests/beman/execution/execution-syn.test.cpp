@@ -1,6 +1,13 @@
 // src/beman/execution/tests/execution-syn.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <variant>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/decays_to.hpp>
@@ -16,10 +23,9 @@
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/as_awaitable.hpp>
 #include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
-#include <concepts>
 
 #include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

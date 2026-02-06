@@ -1,8 +1,13 @@
 // src/beman/execution/tests/queryable.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/execution.hpp>
 #include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/execution.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

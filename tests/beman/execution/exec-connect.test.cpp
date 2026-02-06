@@ -1,15 +1,21 @@
 // src/beman/execution/tests/exec-connect.test.cpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <coroutine>
+#include <stdexcept>
+#include <utility>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/operation_state_task.hpp>
 #include <beman/execution/detail/suspend_complete.hpp>
 #include <beman/execution/detail/connect_awaitable.hpp>
-#include <test/execution.hpp>
-
-#include <concepts>
-#include <stdexcept>
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -1,9 +1,14 @@
 // src/beman/execution/tests/functional-syn.test.cpp                -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/functional.hpp>
-#include <test/execution.hpp>
 #include <concepts>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/functional.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

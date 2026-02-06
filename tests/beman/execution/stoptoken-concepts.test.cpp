@@ -3,7 +3,12 @@
 
 #include <type_traits>
 #include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/stop_token.hpp>
+#endif
 
 namespace {
 namespace detail_stopppable_callback_for {
