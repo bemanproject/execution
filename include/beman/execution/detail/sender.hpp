@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct sender_t {};
+struct sender_t {};
 } // namespace beman::execution
 namespace beman::execution::detail {
 template <typename Sender>
@@ -29,7 +29,7 @@ concept enable_sender =
                                              ::beman::execution::detail::env_promise<::beman::execution::env<>>>;
 } // namespace beman::execution::detail
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Sender>
+template <typename Sender>
 concept sender = ::beman::execution::detail::enable_sender<::std::remove_cvref_t<Sender>> &&
                  requires(const ::std::remove_cvref_t<Sender>& sndr) {
                      { ::beman::execution::get_env(sndr) } -> ::beman::execution::detail::queryable;

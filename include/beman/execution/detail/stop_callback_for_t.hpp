@@ -10,7 +10,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <class Token, class CallbackFun>
+template <class Token, class CallbackFun>
 using stop_callback_for_t = typename Token::template callback_type<CallbackFun>;
 }
 

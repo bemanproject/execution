@@ -35,7 +35,7 @@ set(EXAMPLES
 )
 
 if(BEMAN_USE_MODULES)
-    list(APPEND EXAMPLES modules) # modules.cpp
+    list(APPEND EXAMPLES modules modules-and-header)
 endif()
 
 foreach(EXAMPLE ${EXAMPLES})

@@ -15,11 +15,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT class inplace_stop_token;
-BEMAN_EXECUTION_EXPORT class inplace_stop_source;
-BEMAN_EXECUTION_EXPORT template <typename CallbackFun>
+class inplace_stop_token;
+class inplace_stop_source;
+template <typename CallbackFun>
 class inplace_stop_callback;
-BEMAN_EXECUTION_EXPORT template <typename CallbackFun>
+template <typename CallbackFun>
 inplace_stop_callback(::beman::execution::inplace_stop_token, CallbackFun) -> inplace_stop_callback<CallbackFun>;
 } // namespace beman::execution
 

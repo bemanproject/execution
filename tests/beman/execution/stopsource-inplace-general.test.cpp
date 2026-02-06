@@ -1,9 +1,8 @@
 // src/beman/execution/tests/stopsource-inplace-general.test.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <test/execution.hpp>
 #include <test/stop_token.hpp>
-#if false && defined(BEMAN_HAS_MODULES) //-dk:TODO module disabled
+#if defined(BEMAN_HAS_MODULES) //-dk:TODO module disabled
 import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>

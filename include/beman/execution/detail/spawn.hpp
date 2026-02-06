@@ -85,8 +85,8 @@ struct spawn_t {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using spawn_t = ::beman::execution::detail::spawn_t;
-BEMAN_EXECUTION_EXPORT inline constexpr spawn_t spawn{};
+using spawn_t = ::beman::execution::detail::spawn_t;
+inline constexpr spawn_t spawn{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

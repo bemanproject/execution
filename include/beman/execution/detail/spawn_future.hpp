@@ -262,8 +262,8 @@ struct impls_for<spawn_future_t> : ::beman::execution::detail::default_impls {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using spawn_future_t = ::beman::execution::detail::spawn_future_t;
-BEMAN_EXECUTION_EXPORT inline constexpr spawn_future_t spawn_future{};
+using spawn_future_t = ::beman::execution::detail::spawn_future_t;
+inline constexpr spawn_future_t spawn_future{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

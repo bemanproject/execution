@@ -58,31 +58,34 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
 template <typename Completion>
 struct impls_for<then_t<Completion>> : ::beman::execution::detail::default_impls {
     // NOLINTBEGIN(bugprone-exception-escape)
-    static constexpr auto complete =
-        []<typename Tag, typename... Args>(auto, auto& fun, auto& receiver, Tag, Args&&... args) noexcept -> void {
-        if constexpr (::std::same_as<Completion, Tag>) {
-            try {
-                auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
-                if constexpr (::std::same_as<void, decltype(invoke())>) {
-                    invoke();
-                    ::beman::execution::set_value(::std::move(receiver));
-                } else {
-                    ::beman::execution::set_value(::std::move(receiver), invoke());
-                }
-            } catch (...) {
-                if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
+    struct complete_impl {
+        template <typename Tag, typename... Args>
+        auto operator()(auto, auto& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
+            if constexpr (::std::same_as<Completion, Tag>) {
+                try {
+                    auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
+                    if constexpr (::std::same_as<void, decltype(invoke())>) {
+                        invoke();
+                        ::beman::execution::set_value(::std::move(receiver));
+                    } else {
+                        ::beman::execution::set_value(::std::move(receiver), invoke());
+                    }
+                } catch (...) {
+                    if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
 
-                                               )) {
-                    static_assert(
-                        noexcept(::beman::execution::set_error(::std::move(receiver), ::std::current_exception())));
-                    ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                                                   )) {
+                        static_assert(noexcept(
+                            ::beman::execution::set_error(::std::move(receiver), ::std::current_exception())));
+                        ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                    }
                 }
+            } else {
+                static_assert(noexcept(Tag()(::std::move(receiver), ::std::forward<Args>(args)...)));
+                Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
             }
-        } else {
-            static_assert(noexcept(Tag()(::std::move(receiver), ::std::forward<Args>(args)...)));
-            Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
         }
     };
+    static constexpr auto complete{complete_impl{}};
     // NOLINTEND(bugprone-exception-escape)
 };
 
@@ -150,17 +153,17 @@ namespace beman::execution {
  * \brief <code>then_t</code> is the type of <code>then</code>.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT using then_t = ::beman::execution::detail::then_t<::beman::execution::set_value_t>;
+using then_t = ::beman::execution::detail::then_t<::beman::execution::set_value_t>;
 /*!
  * \brief <code>upon_error_t</code> is the type of <code>upon_error</code>.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT using upon_error_t = ::beman::execution::detail::then_t<::beman::execution::set_error_t>;
+using upon_error_t = ::beman::execution::detail::then_t<::beman::execution::set_error_t>;
 /*!
  * \brief <code>upon_stopped_t</code> is the type of <code>upon_stopped</code>.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT using upon_stopped_t = ::beman::execution::detail::then_t<::beman::execution::set_stopped_t>;
+using upon_stopped_t = ::beman::execution::detail::then_t<::beman::execution::set_stopped_t>;
 
 /*!
  * \brief <code>then(_sender_, _fun_)</code> yields a sender transforming a <code>set_value_t(_A_...)</code> completion
@@ -212,7 +215,7 @@ BEMAN_EXECUTION_EXPORT using upon_stopped_t = ::beman::execution::detail::then_t
  * }
  * </pre>
  */
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::then_t then{};
+inline constexpr ::beman::execution::then_t then{};
 
 /*!
  * \brief <code>upon_error(_sender_, _fun_)</code> yields a sender transforming a <code>set_error_t(_E_)</code>
@@ -266,7 +269,7 @@ BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::then_t then{};
  * }
  * </pre>
  */
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::upon_error_t upon_error{};
+inline constexpr ::beman::execution::upon_error_t upon_error{};
 
 /*!
  * \brief <code>upon_stopped(_sender_, _fun_)</code> yields a sender transforming a <code>set_stopped_t()</code>
@@ -317,7 +320,7 @@ BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::upon_error_t upon_er
  * }
  * </pre>
  */
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::upon_stopped_t upon_stopped{};
+inline constexpr ::beman::execution::upon_stopped_t upon_stopped{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

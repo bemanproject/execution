@@ -9,11 +9,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct nostopstate_t {
+struct nostopstate_t {
     explicit nostopstate_t() = default;
 };
 
-BEMAN_EXECUTION_EXPORT inline constexpr nostopstate_t nostopstate{};
+inline constexpr nostopstate_t nostopstate{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

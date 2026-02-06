@@ -18,7 +18,7 @@ template <typename Token>
 concept decayed_stoppable_token = ::beman::execution::stoppable_token<::std::decay_t<Token>>;
 }
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct get_stop_token_t {
+struct get_stop_token_t {
     template <typename Object>
         requires requires(Object&& object, const get_stop_token_t& tag) {
             { ::std::as_const(object).query(tag) } noexcept -> ::beman::execution::detail::decayed_stoppable_token;
@@ -35,7 +35,7 @@ BEMAN_EXECUTION_EXPORT struct get_stop_token_t {
     constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
 };
 
-BEMAN_EXECUTION_EXPORT inline constexpr get_stop_token_t get_stop_token{};
+inline constexpr get_stop_token_t get_stop_token{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

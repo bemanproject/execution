@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT class counting_scope;
+class counting_scope;
 }
 
 // ----------------------------------------------------------------------------

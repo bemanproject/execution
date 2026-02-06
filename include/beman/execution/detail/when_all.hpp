@@ -78,20 +78,26 @@ struct when_all_value_types<::beman::execution::detail::type_list<T...>> {
 
 template <>
 struct impls_for<::beman::execution::detail::when_all_t> : ::beman::execution::detail::default_impls {
-    static constexpr auto get_attrs{[](auto&&, auto&&... sender) {
-        using common_t =
-            typename ::std::common_type_t<decltype(::beman::execution::detail::get_domain_early(sender))...>;
-        if constexpr (::std::same_as<common_t, ::beman::execution::default_domain>)
-            return ::beman::execution::env<>{};
-        else
-            return ::beman::execution::detail::make_env(::beman::execution::get_domain, common_t{});
-    }};
-    static constexpr auto get_env{
-        []<typename State, typename Receiver>(auto&&, State& state, const Receiver& receiver) noexcept {
+    struct get_attrs_impl {
+        auto operator()(auto&&, auto&&... sender) const {
+            using common_t =
+                typename ::std::common_type_t<decltype(::beman::execution::detail::get_domain_early(sender))...>;
+            if constexpr (::std::same_as<common_t, ::beman::execution::default_domain>)
+                return ::beman::execution::env<>{};
+            else
+                return ::beman::execution::detail::make_env(::beman::execution::get_domain, common_t{});
+        }
+    };
+    static constexpr auto get_attrs{get_attrs_impl{}};
+    struct get_env_impl {
+        template <typename State, typename Receiver>
+        auto operator()(auto&&, State& state, const Receiver& receiver) const noexcept {
             return ::beman::execution::detail::join_env(
                 ::beman::execution::detail::make_env(::beman::execution::get_stop_token, state.stop_src.get_token()),
                 ::beman::execution::get_env(receiver));
-        }};
+        }
+    };
+    static constexpr auto get_env{get_env_impl{}};
 
     enum class disposition : unsigned char { started, error, stopped };
 
@@ -183,25 +189,32 @@ struct impls_for<::beman::execution::detail::when_all_t> : ::beman::execution::d
             return state_type<Receiver, Sender...>{};
         }
     };
-    static constexpr auto get_state{[]<typename Sender, typename Receiver>(Sender&& sender, Receiver&) noexcept(
-                                        noexcept(std::forward<Sender>(sender).apply(make_state<Receiver>{}))) {
-        return std::forward<Sender>(sender).apply(make_state<Receiver>{});
-    }};
-    static constexpr auto start{[]<typename State, typename Receiver, typename... Ops>(
-                                    State& state, Receiver& receiver, Ops&... ops) noexcept -> void {
-        state.receiver = &receiver;
-        state.on_stop.emplace(::beman::execution::get_stop_token(::beman::execution::get_env(receiver)),
-                              ::beman::execution::detail::on_stop_request{state});
-        if (state.stop_src.stop_requested()) {
-            state.on_stop.reset();
-            ::beman::execution::set_stopped(std::move(receiver));
-        } else {
-            (::beman::execution::start(ops), ...);
+    struct get_state_impl {
+        template <typename Sender, typename Receiver>
+        auto operator()(Sender&& sender, Receiver&) const
+            noexcept(noexcept(std::forward<Sender>(sender).apply(make_state<Receiver>{}))) {
+            return std::forward<Sender>(sender).apply(make_state<Receiver>{});
         }
-    }};
-    static constexpr auto complete{
-        []<typename Index, typename State, typename Receiver, typename Set, typename... Args>(
-            Index, State& state, Receiver& receiver, Set, Args&&... args) noexcept -> void {
+    };
+    static constexpr auto get_state{get_state_impl{}};
+    struct start_impl {
+        template <typename State, typename Receiver, typename... Ops>
+        auto operator()(State& state, Receiver& receiver, Ops&... ops) const noexcept -> void {
+            state.receiver = &receiver;
+            state.on_stop.emplace(::beman::execution::get_stop_token(::beman::execution::get_env(receiver)),
+                                  ::beman::execution::detail::on_stop_request{state});
+            if (state.stop_src.stop_requested()) {
+                state.on_stop.reset();
+                ::beman::execution::set_stopped(std::move(receiver));
+            } else {
+                (::beman::execution::start(ops), ...);
+            }
+        }
+    };
+    static constexpr auto start{start_impl{}};
+    struct complete_impl {
+        template <typename Index, typename State, typename Receiver, typename Set, typename... Args>
+        auto operator()(Index, State& state, Receiver& receiver, Set, Args&&... args) const noexcept -> void {
             if constexpr (::std::same_as<Set, ::beman::execution::set_error_t>) {
                 if (disposition::error != state.disp.exchange(disposition::error)) {
                     state.stop_src.request_stop();
@@ -231,7 +244,9 @@ struct impls_for<::beman::execution::detail::when_all_t> : ::beman::execution::d
                 }
             }
             state.arrive(receiver);
-        }};
+        }
+    };
+    static constexpr auto complete{complete_impl{}};
 };
 
 template <typename Data, typename Env, typename... Sender>
@@ -261,8 +276,8 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using when_all_t = ::beman::execution::detail::when_all_t;
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::when_all_t when_all{};
+using when_all_t = ::beman::execution::detail::when_all_t;
+inline constexpr ::beman::execution::when_all_t when_all{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

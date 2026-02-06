@@ -6,7 +6,7 @@
 #define INCLUDED_TEST_STOP_TOKEN
 
 #include <beman/execution/detail/immovable.hpp>
-#include <test/execution.hpp>
+#include <beman/execution/detail/stoppable_source.hpp>
 
 #include <algorithm>
 #include <array>
@@ -20,7 +20,8 @@
 #include <mutex>
 #include <ranges>
 #include <thread>
-#if false && defined(BEMAN_HAS_MODULES) //-dk:TODO module disabled
+#include <test/execution.hpp>
+#if defined(BEMAN_HAS_MODULES)
 import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>

@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct get_domain_t {
+struct get_domain_t {
     template <typename Object>
         requires(not requires(Object&& object, const get_domain_t& tag) {
                     ::std::forward<Object>(object).query(tag);
@@ -37,7 +37,7 @@ BEMAN_EXECUTION_EXPORT struct get_domain_t {
     constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
 };
 
-BEMAN_EXECUTION_EXPORT inline constexpr get_domain_t get_domain{};
+inline constexpr get_domain_t get_domain{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

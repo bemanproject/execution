@@ -23,7 +23,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Tag>
+template <typename Tag>
 struct get_completion_scheduler_t;
 
 template <typename Tag>
@@ -78,7 +78,7 @@ struct get_completion_scheduler_t : ::beman::execution::forwarding_query_t {
     }
 };
 
-BEMAN_EXECUTION_EXPORT template <::beman::execution::detail::completion_tag Tag>
+template <::beman::execution::detail::completion_tag Tag>
 inline constexpr get_completion_scheduler_t<Tag> get_completion_scheduler{};
 } // namespace beman::execution
 

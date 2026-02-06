@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-BEMAN_EXECUTION_EXPORT template <typename Adaptor, typename... T> //-dk:TODO detail export
+template <typename Adaptor, typename... T> //-dk:TODO detail export
 struct sender_adaptor : ::beman::execution::detail::product_type<::std::decay_t<Adaptor>, ::std::decay_t<T>...>,
                         ::beman::execution::sender_adaptor_closure<sender_adaptor<Adaptor, T...>> {
     template <::beman::execution::sender Sender, typename Self>

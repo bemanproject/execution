@@ -17,7 +17,7 @@ struct prop_like;
 }
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Query, typename Value>
+template <typename Query, typename Value>
 struct prop;
 
 template <typename Query, typename Value>

@@ -12,7 +12,7 @@
 #include <coroutine>
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <::beman::execution::detail::class_type Promise>
+template <::beman::execution::detail::class_type Promise>
 struct with_awaitable_senders {
     template <class OtherPromise>
         requires(!::std::same_as<OtherPromise, void>)

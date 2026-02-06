@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Sender, typename Env = ::beman::execution::env<>>
+template <typename Sender, typename Env = ::beman::execution::env<>>
     requires ::beman::execution::sender_in<Sender, Env>
 inline constexpr bool sends_stopped{!::std::same_as<
     ::beman::execution::detail::type_list<>,

@@ -12,7 +12,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <::beman::execution::scheduler Scheduler>
+template <::beman::execution::scheduler Scheduler>
 using schedule_result_t = decltype(::beman::execution::schedule(::std::declval<Scheduler>()));
 }
 

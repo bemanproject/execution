@@ -37,7 +37,7 @@ struct find_env<Q, E0, E...> {
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <::beman::execution::detail::queryable... Envs>
+template <::beman::execution::detail::queryable... Envs>
 struct env : ::beman::execution::detail::env_base<Envs>... {
     [[no_unique_address]] ::beman::execution::detail::non_assignable na_{};
 

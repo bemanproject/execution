@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-BEMAN_EXECUTION_EXPORT template <typename Query, typename Value> //-dk:TODO detail export
+template <typename Query, typename Value> //-dk:TODO detail export
 class make_env {
   private:
     Value value;

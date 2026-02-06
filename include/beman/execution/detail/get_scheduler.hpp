@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct get_scheduler_t : ::beman::execution::forwarding_query_t {
+struct get_scheduler_t : ::beman::execution::forwarding_query_t {
     template <typename Env>
         requires requires(const get_scheduler_t& self, Env&& env) { ::std::as_const(env).query(self); }
     auto operator()(Env&& env) const noexcept {
@@ -24,7 +24,7 @@ BEMAN_EXECUTION_EXPORT struct get_scheduler_t : ::beman::execution::forwarding_q
     }
 };
 
-BEMAN_EXECUTION_EXPORT inline constexpr get_scheduler_t get_scheduler{};
+inline constexpr get_scheduler_t get_scheduler{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

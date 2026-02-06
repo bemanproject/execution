@@ -13,9 +13,9 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct receiver_t {};
+struct receiver_t {};
 
-BEMAN_EXECUTION_EXPORT template <typename Rcvr>
+template <typename Rcvr>
 concept receiver =
     ::std::derived_from<typename ::std::remove_cvref_t<Rcvr>::receiver_concept, ::beman::execution::receiver_t> &&
     requires(const ::std::remove_cvref_t<Rcvr>& rcvr) {

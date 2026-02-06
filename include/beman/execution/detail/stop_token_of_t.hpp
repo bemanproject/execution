@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename T>
+template <typename T>
 using stop_token_of_t = ::std::remove_cvref_t<decltype(::beman::execution::get_stop_token(::std::declval<T>()))>;
 }
 

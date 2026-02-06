@@ -20,9 +20,9 @@ namespace beman::execution {
  * \brief Type alias to get error types for a sender
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT template <typename Sender,
-                                 typename Env                         = ::beman::execution::env<>,
-                                 template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
+template <typename Sender,
+          typename Env                         = ::beman::execution::env<>,
+          template <typename...> class Variant = ::beman::execution::detail::variant_or_empty>
     requires ::beman::execution::sender_in<Sender, Env>
 using error_types_of_t =
     ::beman::execution::detail::gather_signatures<::beman::execution::set_error_t,

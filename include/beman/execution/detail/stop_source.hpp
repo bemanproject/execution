@@ -16,11 +16,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT class stop_token;
-BEMAN_EXECUTION_EXPORT class stop_source;
-BEMAN_EXECUTION_EXPORT template <typename CallbackFun>
+class stop_token;
+class stop_source;
+template <typename CallbackFun>
 class stop_callback;
-BEMAN_EXECUTION_EXPORT template <typename CallbackFun>
+template <typename CallbackFun>
 stop_callback(::beman::execution::stop_token, CallbackFun) -> stop_callback<CallbackFun>;
 } // namespace beman::execution
 

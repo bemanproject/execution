@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Token>
+template <typename Token>
 concept stoppable_token = requires(const Token& token) {
     typename ::beman::execution::detail::check_type_alias_exist<Token::template callback_type>;
     { token.stop_requested() } noexcept -> ::std::same_as<bool>;

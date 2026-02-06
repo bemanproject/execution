@@ -54,8 +54,8 @@ struct starts_on_t {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using starts_on_t = ::beman::execution::detail::starts_on_t;
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::detail::starts_on_t starts_on{};
+using starts_on_t = ::beman::execution::detail::starts_on_t;
+inline constexpr ::beman::execution::detail::starts_on_t starts_on{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

@@ -30,14 +30,17 @@ struct read_env_t {
 
 template <>
 struct impls_for<::beman::execution::detail::read_env_t> : ::beman::execution::detail::default_impls {
-    static constexpr auto start = [](auto query, auto& receiver) noexcept -> void {
-        try {
-            auto env{::beman::execution::get_env(receiver)};
-            ::beman::execution::set_value(::std::move(receiver), query(env));
-        } catch (...) {
-            ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+    struct start_impl {
+        auto operator()(auto query, auto& receiver) const noexcept -> void {
+            try {
+                auto env{::beman::execution::get_env(receiver)};
+                ::beman::execution::set_value(::std::move(receiver), query(env));
+            } catch (...) {
+                ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+            }
         }
     };
+    static constexpr auto start{start_impl{}};
 };
 
 template <typename Query, typename Env>
@@ -54,8 +57,8 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using read_env_t = beman::execution::detail::read_env_t;
-BEMAN_EXECUTION_EXPORT inline constexpr read_env_t read_env{};
+using read_env_t = beman::execution::detail::read_env_t;
+inline constexpr read_env_t read_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

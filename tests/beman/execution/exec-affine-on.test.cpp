@@ -5,6 +5,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <thread>
+#include <tuple>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

@@ -114,15 +114,20 @@ struct impls_for<::beman::execution::detail::schedule_from_t> : ::beman::executi
               op_state(::beman::execution::connect(::beman::execution::schedule(sch), receiver_t{this})) {}
     };
 
-    static constexpr auto get_attrs{[](const auto& data, const auto& child) noexcept -> decltype(auto) {
-        return ::beman::execution::detail::join_env(
-            ::beman::execution::detail::sched_attrs(data),
-            ::beman::execution::detail::fwd_env(::beman::execution::get_env(child)));
-    }};
-    static constexpr auto get_state{
-        []<typename Sender, typename Receiver>(Sender&& sender, Receiver& receiver) //-dk:TODO noexcept(see below)
+    struct get_attrs_impl {
+
+        auto operator()(const auto& data, const auto& child) const noexcept -> decltype(auto) {
+            return ::beman::execution::detail::join_env(
+                ::beman::execution::detail::sched_attrs(data),
+                ::beman::execution::detail::fwd_env(::beman::execution::get_env(child)));
+        }
+    };
+    static constexpr auto get_attrs{get_attrs_impl{}};
+    struct get_state_impl {
+        template <typename Sender, typename Receiver>
             requires ::beman::execution::sender_in<::beman::execution::detail::child_type<Sender>,
                                                    ::beman::execution::env_of_t<Receiver>>
+        auto operator()(Sender&& sender, Receiver& receiver) const //-dk:TODO noexcept(see below)
         {
             auto sch{sender.template get<1>()};
 
@@ -142,9 +147,12 @@ struct impls_for<::beman::execution::detail::schedule_from_t> : ::beman::executi
                                                                  ::beman::execution::set_stopped_t()>>>>>>;
 
             return state_type<Receiver, sched_t, variant_t>(sch, receiver);
-        }};
-    static constexpr auto complete{
-        []<typename Tag, typename... Args>(auto, auto& state, auto& receiver, Tag, Args&&... args) noexcept -> void {
+        };
+    };
+    static constexpr auto get_state{get_state_impl{}};
+    struct complete_impl {
+        template <typename Tag, typename... Args>
+        auto operator()(auto, auto& state, auto& receiver, Tag, Args&&... args) const noexcept -> void {
             using result_t         = ::beman::execution::detail::decayed_tuple<Tag, Args...>;
             constexpr bool nothrow = ::std::is_nothrow_constructible_v<result_t, Tag, Args...>;
 
@@ -161,7 +169,9 @@ struct impls_for<::beman::execution::detail::schedule_from_t> : ::beman::executi
                 return;
 
             ::beman::execution::start(state.op_state);
-        }};
+        }
+    };
+    static constexpr auto complete{complete_impl{}};
 };
 
 template <typename Scheduler, typename Sender, typename Env>
@@ -181,8 +191,8 @@ struct completion_signatures_for_impl<
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using schedule_from_t = beman::execution::detail::schedule_from_t;
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::schedule_from_t schedule_from{};
+using schedule_from_t = beman::execution::detail::schedule_from_t;
+inline constexpr ::beman::execution::schedule_from_t schedule_from{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

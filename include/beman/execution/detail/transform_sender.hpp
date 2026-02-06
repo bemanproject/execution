@@ -66,7 +66,7 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT template <typename Domain, ::beman::execution::sender Sender, typename... Env>
+template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(sizeof...(Env) < 2) &&
             requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
@@ -79,7 +79,7 @@ constexpr auto transform_sender(Domain, Sender&& sender, const Env&...) noexcept
     return ::std::forward<Sender>(sender);
 }
 
-BEMAN_EXECUTION_EXPORT template <typename Domain, ::beman::execution::sender Sender, typename... Env>
+template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(sizeof...(Env) < 2) &&
             requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
@@ -93,7 +93,7 @@ constexpr auto transform_sender(Domain dom, Sender&& sender, const Env&... env) 
         dom, dom.transform_sender(::std::forward<Sender>(sender), env...), env...);
 }
 
-BEMAN_EXECUTION_EXPORT template <typename Domain, ::beman::execution::sender Sender, typename... Env>
+template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(sizeof...(Env) < 2) && (not requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
             }) &&
@@ -106,7 +106,7 @@ constexpr auto
     return ::std::forward<Sender>(sender);
 }
 
-BEMAN_EXECUTION_EXPORT template <typename Domain, ::beman::execution::sender Sender, typename... Env>
+template <typename Domain, ::beman::execution::sender Sender, typename... Env>
     requires(sizeof...(Env) < 2) && (not requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
             }) &&

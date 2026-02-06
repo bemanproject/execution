@@ -16,7 +16,7 @@ namespace beman::execution {
  * \brief Type of the customization point object for error completions.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT struct set_error_t {
+struct set_error_t {
     template <typename Receiver, typename Error>
     auto operator()(Receiver&, Error&&) const
         -> void = BEMAN_EXECUTION_DELETE("set_error requires the receiver to be passed as non-const rvalue");
@@ -46,7 +46,7 @@ BEMAN_EXECUTION_EXPORT struct set_error_t {
  * \brief Customization point object for error completions.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-BEMAN_EXECUTION_EXPORT inline constexpr set_error_t set_error{};
+inline constexpr set_error_t set_error{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

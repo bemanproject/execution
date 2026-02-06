@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT struct get_env_t {
+struct get_env_t {
     template <typename Object>
         requires(not requires(::std::add_const_t<::std::remove_cvref_t<Object>>& object) { object.get_env(); } ||
                  ::beman::execution::detail::queryable<
@@ -31,7 +31,7 @@ BEMAN_EXECUTION_EXPORT struct get_env_t {
     }
 };
 
-BEMAN_EXECUTION_EXPORT inline constexpr get_env_t get_env{};
+inline constexpr get_env_t get_env{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

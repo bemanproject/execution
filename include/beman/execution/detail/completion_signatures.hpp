@@ -21,7 +21,7 @@ namespace beman::execution {
  * any specializaion are empty. Objects may be created to return them from
  * functions used for type computations like get_completion_signatures(sender, env).
  */
-BEMAN_EXECUTION_EXPORT template <::beman::execution::detail::completion_signature...>
+template <::beman::execution::detail::completion_signature...>
 struct completion_signatures {};
 } // namespace beman::execution
 

@@ -179,8 +179,9 @@ struct impls_for<::beman::execution::detail::let_t<Completion>> : ::beman::execu
         ::beman::execution::start(
             state.ops2.template emplace<decltype(mkop())>(beman::execution::detail::emplace_from{mkop}));
     }
-    static constexpr auto complete{
-        []<class Tag, class... Args>(auto, auto& state, auto& receiver, Tag, Args&&... args) {
+    struct complete_impl {
+        template <class Tag, class... Args>
+        auto operator()(auto, auto& state, auto& receiver, Tag, Args&&... args) const {
             if constexpr (::std::same_as<Tag, Completion>) {
                 try {
                     let_bind(state, receiver, ::std::forward<Args>(args)...);
@@ -191,7 +192,9 @@ struct impls_for<::beman::execution::detail::let_t<Completion>> : ::beman::execu
             } else {
                 Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
             }
-        }};
+        }
+    };
+    static constexpr auto complete{complete_impl{}};
 };
 
 template <typename Completion, typename Fun, typename Sender, typename Env>
@@ -236,13 +239,13 @@ struct completion_signatures_for_impl<
 #include <beman/execution/detail/suppress_pop.hpp>
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using let_error_t   = ::beman::execution::detail::let_t<::beman::execution::set_error_t>;
-BEMAN_EXECUTION_EXPORT using let_stopped_t = ::beman::execution::detail::let_t<::beman::execution::set_stopped_t>;
-BEMAN_EXECUTION_EXPORT using let_value_t   = ::beman::execution::detail::let_t<::beman::execution::set_value_t>;
+using let_error_t   = ::beman::execution::detail::let_t<::beman::execution::set_error_t>;
+using let_stopped_t = ::beman::execution::detail::let_t<::beman::execution::set_stopped_t>;
+using let_value_t   = ::beman::execution::detail::let_t<::beman::execution::set_value_t>;
 
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::let_error_t   let_error{};
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::let_stopped_t let_stopped{};
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::let_value_t   let_value{};
+inline constexpr ::beman::execution::let_error_t   let_error{};
+inline constexpr ::beman::execution::let_stopped_t let_stopped{};
+inline constexpr ::beman::execution::let_value_t   let_value{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

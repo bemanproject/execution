@@ -5,6 +5,7 @@
 #include <concepts>
 #include <tuple>
 #include <type_traits>
+#include <test/inline_scheduler.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -13,7 +14,6 @@ import beman.execution;
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #endif
-#include <test/inline_scheduler.hpp>
 
 // ----------------------------------------------------------------------------
 

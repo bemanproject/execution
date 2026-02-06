@@ -41,8 +41,8 @@ struct when_all_with_variant_t {
 } // namespace beman::execution::detail
 
 namespace beman::execution {
-BEMAN_EXECUTION_EXPORT using when_all_with_variant_t = ::beman::execution::detail::when_all_with_variant_t;
-BEMAN_EXECUTION_EXPORT inline constexpr ::beman::execution::when_all_with_variant_t when_all_with_variant{};
+using when_all_with_variant_t = ::beman::execution::detail::when_all_with_variant_t;
+inline constexpr ::beman::execution::when_all_with_variant_t when_all_with_variant{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
