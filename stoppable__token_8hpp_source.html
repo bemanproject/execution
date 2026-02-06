@@ -113,7 +113,7 @@ $(document).ready(function(){initNavTree('stoppable__token_8hpp_source.html','')
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>BEMAN_EXECUTION_EXPORT <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Token&gt;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Token&gt;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="conceptbeman_1_1execution_1_1stoppable__token.html">   15</a></span><span class="keyword">concept </span><a class="code hl_concept" href="conceptbeman_1_1execution_1_1stoppable__token.html">stoppable_token</a> = <span class="keyword">requires</span>(<span class="keyword">const</span> Token&amp; token) {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    typename ::beman::execution::detail::check_type_alias_exist&lt;Token::template callback_type&gt;;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    { token.stop_requested() } <span class="keyword">noexcept</span> -&gt; ::std::same_as&lt;bool&gt;;</div>

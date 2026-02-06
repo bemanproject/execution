@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('basic__state_8hpp_source.html',''); in
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span>beman::execution::detail {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">//-dk:TODO the export below shouldn&#39;t be needed, but MSVC++ seems to require it (2026-02-01)</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>BEMAN_EXECUTION_EXPORT <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt; <span class="comment">//-dk:TODO detail export</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt; <span class="comment">//-dk:TODO detail export</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">struct </span>basic_state {</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    basic_state(Sender&amp;&amp; sender, Receiver&amp;&amp; rcvr) <span class="keyword">noexcept</span>(<span class="keyword">true</span>)</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        : <a class="code hl_struct" href="structreceiver.html">receiver</a>(::std::move(rcvr)),</div>

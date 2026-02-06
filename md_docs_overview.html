@@ -100,11 +100,11 @@ $(document).ready(function(){initNavTree('md_docs_overview.html',''); initResiza
   <div class="headertitle"><div class="title">overview </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md2"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md12"></a>
 std::execution Overview</h1>
 <p>This page provides an overview of the components in <code>std::execution</code>. The documentation on this page doesn’t represent all details of the specification. However, it should capture enough details to be a suitable resource to determine how the various components are used.</p>
 <p>For each of the components a summary view is provided. To get more details expand the respective section. </p>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md13"></a>
 Terms</h2>
 <p>This section defines a few terms used throughout the description on this page. The terms aren’t taken from the specification and are, thus, somewhat informal.</p>
 <details >
@@ -123,7 +123,7 @@ completion signal</summary>
 environment</summary>
 <p>The term <em>enviroment</em> refers to the bag of properties associated with an <code><em>object</em></code> by the call <code><a href="‘#get-env’">std::execution::get_env</a>(<em>object</em>)</code>. By default the environment for objects is empty (<code><a href="‘#env’">std::execution::env&lt;&gt;</a></code>). In particular, environments associated with <code><a href="‘#receiver’">receiver</a></code>s are used to provide access to properties like the <a href="‘#get-stop-token’">stop token</a>, <a href="‘#get-scheduler’">scheduler</a>, or <a href="‘#get-allocator’">allocator</a> associated with the <code><a href="‘#receiver’">receiver</a></code>. The various properties associated with an object are accessed via <a href="‘#queries’">queries</a>. </p>
 </details>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Concepts</h2>
 <p>This section lists the concepts from <code>std::execution</code>.</p>
 <details >
@@ -436,7 +436,7 @@ Example</summary>
 </div><!-- fragment --> </details>
 </blockquote>
 </details>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Queries</h2>
 <p>The queries are used to obtain properties associated with an object.</p>
 <details >
@@ -646,7 +646,7 @@ the expression satisfies <code>stoppable_token</code>. </li>
 </ul>
 <p>Otherwise the value is <code>never_stop_token{}</code>. </p>
 </details>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Customization Point Objects</h2>
 <details >
 <summary >
@@ -673,9 +673,9 @@ Customization Point Objects</h2>
 <code>start(<em>state</em>) noexcept -&gt; void</code></summary>
 <p>The expression <code>start(<em>state</em>)</code> starts the execution of the <code>operation_state</code> object <code><em>state</em></code>. Once this expression started executing the object <code><em>state</em></code> is required to stay valid at least until one of the completion signals of <code><em>state</em></code>’s <code>receiver</code> is invoked. Once started exactly one of the completion signals is eventually called. </p>
 </details>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 Senders</h2>
-<h3><a class="anchor" id="autotoc_md8"></a>
+<h3><a class="anchor" id="autotoc_md18"></a>
 Sender Factories</h3>
 <p>Sender factories create a sender which forms the start of a graph of lazy work items.</p>
 <details >
@@ -729,7 +729,7 @@ Sender Factories</h3>
 <code>set_stopped_t()</code> upon cancellation if <code><em>scheduler</em></code> supports cancellation </li>
 </ul>
 </details>
-<h3><a class="anchor" id="autotoc_md9"></a>
+<h3><a class="anchor" id="autotoc_md19"></a>
 Sender Adaptors</h3>
 <p>The sender adaptors take one or more senders and adapt their respective behavior to complete with a corresponding result. The description uses the informal function <code><em>completions-of</em>(<em>sender</em>)</code> to represent the completion signatures which <code><em>sender</em></code> produces. Also, completion signatures are combined using <code>+</code>: the result is the deduplicated set of the combined completion signatures.</p>
 <details >
@@ -834,12 +834,12 @@ Sender Adaptors</h3>
 <code>write_env(<em>sender</em>, <em>env</em>) -&gt; <em>sender</em></code></summary>
 <p></p>
 </details>
-<h3><a class="anchor" id="autotoc_md10"></a>
+<h3><a class="anchor" id="autotoc_md20"></a>
 Sender Consumers</h3>
 <ul>
 <li><code>sync_wait(<em>sender</em>) -&gt; std::optional&lt;std::tuple&lt;T...&gt;&gt;</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 Helpers</h2>
 <ul>
 <li><code>as_awaitable</code></li>
@@ -867,7 +867,7 @@ Helpers</h2>
 <li><code>transform_completion_signatures_of</code></li>
 <li><code>value_types_of_t</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md12"></a>
+<h2><a class="anchor" id="autotoc_md22"></a>
 Stop Token</h2>
 <ul>
 <li><code>never_stop_token</code></li>

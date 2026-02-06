@@ -131,7 +131,7 @@ $(document).ready(function(){initNavTree('scope__token_8hpp_source.html',''); in
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>} <span class="comment">// namespace beman::execution::detail</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>BEMAN_EXECUTION_EXPORT <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Token&gt;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Token&gt;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="conceptbeman_1_1execution_1_1scope__token.html">   33</a></span><span class="keyword">concept </span><a class="code hl_concept" href="conceptbeman_1_1execution_1_1scope__token.html">scope_token</a> = ::std::copyable&lt;Token&gt; &amp;&amp; <span class="keyword">requires</span>(Token token) {</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    { token.try_associate() } -&gt; ::std::same_as&lt;bool&gt;;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    { token.disassociate() } <span class="keyword">noexcept</span>;</div>

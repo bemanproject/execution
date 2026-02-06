@@ -123,7 +123,7 @@ $(document).ready(function(){initNavTree('basic__operation_8hpp_source.html','')
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span>beman::execution::detail {</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">//-dk:TODO the export below shouldn&#39;t be needed, but MSVC++ seems to require it (2026-02-01)</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>BEMAN_EXECUTION_EXPORT <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt; <span class="comment">//-dk:TODO detail export</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt; <span class="comment">//-dk:TODO detail export</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    requires ::beman::execution::detail::</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="comment">//-dk:TODO why is the remove_cvref_t needed...?</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    valid_specialization&lt;::beman::execution::detail::state_type, std::remove_cvref_t&lt;Sender&gt;, Receiver&gt;</div>

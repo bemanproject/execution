@@ -32,24 +32,36 @@ var NAVTREE =
     [ "intro-examples", "md_docs_intro_examples.html", [
       [ "Introduction by Example", "md_docs_intro_examples.html#autotoc_md1", null ]
     ] ],
+    [ "Supporting Modules", "md_docs_modules.html", [
+      [ "History of Adding Module Support", "md_docs_modules.html#autotoc_md3", [
+        [ "Use <tt>export using</tt>", "md_docs_modules.html#autotoc_md4", null ],
+        [ "Generate Module Friendly Code: <tt>mk-module.py</tt>", "md_docs_modules.html#autotoc_md5", null ],
+        [ "Retry <tt>export using</tt>", "md_docs_modules.html#autotoc_md6", null ],
+        [ "<tt>import std;</tt>", "md_docs_modules.html#autotoc_md7", null ]
+      ] ],
+      [ "Changes Needed to Support Modules", "md_docs_modules.html#autotoc_md8", null ],
+      [ "Scanning and Building", "md_docs_modules.html#autotoc_md9", null ],
+      [ "Modules vs. Testing", "md_docs_modules.html#autotoc_md10", null ],
+      [ "Conclusion", "md_docs_modules.html#autotoc_md11", null ]
+    ] ],
     [ "overview", "md_docs_overview.html", [
-      [ "std::execution Overview", "md_docs_overview.html#autotoc_md2", [
-        [ "Terms", "md_docs_overview.html#autotoc_md3", null ],
-        [ "Concepts", "md_docs_overview.html#autotoc_md4", null ],
-        [ "Queries", "md_docs_overview.html#autotoc_md5", null ],
-        [ "Customization Point Objects", "md_docs_overview.html#autotoc_md6", null ],
-        [ "Senders", "md_docs_overview.html#autotoc_md7", [
-          [ "Sender Factories", "md_docs_overview.html#autotoc_md8", null ],
-          [ "Sender Adaptors", "md_docs_overview.html#autotoc_md9", null ],
-          [ "Sender Consumers", "md_docs_overview.html#autotoc_md10", null ]
+      [ "std::execution Overview", "md_docs_overview.html#autotoc_md12", [
+        [ "Terms", "md_docs_overview.html#autotoc_md13", null ],
+        [ "Concepts", "md_docs_overview.html#autotoc_md14", null ],
+        [ "Queries", "md_docs_overview.html#autotoc_md15", null ],
+        [ "Customization Point Objects", "md_docs_overview.html#autotoc_md16", null ],
+        [ "Senders", "md_docs_overview.html#autotoc_md17", [
+          [ "Sender Factories", "md_docs_overview.html#autotoc_md18", null ],
+          [ "Sender Adaptors", "md_docs_overview.html#autotoc_md19", null ],
+          [ "Sender Consumers", "md_docs_overview.html#autotoc_md20", null ]
         ] ],
-        [ "Helpers", "md_docs_overview.html#autotoc_md11", null ],
-        [ "Stop Token", "md_docs_overview.html#autotoc_md12", null ]
+        [ "Helpers", "md_docs_overview.html#autotoc_md21", null ],
+        [ "Stop Token", "md_docs_overview.html#autotoc_md22", null ]
       ] ]
     ] ],
     [ "Questions", "md_docs_questions.html", null ],
     [ "resources", "md_docs_resources.html", [
-      [ "Resources Related to <tt>beman::execution</tt>", "md_docs_resources.html#autotoc_md14", null ]
+      [ "Resources Related to <tt>beman::execution</tt>", "md_docs_resources.html#autotoc_md24", null ]
     ] ],
     [ "ToDo", "md_docs_TODO.html", null ],
     [ "Namespaces", "namespaces.html", [
@@ -76,7 +88,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "affine__on_8hpp_source.html",
-"single__sender_8hpp_source.html"
+"sender__decompose_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

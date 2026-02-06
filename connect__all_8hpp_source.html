@@ -174,12 +174,12 @@ $(document).ready(function(){initNavTree('connect__all_8hpp_source.html',''); in
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keyword">template</span> &lt;::std::size_t... J, <span class="keyword">typename</span>... C&gt;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">auto</span> operator()(::std::index_sequence&lt;J...&gt;, C&amp;&amp;... c) <span class="keyword">noexcept</span>(</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            (<span class="keyword">noexcept</span>(<a class="code hl_variable" href="namespacebeman_1_1execution.html#af3ca0aa23afbd3f71811787934127535">::beman::execution::connect</a>(</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            (<span class="keyword">noexcept</span>(<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">::beman::execution::connect</a>(</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                 ::beman::execution::detail::forward_like&lt;Sender&gt;(c),</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                 ::beman::execution::detail::</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                     basic_receiver&lt;Sender, Receiver, ::std::integral_constant&lt;::std::size_t, J&gt;&gt;{this-&gt;op})) &amp;&amp;</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>             ... &amp;&amp; <span class="keyword">true</span>)) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            return ::beman::execution::detail::product_type{<a class="code hl_variable" href="namespacebeman_1_1execution.html#af3ca0aa23afbd3f71811787934127535">::beman::execution::connect</a>(</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            return ::beman::execution::detail::product_type{<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">::beman::execution::connect</a>(</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                ::beman::execution::detail::forward_like&lt;Sender&gt;(c),</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                ::beman::execution::detail::</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                    basic_receiver&lt;Sender, Receiver, ::std::integral_constant&lt;::std::size_t, J&gt;&gt;{this-&gt;op})...};</div>
@@ -215,7 +215,7 @@ $(document).ready(function(){initNavTree('connect__all_8hpp_source.html',''); in
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>};</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment">//-dk:TODO the export below shouldn&#39;t be needed, but MSVC++ seems to require it (2026-02-01)</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>BEMAN_EXECUTION_EXPORT <span class="keyword">constexpr</span> connect_all_t connect_all{}; <span class="comment">//-dk:TODO detail export</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> connect_all_t connect_all{}; <span class="comment">//-dk:TODO detail export</span></div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>} <span class="comment">// namespace beman::execution::detail</span></div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
@@ -223,7 +223,7 @@ $(document).ready(function(){initNavTree('connect__all_8hpp_source.html',''); in
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL</span></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_af3ca0aa23afbd3f71811787934127535"><div class="ttname"><a href="namespacebeman_1_1execution.html#af3ca0aa23afbd3f71811787934127535">beman::execution::connect</a></div><div class="ttdeci">BEMAN_EXECUTION_EXPORT constexpr connect_t connect</div><div class="ttdoc">Customization point object used to connect a sender and a receiver.</div><div class="ttdef"><b>Definition:</b> connect.hpp:95</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_a4fbf35f4823d5db0af863feee680e072"><div class="ttname"><a href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">beman::execution::connect</a></div><div class="ttdeci">constexpr connect_t connect</div><div class="ttdoc">Customization point object used to connect a sender and a receiver.</div><div class="ttdef"><b>Definition:</b> connect.hpp:95</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

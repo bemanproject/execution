@@ -234,8 +234,8 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>connect_t</b> = bema
 <tr class="separator:a806dab6de1ac6ae4ec22419cd4ea1e11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04076b97aa86da382501e357c0b88cf1"><td class="memTemplParams" colspan="2"><a id="a04076b97aa86da382501e357c0b88cf1" name="a04076b97aa86da382501e357c0b88cf1"></a>
 template&lt;typename Sender , typename Receiver &gt; </td></tr>
-<tr class="memitem:a04076b97aa86da382501e357c0b88cf1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connect_result_t</b> = decltype(<a class="el" href="namespacebeman_1_1execution.html#af3ca0aa23afbd3f71811787934127535">::beman::execution::connect</a>(::std::declval&lt; Sender &gt;(), ::std::declval&lt; Receiver &gt;()))</td></tr>
-<tr class="memdesc:a04076b97aa86da382501e357c0b88cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias to determine the operation state type returned from <code><a class="el" href="namespacebeman_1_1execution.html#af3ca0aa23afbd3f71811787934127535" title="Customization point object used to connect a sender and a receiver.">connect()</a></code>. <br /></td></tr>
+<tr class="memitem:a04076b97aa86da382501e357c0b88cf1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connect_result_t</b> = decltype(<a class="el" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">::beman::execution::connect</a>(::std::declval&lt; Sender &gt;(), ::std::declval&lt; Receiver &gt;()))</td></tr>
+<tr class="memdesc:a04076b97aa86da382501e357c0b88cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias to determine the operation state type returned from <code><a class="el" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072" title="Customization point object used to connect a sender and a receiver.">connect()</a></code>. <br /></td></tr>
 <tr class="separator:a04076b97aa86da382501e357c0b88cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec91a89ee087ddb9f41ad03771ed3b36"><td class="memItemLeft" align="right" valign="top"><a id="aec91a89ee087ddb9f41ad03771ed3b36" name="aec91a89ee087ddb9f41ad03771ed3b36"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>continues_on_t</b> = ::beman::execution::detail::continues_on_t</td></tr>
@@ -343,191 +343,191 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>write_env_t</b> = ::
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a49785ab95a2c693944e1a84ab7ed2bec"><td class="memTemplParams" colspan="2"><a id="a49785ab95a2c693944e1a84ab7ed2bec" name="a49785ab95a2c693944e1a84ab7ed2bec"></a>
+<tr class="memitem:a14b1351ec5d8ea786854eb581fcb9ea8"><td class="memTemplParams" colspan="2"><a id="a14b1351ec5d8ea786854eb581fcb9ea8" name="a14b1351ec5d8ea786854eb581fcb9ea8"></a>
 template&lt;typename Domain , typename Tag , ::beman::execution::sender Sender, typename... Args&gt; <br />
 requires requires(Domain domain, Tag tag, Sender&amp;&amp; sender, Args&amp;&amp;... args) { domain.apply_sender(Tag(), ::std::forward&lt;Sender&gt;(sender), ::std::forward&lt;Args&gt;(args)...); }</td></tr>
-<tr class="memitem:a49785ab95a2c693944e1a84ab7ed2bec"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply_sender</b> (Domain domain, Tag, Sender &amp;&amp;sender, Args &amp;&amp;... args) noexcept(noexcept(domain.apply_sender(Tag(), ::std::forward&lt; Sender &gt;(sender), ::std::forward&lt; Args &gt;(args)...))) -&gt; decltype(auto)</td></tr>
-<tr class="memdesc:a49785ab95a2c693944e1a84ab7ed2bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function used to transform a sender and its arguments for a domain. <br /></td></tr>
-<tr class="separator:a49785ab95a2c693944e1a84ab7ed2bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b830bc427e94aa0fe15f6db76816fa7"><td class="memTemplParams" colspan="2"><a id="a1b830bc427e94aa0fe15f6db76816fa7" name="a1b830bc427e94aa0fe15f6db76816fa7"></a>
+<tr class="memitem:a14b1351ec5d8ea786854eb581fcb9ea8"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply_sender</b> (Domain domain, Tag, Sender &amp;&amp;sender, Args &amp;&amp;... args) noexcept(noexcept(domain.apply_sender(Tag(), ::std::forward&lt; Sender &gt;(sender), ::std::forward&lt; Args &gt;(args)...))) -&gt; decltype(auto)</td></tr>
+<tr class="memdesc:a14b1351ec5d8ea786854eb581fcb9ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function used to transform a sender and its arguments for a domain. <br /></td></tr>
+<tr class="separator:a14b1351ec5d8ea786854eb581fcb9ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2237cec640f636800ac30b98d7c8a527"><td class="memTemplParams" colspan="2"><a id="a2237cec640f636800ac30b98d7c8a527" name="a2237cec640f636800ac30b98d7c8a527"></a>
 template&lt;typename Domain , typename Tag , ::beman::execution::sender Sender, typename... Args&gt; <br />
 requires (not requires(Domain domain, Tag tag, Sender&amp;&amp; sender, Args&amp;&amp;... args) { domain.apply_sender(Tag(), ::std::forward&lt;Sender&gt;(sender), ::std::forward&lt;Args&gt;(args)...); }) &amp;&amp; requires(Tag tag, Sender&amp;&amp; sender, Args&amp;&amp;... args) { <a class="el" href="structbeman_1_1execution_1_1default__domain.html">beman::execution::default_domain</a>().apply_sender( Tag(), ::std::forward&lt;Sender&gt;(sender), ::std::forward&lt;Args&gt;(args)...); }</td></tr>
-<tr class="memitem:a1b830bc427e94aa0fe15f6db76816fa7"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply_sender</b> (Domain, Tag, Sender &amp;&amp;sender, Args &amp;&amp;... args) noexcept(noexcept(<a class="el" href="structbeman_1_1execution_1_1default__domain.html">beman::execution::default_domain</a>().apply_sender(Tag(), ::std::forward&lt; Sender &gt;(sender), ::std::forward&lt; Args &gt;(args)...))) -&gt; decltype(auto)</td></tr>
-<tr class="memdesc:a1b830bc427e94aa0fe15f6db76816fa7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default function used to transform a second and its arguments. <br /></td></tr>
-<tr class="separator:a1b830bc427e94aa0fe15f6db76816fa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2237cec640f636800ac30b98d7c8a527"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply_sender</b> (Domain, Tag, Sender &amp;&amp;sender, Args &amp;&amp;... args) noexcept(noexcept(<a class="el" href="structbeman_1_1execution_1_1default__domain.html">beman::execution::default_domain</a>().apply_sender(Tag(), ::std::forward&lt; Sender &gt;(sender), ::std::forward&lt; Args &gt;(args)...))) -&gt; decltype(auto)</td></tr>
+<tr class="memdesc:a2237cec640f636800ac30b98d7c8a527"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default function used to transform a second and its arguments. <br /></td></tr>
+<tr class="separator:a2237cec640f636800ac30b98d7c8a527"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84aa8b475d5da0dce5eceda67eeca375"><td class="memTemplParams" colspan="2"><a id="a84aa8b475d5da0dce5eceda67eeca375" name="a84aa8b475d5da0dce5eceda67eeca375"></a>
 template&lt;::beman::execution::detail::queryable... Envs&gt; </td></tr>
 <tr class="memitem:a84aa8b475d5da0dce5eceda67eeca375"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>env</b> (Envs...) -&gt; <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>&lt;::std::unwrap_reference_t&lt; Envs &gt;... &gt;</td></tr>
 <tr class="separator:a84aa8b475d5da0dce5eceda67eeca375"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adce2b9a2a208e8dde1097b3daba40b8e"><td class="memTemplParams" colspan="2"><a id="adce2b9a2a208e8dde1097b3daba40b8e" name="adce2b9a2a208e8dde1097b3daba40b8e"></a>
+<tr class="memitem:adbbf7018f3e3e401db128266d42a0838"><td class="memTemplParams" colspan="2"><a id="adbbf7018f3e3e401db128266d42a0838" name="adbbf7018f3e3e401db128266d42a0838"></a>
 template&lt;typename CallbackFun &gt; </td></tr>
-<tr class="memitem:adce2b9a2a208e8dde1097b3daba40b8e"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT&#160;</td><td class="memTemplItemRight" valign="bottom"><b>inplace_stop_callback</b> (<a class="el" href="classbeman_1_1execution_1_1inplace__stop__token.html">::beman::execution::inplace_stop_token</a>, CallbackFun) -&gt; <a class="el" href="classbeman_1_1execution_1_1inplace__stop__callback.html">inplace_stop_callback</a>&lt; CallbackFun &gt;</td></tr>
-<tr class="separator:adce2b9a2a208e8dde1097b3daba40b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbbf7018f3e3e401db128266d42a0838"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>inplace_stop_callback</b> (<a class="el" href="classbeman_1_1execution_1_1inplace__stop__token.html">::beman::execution::inplace_stop_token</a>, CallbackFun) -&gt; <a class="el" href="classbeman_1_1execution_1_1inplace__stop__callback.html">inplace_stop_callback</a>&lt; CallbackFun &gt;</td></tr>
+<tr class="separator:adbbf7018f3e3e401db128266d42a0838"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ebbf3d4466b511b144dab4e94fff815"><td class="memTemplParams" colspan="2"><a id="a4ebbf3d4466b511b144dab4e94fff815" name="a4ebbf3d4466b511b144dab4e94fff815"></a>
 template&lt;typename Query , typename Value &gt; </td></tr>
 <tr class="memitem:a4ebbf3d4466b511b144dab4e94fff815"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>prop</b> (Query, Value, ::beman::execution::detail::non_assignable={}) -&gt; <a class="el" href="structbeman_1_1execution_1_1prop.html">prop</a>&lt; Query, ::std::unwrap_reference_t&lt; Value &gt; &gt;</td></tr>
 <tr class="separator:a4ebbf3d4466b511b144dab4e94fff815"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a6580a8db07d4da61b60c68e6b1fbf9"><td class="memTemplParams" colspan="2"><a id="a3a6580a8db07d4da61b60c68e6b1fbf9" name="a3a6580a8db07d4da61b60c68e6b1fbf9"></a>
+<tr class="memitem:a77d1435e9602646025b0bd95004515e7"><td class="memTemplParams" colspan="2"><a id="a77d1435e9602646025b0bd95004515e7" name="a77d1435e9602646025b0bd95004515e7"></a>
 template&lt;typename CallbackFun &gt; </td></tr>
-<tr class="memitem:a3a6580a8db07d4da61b60c68e6b1fbf9"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT&#160;</td><td class="memTemplItemRight" valign="bottom"><b>stop_callback</b> (<a class="el" href="classbeman_1_1execution_1_1stop__token.html">::beman::execution::stop_token</a>, CallbackFun) -&gt; <a class="el" href="classbeman_1_1execution_1_1stop__callback.html">stop_callback</a>&lt; CallbackFun &gt;</td></tr>
-<tr class="separator:a3a6580a8db07d4da61b60c68e6b1fbf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a747bfb164fb1f39a778d9869ec7d254b"><td class="memTemplParams" colspan="2"><a id="a747bfb164fb1f39a778d9869ec7d254b" name="a747bfb164fb1f39a778d9869ec7d254b"></a>
+<tr class="memitem:a77d1435e9602646025b0bd95004515e7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>stop_callback</b> (<a class="el" href="classbeman_1_1execution_1_1stop__token.html">::beman::execution::stop_token</a>, CallbackFun) -&gt; <a class="el" href="classbeman_1_1execution_1_1stop__callback.html">stop_callback</a>&lt; CallbackFun &gt;</td></tr>
+<tr class="separator:a77d1435e9602646025b0bd95004515e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e0772abfd2a235bba4181c948f74c1a"><td class="memTemplParams" colspan="2"><a id="a2e0772abfd2a235bba4181c948f74c1a" name="a2e0772abfd2a235bba4181c948f74c1a"></a>
 template&lt;typename Domain , ::beman::execution::sender Sender, typename... Env&gt; <br />
 requires (sizeof...(Env) &lt; 2) &amp;&amp; requires(Domain dom, Sender&amp;&amp; sender, const Env&amp;... <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) { dom.transform_sender(::std::forward&lt;Sender&gt;(sender), env...); } &amp;&amp; (::std::same_as&lt;::std::remove_cvref_t&lt;Sender&gt;, std::remove_cvref_t&lt;decltype(::std::declval&lt;Domain&gt;().transform_sender( ::std::declval&lt;Sender&gt;(), ::std::declval&lt;const Env&amp;&gt;()...))&gt;&gt;)</td></tr>
-<tr class="memitem:a747bfb164fb1f39a778d9869ec7d254b"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_sender</b> (Domain, Sender &amp;&amp;sender, const Env &amp;...) noexcept -&gt; ::beman::execution::sender decltype(auto)</td></tr>
-<tr class="separator:a747bfb164fb1f39a778d9869ec7d254b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8e10036a829191b1700e44ad2596583"><td class="memTemplParams" colspan="2"><a id="af8e10036a829191b1700e44ad2596583" name="af8e10036a829191b1700e44ad2596583"></a>
+<tr class="memitem:a2e0772abfd2a235bba4181c948f74c1a"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_sender</b> (Domain, Sender &amp;&amp;sender, const Env &amp;...) noexcept -&gt; ::beman::execution::sender decltype(auto)</td></tr>
+<tr class="separator:a2e0772abfd2a235bba4181c948f74c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52675ec458ca9c6eaf6e385f46c442ac"><td class="memTemplParams" colspan="2"><a id="a52675ec458ca9c6eaf6e385f46c442ac" name="a52675ec458ca9c6eaf6e385f46c442ac"></a>
 template&lt;typename Domain , ::beman::execution::sender Sender, typename... Env&gt; <br />
 requires (sizeof...(Env) &lt; 2) &amp;&amp; requires(Domain dom, Sender&amp;&amp; sender, const Env&amp;... <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) { dom.transform_sender(::std::forward&lt;Sender&gt;(sender), env...); } &amp;&amp; (!::std::same_as&lt;::std::remove_cvref_t&lt;Sender&gt;, std::remove_cvref_t&lt;decltype(::std::declval&lt;Domain&gt;().transform_sender( ::std::declval&lt;Sender&gt;(), ::std::declval&lt;const Env&amp;&gt;()...))&gt;&gt;)</td></tr>
-<tr class="memitem:af8e10036a829191b1700e44ad2596583"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_sender</b> (Domain dom, Sender &amp;&amp;sender, const Env &amp;... <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) noexcept -&gt; ::beman::execution::sender auto</td></tr>
-<tr class="separator:af8e10036a829191b1700e44ad2596583"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36d8084846dec8cd639a437f3d58c171"><td class="memTemplParams" colspan="2"><a id="a36d8084846dec8cd639a437f3d58c171" name="a36d8084846dec8cd639a437f3d58c171"></a>
+<tr class="memitem:a52675ec458ca9c6eaf6e385f46c442ac"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_sender</b> (Domain dom, Sender &amp;&amp;sender, const Env &amp;... <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) noexcept -&gt; ::beman::execution::sender auto</td></tr>
+<tr class="separator:a52675ec458ca9c6eaf6e385f46c442ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad539c26f42e9be093c4b5ca495ea7ce5"><td class="memTemplParams" colspan="2"><a id="ad539c26f42e9be093c4b5ca495ea7ce5" name="ad539c26f42e9be093c4b5ca495ea7ce5"></a>
 template&lt;typename Domain , ::beman::execution::sender Sender, typename... Env&gt; <br />
 requires (sizeof...(Env) &lt; 2) &amp;&amp; (not requires(Domain dom, Sender&amp;&amp; sender, const Env&amp;... <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) { dom.transform_sender(::std::forward&lt;Sender&gt;(sender), env...); }) &amp;&amp; ::std::same_as&lt;::std::remove_cvref_t&lt;Sender&gt;, ::std::remove_cvref_t&lt;decltype(<a class="el" href="structbeman_1_1execution_1_1default__domain.html">::beman::execution::default_domain</a>{}.transform_sender( ::std::declval&lt;Sender&gt;(), ::std::declval&lt;Env&gt;()...))&gt;&gt;</td></tr>
-<tr class="memitem:a36d8084846dec8cd639a437f3d58c171"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_sender</b> (Domain, Sender &amp;&amp;sender, const Env &amp;...) noexcept(noexcept(::std::forward&lt; Sender &gt;(sender))) -&gt; ::beman::execution::sender decltype(auto)</td></tr>
-<tr class="separator:a36d8084846dec8cd639a437f3d58c171"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29906ce3293ff2b8e5c1448a34c47102"><td class="memTemplParams" colspan="2"><a id="a29906ce3293ff2b8e5c1448a34c47102" name="a29906ce3293ff2b8e5c1448a34c47102"></a>
+<tr class="memitem:ad539c26f42e9be093c4b5ca495ea7ce5"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_sender</b> (Domain, Sender &amp;&amp;sender, const Env &amp;...) noexcept(noexcept(::std::forward&lt; Sender &gt;(sender))) -&gt; ::beman::execution::sender decltype(auto)</td></tr>
+<tr class="separator:ad539c26f42e9be093c4b5ca495ea7ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9de27050a4caf85ad50e80b9f7002a4a"><td class="memTemplParams" colspan="2"><a id="a9de27050a4caf85ad50e80b9f7002a4a" name="a9de27050a4caf85ad50e80b9f7002a4a"></a>
 template&lt;typename Domain , ::beman::execution::sender Sender, typename... Env&gt; <br />
 requires (sizeof...(Env) &lt; 2) &amp;&amp; (not requires(Domain dom, Sender&amp;&amp; sender, const Env&amp;... <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) { dom.transform_sender(::std::forward&lt;Sender&gt;(sender), env...); }) &amp;&amp; (!::std::same_as&lt;::std::remove_cvref_t&lt;Sender&gt;, ::std::remove_cvref_t&lt;decltype(<a class="el" href="structbeman_1_1execution_1_1default__domain.html">::beman::execution::default_domain</a>{}.transform_sender( ::std::declval&lt;Sender&gt;(), ::std::declval&lt;Env&gt;()...))&gt;&gt;)</td></tr>
-<tr class="memitem:a29906ce3293ff2b8e5c1448a34c47102"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_sender</b> (Domain dom, Sender &amp;&amp;sender, const Env &amp;... <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) noexcept(noexcept(::beman::execution::detail::transform_sender(dom, <a class="el" href="structbeman_1_1execution_1_1default__domain.html">::beman::execution::default_domain</a>{}.transform_sender(::std::declval&lt; Sender &gt;(), ::std::declval&lt; Env &gt;()...), env...))) -&gt; ::beman::execution::sender decltype(auto)</td></tr>
-<tr class="separator:a29906ce3293ff2b8e5c1448a34c47102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9de27050a4caf85ad50e80b9f7002a4a"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_sender</b> (Domain dom, Sender &amp;&amp;sender, const Env &amp;... <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) noexcept(noexcept(::beman::execution::detail::transform_sender(dom, <a class="el" href="structbeman_1_1execution_1_1default__domain.html">::beman::execution::default_domain</a>{}.transform_sender(::std::declval&lt; Sender &gt;(), ::std::declval&lt; Env &gt;()...), env...))) -&gt; ::beman::execution::sender decltype(auto)</td></tr>
+<tr class="separator:a9de27050a4caf85ad50e80b9f7002a4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a92547b10043bca20c540525b5f6176dd"><td class="memItemLeft" align="right" valign="top"><a id="a92547b10043bca20c540525b5f6176dd" name="a92547b10043bca20c540525b5f6176dd"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="namespacebeman_1_1execution.html#a1f94aa0e5e5a137c6565d439e868320b">affine_on_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>affine_on</b> {}</td></tr>
-<tr class="separator:a92547b10043bca20c540525b5f6176dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51f8f2865ea5e1dfa3fc0eb903f538d6"><td class="memItemLeft" align="right" valign="top"><a id="a51f8f2865ea5e1dfa3fc0eb903f538d6" name="a51f8f2865ea5e1dfa3fc0eb903f538d6"></a>
-BEMAN_EXECUTION_EXPORTconstexpr <a class="el" href="structbeman_1_1execution_1_1as__awaitable__t.html">::beman::execution::as_awaitable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>as_awaitable</b> {}</td></tr>
-<tr class="separator:a51f8f2865ea5e1dfa3fc0eb903f538d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7be360a29702fe08939dac511d0bf7c2"><td class="memItemLeft" align="right" valign="top"><a id="a7be360a29702fe08939dac511d0bf7c2" name="a7be360a29702fe08939dac511d0bf7c2"></a>
-BEMAN_EXECUTION_EXPORT constexpr associate_t&#160;</td><td class="memItemRight" valign="bottom"><b>associate</b> {}</td></tr>
-<tr class="separator:a7be360a29702fe08939dac511d0bf7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9e64daaf1e76d3a08e76838c9f3aa2c"><td class="memItemLeft" align="right" valign="top"><a id="ac9e64daaf1e76d3a08e76838c9f3aa2c" name="ac9e64daaf1e76d3a08e76838c9f3aa2c"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::bulk_t&#160;</td><td class="memItemRight" valign="bottom"><b>bulk</b> {}</td></tr>
-<tr class="separator:ac9e64daaf1e76d3a08e76838c9f3aa2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3ca0aa23afbd3f71811787934127535"><td class="memItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="namespacebeman_1_1execution.html#a806dab6de1ac6ae4ec22419cd4ea1e11">connect_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#af3ca0aa23afbd3f71811787934127535">connect</a> {}</td></tr>
-<tr class="memdesc:af3ca0aa23afbd3f71811787934127535"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object used to connect a sender and a receiver.  <br /></td></tr>
-<tr class="separator:af3ca0aa23afbd3f71811787934127535"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4966cdd647477ec6958ddafcb60835e7"><td class="memItemLeft" align="right" valign="top"><a id="a4966cdd647477ec6958ddafcb60835e7" name="a4966cdd647477ec6958ddafcb60835e7"></a>
-BEMAN_EXECUTION_EXPORT constexpr continues_on_t&#160;</td><td class="memItemRight" valign="bottom"><b>continues_on</b> {}</td></tr>
-<tr class="memdesc:a4966cdd647477ec6958ddafcb60835e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object to create a <code>continues_on</code> sender. <br /></td></tr>
-<tr class="separator:a4966cdd647477ec6958ddafcb60835e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1b67aef1ed702a42f470540aedbbfc4"><td class="memItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6">forwarding_query_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#ad1b67aef1ed702a42f470540aedbbfc4">forwarding_query</a> {}</td></tr>
-<tr class="memdesc:ad1b67aef1ed702a42f470540aedbbfc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The customization point object to determine whether queries should be forwarded.  <br /></td></tr>
-<tr class="separator:ad1b67aef1ed702a42f470540aedbbfc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc885f903cbca2ebaddc0f2a49ff205f"><td class="memItemLeft" align="right" valign="top"><a id="acc885f903cbca2ebaddc0f2a49ff205f" name="acc885f903cbca2ebaddc0f2a49ff205f"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1get__allocator__t.html">get_allocator_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> {}</td></tr>
-<tr class="separator:acc885f903cbca2ebaddc0f2a49ff205f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cd8ae50ee016a2ddf01047ee4843105"><td class="memTemplParams" colspan="2"><a id="a5cd8ae50ee016a2ddf01047ee4843105" name="a5cd8ae50ee016a2ddf01047ee4843105"></a>
+<tr class="memitem:ae43049fda75dd38965ef8e80abffb200"><td class="memItemLeft" align="right" valign="top"><a id="ae43049fda75dd38965ef8e80abffb200" name="ae43049fda75dd38965ef8e80abffb200"></a>
+constexpr <a class="el" href="namespacebeman_1_1execution.html#a1f94aa0e5e5a137c6565d439e868320b">affine_on_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>affine_on</b> {}</td></tr>
+<tr class="separator:ae43049fda75dd38965ef8e80abffb200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f18a47d8dc6b7476eadadb3df7420a7"><td class="memItemLeft" align="right" valign="top"><a id="a3f18a47d8dc6b7476eadadb3df7420a7" name="a3f18a47d8dc6b7476eadadb3df7420a7"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1as__awaitable__t.html">::beman::execution::as_awaitable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>as_awaitable</b> {}</td></tr>
+<tr class="separator:a3f18a47d8dc6b7476eadadb3df7420a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d365f894679ff01040833af8fb69b14"><td class="memItemLeft" align="right" valign="top"><a id="a1d365f894679ff01040833af8fb69b14" name="a1d365f894679ff01040833af8fb69b14"></a>
+constexpr associate_t&#160;</td><td class="memItemRight" valign="bottom"><b>associate</b> {}</td></tr>
+<tr class="separator:a1d365f894679ff01040833af8fb69b14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d068db5741c84f306e945c832744cd9"><td class="memItemLeft" align="right" valign="top"><a id="a0d068db5741c84f306e945c832744cd9" name="a0d068db5741c84f306e945c832744cd9"></a>
+constexpr ::beman::execution::bulk_t&#160;</td><td class="memItemRight" valign="bottom"><b>bulk</b> {}</td></tr>
+<tr class="separator:a0d068db5741c84f306e945c832744cd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fbf35f4823d5db0af863feee680e072"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a806dab6de1ac6ae4ec22419cd4ea1e11">connect_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a> {}</td></tr>
+<tr class="memdesc:a4fbf35f4823d5db0af863feee680e072"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object used to connect a sender and a receiver.  <br /></td></tr>
+<tr class="separator:a4fbf35f4823d5db0af863feee680e072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac82cc62b2a581cacd988ddc78cbc3bef"><td class="memItemLeft" align="right" valign="top"><a id="ac82cc62b2a581cacd988ddc78cbc3bef" name="ac82cc62b2a581cacd988ddc78cbc3bef"></a>
+constexpr continues_on_t&#160;</td><td class="memItemRight" valign="bottom"><b>continues_on</b> {}</td></tr>
+<tr class="memdesc:ac82cc62b2a581cacd988ddc78cbc3bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object to create a <code>continues_on</code> sender. <br /></td></tr>
+<tr class="separator:ac82cc62b2a581cacd988ddc78cbc3bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b0f7f25fb2dfd00f655321db3a2d18f"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6">forwarding_query_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a9b0f7f25fb2dfd00f655321db3a2d18f">forwarding_query</a> {}</td></tr>
+<tr class="memdesc:a9b0f7f25fb2dfd00f655321db3a2d18f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The customization point object to determine whether queries should be forwarded.  <br /></td></tr>
+<tr class="separator:a9b0f7f25fb2dfd00f655321db3a2d18f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bab3fbcd5c39321b7eb3131745a2684"><td class="memItemLeft" align="right" valign="top"><a id="a2bab3fbcd5c39321b7eb3131745a2684" name="a2bab3fbcd5c39321b7eb3131745a2684"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1get__allocator__t.html">get_allocator_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> {}</td></tr>
+<tr class="separator:a2bab3fbcd5c39321b7eb3131745a2684"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46482468e146622bfb1cbd0484c6a3bf"><td class="memTemplParams" colspan="2"><a id="a46482468e146622bfb1cbd0484c6a3bf" name="a46482468e146622bfb1cbd0484c6a3bf"></a>
 template&lt;::beman::execution::detail::completion_tag Tag&gt; </td></tr>
-<tr class="memitem:a5cd8ae50ee016a2ddf01047ee4843105"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1get__completion__scheduler__t.html">get_completion_scheduler_t</a>&lt; Tag &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_completion_scheduler</b> {}</td></tr>
-<tr class="separator:a5cd8ae50ee016a2ddf01047ee4843105"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c5e6746255178e7f9b0baf72d9dce93"><td class="memItemLeft" align="right" valign="top"><a id="a0c5e6746255178e7f9b0baf72d9dce93" name="a0c5e6746255178e7f9b0baf72d9dce93"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1get__completion__signatures__t.html">get_completion_signatures_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_completion_signatures</b> {}</td></tr>
-<tr class="separator:a0c5e6746255178e7f9b0baf72d9dce93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae733e5658fbe0878a039faef0e8a2f80"><td class="memItemLeft" align="right" valign="top"><a id="ae733e5658fbe0878a039faef0e8a2f80" name="ae733e5658fbe0878a039faef0e8a2f80"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1get__delegation__scheduler__t.html">get_delegation_scheduler_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_delegation_scheduler</b> {}</td></tr>
-<tr class="separator:ae733e5658fbe0878a039faef0e8a2f80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af229b5edd598c99ab1663117854c4492"><td class="memItemLeft" align="right" valign="top"><a id="af229b5edd598c99ab1663117854c4492" name="af229b5edd598c99ab1663117854c4492"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1get__domain__t.html">get_domain_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_domain</b> {}</td></tr>
-<tr class="separator:af229b5edd598c99ab1663117854c4492"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab876d683f84d3400bc99d4360b17811f"><td class="memItemLeft" align="right" valign="top"><a id="ab876d683f84d3400bc99d4360b17811f" name="ab876d683f84d3400bc99d4360b17811f"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1get__env__t.html">get_env_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_env</b> {}</td></tr>
-<tr class="separator:ab876d683f84d3400bc99d4360b17811f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12ec3b0dd7cc25ceb437428727aeb608"><td class="memItemLeft" align="right" valign="top"><a id="a12ec3b0dd7cc25ceb437428727aeb608" name="a12ec3b0dd7cc25ceb437428727aeb608"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1get__scheduler__t.html">get_scheduler_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_scheduler</b> {}</td></tr>
-<tr class="separator:a12ec3b0dd7cc25ceb437428727aeb608"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c9a0346738eff0aedbe9c237be32866"><td class="memItemLeft" align="right" valign="top"><a id="a7c9a0346738eff0aedbe9c237be32866" name="a7c9a0346738eff0aedbe9c237be32866"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1get__stop__token__t.html">get_stop_token_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_stop_token</b> {}</td></tr>
-<tr class="separator:a7c9a0346738eff0aedbe9c237be32866"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2a85b58f88fd2f2115fd982102d3f23"><td class="memItemLeft" align="right" valign="top"><a id="af2a85b58f88fd2f2115fd982102d3f23" name="af2a85b58f88fd2f2115fd982102d3f23"></a>
-BEMAN_EXECUTION_EXPORT constexpr into_variant_t&#160;</td><td class="memItemRight" valign="bottom"><b>into_variant</b> {}</td></tr>
-<tr class="separator:af2a85b58f88fd2f2115fd982102d3f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86a95402660a39f0f4737aa2444e0993"><td class="memItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::just_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a86a95402660a39f0f4737aa2444e0993">just</a> {}</td></tr>
-<tr class="memdesc:a86a95402660a39f0f4737aa2444e0993"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>just(<em>arg</em>...)</code> yields a sender completing with <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)</code>  <br /></td></tr>
-<tr class="separator:a86a95402660a39f0f4737aa2444e0993"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a468f3a132f894094d260c2b1323d5697"><td class="memItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::just_error_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a468f3a132f894094d260c2b1323d5697">just_error</a> {}</td></tr>
-<tr class="memdesc:a468f3a132f894094d260c2b1323d5697"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>just_error(<em>error</em>)</code> yields a sender completing with <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>Error</em>)</code>  <br /></td></tr>
-<tr class="separator:a468f3a132f894094d260c2b1323d5697"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab10ebe3835c37046ca5df1a61f25e79a"><td class="memItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::just_stopped_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#ab10ebe3835c37046ca5df1a61f25e79a">just_stopped</a> {}</td></tr>
-<tr class="memdesc:ab10ebe3835c37046ca5df1a61f25e79a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="namespacebeman_1_1execution.html#ab10ebe3835c37046ca5df1a61f25e79a" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender completing with <code>set_stopped_t()</code>  <br /></td></tr>
-<tr class="separator:ab10ebe3835c37046ca5df1a61f25e79a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a888870d663c43d800d4d3a8f5f163a4e"><td class="memItemLeft" align="right" valign="top"><a id="a888870d663c43d800d4d3a8f5f163a4e" name="a888870d663c43d800d4d3a8f5f163a4e"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::let_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>let_error</b> {}</td></tr>
-<tr class="separator:a888870d663c43d800d4d3a8f5f163a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d8f664f72441e393f9d7d3fe2fdf068"><td class="memItemLeft" align="right" valign="top"><a id="a2d8f664f72441e393f9d7d3fe2fdf068" name="a2d8f664f72441e393f9d7d3fe2fdf068"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::let_stopped_t&#160;</td><td class="memItemRight" valign="bottom"><b>let_stopped</b> {}</td></tr>
-<tr class="separator:a2d8f664f72441e393f9d7d3fe2fdf068"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a45b772dde017499566bce4368fefdf"><td class="memItemLeft" align="right" valign="top"><a id="a7a45b772dde017499566bce4368fefdf" name="a7a45b772dde017499566bce4368fefdf"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::let_value_t&#160;</td><td class="memItemRight" valign="bottom"><b>let_value</b> {}</td></tr>
-<tr class="separator:a7a45b772dde017499566bce4368fefdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af38bb7a3cd72fe3f4540e64507944797"><td class="memItemLeft" align="right" valign="top"><a id="af38bb7a3cd72fe3f4540e64507944797" name="af38bb7a3cd72fe3f4540e64507944797"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1nostopstate__t.html">nostopstate_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>nostopstate</b> {}</td></tr>
-<tr class="separator:af38bb7a3cd72fe3f4540e64507944797"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa427aa7ab4d2e7358f080a0c170dd321"><td class="memItemLeft" align="right" valign="top"><a id="aa427aa7ab4d2e7358f080a0c170dd321" name="aa427aa7ab4d2e7358f080a0c170dd321"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::on_t&#160;</td><td class="memItemRight" valign="bottom"><b>on</b> {}</td></tr>
-<tr class="separator:aa427aa7ab4d2e7358f080a0c170dd321"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70ef5ecac374eddf5a694dc91ba4f43d"><td class="memItemLeft" align="right" valign="top"><a id="a70ef5ecac374eddf5a694dc91ba4f43d" name="a70ef5ecac374eddf5a694dc91ba4f43d"></a>
-BEMAN_EXECUTION_EXPORT constexpr read_env_t&#160;</td><td class="memItemRight" valign="bottom"><b>read_env</b> {}</td></tr>
-<tr class="separator:a70ef5ecac374eddf5a694dc91ba4f43d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc950542fc6283cbae8bd0240688e89c"><td class="memItemLeft" align="right" valign="top"><a id="abc950542fc6283cbae8bd0240688e89c" name="abc950542fc6283cbae8bd0240688e89c"></a>
-BEMAN_EXECUTION_EXPORTconstexpr <a class="el" href="structbeman_1_1execution_1_1schedule__t.html">::beman::execution::schedule_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>schedule</b> {}</td></tr>
-<tr class="separator:abc950542fc6283cbae8bd0240688e89c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8771072e39df58c69230c080db226a3b"><td class="memItemLeft" align="right" valign="top"><a id="a8771072e39df58c69230c080db226a3b" name="a8771072e39df58c69230c080db226a3b"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::schedule_from_t&#160;</td><td class="memItemRight" valign="bottom"><b>schedule_from</b> {}</td></tr>
-<tr class="separator:a8771072e39df58c69230c080db226a3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac772aa91cf0ba688732aefc4575ab59e"><td class="memTemplParams" colspan="2">template&lt;typename Sender , typename Env  = ::beman::execution::env&lt;&gt;&gt; </td></tr>
-<tr class="memitem:ac772aa91cf0ba688732aefc4575ab59e"><td class="memTemplItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORT requires ::beman::execution::sender_in&lt; Sender, Env &gt; constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#ac772aa91cf0ba688732aefc4575ab59e">sends_stopped</a></td></tr>
-<tr class="separator:ac772aa91cf0ba688732aefc4575ab59e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e16f19c0b4ba21ee43d1c23e0f1cff3"><td class="memItemLeft" align="right" valign="top"><a id="a9e16f19c0b4ba21ee43d1c23e0f1cff3" name="a9e16f19c0b4ba21ee43d1c23e0f1cff3"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1set__error__t.html">set_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_error</b> {}</td></tr>
-<tr class="memdesc:a9e16f19c0b4ba21ee43d1c23e0f1cff3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object for error completions. <br /></td></tr>
-<tr class="separator:a9e16f19c0b4ba21ee43d1c23e0f1cff3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8244f7fb2c9f716d9602e260a8d91c4c"><td class="memItemLeft" align="right" valign="top"><a id="a8244f7fb2c9f716d9602e260a8d91c4c" name="a8244f7fb2c9f716d9602e260a8d91c4c"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1set__stopped__t.html">set_stopped_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_stopped</b> {}</td></tr>
-<tr class="memdesc:a8244f7fb2c9f716d9602e260a8d91c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object for cancellation completions. <br /></td></tr>
-<tr class="separator:a8244f7fb2c9f716d9602e260a8d91c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46482468e146622bfb1cbd0484c6a3bf"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structbeman_1_1execution_1_1get__completion__scheduler__t.html">get_completion_scheduler_t</a>&lt; Tag &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_completion_scheduler</b> {}</td></tr>
+<tr class="separator:a46482468e146622bfb1cbd0484c6a3bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62023efcd3f5843dc33da07e3983ca96"><td class="memItemLeft" align="right" valign="top"><a id="a62023efcd3f5843dc33da07e3983ca96" name="a62023efcd3f5843dc33da07e3983ca96"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1get__completion__signatures__t.html">get_completion_signatures_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_completion_signatures</b> {}</td></tr>
+<tr class="separator:a62023efcd3f5843dc33da07e3983ca96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a639310dd1bdafdcb3c69fc655fd31658"><td class="memItemLeft" align="right" valign="top"><a id="a639310dd1bdafdcb3c69fc655fd31658" name="a639310dd1bdafdcb3c69fc655fd31658"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1get__delegation__scheduler__t.html">get_delegation_scheduler_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_delegation_scheduler</b> {}</td></tr>
+<tr class="separator:a639310dd1bdafdcb3c69fc655fd31658"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ba7744f96b624d55df569e65c4b3faa"><td class="memItemLeft" align="right" valign="top"><a id="a7ba7744f96b624d55df569e65c4b3faa" name="a7ba7744f96b624d55df569e65c4b3faa"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1get__domain__t.html">get_domain_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_domain</b> {}</td></tr>
+<tr class="separator:a7ba7744f96b624d55df569e65c4b3faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fa02c8479269b757d86df447c65fb4f"><td class="memItemLeft" align="right" valign="top"><a id="a6fa02c8479269b757d86df447c65fb4f" name="a6fa02c8479269b757d86df447c65fb4f"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1get__env__t.html">get_env_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_env</b> {}</td></tr>
+<tr class="separator:a6fa02c8479269b757d86df447c65fb4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac72a28f06f4e41eea97c9d4ee1749a93"><td class="memItemLeft" align="right" valign="top"><a id="ac72a28f06f4e41eea97c9d4ee1749a93" name="ac72a28f06f4e41eea97c9d4ee1749a93"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1get__scheduler__t.html">get_scheduler_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_scheduler</b> {}</td></tr>
+<tr class="separator:ac72a28f06f4e41eea97c9d4ee1749a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07b152ace16d68e2a3a765ecb9ec32dd"><td class="memItemLeft" align="right" valign="top"><a id="a07b152ace16d68e2a3a765ecb9ec32dd" name="a07b152ace16d68e2a3a765ecb9ec32dd"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1get__stop__token__t.html">get_stop_token_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_stop_token</b> {}</td></tr>
+<tr class="separator:a07b152ace16d68e2a3a765ecb9ec32dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ce06d5f6ceb562a63b823973645d30a"><td class="memItemLeft" align="right" valign="top"><a id="a7ce06d5f6ceb562a63b823973645d30a" name="a7ce06d5f6ceb562a63b823973645d30a"></a>
+constexpr into_variant_t&#160;</td><td class="memItemRight" valign="bottom"><b>into_variant</b> {}</td></tr>
+<tr class="separator:a7ce06d5f6ceb562a63b823973645d30a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdbad94bfa3d61a849a61c99a753d5da"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution::just_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">just</a> {}</td></tr>
+<tr class="memdesc:acdbad94bfa3d61a849a61c99a753d5da"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>just(<em>arg</em>...)</code> yields a sender completing with <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)</code>  <br /></td></tr>
+<tr class="separator:acdbad94bfa3d61a849a61c99a753d5da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4043903f88f6bb02acdf1c1c369f4ead"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution::just_error_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead">just_error</a> {}</td></tr>
+<tr class="memdesc:a4043903f88f6bb02acdf1c1c369f4ead"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>just_error(<em>error</em>)</code> yields a sender completing with <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>Error</em>)</code>  <br /></td></tr>
+<tr class="separator:a4043903f88f6bb02acdf1c1c369f4ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6406f8f62cb941fe811fedeebf0b985f"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution::just_stopped_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f">just_stopped</a> {}</td></tr>
+<tr class="memdesc:a6406f8f62cb941fe811fedeebf0b985f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender completing with <code>set_stopped_t()</code>  <br /></td></tr>
+<tr class="separator:a6406f8f62cb941fe811fedeebf0b985f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a744276b9a2846e0b9df2e62998e57d00"><td class="memItemLeft" align="right" valign="top"><a id="a744276b9a2846e0b9df2e62998e57d00" name="a744276b9a2846e0b9df2e62998e57d00"></a>
+constexpr ::beman::execution::let_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>let_error</b> {}</td></tr>
+<tr class="separator:a744276b9a2846e0b9df2e62998e57d00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc7a0e2b3f0553302df17259f07a1b55"><td class="memItemLeft" align="right" valign="top"><a id="abc7a0e2b3f0553302df17259f07a1b55" name="abc7a0e2b3f0553302df17259f07a1b55"></a>
+constexpr ::beman::execution::let_stopped_t&#160;</td><td class="memItemRight" valign="bottom"><b>let_stopped</b> {}</td></tr>
+<tr class="separator:abc7a0e2b3f0553302df17259f07a1b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8917ac6fb4021ef7c51f5d856290d64"><td class="memItemLeft" align="right" valign="top"><a id="ac8917ac6fb4021ef7c51f5d856290d64" name="ac8917ac6fb4021ef7c51f5d856290d64"></a>
+constexpr ::beman::execution::let_value_t&#160;</td><td class="memItemRight" valign="bottom"><b>let_value</b> {}</td></tr>
+<tr class="separator:ac8917ac6fb4021ef7c51f5d856290d64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a376b83ff4dccd652f45cf998c3a498d9"><td class="memItemLeft" align="right" valign="top"><a id="a376b83ff4dccd652f45cf998c3a498d9" name="a376b83ff4dccd652f45cf998c3a498d9"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1nostopstate__t.html">nostopstate_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>nostopstate</b> {}</td></tr>
+<tr class="separator:a376b83ff4dccd652f45cf998c3a498d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cd310f3ad5718578cc01a8b4b3416a4"><td class="memItemLeft" align="right" valign="top"><a id="a2cd310f3ad5718578cc01a8b4b3416a4" name="a2cd310f3ad5718578cc01a8b4b3416a4"></a>
+constexpr ::beman::execution::on_t&#160;</td><td class="memItemRight" valign="bottom"><b>on</b> {}</td></tr>
+<tr class="separator:a2cd310f3ad5718578cc01a8b4b3416a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab14f65a35b63fe3a7164c08935727bf9"><td class="memItemLeft" align="right" valign="top"><a id="ab14f65a35b63fe3a7164c08935727bf9" name="ab14f65a35b63fe3a7164c08935727bf9"></a>
+constexpr read_env_t&#160;</td><td class="memItemRight" valign="bottom"><b>read_env</b> {}</td></tr>
+<tr class="separator:ab14f65a35b63fe3a7164c08935727bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf0af004c48762fadb5d1bb90f96b5a9"><td class="memItemLeft" align="right" valign="top"><a id="acf0af004c48762fadb5d1bb90f96b5a9" name="acf0af004c48762fadb5d1bb90f96b5a9"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1schedule__t.html">::beman::execution::schedule_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>schedule</b> {}</td></tr>
+<tr class="separator:acf0af004c48762fadb5d1bb90f96b5a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a9c0a0e58622599c59cc2cb73637d7d"><td class="memItemLeft" align="right" valign="top"><a id="a3a9c0a0e58622599c59cc2cb73637d7d" name="a3a9c0a0e58622599c59cc2cb73637d7d"></a>
+constexpr ::beman::execution::schedule_from_t&#160;</td><td class="memItemRight" valign="bottom"><b>schedule_from</b> {}</td></tr>
+<tr class="separator:a3a9c0a0e58622599c59cc2cb73637d7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2ed13e395a573ad12e2f930dd3c1506"><td class="memTemplParams" colspan="2">template&lt;typename Sender , typename Env  = ::beman::execution::env&lt;&gt;&gt; </td></tr>
+<tr class="memitem:ae2ed13e395a573ad12e2f930dd3c1506"><td class="memTemplItemLeft" align="right" valign="top">requires ::beman::execution::sender_in&lt; Sender, Env &gt; constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#ae2ed13e395a573ad12e2f930dd3c1506">sends_stopped</a></td></tr>
+<tr class="separator:ae2ed13e395a573ad12e2f930dd3c1506"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c818e99f3355da27e1b2742a6412e80"><td class="memItemLeft" align="right" valign="top"><a id="a0c818e99f3355da27e1b2742a6412e80" name="a0c818e99f3355da27e1b2742a6412e80"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1set__error__t.html">set_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_error</b> {}</td></tr>
+<tr class="memdesc:a0c818e99f3355da27e1b2742a6412e80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object for error completions. <br /></td></tr>
+<tr class="separator:a0c818e99f3355da27e1b2742a6412e80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a303495814a79f042a0887317843d6187"><td class="memItemLeft" align="right" valign="top"><a id="a303495814a79f042a0887317843d6187" name="a303495814a79f042a0887317843d6187"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1set__stopped__t.html">set_stopped_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_stopped</b> {}</td></tr>
+<tr class="memdesc:a303495814a79f042a0887317843d6187"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object for cancellation completions. <br /></td></tr>
+<tr class="separator:a303495814a79f042a0887317843d6187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88ba134b297e5c0b06590a57ae9d5dfe"><td class="memItemLeft" align="right" valign="top"><a id="a88ba134b297e5c0b06590a57ae9d5dfe" name="a88ba134b297e5c0b06590a57ae9d5dfe"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1set__value__t.html">set_value_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_value</b> {}</td></tr>
+constexpr <a class="el" href="structbeman_1_1execution_1_1set__value__t.html">set_value_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_value</b> {}</td></tr>
 <tr class="memdesc:a88ba134b297e5c0b06590a57ae9d5dfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object for successful completions. <br /></td></tr>
 <tr class="separator:a88ba134b297e5c0b06590a57ae9d5dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74725cbe37ab55f960ab59b192aaa642"><td class="memItemLeft" align="right" valign="top"><a id="a74725cbe37ab55f960ab59b192aaa642" name="a74725cbe37ab55f960ab59b192aaa642"></a>
-BEMAN_EXECUTION_EXPORT constexpr spawn_t&#160;</td><td class="memItemRight" valign="bottom"><b>spawn</b> {}</td></tr>
-<tr class="separator:a74725cbe37ab55f960ab59b192aaa642"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a219b838ef7ac462b42c3392b9855dabd"><td class="memItemLeft" align="right" valign="top"><a id="a219b838ef7ac462b42c3392b9855dabd" name="a219b838ef7ac462b42c3392b9855dabd"></a>
-BEMAN_EXECUTION_EXPORT constexpr spawn_future_t&#160;</td><td class="memItemRight" valign="bottom"><b>spawn_future</b> {}</td></tr>
-<tr class="separator:a219b838ef7ac462b42c3392b9855dabd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae108e7a9cb18d0c2e00d6f20878f91e1"><td class="memItemLeft" align="right" valign="top"><a id="ae108e7a9cb18d0c2e00d6f20878f91e1" name="ae108e7a9cb18d0c2e00d6f20878f91e1"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::split_t&#160;</td><td class="memItemRight" valign="bottom"><b>split</b> {}</td></tr>
-<tr class="separator:ae108e7a9cb18d0c2e00d6f20878f91e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8515310ec9c2384a48057ab0623ef5d8"><td class="memItemLeft" align="right" valign="top"><a id="a8515310ec9c2384a48057ab0623ef5d8" name="a8515310ec9c2384a48057ab0623ef5d8"></a>
-BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="structbeman_1_1execution_1_1start__t.html">start_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> {}</td></tr>
-<tr class="separator:a8515310ec9c2384a48057ab0623ef5d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad33bc8fbd5a7462967eab19fe8b408de"><td class="memItemLeft" align="right" valign="top"><a id="ad33bc8fbd5a7462967eab19fe8b408de" name="ad33bc8fbd5a7462967eab19fe8b408de"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::detail::starts_on_t&#160;</td><td class="memItemRight" valign="bottom"><b>starts_on</b> {}</td></tr>
-<tr class="separator:ad33bc8fbd5a7462967eab19fe8b408de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c7b4c1bdad6f6f4ea09c03de8e89a51"><td class="memItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::sync_wait_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51">sync_wait</a> {}</td></tr>
-<tr class="memdesc:a4c7b4c1bdad6f6f4ea09c03de8e89a51"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>sync_wait(<em>sender</em>)</code> starts <code><em>sender</em></code> and waits for its completion.  <br /></td></tr>
-<tr class="separator:a4c7b4c1bdad6f6f4ea09c03de8e89a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42194e9663efb60f2ed04d4a16641247"><td class="memItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORTconstexpr <a class="el" href="namespacebeman_1_1execution.html#a4d128b0eb18329ca6d9dff7068eaf865">::beman::execution::then_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a42194e9663efb60f2ed04d4a16641247">then</a> {}</td></tr>
-<tr class="memdesc:a42194e9663efb60f2ed04d4a16641247"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>then(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>A</em>...)</code> completion  <br /></td></tr>
-<tr class="separator:a42194e9663efb60f2ed04d4a16641247"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b66c91515401c3c5a8ebc0157f819f1"><td class="memItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORTconstexpr <a class="el" href="namespacebeman_1_1execution.html#a5edc31fa03580fefdec5ff9de774cd7b">::beman::execution::upon_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a6b66c91515401c3c5a8ebc0157f819f1">upon_error</a> {}</td></tr>
-<tr class="memdesc:a6b66c91515401c3c5a8ebc0157f819f1"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_error(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>E</em>)</code> completion  <br /></td></tr>
-<tr class="separator:a6b66c91515401c3c5a8ebc0157f819f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a103c28706c08a5f4ee9c2fb2996a4670"><td class="memItemLeft" align="right" valign="top">BEMAN_EXECUTION_EXPORTconstexpr <a class="el" href="namespacebeman_1_1execution.html#a724b0f844f19033a9aff2385c0c2532d">::beman::execution::upon_stopped_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a103c28706c08a5f4ee9c2fb2996a4670">upon_stopped</a> {}</td></tr>
-<tr class="memdesc:a103c28706c08a5f4ee9c2fb2996a4670"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_stopped(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code>set_stopped_t()</code> completion  <br /></td></tr>
-<tr class="separator:a103c28706c08a5f4ee9c2fb2996a4670"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a595be9a1d273c7edc3156506b87a1d86"><td class="memItemLeft" align="right" valign="top"><a id="a595be9a1d273c7edc3156506b87a1d86" name="a595be9a1d273c7edc3156506b87a1d86"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::when_all_t&#160;</td><td class="memItemRight" valign="bottom"><b>when_all</b> {}</td></tr>
-<tr class="separator:a595be9a1d273c7edc3156506b87a1d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82abc302fefcaf57715c5e717bd4af21"><td class="memItemLeft" align="right" valign="top"><a id="a82abc302fefcaf57715c5e717bd4af21" name="a82abc302fefcaf57715c5e717bd4af21"></a>
-BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::when_all_with_variant_t&#160;</td><td class="memItemRight" valign="bottom"><b>when_all_with_variant</b> {}</td></tr>
-<tr class="separator:a82abc302fefcaf57715c5e717bd4af21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2ed4202cf4050791dbc46bbbd33e5a0"><td class="memItemLeft" align="right" valign="top"><a id="ac2ed4202cf4050791dbc46bbbd33e5a0" name="ac2ed4202cf4050791dbc46bbbd33e5a0"></a>
-BEMAN_EXECUTION_EXPORT constexpr write_env_t&#160;</td><td class="memItemRight" valign="bottom"><b>write_env</b> {}</td></tr>
-<tr class="separator:ac2ed4202cf4050791dbc46bbbd33e5a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad68e634e7a244efee148d8acaa6e3227"><td class="memItemLeft" align="right" valign="top"><a id="ad68e634e7a244efee148d8acaa6e3227" name="ad68e634e7a244efee148d8acaa6e3227"></a>
+constexpr spawn_t&#160;</td><td class="memItemRight" valign="bottom"><b>spawn</b> {}</td></tr>
+<tr class="separator:ad68e634e7a244efee148d8acaa6e3227"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26d569173995dbdd870ab9b204e65f54"><td class="memItemLeft" align="right" valign="top"><a id="a26d569173995dbdd870ab9b204e65f54" name="a26d569173995dbdd870ab9b204e65f54"></a>
+constexpr spawn_future_t&#160;</td><td class="memItemRight" valign="bottom"><b>spawn_future</b> {}</td></tr>
+<tr class="separator:a26d569173995dbdd870ab9b204e65f54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab504a7494c49d4cff66b80e457d08bb4"><td class="memItemLeft" align="right" valign="top"><a id="ab504a7494c49d4cff66b80e457d08bb4" name="ab504a7494c49d4cff66b80e457d08bb4"></a>
+constexpr ::beman::execution::split_t&#160;</td><td class="memItemRight" valign="bottom"><b>split</b> {}</td></tr>
+<tr class="separator:ab504a7494c49d4cff66b80e457d08bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7eb79ac19f88546184773e96a26bc97"><td class="memItemLeft" align="right" valign="top"><a id="ac7eb79ac19f88546184773e96a26bc97" name="ac7eb79ac19f88546184773e96a26bc97"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1start__t.html">start_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> {}</td></tr>
+<tr class="separator:ac7eb79ac19f88546184773e96a26bc97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95377102421566b05cd68f612ce76c0d"><td class="memItemLeft" align="right" valign="top"><a id="a95377102421566b05cd68f612ce76c0d" name="a95377102421566b05cd68f612ce76c0d"></a>
+constexpr ::beman::execution::detail::starts_on_t&#160;</td><td class="memItemRight" valign="bottom"><b>starts_on</b> {}</td></tr>
+<tr class="separator:a95377102421566b05cd68f612ce76c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43774ecef52b77ef5d3f668bfcc51519"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution::sync_wait_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519">sync_wait</a> {}</td></tr>
+<tr class="memdesc:a43774ecef52b77ef5d3f668bfcc51519"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>sync_wait(<em>sender</em>)</code> starts <code><em>sender</em></code> and waits for its completion.  <br /></td></tr>
+<tr class="separator:a43774ecef52b77ef5d3f668bfcc51519"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67398f7901010156ad6b008f62fa9ba3"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a4d128b0eb18329ca6d9dff7068eaf865">::beman::execution::then_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3">then</a> {}</td></tr>
+<tr class="memdesc:a67398f7901010156ad6b008f62fa9ba3"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>then(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code><a class="el" href="structbeman_1_1execution_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>A</em>...)</code> completion  <br /></td></tr>
+<tr class="separator:a67398f7901010156ad6b008f62fa9ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe7e6d1b61436b69aa7fa70b1f653271"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a5edc31fa03580fefdec5ff9de774cd7b">::beman::execution::upon_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271">upon_error</a> {}</td></tr>
+<tr class="memdesc:afe7e6d1b61436b69aa7fa70b1f653271"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_error(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code><a class="el" href="structbeman_1_1execution_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>E</em>)</code> completion  <br /></td></tr>
+<tr class="separator:afe7e6d1b61436b69aa7fa70b1f653271"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e12a82c294cbf0775945930a63025d4"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a724b0f844f19033a9aff2385c0c2532d">::beman::execution::upon_stopped_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a7e12a82c294cbf0775945930a63025d4">upon_stopped</a> {}</td></tr>
+<tr class="memdesc:a7e12a82c294cbf0775945930a63025d4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_stopped(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code>set_stopped_t()</code> completion  <br /></td></tr>
+<tr class="separator:a7e12a82c294cbf0775945930a63025d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada5b779202d31104b192afb6e1092ab2"><td class="memItemLeft" align="right" valign="top"><a id="ada5b779202d31104b192afb6e1092ab2" name="ada5b779202d31104b192afb6e1092ab2"></a>
+constexpr ::beman::execution::when_all_t&#160;</td><td class="memItemRight" valign="bottom"><b>when_all</b> {}</td></tr>
+<tr class="separator:ada5b779202d31104b192afb6e1092ab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a279072c2c153dc5cda04612e142ae1e6"><td class="memItemLeft" align="right" valign="top"><a id="a279072c2c153dc5cda04612e142ae1e6" name="a279072c2c153dc5cda04612e142ae1e6"></a>
+constexpr ::beman::execution::when_all_with_variant_t&#160;</td><td class="memItemRight" valign="bottom"><b>when_all_with_variant</b> {}</td></tr>
+<tr class="separator:a279072c2c153dc5cda04612e142ae1e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2defa838a747e82bc632f5b0fdb4d6cf"><td class="memItemLeft" align="right" valign="top"><a id="a2defa838a747e82bc632f5b0fdb4d6cf" name="a2defa838a747e82bc632f5b0fdb4d6cf"></a>
+constexpr write_env_t&#160;</td><td class="memItemRight" valign="bottom"><b>write_env</b> {}</td></tr>
+<tr class="separator:a2defa838a747e82bc632f5b0fdb4d6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96e6606229cea8cab1a5097791d50cc9"><td class="memItemLeft" align="right" valign="top"><a id="a96e6606229cea8cab1a5097791d50cc9" name="a96e6606229cea8cab1a5097791d50cc9"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td></tr>
 <tr class="separator:a96e6606229cea8cab1a5097791d50cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -536,8 +536,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
 <div class="textblock"><p>Namespace for asynchronous operations and their vocabulary. </p>
 <p>The <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a> namespace contains various components for accessing asynchronous operations. </p>
 </div><h2 class="groupheader">Variable Documentation</h2>
-<a id="af3ca0aa23afbd3f71811787934127535" name="af3ca0aa23afbd3f71811787934127535"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3ca0aa23afbd3f71811787934127535">&#9670;&#160;</a></span>connect</h2>
+<a id="a4fbf35f4823d5db0af863feee680e072" name="a4fbf35f4823d5db0af863feee680e072"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fbf35f4823d5db0af863feee680e072">&#9670;&#160;</a></span>connect</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -546,7 +546,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="namespacebeman_1_1execution.html#a806dab6de1ac6ae4ec22419cd4ea1e11">connect_t</a> beman::execution::connect {}</td>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution.html#a806dab6de1ac6ae4ec22419cd4ea1e11">connect_t</a> beman::execution::connect {}</td>
         </tr>
       </table>
   </td>
@@ -557,12 +557,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
 </div><div class="memdoc">
 
 <p>Customization point object used to connect a sender and a receiver. </p>
-<p><code><a class="el" href="namespacebeman_1_1execution.html#af3ca0aa23afbd3f71811787934127535" title="Customization point object used to connect a sender and a receiver.">connect(sender, receiver)</a></code> returns the result of calling <code>sender.connect(receiver)</code>. The returned object <code>state</code> is an <code>operation_state</code> object. </p>
+<p><code><a class="el" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072" title="Customization point object used to connect a sender and a receiver.">connect(sender, receiver)</a></code> returns the result of calling <code>sender.connect(receiver)</code>. The returned object <code>state</code> is an <code>operation_state</code> object. </p>
 
 </div>
 </div>
-<a id="ad1b67aef1ed702a42f470540aedbbfc4" name="ad1b67aef1ed702a42f470540aedbbfc4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1b67aef1ed702a42f470540aedbbfc4">&#9670;&#160;</a></span>forwarding_query</h2>
+<a id="a9b0f7f25fb2dfd00f655321db3a2d18f" name="a9b0f7f25fb2dfd00f655321db3a2d18f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b0f7f25fb2dfd00f655321db3a2d18f">&#9670;&#160;</a></span>forwarding_query</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -571,7 +571,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORT constexpr <a class="el" href="namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6">forwarding_query_t</a> beman::execution::forwarding_query {}</td>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6">forwarding_query_t</a> beman::execution::forwarding_query {}</td>
         </tr>
       </table>
   </td>
@@ -582,7 +582,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
 </div><div class="memdoc">
 
 <p>The customization point object to determine whether queries should be forwarded. </p>
-<p>The <code>constexpr</code> call <code><a class="el" href="namespacebeman_1_1execution.html#ad1b67aef1ed702a42f470540aedbbfc4" title="The customization point object to determine whether queries should be forwarded.">forwarding_query(q)</a></code> determines whether the query <code>q</code> passed as argument should be forwarded. The result is determined as follows:</p>
+<p>The <code>constexpr</code> call <code><a class="el" href="namespacebeman_1_1execution.html#a9b0f7f25fb2dfd00f655321db3a2d18f" title="The customization point object to determine whether queries should be forwarded.">forwarding_query(q)</a></code> determines whether the query <code>q</code> passed as argument should be forwarded. The result is determined as follows:</p>
 <ul>
 <li>If the <code>q.query(forwarding_query)</code> is a <code>noexcept</code> expression of type <code>bool</code> the result of this call.</li>
 <li>If the type of <code>q</code> is derived from <code>forwarding_query_t</code>.</li>
@@ -591,8 +591,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
 
 </div>
 </div>
-<a id="a86a95402660a39f0f4737aa2444e0993" name="a86a95402660a39f0f4737aa2444e0993"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86a95402660a39f0f4737aa2444e0993">&#9670;&#160;</a></span>just</h2>
+<a id="acdbad94bfa3d61a849a61c99a753d5da" name="acdbad94bfa3d61a849a61c99a753d5da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdbad94bfa3d61a849a61c99a753d5da">&#9670;&#160;</a></span>just</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -601,7 +601,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::just_t beman::execution::just {}</td>
+          <td class="memname">constexpr ::beman::execution::just_t beman::execution::just {}</td>
         </tr>
       </table>
   </td>
@@ -631,15 +631,15 @@ just(<em>arg</em>...)
 using namespace std::string_literals;
 
 int main() {
-    auto result = <a class="el" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a86a95402660a39f0f4737aa2444e0993" title="just(arg...) yields a sender completing with set_value_t(Arg...)">ex::just</a>(17, "hello"s, true));
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da" title="just(arg...) yields a sender completing with set_value_t(Arg...)">ex::just</a>(17, "hello"s, true));
     assert(result);
     assert(*result == std::tuple(17, "hello"s, true));
 }
 </pre> 
 </div>
 </div>
-<a id="a468f3a132f894094d260c2b1323d5697" name="a468f3a132f894094d260c2b1323d5697"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a468f3a132f894094d260c2b1323d5697">&#9670;&#160;</a></span>just_error</h2>
+<a id="a4043903f88f6bb02acdf1c1c369f4ead" name="a4043903f88f6bb02acdf1c1c369f4ead"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4043903f88f6bb02acdf1c1c369f4ead">&#9670;&#160;</a></span>just_error</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -648,7 +648,7 @@ int main() {
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::just_error_t beman::execution::just_error {}</td>
+          <td class="memname">constexpr ::beman::execution::just_error_t beman::execution::just_error {}</td>
         </tr>
       </table>
   </td>
@@ -679,8 +679,8 @@ namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Name
 
 int main() {
     bool had_error{false};
-    auto result = <a class="el" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a468f3a132f894094d260c2b1323d5697" title="just_error(error) yields a sender completing with set_error_t(Error)">ex::just_error</a>(std::error_code(17, std::system_category())) |
-                                <a class="el" href="namespacebeman_1_1execution.html#a6b66c91515401c3c5a8ebc0157f819f1" title="upon_error(sender, fun) yields a sender transforming a set_error_t(E) completion">ex::upon_error</a>([&amp;](std::error_code ec) {
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead" title="just_error(error) yields a sender completing with set_error_t(Error)">ex::just_error</a>(std::error_code(17, std::system_category())) |
+                                <a class="el" href="namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271" title="upon_error(sender, fun) yields a sender transforming a set_error_t(E) completion">ex::upon_error</a>([&amp;](std::error_code ec) {
                                     assert(ec.value() == 17);
                                     had_error = true;
                                 }));
@@ -689,8 +689,8 @@ int main() {
 </pre> 
 </div>
 </div>
-<a id="ab10ebe3835c37046ca5df1a61f25e79a" name="ab10ebe3835c37046ca5df1a61f25e79a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab10ebe3835c37046ca5df1a61f25e79a">&#9670;&#160;</a></span>just_stopped</h2>
+<a id="a6406f8f62cb941fe811fedeebf0b985f" name="a6406f8f62cb941fe811fedeebf0b985f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6406f8f62cb941fe811fedeebf0b985f">&#9670;&#160;</a></span>just_stopped</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -699,7 +699,7 @@ int main() {
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::just_stopped_t beman::execution::just_stopped {}</td>
+          <td class="memname">constexpr ::beman::execution::just_stopped_t beman::execution::just_stopped {}</td>
         </tr>
       </table>
   </td>
@@ -709,18 +709,18 @@ int main() {
 </table>
 </div><div class="memdoc">
 
-<p><code><a class="el" href="namespacebeman_1_1execution.html#ab10ebe3835c37046ca5df1a61f25e79a" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender completing with <code>set_stopped_t()</code> </p>
-<p><code>just_stopped</code> is a callable object of type <code>just_stopped_t</code>. Invoking <code><a class="el" href="namespacebeman_1_1execution.html#ab10ebe3835c37046ca5df1a61f25e79a" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender which produces a cancellation completion when started. This sender completes synchronously when started.</p>
+<p><code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender completing with <code>set_stopped_t()</code> </p>
+<p><code>just_stopped</code> is a callable object of type <code>just_stopped_t</code>. Invoking <code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender which produces a cancellation completion when started. This sender completes synchronously when started.</p>
 <h4>Usage</h4>
 <pre>
-<a class="el" href="namespacebeman_1_1execution.html#ab10ebe3835c37046ca5df1a61f25e79a" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a>
+<a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a>
 </pre><h4>Completions Signatures</h4>
 <pre>
 <a class="el" href="structbeman_1_1execution_1_1completion__signatures.html" title="Class template used to a specify a list of completion signatures.">completion_signatures</a>&lt;
     set_stopped_t()
 &gt;;
 </pre><h4>Example</h4>
-<p>The normal use of <code><a class="el" href="namespacebeman_1_1execution.html#ab10ebe3835c37046ca5df1a61f25e79a" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> is to report a cancellation as the result of some work in a work graph. It would, e.g., be used as the completion produced by <code>let_value</code>. The example below creates a sender yielding a completion on the cancellation channel and uses that as the input for <code>upon_stopped</code> consuming the cancellation and producing a value completion: using <code><a class="el" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51" title="sync_wait(sender) starts sender and waits for its completion.">sync_wait(just_stopped())</a></code> directly doesn't work because <code>sync_wait</code> requires exactly one value completion from its argument and <code>set_stopped</code> only has a cancellation completion. The function used with <code>upon_stopped</code> sets the flag <code>had_stopped</code> indicating it was called at all. This flag is checked after waiting for the result in <code>sync_wait</code>.</p>
+<p>The normal use of <code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> is to report a cancellation as the result of some work in a work graph. It would, e.g., be used as the completion produced by <code>let_value</code>. The example below creates a sender yielding a completion on the cancellation channel and uses that as the input for <code>upon_stopped</code> consuming the cancellation and producing a value completion: using <code><a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">sync_wait(just_stopped())</a></code> directly doesn't work because <code>sync_wait</code> requires exactly one value completion from its argument and <code>set_stopped</code> only has a cancellation completion. The function used with <code>upon_stopped</code> sets the flag <code>had_stopped</code> indicating it was called at all. This flag is checked after waiting for the result in <code>sync_wait</code>.</p>
 <pre example="doc-just_error.cpp">
 #include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
 #include &lt;system_error&gt;
@@ -729,8 +729,8 @@ namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Name
 
 int main() {
     bool had_stopped{false};
-    auto result = <a class="el" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a468f3a132f894094d260c2b1323d5697" title="just_error(error) yields a sender completing with set_error_t(Error)">ex::just_error</a>(std::error_code(17, std::system_category())) |
-                                <a class="el" href="namespacebeman_1_1execution.html#a6b66c91515401c3c5a8ebc0157f819f1" title="upon_error(sender, fun) yields a sender transforming a set_error_t(E) completion">ex::upon_error</a>([&amp;](std::error_code ec) {
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead" title="just_error(error) yields a sender completing with set_error_t(Error)">ex::just_error</a>(std::error_code(17, std::system_category())) |
+                                <a class="el" href="namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271" title="upon_error(sender, fun) yields a sender transforming a set_error_t(E) completion">ex::upon_error</a>([&amp;](std::error_code ec) {
                                     assert(ec.value() == 17);
                                     had_stopped = true;
                                 }));
@@ -739,8 +739,8 @@ int main() {
 </pre> 
 </div>
 </div>
-<a id="ac772aa91cf0ba688732aefc4575ab59e" name="ac772aa91cf0ba688732aefc4575ab59e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac772aa91cf0ba688732aefc4575ab59e">&#9670;&#160;</a></span>sends_stopped</h2>
+<a id="ae2ed13e395a573ad12e2f930dd3c1506" name="ae2ed13e395a573ad12e2f930dd3c1506"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2ed13e395a573ad12e2f930dd3c1506">&#9670;&#160;</a></span>sends_stopped</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -751,7 +751,7 @@ template&lt;typename Sender , typename Env  = ::beman::execution::env&lt;&gt;&gt
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORT requires ::beman::execution::sender_in&lt;Sender, Env&gt; constexpr bool beman::execution::sends_stopped</td>
+          <td class="memname">requires ::beman::execution::sender_in&lt;Sender, Env&gt; constexpr bool beman::execution::sends_stopped</td>
         </tr>
       </table>
   </td>
@@ -771,8 +771,8 @@ template&lt;typename Sender , typename Env  = ::beman::execution::env&lt;&gt;&gt
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a4c7b4c1bdad6f6f4ea09c03de8e89a51" name="a4c7b4c1bdad6f6f4ea09c03de8e89a51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c7b4c1bdad6f6f4ea09c03de8e89a51">&#9670;&#160;</a></span>sync_wait</h2>
+<a id="a43774ecef52b77ef5d3f668bfcc51519" name="a43774ecef52b77ef5d3f668bfcc51519"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43774ecef52b77ef5d3f668bfcc51519">&#9670;&#160;</a></span>sync_wait</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -781,7 +781,7 @@ template&lt;typename Sender , typename Env  = ::beman::execution::env&lt;&gt;&gt
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORTconstexpr ::beman::execution::sync_wait_t beman::execution::sync_wait {}</td>
+          <td class="memname">constexpr ::beman::execution::sync_wait_t beman::execution::sync_wait {}</td>
         </tr>
       </table>
   </td>
@@ -800,7 +800,7 @@ template&lt;typename Sender , typename Env  = ::beman::execution::env&lt;&gt;&gt
 </ol>
 <p>Once the <code><em>sender</em></code> completes, the result is provided by <code>sync_wait</code>:</p><ul>
 <li>If the <code><em>sender</em></code> completes with <code>set_value(<em>arg</em>...)</code>, <code>sync_wait</code> returns an <code>std::optional&lt;std::tuple&lt;<em>Arg</em>...&gt;&gt;</code> containing the results <code><em>arg</em>...</code>.</li>
-<li>If the <code><em>sender</em></code> completes with <code><a class="el" href="namespacebeman_1_1execution.html#a8244f7fb2c9f716d9602e260a8d91c4c" title="Customization point object for cancellation completions.">set_stopped()</a></code>, <code>sync_wait</code> returns a disengaged <code>std::optional&lt;std::tuple&lt;<em>Arg</em>...&gt;&gt;</code>.</li>
+<li>If the <code><em>sender</em></code> completes with <code><a class="el" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187" title="Customization point object for cancellation completions.">set_stopped()</a></code>, <code>sync_wait</code> returns a disengaged <code>std::optional&lt;std::tuple&lt;<em>Arg</em>...&gt;&gt;</code>.</li>
 <li>If the <code><em>sender</em></code> completes with <code>set_error(<em>error</em>)</code>, <code>sync_wait</code> throw <code><em>error</em></code> or rethrows the exception if <code><em>error</em></code> is an <code>std::exception_ptr</code>.</li>
 </ul>
 <h4>Usage</h4>
@@ -813,15 +813,15 @@ sync_wait(<em>sender</em>...)
 #include &lt;cassert&gt;
 
 int main() {
-    auto result = <a class="el" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait(ex::just(17))</a>;
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait(ex::just(17))</a>;
     assert(result);
     assert(*result == std::tuple(17));
 }
 </pre> 
 </div>
 </div>
-<a id="a42194e9663efb60f2ed04d4a16641247" name="a42194e9663efb60f2ed04d4a16641247"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42194e9663efb60f2ed04d4a16641247">&#9670;&#160;</a></span>then</h2>
+<a id="a67398f7901010156ad6b008f62fa9ba3" name="a67398f7901010156ad6b008f62fa9ba3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67398f7901010156ad6b008f62fa9ba3">&#9670;&#160;</a></span>then</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -830,7 +830,7 @@ int main() {
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORTconstexpr <a class="el" href="namespacebeman_1_1execution.html#a4d128b0eb18329ca6d9dff7068eaf865">::beman::execution::then_t</a> beman::execution::then {}</td>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution.html#a4d128b0eb18329ca6d9dff7068eaf865">::beman::execution::then_t</a> beman::execution::then {}</td>
         </tr>
       </table>
   </td>
@@ -849,7 +849,7 @@ int main() {
 </ul>
 </li>
 <li>Otherwise, if the completion is <code>set_error(<em>e</em>)</code>, <code>then</code> completes with <code>set_error(<em>r</em>, <em>e</em>)</code></li>
-<li>Otherwise, if the completion is <code><a class="el" href="namespacebeman_1_1execution.html#a8244f7fb2c9f716d9602e260a8d91c4c" title="Customization point object for cancellation completions.">set_stopped()</a></code>, <code>then</code> completes with <code>set_stopped(<em>r</em>)</code>.</li>
+<li>Otherwise, if the completion is <code><a class="el" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187" title="Customization point object for cancellation completions.">set_stopped()</a></code>, <code>then</code> completes with <code>set_stopped(<em>r</em>)</code>.</li>
 </ul>
 <h4>Usage</h4>
 <pre>
@@ -869,15 +869,15 @@ then(<em>sender</em>, <em>fun</em>)
 namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
 
 int main() {
-    auto result = <a class="el" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a86a95402660a39f0f4737aa2444e0993" title="just(arg...) yields a sender completing with set_value_t(Arg...)">ex::just(10)</a> | <a class="el" href="namespacebeman_1_1execution.html#a42194e9663efb60f2ed04d4a16641247" title="then(sender, fun) yields a sender transforming a set_value_t(A...) completion">ex::then</a>([](int v) { return v == 3; }));
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da" title="just(arg...) yields a sender completing with set_value_t(Arg...)">ex::just(10)</a> | <a class="el" href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3" title="then(sender, fun) yields a sender transforming a set_value_t(A...) completion">ex::then</a>([](int v) { return v == 3; }));
     assert(result);
     assert(*result == std::tuple(false));
 }
 </pre> 
 </div>
 </div>
-<a id="a6b66c91515401c3c5a8ebc0157f819f1" name="a6b66c91515401c3c5a8ebc0157f819f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b66c91515401c3c5a8ebc0157f819f1">&#9670;&#160;</a></span>upon_error</h2>
+<a id="afe7e6d1b61436b69aa7fa70b1f653271" name="afe7e6d1b61436b69aa7fa70b1f653271"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe7e6d1b61436b69aa7fa70b1f653271">&#9670;&#160;</a></span>upon_error</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -886,7 +886,7 @@ int main() {
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORTconstexpr <a class="el" href="namespacebeman_1_1execution.html#a5edc31fa03580fefdec5ff9de774cd7b">::beman::execution::upon_error_t</a> beman::execution::upon_error {}</td>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution.html#a5edc31fa03580fefdec5ff9de774cd7b">::beman::execution::upon_error_t</a> beman::execution::upon_error {}</td>
         </tr>
       </table>
   </td>
@@ -905,7 +905,7 @@ int main() {
 </ul>
 </li>
 <li>Otherwise, if the completion is <code>set_value(<em>a</em>...)</code>, <code>upon_error</code> completes with <code>set_value(<em>r</em>, <em>a</em>...)</code></li>
-<li>Otherwise, if the completion is <code><a class="el" href="namespacebeman_1_1execution.html#a8244f7fb2c9f716d9602e260a8d91c4c" title="Customization point object for cancellation completions.">set_stopped()</a></code>, <code>upon_error</code> completes with <code>set_stopped(<em>r</em>)</code>.</li>
+<li>Otherwise, if the completion is <code><a class="el" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187" title="Customization point object for cancellation completions.">set_stopped()</a></code>, <code>upon_error</code> completes with <code>set_stopped(<em>r</em>)</code>.</li>
 </ul>
 <h4>Usage</h4>
 <pre>
@@ -925,15 +925,15 @@ upon_error(<em>sender</em>, <em>fun</em>)
 namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
 
 int main() {
-    auto result = <a class="el" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a468f3a132f894094d260c2b1323d5697" title="just_error(error) yields a sender completing with set_error_t(Error)">ex::just_error(10)</a> | <a class="el" href="namespacebeman_1_1execution.html#a6b66c91515401c3c5a8ebc0157f819f1" title="upon_error(sender, fun) yields a sender transforming a set_error_t(E) completion">ex::upon_error</a>([](int v) { return v == 3; }));
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a4043903f88f6bb02acdf1c1c369f4ead" title="just_error(error) yields a sender completing with set_error_t(Error)">ex::just_error(10)</a> | <a class="el" href="namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271" title="upon_error(sender, fun) yields a sender transforming a set_error_t(E) completion">ex::upon_error</a>([](int v) { return v == 3; }));
     assert(result);
     assert(*result == std::tuple(false));
 }
 </pre> 
 </div>
 </div>
-<a id="a103c28706c08a5f4ee9c2fb2996a4670" name="a103c28706c08a5f4ee9c2fb2996a4670"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a103c28706c08a5f4ee9c2fb2996a4670">&#9670;&#160;</a></span>upon_stopped</h2>
+<a id="a7e12a82c294cbf0775945930a63025d4" name="a7e12a82c294cbf0775945930a63025d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e12a82c294cbf0775945930a63025d4">&#9670;&#160;</a></span>upon_stopped</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -942,7 +942,7 @@ int main() {
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BEMAN_EXECUTION_EXPORTconstexpr <a class="el" href="namespacebeman_1_1execution.html#a724b0f844f19033a9aff2385c0c2532d">::beman::execution::upon_stopped_t</a> beman::execution::upon_stopped {}</td>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution.html#a724b0f844f19033a9aff2385c0c2532d">::beman::execution::upon_stopped_t</a> beman::execution::upon_stopped {}</td>
         </tr>
       </table>
   </td>
@@ -981,7 +981,7 @@ upon_stopped(<em>sender</em>, <em>fun</em>)
 namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
 
 int main() {
-    auto result = <a class="el" href="namespacebeman_1_1execution.html#a4c7b4c1bdad6f6f4ea09c03de8e89a51" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#ab10ebe3835c37046ca5df1a61f25e79a" title="just_stopped() yields a sender completing with set_stopped_t()">ex::just_stopped()</a> | <a class="el" href="namespacebeman_1_1execution.html#a103c28706c08a5f4ee9c2fb2996a4670" title="upon_stopped(sender, fun) yields a sender transforming a set_stopped_t() completion">ex::upon_stopped</a>([]() { return true; }));
+    auto result = <a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">ex::sync_wait</a>(<a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">ex::just_stopped()</a> | <a class="el" href="namespacebeman_1_1execution.html#a7e12a82c294cbf0775945930a63025d4" title="upon_stopped(sender, fun) yields a sender transforming a set_stopped_t() completion">ex::upon_stopped</a>([]() { return true; }));
     assert(result);
     assert(*result == std::tuple(true));
 }
