@@ -75,7 +75,7 @@ if(
     elseif(LINUX)
         execute_process(
             OUTPUT_VARIABLE LLVM_MODULES
-            COMMAND clang++ -print-file-name=c++/libc++.modules.json
+            COMMAND clang++ -print-file-name=libc++.modules.json
             COMMAND_ECHO STDOUT
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )

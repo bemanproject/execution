@@ -247,7 +247,10 @@ function(beman_install_library name)
     # ----------------------------------------
     set(_beman_find_deps "")
     foreach(dep IN ITEMS ${BEMAN_DEPENDENCIES})
-        message(VERBOSE "Add find_dependency(${dep})")
+        message(
+            VERBOSE
+            "beman-install-library(${name}): Add find_dependency(${dep})"
+        )
         string(APPEND _beman_find_deps "find_dependency(${dep})\n")
     endforeach()
     set(BEMAN_FIND_DEPENDENCIES "${_beman_find_deps}")

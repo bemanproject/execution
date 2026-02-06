@@ -25,6 +25,8 @@ if(BEMAN_USE_MODULES)
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
+    find_package(Threads REQUIRED)
+
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
     add_library(${TARGET_PREFIX} STATIC)
@@ -49,6 +51,7 @@ if(BEMAN_USE_MODULES)
                     ${CMAKE_CURRENT_BINARY_DIR}/beman/execution/modules_export.hpp
     )
     target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_MODULES)
+    target_link_libraries(${TARGET_PREFIX} PUBLIC Threads::Threads)
 else()
     set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 endif()
@@ -80,6 +83,7 @@ include(./cmake/beman-install-library.cmake)
 beman_install_library(${TARGET_PREFIX} TARGETS ${TARGET_NAME} ${TARGET_PREFIX}
     # FIXME: DEPENDENCIES [===[beman.inplace_vector 1.0.0]===] [===[beman.scope 0.0.1 EXACT]===] fmt
     # TODO(CK): XXX OR XXX DEPENDENCIES "beman.inplace_vector 1.0.0;beman.scope 0.0.1 EXACT"
+    DEPENDENCIES Threads
 )
 #===============================================================================
 
