@@ -93,7 +93,7 @@ endif()
 option(
     BEMAN_USE_STD_MODULE
     "Check if 'import std;' is possible with the toolchain?"
-    ON
+    OFF
 )
 message(STATUS "BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}")
 
