@@ -33,10 +33,9 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
 endif()
 # gersemi: on
 
-# TODO(CK): not yet!
-## if(NOT APPLE)
-##     return()
-## endif()
+if(NOT APPLE)
+    return()
+endif()
 
 # FIXME: clang++ we still needs to export CXX=clang++
 if("$ENV{CXX}" STREQUAL "" AND CMAKE_CXX_COMPILER)
