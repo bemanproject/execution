@@ -5,13 +5,19 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_TRANSFORM
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.meta_contains
+#else
 #include <beman/execution/detail/meta_contains.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail::meta::detail {
-template <template <typename> class Transform, typename List>
-struct transform;
+    namespace beman::execution::detail::meta::detail { template <template <typename> class Transform, typename List> struct transform;
 
 template <template <typename> class Transform, template <typename... T> class List, typename... T>
 struct transform<Transform, List<T...>> {

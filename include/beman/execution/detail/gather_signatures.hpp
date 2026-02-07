@@ -5,16 +5,22 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GATHER_SIGNATURES
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/meta_filter.hpp>
-#include <beman/execution/detail/indirect_meta_apply.hpp>
-#include <beman/execution/detail/valid_completion_signatures.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.indirect_meta_apply import beman.execution.detail.meta_filter import beman.execution.detail.valid_completion_signatures
+#else
+#include <beman/execution/detail/indirect_meta_apply.hpp>
+#include <beman/execution/detail/meta_filter.hpp>
+#include <beman/execution/detail/valid_completion_signatures.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename...>
-concept always_true = true;
+    namespace beman::execution::detail { template <typename...> concept always_true = true;
 
 template <typename, typename>
 struct same_tag;

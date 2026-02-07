@@ -5,19 +5,23 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/forwarding_query.hpp>
-#include <utility>
-
 #include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.forwarding_query
+#else
+#include <beman/execution/detail/forwarding_query.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution {
-struct get_domain_t {
-    template <typename Object>
-        requires(not requires(Object&& object, const get_domain_t& tag) {
-                    ::std::forward<Object>(object).query(tag);
-                }) && (not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
+    namespace beman::execution { struct get_domain_t { template <typename Object>
+                                                           requires(not requires(Object && object, const get_domain_t& tag) { ::std::forward <Object>(object).query(tag);
+}) && (not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
     auto operator()(Object&&) const noexcept = BEMAN_EXECUTION_DELETE("object needs a query(get_domain_t) overload");
     template <typename Object>
         requires(not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })

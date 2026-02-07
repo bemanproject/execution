@@ -5,17 +5,24 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/immovable.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <atomic>
 #include <memory>
 #include <mutex>
 #include <thread>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.immovable
+#else
+#include <beman/execution/detail/immovable.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution {
-class inplace_stop_token;
+    namespace beman::execution { class inplace_stop_token;
 class inplace_stop_source;
 template <typename CallbackFun>
 class inplace_stop_callback;

@@ -5,8 +5,12 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_ALLOCATOR
 
 #include <beman/execution/detail/common.hpp>
-#include <cstddef>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#include <cstddef>
+#endif
 
 // ----------------------------------------------------------------------------
 

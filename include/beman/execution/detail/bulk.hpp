@@ -5,40 +5,46 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BULK
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/sender_adaptor.hpp>
-#include <beman/execution/detail/sender_adaptor_closure.hpp>
-#include <beman/execution/detail/get_completion_signatures.hpp>
-#include <beman/execution/detail/meta_combine.hpp>
-#include <beman/execution/detail/meta_unique.hpp>
-#include <beman/execution/detail/basic_sender.hpp>
-#include <beman/execution/detail/completion_signatures.hpp>
-#include <beman/execution/detail/completion_signatures_for.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/movable_value.hpp>
-#include <beman/execution/detail/product_type.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/set_error.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
-#include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/impls_for.hpp>
-#include <beman/execution/detail/set_value.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <algorithm>
 #include <concepts>
 #include <exception>
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender import beman.execution.detail.completion_signatures import beman.execution.detail.completion_signatures_for import beman.execution.detail.default_impls import beman.execution.detail.get_completion_signatures import beman.execution.detail.get_domain_early import beman.execution.detail.impls_for import beman.execution.detail.make_sender import beman.execution.detail.meta_combine import beman.execution.detail.meta_unique import beman.execution.detail.movable_value import beman.execution.detail.product_type import beman.execution.detail.sender import beman.execution.detail.sender_adaptor import beman.execution.detail.sender_adaptor_closure import beman.execution.detail.set_error import beman.execution.detail.set_value import beman.execution.detail.transform_sender
+#else
+#include <beman/execution/detail/basic_sender.hpp>
+#include <beman/execution/detail/completion_signatures.hpp>
+#include <beman/execution/detail/completion_signatures_for.hpp>
+#include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/get_domain_early.hpp>
+#include <beman/execution/detail/impls_for.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/meta_unique.hpp>
+#include <beman/execution/detail/movable_value.hpp>
+#include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_adaptor.hpp>
+#include <beman/execution/detail/sender_adaptor_closure.hpp>
+#include <beman/execution/detail/set_error.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/transform_sender.hpp>
+#endif
 
-#include <beman/execution/detail/suppress_push.hpp>
-namespace beman::execution::detail {
+    namespace beman::execution::detail {
 
-struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
+        struct bulk_t: ::beman::execution::sender_adaptor_closure <bulk_t> {
 
-    template <class Shape, class f>
-        requires(std::is_integral_v<Shape> && ::beman::execution::detail::movable_value<f>)
-    auto operator()(Shape&& shape, f&& fun) const {
-        return beman::execution::detail::sender_adaptor{*this, std::forward<Shape>(shape), std::forward<f>(fun)};
-    }
+            template <class Shape, class f>
+                requires(std::is_integral_v <Shape> && ::beman::execution::detail::movable_value <f>)
+                         auto operator()(Shape && shape, f && fun) const { return beman::execution::detail::sender_adaptor{* this, std::forward <Shape>(shape), std::forward <f>(fun) };
+}
 
     template <class Sender, class Shape, class f>
         requires(::beman::execution::sender<Sender> && std::is_integral_v<Shape> &&

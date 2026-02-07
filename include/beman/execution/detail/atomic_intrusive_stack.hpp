@@ -5,16 +5,22 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ATOMIC_INTRUSIVE_STACK
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/intrusive_stack.hpp>
-
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <atomic>
 #include <cassert>
 #include <optional>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.intrusive_stack
+#else
+#include <beman/execution/detail/intrusive_stack.hpp>
+#endif
 
-namespace beman::execution::detail {
+    namespace beman::execution::detail {
 
-template <auto Next>
-class atomic_intrusive_stack;
+        template <auto Next> class atomic_intrusive_stack;
 
 //! @brief  This data structure is an intrusive stack that can be used in a lock-free manner.
 //!

@@ -5,10 +5,21 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INTO_VARIANT
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#include <exception>
+#include <type_traits>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.child_type import beman.execution.detail.completion_signatures_for import beman.execution.detail.decayed_tuple import beman.execution.detail.default_impls import beman.execution.detail.env_of_t import beman.execution.detail.error_types_of_t import beman.execution.detail.get_domain_early import beman.execution.detail.impls_for import beman.execution.detail.make_sender import beman.execution.detail.meta_combine import beman.execution.detail.sender import beman.execution.detail.sends_stopped import beman.execution.detail.set_error import beman.execution.detail.set_value import beman.execution.detail.transform_sender import beman.execution.detail.value_types_of_t
+#else
 #include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
-#include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
+#include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
@@ -21,26 +32,18 @@
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
+#endif
 
-#include <concepts>
-#include <exception>
-#include <type_traits>
-#include <utility>
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-struct into_variant_t {
-    template <::beman::execution::sender Sender>
-    auto operator()(Sender&& sender) const {
-        auto domain{::beman::execution::detail::get_domain_early(sender)};
-        (void)domain;
-        return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender));
-        // return ::beman::execution::transform_sender(
-        //     ::std::move(domain),
-        //     ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender))
-        //);
-    }
+    namespace beman::execution::detail { struct into_variant_t { template <::beman::execution::sender Sender> auto operator()(Sender && sender) const { auto domain{::beman::execution::detail::get_domain_early(sender) };
+(void)domain;
+return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender));
+// return ::beman::execution::transform_sender(
+//     ::std::move(domain),
+//     ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender))
+//);
+}
 };
 
 template <>

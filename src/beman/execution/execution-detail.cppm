@@ -2,88 +2,90 @@ module;
 // src/beman/execution/execution-detail.cppm                          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/as_except_ptr.hpp>
-#include <beman/execution/detail/await_suspend_result.hpp>
-#include <beman/execution/detail/await_result_type.hpp>
-#include <beman/execution/detail/basic_operation.hpp>
-#include <beman/execution/detail/basic_receiver.hpp>
-#include <beman/execution/detail/basic_sender.hpp>
-#include <beman/execution/detail/basic_state.hpp>
-#include <beman/execution/detail/call_result_t.hpp>
-#include <beman/execution/detail/callable.hpp>
-#include <beman/execution/detail/child_type.hpp>
-#include <beman/execution/detail/completion_domain.hpp>
-#include <beman/execution/detail/completion_signature.hpp>
-#include <beman/execution/detail/completion_signatures_for.hpp>
-#include <beman/execution/detail/completion_tag.hpp>
-#include <beman/execution/detail/connect_all.hpp>
-#include <beman/execution/detail/connect_all_result.hpp>
-#include <beman/execution/detail/connect_awaitable.hpp>
-#include <beman/execution/detail/decayed_tuple.hpp>
-#include <beman/execution/detail/decayed_typeof.hpp>
-#include <beman/execution/detail/decays_to.hpp>
-#include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/env_promise.hpp>
-#include <beman/execution/detail/env_type.hpp>
-#include <beman/execution/detail/forward_like.hpp>
-#include <beman/execution/detail/fwd_env.hpp>
-#include <beman/execution/detail/gather_signatures.hpp>
-#include <beman/execution/detail/get_awaiter.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
-#include <beman/execution/detail/get_domain_late.hpp>
-#include <beman/execution/detail/has_as_awaitable.hpp>
-#include <beman/execution/detail/has_completions.hpp>
-#include <beman/execution/detail/immovable.hpp>
-#include <beman/execution/detail/impls_for.hpp>
-#include <beman/execution/detail/indices_for.hpp>
-#include <beman/execution/detail/indirect_meta_apply.hpp>
-#include <beman/execution/detail/is_awaitable.hpp>
-#include <beman/execution/detail/is_awaiter.hpp>
-#include <beman/execution/detail/join_env.hpp>
-#include <beman/execution/detail/make_env.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/matching_sig.hpp>
-#include <beman/execution/detail/meta_combine.hpp>
-#include <beman/execution/detail/meta_contain_same.hpp>
-#include <beman/execution/detail/meta_contains.hpp>
-#include <beman/execution/detail/meta_filter.hpp>
-#include <beman/execution/detail/meta_prepend.hpp>
-#include <beman/execution/detail/meta_transform.hpp>
-#include <beman/execution/detail/meta_unique.hpp>
-#include <beman/execution/detail/movable_value.hpp>
-#include <beman/execution/detail/non_assignable.hpp>
-#include <beman/execution/detail/nothrow_callable.hpp>
-#include <beman/execution/detail/notify.hpp>
-#include <beman/execution/detail/operation_state_task.hpp>
-#include <beman/execution/detail/product_type.hpp>
-#include <beman/execution/detail/query_with_default.hpp>
-#include <beman/execution/detail/queryable.hpp>
-#include <beman/execution/detail/sched_attrs.hpp>
-#include <beman/execution/detail/sched_env.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/sender_adaptor.hpp>
-#include <beman/execution/detail/sender_adaptor_closure.hpp>
-#include <beman/execution/detail/sender_for.hpp>
-#include <beman/execution/detail/simple_allocator.hpp>
-#include <beman/execution/detail/single_sender.hpp>
-#include <beman/execution/detail/single_sender_value_type.hpp>
-#include <beman/execution/detail/spawn.hpp>
-#include <beman/execution/detail/spawn_future.hpp>
-#include <beman/execution/detail/state_type.hpp>
-#include <beman/execution/detail/stop_callback_for_t.hpp>
-#include <beman/execution/detail/stop_when.hpp>
-#include <beman/execution/detail/stoppable_source.hpp>
-#include <beman/execution/detail/suspend_complete.hpp>
-#include <beman/execution/detail/sync_wait.hpp>
-#include <beman/execution/detail/type_list.hpp>
-#include <beman/execution/detail/valid_completion_for.hpp>
-#include <beman/execution/detail/valid_completion_signatures.hpp>
-#include <beman/execution/detail/valid_specialization.hpp>
-#include <beman/execution/detail/variant_or_empty.hpp>
-#include <beman/execution/detail/with_await_transform.hpp>
-#include <beman/execution/detail/write_env.hpp>
-
 export module beman.execution.detail;
+
+import beman.execution.detail.as_except_ptr;
+import beman.execution.detail.await_result_type;
+import beman.execution.detail.await_suspend_result;
+import beman.execution.detail.basic_operation;
+import beman.execution.detail.basic_receiver;
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.basic_state;
+import beman.execution.detail.call_result_t;
+import beman.execution.detail.callable;
+import beman.execution.detail.child_type;
+import beman.execution.detail.completion_domain;
+import beman.execution.detail.completion_signature;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.completion_tag;
+import beman.execution.detail.connect_all;
+import beman.execution.detail.connect_all_result;
+import beman.execution.detail.connect_awaitable;
+import beman.execution.detail.decayed_tuple;
+import beman.execution.detail.decayed_typeof;
+import beman.execution.detail.decays_to;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.env_promise;
+import beman.execution.detail.env_type;
+import beman.execution.detail.forward_like;
+import beman.execution.detail.fwd_env;
+import beman.execution.detail.gather_signatures;
+import beman.execution.detail.get_awaiter;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.get_domain_late;
+import beman.execution.detail.has_as_awaitable;
+import beman.execution.detail.has_completions;
+import beman.execution.detail.immovable;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.indices_for;
+import beman.execution.detail.indirect_meta_apply;
+import beman.execution.detail.is_awaitable;
+import beman.execution.detail.is_awaiter;
+import beman.execution.detail.join_env;
+import beman.execution.detail.make_env;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.matching_sig;
+import beman.execution.detail.meta.combine;
+import beman.execution.detail.meta.contain_same;
+import beman.execution.detail.meta.contains;
+import beman.execution.detail.meta.filter;
+import beman.execution.detail.meta.prepend;
+import beman.execution.detail.meta.transform;
+import beman.execution.detail.meta.unique;
+import beman.execution.detail.movable_value;
+import beman.execution.detail.non_assignable;
+import beman.execution.detail.nothrow_callable;
+import beman.execution.detail.notify;
+import beman.execution.detail.operation_state_task;
+import beman.execution.detail.product_type;
+import beman.execution.detail.query_with_default;
+import beman.execution.detail.queryable;
+import beman.execution.detail.sched_attrs;
+import beman.execution.detail.sched_env;
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_adaptor;
+import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.sender_decompose;
+import beman.execution.detail.sender_for;
+import beman.execution.detail.simple_allocator;
+import beman.execution.detail.single_sender;
+import beman.execution.detail.single_sender_value_type;
+import beman.execution.detail.spawn;
+import beman.execution.detail.spawn_get_allocator;
+import beman.execution.detail.spawn_future;
+import beman.execution.detail.state_type;
+import beman.execution.detail.stop_callback_for_t;
+import beman.execution.detail.stop_when;
+import beman.execution.detail.stoppable_source;
+import beman.execution.detail.suspend_complete;
+import beman.execution.detail.sync_wait;
+import beman.execution.detail.type_list;
+import beman.execution.detail.valid_completion_for;
+import beman.execution.detail.valid_completion_signatures;
+import beman.execution.detail.valid_specialization;
+import beman.execution.detail.variant_or_empty;
+import beman.execution.detail.with_await_transform;
+import beman.execution.detail.write_env;
 
 namespace beman::execution::detail::meta {
 export using beman::execution::detail::meta::combine;
@@ -169,7 +171,7 @@ export using beman::execution::detail::single_sender_value_type;
 export using beman::execution::detail::spawn_future_receiver;
 export using beman::execution::detail::spawn_future_state_base;
 export using beman::execution::detail::spawn_get_allocator;
-export using beman::execution::detail::spawn_t;
+export using beman::execution::detail::spawn_t; //-dk:TODO needed?
 export using beman::execution::detail::state_type;
 export using beman::execution::detail::stop_when;
 export using beman::execution::detail::stop_when_t;

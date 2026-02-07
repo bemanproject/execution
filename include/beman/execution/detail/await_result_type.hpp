@@ -5,20 +5,27 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_RESULT_TYPE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/get_awaiter.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.get_awaiter
+#else
+#include <beman/execution/detail/get_awaiter.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-/*!
+    namespace beman::execution::detail {
+        /*!
  * \brief Auxiliary type alias to get the result type of an awaiter.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename T, typename Promise> //-dk:TODO detail export
-using await_result_type =
-    decltype(::beman::execution::detail::get_awaiter(::std::declval<T>(), ::std::declval<Promise&>()).await_resume());
+        template <typename T, typename Promise> //-dk:TODO detail export
+        using await_result_type = decltype(::beman::execution::detail::get_awaiter(::std::declval <T>(), ::std::declval <Promise&>()).await_resume());
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------

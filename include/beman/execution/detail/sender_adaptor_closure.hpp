@@ -5,15 +5,22 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_ADAPTOR_CLOSURE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/sender.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.sender
+#else
+#include <beman/execution/detail/sender.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail::pipeable {
-struct sender_adaptor_closure_base {};
+    namespace beman::execution::detail::pipeable { struct sender_adaptor_closure_base {};
 } // namespace beman::execution::detail::pipeable
 
 namespace beman::execution {

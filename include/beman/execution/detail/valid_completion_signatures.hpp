@@ -5,14 +5,20 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_VALID_COMPLETION_SIGNATURES
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/completion_signatures.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signatures
+#else
+#include <beman/execution/detail/completion_signatures.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename>
-struct valid_completion_signatures_helper : ::std::false_type {};
+    namespace beman::execution::detail { template <typename> struct valid_completion_signatures_helper: ::std::false_type {};
 template <typename... Sigs>
 struct valid_completion_signatures_helper<::beman::execution::completion_signatures<Sigs...>> : ::std::true_type {};
 

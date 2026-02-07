@@ -5,20 +5,26 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_LATE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/default_domain.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_domain import beman.execution.detail.default_domain import beman.execution.detail.get_domain import beman.execution.detail.get_env import beman.execution.detail.get_scheduler import beman.execution.detail.sender_decompose import beman.execution.detail.tag_of_t
+#else
 #include <beman/execution/detail/completion_domain.hpp>
-#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
-#include <concepts>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename T>
-concept not_void = !::std::same_as<T, void>;
+    namespace beman::execution::detail { template <typename T> concept not_void = ! ::std::same_as <T, void>;
 
 template <typename Tag>
 struct get_domain_late_helper {

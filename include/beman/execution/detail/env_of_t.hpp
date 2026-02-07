@@ -5,18 +5,25 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_OF
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/get_env.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.get_env
+#else
+#include <beman/execution/detail/get_env.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution {
-/*!
+    namespace beman::execution {
+        /*!
  * \brief Determine the type of the environment associated with a type
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-template <typename T>
-using env_of_t = decltype(::beman::execution::get_env(::std::declval<T>()));
+        template <typename T> using env_of_t = decltype(::beman::execution::get_env(::std::declval <T>()));
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

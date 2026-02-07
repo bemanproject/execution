@@ -5,18 +5,24 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TRANSFORM_SENDER
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/default_domain.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.default_domain import beman.execution.detail.sender
+#else
+#include <beman/execution/detail/default_domain.hpp>
+#include <beman/execution/detail/sender.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename Domain, ::beman::execution::sender Sender, typename... Env>
-    requires(sizeof...(Env) < 2) &&
-            requires(Domain dom, Sender&& sender, const Env&... env) {
+    namespace beman::execution::detail { template <typename Domain, ::beman::execution::sender Sender, typename... Env>
+                                             requires(sizeof...(Env) < 2) && requires(Domain dom, Sender&& sender, const Env&... env) {
                 dom.transform_sender(::std::forward<Sender>(sender), env...);
-            } &&
+} &&
             (::std::same_as<::std::remove_cvref_t<Sender>,
                             std::remove_cvref_t<decltype(::std::declval<Domain>().transform_sender(
                                 ::std::declval<Sender>(), ::std::declval<const Env&>()...))>>)

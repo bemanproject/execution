@@ -5,11 +5,17 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_PRODUCT_TYPE
 
 #include <beman/execution/detail/common.hpp>
+#include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <cstddef>
 #include <memory>
 #include <tuple>
-#include <cstddef>
-
-#include <beman/execution/detail/suppress_push.hpp>
+#endif
+#ifdef BEMAN_HAS_MODULES
+#else
+#endif
 
 // ----------------------------------------------------------------------------
 

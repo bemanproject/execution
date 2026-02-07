@@ -5,18 +5,24 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER_VALUE_TYPE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/value_types_of_t.hpp>
-#include <beman/execution/detail/decayed_tuple.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <tuple>
 #include <type_traits>
 #include <variant>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.decayed_tuple import beman.execution.detail.value_types_of_t
+#else
+#include <beman/execution/detail/decayed_tuple.hpp>
+#include <beman/execution/detail/value_types_of_t.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename Sender, typename Env>
-struct single_sender_value_type_helper;
+    namespace beman::execution::detail { template <typename Sender, typename Env> struct single_sender_value_type_helper;
 
 template <typename Sender, typename Env>
     requires requires {

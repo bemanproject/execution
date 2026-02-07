@@ -5,7 +5,11 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_AWAITER
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -5,19 +5,26 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <cstdlib>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.counting_scope_base import beman.execution.detail.counting_scope_join import beman.execution.detail.inplace_stop_source import beman.execution.detail.scope_token import beman.execution.detail.sender import beman.execution.detail.stop_when
+#else
 #include <beman/execution/detail/counting_scope_base.hpp>
 #include <beman/execution/detail/counting_scope_join.hpp>
+#include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/stop_when.hpp>
-#include <utility>
-#include <cstdlib>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution {
-class counting_scope;
+    namespace beman::execution { class counting_scope;
 }
 
 // ----------------------------------------------------------------------------

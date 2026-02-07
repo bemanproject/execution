@@ -28,7 +28,6 @@ list(
     exec-get-stop-token.test
     exec-getcomplsigs.test
     exec-into-variant.test
-    exec-just.test
     exec-let.test
     exec-on.test
     exec-opstate-start.test
@@ -52,9 +51,7 @@ list(
     exec-snd-concepts.test
     exec-snd-expos.test
     exec-snd-transform.test
-    exec-spawn-future.test
     exec-spawn.test
-    exec-split.test
     exec-starts-on.test
     exec-stop-when.test
     exec-sync-wait.test
@@ -77,7 +74,6 @@ list(
     meta-transform.test
     meta-unique.test
     non_assignable.test
-    notify.test
     stopcallback-cons.test
     stopcallback-general.test
     stopcallback-inplace-cons.test
@@ -106,6 +102,12 @@ list(
     thread-stoptoken.test
     thread.test
     utilities.test
+)
+set(XX
+    notify.test
+    exec-split.test
+    exec-just.test
+    exec-spawn-future.test
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)

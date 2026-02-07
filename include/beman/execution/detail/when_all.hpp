@@ -5,6 +5,20 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#include <exception>
+#include <optional>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signatures_of_t import beman.execution.detail.decayed_tuple import beman.execution.detail.decayed_type_list import beman.execution.detail.default_domain import beman.execution.detail.default_impls import beman.execution.detail.env import beman.execution.detail.env_of_t import beman.execution.detail.error_types_of_t import beman.execution.detail.get_domain import beman.execution.detail.get_domain_early import beman.execution.detail.get_stop_token import beman.execution.detail.impls_for import beman.execution.detail.inplace_stop_source import beman.execution.detail.join_env import beman.execution.detail.make_env import beman.execution.detail.make_sender import beman.execution.detail.meta_combine import beman.execution.detail.meta_prepend import beman.execution.detail.meta_size import beman.execution.detail.meta_to import beman.execution.detail.meta_transform import beman.execution.detail.meta_unique import beman.execution.detail.on_stop_request import beman.execution.detail.sender import beman.execution.detail.sender_in import beman.execution.detail.sends_stopped import beman.execution.detail.set_value import beman.execution.detail.stop_callback_for_t import beman.execution.detail.stop_token_of_t import beman.execution.detail.transform_sender import beman.execution.detail.type_list import beman.execution.detail.value_types_of_t
+#else
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/decayed_type_list.hpp>
@@ -22,45 +36,30 @@
 #include <beman/execution/detail/make_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/meta_prepend.hpp>
 #include <beman/execution/detail/meta_size.hpp>
 #include <beman/execution/detail/meta_to.hpp>
 #include <beman/execution/detail/meta_transform.hpp>
-#include <beman/execution/detail/meta_prepend.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/on_stop_request.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
+#include <beman/execution/detail/sends_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/stop_callback_for_t.hpp>
 #include <beman/execution/detail/stop_token_of_t.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/type_list.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
-#include <beman/execution/detail/sends_stopped.hpp>
+#endif
 
-#include <concepts>
-#include <exception>
-#include <optional>
-#include <variant>
-#include <tuple>
-#include <type_traits>
-#include <utility>
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-struct when_all_t {
-    template <::beman::execution::sender... Sender>
-        requires(0u != sizeof...(Sender)) &&
-                ((::beman::execution::detail::meta::size_v<
+    namespace beman::execution::detail { struct when_all_t { template <::beman::execution::sender... Sender>
+                                                                 requires(0u != sizeof...(Sender)) && ((::beman::execution::detail::meta::size_v <
                       ::beman::execution::value_types_of_t<Sender,
-                                                           ::beman::execution::env<>,
-                                                           ::std::tuple,
-                                                           ::beman::execution::detail::type_list>> == 1u) &&
-                 ...) &&
-                requires(Sender&&... s) {
-                    typename ::std::common_type_t<decltype(::beman::execution::detail::get_domain_early(s))...>;
-                }
+                                                           ::beman::execution::env<>, ::std::tuple, ::beman::execution::detail::type_list>> == 1u) && ...) && requires(Sender &&...s) { typename ::std::common_type_t <decltype(::beman::execution::detail::get_domain_early(s))...>;
+}
     auto operator()(Sender&&... sender) const {
         using common_t =
             typename ::std::common_type_t<decltype(::beman::execution::detail::get_domain_early(sender))...>;

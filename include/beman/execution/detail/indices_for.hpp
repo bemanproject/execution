@@ -5,7 +5,11 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INDICES_FOR
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 

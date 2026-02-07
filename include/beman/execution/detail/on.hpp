@@ -5,45 +5,47 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ON
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.continues_on import beman.execution.detail.default_domain import beman.execution.detail.forward_like import beman.execution.detail.fwd_env import beman.execution.detail.get_domain import beman.execution.detail.get_domain_early import beman.execution.detail.join_env import beman.execution.detail.make_sender import beman.execution.detail.product_type import beman.execution.detail.query_with_default import beman.execution.detail.sched_env import beman.execution.detail.scheduler import beman.execution.detail.sender import beman.execution.detail.sender_adaptor_closure import beman.execution.detail.sender_for import beman.execution.detail.starts_on import beman.execution.detail.transform_sender import beman.execution.detail.write_env
+#else
+#include <beman/execution/detail/continues_on.hpp>
+#include <beman/execution/detail/default_domain.hpp>
+#include <beman/execution/detail/forward_like.hpp>
+#include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_domain_early.hpp>
+#include <beman/execution/detail/join_env.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/query_with_default.hpp>
+#include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
-#include <beman/execution/detail/query_with_default.hpp>
-#include <beman/execution/detail/get_domain.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
-#include <beman/execution/detail/default_domain.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/sender_for.hpp>
-#include <beman/execution/detail/join_env.hpp>
-#include <beman/execution/detail/forward_like.hpp>
-#include <beman/execution/detail/fwd_env.hpp>
-#include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/starts_on.hpp>
-#include <beman/execution/detail/continues_on.hpp>
+#include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/write_env.hpp>
-#include <utility>
+#endif
 
-#include <beman/execution/detail/suppress_push.hpp>
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
+    namespace beman::execution::detail { struct on_t: ::beman::execution::sender_adaptor_closure <on_t> { template <::beman::execution::detail::sender_for<on_t> OutSndr, typename Env> auto transform_env(OutSndr && out_sndr, Env && env) const->decltype(auto) { auto && data{out_sndr.template get <1>() };
 
-namespace beman::execution::detail {
-struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
-    template <::beman::execution::detail::sender_for<on_t> OutSndr, typename Env>
-    auto transform_env(OutSndr&& out_sndr, Env&& env) const -> decltype(auto) {
-        auto&& data{out_sndr.template get<1>()};
+if constexpr (::beman::execution::scheduler<decltype(data)>)
+    return ::beman::execution::detail::join_env(
+        ::beman::execution::detail::sched_env(::beman::execution::detail::forward_like<OutSndr>(data)
 
-        if constexpr (::beman::execution::scheduler<decltype(data)>)
-            return ::beman::execution::detail::join_env(
-                ::beman::execution::detail::sched_env(::beman::execution::detail::forward_like<OutSndr>(data)
-
-                                                          ),
-                ::beman::execution::detail::fwd_env(::std::forward<Env>(env)));
-        else
-            return std::forward<Env>(env);
-    }
+                                                  ),
+        ::beman::execution::detail::fwd_env(::std::forward<Env>(env)));
+else
+    return std::forward<Env>(env);
+}
 
     template <typename>
     struct env_needs_get_scheduler {

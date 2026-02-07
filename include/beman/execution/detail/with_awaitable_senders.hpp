@@ -5,26 +5,29 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_AWAITABLE_SENDERS
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/as_awaitable.hpp>
-#include <beman/execution/detail/class_type.hpp>
-#include <beman/execution/detail/call_result_t.hpp>
-
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.as_awaitable import beman.execution.detail.call_result_t import beman.execution.detail.class_type
+#else
+#include <beman/execution/detail/as_awaitable.hpp>
+#include <beman/execution/detail/call_result_t.hpp>
+#include <beman/execution/detail/class_type.hpp>
+#endif
 
-namespace beman::execution {
-template <::beman::execution::detail::class_type Promise>
-struct with_awaitable_senders {
-    template <class OtherPromise>
-        requires(!::std::same_as<OtherPromise, void>)
-    void set_continuation(::std::coroutine_handle<OtherPromise> h) noexcept {
-        contination_ = h;
-        if constexpr (requires(OtherPromise& other) { other.unhandled_stopped(); }) {
-            stopped_handler_ = [](void* p) noexcept -> ::std::coroutine_handle<> {
-                return ::std::coroutine_handle<OtherPromise>::from_address(p).promise().unhandled_stopped();
-            };
-        } else {
-            stopped_handler_ = &default_unhandled_stopped;
-        }
+    namespace beman::execution { template <::beman::execution::detail::class_type Promise> struct with_awaitable_senders { template <class OtherPromise>
+                                                                                                                               requires(! ::std::same_as <OtherPromise, void>)
+                                                                                                                                        void set_continuation(::std::coroutine_handle <OtherPromise> h) noexcept { contination_ = h;
+if constexpr (requires(OtherPromise& other) { other.unhandled_stopped(); }) {
+    stopped_handler_ = [](void* p) noexcept -> ::std::coroutine_handle<> {
+        return ::std::coroutine_handle<OtherPromise>::from_address(p).promise().unhandled_stopped();
+    };
+} else {
+    stopped_handler_ = &default_unhandled_stopped;
+}
     }
 
     ::std::coroutine_handle<> continuation() const noexcept { return contination_; }
