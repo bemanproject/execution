@@ -4,6 +4,7 @@ module;
 
 #include <beman/execution/detail/as_except_ptr.hpp>
 #include <beman/execution/detail/await_suspend_result.hpp>
+#include <beman/execution/detail/await_result_type.hpp>
 #include <beman/execution/detail/basic_operation.hpp>
 #include <beman/execution/detail/basic_receiver.hpp>
 #include <beman/execution/detail/basic_sender.hpp>
@@ -22,6 +23,7 @@ module;
 #include <beman/execution/detail/decayed_typeof.hpp>
 #include <beman/execution/detail/decays_to.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/env_promise.hpp>
 #include <beman/execution/detail/env_type.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
@@ -96,6 +98,7 @@ export using beman::execution::detail::meta::unique;
 namespace beman::execution::detail {
 export using beman::execution::detail::always_true;
 export using beman::execution::detail::as_except_ptr;
+export using beman::execution::detail::await_result_type;
 export using beman::execution::detail::await_suspend_result;
 export using beman::execution::detail::basic_operation;
 export using beman::execution::detail::basic_receiver;
@@ -119,6 +122,7 @@ export using beman::execution::detail::decays_to;
 export using beman::execution::detail::default_impls;
 export using beman::execution::detail::empty_variant;
 export using beman::execution::detail::enable_sender;
+export using beman::execution::detail::env_promise;
 export using beman::execution::detail::env_type;
 export using beman::execution::detail::forward_like;
 export using beman::execution::detail::fwd_env;
@@ -136,6 +140,7 @@ export using beman::execution::detail::indirect_meta_apply;
 export using beman::execution::detail::is_awaitable;
 export using beman::execution::detail::is_awaiter;
 export using beman::execution::detail::is_product_type;
+export using beman::execution::detail::is_product_type_c;
 export using beman::execution::detail::is_sender;
 export using beman::execution::detail::is_sender_adaptor_closure;
 export using beman::execution::detail::join_env;
