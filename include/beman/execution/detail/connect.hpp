@@ -5,35 +5,35 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.connect_awaitable import beman.execution.detail.get_domain_late import beman.execution.detail.get_env import beman.execution.detail.operation_state import beman.execution.detail.transform_sender
+#else
+#include <beman/execution/detail/connect_awaitable.hpp>
 #include <beman/execution/detail/get_domain_late.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/operation_state.hpp>
-#include <beman/execution/detail/connect_awaitable.hpp>
-#include <type_traits>
-#include <concepts>
+#include <beman/execution/detail/transform_sender.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-/*!
+    namespace beman::execution::detail {
+        /*!
  * \brief The actual implementation of the connect customization point type
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-//-dk:TODO this seems to needed for MSVC++ (2026-01-30)
-struct connect_t {
-  private:
-    template <typename Sender, typename Receiver>
-    static auto make_new_sender(Sender&& sender, Receiver&& receiver)
-        //-dk:TODO this noexcept needs to get confirmed/fixed
-        noexcept(true) -> decltype(auto) {
-        return ::beman::execution::transform_sender(
-            decltype(::beman::execution::detail::get_domain_late(::std::forward<Sender>(sender),
-                                                                 ::beman::execution::get_env(receiver))){},
-            ::std::forward<Sender>(sender),
-            ::beman::execution::get_env(receiver));
-    }
+        //-dk:TODO this seems to needed for MSVC++ (2026-01-30)
+        struct connect_t { private : template <typename Sender, typename Receiver> static auto make_new_sender(Sender && sender, Receiver && receiver)
+                                                                                                               //-dk:TODO this noexcept needs to get confirmed/fixed
+                                                                                                               noexcept(true)->decltype(auto) { return ::beman::execution::transform_sender(decltype(::beman::execution::detail::get_domain_late(::std::forward <Sender>(sender), ::beman::execution::get_env(receiver))){}, ::std::forward <Sender>(sender), ::beman::execution::get_env(receiver));
+}
     template <typename Sender, typename Receiver>
     static constexpr auto connect_noexcept() -> bool {
         if constexpr (requires {

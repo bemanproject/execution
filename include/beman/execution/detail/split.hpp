@@ -5,41 +5,48 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPLIT
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <atomic>
+#include <cassert>
+#include <exception>
+#include <optional>
+#include <tuple>
+#include <variant>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.atomic_intrusive_stack import beman.execution.detail.child_type import beman.execution.detail.completion_signatures_for import beman.execution.detail.completion_signatures_of_t import beman.execution.detail.connect_result_t import beman.execution.detail.default_impls import beman.execution.detail.emplace_from import beman.execution.detail.error_types_of_t import beman.execution.detail.get_domain_early import beman.execution.detail.get_stop_token import beman.execution.detail.impls_for import beman.execution.detail.inplace_stop_source import beman.execution.detail.make_sender import beman.execution.detail.meta_combine import beman.execution.detail.meta_unique import beman.execution.detail.receiver import beman.execution.detail.sender_for import beman.execution.detail.stop_callback_for_t import beman.execution.detail.stop_token_of_t import beman.execution.detail.stoppable_token import beman.execution.detail.type_list import beman.execution.detail.value_types_of_t
+#else
 #include <beman/execution/detail/atomic_intrusive_stack.hpp>
+#include <beman/execution/detail/child_type.hpp>
+#include <beman/execution/detail/completion_signatures_for.hpp>
+#include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/emplace_from.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
-#include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
-#include <beman/execution/detail/child_type.hpp>
-#include <beman/execution/detail/completion_signatures_of_t.hpp>
-#include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/type_list.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/stop_callback_for_t.hpp>
 #include <beman/execution/detail/stop_token_of_t.hpp>
 #include <beman/execution/detail/stoppable_token.hpp>
+#include <beman/execution/detail/type_list.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
+#endif
 
-#include <atomic>
-#include <exception>
-#include <optional>
-#include <variant>
-#include <tuple>
-#include <cassert>
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
+    namespace beman::execution::detail {
 
-namespace beman::execution::detail {
-
-struct split_impl_t {};
+        struct split_impl_t {};
 template <>
 struct impls_for<split_impl_t> : ::beman::execution::detail::default_impls {
 

@@ -5,21 +5,29 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_FOR
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/sender_in.hpp>
-#include <beman/execution/detail/get_completion_signatures.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
 #include <functional>
 #include <type_traits>
-#include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.get_completion_signatures import beman.execution.detail.sender_in
+#else
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/sender_in.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-/*!
+    namespace beman::execution::detail {
+        /*!
  * \brief Tag type used to determine if completion signatures were defined.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-struct no_completion_signatures_defined_in_sender {};
+        struct no_completion_signatures_defined_in_sender {};
 
 /*!
  * \brief Primary template declaration for the customization of sender completion signatures.

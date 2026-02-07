@@ -1,9 +1,10 @@
 // src/beman/execution/tests/exec-just.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <string>
+#include <concepts>
 #include <memory>
 #include <memory_resource>
+#include <string>
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
@@ -209,6 +210,7 @@ TEST(exec_just) {
     using type =
         test_detail::call_result_t<test_std::get_completion_signatures_t, decltype(test_std::just()), test_std::env<>>;
 
+    type x = 17;
     static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>, type>);
     try {
         test_just_constraints();

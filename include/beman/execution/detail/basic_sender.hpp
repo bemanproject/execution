@@ -5,39 +5,45 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_SENDER
 
 #include <beman/execution/detail/common.hpp>
+#include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_operation import beman.execution.detail.completion_signatures_for import beman.execution.detail.connect import beman.execution.detail.decays_to import beman.execution.detail.get_completion_signatures import beman.execution.detail.impls_for import beman.execution.detail.product_type import beman.execution.detail.sender import beman.execution.detail.sender_decompose
+#else
 #include <beman/execution/detail/basic_operation.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
+#include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/decays_to.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
-#include <beman/execution/detail/connect.hpp>
-#include <beman/execution/detail/get_completion_signatures.hpp>
-#include <utility>
+#endif
 
-#include <beman/execution/detail/suppress_push.hpp>
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-/*!
+    namespace beman::execution::detail {
+        /*!
  * \brief Class template used to factor out common sender implementation for library senders.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename Tag, typename Data, typename... Child>
-struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child...> {
-    //-dk:TODO friend struct ::beman::execution::detail::connect_t;
-    //-dk:TODO friend struct ::beman::execution::get_completion_signatures_t;
-    using sender_concept = ::beman::execution::sender_t;
-    using indices_for    = ::std::index_sequence_for<Child...>;
+        template <typename Tag, typename Data, typename... Child> struct basic_sender: ::beman::execution::detail::product_type <Tag, Data, Child...> {
+            //-dk:TODO friend struct ::beman::execution::detail::connect_t;
+            //-dk:TODO friend struct ::beman::execution::get_completion_signatures_t;
+            using sender_concept = ::beman::execution::sender_t;
+using indices_for = ::std::index_sequence_for<Child...>;
 
-    auto get_env() const noexcept -> decltype(auto) {
-        auto&& d{this->template get<1>()};
-        return sub_apply<2>(
-            [&d](auto&&... c) { return ::beman::execution::detail::impls_for<Tag>::get_attrs(d, c...); }, *this);
-    }
+auto get_env() const noexcept -> decltype(auto) {
+    auto&& d{this->template get<1>()};
+    return sub_apply<2>([&d](auto&&... c) { return ::beman::execution::detail::impls_for<Tag>::get_attrs(d, c...); },
+                        *this);
+}
 
     template <typename Receiver>
         requires(!::beman::execution::receiver<Receiver>)

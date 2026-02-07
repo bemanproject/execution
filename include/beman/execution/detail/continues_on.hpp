@@ -5,41 +5,45 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution/detail/sender_adaptor.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/sender_for.hpp>
-#include <beman/execution/detail/schedule_from.hpp>
-#include <beman/execution/detail/join_env.hpp>
-#include <beman/execution/detail/fwd_env.hpp>
-#include <beman/execution/detail/get_env.hpp>
-#include <beman/execution/detail/sched_attrs.hpp>
-#include <beman/execution/detail/impls_for.hpp>
-#include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/get_domain_late.hpp>
-#include <beman/execution/detail/default_domain.hpp>
-#include <beman/execution/detail/query_with_default.hpp>
-
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.default_domain import beman.execution.detail.default_impls import beman.execution.detail.fwd_env import beman.execution.detail.get_domain_early import beman.execution.detail.get_domain_late import beman.execution.detail.get_env import beman.execution.detail.impls_for import beman.execution.detail.join_env import beman.execution.detail.make_sender import beman.execution.detail.query_with_default import beman.execution.detail.sched_attrs import beman.execution.detail.schedule_from import beman.execution.detail.scheduler import beman.execution.detail.sender import beman.execution.detail.sender_adaptor import beman.execution.detail.sender_for import beman.execution.detail.transform_sender
+#else
+#include <beman/execution/detail/default_domain.hpp>
+#include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/get_domain_early.hpp>
+#include <beman/execution/detail/get_domain_late.hpp>
+#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/impls_for.hpp>
+#include <beman/execution/detail/join_env.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/query_with_default.hpp>
+#include <beman/execution/detail/sched_attrs.hpp>
+#include <beman/execution/detail/schedule_from.hpp>
+#include <beman/execution/detail/scheduler.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_adaptor.hpp>
+#include <beman/execution/detail/sender_for.hpp>
+#include <beman/execution/detail/transform_sender.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
 #include <beman/execution/detail/suppress_push.hpp>
 
-namespace beman::execution::detail {
-// specialize default_domain appropriately
-/*!
+    namespace beman::execution::detail {
+        // specialize default_domain appropriately
+        /*!
  * \brief The actual implementation of the continues_on customization point object
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-struct continues_on_t {
-    template <::beman::execution::detail::sender_for<continues_on_t> Sender, typename... Env>
-    static auto transform_sender(Sender&& sender, Env&&...) {
-        auto&& data{sender.template get<1>()};
+        struct continues_on_t { template <::beman::execution::detail::sender_for<continues_on_t> Sender, typename...Env> static auto transform_sender(Sender && sender, Env &&...) { auto && data{sender.template get <1>() };
         auto&& child{sender.template get<2>()};
         return ::beman::execution::schedule_from(std::move(data), std::move(child));
     }

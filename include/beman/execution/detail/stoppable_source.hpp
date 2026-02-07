@@ -5,8 +5,16 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_SOURCE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/stoppable_token.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.stoppable_token;
+#else
+#include <beman/execution/detail/stoppable_token.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

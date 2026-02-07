@@ -6,28 +6,29 @@
 
 // ----------------------------------------------------------------------------
 
-#include <beman/execution/detail/queryable.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.env import beman.execution.detail.get_allocator import beman.execution.detail.get_completion_scheduler import beman.execution.detail.get_completion_signatures import beman.execution.detail.get_delegation_scheduler import beman.execution.detail.get_domain import beman.execution.detail.get_env import beman.execution.detail.get_scheduler import beman.execution.detail.get_stop_token import beman.execution.detail.operation_state import beman.execution.detail.receiver import beman.execution.detail.scheduler import beman.execution.detail.sender import beman.execution.detail.sender_in import beman.execution.detail.valid_completion_for
+#else
 #include <beman/execution/detail/env.hpp>
-#include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
-#include <beman/execution/detail/get_stop_token.hpp>
-#include <beman/execution/detail/get_env.hpp>
-#include <beman/execution/detail/get_domain.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
-#include <beman/execution/detail/get_delegation_scheduler.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/get_delegation_scheduler.hpp>
+#include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
-#include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/valid_completion_for.hpp>
+#endif
 
 #include <beman/execution/detail/completion_signature.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/valid_completion_signatures.hpp>
-#include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/matching_sig.hpp>
 #include <beman/execution/detail/as_except_ptr.hpp>
 
@@ -63,6 +64,12 @@
 #include <beman/execution/detail/simple_counting_scope.hpp>
 #include <beman/execution/detail/spawn_future.hpp>
 #include <beman/execution/detail/spawn.hpp>
+
+#ifdef BEMAN_HAS_MODULES
+    import beman.execution.detail.forwarding_query;
+#else
+#include <beman/execution/detail/forwarding_query.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

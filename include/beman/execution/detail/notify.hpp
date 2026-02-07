@@ -5,15 +5,22 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NOTIFY
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/immovable.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <mutex>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.immovable import beman.execution.detail.make_sender
+#else
+#include <beman/execution/detail/immovable.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-struct notify_t;
+    namespace beman::execution::detail { struct notify_t;
 class notifier : ::beman::execution::detail::immovable {
   public:
     auto complete() -> void {

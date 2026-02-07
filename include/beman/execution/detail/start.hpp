@@ -5,8 +5,11 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_START
 
 #include <beman/execution/detail/common.hpp>
-
 #include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#endif
 
 // ----------------------------------------------------------------------------
 

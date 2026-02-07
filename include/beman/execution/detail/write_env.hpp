@@ -5,26 +5,29 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WRITE_ENV
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <type_traits>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.default_impls import beman.execution.detail.get_env import beman.execution.detail.impls_for import beman.execution.detail.join_env import beman.execution.detail.make_sender import beman.execution.detail.nested_sender_has_affine_on import beman.execution.detail.queryable import beman.execution.detail.sender
+#else
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/nested_sender_has_affine_on.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/nested_sender_has_affine_on.hpp>
-#include <type_traits>
-#include <utility>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-struct write_env_t {
-    template <::beman::execution::sender Sender, ::beman::execution::detail::queryable Env>
-    constexpr auto operator()(Sender&& sender, Env&& env) const {
-        return ::beman::execution::detail::make_sender(
-            *this, ::std::forward<Env>(env), ::std::forward<Sender>(sender));
-    }
+    namespace beman::execution::detail { struct write_env_t { template <::beman::execution::sender Sender, ::beman::execution::detail::queryable Env> constexpr auto operator()(Sender && sender, Env && env) const { return ::beman::execution::detail::make_sender(* this, ::std::forward <Env>(env), ::std::forward <Sender>(sender));
+}
     static auto name() { return "write_env_t"; }
     template <::beman::execution::sender Sender, typename Env>
         requires ::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>

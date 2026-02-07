@@ -5,16 +5,21 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.non_assignable import beman.execution.detail.queryable
+#else
 #include <beman/execution/detail/non_assignable.hpp>
 #include <beman/execution/detail/queryable.hpp>
-#include <type_traits>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <::beman::execution::detail::queryable Env>
-struct env_base {
-    Env env_;
+    namespace beman::execution::detail { template <::beman::execution::detail::queryable Env> struct env_base { Env env_;
 };
 
 template <typename E, typename Q>

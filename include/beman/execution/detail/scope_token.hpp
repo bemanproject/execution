@@ -5,17 +5,24 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCOPE_TOKEN
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/sender_in.hpp>
-#include <beman/execution/detail/get_completion_signatures.hpp>
-#include <beman/execution/detail/scope_association.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.get_completion_signatures import beman.execution.detail.sender import beman.execution.detail.sender_in
+#else
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/scope_association.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_in.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-struct token_test_env {};
+    namespace beman::execution::detail { struct token_test_env {};
 
 struct token_test_sender {
     using sender_concept = ::beman::execution::sender_t;

@@ -5,31 +5,32 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ALMOST_SCHEDULER
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.queryable import beman.execution.detail.schedule import beman.execution.detail.scheduler_t import beman.execution.detail.sender
+#else
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/scheduler_t.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <concepts>
-#include <utility>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-/*!
+    namespace beman::execution::detail {
+        /*!
  * \brief Auxiliary concept used to break cycle for scheduler concept.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  * \concept almost_scheduler
  */
-template <typename Scheduler>
-concept almost_scheduler = ::std::derived_from<typename ::std::remove_cvref_t<Scheduler>::scheduler_concept,
-                                               ::beman::execution::scheduler_t> &&
-                           ::beman::execution::detail::queryable<Scheduler> &&
-                           requires(Scheduler&& sched) {
-                               {
-                                   ::beman::execution::schedule(::std::forward<Scheduler>(sched))
-                               } -> ::beman::execution::sender;
-                           } && ::std::equality_comparable<::std::remove_cvref_t<Scheduler>> &&
+        template <typename Scheduler> concept almost_scheduler = ::std::derived_from <typename ::std::remove_cvref_t<Scheduler> ::scheduler_concept, ::beman::execution::scheduler_t> && ::beman::execution::detail::queryable <Scheduler> && requires(Scheduler && sched) { { ::beman::execution::schedule(::std::forward <Scheduler>(sched)) }->::beman::execution::sender;
+} && ::std::equality_comparable<::std::remove_cvref_t<Scheduler>> &&
                            ::std::copy_constructible<::std::remove_cvref_t<Scheduler>>;
 } // namespace beman::execution::detail
 

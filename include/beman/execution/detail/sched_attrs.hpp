@@ -5,33 +5,38 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ATTRS
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/get_domain.hpp>
-#include <beman/execution/detail/get_completion_scheduler.hpp>
-#include <beman/execution/detail/set_error.hpp>
-#include <beman/execution/detail/set_stopped.hpp>
-#include <beman/execution/detail/set_value.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.get_completion_scheduler import beman.execution.detail.get_domain import beman.execution.detail.set_error import beman.execution.detail.set_stopped import beman.execution.detail.set_value
+#else
+#include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/set_error.hpp>
+#include <beman/execution/detail/set_stopped.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
+    namespace beman::execution::detail {
 
-template <typename Scheduler>
-class sched_attrs {
-  private:
-    Scheduler sched;
+        template <typename Scheduler> class sched_attrs { private :Scheduler sched;
 
-  public:
-    template <typename S>
-        requires(!::std::same_as<sched_attrs, ::std::remove_cvref_t<S>>)
-    explicit sched_attrs(S&& s) : sched(::std::forward<S>(s)) {}
+public:
+template <typename S>
+    requires(!::std::same_as<sched_attrs, ::std::remove_cvref_t<S>>)
+explicit sched_attrs(S&& s) : sched(::std::forward<S>(s)) {}
 
-    template <typename Tag>
-    auto query(const ::beman::execution::get_completion_scheduler_t<Tag>&) const noexcept {
-        return this->sched;
-    }
+template <typename Tag>
+auto query(const ::beman::execution::get_completion_scheduler_t<Tag>&) const noexcept {
+    return this->sched;
+}
 
     template <typename T = bool>
         requires requires(Scheduler&& s) { s.query(::beman::execution::get_domain); }

@@ -5,31 +5,35 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ENV
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/get_domain.hpp>
-#include <beman/execution/detail/default_domain.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.default_domain import beman.execution.detail.get_domain import beman.execution.detail.get_scheduler
+#else
+#include <beman/execution/detail/default_domain.hpp>
+#include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_scheduler.hpp>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-template <typename Scheduler>
-class sched_env {
-  private:
-    Scheduler sched;
+    namespace beman::execution::detail { template <typename Scheduler> class sched_env { private :Scheduler sched;
 
-  public:
-    template <typename S>
-    explicit sched_env(S sch) : sched(::std::move(sch)) {}
+public:
+template <typename S>
+explicit sched_env(S sch) : sched(::std::move(sch)) {}
 
-    auto query(const ::beman::execution::get_scheduler_t&) const noexcept { return this->sched; }
-    auto query(const ::beman::execution::get_domain_t& q) const noexcept {
-        if constexpr (requires { this->sched.query(q); })
-            return this->sched.query(q);
-        else
-            return ::beman::execution::default_domain{};
-    }
+auto query(const ::beman::execution::get_scheduler_t&) const noexcept { return this->sched; }
+auto query(const ::beman::execution::get_domain_t& q) const noexcept {
+    if constexpr (requires { this->sched.query(q); })
+        return this->sched.query(q);
+    else
+        return ::beman::execution::default_domain{};
+}
 };
 
 template <typename Scheduler>

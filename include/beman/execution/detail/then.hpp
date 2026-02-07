@@ -5,6 +5,18 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_THEN
 
 #include <beman/execution/detail/common.hpp>
+#include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#include <exception>
+#include <functional>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.call_result_t import beman.execution.detail.completion_signatures import beman.execution.detail.completion_signatures_for import beman.execution.detail.completion_signatures_of_t import beman.execution.detail.default_impls import beman.execution.detail.get_domain_early import beman.execution.detail.impls_for import beman.execution.detail.make_sender import beman.execution.detail.meta_combine import beman.execution.detail.meta_transform import beman.execution.detail.meta_unique import beman.execution.detail.movable_value import beman.execution.detail.nested_sender_has_affine_on import beman.execution.detail.sender import beman.execution.detail.sender_adaptor import beman.execution.detail.sender_adaptor_closure import beman.execution.detail.set_error import beman.execution.detail.set_stopped import beman.execution.detail.set_value import beman.execution.detail.transform_sender
+#else
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
@@ -13,8 +25,8 @@
 #include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/meta_transform.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/meta_transform.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/nested_sender_has_affine_on.hpp>
@@ -25,22 +37,12 @@
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
-#include <concepts>
-#include <exception>
-#include <functional>
-#include <utility>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-#include <beman/execution/detail/suppress_push.hpp>
-
-namespace beman::execution::detail {
-template <typename Completion>
-struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
-    template <::beman::execution::detail::movable_value Fun>
-    auto operator()(Fun&& fun) const {
-        return ::beman::execution::detail::sender_adaptor{*this, ::std::forward<Fun>(fun)};
-    }
+    namespace beman::execution::detail { template <typename Completion> struct then_t: ::beman::execution::sender_adaptor_closure <then_t<Completion>> { template <::beman::execution::detail::movable_value Fun> auto operator()(Fun && fun) const { return ::beman::execution::detail::sender_adaptor{* this, ::std::forward <Fun>(fun) };
+}
     template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
     auto operator()(Sender&& sender, Fun&& fun) const {
         auto domain{::beman::execution::detail::get_domain_early(sender)};

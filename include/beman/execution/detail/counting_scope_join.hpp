@@ -5,6 +5,14 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_JOIN
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender import beman.execution.detail.completion_signatures import beman.execution.detail.connect import beman.execution.detail.counting_scope_base import beman.execution.detail.default_impls import beman.execution.detail.get_env import beman.execution.detail.get_scheduler import beman.execution.detail.impls_for import beman.execution.detail.make_sender import beman.execution.detail.receiver import beman.execution.detail.schedule import beman.execution.detail.set_value import beman.execution.detail.start
+#else
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/connect.hpp>
@@ -18,19 +26,15 @@
 #include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/start.hpp>
+#endif
 
-#include <type_traits>
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
+    namespace beman::execution::detail { struct counting_scope_join_t { template <::beman::execution::receiver> struct state;
 
-namespace beman::execution::detail {
-struct counting_scope_join_t {
-    template <::beman::execution::receiver>
-    struct state;
-
-    auto operator()(::beman::execution::detail::counting_scope_base* ptr) const {
-        return ::beman::execution::detail::make_sender(*this, ptr);
-    }
+auto operator()(::beman::execution::detail::counting_scope_base* ptr) const {
+    return ::beman::execution::detail::make_sender(*this, ptr);
+}
 };
 inline constexpr counting_scope_join_t counting_scope_join{};
 

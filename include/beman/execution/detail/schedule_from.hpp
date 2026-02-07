@@ -5,6 +5,17 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_FROM
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <exception>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.as_tuple import beman.execution.detail.child_type import beman.execution.detail.completion_signatures_of_t import beman.execution.detail.connect import beman.execution.detail.decayed_tuple import beman.execution.detail.default_domain import beman.execution.detail.default_impls import beman.execution.detail.env_of_t import beman.execution.detail.error_types_of_t import beman.execution.detail.fwd_env import beman.execution.detail.get_domain import beman.execution.detail.get_env import beman.execution.detail.impls_for import beman.execution.detail.join_env import beman.execution.detail.make_sender import beman.execution.detail.meta_combine import beman.execution.detail.meta_prepend import beman.execution.detail.meta_to import beman.execution.detail.meta_transform import beman.execution.detail.meta_unique import beman.execution.detail.query_with_default import beman.execution.detail.sched_attrs import beman.execution.detail.schedule import beman.execution.detail.schedule_result_t import beman.execution.detail.scheduler import beman.execution.detail.sender import beman.execution.detail.sender_in import beman.execution.detail.set_error import beman.execution.detail.set_stopped import beman.execution.detail.start import beman.execution.detail.transform_sender
+#else
 #include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
@@ -27,34 +38,25 @@
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/query_with_default.hpp>
 #include <beman/execution/detail/sched_attrs.hpp>
-#include <beman/execution/detail/schedule_result_t.hpp>
 #include <beman/execution/detail/schedule.hpp>
+#include <beman/execution/detail/schedule_result_t.hpp>
 #include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
+#endif
 
-#include <exception>
-#include <type_traits>
-#include <utility>
-#include <variant>
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-struct schedule_from_t {
-    template <::beman::execution::scheduler Scheduler, ::beman::execution::sender Sender>
-    auto operator()(Scheduler&& scheduler, Sender&& sender) const {
-        auto domain{::beman::execution::detail::query_with_default(
-            ::beman::execution::get_domain, scheduler, ::beman::execution::default_domain{})};
-        return ::beman::execution::transform_sender(
-            domain,
-            ::beman::execution::detail::make_sender(
-                *this, ::std::forward<Scheduler>(scheduler), ::std::forward<Sender>(sender)));
-    }
+    namespace beman::execution::detail { struct schedule_from_t { template <::beman::execution::scheduler Scheduler, ::beman::execution::sender Sender> auto operator()(Scheduler && scheduler, Sender && sender) const { auto domain{::beman::execution::detail::query_with_default(::beman::execution::get_domain, scheduler, ::beman::execution::default_domain{}) };
+return ::beman::execution::transform_sender(
+    domain,
+    ::beman::execution::detail::make_sender(
+        *this, ::std::forward<Scheduler>(scheduler), ::std::forward<Sender>(sender)));
+}
 };
 
 template <>

@@ -5,17 +5,24 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_DOMAIN
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.default_domain import beman.execution.detail.get_completion_scheduler import beman.execution.detail.get_domain import beman.execution.detail.get_env import beman.execution.detail.sender
+#else
 #include <beman/execution/detail/default_domain.hpp>
-#include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <concepts>
+#endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-namespace beman::execution::detail {
-struct completion_domain_undefined {};
+    namespace beman::execution::detail { struct completion_domain_undefined {};
 template <typename, typename>
 struct completion_domain_merge {};
 template <typename T>
