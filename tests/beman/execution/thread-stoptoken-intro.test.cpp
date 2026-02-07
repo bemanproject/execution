@@ -4,7 +4,7 @@
 #include <beman/execution/detail/immovable.hpp>
 #include <utility>
 #include <test/stop_token.hpp>
-#if defined(BEMAN_HAS_MODULES)
+#ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>

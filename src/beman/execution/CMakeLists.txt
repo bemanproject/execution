@@ -200,8 +200,8 @@ if(BEMAN_USE_MODULES)
             execution.cpp # TODO(CK): check if really needed!
         PUBLIC
             FILE_SET CXX_MODULES
-                BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
-                FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
+                BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
+                FILES execution.cppm
     )
     target_link_libraries(${TARGET_PREFIX} PUBLIC ${TARGET_NAME})
 endif()

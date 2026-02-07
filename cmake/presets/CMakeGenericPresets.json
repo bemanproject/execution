@@ -12,9 +12,9 @@
           "type": "path",
           "value": "${sourceDir}/stagedir"
         },
+        "BEMAN_USE_MODULES": true,
         "CMAKE_CXX_STANDARD": "23",
         "CMAKE_CXX_EXTENSIONS": true,
-        "CMAKE_CXX_SCAN_FOR_MODULES": true,
         "CMAKE_CXX_STANDARD_REQUIRED": true,
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
         "CMAKE_INSTALL_MESSAGE": "LAZY",
