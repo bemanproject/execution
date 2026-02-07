@@ -9,12 +9,11 @@ so it does not respect the usual structure of a Beman library repository nor The
 
 * `cmake/`: CMake modules and toolchain files used by Beman libraries.
 * `containers/`: Containers used for CI builds and tests in the Beman org.
-* `tools/`: Tools used to manage the infrastructure and the codebase (e.g., linting, formatting, etc.).
 
 ## Usage
 
 This repository is intended to be used as a beman-submodule in other Beman repositories. See
-[the Beman Submodule documentation](./tools/beman-submodule/README.md) for details.
+[the beman-submodule documentation](https://github.com/bemanproject/beman-submodule) for details.
 
 
 ### CMake Modules
