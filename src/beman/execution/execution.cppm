@@ -239,6 +239,7 @@ export using ::beman::execution::associate;
 export using ::beman::execution::spawn;
 export using ::beman::execution::spawn_future;
 
+#if 0
 namespace detail {
 export using ::beman::execution::detail::await_result_type;
 export using ::beman::execution::detail::basic_sender;
@@ -253,6 +254,7 @@ export using ::beman::execution::detail::sync_wait_receiver;
 export using ::beman::execution::detail::sync_wait_result_type;
 export using ::beman::execution::detail::sync_wait_state;
 } // namespace detail
+#endif
 
 } // namespace beman::execution
 
