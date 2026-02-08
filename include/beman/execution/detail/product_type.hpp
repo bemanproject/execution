@@ -13,9 +13,6 @@ import std;
 #include <memory>
 #include <tuple>
 #endif
-#ifdef BEMAN_HAS_MODULES
-#else
-#endif
 
 // ----------------------------------------------------------------------------
 
@@ -119,20 +116,6 @@ constexpr auto is_product_type(const T&) -> ::std::false_type {
 template <typename... T>
 constexpr auto is_product_type(const ::beman::execution::detail::product_type<T...>&) -> ::std::true_type {
     return {};
-}
-
-template <::std::size_t Start, typename Fun, typename Tuple, ::std::size_t... I>
-constexpr auto sub_apply_helper(Fun&& fun, Tuple&& tuple, ::std::index_sequence<I...>) -> decltype(auto) {
-    // NOLINTNEXTLINE(bugprone-use-after-move,hicpp-invalid-access-moved)
-    return ::std::forward<Fun>(fun)(::std::forward<Tuple>(tuple).template get<I + Start>()...);
-}
-
-template <::std::size_t Start, typename Fun, typename Tuple>
-constexpr auto sub_apply(Fun&& fun, Tuple&& tuple) -> decltype(auto) {
-    constexpr ::std::size_t TSize{::std::tuple_size_v<::std::remove_cvref_t<Tuple>>};
-    static_assert(Start <= TSize);
-    return sub_apply_helper<Start>(
-        ::std::forward<Fun>(fun), ::std::forward<Tuple>(tuple), ::std::make_index_sequence<TSize - Start>());
 }
 
 } // namespace beman::execution::detail

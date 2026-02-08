@@ -5,7 +5,7 @@
 #include <concepts>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
-import beman.execution.detail;
+import beman.execution.detail.forward_like;
 #else
 #include <beman/execution/detail/forward_like.hpp>
 #endif

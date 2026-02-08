@@ -16,7 +16,28 @@ import std;
 #include <variant>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.atomic_intrusive_stack import beman.execution.detail.child_type import beman.execution.detail.completion_signatures_for import beman.execution.detail.completion_signatures_of_t import beman.execution.detail.connect_result_t import beman.execution.detail.default_impls import beman.execution.detail.emplace_from import beman.execution.detail.error_types_of_t import beman.execution.detail.get_domain_early import beman.execution.detail.get_stop_token import beman.execution.detail.impls_for import beman.execution.detail.inplace_stop_source import beman.execution.detail.make_sender import beman.execution.detail.meta_combine import beman.execution.detail.meta_unique import beman.execution.detail.receiver import beman.execution.detail.sender_for import beman.execution.detail.stop_callback_for_t import beman.execution.detail.stop_token_of_t import beman.execution.detail.stoppable_token import beman.execution.detail.type_list import beman.execution.detail.value_types_of_t
+import beman.execution.detail.atomic_intrusive_stack;
+import beman.execution.detail.child_type;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.connect_result_t;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.emplace_from;
+import beman.execution.detail.error_types_of_t;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.get_stop_token;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.inplace_stop_source;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.meta_combine;
+import beman.execution.detail.meta_unique;
+import beman.execution.detail.receiver;
+import beman.execution.detail.sender_for;
+import beman.execution.detail.stop_callback_for_t;
+import beman.execution.detail.stop_token_of_t;
+import beman.execution.detail.stoppable_token;
+import beman.execution.detail.type_list;
+import beman.execution.detail.value_types_of_t;
 #else
 #include <beman/execution/detail/atomic_intrusive_stack.hpp>
 #include <beman/execution/detail/child_type.hpp>
@@ -42,11 +63,11 @@ import beman.execution.detail.atomic_intrusive_stack import beman.execution.deta
 #include <beman/execution/detail/value_types_of_t.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail {
+namespace beman::execution::detail {
 
-        struct split_impl_t {};
+struct split_impl_t {};
 template <>
 struct impls_for<split_impl_t> : ::beman::execution::detail::default_impls {
 

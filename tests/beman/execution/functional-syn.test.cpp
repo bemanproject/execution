@@ -5,7 +5,10 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
-import beman.execution.detail;
+import beman.execution.detail.callable;
+import beman.execution.detail.call_result_t;
+import beman.execution.detail.decayed_typeof;
+import beman.execution.detail.nothrow_callable;
 #else
 #include <beman/execution/functional.hpp>
 #endif

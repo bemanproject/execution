@@ -11,19 +11,20 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.connect
+import beman.execution.detail.connect;
 #else
 #include <beman/execution/detail/connect.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution {
-        /*!
+namespace beman::execution {
+/*!
  * \brief Type alias to determine the operation state type returned from `connect()`.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-        template <typename Sender, typename Receiver> using connect_result_t = decltype(::beman::execution::connect(::std::declval <Sender>(), ::std::declval <Receiver>()));
+template <typename Sender, typename Receiver>
+using connect_result_t = decltype(::beman::execution::connect(::std::declval<Sender>(), ::std::declval<Receiver>()));
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

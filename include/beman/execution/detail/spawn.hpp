@@ -12,7 +12,15 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.connect import beman.execution.detail.connect_result_t import beman.execution.detail.env import beman.execution.detail.receiver import beman.execution.detail.scope_token import beman.execution.detail.sender import beman.execution.detail.spawn_get_allocator import beman.execution.detail.start import beman.execution.detail.write_env
+import beman.execution.detail.connect;
+import beman.execution.detail.connect_result_t;
+import beman.execution.detail.env;
+import beman.execution.detail.receiver;
+import beman.execution.detail.scope_token;
+import beman.execution.detail.sender;
+import beman.execution.detail.spawn_get_allocator;
+import beman.execution.detail.start;
+import beman.execution.detail.write_env;
 #else
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
@@ -25,11 +33,14 @@ import beman.execution.detail.connect import beman.execution.detail.connect_resu
 #include <beman/execution/detail/write_env.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { struct spawn_t { struct state_base { virtual ~state_base() = default;
-virtual auto complete() noexcept -> void = 0;
-};
+namespace beman::execution::detail {
+struct spawn_t {
+    struct state_base {
+        virtual ~state_base()                    = default;
+        virtual auto complete() noexcept -> void = 0;
+    };
 
     struct receiver {
         using receiver_concept = ::beman::execution::receiver_t;

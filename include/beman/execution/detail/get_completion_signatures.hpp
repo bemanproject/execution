@@ -14,21 +14,32 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.await_result_type import beman.execution.detail.completion_signatures import beman.execution.detail.env_promise import beman.execution.detail.get_domain_late..- dk:TODO remove import beman.execution.detail.is_awaitable import beman.execution.detail.transform_sender..- dk:TODO remove
+import beman.execution.detail.await_result_type;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.env_promise;
+import beman.execution.detail.get_domain_late;
+import beman.execution.detail.is_awaitable;
+import beman.execution.detail.transform_sender;
 #else
 #include <beman/execution/detail/await_result_type.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/env_promise.hpp>
-#include <beman/execution/detail/get_domain_late.hpp> //-dk:TODO remove
+#include <beman/execution/detail/get_domain_late.hpp>
 #include <beman/execution/detail/is_awaitable.hpp>
-#include <beman/execution/detail/transform_sender.hpp> //-dk:TODO remove
+#include <beman/execution/detail/transform_sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { struct get_completion_signatures_t { private : template <typename Sender, typename Env> static auto get(Sender && sender, Env && env) noexcept { auto new_sender{[](auto&& sndr, auto&& e) -> decltype(auto) { auto domain{::beman::execution::detail::get_domain_late(sndr, e) };
-return ::beman::execution::transform_sender(domain, ::std::forward<Sender>(sndr), ::std::forward<Env>(e));
-}};
+namespace beman::execution {
+struct get_completion_signatures_t {
+  private:
+    template <typename Sender, typename Env>
+    static auto get(Sender&& sender, Env&& env) noexcept {
+        auto new_sender{[](auto&& sndr, auto&& e) -> decltype(auto) {
+            auto domain{::beman::execution::detail::get_domain_late(sndr, e)};
+            return ::beman::execution::transform_sender(domain, ::std::forward<Sender>(sndr), ::std::forward<Env>(e));
+        }};
 
         using sender_type = ::std::remove_cvref_t<decltype(new_sender(sender, env))>;
         using decayed_env = ::std::remove_cvref_t<Env>;

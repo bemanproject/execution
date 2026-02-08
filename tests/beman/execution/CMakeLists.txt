@@ -50,7 +50,6 @@ list(
     exec-set-value.test
     exec-snd-apply.test
     exec-snd-concepts.test
-    exec-snd-expos.test
     exec-snd-transform.test
     exec-spawn.test
     exec-starts-on.test
@@ -109,7 +108,111 @@ set(XX
     exec-split.test
     exec-just.test
     exec-spawn-future.test
+    exec-snd-expos.test
 )
+
+set(xexecution_tests
+    notify.test
+    exec-into-variant.test
+    exec-affine-on.test
+    exec-bulk.test
+    exec-on.test
+    exec-split.test
+    exec-spawn-future.test
+    exec-snd-expos.test
+    exec-spawn.test
+    exec-starts-on.test
+    exec-stop-when.test
+    exec-when-all.test
+    exec-scope-counting.test
+    exec-scope-simple-counting.test
+    exec-schedule-from.test
+    exec-with-awaitable-senders.test
+    issue-186.test
+    issue-144.test
+    issue-174.test
+    exec-let.test
+    exec-sync-wait.test
+    exec-then.test
+    exec-just.test
+    exec-continues-on.test
+    exec-read-env.test
+)
+
+set(execution_tests
+    exec-utils-cmplsigs.test
+    exec-awaitable.test
+    exec-connect.test
+    exec-domain-default.test
+    exec-env.test
+    exec-fwd-env.test
+    exec-general.test
+    exec-get-allocator.test
+    exec-get-compl-sched.test
+    exec-get-delegation-scheduler.test
+    exec-get-domain.test
+    exec-get-env.test
+    exec-get-scheduler.test
+    exec-get-stop-token.test
+    exec-getcomplsigs.test
+    exec-opstate-start.test
+    exec-opstate.test
+    exec-prop.test
+    exec-recv-concepts.test
+    exec-recv.test
+    exec-run-loop-general.test
+    exec-run-loop-types.test
+    exec-sched.test
+    exec-schedule.test
+    exec-scope-concepts.test
+    exec-set-error.test
+    exec-set-stopped.test
+    exec-set-value.test
+    exec-snd-apply.test
+    exec-snd-concepts.test
+    exec-snd-transform.test
+    execution-queryable-concept.test
+    execution-syn.test
+    forward-like.test
+    function-objects.test
+    functional-syn.test
+    meta-combine.test
+    meta-contains.test
+    meta-filter.test
+    meta-prepend.test
+    meta-transform.test
+    meta-unique.test
+    non_assignable.test
+    stopcallback-cons.test
+    stopcallback-general.test
+    stopcallback-inplace-cons.test
+    stopcallback-inplace-general.test
+    stopcallback-inplace.test
+    stopcallback.test
+    stopsource-cons.test
+    stopsource-general.test
+    stopsource-inplace-cons.test
+    stopsource-inplace-general.test
+    stopsource-inplace-mem.test
+    stopsource-inplace.test
+    stopsource-mem.test
+    stopsource.test
+    stoptoken-concepts.test
+    stoptoken-general.test
+    stoptoken-inplace-general.test
+    stoptoken-inplace-members.test
+    stoptoken-inplace.test
+    stoptoken-mem.test
+    stoptoken-never-general.test
+    stoptoken-never.test
+    stoptoken.test
+    thread-stoptoken-intro.test
+    thread-stoptoken-syn.compile.test
+    thread-stoptoken.test
+    thread.test
+    utilities.test
+)
+#set(execution_tests exec-then.test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

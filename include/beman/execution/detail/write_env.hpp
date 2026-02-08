@@ -12,7 +12,14 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.default_impls import beman.execution.detail.get_env import beman.execution.detail.impls_for import beman.execution.detail.join_env import beman.execution.detail.make_sender import beman.execution.detail.nested_sender_has_affine_on import beman.execution.detail.queryable import beman.execution.detail.sender
+import beman.execution.detail.default_impls;
+import beman.execution.detail.get_env;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.join_env;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.nested_sender_has_affine_on;
+import beman.execution.detail.queryable;
+import beman.execution.detail.sender;
 #else
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -24,11 +31,16 @@ import beman.execution.detail.default_impls import beman.execution.detail.get_en
 #include <beman/execution/detail/sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { struct write_env_t { template <::beman::execution::sender Sender, ::beman::execution::detail::queryable Env> constexpr auto operator()(Sender && sender, Env && env) const { return ::beman::execution::detail::make_sender(* this, ::std::forward <Env>(env), ::std::forward <Sender>(sender));
-}
-    static auto name() { return "write_env_t"; }
+namespace beman::execution::detail {
+
+struct write_env_t {
+    template <::beman::execution::sender Sender, ::beman::execution::detail::queryable Env>
+    constexpr auto operator()(Sender&& sender, Env&& env) const {
+        return ::beman::execution::detail::make_sender(
+            *this, ::std::forward<Env>(env), ::std::forward<Sender>(sender));
+    }
     template <::beman::execution::sender Sender, typename Env>
         requires ::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>
     static auto affine_on(Sender&& sndr, const Env&) noexcept {
@@ -54,8 +66,6 @@ struct impls_for<write_env_t> : ::beman::execution::detail::default_impls {
     };
     static constexpr auto get_env = get_env_impl{};
 };
-
-inline constexpr write_env_t write_env{};
 } // namespace beman::execution::detail
 
 namespace beman::execution {

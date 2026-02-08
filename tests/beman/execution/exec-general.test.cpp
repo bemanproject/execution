@@ -7,7 +7,9 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
-import beman.execution.detail;
+import beman.execution.detail.movable_value;
+import beman.execution.detail.matching_sig;
+import beman.execution.detail.as_except_ptr;
 #else
 #include <beman/execution/execution.hpp>
 #include <beman/execution/detail/movable_value.hpp>

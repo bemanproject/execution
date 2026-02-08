@@ -15,7 +15,37 @@ import std;
 #include <variant>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.allocator_aware_move import beman.execution.detail.completion_signatures_for import beman.execution.detail.completion_signatures_of_t import beman.execution.detail.connect import beman.execution.detail.decayed_tuple import beman.execution.detail.default_impls import beman.execution.detail.emplace_from import beman.execution.detail.env import beman.execution.detail.env_of_t import beman.execution.detail.forward_like import beman.execution.detail.fwd_env import beman.execution.detail.get_domain_early import beman.execution.detail.impls_for import beman.execution.detail.join_env import beman.execution.detail.make_env import beman.execution.detail.make_sender import beman.execution.detail.meta_combine import beman.execution.detail.meta_filter import beman.execution.detail.meta_prepend import beman.execution.detail.meta_to import beman.execution.detail.meta_transform import beman.execution.detail.meta_unique import beman.execution.detail.movable_value import beman.execution.detail.sched_env import beman.execution.detail.sender import beman.execution.detail.sender_adaptor import beman.execution.detail.set_error import beman.execution.detail.set_stopped import beman.execution.detail.set_value import beman.execution.detail.transform_sender import beman.execution.detail.type_list
+import beman.execution.detail.allocator_aware_move;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.connect;
+import beman.execution.detail.decayed_tuple;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.emplace_from;
+import beman.execution.detail.env;
+import beman.execution.detail.env_of_t;
+import beman.execution.detail.forward_like;
+import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.join_env;
+import beman.execution.detail.make_env;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.meta_combine;
+import beman.execution.detail.meta_filter;
+import beman.execution.detail.meta_prepend;
+import beman.execution.detail.meta_to;
+import beman.execution.detail.meta_transform;
+import beman.execution.detail.meta_unique;
+import beman.execution.detail.movable_value;
+import beman.execution.detail.sched_env;
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_adaptor;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.transform_sender;
+import beman.execution.detail.type_list;
 #else
 #include <beman/execution/detail/allocator_aware_move.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
@@ -54,7 +84,12 @@ import beman.execution.detail.allocator_aware_move import beman.execution.detail
 
 #include <beman/execution/detail/suppress_push.hpp>
 
-    namespace beman::execution::detail { template <typename Completion> struct let_t { template <::beman::execution::detail::movable_value Fun> auto operator()(Fun && fun) const { return ::beman::execution::detail::sender_adaptor{* this, ::std::forward <Fun>(fun) };
+namespace beman::execution::detail {
+template <typename Completion>
+struct let_t {
+    template <::beman::execution::detail::movable_value Fun>
+    auto operator()(Fun&& fun) const {
+        return ::beman::execution::detail::sender_adaptor{*this, ::std::forward<Fun>(fun)};
     }
     template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
     auto operator()(Sender&& sender, Fun&& fun) const {

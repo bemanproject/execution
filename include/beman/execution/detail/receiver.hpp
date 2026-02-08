@@ -12,15 +12,17 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.get_env import beman.execution.detail.queryable
+import beman.execution.detail.get_env;
+import beman.execution.detail.queryable;
 #else
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { struct receiver_t {};
+namespace beman::execution {
+struct receiver_t {};
 
 template <typename Rcvr>
 concept receiver =

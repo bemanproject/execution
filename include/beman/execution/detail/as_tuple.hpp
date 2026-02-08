@@ -6,19 +6,20 @@
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.decayed_tuple
+import beman.execution.detail.decayed_tuple;
 #else
 #include <beman/execution/detail/decayed_tuple.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail {
-        /*!
+namespace beman::execution::detail {
+/*!
  * \brief Turn a completion signatures into a std::tuple type.
  * \internal
  */
-        template <typename T> struct as_tuple;
+template <typename T>
+struct as_tuple;
 /*!
  * \brief The actual operational partial specialization of as_tuple.
  * \internal

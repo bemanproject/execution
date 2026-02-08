@@ -7,5 +7,7 @@ module;
 export module beman.execution.detail.inplace_stop_source;
 
 namespace beman::execution {
+export using beman::execution::inplace_stop_callback;
 export using beman::execution::inplace_stop_source;
+export using beman::execution::inplace_stop_token;
 } // namespace beman::execution

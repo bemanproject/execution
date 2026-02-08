@@ -3,7 +3,7 @@
 
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail;
+import beman.execution.detail.simple_allocator;
 #else
 #include <beman/execution/detail/simple_allocator.hpp>
 #endif

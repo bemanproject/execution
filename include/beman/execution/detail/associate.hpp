@@ -14,7 +14,15 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.connect import beman.execution.detail.default_impls import beman.execution.detail.get_domain_early import beman.execution.detail.impls_for import beman.execution.detail.make_sender import beman.execution.detail.nothrow_callable import beman.execution.detail.scope_token import beman.execution.detail.sender import beman.execution.detail.transform_sender
+import beman.execution.detail.connect;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.nothrow_callable;
+import beman.execution.detail.scope_token;
+import beman.execution.detail.sender;
+import beman.execution.detail.transform_sender;
 #else
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -28,7 +36,7 @@ import beman.execution.detail.connect import beman.execution.detail.default_impl
 #include <beman/execution/detail/transform_sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
 template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
@@ -76,7 +84,6 @@ struct associate_data {
     auto release() && noexcept -> ::std::pair<assoc_t, sender_ref> {
         return {::std::move(assoc), sender_ref{assoc ? ::std::addressof(this->sender) : nullptr}};
     }
-}
 
     assoc_t assoc;
     union {

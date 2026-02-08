@@ -14,15 +14,18 @@ import std;
 #include <variant>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.decayed_tuple import beman.execution.detail.value_types_of_t
+import beman.execution.detail.decayed_tuple;
+import beman.execution.detail.value_types_of_t;
 #else
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <typename Sender, typename Env> struct single_sender_value_type_helper;
+namespace beman::execution::detail {
+template <typename Sender, typename Env>
+struct single_sender_value_type_helper;
 
 template <typename Sender, typename Env>
     requires requires {

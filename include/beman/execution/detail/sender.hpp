@@ -12,7 +12,11 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.env import beman.execution.detail.env_promise import beman.execution.detail.get_env import beman.execution.detail.is_awaitable import beman.execution.detail.queryable
+import beman.execution.detail.env;
+import beman.execution.detail.env_promise;
+import beman.execution.detail.get_env;
+import beman.execution.detail.is_awaitable;
+import beman.execution.detail.queryable;
 #else
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_promise.hpp>
@@ -21,9 +25,10 @@ import beman.execution.detail.env import beman.execution.detail.env_promise impo
 #include <beman/execution/detail/queryable.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { struct sender_t {};
+namespace beman::execution {
+struct sender_t {};
 } // namespace beman::execution
 namespace beman::execution::detail {
 template <typename Sender>

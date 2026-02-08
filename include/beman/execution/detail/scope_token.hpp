@@ -12,7 +12,9 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.get_completion_signatures import beman.execution.detail.sender import beman.execution.detail.sender_in
+import beman.execution.detail.get_completion_signatures;
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_in;
 #else
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/scope_association.hpp>
@@ -20,9 +22,10 @@ import beman.execution.detail.get_completion_signatures import beman.execution.d
 #include <beman/execution/detail/sender_in.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { struct token_test_env {};
+namespace beman::execution::detail {
+struct token_test_env {};
 
 struct token_test_sender {
     using sender_concept = ::beman::execution::sender_t;

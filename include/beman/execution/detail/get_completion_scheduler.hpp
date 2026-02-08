@@ -14,7 +14,15 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.almost_scheduler import beman.execution.detail.completion_tag import beman.execution.detail.decayed_same_as import beman.execution.detail.forwarding_query import beman.execution.detail.get_env import beman.execution.detail.schedule import beman.execution.detail.set_error import beman.execution.detail.set_stopped import beman.execution.detail.set_value
+import beman.execution.detail.almost_scheduler;
+import beman.execution.detail.completion_tag;
+import beman.execution.detail.decayed_same_as;
+import beman.execution.detail.forwarding_query;
+import beman.execution.detail.get_env;
+import beman.execution.detail.schedule;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
 #else
 #include <beman/execution/detail/almost_scheduler.hpp>
 #include <beman/execution/detail/completion_tag.hpp>
@@ -27,9 +35,11 @@ import beman.execution.detail.almost_scheduler import beman.execution.detail.com
 #include <beman/execution/detail/set_value.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { template <typename Tag> struct get_completion_scheduler_t;
+namespace beman::execution {
+template <typename Tag>
+struct get_completion_scheduler_t;
 
 template <typename Tag>
 struct get_completion_scheduler_t : ::beman::execution::forwarding_query_t {

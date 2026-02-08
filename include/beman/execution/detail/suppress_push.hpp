@@ -17,3 +17,4 @@
 #pragma clang diagnostic ignored "-Wmissing-braces"
 #pragma clang diagnostic ignored "-Wc++26-extensions"
 #endif // #if defined(__clang__)
+#include <beman/execution/detail/common.hpp>

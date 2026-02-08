@@ -11,22 +11,24 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.default_domain import beman.execution.detail.sender
+import beman.execution.detail.default_domain;
+import beman.execution.detail.sender;
 #else
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution {
-        /*!
+namespace beman::execution {
+/*!
  * \brief Function used to transform a sender and its arguments for a domain.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-        template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
-            requires requires(Domain domain, Tag tag, Sender && sender, Args &&...args) { domain.apply_sender(Tag(), ::std::forward <Sender>(sender), ::std::forward <Args>(args)...);
-}
+template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
+    requires requires(Domain domain, Tag tag, Sender&& sender, Args&&... args) {
+        domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
+    }
 constexpr auto apply_sender(Domain domain, Tag, Sender&& sender, Args&&... args) noexcept(noexcept(
     domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...))) -> decltype(auto) {
     return domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);

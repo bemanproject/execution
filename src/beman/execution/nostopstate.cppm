@@ -8,4 +8,5 @@ export module beman.execution.detail.nostopstate;
 
 namespace beman::execution {
 export using beman::execution::nostopstate;
+export using beman::execution::nostopstate_t;
 } // namespace beman::execution

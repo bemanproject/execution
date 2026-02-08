@@ -12,15 +12,18 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.meta_contains import beman.execution.detail.meta_prepend
+import beman.execution.detail.meta_contains;
+import beman.execution.detail.meta_prepend;
 #else
 #include <beman/execution/detail/meta_contains.hpp>
 #include <beman/execution/detail/meta_prepend.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail::meta::detail { template <typename, typename> struct make_unique;
+namespace beman::execution::detail::meta::detail {
+template <typename, typename>
+struct make_unique;
 template <typename>
 struct unique;
 

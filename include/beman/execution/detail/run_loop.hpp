@@ -15,7 +15,17 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.completion_signatures import beman.execution.detail.get_completion_scheduler import beman.execution.detail.get_env import beman.execution.detail.get_stop_token import beman.execution.detail.immovable import beman.execution.detail.operation_state import beman.execution.detail.scheduler import beman.execution.detail.sender import beman.execution.detail.set_stopped import beman.execution.detail.set_value import beman.execution.detail.unstoppable_token
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.get_completion_scheduler;
+import beman.execution.detail.get_env;
+import beman.execution.detail.get_stop_token;
+import beman.execution.detail.immovable;
+import beman.execution.detail.operation_state;
+import beman.execution.detail.scheduler;
+import beman.execution.detail.sender;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.unstoppable_token;
 #else
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
@@ -30,17 +40,20 @@ import beman.execution.detail.completion_signatures import beman.execution.detai
 #include <beman/execution/detail/unstoppable_token.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { class run_loop { private : struct scheduler;
+namespace beman::execution {
+class run_loop {
+  private:
+    struct scheduler;
 
-struct env {
-    run_loop* loop;
+    struct env {
+        run_loop* loop;
 
-    template <typename Completion>
-    auto query(const ::beman::execution::get_completion_scheduler_t<Completion>&) const noexcept -> scheduler {
-        return {this->loop};
-    }
+        template <typename Completion>
+        auto query(const ::beman::execution::get_completion_scheduler_t<Completion>&) const noexcept -> scheduler {
+            return {this->loop};
+        }
     };
 
     struct opstate_base : ::beman::execution::detail::virtual_immovable {

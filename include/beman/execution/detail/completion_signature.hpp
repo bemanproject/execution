@@ -11,16 +11,20 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.set_error import beman.execution.detail.set_stopped import beman.execution.detail.set_value
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
 #else
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <typename> struct is_set_error: ::std::false_type {};
+namespace beman::execution::detail {
+template <typename>
+struct is_set_error : ::std::false_type {};
 template <typename Error>
 struct is_set_error<::beman::execution::set_error_t(Error)> : ::std::true_type {};
 

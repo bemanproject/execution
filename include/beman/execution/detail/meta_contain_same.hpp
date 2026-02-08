@@ -5,19 +5,17 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_CONTAIN_SAME
 
 #include <beman/execution/detail/common.hpp>
-#ifdef BEMAN_HAS_IMPORT_STD
-import std;
-#else
-#endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.meta_contains
+import beman.execution.detail.meta_contains;
 #else
 #include <beman/execution/detail/meta_contains.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail::meta { template <typename, typename> struct contain_same_t;
+namespace beman::execution::detail::meta {
+template <typename, typename>
+struct contain_same_t;
 template <template <typename...> class L0, typename... M0, template <typename...> class L1, typename... M1>
 struct contain_same_t<L0<M0...>, L1<M1...>> {
     static constexpr bool value =

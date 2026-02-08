@@ -12,16 +12,19 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.counting_scope_base import beman.execution.detail.counting_scope_join import beman.execution.detail.sender
+import beman.execution.detail.counting_scope_base;
+import beman.execution.detail.counting_scope_join;
+import beman.execution.detail.sender;
 #else
 #include <beman/execution/detail/counting_scope_base.hpp>
 #include <beman/execution/detail/counting_scope_join.hpp>
 #include <beman/execution/detail/sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { class simple_counting_scope;
+namespace beman::execution {
+class simple_counting_scope;
 }
 
 // ----------------------------------------------------------------------------

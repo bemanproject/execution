@@ -12,15 +12,19 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.immovable import beman.execution.detail.make_sender
+import beman.execution.detail.immovable;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.make_sender;
 #else
 #include <beman/execution/detail/immovable.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { struct notify_t;
+namespace beman::execution::detail {
+struct notify_t;
 class notifier : ::beman::execution::detail::immovable {
   public:
     auto complete() -> void {

@@ -11,16 +11,20 @@ import std;
 #include <concepts>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.sender import beman.execution.detail.sender_decompose import beman.execution.detail.tag_of_t
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_decompose;
+import beman.execution.detail.tag_of_t;
 #else
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_decompose.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <typename Sender, typename Tag> concept sender_for = ::beman::execution::sender <Sender> && ::std::same_as <::beman::execution::tag_of_t<Sender>, Tag>;
+namespace beman::execution::detail {
+template <typename Sender, typename Tag>
+concept sender_for = ::beman::execution::sender<Sender> && ::std::same_as<::beman::execution::tag_of_t<Sender>, Tag>;
 }
 
 // ----------------------------------------------------------------------------

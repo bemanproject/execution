@@ -11,17 +11,20 @@ import std;
 #include <concepts>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.check_type_alias_exist
+import beman.execution.detail.check_type_alias_exist;
 #else
 #include <beman/execution/detail/check_type_alias_exist.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { template <typename Token> concept stoppable_token = requires(const Token& token) { typename ::beman::execution::detail::check_type_alias_exist <Token::template callback_type>;
-{ token.stop_requested() } noexcept -> ::std::same_as<bool>;
-{ token.stop_possible() } noexcept -> ::std::same_as<bool>;
-{ Token(token) } noexcept;
+namespace beman::execution {
+template <typename Token>
+concept stoppable_token = requires(const Token& token) {
+    typename ::beman::execution::detail::check_type_alias_exist<Token::template callback_type>;
+    { token.stop_requested() } noexcept -> ::std::same_as<bool>;
+    { token.stop_possible() } noexcept -> ::std::same_as<bool>;
+    { Token(token) } noexcept;
 } && ::std::copyable<Token> && ::std::equality_comparable<Token> && ::std::swappable<Token>;
 } // namespace beman::execution
 

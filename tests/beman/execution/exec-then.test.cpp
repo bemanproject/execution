@@ -245,7 +245,8 @@ auto test_then_env() -> void {
     }
     {
         int  value{0};
-        auto state{test_std::connect(test_std::then(test_std::read_env(get_value_t{}), [&value](int v) { value = v; }),
+        auto state{test_std::connect(test_std::then(test_std::read_env(get_value_t{}), [&value](int v) {
+            value = v; }),
                                      receiver{})};
         ASSERT(value == 0);
         test_std::start(state);

@@ -11,7 +11,24 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.continues_on import beman.execution.detail.default_domain import beman.execution.detail.forward_like import beman.execution.detail.fwd_env import beman.execution.detail.get_domain import beman.execution.detail.get_domain_early import beman.execution.detail.join_env import beman.execution.detail.make_sender import beman.execution.detail.product_type import beman.execution.detail.query_with_default import beman.execution.detail.sched_env import beman.execution.detail.scheduler import beman.execution.detail.sender import beman.execution.detail.sender_adaptor_closure import beman.execution.detail.sender_for import beman.execution.detail.starts_on import beman.execution.detail.transform_sender import beman.execution.detail.write_env
+import beman.execution.detail.continues_on;
+import beman.execution.detail.default_domain;
+import beman.execution.detail.forward_like;
+import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_domain;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.join_env;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.product_type;
+import beman.execution.detail.query_with_default;
+import beman.execution.detail.sched_env;
+import beman.execution.detail.scheduler;
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.sender_for;
+import beman.execution.detail.starts_on;
+import beman.execution.detail.transform_sender;
+import beman.execution.detail.write_env;
 #else
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/default_domain.hpp>
@@ -33,19 +50,23 @@ import beman.execution.detail.continues_on import beman.execution.detail.default
 #include <beman/execution/detail/write_env.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { struct on_t: ::beman::execution::sender_adaptor_closure <on_t> { template <::beman::execution::detail::sender_for<on_t> OutSndr, typename Env> auto transform_env(OutSndr && out_sndr, Env && env) const->decltype(auto) { auto && data{out_sndr.template get <1>() };
+namespace beman::execution::detail {
+struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
+    template <::beman::execution::detail::sender_for<on_t> OutSndr, typename Env>
+    auto transform_env(OutSndr&& out_sndr, Env&& env) const -> decltype(auto) {
+        auto&& data{out_sndr.template get<1>()};
 
-if constexpr (::beman::execution::scheduler<decltype(data)>)
-    return ::beman::execution::detail::join_env(
-        ::beman::execution::detail::sched_env(::beman::execution::detail::forward_like<OutSndr>(data)
+        if constexpr (::beman::execution::scheduler<decltype(data)>)
+            return ::beman::execution::detail::join_env(
+                ::beman::execution::detail::sched_env(::beman::execution::detail::forward_like<OutSndr>(data)
 
-                                                  ),
-        ::beman::execution::detail::fwd_env(::std::forward<Env>(env)));
-else
-    return std::forward<Env>(env);
-}
+                                                          ),
+                ::beman::execution::detail::fwd_env(::std::forward<Env>(env)));
+        else
+            return std::forward<Env>(env);
+    }
 
     template <typename>
     struct env_needs_get_scheduler {
@@ -83,12 +104,11 @@ else
             if constexpr (::std::same_as<not_a_scheduler, decltype(orig_sch)>) {
                 return env_needs_get_scheduler<Env>{};
             } else {
-                return ::beman::execution::detail::write_env(
+                return ::beman::execution::write_env(
                     ::beman::execution::continues_on(
                         ::beman::execution::detail::forward_like<OutSndr>(closure)(::beman::execution::continues_on(
-                            ::beman::execution::detail::write_env(
-                                ::beman::execution::detail::forward_like<OutSndr>(child),
-                                ::beman::execution::detail::sched_env(orig_sch)),
+                            ::beman::execution::write_env(::beman::execution::detail::forward_like<OutSndr>(child),
+                                                          ::beman::execution::detail::sched_env(orig_sch)),
                             sch)),
                         orig_sch),
                     ::beman::execution::detail::sched_env(env));

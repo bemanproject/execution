@@ -5,7 +5,8 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
-import beman.execution.detail;
+import beman.execution.detail.stop_callback_for_t;
+import beman.execution.detail.stoppable_source;
 #else
 #include <beman/execution/stop_token.hpp>
 #endif

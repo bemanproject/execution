@@ -8,4 +8,5 @@ export module beman.execution.detail.forwarding_query;
 
 namespace beman::execution {
 export using beman::execution::forwarding_query;
+export using beman::execution::forwarding_query_t;
 } // namespace beman::execution
