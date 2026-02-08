@@ -11,7 +11,10 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.call_result_t import beman.execution.detail.impls_for import beman.execution.detail.sender_decompose import beman.execution.detail.tag_of_t
+import beman.execution.detail.call_result_t;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.sender_decompose;
+import beman.execution.detail.tag_of_t;
 #else
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/impls_for.hpp>
@@ -19,10 +22,14 @@ import beman.execution.detail.call_result_t import beman.execution.detail.impls_
 #include <beman/execution/detail/tag_of_t.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <typename Sender, typename Receiver> using state_type = ::std::decay_t <::beman::execution::detail::call_result_t<
-    decltype(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>> ::get_state), Sender, Receiver &>>;
+namespace beman::execution::detail {
+template <typename Sender, typename Receiver>
+using state_type = ::std::decay_t<::beman::execution::detail::call_result_t<
+    decltype(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_state),
+    Sender,
+    Receiver&>>;
 }
 
 // ----------------------------------------------------------------------------

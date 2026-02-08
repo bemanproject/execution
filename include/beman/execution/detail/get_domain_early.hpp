@@ -5,12 +5,11 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DOMAIN_EARLY
 
 #include <beman/execution/detail/common.hpp>
-#ifdef BEMAN_HAS_IMPORT_STD
-import std;
-#else
-#endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.completion_domain import beman.execution.detail.default_domain import beman.execution.detail.get_domain import beman.execution.detail.get_env
+import beman.execution.detail.completion_domain;
+import beman.execution.detail.default_domain;
+import beman.execution.detail.get_domain;
+import beman.execution.detail.get_env;
 #else
 #include <beman/execution/detail/completion_domain.hpp>
 #include <beman/execution/detail/default_domain.hpp>
@@ -18,10 +17,12 @@ import beman.execution.detail.completion_domain import beman.execution.detail.de
 #include <beman/execution/detail/get_env.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <typename Sender> constexpr auto get_domain_early(const Sender& sender) noexcept { if constexpr (requires { ::beman::execution::get_domain(::beman::execution::get_env(sender));
-})
+namespace beman::execution::detail {
+template <typename Sender>
+constexpr auto get_domain_early(const Sender& sender) noexcept {
+    if constexpr (requires { ::beman::execution::get_domain(::beman::execution::get_env(sender)); })
         return decltype(::beman::execution::get_domain(::beman::execution::get_env(sender))){};
     else if constexpr (requires { ::beman::execution::detail::completion_domain(sender); })
         return decltype(::beman::execution::detail::completion_domain(sender)){};

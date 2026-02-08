@@ -13,7 +13,21 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.connect import beman.execution.detail.get_completion_signatures import beman.execution.detail.get_env import beman.execution.detail.get_stop_token import beman.execution.detail.inplace_stop_source import beman.execution.detail.operation_state import beman.execution.detail.receiver import beman.execution.detail.sender import beman.execution.detail.set_error import beman.execution.detail.set_stopped import beman.execution.detail.set_value import beman.execution.detail.start import beman.execution.detail.stop_callback_for_t import beman.execution.detail.stoppable_token import beman.execution.detail.unstoppable_token
+import beman.execution.detail.connect;
+import beman.execution.detail.get_completion_signatures;
+import beman.execution.detail.get_env;
+import beman.execution.detail.get_stop_token;
+import beman.execution.detail.inplace_stop_source;
+import beman.execution.detail.operation_state;
+import beman.execution.detail.receiver;
+import beman.execution.detail.sender;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.start;
+import beman.execution.detail.stop_callback_for_t;
+import beman.execution.detail.stoppable_token;
+import beman.execution.detail.unstoppable_token;
 #else
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
@@ -32,12 +46,15 @@ import beman.execution.detail.connect import beman.execution.detail.get_completi
 #include <beman/execution/detail/unstoppable_token.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { inline constexpr struct stop_when_t { template <::beman::execution::sender Sndr, ::beman::execution::stoppable_token Tok> struct sender;
+namespace beman::execution::detail {
+inline constexpr struct stop_when_t {
+    template <::beman::execution::sender Sndr, ::beman::execution::stoppable_token Tok>
+    struct sender;
 
-template <::beman::execution::sender Sndr, ::beman::execution::stoppable_token Tok>
-auto operator()(Sndr&& sndr, Tok&& tok) const noexcept;
+    template <::beman::execution::sender Sndr, ::beman::execution::stoppable_token Tok>
+    auto operator()(Sndr&& sndr, Tok&& tok) const noexcept;
 } stop_when{};
 } // namespace beman::execution::detail
 

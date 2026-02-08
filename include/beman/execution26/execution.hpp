@@ -11,8 +11,6 @@
 namespace beman::execution26::detail {
 using ::beman::execution::detail::make_env;
 using ::beman::execution::detail::sender_adaptor;
-using ::beman::execution::detail::write_env;
-using ::beman::execution::detail::write_env_t;
 } // namespace beman::execution26::detail
 
 namespace beman::execution26 {

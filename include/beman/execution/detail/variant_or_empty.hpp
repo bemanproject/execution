@@ -12,14 +12,16 @@ import std;
 #include <variant>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.meta_unique
+import beman.execution.detail.meta_unique;
 #else
 #include <beman/execution/detail/meta_unique.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { struct empty_variant { empty_variant() = delete;
+namespace beman::execution::detail {
+struct empty_variant {
+    empty_variant() = delete;
 };
 
 template <typename... T>

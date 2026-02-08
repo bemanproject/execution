@@ -13,14 +13,15 @@ import std;
 #include <optional>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.intrusive_stack
+import beman.execution.detail.intrusive_stack;
 #else
 #include <beman/execution/detail/intrusive_stack.hpp>
 #endif
 
-    namespace beman::execution::detail {
+namespace beman::execution::detail {
 
-        template <auto Next> class atomic_intrusive_stack;
+template <auto Next>
+class atomic_intrusive_stack;
 
 //! @brief  This data structure is an intrusive stack that can be used in a lock-free manner.
 //!

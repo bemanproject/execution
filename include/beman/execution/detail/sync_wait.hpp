@@ -14,7 +14,19 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.apply_sender import beman.execution.detail.as_except_ptr import beman.execution.detail.connect import beman.execution.detail.decayed_tuple import beman.execution.detail.get_delegation_scheduler import beman.execution.detail.get_domain_early import beman.execution.detail.get_scheduler import beman.execution.detail.receiver import beman.execution.detail.run_loop import beman.execution.detail.sender_in import beman.execution.detail.sender_in import beman.execution.detail.start import beman.execution.detail.value_types_of_t
+import beman.execution.detail.apply_sender;
+import beman.execution.detail.as_except_ptr;
+import beman.execution.detail.connect;
+import beman.execution.detail.decayed_tuple;
+import beman.execution.detail.get_delegation_scheduler;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.get_scheduler;
+import beman.execution.detail.receiver;
+import beman.execution.detail.run_loop;
+import beman.execution.detail.sender_in;
+import beman.execution.detail.sender_in;
+import beman.execution.detail.start;
+import beman.execution.detail.value_types_of_t;
 #else
 #include <beman/execution/detail/apply_sender.hpp>
 #include <beman/execution/detail/as_except_ptr.hpp>
@@ -31,13 +43,14 @@ import beman.execution.detail.apply_sender import beman.execution.detail.as_exce
 #include <beman/execution/detail/value_types_of_t.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { struct sync_wait_env { // dk:TODO detail export
-                                                                ::beman::execution::run_loop * loop{};
+namespace beman::execution::detail {
+struct sync_wait_env { // dk:TODO detail export
+    ::beman::execution::run_loop* loop{};
 
-auto query(::beman::execution::get_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
-auto query(::beman::execution::get_delegation_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
+    auto query(::beman::execution::get_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
+    auto query(::beman::execution::get_delegation_scheduler_t) const noexcept { return this->loop->get_scheduler(); }
 };
 
 template <::beman::execution::sender_in<::beman::execution::detail::sync_wait_env> Sender> // dk:TODO detail export

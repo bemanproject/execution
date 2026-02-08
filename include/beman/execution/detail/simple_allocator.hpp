@@ -10,6 +10,7 @@ import std;
 #else
 #include <concepts>
 #include <cstddef>
+#include <type_traits>
 #endif
 
 // ----------------------------------------------------------------------------

@@ -12,7 +12,11 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.get_allocator import beman.execution.detail.get_env import beman.execution.detail.join_env import beman.execution.detail.prop import beman.execution.detail.sender
+import beman.execution.detail.get_allocator;
+import beman.execution.detail.get_env;
+import beman.execution.detail.join_env;
+import beman.execution.detail.prop;
+import beman.execution.detail.sender;
 #else
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -21,21 +25,21 @@ import beman.execution.detail.get_allocator import beman.execution.detail.get_en
 #include <beman/execution/detail/sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <::beman::execution::sender Sndr, typename Ev> auto spawn_get_allocator(const Sndr& sndr, const Ev& ev) { if constexpr (requires { ::beman::execution::get_allocator(ev);
-}) {
+namespace beman::execution::detail {
+template <::beman::execution::sender Sndr, typename Ev>
+auto spawn_get_allocator(const Sndr& sndr, const Ev& ev) {
+    if constexpr (requires { ::beman::execution::get_allocator(ev); }) {
         return ::std::pair(::beman::execution::get_allocator(ev), ev);
+    } else if constexpr (requires { ::beman::execution::get_allocator(::beman::execution::get_env(sndr)); }) {
+        auto alloc{::beman::execution::get_allocator(::beman::execution::get_env(sndr))};
+        return ::std::pair(alloc,
+                           ::beman::execution::detail::join_env(
+                               ::beman::execution::prop(::beman::execution::get_allocator, alloc), ev));
+    } else {
+        return ::std::pair(::std::allocator<void>{}, ev);
     }
-else if constexpr (requires { ::beman::execution::get_allocator(::beman::execution::get_env(sndr)); }) {
-    auto alloc{::beman::execution::get_allocator(::beman::execution::get_env(sndr))};
-    return ::std::pair(
-        alloc,
-        ::beman::execution::detail::join_env(::beman::execution::prop(::beman::execution::get_allocator, alloc), ev));
-}
-else {
-    return ::std::pair(::std::allocator<void>{}, ev);
-}
 }
 
 } // namespace beman::execution::detail

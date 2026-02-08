@@ -16,14 +16,15 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.nostopstate
+import beman.execution.detail.nostopstate;
 #else
 #include <beman/execution/detail/nostopstate.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { class stop_token;
+namespace beman::execution {
+class stop_token;
 class stop_source;
 template <typename CallbackFun>
 class stop_callback;

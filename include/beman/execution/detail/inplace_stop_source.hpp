@@ -15,14 +15,15 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.immovable
+import beman.execution.detail.immovable;
 #else
 #include <beman/execution/detail/immovable.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { class inplace_stop_token;
+namespace beman::execution {
+class inplace_stop_token;
 class inplace_stop_source;
 template <typename CallbackFun>
 class inplace_stop_callback;

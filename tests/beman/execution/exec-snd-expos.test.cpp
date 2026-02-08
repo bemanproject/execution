@@ -1250,7 +1250,7 @@ auto test_write_env() -> void {
     using base_property = property<write_env_env::base>;
     ASSERT(base_property::data{42} == test_std::get_env(plain_op.receiver).query(base_property{}));
 
-    auto we_sender{test_detail::write_env(write_env_sender{}, write_env_added{43})};
+    auto we_sender{test_std::write_env(write_env_sender{}, write_env_added{43})};
 
     static_assert(test_std::sender_in<write_env_sender>);
     static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(bool)>,
@@ -1267,7 +1267,7 @@ auto test_write_env() -> void {
                                decltype(test_std::get_completion_signatures(we_sender, write_env_env{}))>);
 
     static_assert(test_std::sender<decltype(we_sender)>);
-    static_assert(std::same_as<test_detail::write_env_t, test_std::tag_of_t<decltype(we_sender)>>);
+    static_assert(std::same_as<test_std::write_env_t, test_std::tag_of_t<decltype(we_sender)>>);
 
     bool has_both_properties{false};
     ASSERT(not has_both_properties);

@@ -5,12 +5,31 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
 
 #include <beman/execution/detail/common.hpp>
-#ifdef BEMAN_HAS_IMPORT_STD
-import std;
-#else
-#endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.as_tuple import beman.execution.detail.completion_signatures_of_t import beman.execution.detail.connect_result_t import beman.execution.detail.default_impls import beman.execution.detail.env import beman.execution.detail.get_allocator import beman.execution.detail.get_env import beman.execution.detail.impls_for import beman.execution.detail.inplace_stop_source import beman.execution.detail.join_env import beman.execution.detail.make_sender import beman.execution.detail.meta_combine import beman.execution.detail.meta_unique import beman.execution.detail.prop import beman.execution.detail.receiver import beman.execution.detail.scope_token import beman.execution.detail.sender import beman.execution.detail.set_error import beman.execution.detail.set_stopped import beman.execution.detail.set_value import beman.execution.detail.spawn_get_allocator import beman.execution.detail.start import beman.execution.detail.stop_when import beman.execution.detail.write_env
+import beman.execution.detail.as_tuple;
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.connect_result_t;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.env;
+import beman.execution.detail.get_allocator;
+import beman.execution.detail.get_env;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.inplace_stop_source;
+import beman.execution.detail.join_env;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.meta_combine;
+import beman.execution.detail.meta_unique;
+import beman.execution.detail.prop;
+import beman.execution.detail.receiver;
+import beman.execution.detail.scope_token;
+import beman.execution.detail.sender;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.spawn_get_allocator;
+import beman.execution.detail.start;
+import beman.execution.detail.stop_when;
+import beman.execution.detail.write_env;
 #else
 #include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
@@ -47,7 +66,7 @@ import beman.execution.detail.as_tuple import beman.execution.detail.completion_
 #include <variant>
 
 #ifdef BEMAN_HAS_MODULES
-    import beman.execution.detail.queryable;
+import beman.execution.detail.queryable;
 #else
 #include <beman/execution/detail/queryable.hpp>
 #endif

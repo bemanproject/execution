@@ -12,3 +12,4 @@
 #endif // #if defined(__clang__)
 #undef BEMAN_EXECUTION_DIAGNOSTIC_PUSHED
 #endif // #ifdef BEMAN_EXECUTION_DIAGNOSTIC_PUSHED
+#include <beman/execution/detail/common.hpp>

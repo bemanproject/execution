@@ -5,7 +5,7 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
-import beman.execution.detail;
+import beman.execution.detail.get_domain_late;
 #else
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/get_domain_late.hpp>

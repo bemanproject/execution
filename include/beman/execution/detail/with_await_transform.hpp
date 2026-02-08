@@ -12,17 +12,21 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.has_as_awaitable
+import beman.execution.detail.has_as_awaitable;
 #else
 #include <beman/execution/detail/has_as_awaitable.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail {
-        // NOLINTBEGIN(bugprone-crtp-constructor-accessibility)
-        template <typename Derived> struct with_await_transform { template <typename T> auto await_transform(T && obj) noexcept->T && { return ::std::forward <T>(obj);
-}
+namespace beman::execution::detail {
+// NOLINTBEGIN(bugprone-crtp-constructor-accessibility)
+template <typename Derived>
+struct with_await_transform {
+    template <typename T>
+    auto await_transform(T&& obj) noexcept -> T&& {
+        return ::std::forward<T>(obj);
+    }
 
     template <::beman::execution::detail::has_as_awaitable<Derived> T>
     auto await_transform(T&& obj) noexcept(noexcept(::std::forward<T>(obj).as_awaitable(::std::declval<Derived&>())))

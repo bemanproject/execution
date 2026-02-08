@@ -11,14 +11,16 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.completion_signatures
+import beman.execution.detail.completion_signatures;
 #else
 #include <beman/execution/detail/completion_signatures.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <typename> struct valid_completion_signatures_helper: ::std::false_type {};
+namespace beman::execution::detail {
+template <typename>
+struct valid_completion_signatures_helper : ::std::false_type {};
 template <typename... Sigs>
 struct valid_completion_signatures_helper<::beman::execution::completion_signatures<Sigs...>> : ::std::true_type {};
 

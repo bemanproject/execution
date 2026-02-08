@@ -3,6 +3,7 @@
 
 #include <concepts>
 #include <exception>
+#include <tuple>
 #include <type_traits>
 #include <variant>
 #include <test/execution.hpp>

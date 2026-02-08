@@ -12,7 +12,14 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.forward_like import beman.execution.detail.get_domain_early import beman.execution.detail.into_variant import beman.execution.detail.make_sender import beman.execution.detail.sender import beman.execution.detail.sender_for import beman.execution.detail.transform_sender import beman.execution.detail.when_all
+import beman.execution.detail.forward_like;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.into_variant;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_for;
+import beman.execution.detail.transform_sender;
+import beman.execution.detail.when_all;
 #else
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
@@ -24,12 +31,17 @@ import beman.execution.detail.forward_like import beman.execution.detail.get_dom
 #include <beman/execution/detail/when_all.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { struct when_all_with_variant_t {
-        // template <::beman::execution::detail::sender_for<when_all_with_variant_t> Sender>
-        template <::beman::execution::sender Sender> auto transform_sender(Sender && sender, auto &&...) const noexcept { return ::std::forward <Sender>(sender).apply([](auto&&, auto&&, auto&&...child) { return ::beman::execution::when_all(::beman::execution::into_variant(::beman::execution::detail::forward_like <Sender>(child))...);
-});
+namespace beman::execution::detail {
+struct when_all_with_variant_t {
+    // template <::beman::execution::detail::sender_for<when_all_with_variant_t> Sender>
+    template <::beman::execution::sender Sender>
+    auto transform_sender(Sender&& sender, auto&&...) const noexcept {
+        return ::std::forward<Sender>(sender).apply([](auto&&, auto&&, auto&&... child) {
+            return ::beman::execution::when_all(
+                ::beman::execution::into_variant(::beman::execution::detail::forward_like<Sender>(child))...);
+        });
     }
 
     template <::beman::execution::sender... Sender>

@@ -12,17 +12,19 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.env import beman.execution.detail.queryable
+import beman.execution.detail.env;
+import beman.execution.detail.queryable;
 #else
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { struct get_env_t { template <typename Object>
-                                                        requires(not requires(::std::add_const_t <::std::remove_cvref_t<Object>> & object) { object.get_env();
-} ||
+namespace beman::execution {
+struct get_env_t {
+    template <typename Object>
+        requires(not requires(::std::add_const_t<::std::remove_cvref_t<Object>>& object) { object.get_env(); } ||
                  ::beman::execution::detail::queryable<
                      std::remove_cvref_t<decltype(::std::declval<const ::std::remove_cvref_t<Object>&>().get_env())>>)
     auto operator()(Object&& object) const noexcept -> decltype(auto) {
@@ -35,7 +37,7 @@ import beman.execution.detail.env import beman.execution.detail.queryable
         } else {
             return ::beman::execution::env<>{};
         }
-}
+    }
 };
 
 inline constexpr get_env_t get_env{};

@@ -13,14 +13,15 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.sender
+import beman.execution.detail.sender;
 #else
 #include <beman/execution/detail/sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail::pipeable { struct sender_adaptor_closure_base {};
+namespace beman::execution::detail::pipeable {
+struct sender_adaptor_closure_base {};
 } // namespace beman::execution::detail::pipeable
 
 namespace beman::execution {

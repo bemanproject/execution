@@ -12,16 +12,19 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.basic_sender import beman.execution.detail.movable_value import beman.execution.detail.sender
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.movable_value;
+import beman.execution.detail.sender;
 #else
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { struct make_sender_empty {};
+namespace beman::execution::detail {
+struct make_sender_empty {};
 
 template <typename Tag, typename Data = ::beman::execution::detail::make_sender_empty, typename... Child>
     requires ::std::semiregular<Tag> && ::beman::execution::detail::movable_value<Data> &&

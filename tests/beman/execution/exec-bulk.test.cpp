@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <cstdlib>
+#include <tuple>
 #include <vector>
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES

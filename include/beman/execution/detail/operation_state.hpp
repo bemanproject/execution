@@ -12,14 +12,15 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.start
+import beman.execution.detail.start;
 #else
 #include <beman/execution/detail/start.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { struct operation_state_t {};
+namespace beman::execution {
+struct operation_state_t {};
 
 template <typename State>
 concept operation_state =

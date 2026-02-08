@@ -6,6 +6,6 @@ module;
 
 export module beman.execution.detail.transform_sender;
 
-namespace beman::execution::detail {
-export using beman::execution::detail::transform_sender;
-} // namespace beman::execution::detail
+namespace beman::execution {
+export using beman::execution::transform_sender;
+} // namespace beman::execution

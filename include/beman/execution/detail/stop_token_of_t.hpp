@@ -11,14 +11,16 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.get_stop_token
+import beman.execution.detail.get_stop_token;
 #else
 #include <beman/execution/detail/get_stop_token.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { template <typename T> using stop_token_of_t = ::std::remove_cvref_t <decltype(::beman::execution::get_stop_token(::std::declval<T>()))>;
+namespace beman::execution {
+template <typename T>
+using stop_token_of_t = ::std::remove_cvref_t<decltype(::beman::execution::get_stop_token(::std::declval<T>()))>;
 }
 
 // ----------------------------------------------------------------------------

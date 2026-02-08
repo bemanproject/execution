@@ -11,15 +11,18 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.callable import beman.execution.detail.non_assignable
+import beman.execution.detail.callable;
+import beman.execution.detail.non_assignable;
 #else
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/non_assignable.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <typename> struct prop_like;
+namespace beman::execution::detail {
+template <typename>
+struct prop_like;
 }
 
 namespace beman::execution {

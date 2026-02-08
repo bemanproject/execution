@@ -12,16 +12,19 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.sender
+import beman.execution.detail.sender;
 #else
 #include <beman/execution/detail/sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { struct schedule_t { template <typename Scheduler>
-                                                         requires(not requires(Scheduler && sched) { { ::std::forward <Scheduler>(sched).schedule() }->::beman::execution::sender;
-})
+namespace beman::execution {
+struct schedule_t {
+    template <typename Scheduler>
+        requires(not requires(Scheduler&& sched) {
+                    { ::std::forward<Scheduler>(sched).schedule() } -> ::beman::execution::sender;
+                })
     auto operator()(Scheduler&& sched) const =
         BEMAN_EXECUTION_DELETE("the scheduler needs a schedule() member returning a sender");
 

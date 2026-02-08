@@ -13,7 +13,26 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.env import beman.execution.detail.forward_like import beman.execution.detail.fwd_env import beman.execution.detail.get_domain_early import beman.execution.detail.get_scheduler import beman.execution.detail.get_stop_token import beman.execution.detail.join_env import beman.execution.detail.make_sender import beman.execution.detail.never_stop_token import beman.execution.detail.prop import beman.execution.detail.schedule_from import beman.execution.detail.scheduler import beman.execution.detail.sender import beman.execution.detail.sender_adaptor import beman.execution.detail.sender_adaptor_closure import beman.execution.detail.sender_for import beman.execution.detail.sender_has_affine_on import beman.execution.detail.tag_of_t import beman.execution.detail.transform_sender import beman.execution.detail.write_env
+import beman.execution.detail.env;
+import beman.execution.detail.forward_like;
+import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_stop_token;
+import beman.execution.detail.join_env;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.never_stop_token;
+import beman.execution.detail.prop;
+import beman.execution.detail.schedule_from;
+import beman.execution.detail.scheduler;
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_adaptor;
+import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.sender_for;
+import beman.execution.detail.sender_has_affine_on;
+import beman.execution.detail.tag_of_t;
+import beman.execution.detail.transform_sender;
+import beman.execution.detail.write_env;
 #else
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forward_like.hpp>
@@ -37,12 +56,15 @@ import beman.execution.detail.env import beman.execution.detail.forward_like imp
 #include <beman/execution/detail/write_env.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <typename Ev> struct affine_on_env { Ev ev_;
-auto query(const ::beman::execution::get_stop_token_t&) const noexcept -> ::beman::execution::never_stop_token {
-    return ::beman::execution::never_stop_token();
-}
+namespace beman::execution::detail {
+template <typename Ev>
+struct affine_on_env {
+    Ev   ev_;
+    auto query(const ::beman::execution::get_stop_token_t&) const noexcept -> ::beman::execution::never_stop_token {
+        return ::beman::execution::never_stop_token();
+    }
     template <typename Q>
     auto query(const Q& q) const noexcept -> decltype(q(this->ev_)) {
         return q(this->ev_);

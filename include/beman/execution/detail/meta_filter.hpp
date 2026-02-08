@@ -11,14 +11,16 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.meta_prepend
+import beman.execution.detail.meta_prepend;
 #else
 #include <beman/execution/detail/meta_prepend.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail::meta::detail { template <template <typename> class, typename> struct filter;
+namespace beman::execution::detail::meta::detail {
+template <template <typename> class, typename>
+struct filter;
 
 template <template <typename, typename> class, typename, typename>
 struct filter_tag;

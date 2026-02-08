@@ -5,19 +5,17 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_IMPLS_FOR
 
 #include <beman/execution/detail/common.hpp>
-#ifdef BEMAN_HAS_IMPORT_STD
-import std;
-#else
-#endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.default_impls
+import beman.execution.detail.default_impls;
 #else
 #include <beman/execution/detail/default_impls.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <typename Tag> struct impls_for: ::beman::execution::detail::default_impls {};
+namespace beman::execution::detail {
+template <typename Tag>
+struct impls_for : ::beman::execution::detail::default_impls {};
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------

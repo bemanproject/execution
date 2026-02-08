@@ -12,16 +12,19 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.forwarding_query
+import beman.execution.detail.forwarding_query;
 #else
 #include <beman/execution/detail/forwarding_query.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { struct get_domain_t { template <typename Object>
-                                                           requires(not requires(Object && object, const get_domain_t& tag) { ::std::forward <Object>(object).query(tag);
-}) && (not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
+namespace beman::execution {
+struct get_domain_t {
+    template <typename Object>
+        requires(not requires(Object&& object, const get_domain_t& tag) {
+                    ::std::forward<Object>(object).query(tag);
+                }) && (not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
     auto operator()(Object&&) const noexcept = BEMAN_EXECUTION_DELETE("object needs a query(get_domain_t) overload");
     template <typename Object>
         requires(not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })

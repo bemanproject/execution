@@ -8,12 +8,20 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
-#include <type_traits>
 #include <optional>
+#include <type_traits>
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.connect import beman.execution.detail.default_impls import beman.execution.detail.get_domain_early import beman.execution.detail.impls_for import beman.execution.detail.make_sender import beman.execution.detail.nothrow_callable import beman.execution.detail.scope_token import beman.execution.detail.sender import beman.execution.detail.transform_sender
+import beman.execution.detail.connect;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.nothrow_callable;
+import beman.execution.detail.scope_token;
+import beman.execution.detail.sender;
+import beman.execution.detail.transform_sender;
 #else
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -26,52 +34,53 @@ import beman.execution.detail.connect import beman.execution.detail.default_impl
 #include <beman/execution/detail/transform_sender.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { template <::beman::execution::scope_token Token,
-               ::beman::execution::sender      Sender> //-dk:TODO detail export
-                                         struct associate_data { using wrap_sender = ::std::remove_cvref_t <decltype(::std::declval<Token&>().wrap(::std::declval <Sender>()))>;
+namespace beman::execution::detail {
+template <::beman::execution::scope_token Token,
+          ::beman::execution::sender      Sender> //-dk:TODO detail export
+struct associate_data {
+    using wrap_sender = ::std::remove_cvref_t<decltype(::std::declval<Token&>().wrap(::std::declval<Sender>()))>;
 
-explicit associate_data(Token t, Sender&& s) : token(t), sender(this->token.wrap(::std::forward<Sender>(s))) {
-    if (!token.try_associate()) {
-        this->sender.reset();
+    explicit associate_data(Token t, Sender&& s) : token(t), sender(this->token.wrap(::std::forward<Sender>(s))) {
+        if (!token.try_associate()) {
+            this->sender.reset();
+        }
     }
-}
-associate_data(const associate_data& other) noexcept(::std::is_nothrow_copy_constructible_v<wrap_sender> &&
-                                                     noexcept(token.try_associate()))
-    : token(other.token), sender() {
-    if (other.sender && this->token.try_associate()) {
-        try {
-            this->sender.emplace(*other.sender);
-        } catch (...) {
+    associate_data(const associate_data& other) noexcept(::std::is_nothrow_copy_constructible_v<wrap_sender> &&
+                                                         noexcept(token.try_associate()))
+        : token(other.token), sender() {
+        if (other.sender && this->token.try_associate()) {
+            try {
+                this->sender.emplace(*other.sender);
+            } catch (...) {
+                this->token.disassociate();
+            }
+        }
+    }
+    associate_data(associate_data&& other) noexcept(::std::is_nothrow_move_constructible_v<wrap_sender>)
+        : token(other.token), sender(::std::move(other.sender)) {
+        other.sender.reset();
+    }
+    auto operator=(const associate_data&) -> associate_data& = delete;
+    auto operator=(associate_data&&) -> associate_data&      = delete;
+    ~associate_data() {
+        if (this->sender) {
+            this->sender.reset();
             this->token.disassociate();
         }
     }
-}
-associate_data(associate_data&& other) noexcept(::std::is_nothrow_move_constructible_v<wrap_sender>)
-    : token(other.token), sender(::std::move(other.sender)) {
-    other.sender.reset();
-}
-auto operator=(const associate_data&) -> associate_data& = delete;
-auto operator=(associate_data&&) -> associate_data&      = delete;
-~associate_data() {
-    if (this->sender) {
-        this->sender.reset();
-        this->token.disassociate();
+
+    auto release() -> ::std::optional<::std::pair<Token, wrap_sender>> {
+        return this->sender ? (std::unique_ptr<std::optional<wrap_sender>, decltype([](auto* opt) { opt->reset(); })>(
+                                   &this->sender),
+                               ::std::optional{::std::pair{::std::move(this->token), ::std::move(*this->sender)}})
+                            : ::std::optional<::std::pair<Token, wrap_sender>>{};
     }
-}
 
-auto release() -> ::std::optional<::std::pair<Token, wrap_sender>> {
-    return this->sender ? (std::unique_ptr<std::optional<wrap_sender>, decltype([](auto* opt) { opt->reset(); })>(
-                               &this->sender),
-                           ::std::optional{::std::pair{::std::move(this->token), ::std::move(*this->sender)}})
-                        : ::std::optional<::std::pair<Token, wrap_sender>>{};
-}
-
-Token                        token;
-::std::optional<wrap_sender> sender;
-}
-;
+    Token                        token;
+    ::std::optional<wrap_sender> sender;
+};
 template <::beman::execution::scope_token Token, ::beman::execution::sender Sender>
 associate_data(Token, Sender&&) -> associate_data<Token, Sender>;
 

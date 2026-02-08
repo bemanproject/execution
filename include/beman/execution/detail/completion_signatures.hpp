@@ -12,15 +12,15 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.completion_signature
+import beman.execution.detail.completion_signature;
 #else
 #include <beman/execution/detail/completion_signature.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution {
-        /*!
+namespace beman::execution {
+/*!
  * \brief Class template used to a specify a list of completion signatures
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  *
@@ -29,7 +29,8 @@ import beman.execution.detail.completion_signature
  * any specializaion are empty. Objects may be created to return them from
  * functions used for type computations like get_completion_signatures(sender, env).
  */
-        template <::beman::execution::detail::completion_signature...> struct completion_signatures {};
+template <::beman::execution::detail::completion_signature...>
+struct completion_signatures {};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

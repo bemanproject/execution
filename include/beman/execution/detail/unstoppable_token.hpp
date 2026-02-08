@@ -11,16 +11,17 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.stoppable_source
+import beman.execution.detail.stoppable_source;
 #else
 #include <beman/execution/detail/stoppable_source.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution { template <typename Token> concept unstoppable_token = ::beman::execution::stoppable_token <Token> && requires() { requires ::std::bool_constant <not Token::stop_possible()> ::value;
-}
-;
+namespace beman::execution {
+template <typename Token>
+concept unstoppable_token = ::beman::execution::stoppable_token<Token> &&
+                            requires() { requires ::std::bool_constant<not Token::stop_possible()>::value; };
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

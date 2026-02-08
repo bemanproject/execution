@@ -14,14 +14,15 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.immovable
+import beman.execution.detail.immovable;
 #else
 #include <beman/execution/detail/immovable.hpp>
 #endif
 
-    // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-    namespace beman::execution::detail { class counting_scope_base;
+namespace beman::execution::detail {
+class counting_scope_base;
 }
 
 // ----------------------------------------------------------------------------

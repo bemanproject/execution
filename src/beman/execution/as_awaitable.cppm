@@ -8,4 +8,5 @@ export module beman.execution.detail.as_awaitable;
 
 namespace beman::execution {
 export using beman::execution::as_awaitable;
+export using beman::execution::as_awaitable_t;
 } // namespace beman::execution
