@@ -109,37 +109,34 @@ set(XX
     exec-just.test
     exec-spawn-future.test
     exec-snd-expos.test
-)
-
-set(xexecution_tests
-    notify.test
     exec-into-variant.test
+    exec-starts-on.test
+    exec-scope-counting.test
+    exec-scope-simple-counting.test
+    exec-with-awaitable-senders.test
+    issue-186.test
+    exec-spawn-future.test
+    exec-let.test
+    exec-schedule-from.test
     exec-affine-on.test
+    notify.test
+    exec-continues-on.test
     exec-bulk.test
     exec-on.test
     exec-split.test
-    exec-spawn-future.test
-    exec-snd-expos.test
     exec-spawn.test
-    exec-starts-on.test
     exec-stop-when.test
     exec-when-all.test
-    exec-scope-counting.test
-    exec-scope-simple-counting.test
-    exec-schedule-from.test
-    exec-with-awaitable-senders.test
-    issue-186.test
     issue-144.test
     issue-174.test
-    exec-let.test
     exec-sync-wait.test
     exec-then.test
     exec-just.test
-    exec-continues-on.test
     exec-read-env.test
 )
 
 set(execution_tests
+    exec-snd-expos.test
     exec-utils-cmplsigs.test
     exec-awaitable.test
     exec-connect.test
@@ -212,7 +209,7 @@ set(execution_tests
     thread.test
     utilities.test
 )
-#set(execution_tests exec-then.test)
+set(execution_tests exec-snd-expos.test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

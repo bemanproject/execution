@@ -12,8 +12,7 @@ export using beman::execution::into_variant_t;
 } // namespace beman::execution
 
 namespace beman::execution::detail {
-export BEMAN_SPECIALIZE_EXPORT
-struct impls_for<::beman::execution::detail::into_variant_t>;
+export BEMAN_SPECIALIZE_EXPORT struct impls_for<::beman::execution::detail::into_variant_t>;
 
 export template <typename Sender, typename State, typename Env>
 struct completion_signatures_for_impl<
