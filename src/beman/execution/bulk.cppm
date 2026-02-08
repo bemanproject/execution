@@ -12,8 +12,7 @@ export using beman::execution::bulk;
 } // namespace beman::execution
 
 namespace beman::execution::detail {
-export BEMAN_SPECIALIZE_EXPORT
-struct impls_for<bulk_t>;
+export BEMAN_SPECIALIZE_EXPORT struct impls_for<bulk_t>;
 
 export template <class Shape, class F, class Sender, class Env>
 struct completion_signatures_for_impl<

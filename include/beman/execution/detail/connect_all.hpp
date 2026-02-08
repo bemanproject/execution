@@ -34,18 +34,20 @@ import beman.execution.detail.sender_decompose;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-    template <typename T>
-    struct get_tuple_size_t {
-        static constexpr ::std::size_t value{std::tuple_size_v<std::remove_cvref<T>>};
-    };
-    template <typename T>
-        requires requires { std::remove_cvref<T>::size; }
-    struct get_tuple_size_t<T> {
-        static constexpr ::std::size_t value{std::remove_cvref<T>::size};
-    };
-    template <typename T>
-        requires requires { get_tuple_size_t<T>::value; }
-    inline constexpr ::std::size_t get_tuple_size_v{get_tuple_size_t<T>::value};
+template <typename T>
+inline constexpr ::std::size_t get_tuple_size() {
+#if 0
+    if constexpr (requires { std::remove_cvref<T>::size(); })
+        return std::remove_cvref_t<T>::size();
+    else
+        return std::tuple_size_v<std::remove_cvref_t<T>>;
+#else
+    if constexpr (not requires { std::remove_cvref<T>::size(); })
+        return ::std::tuple_size_v<::std::remove_cvref_t<T>>;
+    else
+        return ::std::remove_cvref_t<T>::size();
+#endif
+}
 /*!
  * \brief A helper types whose call operator connects all children of a basic_sender
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
@@ -60,13 +62,14 @@ struct connect_all_t {
         return ::std::forward<Fun>(fun)(seq, ::beman::execution::detail::forward_like<Tuple>(::std::get<I>(tuple))...);
     }
     template <typename Fun, typename Tuple>
-    static auto apply_with_index(Fun&& fun, Tuple&& tuple) noexcept(
-        noexcept(apply_with_index_helper(::std::make_index_sequence<::beman::execution::detail::get_tuple_size_v<Tuple>>{},
-                                         ::std::forward<Fun>(fun),
-                                         ::std::forward<Tuple>(tuple)))) -> decltype(auto) {
-        return apply_with_index_helper(::std::make_index_sequence<::beman::execution::detail::get_tuple_size_v<Tuple>>{},
-                                       ::std::forward<Fun>(fun),
-                                       ::std::forward<Tuple>(tuple));
+    static auto apply_with_index(Fun&& fun, Tuple&& tuple) noexcept(noexcept(
+        apply_with_index_helper(::std::make_index_sequence<::beman::execution::detail::get_tuple_size<Tuple>()>{},
+                                ::std::forward<Fun>(fun),
+                                ::std::forward<Tuple>(tuple)))) -> decltype(auto) {
+        return apply_with_index_helper(
+            ::std::make_index_sequence<::beman::execution::detail::get_tuple_size<Tuple>()>{},
+            ::std::forward<Fun>(fun),
+            ::std::forward<Tuple>(tuple));
     }
 
     template <::std::size_t Start, typename Fun, typename Tuple, ::std::size_t... I>
@@ -80,11 +83,11 @@ struct connect_all_t {
     template <::std::size_t Start, typename Fun, typename Tuple>
         requires requires { ::std::declval<Tuple>().size(); }
     static auto sub_apply_with_index(Fun&& fun, Tuple&& tuple) noexcept(noexcept(sub_apply_with_index_helper<Start>(
-        ::std::make_index_sequence<::beman::execution::detail::get_tuple_size_v<Tuple> - Start>{},
+        ::std::make_index_sequence<::beman::execution::detail::get_tuple_size<Tuple>() - Start>{},
         ::std::forward<Fun>(fun),
         ::std::forward<Tuple>(tuple)))) -> decltype(auto) {
         return sub_apply_with_index_helper<Start>(
-            ::std::make_index_sequence<::beman::execution::detail::get_tuple_size_v<Tuple> - Start>{},
+            ::std::make_index_sequence<::beman::execution::detail::get_tuple_size<Tuple>() - Start>{},
             ::std::forward<Fun>(fun),
             ::std::forward<Tuple>(tuple));
     }

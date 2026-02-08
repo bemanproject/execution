@@ -20,6 +20,7 @@ import beman.execution.detail.decays_to;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.product_type;
+import beman.execution.detail.receiver;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_decompose;
 #else
@@ -45,13 +46,13 @@ constexpr auto sub_apply_helper(Fun&& fun, Tuple&& tuple, ::std::index_sequence<
     return ::std::forward<Fun>(fun)(::std::forward<Tuple>(tuple).template get<I + Start>()...);
 }
 struct sub_apply_t {
-template <::std::size_t Start, typename Fun, typename Tuple>
-constexpr auto at(Fun&& fun, Tuple&& tuple) const -> decltype(auto) {
-    constexpr ::std::size_t TSize{::std::remove_cvref_t<Tuple>::size};
-    static_assert(Start <= TSize);
-    return sub_apply_helper<Start>(
-        ::std::forward<Fun>(fun), ::std::forward<Tuple>(tuple), ::std::make_index_sequence<TSize - Start>());
-}
+    template <::std::size_t Start, typename Fun, typename Tuple>
+    constexpr auto at(Fun&& fun, Tuple&& tuple) const -> decltype(auto) {
+        constexpr ::std::size_t TSize{::std::remove_cvref_t<Tuple>::size()};
+        static_assert(Start <= TSize);
+        return sub_apply_helper<Start>(
+            ::std::forward<Fun>(fun), ::std::forward<Tuple>(tuple), ::std::make_index_sequence<TSize - Start>());
+    }
 };
 inline constexpr sub_apply_t sub_apply{};
 
@@ -66,7 +67,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
     //-dk:TODO friend struct ::beman::execution::get_completion_signatures_t;
     using sender_concept = ::beman::execution::sender_t;
     using indices_for    = ::std::index_sequence_for<Child...>;
-    static constexpr ::std::size_t size{sizeof...(Child) + 2};
+    static constexpr ::std::integral_constant<::std::size_t, sizeof...(Child) + 2> size{};
 
     auto get_env() const noexcept -> decltype(auto) {
         auto&& d{this->template get<1>()};
@@ -139,6 +140,14 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
 #endif
 };
 } // namespace beman::execution::detail
+
+#ifndef BEMAN_HAS_MODULES
+namespace std {
+template <typename Tag, typename Data, typename... Child>
+struct tuple_size<::beman::execution::detail::basic_sender<Tag, Data, Child...>>
+    : ::std::integral_constant<std::size_t, 2u + sizeof...(Child)> {};
+}
+#endif
 
 // ----------------------------------------------------------------------------
 
