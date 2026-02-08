@@ -12,8 +12,8 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.meta_contains;
-import beman.execution.detail.meta_prepend;
+import beman.execution.detail.meta.contains;
+import beman.execution.detail.meta.prepend;
 #else
 #include <beman/execution/detail/meta_contains.hpp>
 #include <beman/execution/detail/meta_prepend.hpp>

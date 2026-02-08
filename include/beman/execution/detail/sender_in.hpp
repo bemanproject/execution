@@ -4,6 +4,11 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_IN
 
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.env;

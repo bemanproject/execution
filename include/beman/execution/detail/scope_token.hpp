@@ -12,6 +12,7 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signatures;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_in;

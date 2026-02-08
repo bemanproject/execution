@@ -12,8 +12,12 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.get_env;
+import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;

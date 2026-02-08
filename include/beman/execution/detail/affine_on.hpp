@@ -13,16 +13,20 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signatures;
 import beman.execution.detail.env;
 import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_domain_early;
 import beman.execution.detail.get_scheduler;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.never_stop_token;
+import beman.execution.detail.nested_sender_has_affine_on;
 import beman.execution.detail.prop;
+import beman.execution.detail.schedule;
 import beman.execution.detail.schedule_from;
 import beman.execution.detail.scheduler;
 import beman.execution.detail.sender;
@@ -30,6 +34,7 @@ import beman.execution.detail.sender_adaptor;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.sender_has_affine_on;
+import beman.execution.detail.set_value;
 import beman.execution.detail.tag_of_t;
 import beman.execution.detail.transform_sender;
 import beman.execution.detail.write_env;
@@ -91,7 +96,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
      */
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
-        return ::beman::execution::detail::transform_sender(
+        return ::beman::execution::transform_sender(
             ::beman::execution::detail::get_domain_early(sender),
             ::beman::execution::detail::make_sender(
                 *this, ::beman::execution::env<>{}, ::std::forward<Sender>(sender)));

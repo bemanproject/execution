@@ -161,7 +161,6 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_future.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_get_allocator.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/split.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/start.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/starts_on.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/state_type.hpp
@@ -341,7 +340,6 @@ if(BEMAN_USE_MODULES)
                     ${PROJECT_SOURCE_DIR}/src/beman/execution/spawn_future.cppm
                     ${PROJECT_SOURCE_DIR}/src/beman/execution/spawn_get_allocator.cppm
                     ${PROJECT_SOURCE_DIR}/src/beman/execution/spawn.cppm
-                    ${PROJECT_SOURCE_DIR}/src/beman/execution/split.cppm
                     ${PROJECT_SOURCE_DIR}/src/beman/execution/start.cppm
                     ${PROJECT_SOURCE_DIR}/src/beman/execution/starts_on.cppm
                     ${PROJECT_SOURCE_DIR}/src/beman/execution/state_type.cppm

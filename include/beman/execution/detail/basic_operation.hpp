@@ -13,8 +13,10 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_state;
+import beman.execution.detail.connect_all;
 import beman.execution.detail.connect_all_result;
 import beman.execution.detail.impls_for;
+import beman.execution.detail.indices_for;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.sender_decompose;
 import beman.execution.detail.start;

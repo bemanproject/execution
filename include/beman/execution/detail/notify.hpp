@@ -12,10 +12,14 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.default_impls;
 import beman.execution.detail.immovable;
 import beman.execution.detail.impls_for;
-import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.make_sender;
+import beman.execution.detail.set_value;
 #else
 #include <beman/execution/detail/immovable.hpp>
 #include <beman/execution/detail/make_sender.hpp>

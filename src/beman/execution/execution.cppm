@@ -2,6 +2,9 @@ module;
 // src/beman/execution/execution.cppm
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifndef BEMAN_HAS_MODULES
+#define BEMAN_HAS_MODULES
+#endif
 // #include <beman/execution/execution.hpp>
 // #include <beman/execution/stop_token.hpp>
 
@@ -65,7 +68,7 @@ export import beman.execution.detail.continues_on;
 export import beman.execution.detail.on;
 export import beman.execution.detail.schedule_from;
 export import beman.execution.detail.let;
-export import beman.execution.detail.split;
+//-dk:TODO? export import beman.execution.detail.split;
 export import beman.execution.detail.when_all;
 export import beman.execution.detail.when_all_with_variant;
 export import beman.execution.detail.into_variant;

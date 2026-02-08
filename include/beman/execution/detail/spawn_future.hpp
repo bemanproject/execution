@@ -7,9 +7,13 @@
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.as_tuple;
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.connect_result_t;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.decayed_tuple;
 import beman.execution.detail.env;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_env;
@@ -17,8 +21,9 @@ import beman.execution.detail.impls_for;
 import beman.execution.detail.inplace_stop_source;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
-import beman.execution.detail.meta_combine;
-import beman.execution.detail.meta_unique;
+import beman.execution.detail.meta.combine;
+import beman.execution.detail.meta.prepend;
+import beman.execution.detail.meta.unique;
 import beman.execution.detail.prop;
 import beman.execution.detail.receiver;
 import beman.execution.detail.scope_token;

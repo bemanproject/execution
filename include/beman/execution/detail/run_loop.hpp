@@ -16,12 +16,14 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.completion_signatures;
+import beman.execution.detail.env;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.immovable;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.scheduler;
+import beman.execution.detail.scheduler_t;
 import beman.execution.detail.sender;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;

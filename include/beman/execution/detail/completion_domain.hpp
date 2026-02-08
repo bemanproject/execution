@@ -16,6 +16,9 @@ import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
 import beman.execution.detail.sender;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
 #else
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>

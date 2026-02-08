@@ -2,6 +2,9 @@ module;
 // src/beman/execution/get_allocator.cppm                             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifndef BEMAN_HAS_MODULES
+#define BEMAN_HAS_MODULES
+#endif
 #include <beman/execution/detail/get_allocator.hpp>
 
 export module beman.execution.detail.get_allocator;

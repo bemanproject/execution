@@ -8,12 +8,17 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
+#include <memory>
 #include <optional>
 #include <type_traits>
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
 import beman.execution.detail.connect;
+import beman.execution.detail.connect_result_t;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.get_domain_early;
 import beman.execution.detail.impls_for;
@@ -21,6 +26,9 @@ import beman.execution.detail.make_sender;
 import beman.execution.detail.nothrow_callable;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.start;
 import beman.execution.detail.transform_sender;
 #else
 #include <beman/execution/detail/connect.hpp>

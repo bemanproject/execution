@@ -12,6 +12,7 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.stoppable_source;
+import beman.execution.detail.stoppable_token;
 #else
 #include <beman/execution/detail/stoppable_source.hpp>
 #endif
