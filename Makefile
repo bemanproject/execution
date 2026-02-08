@@ -45,20 +45,18 @@ EXAMPLE   = beman.execution.examples.stop_token
 
 ################################################
 ifeq (${hostSystemName},Darwin)
-  export LLVM_PREFIX:=$(shell brew --prefix llvm)
-  export LLVM_DIR:=$(shell realpath ${LLVM_PREFIX})
-  export PATH:=${LLVM_DIR}/bin:${PATH}
+  # export LLVM_PREFIX:=$(shell brew --prefix llvm)
+  # export LLVM_DIR:=$(shell realpath ${LLVM_PREFIX})
+  # export PATH:=${LLVM_DIR}/bin:${PATH}
 
-  # export CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_DIR}/lib/c++/libc++.modules.json
   # export CXX=clang++
   # export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi -lc++ # -lc++experimental
   # export GCOV="llvm-cov gcov"
 
   ### TODO: to test g++-15:
-  #  export GCC_PREFIX:=$(shell brew --prefix gcc)
-  #  export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
+  # export GCC_PREFIX:=$(shell brew --prefix gcc)
+  # export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
 
-  # XXX export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
   ifeq ($(origin CXX),default)
     $(info CXX is using the built-in default: $(CXX))
     export CXX=g++-15

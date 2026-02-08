@@ -25,6 +25,7 @@ include(GNUInstallDirs)
 #
 # Arguments:
 # ----------
+#
 # name
 #   Logical package name (e.g. "beman.utility").
 #   Used to derive config file names and cache variable prefixes.
@@ -62,6 +63,7 @@ include(GNUInstallDirs)
 #
 # Cache variables:
 # ----------------
+#
 # BEMAN_INSTALL_CONFIG_FILE_PACKAGES
 #   List of package names for which config files should be installed.
 #
@@ -69,6 +71,15 @@ include(GNUInstallDirs)
 #   Per-package override to enable/disable config file installation.
 #   <PREFIX> is the uppercased package name with dots replaced by underscores.
 #
+# Caveats
+# -------
+#
+# **Only one `FILE_SET of each TYPE` is yet supported to install with this
+# function!**
+#
+# **Only header files contained in a `PUBLIC FILE_SET TYPE HEADERS` will be
+# install with this function!**
+
 function(beman_install_library name)
     # ----------------------------
     # Argument parsing

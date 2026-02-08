@@ -133,7 +133,7 @@ It also handles the installation of the CMake config package files if
 needed.  If the given targets has `FILE_SET TYPE CXX_MODULE`, it will also
 installed to the given DESTINATION
 
-- ***Used Cache variables**
+- **Used Cache variables**
 
 `BEMAN_INSTALL_CONFIG_FILE_PACKAGES`
   List of package names for which config files should be installed.
@@ -144,7 +144,11 @@ installed to the given DESTINATION
 
 ### Caveats
 
-**Only one `FILE_SET of each TYPE` is supported to install with this function yet!**
+- **Only one `FILE_SET of each TYPE` is yet supported to install with this
+  function!**
+
+- **Only header files contained in a `PUBLIC FILE_SET TYPE HEADERS` will be
+  installed with this function!**
 
 ---
 
