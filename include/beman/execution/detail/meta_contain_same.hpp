@@ -6,7 +6,7 @@
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.meta_contains;
+import beman.execution.detail.meta.contains;
 #else
 #include <beman/execution/detail/meta_contains.hpp>
 #endif

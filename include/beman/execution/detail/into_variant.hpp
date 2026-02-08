@@ -14,7 +14,9 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
 import beman.execution.detail.child_type;
+import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.decayed_tuple;
 import beman.execution.detail.default_impls;
@@ -23,13 +25,15 @@ import beman.execution.detail.error_types_of_t;
 import beman.execution.detail.get_domain_early;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
-import beman.execution.detail.meta_combine;
+import beman.execution.detail.meta.combine;
 import beman.execution.detail.sender;
 import beman.execution.detail.sends_stopped;
 import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
 import beman.execution.detail.transform_sender;
 import beman.execution.detail.value_types_of_t;
+import beman.execution.detail.variant_or_empty;
 #else
 #include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>

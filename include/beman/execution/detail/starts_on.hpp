@@ -23,6 +23,7 @@ import beman.execution.detail.query_with_default;
 import beman.execution.detail.sched_env;
 import beman.execution.detail.schedule;
 import beman.execution.detail.scheduler;
+import beman.execution.detail.sender;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.transform_sender;
 #else

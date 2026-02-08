@@ -14,6 +14,7 @@ import std;
 import beman.execution.detail.default_domain;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_domain;
 import beman.execution.detail.get_domain_early;
 import beman.execution.detail.get_domain_late;
 import beman.execution.detail.get_env;

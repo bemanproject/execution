@@ -12,7 +12,7 @@ import std;
 #include <variant>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.meta_unique;
+import beman.execution.detail.meta.unique;
 #else
 #include <beman/execution/detail/meta_unique.hpp>
 #endif

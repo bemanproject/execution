@@ -19,6 +19,9 @@ import beman.execution.detail.completion_signatures;
 import beman.execution.detail.env_promise;
 import beman.execution.detail.get_domain_late;
 import beman.execution.detail.is_awaitable;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
 import beman.execution.detail.transform_sender;
 #else
 #include <beman/execution/detail/await_result_type.hpp>

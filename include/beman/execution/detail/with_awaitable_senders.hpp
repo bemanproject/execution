@@ -9,6 +9,7 @@
 import std;
 #else
 #include <coroutine>
+#include <exception>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.as_awaitable;

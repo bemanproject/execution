@@ -9,10 +9,12 @@
 import std;
 #else
 #include <type_traits>
+#include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.connect;
 import beman.execution.detail.counting_scope_base;
 import beman.execution.detail.default_impls;
