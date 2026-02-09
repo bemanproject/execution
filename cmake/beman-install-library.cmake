@@ -74,7 +74,7 @@ include(GNUInstallDirs)
 # Caveats
 # -------
 #
-# **Only one `FILE_SET of each TYPE` is yet supported to install with this
+# **Only one `FILE_SET CXX_MODULES` is yet supported to install with this
 # function!**
 #
 # **Only header files contained in a `PUBLIC FILE_SET TYPE HEADERS` will be
@@ -163,14 +163,28 @@ function(beman_install_library name)
         )
 
         # Get the list of interface header sets, exact one expected!
-        get_target_property(_header_sets ${_tgt} INTERFACE_HEADER_SETS)
-        if(_header_sets)
+        set(_install_header_set_args)
+        get_target_property(
+            _available_header_sets
+            ${_tgt}
+            INTERFACE_HEADER_SETS
+        )
+        if(_available_header_sets)
             message(
                 VERBOSE
-                "beman-install-library(${name}): '${_tgt}' has INTERFACE_HEADER_SETS=${_header_sets}"
+                "beman-install-library(${name}): '${_tgt}' has INTERFACE_HEADER_SETS=${_available_header_sets}"
             )
+            foreach(_install_header_set IN LISTS _available_header_sets)
+                list(
+                    APPEND _install_header_set_args
+                    FILE_SET
+                    "${_install_header_set}"
+                    # DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+                    # TODO(CK) COMPONENT "${_install_headers_component}"
+                )
+            endforeach()
         else()
-            set(_header_sets HEADERS) # Note: empty FILE_SET in this case! CK
+            set(_install_header_set_args FILE_SET HEADERS) # Note: empty FILE_SET in this case! CK
         endif()
 
         # Detect presence of C++ module file sets, exact one expected!
@@ -187,8 +201,7 @@ function(beman_install_library name)
                 ARCHIVE # DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 LIBRARY # DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 RUNTIME # DESTINATION ${CMAKE_INSTALL_BINDIR}
-                FILE_SET
-                    ${_header_sets} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+                    ${_install_header_set_args} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
                 FILE_SET ${_module_sets} DESTINATION "${BEMAN_DESTINATION}"
                 # NOTE: There's currently no convention for this location! CK
                 CXX_MODULES_BMI
@@ -202,8 +215,7 @@ function(beman_install_library name)
                 ARCHIVE # DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 LIBRARY # DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 RUNTIME # DESTINATION ${CMAKE_INSTALL_BINDIR}
-                FILE_SET
-                    ${_header_sets} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+                    ${_install_header_set_args} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
             )
         endif()
     endforeach()

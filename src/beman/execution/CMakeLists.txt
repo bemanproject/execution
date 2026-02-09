@@ -18,11 +18,11 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/stop_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution26/execution.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution26/stop_token.hpp
-                # PUBLIC
-                #     FILE_SET detail_headers
-                #         TYPE HEADERS
-                #         BASE_DIRS ${PROJECT_SOURCE_DIR}/include
-                #         FILES
+    PUBLIC
+        FILE_SET detail_headers
+            TYPE HEADERS
+            BASE_DIRS ${PROJECT_SOURCE_DIR}/include
+            FILES
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/affine_on.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/allocator_aware_move.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/almost_scheduler.hpp
@@ -206,11 +206,11 @@ if(BEMAN_USE_MODULES)
     target_link_libraries(${TARGET_PREFIX} PUBLIC ${TARGET_NAME})
 endif()
 
-# get_property(
-#     DETAIL_HEADER_FILES
-#     TARGET ${TARGET_NAME}
-#     PROPERTY HEADER_SET_detail_headers
-# )
-# source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
+get_property(
+    DETAIL_HEADER_FILES
+    TARGET ${TARGET_NAME}
+    PROPERTY HEADER_SET_detail_headers
+)
+source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)

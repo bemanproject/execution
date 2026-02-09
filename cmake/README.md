@@ -144,7 +144,7 @@ installed to the given DESTINATION
 
 ### Caveats
 
-- **Only one `FILE_SET of each TYPE` is yet supported to install with this
+- **Only one `FILE_SET CXX_MODULES` is yet supported to install with this
   function!**
 
 - **Only header files contained in a `PUBLIC FILE_SET TYPE HEADERS` will be
