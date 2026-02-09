@@ -5,10 +5,13 @@ module;
 #ifndef BEMAN_HAS_MODULES
 #define BEMAN_HAS_MODULES
 #endif
+#if !defined(__GNUC__) || defined(__clang__)
 #include <beman/execution/detail/spawn_future.hpp>
+#endif
 
 export module beman.execution.detail.spawn_future;
 
+#if !defined(__GNUC__) || defined(__clang__)
 namespace beman::execution {
 export using beman::execution::spawn_future_t;
 export using beman::execution::spawn_future;
@@ -25,3 +28,4 @@ struct completion_signatures_for_impl<
                                              ::std::unique_ptr<State, Deleter>>,
     Env>;
 } // namespace beman::execution::detail
+#endif

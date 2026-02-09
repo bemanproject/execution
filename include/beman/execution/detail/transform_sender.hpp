@@ -9,6 +9,7 @@
 import std;
 #else
 #include <concepts>
+#include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.default_domain;
