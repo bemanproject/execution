@@ -10,6 +10,7 @@ import std;
 #else
 #include <concepts>
 #include <type_traits>
+#include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;

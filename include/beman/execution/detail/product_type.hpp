@@ -122,12 +122,13 @@ constexpr auto is_product_type(const ::beman::execution::detail::product_type<T.
 
 namespace std {
 template <typename... T>
-struct tuple_size<::beman::execution::detail::product_type<T...>>:
-    ::std::integral_constant<std::size_t, ::beman::execution::detail::product_type<T...>::size()> {};
+struct tuple_size<::beman::execution::detail::product_type<T...>>
+    : ::std::integral_constant<std::size_t, ::beman::execution::detail::product_type<T...>::size()> {};
 
 template <::std::size_t I, typename... T>
 struct tuple_element<I, ::beman::execution::detail::product_type<T...>> {
-    using type = ::std::decay_t<decltype(::std::declval<::beman::execution::detail::product_type<T...>>().template get<I>())>;
+    using type =
+        ::std::decay_t<decltype(::std::declval<::beman::execution::detail::product_type<T...>>().template get<I>())>;
 };
 } // namespace std
 

@@ -22,4 +22,4 @@ export template <typename... T>
 struct tuple_size<::beman::execution::detail::product_type<T...>>;
 export template <::std::size_t I, typename... T>
 struct tuple_element<I, ::beman::execution::detail::product_type<T...>>;
-}
+} // namespace std
