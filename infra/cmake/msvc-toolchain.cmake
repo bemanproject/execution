@@ -29,7 +29,7 @@ endif()
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "/EHsc /permissive- ${SANITIZER_FLAGS}")
 set(CMAKE_C_FLAGS_DEBUG_INIT "/EHsc /permissive- ${SANITIZER_FLAGS}")
 
-set(RELEASE_FLAGS "/EHsc /permissive- /O2")
+set(RELEASE_FLAGS "/EHsc /permissive- /O2 ${SANITIZER_FLAGS}")
 
 set(CMAKE_C_FLAGS_RELWITHDEBINFO_INIT "${RELEASE_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT "${RELEASE_FLAGS}")
@@ -38,4 +38,4 @@ set(CMAKE_C_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
 
 # Add this dir to the module path so that `find_package(beman-install-library)` works
-# NO! list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}")

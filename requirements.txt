@@ -14,11 +14,13 @@ pyaml
 
 ### cmake build context
 bump2version>=1.0.1
-check-jsonschema>=0.35.0
+check-jsonschema>=0.36.1
 cmake>=4.2
 codespell>=2.4.1
 # conan>=2.7.0
-gersemi>=0.23.2
-gcovr>=8.2
+gersemi>=0.25.4
+gcovr>=8.6
 ninja>=1.13
-yamllint>=1.35
+yamllint>=1.38
+
+beman_submodule
