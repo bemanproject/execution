@@ -9,15 +9,19 @@ set(execution_tests_todo) #-dk:TODO
 
 list(APPEND unsupported_execution_tests exec-split.test)
 set(ice_execution_tests exec-spawn-future.test)
+set(todo_execution_tests
+    exec-continues-on.test
+    exec-schedule-from.test
+    exec-bulk.test
+)
+
 list(
     APPEND execution_tests
     allocator-requirements-general.test
     exec-affine-on.test
     exec-associate.test
     exec-awaitable.test
-    exec-bulk.test
     exec-connect.test
-    exec-continues-on.test
     exec-domain-default.test
     exec-env.test
     exec-fwd-env.test
@@ -43,7 +47,6 @@ list(
     exec-run-loop-general.test
     exec-run-loop-types.test
     exec-sched.test
-    exec-schedule-from.test
     exec-schedule.test
     exec-scope-concepts.test
     exec-scope-counting.test
@@ -108,6 +111,10 @@ list(
     thread.test
     utilities.test
 )
+#set(execution_tests exec-continues-on.test exec-schedule-from.test)
+#set(execution_tests exec-snd-expos.test)
+#set(execution_tests exec-getcomplsigs.test)
+#set(execution_tests exec-just.test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

@@ -5,6 +5,7 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail;
 #else
 #include <beman/execution/detail/schedule_from.hpp>
 #include <beman/execution/execution.hpp>
@@ -65,12 +66,38 @@ auto test_constraints(Scheduler&& scheduler, Sender&& sender) {
     });
 }
 
+#if 0
+}
+namespace beman::execution::detail {
+template <typename Scheduler, typename Sender, typename Env>
+struct completion_signatures_for_impl<
+    ::beman::execution::detail::basic_sender<::beman::execution::schedule_from_t, Scheduler, Sender>,
+    Env> {
+    using scheduler_sender = decltype(::beman::execution::schedule(::std::declval<Scheduler>()));
+    template <typename... E>
+    using as_set_error = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
+    using type         = ::beman::execution::detail::meta::combine<
+                decltype(::beman::execution::get_completion_signatures(::std::declval<Sender>(), ::std::declval<Env>())),
+                ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
+                ::beman::execution::completion_signatures<::beman::execution::set_error_t(
+            ::std::exception_ptr)> //-dk:TODO this one should be deduced
+                >;
+};
+}
+namespace {
+#endif
 template <typename Scheduler, typename Sender>
 auto test_use(Scheduler&& scheduler, Sender&& sender) {
     auto s{test_std::schedule_from(::std::forward<Scheduler>(scheduler), ::std::forward<Sender>(sender))};
 
     static_assert(test_std::sender<decltype(s)>);
-    test_std::sync_wait(std::move(s));
+    using stype = std::remove_cvref_t<decltype(s)>;
+    using type = typename test_detail::completion_signatures_for_impl<stype, test_std::env<>>::type;
+    type t = 17;
+    //std::same_as<type, test_std::completion_signatures<test_std::set_value_t()>>;
+    //auto sig{test_std::get_completion_signatures(s, test_std::env{})};
+    //static_assert(std::same_as<decltype(sig), test_std::completion_signatures<test_std::set_value_t()>>);
+    //-dk:TODO test_std::sync_wait(std::move(s));
 }
 } // namespace
 

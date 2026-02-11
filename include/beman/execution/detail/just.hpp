@@ -45,6 +45,7 @@ namespace beman::execution::detail {
 template <typename Completion, typename... T>
 concept just_size = (!::std::same_as<Completion, ::beman::execution::set_error_t> or 1u == sizeof...(T)) &&
                     (!::std::same_as<Completion, ::beman::execution::set_stopped_t> or 0u == sizeof...(T));
+
 template <typename Completion>
 struct just_t {
     template <typename... T>
@@ -58,13 +59,23 @@ struct just_t {
     static auto affine_on(Sender&& sndr, const auto&) noexcept {
         return ::std::forward<Sender>(sndr);
     }
-};
 
-template <typename Completion, typename... T, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<just_t<Completion>, ::beman::execution::detail::product_type<T...>>,
-    Env> {
-    using type = ::beman::execution::completion_signatures<Completion(T...)>;
+private:
+    template <typename> struct get_signatures;
+    template <typename C, typename... T> struct get_signatures<
+        ::beman::execution::detail::basic_sender<
+            just_t<C>,
+            ::beman::execution::detail::product_type<T...>
+        >>
+    {
+        using type = ::beman::execution::completion_signatures<::std::remove_cvref_t<C>(T...)>;
+    };
+
+public:
+    template <::beman::execution::sender Sender, typename...>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<::std::remove_cvref_t<Sender>>::type{};
+    }
 };
 
 template <typename Completion>

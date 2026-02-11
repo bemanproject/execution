@@ -11,6 +11,7 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
 import beman.execution.detail.default_domain;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.fwd_env;
@@ -103,12 +104,19 @@ struct impls_for<::beman::execution::detail::continues_on_t> : ::beman::executio
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
+#ifndef BEMAN_HAS_MODULES
+#if 0
 template <::beman::execution::detail::sender_for<::beman::execution::detail::continues_on_t> Sender, typename Env>
 auto get_domain_late(Sender&& sender, Env&&) {
+#else
+template <typename Env, typename...T>
+auto get_domain_late(::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, T...> const& sender, Env&&) {
+#endif
     auto scheduler{sender.template get<1>()};
     return ::beman::execution::detail::query_with_default(
         ::beman::execution::get_domain, scheduler, ::beman::execution::default_domain{});
 }
+#endif
 } // namespace beman::execution::detail
 
 #include <beman/execution/detail/suppress_pop.hpp>

@@ -56,6 +56,30 @@ import beman.execution.detail.transform_sender;
 
 namespace beman::execution::detail {
 
+template <typename, typename, typename>
+struct fixed_completions_helper;
+
+template <typename F, typename Shape, typename... Args>
+struct fixed_completions_helper<F, Shape, completion_signatures<Args...>> {
+
+    template <typename, typename>
+    struct may_throw;
+    template <typename XF, typename Tag, typename... XArgs>
+    struct may_throw<XF, Tag(XArgs...)> {
+        static constexpr bool value =
+            std::same_as<Tag, ::beman::execution::set_value_t> && !::std::is_nothrow_invocable<XF, Shape, XArgs...>();
+    };
+    template <typename XF, typename... Sigs>
+    struct may_throw<XF, completion_signatures<Sigs...>> {
+        static constexpr bool value = (false || ... || may_throw<XF, Sigs>::value);
+    };
+
+    using type = std::conditional_t<!may_throw<F, Args...>::value,
+                                    completion_signatures<Args...>,
+                                    completion_signatures<Args..., set_error_t(std::exception_ptr)>>;
+
+};
+
 struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
 
     template <class Shape, class f>
@@ -75,6 +99,27 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
             domain,
             ::beman::execution::detail::make_sender(
                 *this, ::beman::execution::detail::product_type<Shape, f>{shape, fun}, std::forward<Sender>(sndr)));
+    }
+
+private:
+    template <typename F, typename Shape, typename Completions>
+        using fixed_completions = typename fixed_completions_helper<F, Shape, Completions>::type;
+    template <typename, typename> struct get_signatures;
+    template <class Shape, class F, class Sender, class Env>
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<
+            ::beman::execution::detail::bulk_t, ::beman::execution::detail::product_type<Shape, F>, Sender>,
+        Env> {
+        using completions = decltype(get_completion_signatures(std::declval<Sender>(), std::declval<Env>()));
+        using type        = ::beman::execution::detail::meta::unique<
+                ::beman::execution::detail::meta::combine<fixed_completions<F, Shape, completions>>>;
+    };
+
+
+public:
+    template <typename Sender, typename... Env>
+    consteval static auto get_completion_signatures() {
+        return typename get_signatures<Sender, Env...>::type{};
     }
 };
 
@@ -115,43 +160,6 @@ struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
         }
     };
     static constexpr auto complete{complete_impl{}};
-};
-
-template <typename, typename, typename>
-struct fixed_completions_helper;
-
-template <typename F, typename Shape, typename... Args>
-struct fixed_completions_helper<F, Shape, completion_signatures<Args...>> {
-
-    template <typename, typename>
-    struct may_throw;
-    template <typename XF, typename Tag, typename... XArgs>
-    struct may_throw<XF, Tag(XArgs...)> {
-        static constexpr bool value =
-            std::same_as<Tag, ::beman::execution::set_value_t> && !::std::is_nothrow_invocable<XF, Shape, XArgs...>();
-    };
-    template <typename XF, typename... Sigs>
-    struct may_throw<XF, completion_signatures<Sigs...>> {
-        static constexpr bool value = (false || ... || may_throw<XF, Sigs>::value);
-    };
-
-    using type = std::conditional_t<!may_throw<F, Args...>::value,
-                                    completion_signatures<Args...>,
-                                    completion_signatures<Args..., set_error_t(std::exception_ptr)>>;
-};
-
-template <typename F, typename Shape, typename Completions>
-using fixed_completions = typename fixed_completions_helper<F, Shape, Completions>::type;
-
-template <class Shape, class F, class Sender, class Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::
-        basic_sender<::beman::execution::detail::bulk_t, ::beman::execution::detail::product_type<Shape, F>, Sender>,
-    Env> {
-
-    using completions = decltype(get_completion_signatures(std::declval<Sender>(), std::declval<Env>()));
-    using type        = ::beman::execution::detail::meta::unique<
-               ::beman::execution::detail::meta::combine<fixed_completions<F, Shape, completions>>>;
 };
 
 } // namespace beman::execution::detail

@@ -15,6 +15,7 @@ import std;
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.sender_in;
+import beman.execution.detail.tag_of_t;
 #else
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/sender_in.hpp>
@@ -35,22 +36,30 @@ struct no_completion_signatures_defined_in_sender {};
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename Sender, typename Env>
+template <typename Sender, typename... Env>
 struct completion_signatures_for_impl {
-    using type = ::beman::execution::detail::no_completion_signatures_defined_in_sender;
+            using type = ::beman::execution::detail::no_completion_signatures_defined_in_sender;
 };
+
+template <typename Sender, typename... Env>
+consteval auto get_completion_signatures_for_helper() {
+    using tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<Sender>>;
+    if constexpr (requires{ tag_t::template get_completion_signatures<Sender, Env...>(); })
+        return tag_t::template get_completion_signatures<Sender, Env...>();
+    else if constexpr (requires{ typename ::beman::execution::detail::completion_signatures_for_impl<::std::remove_cvref_t<Sender>, Env...>::type; })
+        return typename ::beman::execution::detail::completion_signatures_for_impl<::std::remove_cvref_t<Sender>, Env...>::type();
+    else
+        return tag_t{};
+        //return ::beman::execution::detail::no_completion_signatures_defined_in_sender{};
+}
 
 /*!
  * \brief Type alias used to access a senders completion signatures.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename Sender, typename Env>
-using completion_signatures_for = ::std::conditional_t<
-    ::std::same_as<beman::execution::detail::no_completion_signatures_defined_in_sender,
-                   typename ::beman::execution::detail::completion_signatures_for_impl<Sender, Env>::type>,
-    typename ::beman::execution::detail::completion_signatures_for_impl<::std::remove_cvref_t<Sender>, Env>::type,
-    typename ::beman::execution::detail::completion_signatures_for_impl<Sender, Env>::type>;
+template <typename Sender, typename... Env>
+using completion_signatures_for = decltype(get_completion_signatures_for_helper<Sender, Env...>());
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
