@@ -110,8 +110,8 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
         return {::std::forward<Self>(self), ::std::move(receiver)};
     }
 #endif
-#if __cpp_explicit_this_parameter < 302110L
-    template <typename Env>
+#if false && __cpp_explicit_this_parameter < 302110L
+    template <typename... Env>
     auto
     get_completion_signatures(Env&&) && -> ::beman::execution::detail::completion_signatures_for<basic_sender, Env> {
         return {};
@@ -121,8 +121,8 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
         Env&&) const&& -> ::beman::execution::detail::completion_signatures_for<const basic_sender, Env> {
         return {};
     }
-    template <typename Env>
-    auto
+    template <typename... Env>
+    consteval auto
     get_completion_signatures(Env&&) & -> ::beman::execution::detail::completion_signatures_for<basic_sender, Env> {
         return {};
     }
@@ -132,10 +132,12 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
         return {};
     }
 #else
-    template <::beman::execution::detail::decays_to<basic_sender> Self, typename Env>
-    auto get_completion_signatures(this Self&&, Env&&) noexcept
-        -> ::beman::execution::detail::completion_signatures_for<Self, Env> {
-        return {};
+    template <::beman::execution::detail::decays_to<basic_sender> Self, typename... Env>
+    consteval auto get_completion_signatures(this Self&&, Env&&...) noexcept {
+        if constexpr (requires{ Tag::template get_completion_signatures<Self, Env...>(); })
+            return Tag::template get_completion_signatures<Self, Env...>();
+        else
+            return ::beman::execution::detail::completion_signatures_for<Self, Env...>{};
     }
 #endif
 };

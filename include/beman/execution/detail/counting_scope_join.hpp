@@ -52,16 +52,13 @@ struct counting_scope_join_t {
     auto operator()(::beman::execution::detail::counting_scope_base* ptr) const {
         return ::beman::execution::detail::make_sender(*this, ptr);
     }
+
+    template <typename Sender, typename...>
+    static consteval auto get_completion_signatures() noexcept {
+            return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>{};
+    }
 };
 inline constexpr counting_scope_join_t counting_scope_join{};
-
-template <typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::counting_scope_join_t,
-                                             ::beman::execution::detail::counting_scope_base*>,
-    Env> {
-    using type = ::beman::execution::completion_signatures<::beman::execution::set_value_t()>;
-};
 
 } // namespace beman::execution::detail
 

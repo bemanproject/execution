@@ -15,10 +15,10 @@ export using beman::execution::schedule_from;
 } // namespace beman::execution
 
 namespace beman::execution::detail {
-export BEMAN_SPECIALIZE_EXPORT struct impls_for<::beman::execution::detail::schedule_from_t>;
+export BEMAN_SPECIALIZE_EXPORT struct impls_for<::beman::execution::schedule_from_t>;
 
 export template <typename Scheduler, typename Sender, typename Env>
 struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::schedule_from_t, Scheduler, Sender>,
+    ::beman::execution::detail::basic_sender<::beman::execution::schedule_from_t, Scheduler, Sender>,
     Env>;
 } // namespace beman::execution::detail
