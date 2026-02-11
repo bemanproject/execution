@@ -40,9 +40,9 @@ jobs:
                   "tests": [
                     { "stdlibs": ["libstdc++"],
                       "tests": [
-                        "Debug.Default", "Debug.Coverage",
-                        "Debug.MaxSan", "Debug.Werror",
-                        "Release.Default"
+                        "Debug.Default", "Release.Default",
+                        "Release.MaxSan", "Debug.Werror",
+                        "Debug.Dynamic", "Debug.Coverage"
                       ]
                     }
                   ]
@@ -67,8 +67,8 @@ jobs:
                   "tests": [
                     { "stdlibs": ["libc++"],
                       "tests": [
-                        "Debug.Default", "Debug.MaxSan",
-                        "Release.Default"
+                        "Debug.Default", "Release.Default", "Release.MaxSan",
+                        "Debug.Dynamic"
                       ]
                     }
                   ]
@@ -96,10 +96,7 @@ jobs:
                 { "cxxversions": ["c++23"],
                   "tests": [
                     { "stdlibs": ["stl"],
-                      "tests": [
-                        "Debug.Default", "Debug.MaxSan",
-                        "Release.Default"
-                      ]
+                      "tests": ["Debug.Default", "Release.Default", "Release.MaxSan"]
                     }
                   ]
                 }
