@@ -111,7 +111,9 @@ function(beman_install_library name)
         return()
     endif()
 
-    set(_config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${name}")
+    set(_config_install_dir
+        "${CMAKE_INSTALL_LIBDIR}/cmake/${name}-${PROJECT_VERSION}"
+    )
 
     # ----------------------------
     # Defaults
@@ -179,7 +181,8 @@ function(beman_install_library name)
                     APPEND _install_header_set_args
                     FILE_SET
                     "${_install_header_set}"
-                    # DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+                    DESTINATION
+                    "${CMAKE_INSTALL_INCLUDEDIR}/beman-${PROJECT_VERSION}"
                     # TODO(CK) COMPONENT "${_install_headers_component}"
                 )
             endforeach()
@@ -198,7 +201,8 @@ function(beman_install_library name)
                 TARGETS "${_tgt}"
                 COMPONENT "${install_component_name}"
                 EXPORT ${BEMAN_EXPORT_NAME}
-                ARCHIVE # DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                ARCHIVE
+                    DESTINATION ${CMAKE_INSTALL_LIBDIR}/beman-${PROJECT_VERSION}
                 LIBRARY # DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 RUNTIME # DESTINATION ${CMAKE_INSTALL_BINDIR}
                     ${_install_header_set_args} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -223,14 +227,15 @@ function(beman_install_library name)
     # --------------------------------------------------
     # Export targets
     # --------------------------------------------------
+    # gersemi: off
     install(
         EXPORT ${BEMAN_EXPORT_NAME}
         NAMESPACE ${BEMAN_NAMESPACE}
-        CXX_MODULES_DIRECTORY
-        cxx-modules
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${name}
+        CXX_MODULES_DIRECTORY cxx-modules
+        DESTINATION ${_config_install_dir}
         COMPONENT "${install_component_name}"
     )
+    # gersemi: on
 
     # ----------------------------------------
     # Config file installation logic
