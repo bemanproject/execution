@@ -275,21 +275,22 @@ class spawn_future_t {
     auto operator()(Sndr&& sndr, Tok&& tok) const {
         return (*this)(::std::forward<Sndr>(sndr), ::std::forward<Tok>(tok), ::beman::execution::env<>{});
     }
-    private:
-    template <typename, typename> struct get_signatures;
-template <typename State, typename Deleter, typename Env>
-struct get_signatures<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::spawn_future_t,
-                                             ::std::unique_ptr<State, Deleter>>,
-    Env> {
-    using type = typename State::sigs_t;
-};
-public:
+
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <typename State, typename Deleter, typename Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::spawn_future_t,
+                                                                   ::std::unique_ptr<State, Deleter>>,
+                          Env> {
+        using type = typename State::sigs_t;
+    };
+
+  public:
     template <typename Sender, typename... Env>
     static consteval auto get_completion_signatures() {
         return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
-
 };
 
 template <>

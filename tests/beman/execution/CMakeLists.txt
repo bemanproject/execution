@@ -10,13 +10,13 @@ set(execution_tests_todo) #-dk:TODO
 list(APPEND unsupported_execution_tests exec-split.test)
 set(ice_execution_tests exec-spawn-future.test)
 set(todo_execution_tests
-    exec-continues-on.test
-    exec-schedule-from.test
-    exec-bulk.test
 )
 
 list(
     APPEND execution_tests
+    exec-continues-on.test
+    exec-schedule-from.test
+    exec-bulk.test
     allocator-requirements-general.test
     exec-affine-on.test
     exec-associate.test

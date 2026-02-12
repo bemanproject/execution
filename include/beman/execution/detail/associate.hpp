@@ -116,6 +116,21 @@ struct associate_t {
     auto operator()(Token token) const {
         return ::beman::execution::detail::sender_adaptor{*this, ::std::move(token)};
     }
+
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <typename Data, typename Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::associate_t, Data>,
+                          Env> {
+        using type = ::beman::execution::completion_signatures<::beman::execution::set_value_t()>;
+    };
+
+  public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+    }
 };
 
 template <>

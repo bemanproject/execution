@@ -134,7 +134,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
 #else
     template <::beman::execution::detail::decays_to<basic_sender> Self, typename... Env>
     consteval auto get_completion_signatures(this Self&&, Env&&...) noexcept {
-        if constexpr (requires{ Tag::template get_completion_signatures<Self, Env...>(); })
+        if constexpr (requires { Tag::template get_completion_signatures<Self, Env...>(); })
             return Tag::template get_completion_signatures<Self, Env...>();
         else
             return ::beman::execution::detail::completion_signatures_for<Self, Env...>{};

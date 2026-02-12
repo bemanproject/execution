@@ -95,6 +95,13 @@ import beman.execution.detail.value_types_of_t;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
+template <typename>
+struct when_all_value_types;
+template <typename... T>
+struct when_all_value_types<::beman::execution::detail::type_list<T...>> {
+    using type = ::beman::execution::completion_signatures<::beman::execution::set_value_t(T...)>;
+};
+
 struct when_all_t {
     template <::beman::execution::sender... Sender>
         requires(0u != sizeof...(Sender)) &&
@@ -113,13 +120,40 @@ struct when_all_t {
         return ::beman::execution::transform_sender(
             common_t(), ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)...));
     }
-};
 
-template <typename>
-struct when_all_value_types;
-template <typename... T>
-struct when_all_value_types<::beman::execution::detail::type_list<T...>> {
-    using type = ::beman::execution::completion_signatures<::beman::execution::set_value_t(T...)>;
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <typename Data, typename Env, typename... Sender>
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::when_all_t, Data, Sender...>,
+        Env> {
+        template <typename... E>
+        struct error_comps_t {
+            using type = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
+        };
+        template <typename... E>
+        using error_comps = typename error_comps_t<E...>::type;
+
+        using value_types =
+            typename ::beman::execution::detail::when_all_value_types<::beman::execution::detail::meta::combine<
+                ::beman::execution::
+                    value_types_of_t<Sender, Env, ::beman::execution::detail::type_list, ::std::type_identity_t>...>>::
+                type;
+        using error_types = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
+            ::beman::execution::error_types_of_t<Sender, Env, error_comps>...>>;
+        using stopped_types =
+            ::std::conditional_t<(false || ... || ::beman::execution::sends_stopped<Sender, Env>),
+                                 ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
+                                 ::beman::execution::completion_signatures<>>;
+        using type = ::beman::execution::detail::meta::combine<value_types, error_types, stopped_types>;
+    };
+
+  public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+    }
 };
 
 template <>
@@ -295,30 +329,6 @@ struct impls_for<::beman::execution::detail::when_all_t> : ::beman::execution::d
     static constexpr auto complete{complete_impl{}};
 };
 
-template <typename Data, typename Env, typename... Sender>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::when_all_t, Data, Sender...>,
-    Env> {
-    template <typename... E>
-    struct error_comps_t {
-        using type = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
-    };
-    template <typename... E>
-    using error_comps = typename error_comps_t<E...>::type;
-
-    using value_types =
-        typename ::beman::execution::detail::when_all_value_types<::beman::execution::detail::meta::combine<
-            ::beman::execution::
-                value_types_of_t<Sender, Env, ::beman::execution::detail::type_list, ::std::type_identity_t>...>>::
-            type;
-    using error_types = ::beman::execution::detail::meta::unique<
-        ::beman::execution::detail::meta::combine<::beman::execution::error_types_of_t<Sender, Env, error_comps>...>>;
-    using stopped_types =
-        ::std::conditional_t<(false || ... || ::beman::execution::sends_stopped<Sender, Env>),
-                             ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
-                             ::beman::execution::completion_signatures<>>;
-    using type = ::beman::execution::detail::meta::combine<value_types, error_types, stopped_types>;
-};
 } // namespace beman::execution::detail
 
 namespace beman::execution {

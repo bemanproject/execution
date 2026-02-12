@@ -60,18 +60,16 @@ struct just_t {
         return ::std::forward<Sender>(sndr);
     }
 
-private:
-    template <typename> struct get_signatures;
-    template <typename C, typename... T> struct get_signatures<
-        ::beman::execution::detail::basic_sender<
-            just_t<C>,
-            ::beman::execution::detail::product_type<T...>
-        >>
-    {
+  private:
+    template <typename>
+    struct get_signatures;
+    template <typename C, typename... T>
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<just_t<C>, ::beman::execution::detail::product_type<T...>>> {
         using type = ::beman::execution::completion_signatures<::std::remove_cvref_t<C>(T...)>;
     };
 
-public:
+  public:
     template <::beman::execution::sender Sender, typename...>
     static consteval auto get_completion_signatures() {
         return typename get_signatures<::std::remove_cvref_t<Sender>>::type{};

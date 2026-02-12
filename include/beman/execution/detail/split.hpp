@@ -381,40 +381,41 @@ struct split_t {
         return ::beman::execution::transform_sender(
             domain, ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)));
     }
-    private:
-    template <typename, typename> struct get_signatures;
-template <class Sndr, class Env>
-struct get_signatures<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::split_impl_t,
-                                             ::beman::execution::detail::shared_wrapper<Sndr>>,
-    Env> {
-    template <class... Args>
-    using make_value_completions =
-        ::beman::execution::completion_signatures<::beman::execution::set_value_t(const std::decay_t<Args>&...)>;
 
-    template <class... Args>
-    using make_error_completions =
-        ::beman::execution::completion_signatures<::beman::execution::set_error_t(const std::decay_t<Args>&)...>;
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <class Sndr, class Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::split_impl_t,
+                                                                   ::beman::execution::detail::shared_wrapper<Sndr>>,
+                          Env> {
+        template <class... Args>
+        using make_value_completions =
+            ::beman::execution::completion_signatures<::beman::execution::set_value_t(const std::decay_t<Args>&...)>;
 
-    using value_completions = ::beman::execution::
-        value_types_of_t<Sndr, Env, make_value_completions, ::beman::execution::detail::meta::combine>;
+        template <class... Args>
+        using make_error_completions =
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(const std::decay_t<Args>&)...>;
 
-    using error_completions = ::beman::execution::error_types_of_t<Sndr, Env, make_error_completions>;
+        using value_completions = ::beman::execution::
+            value_types_of_t<Sndr, Env, make_value_completions, ::beman::execution::detail::meta::combine>;
 
-    using fixed_completions =
-        ::beman::execution::completion_signatures<::beman::execution::set_stopped_t(),
-                                                  ::beman::execution::set_error_t(std::exception_ptr)>;
+        using error_completions = ::beman::execution::error_types_of_t<Sndr, Env, make_error_completions>;
 
-    using type = ::beman::execution::detail::meta::unique<
-        ::beman::execution::detail::meta::combine<fixed_completions, value_completions, error_completions>>;
-};
-public:
+        using fixed_completions =
+            ::beman::execution::completion_signatures<::beman::execution::set_stopped_t(),
+                                                      ::beman::execution::set_error_t(std::exception_ptr)>;
+
+        using type = ::beman::execution::detail::meta::unique<
+            ::beman::execution::detail::meta::combine<fixed_completions, value_completions, error_completions>>;
+    };
+
+  public:
     template <typename Sender, typename... Env>
     static consteval auto get_completion_signatures() {
         return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
 };
-
 
 } // namespace beman::execution::detail
 
