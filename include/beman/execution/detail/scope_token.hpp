@@ -8,6 +8,7 @@
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/scope_association.hpp>
 #include <concepts>
 #include <type_traits>
 
@@ -30,9 +31,8 @@ static_assert(::beman::execution::sender_in<::beman::execution::detail::token_te
 
 namespace beman::execution {
 template <typename Token>
-concept scope_token = ::std::copyable<Token> && requires(Token token) {
-    { token.try_associate() } -> ::std::same_as<bool>;
-    { token.disassociate() } noexcept;
+concept scope_token = ::std::copyable<Token> && requires(const Token token) {
+    { token.try_associate() } -> ::beman::execution::scope_association;
     {
         token.wrap(::std::declval<::beman::execution::detail::token_test_sender>())
     } -> ::beman::execution::sender_in<::beman::execution::detail::token_test_env>;
