@@ -36,21 +36,14 @@ struct no_completion_signatures_defined_in_sender {};
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename Sender, typename... Env>
-struct completion_signatures_for_impl {
-            using type = ::beman::execution::detail::no_completion_signatures_defined_in_sender;
-};
 
 template <typename Sender, typename... Env>
 consteval auto get_completion_signatures_for_helper() {
     using tag_t = ::std::remove_cvref_t<::beman::execution::tag_of_t<::std::remove_cvref_t<Sender>>>;
-    if constexpr (requires{ tag_t::template get_completion_signatures<Sender, Env...>(); })
+    if constexpr (requires { tag_t::template get_completion_signatures<Sender, Env...>(); })
         return tag_t::template get_completion_signatures<Sender, Env...>();
-    else if constexpr (requires{ typename ::beman::execution::detail::completion_signatures_for_impl<::std::remove_cvref_t<Sender>, Env...>::type; })
-        return typename ::beman::execution::detail::completion_signatures_for_impl<::std::remove_cvref_t<Sender>, Env...>::type();
     else
-        return tag_t{};
-        //return ::beman::execution::detail::no_completion_signatures_defined_in_sender{};
+        return ::beman::execution::detail::no_completion_signatures_defined_in_sender{};
 }
 
 /*!

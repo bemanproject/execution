@@ -19,10 +19,6 @@ export using beman::execution::upon_stopped;
 } // namespace beman::execution
 
 namespace beman::execution::detail {
-export template <typename Completion, typename Fun, typename Sender, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::then_t<Completion>, Fun, Sender>,
-    Env>;
 export template <typename Completion>
 struct impls_for<then_t<Completion>>;
 } // namespace beman::execution::detail

@@ -77,7 +77,6 @@ struct fixed_completions_helper<F, Shape, completion_signatures<Args...>> {
     using type = std::conditional_t<!may_throw<F, Args...>::value,
                                     completion_signatures<Args...>,
                                     completion_signatures<Args..., set_error_t(std::exception_ptr)>>;
-
 };
 
 struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
@@ -101,25 +100,25 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
                 *this, ::beman::execution::detail::product_type<Shape, f>{shape, fun}, std::forward<Sender>(sndr)));
     }
 
-private:
+  private:
     template <typename F, typename Shape, typename Completions>
-        using fixed_completions = typename fixed_completions_helper<F, Shape, Completions>::type;
-    template <typename, typename> struct get_signatures;
+    using fixed_completions = typename fixed_completions_helper<F, Shape, Completions>::type;
+    template <typename, typename>
+    struct get_signatures;
     template <class Shape, class F, class Sender, class Env>
-    struct get_signatures<
-        ::beman::execution::detail::basic_sender<
-            ::beman::execution::detail::bulk_t, ::beman::execution::detail::product_type<Shape, F>, Sender>,
-        Env> {
-        using completions = decltype(get_completion_signatures(std::declval<Sender>(), std::declval<Env>()));
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::bulk_t,
+                                                                   ::beman::execution::detail::product_type<Shape, F>,
+                                                                   Sender>,
+                          Env> {
+        using completions = decltype(::beman::execution::get_completion_signatures(std::declval<Sender>(), std::declval<Env>()));
         using type        = ::beman::execution::detail::meta::unique<
-                ::beman::execution::detail::meta::combine<fixed_completions<F, Shape, completions>>>;
+                   ::beman::execution::detail::meta::combine<fixed_completions<F, Shape, completions>>>;
     };
 
-
-public:
+  public:
     template <typename Sender, typename... Env>
-    consteval static auto get_completion_signatures() {
-        return typename get_signatures<Sender, Env...>::type{};
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
 };
 

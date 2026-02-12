@@ -99,23 +99,26 @@ struct schedule_from_t {
             ::beman::execution::detail::make_sender(
                 *this, ::std::forward<Scheduler>(scheduler), ::std::forward<Sender>(sender)));
     }
-    private:
-    template <typename, typename> struct get_signatures;
-template <typename Scheduler, typename Sender, typename Env>
-struct get_signatures<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::schedule_from_t, Scheduler, Sender>,
-    Env> {
-    using scheduler_sender = decltype(::beman::execution::schedule(::std::declval<Scheduler>()));
-    template <typename... E>
-    using as_set_error = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
-    using type         = ::beman::execution::detail::meta::combine<
-                decltype(::beman::execution::get_completion_signatures(::std::declval<Sender>(), ::std::declval<Env>())),
-                ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
-                ::beman::execution::completion_signatures<::beman::execution::set_error_t(
-            ::std::exception_ptr)> //-dk:TODO this one should be deduced
-                >;
-};
-public:
+
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <typename Scheduler, typename Sender, typename Env>
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::schedule_from_t, Scheduler, Sender>,
+        Env> {
+        using scheduler_sender = decltype(::beman::execution::schedule(::std::declval<Scheduler>()));
+        template <typename... E>
+        using as_set_error = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
+        using type         = ::beman::execution::detail::meta::combine<
+                    decltype(::beman::execution::get_completion_signatures(::std::declval<Sender>(), ::std::declval<Env>())),
+                    ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
+                    ::beman::execution::completion_signatures<::beman::execution::set_error_t(
+                ::std::exception_ptr)> //-dk:TODO this one should be deduced
+                    >;
+    };
+
+  public:
     template <typename Sender, typename... Env>
     static consteval auto get_completion_signatures() {
         return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};

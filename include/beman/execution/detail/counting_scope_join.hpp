@@ -55,7 +55,7 @@ struct counting_scope_join_t {
 
     template <typename Sender, typename...>
     static consteval auto get_completion_signatures() noexcept {
-            return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>{};
+        return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>{};
     }
 };
 inline constexpr counting_scope_join_t counting_scope_join{};

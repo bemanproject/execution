@@ -50,15 +50,24 @@ struct write_env_t {
     static auto affine_on(Sender&& sndr, const Env&) noexcept {
         return ::std::forward<Sender>(sndr);
     }
-};
 
-template <typename NewEnv, typename Child, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::write_env_t, NewEnv, Child>,
-    Env> {
-    using type = decltype(::beman::execution::get_completion_signatures(
-        ::std::declval<Child>(),
-        ::beman::execution::detail::join_env(::std::declval<NewEnv>(), ::std::declval<Env>())));
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <typename NewEnv, typename Child, typename Env>
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::write_env_t, NewEnv, Child>,
+        Env> {
+        using type = decltype(::beman::execution::get_completion_signatures(
+            ::std::declval<Child>(),
+            ::beman::execution::detail::join_env(::std::declval<NewEnv>(), ::std::declval<Env>())));
+    };
+
+  public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+    }
 };
 
 template <>

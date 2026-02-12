@@ -109,8 +109,9 @@ struct impls_for<::beman::execution::detail::continues_on_t> : ::beman::executio
 template <::beman::execution::detail::sender_for<::beman::execution::detail::continues_on_t> Sender, typename Env>
 auto get_domain_late(Sender&& sender, Env&&) {
 #else
-template <typename Env, typename...T>
-auto get_domain_late(::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, T...> const& sender, Env&&) {
+template <typename Env, typename... T>
+auto get_domain_late(
+    ::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, T...> const& sender, Env&&) {
 #endif
     auto scheduler{sender.template get<1>()};
     return ::beman::execution::detail::query_with_default(

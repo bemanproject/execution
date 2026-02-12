@@ -11,6 +11,5 @@ export module beman.execution.detail.completion_signatures_for;
 
 namespace beman::execution::detail {
 export using beman::execution::detail::completion_signatures_for;
-export using beman::execution::detail::completion_signatures_for_impl;
 export using beman::execution::detail::no_completion_signatures_defined_in_sender;
 } // namespace beman::execution::detail

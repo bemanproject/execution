@@ -132,10 +132,14 @@ struct let_t {
     static auto join_env(Sender&& sender, Env&& e) -> decltype(auto) {
         return ::beman::execution::detail::join_env(env(sender), ::beman::execution::detail::fwd_env(e));
     }
-private:
-    template <typename, typename> struct get_signatures;
+
+  private:
+    template <typename, typename>
+    struct get_signatures;
     template <typename Comp, typename Fun, typename Child, typename Env>
-    struct get_signatures< ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Comp>, Fun, Child>, Env> {
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Comp>, Fun, Child>,
+        Env> {
         template <typename>
         struct other_completion : ::std::true_type {};
         template <typename... A>
@@ -165,11 +169,13 @@ private:
         using upstream_completions = decltype(::beman::execution::get_completion_signatures(
             ::std::declval<Child>(), ::std::declval<upstream_env>()));
         using other_completions    = ::beman::execution::detail::meta::filter<other_completion, upstream_completions>;
-        using matching_completions = ::beman::execution::detail::meta::filter<matching_completion, upstream_completions>;
+        using matching_completions =
+            ::beman::execution::detail::meta::filter<matching_completion, upstream_completions>;
         using type = ::beman::execution::detail::meta::combine<typename get_completions<matching_completions>::type,
                                                                other_completions>;
     };
-    public:
+
+  public:
     template <typename Sender, typename... Env>
     static consteval auto get_completion_signatures() {
         return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
