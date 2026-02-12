@@ -381,10 +381,10 @@ struct split_t {
         return ::beman::execution::transform_sender(
             domain, ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)));
     }
-};
-
+    private:
+    template <typename, typename> struct get_signatures;
 template <class Sndr, class Env>
-struct completion_signatures_for_impl<
+struct get_signatures<
     ::beman::execution::detail::basic_sender<::beman::execution::detail::split_impl_t,
                                              ::beman::execution::detail::shared_wrapper<Sndr>>,
     Env> {
@@ -408,6 +408,13 @@ struct completion_signatures_for_impl<
     using type = ::beman::execution::detail::meta::unique<
         ::beman::execution::detail::meta::combine<fixed_completions, value_completions, error_completions>>;
 };
+public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+    }
+};
+
 
 } // namespace beman::execution::detail
 

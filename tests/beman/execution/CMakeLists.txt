@@ -114,7 +114,7 @@ list(
 #set(execution_tests exec-continues-on.test exec-schedule-from.test)
 #set(execution_tests exec-snd-expos.test)
 #set(execution_tests exec-getcomplsigs.test)
-#set(execution_tests exec-just.test)
+#set(execution_tests exec-let.test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

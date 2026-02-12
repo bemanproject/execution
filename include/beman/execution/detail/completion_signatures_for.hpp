@@ -43,7 +43,7 @@ struct completion_signatures_for_impl {
 
 template <typename Sender, typename... Env>
 consteval auto get_completion_signatures_for_helper() {
-    using tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<Sender>>;
+    using tag_t = ::std::remove_cvref_t<::beman::execution::tag_of_t<::std::remove_cvref_t<Sender>>>;
     if constexpr (requires{ tag_t::template get_completion_signatures<Sender, Env...>(); })
         return tag_t::template get_completion_signatures<Sender, Env...>();
     else if constexpr (requires{ typename ::beman::execution::detail::completion_signatures_for_impl<::std::remove_cvref_t<Sender>, Env...>::type; })

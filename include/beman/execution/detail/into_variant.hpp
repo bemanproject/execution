@@ -67,6 +67,39 @@ struct into_variant_t {
         //     ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender))
         //);
     }
+    private:
+    template <typename... E>
+    using make_error_types = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
+
+private:
+    template <typename, typename> struct get_signatures;
+    template <::beman::execution::sender Child, typename State, typename Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::into_variant_t, State, Child>, Env>
+    {
+
+    static consteval auto get() {
+        using variant_type = ::beman::execution::value_types_of_t<Child, Env>;
+        using value_types =
+            ::std::conditional_t<::std::same_as<variant_type, ::beman::execution::detail::empty_variant>,
+                                 ::beman::execution::completion_signatures<>,
+                                 ::beman::execution::completion_signatures<::beman::execution::set_value_t(variant_type)>>;
+
+        using error_types = ::beman::execution::error_types_of_t<Child, Env, make_error_types>;
+        using stopped_types =
+            ::std::conditional_t<::beman::execution::sends_stopped<Child, Env>,
+                                 ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
+                                 ::beman::execution::completion_signatures<>>;
+        using type = ::beman::execution::detail::meta::
+            combine<value_types, ::beman::execution::detail::meta::combine<error_types, stopped_types>>;
+        return type{};
+    }
+    };
+
+public:
+    template <::beman::execution::sender Sender, typename Env>
+    static consteval auto get_completion_signatures() {
+        return get_signatures<::std::remove_cvref_t<Sender>, Env>::get();
+    }
 };
 
 template <>
@@ -104,26 +137,6 @@ struct impls_for<::beman::execution::detail::into_variant_t> : ::beman::executio
     static constexpr auto complete{complete_impl{}};
 };
 
-template <typename Sender, typename State, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::into_variant_t, State, Sender>,
-    Env> {
-    using variant_type = ::beman::execution::value_types_of_t<Sender, Env>;
-    using value_types =
-        ::std::conditional_t<::std::same_as<variant_type, ::beman::execution::detail::empty_variant>,
-                             ::beman::execution::completion_signatures<>,
-                             ::beman::execution::completion_signatures<::beman::execution::set_value_t(variant_type)>>;
-    template <typename... E>
-    using make_error_types = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
-
-    using error_types = ::beman::execution::error_types_of_t<Sender, Env, make_error_types>;
-    using stopped_types =
-        ::std::conditional_t<::beman::execution::sends_stopped<Sender, Env>,
-                             ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
-                             ::beman::execution::completion_signatures<>>;
-    using type = ::beman::execution::detail::meta::
-        combine<value_types, ::beman::execution::detail::meta::combine<error_types, stopped_types>>;
-};
 } // namespace beman::execution::detail
 
 namespace beman::execution {

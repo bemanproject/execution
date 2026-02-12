@@ -19,6 +19,7 @@ import std;
 import beman.execution.detail.allocator_aware_move;
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.call_result_t;
+import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.connect;
@@ -130,6 +131,48 @@ struct let_t {
     template <typename Sender, typename Env>
     static auto join_env(Sender&& sender, Env&& e) -> decltype(auto) {
         return ::beman::execution::detail::join_env(env(sender), ::beman::execution::detail::fwd_env(e));
+    }
+private:
+    template <typename, typename> struct get_signatures;
+    template <typename Comp, typename Fun, typename Child, typename Env>
+    struct get_signatures< ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Comp>, Fun, Child>, Env> {
+        template <typename>
+        struct other_completion : ::std::true_type {};
+        template <typename... A>
+        struct other_completion<Comp(A...)> : ::std::false_type {};
+        template <typename>
+        struct matching_completion : ::std::false_type {};
+        template <typename... A>
+        struct matching_completion<Comp(A...)> : ::std::true_type {};
+
+        template <typename>
+        struct apply_decayed;
+        template <typename C, typename... A>
+        struct apply_decayed<C(A...)> {
+            using sender_type = ::beman::execution::detail::call_result_t<Fun, ::std::decay_t<A>...>;
+        };
+        template <typename>
+        struct get_completions;
+        template <template <typename...> class L, typename... C>
+        struct get_completions<L<C...>> {
+            using type = ::beman::execution::detail::meta::unique<
+                ::beman::execution::detail::meta::combine<decltype(::beman::execution::get_completion_signatures(
+                    std::declval<typename apply_decayed<C>::sender_type>(), std::declval<Env>()))...>>;
+        };
+
+        using upstream_env = decltype(::beman::execution::detail::let_t<Comp>::join_env(::std::declval<Child>(),
+                                                                                        ::std::declval<Env>()));
+        using upstream_completions = decltype(::beman::execution::get_completion_signatures(
+            ::std::declval<Child>(), ::std::declval<upstream_env>()));
+        using other_completions    = ::beman::execution::detail::meta::filter<other_completion, upstream_completions>;
+        using matching_completions = ::beman::execution::detail::meta::filter<matching_completion, upstream_completions>;
+        using type = ::beman::execution::detail::meta::combine<typename get_completions<matching_completions>::type,
+                                                               other_completions>;
+    };
+    public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
 };
 
@@ -244,43 +287,6 @@ struct impls_for<::beman::execution::detail::let_t<Completion>> : ::beman::execu
     static constexpr auto complete{complete_impl{}};
 };
 
-template <typename Completion, typename Fun, typename Sender, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Completion>, Fun, Sender>,
-    Env> {
-    template <typename>
-    struct other_completion : ::std::true_type {};
-    template <typename... A>
-    struct other_completion<Completion(A...)> : ::std::false_type {};
-    template <typename>
-    struct matching_completion : ::std::false_type {};
-    template <typename... A>
-    struct matching_completion<Completion(A...)> : ::std::true_type {};
-
-    template <typename>
-    struct apply_decayed;
-    template <typename C, typename... A>
-    struct apply_decayed<C(A...)> {
-        using sender_type = ::beman::execution::detail::call_result_t<Fun, ::std::decay_t<A>...>;
-    };
-    template <typename>
-    struct get_completions;
-    template <template <typename...> class L, typename... C>
-    struct get_completions<L<C...>> {
-        using type = ::beman::execution::detail::meta::unique<
-            ::beman::execution::detail::meta::combine<decltype(::beman::execution::get_completion_signatures(
-                std::declval<typename apply_decayed<C>::sender_type>(), std::declval<Env>()))...>>;
-    };
-
-    using upstream_env = decltype(::beman::execution::detail::let_t<Completion>::join_env(::std::declval<Sender>(),
-                                                                                          ::std::declval<Env>()));
-    using upstream_completions = decltype(::beman::execution::get_completion_signatures(
-        ::std::declval<Sender>(), ::std::declval<upstream_env>()));
-    using other_completions    = ::beman::execution::detail::meta::filter<other_completion, upstream_completions>;
-    using matching_completions = ::beman::execution::detail::meta::filter<matching_completion, upstream_completions>;
-    using type = ::beman::execution::detail::meta::combine<typename get_completions<matching_completions>::type,
-                                                           other_completions>;
-};
 } // namespace beman::execution::detail
 
 #include <beman/execution/detail/suppress_pop.hpp>
