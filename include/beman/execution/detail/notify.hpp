@@ -65,6 +65,11 @@ struct notify_t {
     auto operator()(::beman::execution::detail::notifier& n) const {
         return ::beman::execution::detail::make_sender(*this, &n);
     }
+
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>();
+    }
 };
 inline constexpr ::beman::execution::detail::notify_t notify{};
 
@@ -87,13 +92,6 @@ struct impls_for<::beman::execution::detail::notify_t> : ::beman::execution::det
             state.complete();
         }
     }};
-};
-
-template <typename Notifier, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::notify_t, Notifier>,
-    Env> {
-    using type = ::beman::execution::completion_signatures<::beman::execution::set_value_t()>;
 };
 } // namespace beman::execution::detail
 
