@@ -15,7 +15,7 @@ namespace beman::execution::detail {
 export using beman::execution::detail::basic_sender;
 } // namespace beman::execution::detail
 
-#if not defined(__GNUC__) || defined(__clang__)
+#ifdef _MSC_VER
 namespace std {
 export template <typename Tag, typename Data, typename... Child>
 struct tuple_size<::beman::execution::detail::basic_sender<Tag, Data, Child...>>
