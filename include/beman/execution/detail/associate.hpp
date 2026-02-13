@@ -14,9 +14,7 @@
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/impls_for.hpp>
-#include "beman/execution/detail/sender_adaptor.hpp"
-#include <type_traits>
-#include <optional>
+#include <beman/execution/detail/sender_adaptor.hpp>
 #include <memory>
 #include <utility>
 
@@ -27,7 +25,7 @@ template <::beman::execution::scope_token Token, ::beman::execution::sender Send
 struct associate_data {
     using wrap_sender = ::std::remove_cvref_t<decltype(::std::declval<Token&>().wrap(::std::declval<Sender>()))>;
     using assoc_t     = decltype(::std::declval<Token&>().try_associate());
-    using sender_ref  = ::std::unique_ptr<wrap_sender, decltype([](wrap_sender* ptr) { ::std::destroy_at(ptr); })>;
+    using sender_ref  = ::std::unique_ptr<wrap_sender, decltype(std::ranges::destroy_at)>;
 
     explicit associate_data(Token t, Sender&& s) : sender(t.wrap(::std::forward<Sender>(s))) {
         sender_ref guard{::std::addressof(this->sender)};

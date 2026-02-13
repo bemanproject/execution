@@ -141,6 +141,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule_result_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler_t.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_association.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_adaptor.hpp
