@@ -119,81 +119,80 @@ struct associate_t {
     static consteval auto get_completion_signatures() {
         return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
-};
+    struct impls_for : ::beman::execution::detail::default_impls {
+        template <typename, typename>
+        struct get_noexcept : ::std::false_type {};
+        template <typename Tag, typename Data, typename Receiver>
+        struct get_noexcept<::beman::execution::detail::basic_sender<Tag, Data>, Receiver>
+            : ::std::bool_constant<
+                  ::std::is_nothrow_move_constructible_v<typename ::std::remove_cvref_t<Data>::wrap_sender>&& ::beman::
+                      execution::detail::nothrow_callable<::beman::execution::connect_t,
+                                                          typename ::std::remove_cvref_t<Data>::wrap_sender,
+                                                          Receiver>> {};
 
-template <>
-struct impls_for<associate_t> : ::beman::execution::detail::default_impls {
-    template <typename, typename>
-    struct get_noexcept : ::std::false_type {};
-    template <typename Tag, typename Data, typename Receiver>
-    struct get_noexcept<::beman::execution::detail::basic_sender<Tag, Data>, Receiver>
-        : ::std::bool_constant<
-              ::std::is_nothrow_move_constructible_v<typename ::std::remove_cvref_t<Data>::wrap_sender>&& ::beman::
-                  execution::detail::nothrow_callable<::beman::execution::connect_t,
-                                                      typename ::std::remove_cvref_t<Data>::wrap_sender,
-                                                      Receiver>> {};
+        struct get_state_impl {
+            template <typename Sender, typename Receiver>
+            auto operator()(Sender&& sender, Receiver& receiver) const
+                noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
+                         get_noexcept<::std::remove_cvref_t<Sender>, Receiver>::value) {
+                std::cout << "associate get_state_impl\n" << std::flush;
+                auto [_, data] = ::std::forward<Sender>(sender);
+                auto dataParts{data.release()};
 
-    struct get_state_impl {
-        template <typename Sender, typename Receiver>
-        auto operator()(Sender&& sender, Receiver& receiver) const
-            noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
-                     get_noexcept<::std::remove_cvref_t<Sender>, Receiver>::value) {
-            auto [_, data] = ::std::forward<Sender>(sender);
-            auto dataParts{data.release()};
+                using scope_token = decltype(dataParts->first);
+                using wrap_sender = decltype(dataParts->second);
+                using op_t        = decltype(::beman::execution::connect(::std::move(dataParts->second),
+                                                                  ::std::forward<Receiver>(receiver)));
 
-            using scope_token = decltype(dataParts->first);
-            using wrap_sender = decltype(dataParts->second);
-            using op_t        = decltype(::beman::execution::connect(::std::move(dataParts->second),
-                                                              ::std::forward<Receiver>(receiver)));
+                struct op_state {
+                    using sop_t        = op_t;
+                    using sscope_token = scope_token;
+                    struct assoc_t {
+                        sscope_token tok;
+                        sop_t        op;
+                    };
 
-            struct op_state {
-                using sop_t        = op_t;
-                using sscope_token = scope_token;
-                struct assoc_t {
-                    sscope_token tok;
-                    sop_t        op;
-                };
-
-                bool associated{false};
-                union {
-                    Receiver* rcvr;
-                    assoc_t   assoc;
-                };
-                explicit op_state(Receiver& r) noexcept : rcvr(::std::addressof(r)) {}
-                explicit op_state(sscope_token tk, wrap_sender&& sndr, Receiver& r) try
-                    : associated(true), assoc(tk, ::beman::execution::connect(::std::move(sndr), ::std::move(r))) {
-                } catch (...) {
-                    tk.disassociate();
-                    throw;
-                }
-                op_state(op_state&&) = delete;
-                ~op_state() {
-                    if (this->associated) {
-                        this->assoc.op.~sop_t();
-                        this->assoc.tok.disassociate();
-                        this->assoc.tok.~sscope_token();
+                    bool associated{false};
+                    union {
+                        Receiver* rcvr;
+                        assoc_t   assoc;
+                    };
+                    explicit op_state(Receiver& r) noexcept : rcvr(::std::addressof(r)) {}
+                    explicit op_state(sscope_token tk, wrap_sender&& sndr, Receiver& r) try
+                        : associated(true), assoc(tk, ::beman::execution::connect(::std::move(sndr), ::std::move(r))) {
+                    } catch (...) {
+                        tk.disassociate();
+                        throw;
                     }
-                }
-                auto run() noexcept -> void {
-                    if (this->associated) {
-                        ::beman::execution::start(this->assoc.op);
-                    } else {
-                        ::beman::execution::set_stopped(::std::move(*this->rcvr));
+                    op_state(op_state&&) = delete;
+                    ~op_state() {
+                        if (this->associated) {
+                            this->assoc.op.~sop_t();
+                            this->assoc.tok.disassociate();
+                            this->assoc.tok.~sscope_token();
+                        }
                     }
-                }
-            };
-            return dataParts ? op_state(::std::move(dataParts->first), ::std::move(dataParts->second), receiver)
-                             : op_state(receiver);
-        }
+                    auto run() noexcept -> void {
+                        if (this->associated) {
+                            ::beman::execution::start(this->assoc.op);
+                        } else {
+                            ::beman::execution::set_stopped(::std::move(*this->rcvr));
+                        }
+                    }
+                };
+                if (dataParts) return op_state(::std::move(dataParts->first), ::std::move(dataParts->second), receiver);
+                                 else return op_state(receiver);
+            }
+        };
+        static constexpr auto get_state{get_state_impl{}};
+        struct start_impl {
+            auto operator()(auto& state, auto&&) const noexcept -> void {
+                std::cout << "associate start_impl\n" << std::flush;
+                state.run();
+            }
+        };
+        static constexpr auto start{start_impl{}};
     };
-    static constexpr auto get_state{get_state_impl{}};
-    struct start_impl {
-        auto operator()(auto& state, auto&&) const noexcept -> void {
-            std::cout << "associate start_impl\n";
-            state.run();
-        }
-    };
-    static constexpr auto start{start_impl{}};
 };
 
 } // namespace beman::execution::detail

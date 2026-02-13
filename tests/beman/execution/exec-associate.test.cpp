@@ -155,7 +155,7 @@ auto test_associate(Sender&& sender, Token&& token) -> void {
 TEST(exec_associate) {
     static_assert(std::same_as<const test_std::associate_t, decltype(test_std::associate)>);
 
-    //-dk:TODO test_associate_data();
+    test_associate_data();
 
-    //-dk:TODO test_associate(sender{}, token<true>{});
+    test_associate(sender{}, token<true>{});
 }

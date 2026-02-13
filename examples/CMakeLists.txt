@@ -36,6 +36,7 @@ set(EXAMPLES
 
 if(BEMAN_USE_MODULES)
     list(APPEND EXAMPLES modules modules-and-header)
+    set(EXAMPLES)
 endif()
 
 foreach(EXAMPLE ${EXAMPLES})
