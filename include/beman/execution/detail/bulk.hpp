@@ -110,9 +110,10 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
                                                                    ::beman::execution::detail::product_type<Shape, F>,
                                                                    Sender>,
                           Env> {
-        using completions = decltype(::beman::execution::get_completion_signatures(std::declval<Sender>(), std::declval<Env>()));
-        using type        = ::beman::execution::detail::meta::unique<
-                   ::beman::execution::detail::meta::combine<fixed_completions<F, Shape, completions>>>;
+        using completions =
+            decltype(::beman::execution::get_completion_signatures(std::declval<Sender>(), std::declval<Env>()));
+        using type = ::beman::execution::detail::meta::unique<
+            ::beman::execution::detail::meta::combine<fixed_completions<F, Shape, completions>>>;
     };
 
   public:
@@ -120,45 +121,43 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
     static consteval auto get_completion_signatures() {
         return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
-};
+    struct impls_for : ::beman::execution::detail::default_impls {
 
-template <>
-struct impls_for<bulk_t> : ::beman::execution::detail::default_impls {
+        struct complete_impl {
+            template <class Index, class Shape, class Fun, class Rcvr, class Tag, class... Args>
+                requires(!::std::same_as<Tag, set_value_t> || std::is_invocable_v<Fun, Shape, Args...>)
+            auto operator()(Index,
+                            ::beman::execution::detail::product_type<Shape, Fun>& state,
+                            Rcvr&                                                 rcvr,
+                            Tag,
+                            Args&&... args) const noexcept -> void {
+                if constexpr (std::same_as<Tag, set_value_t>) {
+                    auto& [shape, f] = state;
 
-    struct complete_impl {
-        template <class Index, class Shape, class Fun, class Rcvr, class Tag, class... Args>
-            requires(!::std::same_as<Tag, set_value_t> || std::is_invocable_v<Fun, Shape, Args...>)
-        auto operator()(Index,
-                        ::beman::execution::detail::product_type<Shape, Fun>& state,
-                        Rcvr&                                                 rcvr,
-                        Tag,
-                        Args&&... args) const noexcept -> void {
-            if constexpr (std::same_as<Tag, set_value_t>) {
-                auto& [shape, f] = state;
+                    using s_type = std::remove_cvref_t<decltype(shape)>;
 
-                using s_type = std::remove_cvref_t<decltype(shape)>;
+                    constexpr bool nothrow = noexcept(f(s_type(shape), args...));
 
-                constexpr bool nothrow = noexcept(f(s_type(shape), args...));
+                    try {
+                        [&]() noexcept(nothrow) {
+                            for (decltype(s_type(shape)) i = 0; i < shape; i++) {
+                                f(s_type(i), args...);
+                            }
+                            Tag()(std::move(rcvr), std::forward<Args>(args)...);
+                        }();
 
-                try {
-                    [&]() noexcept(nothrow) {
-                        for (decltype(s_type(shape)) i = 0; i < shape; i++) {
-                            f(s_type(i), args...);
+                    } catch (...) {
+                        if constexpr (not nothrow) {
+                            ::beman::execution::set_error(std::move(rcvr), std::current_exception());
                         }
-                        Tag()(std::move(rcvr), std::forward<Args>(args)...);
-                    }();
-
-                } catch (...) {
-                    if constexpr (not nothrow) {
-                        ::beman::execution::set_error(std::move(rcvr), std::current_exception());
                     }
+                } else {
+                    Tag()(std::move(rcvr), std::forward<Args>(args)...);
                 }
-            } else {
-                Tag()(std::move(rcvr), std::forward<Args>(args)...);
             }
-        }
+        };
+        static constexpr auto complete{complete_impl{}};
     };
-    static constexpr auto complete{complete_impl{}};
 };
 
 } // namespace beman::execution::detail

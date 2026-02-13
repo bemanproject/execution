@@ -13,7 +13,3 @@ namespace beman::execution {
 export using beman::execution::write_env_t;
 export using beman::execution::write_env;
 } // namespace beman::execution
-
-namespace beman::execution::detail {
-export BEMAN_SPECIALIZE_EXPORT struct impls_for<write_env_t>;
-} // namespace beman::execution::detail

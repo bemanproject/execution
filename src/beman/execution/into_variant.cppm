@@ -13,7 +13,3 @@ namespace beman::execution {
 export using beman::execution::into_variant;
 export using beman::execution::into_variant_t;
 } // namespace beman::execution
-
-namespace beman::execution::detail {
-export BEMAN_SPECIALIZE_EXPORT struct impls_for<::beman::execution::detail::into_variant_t>;
-} // namespace beman::execution::detail

@@ -60,7 +60,7 @@ template <typename Sender, typename Receiver, typename Index>
     using receiver_concept                = ::beman::execution::receiver_t;
     using tag_t                           = ::beman::execution::tag_of_t<Sender>;
     using state_t                         = ::beman::execution::detail::state_type<Sender, Receiver>;
-    static constexpr const auto& complete = ::beman::execution::detail::impls_for<tag_t>::complete;
+    static constexpr const auto& complete = ::beman::execution::detail::get_impls_for<tag_t>::complete();
     ::beman::execution::detail::basic_state<Sender, Receiver>* op{};
 
   private:
@@ -96,7 +96,8 @@ template <typename Sender, typename Receiver, typename Index>
     }
 
     auto get_env() const noexcept -> ::beman::execution::detail::env_type<Index, Sender, Receiver> {
-        return ::beman::execution::detail::impls_for<tag_t>::get_env(Index(), this->op->state, this->op->receiver);
+        return ::beman::execution::detail::get_impls_for<tag_t>::get_env()(
+            Index(), this->op->state, this->op->receiver);
     }
 };
 } // namespace beman::execution::detail

@@ -17,8 +17,3 @@ export using beman::execution::let_error;
 export using beman::execution::let_stopped_t;
 export using beman::execution::let_stopped;
 } // namespace beman::execution
-
-namespace beman::execution::detail {
-export template <typename Completion>
-struct impls_for<::beman::execution::detail::let_t<Completion>>;
-} // namespace beman::execution::detail

@@ -16,8 +16,6 @@ export using beman::execution::continues_on;
 } // namespace beman::execution
 
 namespace beman::execution::detail {
-export BEMAN_SPECIALIZE_EXPORT struct impls_for<::beman::execution::detail::continues_on_t>;
-
 export template <typename Env, typename... T>
 auto get_domain_late(
     const ::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, T...>& sender, Env&&) {

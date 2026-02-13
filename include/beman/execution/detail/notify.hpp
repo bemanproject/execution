@@ -42,8 +42,9 @@ class notifier : ::beman::execution::detail::immovable {
         }
     }
 
-  private:
-    friend struct impls_for<::beman::execution::detail::notify_t>;
+  public:
+    struct impls_for;
+    friend struct impls_for;
     struct base : ::beman::execution::detail::virtual_immovable {
         base*        next{};
         virtual auto complete() -> void = 0;
@@ -70,29 +71,35 @@ struct notify_t {
     static consteval auto get_completion_signatures() {
         return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>();
     }
+
+    struct impls_for : ::beman::execution::detail::default_impls {
+        template <typename Receiver>
+        struct state : ::beman::execution::detail::notifier::base {
+            ::beman::execution::detail::notifier* n;
+            ::std::remove_cvref_t<Receiver>&      receiver{};
+            state(::beman::execution::detail::notifier* nn, ::std::remove_cvref_t<Receiver>& rcvr)
+                : n(nn), receiver(rcvr) {}
+            auto complete() -> void override { ::beman::execution::set_value(::std::move(this->receiver)); }
+        };
+        struct get_state_impl {
+            template <typename Sender, typename Receiver>
+            auto operator()(Sender&& sender, Receiver&& receiver) const {
+                ::beman::execution::detail::notifier* n{sender.template get<1>()};
+                return state<Receiver>(n, receiver);
+            }
+        };
+        static constexpr auto get_state{get_state_impl{}};
+        struct start_impl {
+            auto operator()(auto& state, auto&) const noexcept -> void {
+                if (not state.n->add(&state)) {
+                    state.complete();
+                }
+            }
+        };
+        static constexpr auto start{start_impl{}};
+    };
 };
 inline constexpr ::beman::execution::detail::notify_t notify{};
-
-template <>
-struct impls_for<::beman::execution::detail::notify_t> : ::beman::execution::detail::default_impls {
-    template <typename Receiver>
-    struct state : ::beman::execution::detail::notifier::base {
-        ::beman::execution::detail::notifier* n;
-        ::std::remove_cvref_t<Receiver>&      receiver{};
-        state(::beman::execution::detail::notifier* nn, ::std::remove_cvref_t<Receiver>& rcvr)
-            : n(nn), receiver(rcvr) {}
-        auto complete() -> void override { ::beman::execution::set_value(::std::move(this->receiver)); }
-    };
-    static constexpr auto get_state{[]<typename Sender, typename Receiver>(Sender&& sender, Receiver&& receiver) {
-        ::beman::execution::detail::notifier* n{sender.template get<1>()};
-        return state<Receiver>(n, receiver);
-    }};
-    static constexpr auto start{[](auto& state, auto&) noexcept -> void {
-        if (not state.n->add(&state)) {
-            state.complete();
-        }
-    }};
-};
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------

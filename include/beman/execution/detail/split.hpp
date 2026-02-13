@@ -71,8 +71,7 @@ import beman.execution.detail.value_types_of_t;
 namespace beman::execution::detail {
 
 struct split_impl_t {};
-template <>
-struct impls_for<split_impl_t> : ::beman::execution::detail::default_impls {
+struct impls_for : ::beman::execution::detail::default_impls {
 
     template <class Sndr>
     struct shared_state;
@@ -321,6 +320,8 @@ struct impls_for<split_impl_t> : ::beman::execution::detail::default_impls {
         state.start();
     };
 };
+
+}
 
 template <class Sndr>
 struct shared_wrapper {

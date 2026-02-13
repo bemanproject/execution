@@ -85,7 +85,9 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     template <::beman::execution::detail::sender_for<on_t> OutSndr, typename Env>
     auto transform_sender(OutSndr&& out_sndr, Env&& env) const -> decltype(auto) {
         struct not_a_scheduler {};
-        auto&& [_, data, child] = out_sndr;
+        // auto&& [_, data, child] = out_sndr;
+        auto&& data  = out_sndr.template get<1>();
+        auto&& child = out_sndr.template get<2>();
 
         if constexpr (::beman::execution::scheduler<decltype(data)>) {
             auto sch{::beman::execution::detail::query_with_default(

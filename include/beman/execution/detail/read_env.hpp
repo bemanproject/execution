@@ -63,21 +63,19 @@ struct read_env_t {
     static consteval auto get_completion_signatures() {
         return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
     }
-};
-
-template <>
-struct impls_for<::beman::execution::detail::read_env_t> : ::beman::execution::detail::default_impls {
-    struct start_impl {
-        auto operator()(auto query, auto& receiver) const noexcept -> void {
-            try {
-                auto env{::beman::execution::get_env(receiver)};
-                ::beman::execution::set_value(::std::move(receiver), query(env));
-            } catch (...) {
-                ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct start_impl {
+            auto operator()(auto query, auto& receiver) const noexcept -> void {
+                try {
+                    auto env{::beman::execution::get_env(receiver)};
+                    ::beman::execution::set_value(::std::move(receiver), query(env));
+                } catch (...) {
+                    ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                }
             }
-        }
+        };
+        static constexpr auto start{start_impl{}};
     };
-    static constexpr auto start{start_impl{}};
 };
 
 } // namespace beman::execution::detail

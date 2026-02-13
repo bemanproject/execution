@@ -30,7 +30,7 @@ struct product_type_base;
 template <::std::size_t... I, typename... T>
 struct product_type_base<::std::index_sequence<I...>, T...>
     : ::beman::execution::detail::product_type_element<I, T>... {
-    static constexpr ::std::size_t size() { return sizeof...(T); }
+    static constexpr ::std::size_t size() noexcept { return sizeof...(T); }
     static constexpr bool          is_product_type{true};
 
     template <::std::size_t J, typename S>

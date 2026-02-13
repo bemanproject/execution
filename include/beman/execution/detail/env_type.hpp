@@ -29,7 +29,7 @@ namespace beman::execution::detail {
  */
 template <typename Index, typename Sender, typename Receiver>
 using env_type = ::beman::execution::detail::call_result_t<
-    decltype(::beman::execution::detail::impls_for<::beman::execution::tag_of_t<Sender>>::get_env),
+    decltype(::beman::execution::detail::get_impls_for<::beman::execution::tag_of_t<Sender>>::get_env()),
     Index,
     ::beman::execution::detail::state_type<Sender, Receiver>&,
     const Receiver&>;
