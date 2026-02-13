@@ -180,8 +180,10 @@ struct associate_t {
                         }
                     }
                 };
-                if (dataParts) return op_state(::std::move(dataParts->first), ::std::move(dataParts->second), receiver);
-                                 else return op_state(receiver);
+                if (dataParts)
+                    return op_state(::std::move(dataParts->first), ::std::move(dataParts->second), receiver);
+                else
+                    return op_state(receiver);
             }
         };
         static constexpr auto get_state{get_state_impl{}};

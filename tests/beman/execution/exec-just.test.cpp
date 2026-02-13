@@ -36,13 +36,9 @@ auto test_just_constraints(CPO const& cpo, T&&... args) -> void {
     static_assert(Expect == requires { cpo(::std::forward<T>(args)...); });
     if constexpr (requires { cpo(::std::forward<T>(args)...); }) {
         auto sender{cpo(::std::forward<T>(args)...)};
-        using sender_t = decltype(sender);
 
         static_assert(test_std::sender<decltype(cpo(::std::forward<T>(args)...))>);
         static_assert(test_std::sender_in<decltype(cpo(::std::forward<T>(args)...))>);
-        //-dk:TODO remove
-        // static_assert(std::same_as<test_std::completion_signatures<Completion(std::remove_cvref_t<T>...)>, -dk:TODO
-        // remove                            test_detail::completion_signatures_for<sender_t, test_std::env<>>>);
         static_assert(std::same_as<test_std::completion_signatures<Completion(std::remove_cvref_t<T>...)>,
                                    decltype(beman::execution::get_completion_signatures(sender, test_std::env<>{}))>);
     }
