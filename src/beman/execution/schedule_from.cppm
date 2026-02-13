@@ -2,7 +2,6 @@ module;
 // src/beman/execution/schedule_from.cppm                             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-
 #include <beman/execution/detail/schedule_from.hpp>
 
 export module beman.execution.detail.schedule_from;

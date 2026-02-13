@@ -186,9 +186,7 @@ struct associate_t {
         };
         static constexpr auto get_state{get_state_impl{}};
         struct start_impl {
-            auto operator()(auto& state, auto&&) const noexcept -> void {
-                state.run();
-            }
+            auto operator()(auto& state, auto&&) const noexcept -> void { state.run(); }
         };
         static constexpr auto start{start_impl{}};
     };

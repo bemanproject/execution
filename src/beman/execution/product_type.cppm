@@ -2,7 +2,6 @@ module;
 // src/beman/execution/product_type.cppm                              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-
 #include <tuple>
 #include <beman/execution/detail/product_type.hpp>
 

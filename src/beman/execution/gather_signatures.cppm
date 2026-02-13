@@ -2,7 +2,6 @@ module;
 // src/beman/execution/gather_signatures.cppm                         -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-
 #include <beman/execution/detail/gather_signatures.hpp>
 
 export module beman.execution.detail.gather_signatures;
