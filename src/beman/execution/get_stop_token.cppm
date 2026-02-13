@@ -2,7 +2,6 @@ module;
 // src/beman/execution/get_stop_token.cppm                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-
 #include <beman/execution/detail/get_stop_token.hpp>
 
 export module beman.execution.detail.get_stop_token;
