@@ -6,10 +6,14 @@
 #include <tuple>
 #include <type_traits>
 #include <test/inline_scheduler.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/simple_counting_scope.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

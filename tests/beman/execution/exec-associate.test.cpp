@@ -9,6 +9,9 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/associate.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/just.hpp>
@@ -17,6 +20,7 @@
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #include <beman/execution/detail/then.hpp>
+#endif
 
 namespace {
 // A scope token that always associates successfully and doesn't wrap the sender.
