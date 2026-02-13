@@ -8,7 +8,6 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
-#include <iostream>
 #include <memory>
 #include <optional>
 #include <type_traits>
@@ -135,8 +134,7 @@ struct associate_t {
             auto operator()(Sender&& sender, Receiver& receiver) const
                 noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
                          get_noexcept<::std::remove_cvref_t<Sender>, Receiver>::value) {
-                std::cout << "associate get_state_impl\n" << std::flush;
-                auto [_, data] = ::std::forward<Sender>(sender);
+                auto data = ::std::forward<Sender>(sender).template get<1>();
                 auto dataParts{data.release()};
 
                 using scope_token = decltype(dataParts->first);
@@ -189,7 +187,6 @@ struct associate_t {
         static constexpr auto get_state{get_state_impl{}};
         struct start_impl {
             auto operator()(auto& state, auto&&) const noexcept -> void {
-                std::cout << "associate start_impl\n" << std::flush;
                 state.run();
             }
         };
