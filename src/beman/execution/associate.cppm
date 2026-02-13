@@ -13,3 +13,8 @@ namespace beman::execution {
 export using beman::execution::associate_t;
 export using beman::execution::associate;
 } // namespace beman::execution
+
+namespace beman::execution::detail {
+export using beman::execution::detail::associate_data;
+
+} // namespace beman::execution::detail

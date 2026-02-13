@@ -2,12 +2,6 @@ module;
 // src/beman/execution/execution.cppm
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef BEMAN_HAS_MODULES
-#define BEMAN_HAS_MODULES
-#endif
-// #include <beman/execution/execution.hpp>
-// #include <beman/execution/stop_token.hpp>
-
 export module beman.execution;
 
 export import beman.execution.detail.affine_on;
@@ -78,5 +72,6 @@ export import beman.execution.detail.value_types_of_t;
 export import beman.execution.detail.counting_scope;
 export import beman.execution.detail.simple_counting_scope;
 export import beman.execution.detail.scope_token;
+export import beman.execution.detail.spawn_future;
 export import beman.execution.detail.apply_sender;
 export import beman.execution.detail.error_types_of_t;
