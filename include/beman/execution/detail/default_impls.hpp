@@ -8,6 +8,7 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
+// #include <iostream> //-dk:TODO remove
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
@@ -84,6 +85,7 @@ struct default_impls {
         template <typename Index, typename Receiver, typename Tag, typename... Args>
             requires ::beman::execution::detail::callable<Tag, Receiver, Args...>
         auto operator()(Index, auto&, Receiver& receiver, Tag, Args&&... args) const noexcept -> void {
+            // std::cout << "default impl complete\n";
             static_assert(Index::value == 0);
             Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
         }

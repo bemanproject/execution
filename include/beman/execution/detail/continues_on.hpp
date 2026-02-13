@@ -80,23 +80,16 @@ struct continues_on_t {
             ::beman::execution::detail::make_sender(
                 *this, std::forward<Scheduler>(scheduler), ::std::forward<Sender>(sender)));
     }
-};
-
-/*!
- * \brief Specialization of impls_for to implement the continues_on functionality
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
- * \internal
- */
-template <>
-struct impls_for<::beman::execution::detail::continues_on_t> : ::beman::execution::detail::default_impls {
-    struct get_attrs_impl {
-        auto operator()(const auto& data, const auto& child) const noexcept -> decltype(auto) {
-            return ::beman::execution::detail::join_env(
-                ::beman::execution::detail::sched_attrs(data),
-                ::beman::execution::detail::fwd_env(::beman::execution::get_env(child)));
-        }
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct get_attrs_impl {
+            auto operator()(const auto& data, const auto& child) const noexcept -> decltype(auto) {
+                return ::beman::execution::detail::join_env(
+                    ::beman::execution::detail::sched_attrs(data),
+                    ::beman::execution::detail::fwd_env(::beman::execution::get_env(child)));
+            }
+        };
+        static constexpr auto get_attrs{get_attrs_impl{}};
     };
-    static constexpr auto get_attrs{get_attrs_impl{}};
 };
 
 /*!

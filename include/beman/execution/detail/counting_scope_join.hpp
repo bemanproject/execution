@@ -57,6 +57,22 @@ struct counting_scope_join_t {
     static consteval auto get_completion_signatures() noexcept {
         return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>{};
     }
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct get_state_impl {
+
+            template <typename Receiver>
+            auto operator()(auto&& sender, Receiver& receiver) const noexcept(false) {
+                // auto [_, self] = sender;
+                auto self = sender.template get<1>();
+                return ::beman::execution::detail::counting_scope_join_t::state<Receiver>(self, receiver);
+            }
+        };
+        static constexpr auto get_state{get_state_impl{}};
+        struct start_impl {
+            auto operator()(auto& s, auto&) const noexcept { s.start(); }
+        };
+        static constexpr auto start{start_impl{}};
+    };
 };
 inline constexpr counting_scope_join_t counting_scope_join{};
 
@@ -89,25 +105,6 @@ struct beman::execution::detail::counting_scope_join_t::state : ::beman::executi
 };
 
 // ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-template <>
-struct impls_for<::beman::execution::detail::counting_scope_join_t> : ::beman::execution::detail::default_impls {
-    struct get_state_impl {
-
-        template <typename Receiver>
-        auto operator()(auto&& sender, Receiver& receiver) const noexcept(false) {
-            auto [_, self] = sender;
-            return ::beman::execution::detail::counting_scope_join_t::state<Receiver>(self, receiver);
-        }
-    };
-    static constexpr auto get_state{get_state_impl{}};
-    struct start_impl {
-        auto operator()(auto& s, auto&) const noexcept { s.start(); }
-    };
-    static constexpr auto start{start_impl{}};
-};
-} // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
 

@@ -17,8 +17,3 @@ export using beman::execution::upon_error;
 export using beman::execution::upon_stopped_t;
 export using beman::execution::upon_stopped;
 } // namespace beman::execution
-
-namespace beman::execution::detail {
-export template <typename Completion>
-struct impls_for<then_t<Completion>>;
-} // namespace beman::execution::detail

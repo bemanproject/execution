@@ -13,8 +13,3 @@ namespace beman::execution {
 export using beman::execution::bulk_t;
 export using beman::execution::bulk;
 } // namespace beman::execution
-
-namespace beman::execution::detail {
-export BEMAN_SPECIALIZE_EXPORT struct impls_for<bulk_t>;
-
-} // namespace beman::execution::detail

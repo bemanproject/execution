@@ -11,7 +11,4 @@ export module beman.execution.detail.counting_scope_join;
 
 namespace beman::execution::detail {
 export using beman::execution::detail::counting_scope_join;
-
-export BEMAN_SPECIALIZE_EXPORT struct impls_for<::beman::execution::detail::counting_scope_join_t>;
-
 } // namespace beman::execution::detail

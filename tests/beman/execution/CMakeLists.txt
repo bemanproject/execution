@@ -115,6 +115,11 @@ list(
 #set(execution_tests exec-snd-expos.test)
 #set(execution_tests exec-getcomplsigs.test)
 #set(execution_tests exec-let.test)
+#set(execution_tests exec-then.test)
+#set(execution_tests exec-into-variant.test)
+#set(execution_tests exec-continues-on.test)
+#set(execution_tests exec-schedule-from.test)
+#set(execution_tests notify.test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

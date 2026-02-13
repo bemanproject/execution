@@ -13,7 +13,3 @@ namespace beman::execution {
 export using beman::execution::schedule_from_t;
 export using beman::execution::schedule_from;
 } // namespace beman::execution
-
-namespace beman::execution::detail {
-export BEMAN_SPECIALIZE_EXPORT struct impls_for<::beman::execution::schedule_from_t>;
-} // namespace beman::execution::detail

@@ -10,6 +10,7 @@ import std;
 #else
 #include <concepts>
 #include <exception>
+#include <iostream> //-dk:TODO remove
 #include <type_traits>
 #include <utility>
 #endif
@@ -59,8 +60,8 @@ namespace beman::execution::detail {
 struct into_variant_t {
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
-        auto domain{::beman::execution::detail::get_domain_early(sender)};
-        (void)domain;
+        // auto domain{::beman::execution::detail::get_domain_early(sender)};
+        //(void)domain;
         return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender));
         // return ::beman::execution::transform_sender(
         //     ::std::move(domain),
@@ -103,41 +104,40 @@ struct into_variant_t {
     static consteval auto get_completion_signatures() {
         return get_signatures<::std::remove_cvref_t<Sender>, Env>::get();
     }
-};
-
-template <>
-struct impls_for<::beman::execution::detail::into_variant_t> : ::beman::execution::detail::default_impls {
-    struct get_state_impl {
-        template <typename Sender, typename Receiver>
-        auto operator()(Sender&&, Receiver&&) const noexcept -> ::std::type_identity<
-            ::beman::execution::value_types_of_t<::beman::execution::detail::child_type<Sender>,
-                                                 ::beman::execution::env_of_t<Receiver>>> {
-            return {};
-        }
-    };
-    static constexpr auto get_state{get_state_impl{}};
-    struct complete_impl {
-        template <typename State, typename Tag, typename... Args>
-        auto operator()(auto, State, auto& receiver, Tag, Args&&... args) const noexcept -> void {
-            if constexpr (::std::same_as<Tag, ::beman::execution::set_value_t>) {
-                using variant_type = typename State::type;
-                using tuple_type   = ::beman::execution::detail::decayed_tuple<Args...>;
-                try {
-                    if constexpr (sizeof...(Args) == 0u)
-                        ::beman::execution::set_value(::std::move(receiver));
-                    else
-                        ::beman::execution::set_value(::std::move(receiver),
-                                                      variant_type(tuple_type{::std::forward<Args>(args)...}));
-                } catch (...) {
-                    ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
-                }
-
-            } else {
-                Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct get_state_impl {
+            template <typename Sender, typename Receiver>
+            auto operator()(Sender&&, Receiver&&) const noexcept -> ::std::type_identity<
+                ::beman::execution::value_types_of_t<::beman::execution::detail::child_type<Sender>,
+                                                     ::beman::execution::env_of_t<Receiver>>> {
+                std::cout << "into_variant get_state\n" << std::flush;
+                return {};
             }
-        }
+        };
+        static constexpr auto get_state{get_state_impl{}};
+        struct complete_impl {
+            template <typename State, typename Tag, typename... Args>
+            auto operator()(auto, State, auto& receiver, Tag, Args&&... args) const noexcept -> void {
+                std::cout << "into_variant complete\n" << std::flush;
+                if constexpr (::std::same_as<Tag, ::beman::execution::set_value_t>) {
+                    using variant_type = typename State::type;
+                    using tuple_type   = ::beman::execution::detail::decayed_tuple<Args...>;
+                    try {
+                        if constexpr (sizeof...(Args) == 0u)
+                            ::beman::execution::set_value(::std::move(receiver));
+                        else
+                            ::beman::execution::set_value(::std::move(receiver),
+                                                          variant_type(tuple_type{::std::forward<Args>(args)...}));
+                    } catch (...) {
+                        ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                    }
+                } else {
+                    Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+                }
+            }
+        };
+        static constexpr auto complete{complete_impl{}};
     };
-    static constexpr auto complete{complete_impl{}};
 };
 
 } // namespace beman::execution::detail

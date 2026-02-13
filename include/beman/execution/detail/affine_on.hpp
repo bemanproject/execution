@@ -142,7 +142,8 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             } -> ::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>;
         }
     static auto transform_sender(Sender&& sender, const Env& ev) {
-        [[maybe_unused]] auto& [tag, data, child] = sender;
+        //[[maybe_unused]] auto& [tag, data, child] = sender;
+        auto& child       = sender.template get<2>();
         using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
 
         if constexpr (::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>) {

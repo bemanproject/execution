@@ -13,7 +13,3 @@ namespace beman::execution {
 export using beman::execution::when_all_t;
 export using beman::execution::when_all;
 } // namespace beman::execution
-
-namespace beman::execution::detail {
-export BEMAN_SPECIALIZE_EXPORT struct impls_for<::beman::execution::detail::when_all_t>;
-} // namespace beman::execution::detail

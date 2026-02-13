@@ -74,20 +74,19 @@ struct just_t {
     static consteval auto get_completion_signatures() {
         return typename get_signatures<::std::remove_cvref_t<Sender>>::type{};
     }
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct start_impl {
+            template <typename State>
+            auto operator()(State& state, auto& receiver) const noexcept -> void {
+                [&state, &receiver]<::std::size_t... I>(::std::index_sequence<I...>) {
+                    Completion()(::std::move(receiver), ::std::move(state.template get<I>())...);
+                }(::std::make_index_sequence<State::size()>{});
+            }
+        };
+        static constexpr auto start{start_impl{}};
+    };
 };
 
-template <typename Completion>
-struct impls_for<just_t<Completion>> : ::beman::execution::detail::default_impls {
-    struct start_impl {
-        template <typename State>
-        auto operator()(State& state, auto& receiver) const noexcept -> void {
-            [&state, &receiver]<::std::size_t... I>(::std::index_sequence<I...>) {
-                Completion()(::std::move(receiver), ::std::move(state.template get<I>())...);
-            }(::std::make_index_sequence<State::size()>{});
-        }
-    };
-    static constexpr auto start{start_impl{}};
-};
 } // namespace beman::execution::detail
 
 #include <beman/execution/detail/suppress_pop.hpp>

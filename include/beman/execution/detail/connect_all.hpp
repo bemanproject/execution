@@ -36,17 +36,11 @@ import beman.execution.detail.sender_decompose;
 namespace beman::execution::detail {
 template <typename T>
 inline constexpr ::std::size_t get_tuple_size() {
-#if 0
-    if constexpr (requires { std::remove_cvref<T>::size(); })
-        return std::remove_cvref_t<T>::size();
+    using type = ::std::remove_cvref_t<T>;
+    if constexpr (requires { type::size(); })
+        return type::size();
     else
-        return std::tuple_size_v<std::remove_cvref_t<T>>;
-#else
-    if constexpr (not requires { std::remove_cvref<T>::size(); })
-        return ::std::tuple_size_v<::std::remove_cvref_t<T>>;
-    else
-        return ::std::remove_cvref_t<T>::size();
-#endif
+        return std::tuple_size_v<type>;
 }
 /*!
  * \brief A helper types whose call operator connects all children of a basic_sender
