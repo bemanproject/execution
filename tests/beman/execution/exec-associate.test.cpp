@@ -23,15 +23,15 @@ namespace {
 struct null_token {
     struct assoc {
         constexpr explicit operator bool() const noexcept { return true; }
-        constexpr assoc    try_associate() const noexcept { return {}; }
+        constexpr auto     try_associate() const noexcept -> assoc { return {}; }
     };
 
     template <test_std::sender Sender>
-    constexpr Sender&& wrap(Sender&& sndr) const noexcept {
+    constexpr auto wrap(Sender&& sndr) const noexcept -> Sender&& {
         return std::forward<Sender>(sndr);
     }
 
-    constexpr assoc try_associate() const noexcept { return {}; }
+    constexpr auto try_associate() const noexcept -> assoc { return {}; }
 };
 static_assert(test_std::scope_token<null_token>);
 
@@ -39,15 +39,15 @@ static_assert(test_std::scope_token<null_token>);
 struct expired_token {
     struct assoc {
         constexpr explicit operator bool() const noexcept { return false; }
-        constexpr assoc    try_associate() const noexcept { return {}; }
+        constexpr auto     try_associate() const noexcept -> assoc { return {}; }
     };
 
     template <test_std::sender Sender>
-    constexpr Sender&& wrap(Sender&& sndr) const noexcept {
+    constexpr auto wrap(Sender&& sndr) const noexcept -> Sender&& {
         return std::forward<Sender>(sndr);
     }
 
-    constexpr assoc try_associate() const noexcept { return {}; }
+    constexpr auto try_associate() const noexcept -> assoc { return {}; }
 };
 static_assert(test_std::scope_token<expired_token>);
 
@@ -64,23 +64,27 @@ struct scope {
     struct assoc {
         constexpr explicit operator bool() const noexcept { return !!scope_; }
 
-        constexpr assoc try_associate() const noexcept { return assoc{scope_ && scope_->open ? scope_ : nullptr}; }
+        constexpr auto try_associate() const noexcept -> assoc {
+            return assoc{scope_ && scope_->open ? scope_ : nullptr};
+        }
 
         const scope* scope_{};
     };
 
     struct token {
         template <test_std::sender Sender>
-        constexpr Sender&& wrap(Sender&& sndr) const noexcept {
+        constexpr auto wrap(Sender&& sndr) const noexcept -> Sender&& {
             return std::forward<Sender>(sndr);
         }
 
-        constexpr assoc try_associate() const noexcept { return assoc{scope_ && scope_->open ? scope_ : nullptr}; }
+        constexpr auto try_associate() const noexcept -> assoc {
+            return assoc{scope_ && scope_->open ? scope_ : nullptr};
+        }
 
         const scope* scope_{};
     };
 
-    constexpr token get_token() const noexcept { return token{this}; }
+    constexpr auto get_token() const noexcept -> token { return token{this}; }
 };
 static_assert(test_std::scope_token<scope::token>);
 static_assert(test_std::scope_association<scope::assoc>);

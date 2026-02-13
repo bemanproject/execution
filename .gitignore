@@ -39,6 +39,7 @@ build
 .vs
 .cache
 .vscode
+.idea
 compile_commands.json
 stagedir
 

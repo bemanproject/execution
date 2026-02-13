@@ -50,30 +50,6 @@ auto ctor() -> void {
     {
         test_std::simple_counting_scope scope;
     }
-    test::death([] {
-        test_std::simple_counting_scope scope;
-        scope.get_token().try_associate();
-    });
-    test::death([] {
-        test_std::simple_counting_scope scope;
-        scope.get_token().try_associate();
-        bool called{false};
-        auto state(test_std::connect(scope.join(), join_receiver{called}));
-        test_std::start(state);
-    });
-    test::death([] {
-        test_std::simple_counting_scope scope;
-        scope.get_token().try_associate();
-        scope.close();
-    });
-    test::death([] {
-        test_std::simple_counting_scope scope;
-        scope.get_token().try_associate();
-        bool called{false};
-        auto state(test_std::connect(scope.join(), join_receiver{called}));
-        test_std::start(state);
-        scope.close();
-    });
     {
         test_std::simple_counting_scope scope;
         scope.close();

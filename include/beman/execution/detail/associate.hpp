@@ -102,6 +102,56 @@ struct impls_for<associate_t> : ::beman::execution::detail::default_impls {
         using type = typename ::std::remove_cvref_t<Data>::wrap_sender;
     };
 
+    template <typename AssociateData, typename Receiver>
+    struct op_state {
+        using assoc_t      = typename AssociateData::assoc_t;
+        using sender_ref_t = typename AssociateData::sender_ref;
+        using op_t         = ::beman::execution::connect_result_t<typename sender_ref_t::element_type, Receiver>;
+
+        assoc_t assoc;
+        union {
+            Receiver* rcvr;
+            op_t      op;
+        };
+
+        explicit op_state(::std::pair<assoc_t, sender_ref_t> parts, Receiver& r) : assoc(::std::move(parts.first)) {
+            if (assoc) {
+                ::std::construct_at(::std::addressof(op),
+                                    ::beman::execution::connect(::std::move(*parts.second), ::std::move(r)));
+            } else {
+                rcvr = ::std::addressof(r);
+            }
+        }
+
+        explicit op_state(AssociateData&& ad, Receiver& r) : op_state(::std::move(ad).release(), r) {}
+
+        explicit op_state(const AssociateData& ad, Receiver& r)
+            requires ::std::copy_constructible<AssociateData>
+            : op_state(AssociateData(ad).release(), r) {}
+
+        op_state(const op_state&) = delete;
+
+        op_state(op_state&&) = delete;
+
+        ~op_state() {
+            if (this->assoc) {
+                op.~op_t();
+            }
+        }
+
+        auto operator=(const op_state&) -> op_state& = delete;
+
+        auto operator=(op_state&&) -> op_state& = delete;
+
+        auto run() noexcept -> void {
+            if (this->assoc) {
+                ::beman::execution::start(this->op);
+            } else {
+                ::beman::execution::set_stopped(::std::move(*this->rcvr));
+            }
+        }
+    };
+
     struct get_state_impl {
         template <typename Sender, typename Receiver>
         auto operator()(Sender&& sender, Receiver& receiver) const
@@ -111,57 +161,6 @@ struct impls_for<associate_t> : ::beman::execution::detail::default_impls {
                                                          typename get_wrap_sender<::std::remove_cvref_t<Sender>>::type,
                                                          Receiver>) {
             auto [_, data] = ::std::forward<Sender>(sender);
-
-            using associate_data_t = ::std::remove_cvref_t<decltype(data)>;
-            using assoc_t          = typename associate_data_t::assoc_t;
-            using sender_ref_t     = typename associate_data_t::sender_ref;
-            using op_t = ::beman::execution::connect_result_t<typename sender_ref_t::element_type, Receiver>;
-
-            struct op_state {
-                assoc_t assoc;
-                union {
-                    Receiver* rcvr;
-                    op_t      op;
-                };
-
-                explicit op_state(::std::pair<assoc_t, sender_ref_t> parts, Receiver& r)
-                    : assoc(::std::move(parts.first)) {
-                    if (assoc) {
-                        ::std::construct_at(::std::addressof(op),
-                                            ::beman::execution::connect(::std::move(*parts.second), ::std::move(r)));
-                    } else {
-                        rcvr = ::std::addressof(r);
-                    }
-                }
-
-                explicit op_state(associate_data_t&& ad, Receiver& r) : op_state(::std::move(ad).release(), r) {}
-
-                explicit op_state(const associate_data_t& ad, Receiver& r)
-                    requires ::std::copy_constructible<associate_data_t>
-                    : op_state(associate_data_t(ad).release(), r) {}
-
-                op_state(const op_state&) = delete;
-
-                op_state(op_state&&) = delete;
-
-                ~op_state() {
-                    if (this->assoc) {
-                        op.~op_t();
-                    }
-                }
-
-                auto operator=(const op_state&) -> op_state& = delete;
-
-                auto operator=(op_state&&) -> op_state& = delete;
-
-                auto run() noexcept -> void {
-                    if (this->assoc) {
-                        ::beman::execution::start(this->op);
-                    } else {
-                        ::beman::execution::set_stopped(::std::move(*this->rcvr));
-                    }
-                }
-            };
             return op_state{::beman::execution::detail::forward_like<Sender>(data), receiver};
         }
     };
