@@ -5,12 +5,23 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ALMOST_SCHEDULER
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.queryable;
+import beman.execution.detail.schedule;
+import beman.execution.detail.scheduler_t;
+import beman.execution.detail.sender;
+#else
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/scheduler_t.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <concepts>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 

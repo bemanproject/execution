@@ -5,8 +5,13 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_HAS_COMPLETIONS
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/valid_completion_for.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.valid_completion_for;
+#else
 #include <beman/execution/detail/completion_signatures.hpp>
+#include <beman/execution/detail/valid_completion_for.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

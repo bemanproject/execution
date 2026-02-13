@@ -1,17 +1,25 @@
 // tests/beman/execution/exec-on.test.cpp                           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/on.hpp>
-#include <beman/execution/detail/just.hpp>
-#include <beman/execution/detail/sender_adaptor_closure.hpp>
-#include <beman/execution/detail/then.hpp>
-#include <beman/execution/detail/sync_wait.hpp>
-#include <beman/execution/detail/get_completion_signatures.hpp>
-#include <test/execution.hpp>
-#include <test/thread_pool.hpp>
 #include <concepts>
+#include <test/thread_pool.hpp>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/on.hpp>
+#include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/sender_adaptor_closure.hpp>
+#include <beman/execution/detail/sender_for.hpp>
+#include <beman/execution/detail/sync_wait.hpp>
+#include <beman/execution/detail/then.hpp>
 
 #include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

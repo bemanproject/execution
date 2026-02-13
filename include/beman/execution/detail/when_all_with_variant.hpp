@@ -5,17 +5,31 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WHEN_ALL_WITH_VARIANT
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
-#include <beman/execution/detail/sender_for.hpp>
-#include <beman/execution/detail/forward_like.hpp>
-#include <beman/execution/detail/when_all.hpp>
-#include <beman/execution/detail/into_variant.hpp>
-
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.forward_like;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.into_variant;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_for;
+import beman.execution.detail.transform_sender;
+import beman.execution.detail.when_all;
+#else
+#include <beman/execution/detail/forward_like.hpp>
+#include <beman/execution/detail/get_domain_early.hpp>
+#include <beman/execution/detail/into_variant.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_for.hpp>
+#include <beman/execution/detail/transform_sender.hpp>
+#include <beman/execution/detail/when_all.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

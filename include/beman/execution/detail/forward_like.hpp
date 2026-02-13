@@ -5,8 +5,12 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARD_LIKE
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
 #include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 // std::forward_like() doesn't work on some compilers, yet. This header

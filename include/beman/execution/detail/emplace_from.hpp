@@ -5,10 +5,19 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_EMPLACE_FROM
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/call_result_t.hpp>
-#include <beman/execution/detail/nothrow_callable.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.call_result_t;
+import beman.execution.detail.nothrow_callable;
+#else
+#include <beman/execution/detail/call_result_t.hpp>
+#include <beman/execution/detail/nothrow_callable.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -5,8 +5,16 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_RESULT_TYPE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/get_awaiter.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.get_awaiter;
+#else
+#include <beman/execution/detail/get_awaiter.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

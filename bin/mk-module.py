@@ -167,6 +167,7 @@ export_re = re.compile("BEMAN_EXECUTION_EXPORT (.*)")
 
 def write_header(to, header):
     filename = f"include/{header}.hpp"
+    print(f"writing {filename}...")
     with open(filename) as file:
         number = 0
         for line in file.readlines():

@@ -5,7 +5,11 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NESTED_SENDER_HAS_AFFINE_ON
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.sender_has_affine_on;
+#else
 #include <beman/execution/detail/sender_has_affine_on.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

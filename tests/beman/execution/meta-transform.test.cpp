@@ -1,11 +1,15 @@
 // src/beman/execution/tests/meta-transform.test.cpp                -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/meta_transform.hpp>
-#include <beman/execution/detail/type_list.hpp>
-#include <test/execution.hpp>
 #include <concepts>
 #include <type_traits>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/meta_transform.hpp>
+#include <beman/execution/detail/type_list.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

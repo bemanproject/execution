@@ -5,9 +5,17 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/completion_signature.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signature;
+#else
+#include <beman/execution/detail/completion_signature.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

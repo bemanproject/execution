@@ -1,11 +1,11 @@
 // tests/beman/execution/exec-scope-simple-counting.test.cpp          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <test/execution.hpp>
 #include <concepts>
 #include <tuple>
 #include <type_traits>
 #include <test/inline_scheduler.hpp>
+#include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

@@ -5,10 +5,25 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NOTIFY
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/immovable.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <mutex>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.immovable;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.set_value;
+#else
+#include <beman/execution/detail/immovable.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -27,8 +42,9 @@ class notifier : ::beman::execution::detail::immovable {
         }
     }
 
-  private:
-    friend struct impls_for<::beman::execution::detail::notify_t>;
+  public:
+    struct impls_for;
+    friend struct impls_for;
     struct base : ::beman::execution::detail::virtual_immovable {
         base*        next{};
         virtual auto complete() -> void = 0;
@@ -50,36 +66,40 @@ struct notify_t {
     auto operator()(::beman::execution::detail::notifier& n) const {
         return ::beman::execution::detail::make_sender(*this, &n);
     }
+
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>();
+    }
+
+    struct impls_for : ::beman::execution::detail::default_impls {
+        template <typename Receiver>
+        struct state : ::beman::execution::detail::notifier::base {
+            ::beman::execution::detail::notifier* n;
+            ::std::remove_cvref_t<Receiver>&      receiver{};
+            state(::beman::execution::detail::notifier* nn, ::std::remove_cvref_t<Receiver>& rcvr)
+                : n(nn), receiver(rcvr) {}
+            auto complete() -> void override { ::beman::execution::set_value(::std::move(this->receiver)); }
+        };
+        struct get_state_impl {
+            template <typename Sender, typename Receiver>
+            auto operator()(Sender&& sender, Receiver&& receiver) const {
+                ::beman::execution::detail::notifier* n{sender.template get<1>()};
+                return state<Receiver>(n, receiver);
+            }
+        };
+        static constexpr auto get_state{get_state_impl{}};
+        struct start_impl {
+            auto operator()(auto& state, auto&) const noexcept -> void {
+                if (not state.n->add(&state)) {
+                    state.complete();
+                }
+            }
+        };
+        static constexpr auto start{start_impl{}};
+    };
 };
 inline constexpr ::beman::execution::detail::notify_t notify{};
-
-template <>
-struct impls_for<::beman::execution::detail::notify_t> : ::beman::execution::detail::default_impls {
-    template <typename Receiver>
-    struct state : ::beman::execution::detail::notifier::base {
-        ::beman::execution::detail::notifier* n;
-        ::std::remove_cvref_t<Receiver>&      receiver{};
-        state(::beman::execution::detail::notifier* nn, ::std::remove_cvref_t<Receiver>& rcvr)
-            : n(nn), receiver(rcvr) {}
-        auto complete() -> void override { ::beman::execution::set_value(::std::move(this->receiver)); }
-    };
-    static constexpr auto get_state{[]<typename Sender, typename Receiver>(Sender&& sender, Receiver&& receiver) {
-        ::beman::execution::detail::notifier* n{sender.template get<1>()};
-        return state<Receiver>(n, receiver);
-    }};
-    static constexpr auto start{[](auto& state, auto&) noexcept -> void {
-        if (not state.n->add(&state)) {
-            state.complete();
-        }
-    }};
-};
-
-template <typename Notifier, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::notify_t, Notifier>,
-    Env> {
-    using type = ::beman::execution::completion_signatures<::beman::execution::set_value_t()>;
-};
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------

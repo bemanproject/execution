@@ -5,11 +5,21 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_STOP_TOKEN
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <type_traits>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.forwarding_query;
+import beman.execution.detail.never_stop_token;
+import beman.execution.detail.stoppable_token;
+#else
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/never_stop_token.hpp>
 #include <beman/execution/detail/stoppable_token.hpp>
-#include <type_traits>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 

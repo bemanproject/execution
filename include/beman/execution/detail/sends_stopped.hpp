@@ -5,13 +5,26 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDS_STOPPED
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.env;
+import beman.execution.detail.gather_signatures;
+import beman.execution.detail.sender_in;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.type_list;
+#else
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/gather_signatures.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/type_list.hpp>
-#include <concepts>
+#endif
 
 // ----------------------------------------------------------------------------
 

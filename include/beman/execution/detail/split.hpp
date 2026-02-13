@@ -5,43 +5,73 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPLIT
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <atomic>
+#include <cassert>
+#include <exception>
+#include <optional>
+#include <tuple>
+#include <variant>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.atomic_intrusive_stack;
+import beman.execution.detail.child_type;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.connect_result_t;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.emplace_from;
+import beman.execution.detail.error_types_of_t;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.get_stop_token;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.inplace_stop_source;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.meta.combine;
+import beman.execution.detail.meta.unique;
+import beman.execution.detail.receiver;
+import beman.execution.detail.sender_for;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.stop_callback_for_t;
+import beman.execution.detail.stop_token_of_t;
+import beman.execution.detail.stoppable_token;
+import beman.execution.detail.type_list;
+import beman.execution.detail.value_types_of_t;
+#else
 #include <beman/execution/detail/atomic_intrusive_stack.hpp>
+#include <beman/execution/detail/child_type.hpp>
+#include <beman/execution/detail/completion_signatures_for.hpp>
+#include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/emplace_from.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
-#include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
-#include <beman/execution/detail/child_type.hpp>
-#include <beman/execution/detail/completion_signatures_of_t.hpp>
-#include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/type_list.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/stop_callback_for_t.hpp>
 #include <beman/execution/detail/stop_token_of_t.hpp>
 #include <beman/execution/detail/stoppable_token.hpp>
+#include <beman/execution/detail/type_list.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
-
-#include <atomic>
-#include <exception>
-#include <optional>
-#include <variant>
-#include <tuple>
-#include <cassert>
+#endif
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
 
 struct split_impl_t {};
-template <>
-struct impls_for<split_impl_t> : ::beman::execution::detail::default_impls {
+struct impls_for : ::beman::execution::detail::default_impls {
 
     template <class Sndr>
     struct shared_state;
@@ -291,6 +321,8 @@ struct impls_for<split_impl_t> : ::beman::execution::detail::default_impls {
     };
 };
 
+}
+
 template <class Sndr>
 struct shared_wrapper {
     explicit shared_wrapper(impls_for<split_impl_t>::shared_state<Sndr>* state) noexcept : sh_state(state) {
@@ -350,32 +382,40 @@ struct split_t {
         return ::beman::execution::transform_sender(
             domain, ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)));
     }
-};
 
-template <class Sndr, class Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::split_impl_t,
-                                             ::beman::execution::detail::shared_wrapper<Sndr>>,
-    Env> {
-    template <class... Args>
-    using make_value_completions =
-        ::beman::execution::completion_signatures<::beman::execution::set_value_t(const std::decay_t<Args>&...)>;
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <class Sndr, class Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::split_impl_t,
+                                                                   ::beman::execution::detail::shared_wrapper<Sndr>>,
+                          Env> {
+        template <class... Args>
+        using make_value_completions =
+            ::beman::execution::completion_signatures<::beman::execution::set_value_t(const std::decay_t<Args>&...)>;
 
-    template <class... Args>
-    using make_error_completions =
-        ::beman::execution::completion_signatures<::beman::execution::set_error_t(const std::decay_t<Args>&)...>;
+        template <class... Args>
+        using make_error_completions =
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(const std::decay_t<Args>&)...>;
 
-    using value_completions = ::beman::execution::
-        value_types_of_t<Sndr, Env, make_value_completions, ::beman::execution::detail::meta::combine>;
+        using value_completions = ::beman::execution::
+            value_types_of_t<Sndr, Env, make_value_completions, ::beman::execution::detail::meta::combine>;
 
-    using error_completions = ::beman::execution::error_types_of_t<Sndr, Env, make_error_completions>;
+        using error_completions = ::beman::execution::error_types_of_t<Sndr, Env, make_error_completions>;
 
-    using fixed_completions =
-        ::beman::execution::completion_signatures<::beman::execution::set_stopped_t(),
-                                                  ::beman::execution::set_error_t(std::exception_ptr)>;
+        using fixed_completions =
+            ::beman::execution::completion_signatures<::beman::execution::set_stopped_t(),
+                                                      ::beman::execution::set_error_t(std::exception_ptr)>;
 
-    using type = ::beman::execution::detail::meta::unique<
-        ::beman::execution::detail::meta::combine<fixed_completions, value_completions, error_completions>>;
+        using type = ::beman::execution::detail::meta::unique<
+            ::beman::execution::detail::meta::combine<fixed_completions, value_completions, error_completions>>;
+    };
+
+  public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+    }
 };
 
 } // namespace beman::execution::detail

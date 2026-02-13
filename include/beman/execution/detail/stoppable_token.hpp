@@ -5,8 +5,16 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_TOKEN
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/check_type_alias_exist.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.check_type_alias_exist;
+#else
+#include <beman/execution/detail/check_type_alias_exist.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -1,17 +1,22 @@
 // tests/beman/execution/exec-spawn.test.cpp                          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <type_traits>
+#include <utility>
+#include <memory>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/spawn.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
-#include <test/execution.hpp>
-#include <concepts>
-#include <type_traits>
-#include <utility>
-#include <memory>
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -5,8 +5,16 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_HAS_AS_AWAITABLE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/is_awaitable.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.is_awaitable;
+#else
+#include <beman/execution/detail/is_awaitable.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

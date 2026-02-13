@@ -5,17 +5,33 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/spawn_get_allocator.hpp>
-#include <beman/execution/detail/scope_token.hpp>
-#include <beman/execution/detail/env.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/receiver.hpp>
-#include <beman/execution/detail/connect_result_t.hpp>
-#include <beman/execution/detail/connect.hpp>
-#include <beman/execution/detail/start.hpp>
-#include <beman/execution/detail/write_env.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <memory>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.connect;
+import beman.execution.detail.connect_result_t;
+import beman.execution.detail.env;
+import beman.execution.detail.receiver;
+import beman.execution.detail.scope_token;
+import beman.execution.detail.sender;
+import beman.execution.detail.spawn_get_allocator;
+import beman.execution.detail.start;
+import beman.execution.detail.write_env;
+#else
+#include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/connect_result_t.hpp>
+#include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/scope_token.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/spawn_get_allocator.hpp>
+#include <beman/execution/detail/start.hpp>
+#include <beman/execution/detail/write_env.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

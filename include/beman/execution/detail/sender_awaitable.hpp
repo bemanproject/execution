@@ -5,26 +5,45 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_AWAITABLE
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <atomic>
+#include <concepts>
+#include <coroutine>
+#include <exception>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.as_except_ptr;
+import beman.execution.detail.connect;
+import beman.execution.detail.connect_result_t;
+import beman.execution.detail.env_of_t;
+import beman.execution.detail.env_promise;
+import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_env;
+import beman.execution.detail.is_awaitable;
+import beman.execution.detail.receiver;
+import beman.execution.detail.single_sender;
+import beman.execution.detail.single_sender_value_type;
+import beman.execution.detail.start;
+import beman.execution.detail.unspecified_promise;
+#else
 #include <beman/execution/detail/as_except_ptr.hpp>
-#include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/env_promise.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/is_awaitable.hpp>
-#include <beman/execution/detail/single_sender_value_type.hpp>
 #include <beman/execution/detail/single_sender.hpp>
+#include <beman/execution/detail/single_sender_value_type.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/unspecified_promise.hpp>
-
-#include <concepts>
-#include <coroutine>
-#include <exception>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <tuple>
-#include <atomic>
+#endif
 
 namespace beman::execution::detail {
 template <class Sndr, class Promise>

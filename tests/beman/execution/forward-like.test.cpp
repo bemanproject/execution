@@ -1,9 +1,14 @@
 // src/beman/execution/tests/forward-like.test.cpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/forward_like.hpp>
 #include <test/execution.hpp>
 #include <concepts>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail.forward_like;
+#else
+#include <beman/execution/detail/forward_like.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

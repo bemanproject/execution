@@ -1,12 +1,12 @@
 // src/beman/execution/tests/exec-when-all.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <test/execution.hpp>
 #include <concepts>
 #include <optional>
 #include <utility>
 #include <tuple>
 #include <variant>
+#include <test/execution.hpp>
 // #include <beman/execution/detail/suppress_push.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;

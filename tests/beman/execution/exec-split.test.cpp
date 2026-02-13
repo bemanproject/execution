@@ -1,13 +1,22 @@
 // src/beman/execution/tests/split.test.cpp                         -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/split.hpp>
-#include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
 #include <concepts>
 #include <chrono>
 #include <future>
 #include <list>
+#include <thread>
+#include <variant>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/split.hpp>
+#include <beman/execution/detail/type_list.hpp>
+#include <beman/execution/execution.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

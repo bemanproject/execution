@@ -5,8 +5,12 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INTRUSIVE_QUEUE
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <cassert>
 #include <utility>
+#endif
 
 namespace beman::execution::detail {
 

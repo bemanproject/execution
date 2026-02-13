@@ -5,17 +5,35 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_OPERATION
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/operation_state.hpp>
-#include <beman/execution/detail/basic_state.hpp>
-#include <beman/execution/detail/state_type.hpp>
-#include <beman/execution/detail/sender_decompose.hpp>
-#include <beman/execution/detail/tag_of_t.hpp>
-#include <beman/execution/detail/impls_for.hpp>
-#include <beman/execution/detail/connect_all_result.hpp>
-#include <beman/execution/detail/valid_specialization.hpp>
-#include <beman/execution/detail/start.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <functional>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_state;
+import beman.execution.detail.connect_all;
+import beman.execution.detail.connect_all_result;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.indices_for;
+import beman.execution.detail.operation_state;
+import beman.execution.detail.sender_decompose;
+import beman.execution.detail.start;
+import beman.execution.detail.state_type;
+import beman.execution.detail.tag_of_t;
+import beman.execution.detail.valid_specialization;
+#else
+#include <beman/execution/detail/basic_state.hpp>
+#include <beman/execution/detail/connect_all_result.hpp>
+#include <beman/execution/detail/impls_for.hpp>
+#include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/sender_decompose.hpp>
+#include <beman/execution/detail/start.hpp>
+#include <beman/execution/detail/state_type.hpp>
+#include <beman/execution/detail/tag_of_t.hpp>
+#include <beman/execution/detail/valid_specialization.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -56,7 +74,7 @@ struct basic_operation : ::beman::execution::detail::basic_state<Sender, Receive
     auto start() & noexcept -> void {
         ::std::invoke(
             [this]<::std::size_t... I>(::std::index_sequence<I...>) {
-                ::beman::execution::detail::impls_for<tag_t>::start(
+                ::beman::execution::detail::get_impls_for<tag_t>::start()(
                     this->state, this->receiver, this->inner_ops.template get<I>()...);
             },
             ::std::make_index_sequence<inner_ops_t::size()>{});

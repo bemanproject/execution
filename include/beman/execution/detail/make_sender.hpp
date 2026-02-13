@@ -5,13 +5,22 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_MAKE_SENDER
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#include <type_traits>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.movable_value;
+import beman.execution.detail.sender;
+#else
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <concepts>
-#include <type_traits>
-
-#include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

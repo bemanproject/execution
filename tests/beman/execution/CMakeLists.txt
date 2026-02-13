@@ -5,12 +5,13 @@ if(BEMAN_USE_MODULES)
     list(APPEND execution_tests execution-module.test stop-token-module.test)
 endif()
 
-set(execution_tests_todo exec-associate.test) #-dk:TODO
+list(APPEND unsupported_execution_tests exec-split.test)
 
 list(
     APPEND execution_tests
     allocator-requirements-general.test
     exec-affine-on.test
+    exec-associate.test
     exec-awaitable.test
     exec-bulk.test
     exec-connect.test
@@ -54,7 +55,6 @@ list(
     exec-snd-transform.test
     exec-spawn-future.test
     exec-spawn.test
-    exec-split.test
     exec-starts-on.test
     exec-stop-when.test
     exec-sync-wait.test

@@ -5,12 +5,16 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AS_EXCEPT_PTR
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <cassert>
 #include <concepts>
 #include <exception>
 #include <system_error>
 #include <type_traits>
 #include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 

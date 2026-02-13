@@ -5,9 +5,17 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/start.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.start;
+#else
+#include <beman/execution/detail/start.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -5,11 +5,19 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/immovable.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <cstddef>
 #include <exception>
 #include <mutex>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.immovable;
+#else
+#include <beman/execution/detail/immovable.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

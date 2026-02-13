@@ -5,6 +5,25 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_READ_ENV
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <exception>
+#include <type_traits>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.get_env;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.sender;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_value;
+#else
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -13,9 +32,7 @@
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_value.hpp>
-#include <exception>
-#include <type_traits>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -26,34 +43,41 @@ struct read_env_t {
     static auto affine_on(Sender&& sndr, const auto&) noexcept {
         return ::std::forward<Sender>(sndr);
     }
-};
 
-template <>
-struct impls_for<::beman::execution::detail::read_env_t> : ::beman::execution::detail::default_impls {
-    struct start_impl {
-        auto operator()(auto query, auto& receiver) const noexcept -> void {
-            try {
-                auto env{::beman::execution::get_env(receiver)};
-                ::beman::execution::set_value(::std::move(receiver), query(env));
-            } catch (...) {
-                ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
-            }
-        }
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <typename Query, typename Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::read_env_t, Query>,
+                          Env> {
+        using set_value_type =
+            ::beman::execution::set_value_t(decltype(::std::declval<Query>()(::std::as_const(::std::declval<Env>()))));
+        using set_error_type = ::beman::execution::set_error_t(::std::exception_ptr);
+        using type           = ::std::conditional_t<noexcept(::std::declval<Query>()(::std::declval<const Env&>())),
+                                                    ::beman::execution::completion_signatures<set_value_type>,
+                                                    ::beman::execution::completion_signatures<set_value_type, set_error_type>>;
     };
-    static constexpr auto start{start_impl{}};
+
+  public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
+    }
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct start_impl {
+            auto operator()(auto query, auto& receiver) const noexcept -> void {
+                try {
+                    auto env{::beman::execution::get_env(receiver)};
+                    ::beman::execution::set_value(::std::move(receiver), query(env));
+                } catch (...) {
+                    ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                }
+            }
+        };
+        static constexpr auto start{start_impl{}};
+    };
 };
 
-template <typename Query, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::read_env_t, Query>,
-    Env> {
-    using set_value_type =
-        ::beman::execution::set_value_t(decltype(::std::declval<Query>()(::std::as_const(::std::declval<Env>()))));
-    using set_error_type = ::beman::execution::set_error_t(::std::exception_ptr);
-    using type           = ::std::conditional_t<noexcept(::std::declval<Query>()(::std::declval<const Env&>())),
-                                                ::beman::execution::completion_signatures<set_value_type>,
-                                                ::beman::execution::completion_signatures<set_value_type, set_error_type>>;
-};
 } // namespace beman::execution::detail
 
 namespace beman::execution {

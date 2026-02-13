@@ -1,6 +1,15 @@
 // tests/beman/execution/exec-stop-when.test.cpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <optional>
+#include <type_traits>
+#include <utility>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/stop_when.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
@@ -17,11 +26,7 @@
 #include <beman/execution/detail/never_stop_token.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
-#include <test/execution.hpp>
-#include <concepts>
-#include <optional>
-#include <type_traits>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 

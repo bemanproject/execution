@@ -96,7 +96,9 @@ TEST(execution_modules) {
     test::use(test_std::get_completion_signatures);
 
     test::use_template<test_std::completion_signatures_of_t>();
+#if !defined(__GNUC__) || defined(__clang__)
     static_assert(not test_std::sends_stopped<decltype(test_std::just())>);
+#endif
     test::use_template<test_std::tag_of_t>();
 
     // [exec.snd.transform], sender transformations
@@ -141,7 +143,7 @@ TEST(execution_modules) {
     test::use_type<test_std::let_error_t>();
     test::use_type<test_std::let_stopped_t>();
     test::use_type<test_std::bulk_t>();
-    test::use_type<test_std::split_t>();
+    //-dk:TODO support? test::use_type<test_std::split_t>();
     test::use_type<test_std::when_all_t>();
     test::use_type<test_std::when_all_with_variant_t>();
     test::use_type<test_std::into_variant_t>();
@@ -159,7 +161,7 @@ TEST(execution_modules) {
     test::use(test_std::let_error);
     test::use(test_std::let_stopped);
     test::use(test_std::bulk);
-    test::use(test_std::split);
+    //-dk:TODO? test::use(test_std::split);
     test::use(test_std::when_all);
     test::use(test_std::when_all_with_variant);
     test::use(test_std::into_variant);

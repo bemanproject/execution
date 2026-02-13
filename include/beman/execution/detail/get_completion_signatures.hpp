@@ -5,17 +5,32 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SIGNATURES
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/await_result_type.hpp>
-#include <beman/execution/detail/completion_signatures.hpp>
-#include <beman/execution/detail/env_promise.hpp>
-#include <beman/execution/detail/get_domain_late.hpp> //-dk:TODO remove
-#include <beman/execution/detail/is_awaitable.hpp>
-#include <beman/execution/detail/transform_sender.hpp> //-dk:TODO remove
-
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <exception>
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.await_result_type;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.env_promise;
+import beman.execution.detail.get_domain_late;
+import beman.execution.detail.is_awaitable;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.transform_sender;
+#else
+#include <beman/execution/detail/await_result_type.hpp>
+#include <beman/execution/detail/completion_signatures.hpp>
+#include <beman/execution/detail/env_promise.hpp>
+#include <beman/execution/detail/get_domain_late.hpp>
+#include <beman/execution/detail/is_awaitable.hpp>
+#include <beman/execution/detail/transform_sender.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

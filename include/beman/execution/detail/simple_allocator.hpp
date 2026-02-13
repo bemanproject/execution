@@ -5,13 +5,18 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_ALLOCATOR
 
 #include <beman/execution/detail/common.hpp>
-#include <cstddef>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#include <cstddef>
+#include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <typename Alloc> //-dk:TODO detail export
+template <typename Alloc>
 concept simple_allocator =
     requires(::std::remove_cvref_t<Alloc> alloc, ::std::size_t n) {
         { *alloc.allocate(n) } -> ::std::same_as<typename ::std::remove_cvref_t<Alloc>::value_type&>;

@@ -5,9 +5,19 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TRANSFORM_SENDER
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/default_domain.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.default_domain;
+import beman.execution.detail.sender;
+#else
+#include <beman/execution/detail/default_domain.hpp>
+#include <beman/execution/detail/sender.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

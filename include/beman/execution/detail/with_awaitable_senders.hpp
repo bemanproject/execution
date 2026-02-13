@@ -5,11 +5,21 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_AWAITABLE_SENDERS
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/as_awaitable.hpp>
-#include <beman/execution/detail/class_type.hpp>
-#include <beman/execution/detail/call_result_t.hpp>
-
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
+#include <exception>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.as_awaitable;
+import beman.execution.detail.call_result_t;
+import beman.execution.detail.class_type;
+#else
+#include <beman/execution/detail/as_awaitable.hpp>
+#include <beman/execution/detail/call_result_t.hpp>
+#include <beman/execution/detail/class_type.hpp>
+#endif
 
 namespace beman::execution {
 template <::beman::execution::detail::class_type Promise>

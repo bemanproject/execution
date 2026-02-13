@@ -5,8 +5,12 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_MOVABLE_VALUE
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 

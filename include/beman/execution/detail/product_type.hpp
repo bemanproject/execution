@@ -5,11 +5,14 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_PRODUCT_TYPE
 
 #include <beman/execution/detail/common.hpp>
+#include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <cstddef>
 #include <memory>
 #include <tuple>
-#include <cstddef>
-
-#include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -27,7 +30,7 @@ struct product_type_base;
 template <::std::size_t... I, typename... T>
 struct product_type_base<::std::index_sequence<I...>, T...>
     : ::beman::execution::detail::product_type_element<I, T>... {
-    static constexpr ::std::size_t size() { return sizeof...(T); }
+    static constexpr ::std::size_t size() noexcept { return sizeof...(T); }
     static constexpr bool          is_product_type{true};
 
     template <::std::size_t J, typename S>
@@ -115,31 +118,17 @@ constexpr auto is_product_type(const ::beman::execution::detail::product_type<T.
     return {};
 }
 
-template <::std::size_t Start, typename Fun, typename Tuple, ::std::size_t... I>
-constexpr auto sub_apply_helper(Fun&& fun, Tuple&& tuple, ::std::index_sequence<I...>) -> decltype(auto) {
-    // NOLINTNEXTLINE(bugprone-use-after-move,hicpp-invalid-access-moved)
-    return ::std::forward<Fun>(fun)(::std::forward<Tuple>(tuple).template get<I + Start>()...);
-}
-
-template <::std::size_t Start, typename Fun, typename Tuple>
-constexpr auto sub_apply(Fun&& fun, Tuple&& tuple) -> decltype(auto) {
-    constexpr ::std::size_t TSize{::std::tuple_size_v<::std::remove_cvref_t<Tuple>>};
-    static_assert(Start <= TSize);
-    return sub_apply_helper<Start>(
-        ::std::forward<Fun>(fun), ::std::forward<Tuple>(tuple), ::std::make_index_sequence<TSize - Start>());
-}
-
 } // namespace beman::execution::detail
 
 namespace std {
-template <typename T>
-    requires ::beman::execution::detail::is_product_type_c<T>
-struct tuple_size<T> : ::std::integral_constant<std::size_t, T::size()> {};
+template <typename... T>
+struct tuple_size<::beman::execution::detail::product_type<T...>>
+    : ::std::integral_constant<std::size_t, ::beman::execution::detail::product_type<T...>::size()> {};
 
-template <::std::size_t I, typename T>
-    requires ::beman::execution::detail::is_product_type_c<T>
-struct tuple_element<I, T> {
-    using type = ::std::decay_t<decltype(::std::declval<T>().template get<I>())>;
+template <::std::size_t I, typename... T>
+struct tuple_element<I, ::beman::execution::detail::product_type<T...>> {
+    using type =
+        ::std::decay_t<decltype(::std::declval<::beman::execution::detail::product_type<T...>>().template get<I>())>;
 };
 } // namespace std
 
