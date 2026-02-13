@@ -5,6 +5,17 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <exception>
+#include <memory>
+#include <mutex>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.as_tuple;
 import beman.execution.detail.basic_sender;
@@ -12,8 +23,8 @@ import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.connect_result_t;
-import beman.execution.detail.default_impls;
 import beman.execution.detail.decayed_tuple;
+import beman.execution.detail.default_impls;
 import beman.execution.detail.env;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_env;
@@ -25,6 +36,7 @@ import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.prepend;
 import beman.execution.detail.meta.unique;
 import beman.execution.detail.prop;
+import beman.execution.detail.queryable;
 import beman.execution.detail.receiver;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender;
@@ -50,6 +62,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/prop.hpp>
+#include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
@@ -60,20 +73,6 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/stop_when.hpp>
 #include <beman/execution/detail/write_env.hpp>
-#endif
-
-#include <exception>
-#include <memory>
-#include <mutex>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
-#ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.queryable;
-#else
-#include <beman/execution/detail/queryable.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -291,12 +290,14 @@ class spawn_future_t {
     static consteval auto get_completion_signatures() {
         return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct start_impl {
+            auto operator()(auto& state, auto& rcvr) const noexcept -> void { state->consume(rcvr); }
+        };
+        static constexpr auto start{start_impl{}};
+    };
 };
 
-template <>
-struct impls_for<spawn_future_t> : ::beman::execution::detail::default_impls {
-    static constexpr auto start{[](auto& state, auto& rcvr) noexcept -> void { state->consume(rcvr); }};
-};
 } // namespace beman::execution::detail
 
 namespace beman::execution {

@@ -5,23 +5,17 @@ if(BEMAN_USE_MODULES)
     list(APPEND execution_tests execution-module.test stop-token-module.test)
 endif()
 
-set(execution_tests_todo) #-dk:TODO
-
 list(APPEND unsupported_execution_tests exec-split.test)
-set(ice_execution_tests exec-spawn-future.test)
-set(todo_execution_tests
-)
 
 list(
     APPEND execution_tests
-    exec-continues-on.test
-    exec-schedule-from.test
-    exec-bulk.test
     allocator-requirements-general.test
     exec-affine-on.test
     exec-associate.test
     exec-awaitable.test
+    exec-bulk.test
     exec-connect.test
+    exec-continues-on.test
     exec-domain-default.test
     exec-env.test
     exec-fwd-env.test
@@ -47,6 +41,7 @@ list(
     exec-run-loop-general.test
     exec-run-loop-types.test
     exec-sched.test
+    exec-schedule-from.test
     exec-schedule.test
     exec-scope-concepts.test
     exec-scope-counting.test
@@ -58,6 +53,7 @@ list(
     exec-snd-concepts.test
     exec-snd-expos.test
     exec-snd-transform.test
+    exec-spawn-future.test
     exec-spawn.test
     exec-starts-on.test
     exec-stop-when.test
@@ -111,15 +107,6 @@ list(
     thread.test
     utilities.test
 )
-#set(execution_tests exec-continues-on.test exec-schedule-from.test)
-#set(execution_tests exec-snd-expos.test)
-#set(execution_tests exec-getcomplsigs.test)
-#set(execution_tests exec-let.test)
-#set(execution_tests exec-then.test)
-#set(execution_tests exec-into-variant.test)
-#set(execution_tests exec-continues-on.test)
-#set(execution_tests exec-schedule-from.test)
-#set(execution_tests notify.test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

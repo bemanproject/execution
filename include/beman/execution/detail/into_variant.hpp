@@ -10,7 +10,6 @@ import std;
 #else
 #include <concepts>
 #include <exception>
-#include <iostream> //-dk:TODO remove
 #include <type_traits>
 #include <utility>
 #endif
@@ -110,7 +109,6 @@ struct into_variant_t {
             auto operator()(Sender&&, Receiver&&) const noexcept -> ::std::type_identity<
                 ::beman::execution::value_types_of_t<::beman::execution::detail::child_type<Sender>,
                                                      ::beman::execution::env_of_t<Receiver>>> {
-                std::cout << "into_variant get_state\n" << std::flush;
                 return {};
             }
         };
@@ -118,7 +116,6 @@ struct into_variant_t {
         struct complete_impl {
             template <typename State, typename Tag, typename... Args>
             auto operator()(auto, State, auto& receiver, Tag, Args&&... args) const noexcept -> void {
-                std::cout << "into_variant complete\n" << std::flush;
                 if constexpr (::std::same_as<Tag, ::beman::execution::set_value_t>) {
                     using variant_type = typename State::type;
                     using tuple_type   = ::beman::execution::detail::decayed_tuple<Args...>;

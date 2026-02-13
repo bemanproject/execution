@@ -8,6 +8,7 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
+#include <iostream>
 #include <memory>
 #include <optional>
 #include <type_traits>
@@ -207,7 +208,10 @@ struct impls_for<associate_t> : ::beman::execution::detail::default_impls {
     };
     static constexpr auto get_state{get_state_impl{}};
     struct start_impl {
-        auto operator()(auto& state, auto&&) const noexcept -> void { state.run(); }
+        auto operator()(auto& state, auto&&) const noexcept -> void {
+            std::cout << "associate start_impl\n";
+            state.run();
+        }
     };
     static constexpr auto start{start_impl{}};
 };
