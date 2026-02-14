@@ -48,15 +48,48 @@ struct sender {
 static_assert(test_std::sender<sender<true>>);
 static_assert(!test_std::sender<sender<false>>);
 
+template <bool Noexcept>
+struct association {
+    association() = default;
+
+    explicit association(bool* disassociated) noexcept : disassociated(disassociated) {}
+
+    association(const association&) = delete;
+
+    association(association&& other) noexcept(Noexcept) : disassociated(std::exchange(other.disassociated, {})) {}
+
+    ~association() {
+        if (disassociated)
+            *disassociated = true;
+    }
+
+    auto operator=(association other) noexcept(Noexcept) -> association& {
+        std::swap(this->disassociated, other.disassociated);
+        return *this;
+    }
+
+    auto try_associate() const noexcept -> association { return {disassociated}; }
+
+    explicit operator bool() const noexcept { return disassociated != nullptr; }
+
+    bool* disassociated = nullptr;
+};
+
 template <bool B>
 struct token {
     bool* associated{};
     bool* disassociated{};
     bool  can_associate{true};
-    auto  try_associate() noexcept(B) -> bool { return this->can_associate && (*this->associated = true); }
-    auto  disassociate() noexcept(B) { *this->disassociated = true; }
+    auto  try_associate() const noexcept {
+        if (!can_associate) {
+            return association<B>{};
+        }
+        *this->associated = true;
+        return association<B>{this->disassociated};
+    }
+
     template <test_std::sender Sndr>
-    auto wrap(Sndr&& sndr) {
+    auto wrap(Sndr&& sndr) const {
         return std::forward<Sndr>(sndr);
     }
 };

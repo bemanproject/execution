@@ -227,7 +227,17 @@ export using ::beman::execution::read_env_t;
 export using ::beman::execution::read_env;
 export using ::beman::execution::simple_counting_scope;
 export using ::beman::execution::counting_scope;
+
+// [exec.scope.concepts]
+export using ::beman::execution::scope_association;
 export using ::beman::execution::scope_token;
+
+// [exec.associate]
+export using ::beman::execution::associate;
+
+// [exec.spawn]
+export using ::beman::execution::spawn;
+export using ::beman::execution::spawn_future;
 
 namespace detail {
 export using ::beman::execution::detail::basic_sender;

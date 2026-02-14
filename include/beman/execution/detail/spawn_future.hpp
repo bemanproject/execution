@@ -116,6 +116,7 @@ template <typename Allocator, ::beman::execution::scope_token Token, ::beman::ex
 struct spawn_future_state
     : ::beman::execution::detail::spawn_future_state_base<::beman::execution::detail::spawn_future_sigs<Sndr, Env>> {
     using alloc_t          = typename ::std::allocator_traits<Allocator>::template rebind_alloc<spawn_future_state>;
+    using assoc_t          = ::std::remove_cvref_t<decltype(::std::declval<Token&>().try_associate())>;
     using traits_t         = ::std::allocator_traits<alloc_t>;
     using spawned_sender_t = ::beman::execution::detail::future_spawned_sender<Sndr, Env>;
     using sigs_t           = ::beman::execution::detail::spawn_future_sigs<Sndr, Env>;
@@ -130,9 +131,8 @@ struct spawn_future_state
           op(::beman::execution::write_env(
                  ::beman::execution::detail::stop_when(::std::forward<S>(s), source.get_token()), env),
              receiver_t{this}),
-          token(::std::move(tok)),
-          associated(token.try_associate()) {
-        if (this->associated) {
+          assoc(tok.try_associate()) {
+        if (this->assoc) {
             ::beman::execution::start(this->op);
         } else {
             ::beman::execution::set_stopped(receiver_t{this});
@@ -193,24 +193,17 @@ struct spawn_future_state
         spawn_future_state::complete_receiver(rcvr, this->result);
     }
     auto destroy() noexcept -> void {
-        Token tok{this->token};
-        bool  assoc{this->associated};
-        {
-            alloc_t a{this->alloc};
-            traits_t::destroy(a, this);
-            traits_t::deallocate(a, this, 1u);
-        }
-        if (assoc) {
-            tok.disassociate();
-        }
+        assoc_t _ = ::std::move(this->assoc);
+        alloc_t a{this->alloc};
+        traits_t::destroy(a, this);
+        traits_t::deallocate(a, this, 1u);
     }
 
     ::std::mutex                            gate{};
     alloc_t                                 alloc;
     ::beman::execution::inplace_stop_source source{};
     op_t                                    op;
-    Token                                   token;
-    bool                                    associated{false};
+    assoc_t                                 assoc;
     void*                                   receiver{};
     auto (*fun)(void*, spawn_future_state&) noexcept -> void = nullptr;
 };

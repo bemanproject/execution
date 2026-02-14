@@ -37,21 +37,23 @@ struct spawn_t {
     template <typename Alloc, ::beman::execution::scope_token Tok, ::beman::execution::sender Sndr>
     struct state : state_base {
         using op_t     = ::beman::execution::connect_result_t<Sndr, receiver>;
+        using assoc_t  = ::std::remove_cvref_t<decltype(::std::declval<Tok&>().try_associate())>;
         using alloc_t  = typename ::std::allocator_traits<Alloc>::template rebind_alloc<state>;
         using traits_t = ::std::allocator_traits<alloc_t>;
 
         state(Alloc a, Sndr&& sndr, Tok tok)
-            : alloc(a), op(::beman::execution::connect(::std::forward<Sndr>(sndr), receiver{this})), token(tok) {
-            if (this->token.try_associate()) {
+            : alloc(a),
+              op(::beman::execution::connect(::std::forward<Sndr>(sndr), receiver{this})),
+              assoc(tok.try_associate()) {
+            if (this->assoc) {
                 ::beman::execution::start(this->op);
             } else {
                 this->destroy();
             }
         }
         auto complete() noexcept -> void override {
-            Tok tok(this->token);
+            assoc_t _ = ::std::move(this->assoc);
             this->destroy();
-            tok.disassociate();
         }
         auto destroy() noexcept -> void {
             alloc_t all(this->alloc);
@@ -61,7 +63,7 @@ struct spawn_t {
 
         alloc_t alloc;
         op_t    op;
-        Tok     token;
+        assoc_t assoc;
     };
 
     template <::beman::execution::sender Sender, ::beman::execution::scope_token Token, typename Env>

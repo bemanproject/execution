@@ -38,7 +38,7 @@ class beman::execution::counting_scope : public ::beman::execution::detail::coun
 
 // ----------------------------------------------------------------------------
 
-class beman::execution::counting_scope::token : public ::beman::execution::detail::counting_scope_base::token {
+class beman::execution::counting_scope::token : public beman::execution::counting_scope::token_base {
   public:
     template <::beman::execution::sender Sender>
     auto wrap(Sender&& sender) const noexcept -> ::beman::execution::sender auto {
@@ -49,8 +49,7 @@ class beman::execution::counting_scope::token : public ::beman::execution::detai
 
   private:
     friend class beman::execution::counting_scope;
-    explicit token(::beman::execution::counting_scope* s)
-        : ::beman::execution::detail::counting_scope_base::token(s) {}
+    explicit token(::beman::execution::counting_scope* s) : token_base(s) {}
 };
 static_assert(::beman::execution::scope_token<::beman::execution::counting_scope::token>);
 

@@ -65,12 +65,46 @@ static_assert(test_std::sender<sender<int>>);
 static_assert(test_std::sender<sender<int, bool>>);
 
 template <bool Noexcept>
+struct association {
+    association() = default;
+
+    association(std::size_t* count, bool associated) noexcept : count(count), associated(associated) {}
+
+    association(const association&) = delete;
+
+    association(association&& other) noexcept(Noexcept)
+        : count(std::exchange(other.count, {})), associated(std::exchange(other.associated, {})) {}
+
+    ~association() {
+        if (associated) {
+            --*count;
+        }
+    }
+
+    auto operator=(association other) noexcept(Noexcept) -> association& {
+        std::swap(this->count, other.count);
+        std::swap(this->associated, other.associated);
+        return *this;
+    }
+
+    auto try_associate() const noexcept -> association { return {this->count, this->count && bool(++*this->count)}; }
+
+    explicit operator bool() const noexcept { return associated; }
+
+    std::size_t* count      = nullptr;
+    bool         associated = false;
+};
+
+template <bool Noexcept>
 struct token {
     std::size_t* count{nullptr};
-    auto         try_associate() -> bool { return this->count && bool(++*this->count); }
-    auto         disassociate() noexcept(Noexcept) -> void { --*this->count; }
+
+    auto try_associate() const noexcept -> association<Noexcept> {
+        return {this->count, this->count && bool(++*this->count)};
+    }
+
     template <test_std::sender Sender>
-    auto wrap(Sender&& sender) -> Sender {
+    auto wrap(Sender&& sender) const -> Sender {
         return std::forward<Sender>(sender);
     }
 };

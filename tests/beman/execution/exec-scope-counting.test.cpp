@@ -25,14 +25,9 @@ auto general() -> void {
 
     // static_assert(requires(token const& tok){ { tok.wrap(test_std::just(10)) } noexcept; });
     static_assert(requires(const token& tok) {
-        { tok.try_associate() } noexcept -> std::same_as<bool>;
-    });
-    static_assert(requires(const token& tok) { tok.try_associate(); });
-    static_assert(requires(const token& tok) {
-        { tok.disassociate() } noexcept;
+        { tok.try_associate() } noexcept -> test_std::scope_association;
     });
 
-    static_assert(noexcept(scope{}));
     static_assert(!std::is_move_constructible_v<scope>);
     static_assert(!std::is_copy_constructible_v<scope>);
     static_assert(requires(scope sc) {
@@ -62,30 +57,6 @@ auto ctor() -> void {
     {
         test_std::counting_scope scope;
     }
-    test::death([] {
-        test_std::counting_scope scope;
-        scope.get_token().try_associate();
-    });
-    test::death([] {
-        test_std::counting_scope scope;
-        scope.get_token().try_associate();
-        bool called{false};
-        auto state(test_std::connect(scope.join(), join_receiver{called}));
-        test_std::start(state);
-    });
-    test::death([] {
-        test_std::counting_scope scope;
-        scope.get_token().try_associate();
-        scope.close();
-    });
-    test::death([] {
-        test_std::counting_scope scope;
-        scope.get_token().try_associate();
-        bool called{false};
-        auto state(test_std::connect(scope.join(), join_receiver{called}));
-        test_std::start(state);
-        scope.close();
-    });
     {
         test_std::counting_scope scope;
         scope.close();
@@ -102,24 +73,24 @@ auto mem() -> void {
         test_std::counting_scope        scope;
         test_std::counting_scope::token token{scope.get_token()};
 
-        ASSERT(true == token.try_associate());
-        token.disassociate();
+        ASSERT(true == static_cast<bool>(token.try_associate()));
         scope.close();
-        ASSERT(false == token.try_associate());
+        ASSERT(false == static_cast<bool>(token.try_associate()));
 
         test_std::sync_wait(scope.join());
     }
     {
+        bool                     called{false};
         test_std::counting_scope scope;
-        ASSERT(true == scope.get_token().try_associate());
-        bool called{false};
+        const auto               tok{scope.get_token()};
+        std::optional            assoc{tok.try_associate()};
+        ASSERT(true == static_cast<bool>(*assoc));
         ASSERT(called == false);
         auto state(test_std::connect(scope.join(), join_receiver{called}));
         ASSERT(called == false);
         test_std::start(state);
         ASSERT(called == false);
-
-        scope.get_token().disassociate();
+        assoc.reset();
         ASSERT(called == true);
     }
 }
@@ -128,16 +99,17 @@ auto token() -> void {
     const auto               tok{scope.get_token()};
     [[maybe_unused]] auto    sndr{tok.wrap(test_std::just(10))};
 
-    ASSERT(true == tok.try_associate());
+    std::optional assoc{tok.try_associate()};
+    ASSERT(true == static_cast<bool>(*assoc));
     bool called{false};
     auto state(test_std::connect(scope.join(), join_receiver{called}));
     test_std::start(state);
     ASSERT(false == called);
     scope.close();
     ASSERT(false == called);
-    ASSERT(false == tok.try_associate());
+    ASSERT(false == static_cast<bool>(tok.try_associate()));
     ASSERT(false == called);
-    tok.disassociate();
+    assoc.reset();
     ASSERT(true == called);
 }
 

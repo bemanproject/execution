@@ -31,7 +31,7 @@ class beman::execution::simple_counting_scope : public ::beman::execution::detai
 
 // ----------------------------------------------------------------------------
 
-class beman::execution::simple_counting_scope::token : public ::beman::execution::detail::counting_scope_base::token {
+class beman::execution::simple_counting_scope::token : public beman::execution::simple_counting_scope::token_base {
   public:
     template <::beman::execution::sender Sender>
     auto wrap(Sender&& sender) const noexcept -> Sender&& {
@@ -40,8 +40,7 @@ class beman::execution::simple_counting_scope::token : public ::beman::execution
 
   private:
     friend class beman::execution::simple_counting_scope;
-    explicit token(::beman::execution::detail::counting_scope_base* s)
-        : ::beman::execution::detail::counting_scope_base::token(s) {}
+    explicit token(::beman::execution::detail::counting_scope_base* s) : token_base(s) {}
 };
 
 // ----------------------------------------------------------------------------
