@@ -84,11 +84,11 @@ var hierarchy =
     [ "beman::execution::stop_source", "classbeman_1_1execution_1_1stop__source.html", null ],
     [ "beman::execution::stop_token", "classbeman_1_1execution_1_1stop__token.html", null ],
     [ "tst::timer", "classtst_1_1timer.html", null ],
-    [ "beman::execution::detail::counting_scope_base::token", null, [
+    [ "tst::timer::token", "classtst_1_1timer_1_1token.html", null ],
+    [ "beman::execution::detail::counting_scope_base::token_base", null, [
       [ "beman::execution::counting_scope::token", "classbeman_1_1execution_1_1counting__scope_1_1token.html", null ],
       [ "beman::execution::simple_counting_scope::token", "classbeman_1_1execution_1_1simple__counting__scope_1_1token.html", null ]
     ] ],
-    [ "tst::timer::token", "classtst_1_1timer_1_1token.html", null ],
     [ "std::true_type", null, [
       [ "tst::add_set_value< Sender >::is_set_value< tst::ex::set_value_t(A...)>", "structtst_1_1add__set__value_1_1is__set__value_3_01tst_1_1ex_1_1set__value__t_07A_8_8_8_08_4.html", null ]
     ] ],

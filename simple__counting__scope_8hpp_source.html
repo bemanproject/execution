@@ -133,7 +133,7 @@ $(document).ready(function(){initNavTree('simple__counting__scope_8hpp_source.ht
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">   34</a></span><span class="keyword">class </span><a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">beman::execution::simple_counting_scope::token</a> : <span class="keyword">public</span> ::beman::execution::detail::counting_scope_base::token {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">   34</a></span><span class="keyword">class </span><a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">beman::execution::simple_counting_scope::token</a> : <span class="keyword">public</span> beman::execution::simple_counting_scope::token_base {</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">template</span> &lt;::beman::execution::sender Sender&gt;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">auto</span> wrap(Sender&amp;&amp; <a class="code hl_concept" href="conceptbeman_1_1execution_1_1sender.html">sender</a>) <span class="keyword">const</span> <span class="keyword">noexcept</span> -&gt; Sender&amp;&amp; {</div>
@@ -142,20 +142,19 @@ $(document).ready(function(){initNavTree('simple__counting__scope_8hpp_source.ht
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope.html">beman::execution::simple_counting_scope</a>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">token</a>(::beman::execution::detail::counting_scope_base* s)</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        : ::beman::execution::detail::counting_scope_base::token(s) {}</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>};</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">inline</span> <span class="keyword">auto</span> beman::execution::simple_counting_scope::get_token() noexcept</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    -&gt; <a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope.html">simple_counting_scope</a>::<a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">token</a> {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">beman::execution::simple_counting_scope::token</a>(<span class="keyword">this</span>);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_COUNTING_SCOPE</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">token</a>(::beman::execution::detail::counting_scope_base* s) : token_base(s) {}</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>};</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">inline</span> <span class="keyword">auto</span> beman::execution::simple_counting_scope::get_token() noexcept</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    -&gt; <a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope.html">simple_counting_scope</a>::<a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">token</a> {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">beman::execution::simple_counting_scope::token</a>(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_COUNTING_SCOPE</span></div>
 <div class="ttc" id="aclassbeman_1_1execution_1_1simple__counting__scope_1_1token_html"><div class="ttname"><a href="classbeman_1_1execution_1_1simple__counting__scope_1_1token.html">beman::execution::simple_counting_scope::token</a></div><div class="ttdef"><b>Definition:</b> simple_counting_scope.hpp:34</div></div>
 <div class="ttc" id="aclassbeman_1_1execution_1_1simple__counting__scope_html"><div class="ttname"><a href="classbeman_1_1execution_1_1simple__counting__scope.html">beman::execution::simple_counting_scope</a></div><div class="ttdef"><b>Definition:</b> simple_counting_scope.hpp:22</div></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1sender_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1sender.html">beman::execution::sender</a></div><div class="ttdef"><b>Definition:</b> sender.hpp:33</div></div>

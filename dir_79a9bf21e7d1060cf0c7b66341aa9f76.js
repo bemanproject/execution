@@ -118,6 +118,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "schedule_result_t.hpp", "schedule__result__t_8hpp_source.html", null ],
     [ "scheduler.hpp", "scheduler_8hpp_source.html", null ],
     [ "scheduler_t.hpp", "scheduler__t_8hpp_source.html", null ],
+    [ "scope_association.hpp", "scope__association_8hpp_source.html", null ],
     [ "scope_token.hpp", "scope__token_8hpp_source.html", null ],
     [ "sender.hpp", "sender_8hpp_source.html", null ],
     [ "sender_adaptor.hpp", "sender__adaptor_8hpp_source.html", null ],
