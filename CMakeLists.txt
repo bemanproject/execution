@@ -21,40 +21,46 @@ set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets) # NOTE: must be set, is importa
 
 #===============================================================================
 if(BEMAN_USE_MODULES)
+    set(CMAKE_CXX_SCAN_FOR_MODULES ON)
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-    set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
-    add_library(beman.execution STATIC)
-    add_library(beman::execution ALIAS beman.execution)
+    add_library(${TARGET_PREFIX} STATIC)
+    add_library(beman::execution ALIAS ${TARGET_PREFIX})
     target_compile_features(
-        beman.execution
+        ${TARGET_PREFIX}
         PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
     )
 
     include(GenerateExportHeader)
-
     generate_export_header(
-        beman.execution
-        BASE_NAME beman.execution
+        ${TARGET_PREFIX}
+        BASE_NAME ${TARGET_PREFIX}
         EXPORT_FILE_NAME beman/execution/modules_export.hpp
     )
     target_sources(
-        beman.execution
+        ${TARGET_PREFIX}
         PUBLIC
             FILE_SET HEADERS
                 BASE_DIRS include ${CMAKE_CURRENT_BINARY_DIR}
                 FILES
                     ${CMAKE_CURRENT_BINARY_DIR}/beman/execution/modules_export.hpp
     )
-    # FIXME: target_compile_definitions(beman.execution PUBLIC BEMAN_HAS_MODULES)
+    # NOTE: only partly supported for examples!
+    # FIXME: target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_MODULES)
+
+    # XXX find_package(Threads REQUIRED)
+    # XXX target_link_libraries(${TARGET_PREFIX} PUBLIC Threads::Threads)
+else()
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 endif()
 
 if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
-    target_compile_definitions(beman.execution PUBLIC BEMAN_HAS_IMPORT_STD)
-else()
-    message(WARNING "Missing support for CMAKE_CXX_MODULE_STD!")
+    target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_IMPORT_STD)
+elseif(BEMAN_USE_MODULES)
+    message(WARNING "Missing or disabled support for CMAKE_CXX_MODULE_STD!")
 endif()
 #===============================================================================
 
@@ -72,13 +78,19 @@ option(
 
 add_subdirectory(src/beman/execution)
 
+#===============================================================================
 # NOTE: this must be done before tests! CK
-include(./cmake/beman-install-library-config.cmake)
-beman_install_library(${TARGET_PREFIX} headers)
+include(./cmake/beman-install-library.cmake)
+beman_install_library(${TARGET_PREFIX} TARGETS ${TARGET_NAME} ${TARGET_PREFIX}
+    # FIXME: DEPENDENCIES [===[beman.inplace_vector 1.0.0]===] [===[beman.scope 0.0.1 EXACT]===] fmt
+    # TODO(CK): XXX OR XXX DEPENDENCIES "beman.inplace_vector 1.0.0;beman.scope 0.0.1 EXACT"
+    # XXX DEPENDENCIES Threads
+)
+#===============================================================================
+
+enable_testing()
 
 if(BEMAN_EXECUTION_ENABLE_TESTING)
-    enable_testing()
-
     add_subdirectory(tests/beman/execution)
 endif()
 

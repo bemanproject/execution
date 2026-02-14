@@ -123,6 +123,13 @@ foreach(test ${execution_tests})
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    return()
+endif()
+
+#======================================================================
+# NOTE: Only for Release build with enabled install rules useful! CK
+#======================================================================
 if(BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE AND NOT CMAKE_SKIP_INSTALL_RULES)
     # test if the targets are usable from the install directory
     add_test(
@@ -142,11 +149,11 @@ if(BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE AND NOT CMAKE_SKIP_INSTALL_RULES)
             --build-makeprogram ${CMAKE_MAKE_PROGRAM} #
             --build-options #
             "-D BEMAN_USE_MODULES=${BEMAN_USE_MODULES}"
+            "-D BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}"
             "-D CMAKE_BUILD_TYPE=$<CONFIG>"
             "-D CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
             "-D CMAKE_CXX_EXTENSIONS=${CMAKE_CXX_EXTENSIONS}"
             "-D CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}"
-            "-D CMAKE_CXX_SCAN_FOR_MODULES=${CMAKE_CXX_SCAN_FOR_MODULES}"
             "-D CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}"
             "-D CMAKE_CXX_STANDARD_REQUIRED=${CMAKE_CXX_STANDARD_REQUIRED}"
             "-D CMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/stagedir"

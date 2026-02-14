@@ -46,6 +46,7 @@ stagedir
 # In-source builds are not allowed
 CMakeCache.txt
 CMakeFiles/
+GNUmakefile
 
 *.log
 docs/html

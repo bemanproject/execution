@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/stop_token.hpp>
-#if defined(BEMAN_HAS_MODULES) //-dk:TODO module disabled
+#ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
 #include <beman/execution/stop_token.hpp>

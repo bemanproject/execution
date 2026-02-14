@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #
 # This file must be included/used as CMAKE_PROJECT_TOP_LEVEL_INCLUDES -> before project() is called!
 #
@@ -14,35 +15,36 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     )
 endif()
 
-if(PROJECT_NAME)
-    message(
-        FATAL_ERROR
-        "This CMake file has to be included before first project() command call!"
-    )
-endif()
-
-# gersemi: off
-# ---------------------------------------------------------------------------
-# use ccache if found
-# ---------------------------------------------------------------------------
-find_program(CCACHE_EXECUTABLE "ccache" HINTS /usr/local/bin /opt/local/bin)
-if(CCACHE_EXECUTABLE)
-    message(STATUS "use ccache")
-    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_EXECUTABLE}" CACHE PATH "ccache")
-    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_EXECUTABLE}" CACHE PATH "ccache")
-endif()
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
+# ---------------------------------------------------------------------------
+if(NOT BEMAN_USE_STD_MODULE OR CMAKE_VERSION VERSION_GREATER_EQUAL 4.3)
+    return()
+endif()
+# ---------------------------------------------------------------------------
+
+# gersemi: off
 # ---------------------------------------------------------------------------
 # check if import std; is supported by CMAKE_CXX_COMPILER
 # ---------------------------------------------------------------------------
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
+    if(PROJECT_NAME)
+        message(
+            WARNING
+            "This CMake file has to be included before first project() command call!"
+        )
+    endif()
+
     set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 endif()
 # gersemi: on
 
-# FIXME: on APPLE with clang++ still needs to export CXX=clang++
+# TODO(CK): Do we need this HACK for linux too?
+# if(NOT APPLE)
+#     return()
+# endif()
+
+# FIXME: clang++ we still needs to export CXX=clang++
 if("$ENV{CXX}" STREQUAL "" AND CMAKE_CXX_COMPILER)
     message(WARNING "\$CXX is not set")
     set(ENV{CXX} ${CMAKE_CXX_COMPILER})
@@ -80,7 +82,7 @@ if(
     elseif(LINUX)
         execute_process(
             OUTPUT_VARIABLE LLVM_MODULES
-            COMMAND clang++ -print-file-name=c++/libc++.modules.json
+            COMMAND clang++ -print-file-name=libc++.modules.json
             COMMAND_ECHO STDOUT
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
@@ -107,7 +109,7 @@ if(
         # gersemi: on
     else()
         message(
-            WARNING
+            FATAL_ERROR
             "File does NOT EXISTS! ${CMAKE_CXX_STDLIB_MODULES_JSON}"
         )
     endif()
