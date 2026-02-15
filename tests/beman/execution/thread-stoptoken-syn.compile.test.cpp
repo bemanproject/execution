@@ -5,6 +5,7 @@
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail.stoppable_source;
+import beman.execution.detail.stoppable_callback_for;
 import beman.execution.detail.stop_callback_for_t;
 #else
 #include <beman/execution/stop_token.hpp>

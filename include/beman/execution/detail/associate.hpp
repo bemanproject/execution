@@ -20,16 +20,20 @@ import beman.execution.detail.connect_result_t;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.env;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.get_domain_early;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.nothrow_callable;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender;
+import beman.execution.detail.sender_adaptor;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
 import beman.execution.detail.start;
 import beman.execution.detail.transform_sender;
+import beman.execution.detail.valid_completion_signatures;
 #else
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -117,112 +121,95 @@ struct associate_t {
         return ::beman::execution::detail::sender_adaptor{*this, ::std::move(token)};
     }
 
-  private:
-    template <typename, typename>
-    struct get_signatures;
-    template <typename Data, typename Env>
-    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::associate_t, Data>,
-                          Env> {
-        using type = ::beman::execution::completion_signatures<::beman::execution::set_value_t()>;
-    };
-
   public:
     template <typename Sender, typename... Env>
     static consteval auto get_completion_signatures() {
-        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+        using Data         = decltype(std::declval<::std::remove_cvref_t<Sender>>().template get<1>());
+        using child_type_t = ::std::remove_cvref_t<typename ::std::remove_cvref_t<Data>::wrap_sender>;
+        return ::beman::execution::detail::completion_signatures_for<child_type_t, Env...>{};
     }
+
     struct impls_for : ::beman::execution::detail::default_impls {
-        template <typename, typename>
-        struct get_noexcept : ::std::false_type {};
-        template <typename Tag, typename Data, typename Receiver>
-        struct get_noexcept<::beman::execution::detail::basic_sender<Tag, Data>, Receiver>
-            : ::std::bool_constant<
-                  ::std::is_nothrow_move_constructible_v<typename ::std::remove_cvref_t<Data>::wrap_sender>&& ::beman::
-                      execution::detail::nothrow_callable<::beman::execution::connect_t,
-                                                          typename ::std::remove_cvref_t<Data>::wrap_sender,
-                                                          Receiver>> {};
+        template <typename>
+        struct get_wrap_sender;
 
-template <>
-struct impls_for<associate_t> : ::beman::execution::detail::default_impls {
-    template <typename>
-    struct get_wrap_sender;
-
-    template <typename Tag, typename Data>
-    struct get_wrap_sender<::beman::execution::detail::basic_sender<Tag, Data>> {
-        using type = typename ::std::remove_cvref_t<Data>::wrap_sender;
-    };
-
-    template <typename AssociateData, typename Receiver>
-    struct op_state {
-        using assoc_t      = typename AssociateData::assoc_t;
-        using sender_ref_t = typename AssociateData::sender_ref;
-        using op_t         = ::beman::execution::connect_result_t<typename sender_ref_t::element_type, Receiver>;
-
-        assoc_t assoc;
-        union {
-            Receiver* rcvr;
-            op_t      op;
+        template <typename Tag, typename Data>
+        struct get_wrap_sender<::beman::execution::detail::basic_sender<Tag, Data>> {
+            using type = typename ::std::remove_cvref_t<Data>::wrap_sender;
         };
 
-        explicit op_state(::std::pair<assoc_t, sender_ref_t> parts, Receiver& r) : assoc(::std::move(parts.first)) {
-            if (assoc) {
-                ::std::construct_at(::std::addressof(op),
-                                    ::beman::execution::connect(::std::move(*parts.second), ::std::move(r)));
-            } else {
-                rcvr = ::std::addressof(r);
+        template <typename AssociateData, typename Receiver>
+        struct op_state {
+            using assoc_t      = typename AssociateData::assoc_t;
+            using sender_ref_t = typename AssociateData::sender_ref;
+            using op_t         = ::beman::execution::connect_result_t<typename sender_ref_t::element_type, Receiver>;
+
+            assoc_t assoc;
+            union {
+                Receiver* rcvr;
+                op_t      op;
+            };
+
+            explicit op_state(::std::pair<assoc_t, sender_ref_t> parts, Receiver& r)
+                : assoc(::std::move(parts.first)) {
+                if (assoc) {
+                    ::std::construct_at(::std::addressof(op),
+                                        ::beman::execution::connect(::std::move(*parts.second), ::std::move(r)));
+                } else {
+                    rcvr = ::std::addressof(r);
+                }
             }
-        }
 
-        explicit op_state(AssociateData&& ad, Receiver& r) : op_state(::std::move(ad).release(), r) {}
+            explicit op_state(AssociateData&& ad, Receiver& r) : op_state(::std::move(ad).release(), r) {}
 
-        explicit op_state(const AssociateData& ad, Receiver& r)
-            requires ::std::copy_constructible<AssociateData>
-            : op_state(AssociateData(ad).release(), r) {}
+            explicit op_state(const AssociateData& ad, Receiver& r)
+                requires ::std::copy_constructible<AssociateData>
+                : op_state(AssociateData(ad).release(), r) {}
 
-        op_state(const op_state&) = delete;
+            op_state(const op_state&) = delete;
 
-        op_state(op_state&&) = delete;
+            op_state(op_state&&) = delete;
 
-        ~op_state() {
-            if (this->assoc) {
-                op.~op_t();
+            ~op_state() {
+                if (this->assoc) {
+                    op.~op_t();
+                }
             }
-        }
 
-        auto operator=(const op_state&) -> op_state& = delete;
+            auto operator=(const op_state&) -> op_state& = delete;
 
-        auto operator=(op_state&&) -> op_state& = delete;
+            auto operator=(op_state&&) -> op_state& = delete;
 
-        auto run() noexcept -> void {
-            if (this->assoc) {
-                ::beman::execution::start(this->op);
-            } else {
-                ::beman::execution::set_stopped(::std::move(*this->rcvr));
+            auto run() noexcept -> void {
+                if (this->assoc) {
+                    ::beman::execution::start(this->op);
+                } else {
+                    ::beman::execution::set_stopped(::std::move(*this->rcvr));
+                }
             }
-        }
-    };
+        };
 
-    struct get_state_impl {
-        template <typename Sender, typename Receiver>
-        auto operator()(Sender&& sender, Receiver& receiver) const
-            noexcept((::std::same_as<Sender, ::std::remove_cvref_t<Sender>> ||
-                      ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>) &&
-                     execution::detail::nothrow_callable<::beman::execution::connect_t,
-                                                         typename get_wrap_sender<::std::remove_cvref_t<Sender>>::type,
-                                                         Receiver>) {
-            auto [_, data] = ::std::forward<Sender>(sender);
-            return op_state{::beman::execution::detail::forward_like<Sender>(data), receiver};
-        }
+        struct get_state_impl {
+            template <typename Sender, typename Receiver>
+            auto operator()(Sender&& sender, Receiver& receiver) const noexcept(
+                (::std::same_as<Sender, ::std::remove_cvref_t<Sender>> ||
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>) &&
+                execution::detail::nothrow_callable<::beman::execution::connect_t,
+                                                    typename get_wrap_sender<::std::remove_cvref_t<Sender>>::type,
+                                                    Receiver>) {
+                return op_state{
+                    ::beman::execution::detail::forward_like<Sender>(::std::forward<Sender>(sender).template get<1>()),
+                    receiver};
+            }
+        };
+        static constexpr auto get_state{get_state_impl{}};
+        struct start_impl {
+            auto operator()(auto& state, auto&&) const noexcept -> void { state.run(); }
+        };
+        static constexpr auto start{start_impl{}};
     };
 };
 
-template <typename Data, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::associate_t, Data>,
-    Env> {
-    using child_type_t = typename ::std::remove_cvref_t<Data>::wrap_sender;
-    using type         = ::beman::execution::detail::completion_signatures_for<child_type_t, Env>;
-};
 } // namespace beman::execution::detail
 
 namespace beman::execution {

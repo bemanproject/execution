@@ -6,10 +6,6 @@ module;
 
 export module beman.execution.detail.sender;
 
-namespace beman::execution::detail {
-export using beman::execution::detail::enable_sender;
-export using beman::execution::detail::is_sender;
-} // namespace beman::execution::detail
 namespace beman::execution {
 export using beman::execution::sender_t;
 export using beman::execution::sender;

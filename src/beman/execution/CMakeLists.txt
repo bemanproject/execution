@@ -248,6 +248,7 @@ if(BEMAN_USE_MODULES)
                     default_domain.cppm
                     default_impls.cppm
                     emplace_from.cppm
+                    enable_sender.cppm
                     env_of_t.cppm
                     env_promise.cppm
                     env_type.cppm
@@ -279,6 +280,7 @@ if(BEMAN_USE_MODULES)
                     intrusive_stack.cppm
                     is_awaitable.cppm
                     is_awaiter.cppm
+                    is_sender.cppm
                     join_env.cppm
                     just.cppm
                     let.cppm
@@ -320,6 +322,7 @@ if(BEMAN_USE_MODULES)
                     schedule.cppm
                     scheduler_t.cppm
                     scheduler.cppm
+                    scope_association.cppm
                     scope_token.cppm
                     sender_adaptor_closure.cppm
                     sender_adaptor.cppm
@@ -343,6 +346,7 @@ if(BEMAN_USE_MODULES)
                     start.cppm
                     starts_on.cppm
                     state_type.cppm
+                    stoppable_callback_for.cppm
                     stop_callback_for_t.cppm
                     stop_source.cppm
                     stop_token_of_t.cppm

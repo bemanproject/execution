@@ -16,7 +16,6 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
-import beman.execution.detail.associate;
 #else
 #include <beman/execution/detail/associate.hpp>
 #include <beman/execution/detail/connect.hpp>
@@ -116,11 +115,14 @@ TEST(exec_associate) {
 
     // completion signatures: this implementation currently reports set_value() only.
     {
-        using snd0_t = decltype(test_std::associate(test_std::just(), null_token{}));
+        auto snd0 = test_std::associate(test_std::just(), null_token{});
+        using snd0_t = decltype(snd0);
         static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>,
                                    test_std::completion_signatures_of_t<snd0_t, test_std::env<>>>);
 
-        using snd1_t = decltype(test_std::associate(test_std::just(std::string{}), null_token{}));
+#ifndef _MSC_VER //-dk:TODO MSVC++ struggles with more than one of these test
+        auto snd1 = test_std::associate(test_std::just(std::string{}), null_token{});
+        using snd1_t = decltype(snd1);
         static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(std::string)>,
                                    test_std::completion_signatures_of_t<snd1_t, test_std::env<>>>);
 
@@ -136,8 +138,10 @@ TEST(exec_associate) {
         using snd4_t = decltype(test_std::associate(test_std::just(std::ref(i)), null_token{}));
         static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(std::reference_wrapper<int>)>,
                                    test_std::completion_signatures_of_t<snd4_t, test_std::env<>>>);
+#endif
     }
 
+#ifndef _MSC_VER //-dk:TODO MSVC++ struggles with more than one of these test
     // Identity behavior with null_token for value path + piping works.
     {
         {
@@ -239,4 +243,5 @@ TEST(exec_associate) {
         ASSERT(completes_with_value(test_std::just(1) | test_std::associate(null_token{})));
         ASSERT(!completes_with_value(test_std::just(1) | test_std::associate(expired_token{})));
     }
+#endif
 }

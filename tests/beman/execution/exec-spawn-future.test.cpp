@@ -3,6 +3,7 @@
 
 #include <concepts>
 #include <variant>
+#include <utility>
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;

@@ -39,16 +39,7 @@ struct no_completion_signatures_defined_in_sender {};
 
 template <typename Sender, typename... Env>
 consteval auto get_completion_signatures_for_helper() {
-#if 1
     using tag_t = ::std::remove_cvref_t<::beman::execution::tag_of_t<::std::remove_cvref_t<Sender>>>;
-#else
-    using tag_t = decltype([]() noexcept {
-        if constexpr (requires { std::declval<Sender>().template get<0>(); })
-            return decltype(std::declval<Sender>().template get<0>())();
-        else
-            return ::std::remove_cvref_t<::beman::execution::tag_of_t<::std::remove_cvref_t<Sender>>>();
-    }());
-#endif
     if constexpr (requires { tag_t::template get_completion_signatures<Sender, Env...>(); })
         return tag_t::template get_completion_signatures<Sender, Env...>();
     else
