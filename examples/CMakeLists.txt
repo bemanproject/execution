@@ -35,10 +35,9 @@ set(EXAMPLES
 )
 
 if(BEMAN_USE_MODULES)
-    #-dk:TODO list(APPEND EXAMPLES modules modules-and-header)
+    #-dk:TODO gcc doesn't like the modules: list(APPEND EXAMPLES modules modules-and-header)
     list(APPEND EXAMPLES modules-and-header)
 endif()
-set(EXAMPLES)
 
 foreach(EXAMPLE ${EXAMPLES})
     set(EXAMPLE_TARGET ${PROJECT_NAME}.${EXAMPLE})

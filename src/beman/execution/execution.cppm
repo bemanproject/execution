@@ -13,10 +13,10 @@ import beman.execution.detail.as_awaitable;
 export import beman.execution.detail.associate; // [exec.associate]
 import beman.execution.detail.bulk;
 import beman.execution.detail.check_type_alias_exist;
-export import beman.execution.detail.completion_signatures; // [exec.util.cmplsig]
+export import beman.execution.detail.completion_signatures;      // [exec.util.cmplsig]
 export import beman.execution.detail.completion_signatures_of_t; // [exec.getcomplsigs], completion signatures
 import beman.execution.detail.connect;
-export import beman.execution.detail.connect_result_t;// [exec.connect], the connect sender algorithm
+export import beman.execution.detail.connect_result_t; // [exec.connect], the connect sender algorithm
 import beman.execution.detail.continues_on;
 import beman.execution.detail.counting_scope;
 import beman.execution.detail.default_domain;
@@ -49,7 +49,7 @@ export import beman.execution.detail.schedule_result_t;
 export import beman.execution.detail.scheduler; // [exec.sched], schedulers
 export import beman.execution.detail.scheduler_t;
 export import beman.execution.detail.scope_association; // [exec.scope.concepts]
-export import beman.execution.detail.scope_token; // [exec.scope.concepts]
+export import beman.execution.detail.scope_token;       // [exec.scope.concepts]
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;

@@ -115,14 +115,12 @@ TEST(exec_associate) {
 
     // completion signatures: this implementation currently reports set_value() only.
     {
-        auto snd0 = test_std::associate(test_std::just(), null_token{});
-        using snd0_t = decltype(snd0);
+        using snd0_t = decltype(test_std::associate(test_std::just(), null_token{}));
         static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>,
                                    test_std::completion_signatures_of_t<snd0_t, test_std::env<>>>);
 
 #ifndef _MSC_VER //-dk:TODO MSVC++ struggles with more than one of these test
-        auto snd1 = test_std::associate(test_std::just(std::string{}), null_token{});
-        using snd1_t = decltype(snd1);
+        using snd1_t = decltype(test_std::associate(test_std::just(std::string{}), null_token{}));
         static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(std::string)>,
                                    test_std::completion_signatures_of_t<snd1_t, test_std::env<>>>);
 
