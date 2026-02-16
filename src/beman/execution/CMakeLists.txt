@@ -372,7 +372,7 @@ if(BEMAN_USE_MODULES)
                     with_awaitable_senders.cppm
                     write_env.cppm
     )
-    target_compile_definitions(beman.execution PUBLIC BEMAN_HAS_MODULES)
+    target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_MODULES)
     target_link_libraries(${TARGET_PREFIX} PUBLIC ${TARGET_NAME})
 endif()
 
