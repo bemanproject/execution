@@ -44,9 +44,6 @@ var hierarchy =
     [ "beman::execution::inplace_stop_callback< CallbackFun >", "classbeman_1_1execution_1_1inplace__stop__callback.html", null ],
     [ "beman::execution::inplace_stop_source", "classbeman_1_1execution_1_1inplace__stop__source.html", null ],
     [ "beman::execution::inplace_stop_token", "classbeman_1_1execution_1_1inplace__stop__token.html", null ],
-    [ "std::integral_constant", null, [
-      [ "std::tuple_size< T >", "structstd_1_1tuple__size_3_01T_01_4.html", null ]
-    ] ],
     [ "tst::just_error_t", "structtst_1_1just__error__t.html", null ],
     [ "beman::execution::never_stop_token", "classbeman_1_1execution_1_1never__stop__token.html", null ],
     [ "beman::execution::nostopstate_t", "structbeman_1_1execution_1_1nostopstate__t.html", null ],
@@ -75,6 +72,8 @@ var hierarchy =
     [ "beman::execution::set_error_t", "structbeman_1_1execution_1_1set__error__t.html", null ],
     [ "beman::execution::set_stopped_t", "structbeman_1_1execution_1_1set__stopped__t.html", null ],
     [ "beman::execution::set_value_t", "structbeman_1_1execution_1_1set__value__t.html", null ],
+    [ "shared_wrapper< Sndr >", "structshared__wrapper.html", null ],
+    [ "split_t", "structsplit__t.html", null ],
     [ "beman::execution::start_t", "structbeman_1_1execution_1_1start__t.html", null ],
     [ "tst::repeat_effect_unilt_t::sender< Child, Fun >::state< Receiver >", "structtst_1_1repeat__effect__unilt__t_1_1sender_1_1state.html", null ],
     [ "tst::timer::when_done_sender::state< Receiver >", "structtst_1_1timer_1_1when__done__sender_1_1state.html", null ],
@@ -92,7 +91,6 @@ var hierarchy =
     [ "std::true_type", null, [
       [ "tst::add_set_value< Sender >::is_set_value< tst::ex::set_value_t(A...)>", "structtst_1_1add__set__value_1_1is__set__value_3_01tst_1_1ex_1_1set__value__t_07A_8_8_8_08_4.html", null ]
     ] ],
-    [ "std::tuple_element< I, T >", "structstd_1_1tuple__element_3_01I_00_01T_01_4.html", null ],
     [ "tst::when_all_t", "structtst_1_1when__all__t.html", null ],
     [ "tst::timer::when_done_sender", "classtst_1_1timer_1_1when__done__sender.html", null ],
     [ "beman::execution::with_awaitable_senders< Promise >", "structbeman_1_1execution_1_1with__awaitable__senders.html", null ]

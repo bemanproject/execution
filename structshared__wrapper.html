@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beman::execution: std::tuple_element&lt; I, T &gt; Struct Template Reference</title>
+<title>beman::execution: shared_wrapper&lt; Sndr &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structstd_1_1tuple__element_3_01I_00_01T_01_4.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structshared__wrapper.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -98,27 +98,46 @@ $(document).ready(function(){initNavTree('structstd_1_1tuple__element_3_01I_00_0
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="structstd_1_1tuple__element_3_01I_00_01T_01_4-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">std::tuple_element&lt; I, T &gt; Struct Template Reference</div></div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structshared__wrapper-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">shared_wrapper&lt; Sndr &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a8d1a5bc742efe2461aeb38805f0d683d"><td class="memItemLeft" align="right" valign="top"><a id="a8d1a5bc742efe2461aeb38805f0d683d" name="a8d1a5bc742efe2461aeb38805f0d683d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = ::std::decay_t&lt; decltype(::std::declval&lt; T &gt;().template get&lt; I &gt;())&gt;</td></tr>
-<tr class="separator:a8d1a5bc742efe2461aeb38805f0d683d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a061ad7091ef5765c5b0a9711e6c442d2"><td class="memItemLeft" align="right" valign="top"><a id="a061ad7091ef5765c5b0a9711e6c442d2" name="a061ad7091ef5765c5b0a9711e6c442d2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>shared_wrapper</b> (impls_for&lt; split_impl_t &gt;::shared_state&lt; Sndr &gt; *state) noexcept</td></tr>
+<tr class="separator:a061ad7091ef5765c5b0a9711e6c442d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9c7fe1418ecb363aefef26e1afa2ce3"><td class="memItemLeft" align="right" valign="top"><a id="ad9c7fe1418ecb363aefef26e1afa2ce3" name="ad9c7fe1418ecb363aefef26e1afa2ce3"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>shared_wrapper</b> (const <a class="el" href="structshared__wrapper.html">shared_wrapper</a> &amp;other) noexcept</td></tr>
+<tr class="separator:ad9c7fe1418ecb363aefef26e1afa2ce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18a2370a9fca7e85f83acc418b4d7d37"><td class="memItemLeft" align="right" valign="top"><a id="a18a2370a9fca7e85f83acc418b4d7d37" name="a18a2370a9fca7e85f83acc418b4d7d37"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>shared_wrapper</b> (<a class="el" href="structshared__wrapper.html">shared_wrapper</a> &amp;&amp;other) noexcept</td></tr>
+<tr class="separator:a18a2370a9fca7e85f83acc418b4d7d37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a651b5281bb1d6b21000b38ba97478f95"><td class="memItemLeft" align="right" valign="top"><a id="a651b5281bb1d6b21000b38ba97478f95" name="a651b5281bb1d6b21000b38ba97478f95"></a>
+<a class="el" href="structshared__wrapper.html">shared_wrapper</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structshared__wrapper.html">shared_wrapper</a> &amp;other) noexcept</td></tr>
+<tr class="separator:a651b5281bb1d6b21000b38ba97478f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab947e149fc07f92176bb1572507204d3"><td class="memItemLeft" align="right" valign="top"><a id="ab947e149fc07f92176bb1572507204d3" name="ab947e149fc07f92176bb1572507204d3"></a>
+<a class="el" href="structshared__wrapper.html">shared_wrapper</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structshared__wrapper.html">shared_wrapper</a> &amp;&amp;other) noexcept</td></tr>
+<tr class="separator:ab947e149fc07f92176bb1572507204d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:af20bac13a78634bfcee9e5c69502cd48"><td class="memItemLeft" align="right" valign="top"><a id="af20bac13a78634bfcee9e5c69502cd48" name="af20bac13a78634bfcee9e5c69502cd48"></a>
+impls_for&lt; split_impl_t &gt;::shared_state&lt; Sndr &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>sh_state</b></td></tr>
+<tr class="separator:af20bac13a78634bfcee9e5c69502cd48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/beman/execution/detail/<a class="el" href="product__type_8hpp_source.html">product_type.hpp</a></li>
+<li>include/beman/execution/detail/<a class="el" href="split_8hpp_source.html">split.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>std</b></li><li class="navelem"><a class="el" href="structstd_1_1tuple__element_3_01I_00_01T_01_4.html">tuple_element&lt; I, T &gt;</a></li>
+    <li class="navelem"><a class="el" href="structshared__wrapper.html">shared_wrapper</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6 </li>
   </ul>
 </div>

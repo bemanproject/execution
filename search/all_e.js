@@ -16,12 +16,14 @@ var searchData=
   ['set_5fstopped_5ft_13',['set_stopped_t',['../structbeman_1_1execution_1_1set__stopped__t.html',1,'beman::execution']]],
   ['set_5fvalue_14',['set_value',['../namespacebeman_1_1execution.html#a88ba134b297e5c0b06590a57ae9d5dfe',1,'beman::execution']]],
   ['set_5fvalue_5ft_15',['set_value_t',['../structbeman_1_1execution_1_1set__value__t.html',1,'beman::execution']]],
-  ['simple_5fcounting_5fscope_16',['simple_counting_scope',['../classbeman_1_1execution_1_1simple__counting__scope.html',1,'beman::execution']]],
-  ['start_5ft_17',['start_t',['../structbeman_1_1execution_1_1start__t.html',1,'beman::execution']]],
-  ['state_18',['state',['../structtst_1_1repeat__effect__unilt__t_1_1sender_1_1state.html',1,'tst::repeat_effect_unilt_t::sender&lt; Child, Fun &gt;::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1resume__after__sender_1_1state.html',1,'tst::timer::resume_after_sender::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1when__done__sender_1_1state.html',1,'tst::timer::when_done_sender::state&lt; Receiver &gt;']]],
-  ['stop_5fcallback_19',['stop_callback',['../classbeman_1_1execution_1_1stop__callback.html',1,'beman::execution']]],
-  ['stop_5fsource_20',['stop_source',['../classbeman_1_1execution_1_1stop__source.html',1,'beman::execution']]],
-  ['stop_5ftoken_21',['stop_token',['../classbeman_1_1execution_1_1stop__token.html',1,'beman::execution']]],
-  ['supporting_20modules_22',['Supporting Modules',['../md_docs_modules.html',1,'']]],
-  ['sync_5fwait_23',['sync_wait',['../namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519',1,'beman::execution']]]
+  ['shared_5fwrapper_16',['shared_wrapper',['../structshared__wrapper.html',1,'']]],
+  ['simple_5fcounting_5fscope_17',['simple_counting_scope',['../classbeman_1_1execution_1_1simple__counting__scope.html',1,'beman::execution']]],
+  ['split_5ft_18',['split_t',['../structsplit__t.html',1,'']]],
+  ['start_5ft_19',['start_t',['../structbeman_1_1execution_1_1start__t.html',1,'beman::execution']]],
+  ['state_20',['state',['../structtst_1_1repeat__effect__unilt__t_1_1sender_1_1state.html',1,'tst::repeat_effect_unilt_t::sender&lt; Child, Fun &gt;::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1resume__after__sender_1_1state.html',1,'tst::timer::resume_after_sender::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1when__done__sender_1_1state.html',1,'tst::timer::when_done_sender::state&lt; Receiver &gt;']]],
+  ['stop_5fcallback_21',['stop_callback',['../classbeman_1_1execution_1_1stop__callback.html',1,'beman::execution']]],
+  ['stop_5fsource_22',['stop_source',['../classbeman_1_1execution_1_1stop__source.html',1,'beman::execution']]],
+  ['stop_5ftoken_23',['stop_token',['../classbeman_1_1execution_1_1stop__token.html',1,'beman::execution']]],
+  ['supporting_20modules_24',['Supporting Modules',['../md_docs_modules.html',1,'']]],
+  ['sync_5fwait_25',['sync_wait',['../namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519',1,'beman::execution']]]
 ];
