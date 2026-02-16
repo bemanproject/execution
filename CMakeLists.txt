@@ -36,6 +36,7 @@ if(BEMAN_USE_MODULES)
         PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
     )
 
+    # TODO(CK): the export header should be used!
     include(GenerateExportHeader)
     generate_export_header(
         ${TARGET_PREFIX}
@@ -58,6 +59,14 @@ if(BEMAN_USE_MODULES)
             SOVERSION ${PROJECT_VERSION_MAJOR}
             DLL_NAME_WITH_SOVERSION TRUE
     )
+
+    # FIXME: Quickfix only to prevent linker problems on windows? CK
+    if(WIN32 AND BEMAN_EXEMPLAR_BUILD_SHARED)
+        set_target_properties(
+            ${TARGET_PREFIX}
+            PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON
+        )
+    endif()
 
     find_package(Threads REQUIRED)
     target_link_libraries(${TARGET_PREFIX} PUBLIC Threads::Threads)

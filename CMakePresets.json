@@ -73,6 +73,7 @@
         "_debug-base"
       ],
       "cacheVariables": {
+        "BEMAN_USE_STD_MODULE": false,
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/llvm-libc++-toolchain.cmake"
       },
       "environment": {
@@ -88,6 +89,7 @@
         "_release-base"
       ],
       "cacheVariables": {
+        "BEMAN_USE_STD_MODULE": false,
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/llvm-libc++-toolchain.cmake"
       },
       "environment": {
