@@ -5,8 +5,12 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TUPLE
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <tuple>
 #include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 

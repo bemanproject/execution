@@ -5,7 +5,11 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AS_TUPLE
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.decayed_tuple;
+#else
 #include <beman/execution/detail/decayed_tuple.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

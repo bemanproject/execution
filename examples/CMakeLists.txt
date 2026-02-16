@@ -35,7 +35,8 @@ set(EXAMPLES
 )
 
 if(BEMAN_USE_MODULES)
-    list(APPEND EXAMPLES modules modules-and-header)
+    #-dk:TODO gcc doesn't like the modules: list(APPEND EXAMPLES modules modules-and-header)
+    list(APPEND EXAMPLES modules-and-header)
 endif()
 
 foreach(EXAMPLE ${EXAMPLES})
@@ -43,6 +44,7 @@ foreach(EXAMPLE ${EXAMPLES})
     add_executable(${EXAMPLE_TARGET})
     target_sources(${EXAMPLE_TARGET} PRIVATE ${EXAMPLE}.cpp)
     if(BEMAN_USE_MODULES)
+        target_compile_definitions(${EXAMPLE_TARGET} PUBLIC BEMAN_HAS_MODULES)
         target_link_libraries(${EXAMPLE_TARGET} PRIVATE beman::execution)
     else()
         target_link_libraries(

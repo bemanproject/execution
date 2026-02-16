@@ -5,6 +5,38 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_THEN
 
 #include <beman/execution/detail/common.hpp>
+#include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#include <exception>
+#include <functional>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.call_result_t;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.get_domain_early;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.meta.combine;
+import beman.execution.detail.meta.transform;
+import beman.execution.detail.meta.unique;
+import beman.execution.detail.movable_value;
+import beman.execution.detail.nested_sender_has_affine_on;
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_adaptor;
+import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.transform_sender;
+#else
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
@@ -13,8 +45,8 @@
 #include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/meta_transform.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/meta_transform.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/nested_sender_has_affine_on.hpp>
@@ -25,69 +57,11 @@
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
-#include <concepts>
-#include <exception>
-#include <functional>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
-#include <beman/execution/detail/suppress_push.hpp>
-
 namespace beman::execution::detail {
-template <typename Completion>
-struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
-    template <::beman::execution::detail::movable_value Fun>
-    auto operator()(Fun&& fun) const {
-        return ::beman::execution::detail::sender_adaptor{*this, ::std::forward<Fun>(fun)};
-    }
-    template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
-    auto operator()(Sender&& sender, Fun&& fun) const {
-        auto domain{::beman::execution::detail::get_domain_early(sender)};
-        return ::beman::execution::transform_sender(
-            domain,
-            ::beman::execution::detail::make_sender(*this, ::std::forward<Fun>(fun), ::std::forward<Sender>(sender)));
-    }
-    template <::beman::execution::sender Sender, typename Env>
-        requires ::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>
-    static auto affine_on(Sender&& sndr, const Env&) noexcept {
-        return ::std::forward<Sender>(sndr);
-    }
-};
-
-template <typename Completion>
-struct impls_for<then_t<Completion>> : ::beman::execution::detail::default_impls {
-    // NOLINTBEGIN(bugprone-exception-escape)
-    struct complete_impl {
-        template <typename Tag, typename... Args>
-        auto operator()(auto, auto& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
-            if constexpr (::std::same_as<Completion, Tag>) {
-                try {
-                    auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
-                    if constexpr (::std::same_as<void, decltype(invoke())>) {
-                        invoke();
-                        ::beman::execution::set_value(::std::move(receiver));
-                    } else {
-                        ::beman::execution::set_value(::std::move(receiver), invoke());
-                    }
-                } catch (...) {
-                    if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
-
-                                                   )) {
-                        static_assert(noexcept(
-                            ::beman::execution::set_error(::std::move(receiver), ::std::current_exception())));
-                        ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
-                    }
-                }
-            } else {
-                static_assert(noexcept(Tag()(::std::move(receiver), ::std::forward<Args>(args)...)));
-                Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
-            }
-        }
-    };
-    static constexpr auto complete{complete_impl{}};
-    // NOLINTEND(bugprone-exception-escape)
-};
 
 template <typename T>
 struct then_set_value {
@@ -130,19 +104,81 @@ struct then_exception<Comp, Fun, ::beman::execution::completion_signatures<Compl
         then_exception<Comp, Fun, ::beman::execution::completion_signatures<Completions...>>::value};
 };
 
-template <typename Completion, typename Fun, typename Sender, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::then_t<Completion>, Fun, Sender>,
-    Env> {
-    using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
-        ::beman::execution::detail::meta::transform<
-            ::beman::execution::detail::then_transform_t<Fun, Completion>::template transform,
-            ::beman::execution::completion_signatures_of_t<Sender, Env>>,
-        ::std::conditional_t<
-            ::beman::execution::detail::
-                then_exception<Completion, Fun, ::beman::execution::completion_signatures_of_t<Sender, Env>>::value,
-            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>,
-            ::beman::execution::completion_signatures<>>>>;
+template <typename Completion>
+struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
+    template <::beman::execution::detail::movable_value Fun>
+    auto operator()(Fun&& fun) const {
+        return ::beman::execution::detail::sender_adaptor{*this, ::std::forward<Fun>(fun)};
+    }
+    template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
+    auto operator()(Sender&& sender, Fun&& fun) const {
+        auto domain{::beman::execution::detail::get_domain_early(sender)};
+        return ::beman::execution::transform_sender(
+            domain,
+            ::beman::execution::detail::make_sender(*this, ::std::forward<Fun>(fun), ::std::forward<Sender>(sender)));
+    }
+    template <::beman::execution::sender Sender, typename Env>
+        requires ::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>
+    static auto affine_on(Sender&& sndr, const Env&) noexcept {
+        return ::std::forward<Sender>(sndr);
+    }
+
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <typename Comp, typename Fun, typename Child, typename Env>
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::then_t<Comp>, Fun, Child>,
+        Env> {
+        using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
+            ::beman::execution::detail::meta::transform<
+                ::beman::execution::detail::then_transform_t<Fun, Comp>::template transform,
+                ::beman::execution::completion_signatures_of_t<Child, Env>>,
+            ::std::conditional_t<
+                ::beman::execution::detail::
+                    then_exception<Comp, Fun, ::beman::execution::completion_signatures_of_t<Child, Env>>::value,
+                ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>,
+                ::beman::execution::completion_signatures<>>>>;
+    };
+
+  public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+    }
+
+    struct impls_for : ::beman::execution::detail::default_impls {
+        // NOLINTBEGIN(bugprone-exception-escape)
+        struct complete_impl {
+            template <typename Tag, typename... Args>
+            auto operator()(auto, auto& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
+                if constexpr (::std::same_as<Completion, Tag>) {
+                    try {
+                        auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
+                        if constexpr (::std::same_as<void, decltype(invoke())>) {
+                            invoke();
+                            ::beman::execution::set_value(::std::move(receiver));
+                        } else {
+                            ::beman::execution::set_value(::std::move(receiver), invoke());
+                        }
+                    } catch (...) {
+                        if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
+
+                                                       )) {
+                            static_assert(noexcept(
+                                ::beman::execution::set_error(::std::move(receiver), ::std::current_exception())));
+                            ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                        }
+                    }
+                } else {
+                    static_assert(noexcept(Tag()(::std::move(receiver), ::std::forward<Args>(args)...)));
+                    Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
+                }
+            }
+        };
+        static constexpr auto complete{complete_impl{}};
+        // NOLINTEND(bugprone-exception-escape)
+    };
 };
 } // namespace beman::execution::detail
 

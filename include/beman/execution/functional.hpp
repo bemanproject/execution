@@ -6,10 +6,18 @@
 
 // ----------------------------------------------------------------------------
 
-#include <beman/execution/detail/callable.hpp>
-#include <beman/execution/detail/nothrow_callable.hpp>
-#include <beman/execution/detail/decayed_typeof.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.call_result_t;
+import beman.execution.detail.callable;
+import beman.execution.detail.decayed_typeof;
+import beman.execution.detail.nothrow_callable;
+#else
 #include <beman/execution/detail/call_result_t.hpp>
+#include <beman/execution/detail/callable.hpp>
+#include <beman/execution/detail/decayed_typeof.hpp>
+#include <beman/execution/detail/nothrow_callable.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

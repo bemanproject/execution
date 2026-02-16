@@ -5,11 +5,18 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_FWD_ENV
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/forwarding_query.hpp>
+#include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
 #include <utility>
-
-#include <beman/execution/detail/suppress_push.hpp>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.forwarding_query;
+#else
+#include <beman/execution/detail/forwarding_query.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

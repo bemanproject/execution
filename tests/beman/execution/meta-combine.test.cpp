@@ -1,9 +1,13 @@
 // src/beman/execution/tests/meta-combine.cpp                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/meta_combine.hpp>
-#include <test/execution.hpp>
 #include <concepts>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/meta_combine.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

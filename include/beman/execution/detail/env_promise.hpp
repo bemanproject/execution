@@ -5,8 +5,16 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_PROMISE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/with_await_transform.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.with_await_transform;
+#else
+#include <beman/execution/detail/with_await_transform.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

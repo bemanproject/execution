@@ -5,9 +5,18 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.callable;
+import beman.execution.detail.non_assignable;
+#else
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/non_assignable.hpp>
-#include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 

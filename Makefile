@@ -60,7 +60,8 @@ ifeq (${hostSystemName},Darwin)
   ifeq ($(origin CXX),default)
     $(info CXX is using the built-in default: $(CXX))
     export CXX=g++-15
-    export CXXFLAGS=-stdlib=libstdc++
+    CXXLIB=libstdc++
+    export CXXFLAGS=-stdlib=$(CXXLIB)
   endif
   export GCOV="gcov"
 else ifeq (${hostSystemName},Linux)

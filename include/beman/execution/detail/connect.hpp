@@ -5,13 +5,26 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#include <type_traits>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.connect_awaitable;
+import beman.execution.detail.get_domain_late;
+import beman.execution.detail.get_env;
+import beman.execution.detail.operation_state;
+import beman.execution.detail.transform_sender;
+#else
+#include <beman/execution/detail/connect_awaitable.hpp>
 #include <beman/execution/detail/get_domain_late.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/operation_state.hpp>
-#include <beman/execution/detail/connect_awaitable.hpp>
-#include <type_traits>
-#include <concepts>
+#include <beman/execution/detail/transform_sender.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

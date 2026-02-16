@@ -1,7 +1,11 @@
 // tests/beman/execution/exec-associate.test.cpp                          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
 #include <test/execution.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <memory>
 #include <optional>
@@ -9,12 +13,17 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
 #include <beman/execution/detail/associate.hpp>
-#include <beman/execution/detail/completion_signatures_of_t.hpp>
+#include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/scope_token.hpp>
+#include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
@@ -110,6 +119,7 @@ TEST(exec_associate) {
         static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>,
                                    test_std::completion_signatures_of_t<snd0_t, test_std::env<>>>);
 
+#ifndef _MSC_VER //-dk:TODO MSVC++ struggles with more than one of these test
         using snd1_t = decltype(test_std::associate(test_std::just(std::string{}), null_token{}));
         static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(std::string)>,
                                    test_std::completion_signatures_of_t<snd1_t, test_std::env<>>>);
@@ -126,8 +136,10 @@ TEST(exec_associate) {
         using snd4_t = decltype(test_std::associate(test_std::just(std::ref(i)), null_token{}));
         static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(std::reference_wrapper<int>)>,
                                    test_std::completion_signatures_of_t<snd4_t, test_std::env<>>>);
+#endif
     }
 
+#ifndef _MSC_VER //-dk:TODO MSVC++ struggles with more than one of these test
     // Identity behavior with null_token for value path + piping works.
     {
         {
@@ -229,4 +241,5 @@ TEST(exec_associate) {
         ASSERT(completes_with_value(test_std::just(1) | test_std::associate(null_token{})));
         ASSERT(!completes_with_value(test_std::just(1) | test_std::associate(expired_token{})));
     }
+#endif
 }

@@ -5,10 +5,19 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_UNIQUE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/meta_contains.hpp>
-#include <beman/execution/detail/meta_prepend.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.meta.contains;
+import beman.execution.detail.meta.prepend;
+#else
+#include <beman/execution/detail/meta_contains.hpp>
+#include <beman/execution/detail/meta_prepend.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

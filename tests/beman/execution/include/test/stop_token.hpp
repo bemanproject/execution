@@ -5,9 +5,11 @@
 #ifndef INCLUDED_TEST_STOP_TOKEN
 #define INCLUDED_TEST_STOP_TOKEN
 
-#include <beman/execution/detail/immovable.hpp>
-#include <beman/execution/detail/stoppable_source.hpp>
-
+#include <beman/execution/detail/common.hpp>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -20,10 +22,14 @@
 #include <mutex>
 #include <ranges>
 #include <thread>
-#include <test/execution.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.immovable;
+import beman.execution.detail.stoppable_source;
 import beman.execution;
 #else
+#include <beman/execution/detail/immovable.hpp>
+#include <beman/execution/detail/stoppable_source.hpp>
 #include <beman/execution/stop_token.hpp>
 #endif
 

@@ -5,13 +5,25 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_GET_ALLOCATOR
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <memory>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.get_allocator;
+import beman.execution.detail.get_env;
+import beman.execution.detail.join_env;
+import beman.execution.detail.prop;
+import beman.execution.detail.sender;
+#else
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <memory>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 

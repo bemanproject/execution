@@ -1,17 +1,21 @@
 // src/beman/execution/tests/thread-stoptoken-intro.test.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/immovable.hpp>
 #include <utility>
 #include <test/stop_token.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
+#include <beman/execution/detail/immovable.hpp>
 #include <beman/execution/stop_token.hpp>
 #endif
 
 namespace {
-struct test_source : test_detail::immovable {
+struct immovable {
+    immovable()            = default;
+    immovable(immovable&&) = delete;
+};
+struct test_source : immovable {
     struct callback_base {
         callback_base()                                                = default;
         callback_base(callback_base&&)                                 = default;

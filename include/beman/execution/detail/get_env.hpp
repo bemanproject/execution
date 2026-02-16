@@ -5,10 +5,19 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ENV
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/queryable.hpp>
-#include <beman/execution/detail/env.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.env;
+import beman.execution.detail.queryable;
+#else
+#include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/queryable.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

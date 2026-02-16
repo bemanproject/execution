@@ -5,11 +5,21 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHED_ENV
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/get_domain.hpp>
-#include <beman/execution/detail/default_domain.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.default_domain;
+import beman.execution.detail.get_domain;
+import beman.execution.detail.get_scheduler;
+#else
+#include <beman/execution/detail/default_domain.hpp>
+#include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_scheduler.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

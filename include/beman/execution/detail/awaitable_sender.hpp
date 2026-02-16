@@ -5,11 +5,19 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AWAITABLE_SENDER
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/env_of_t.hpp>
-#include <beman/execution/detail/single_sender.hpp>
-
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <coroutine>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.env_of_t;
+import beman.execution.detail.single_sender;
+#else
+#include <beman/execution/detail/env_of_t.hpp>
+#include <beman/execution/detail/single_sender.hpp>
+#endif
 
 namespace beman::execution::detail {
 template <class Sndr, class Promise>

@@ -5,9 +5,50 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SPAWN_FUTURE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/spawn_get_allocator.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <exception>
+#include <memory>
+#include <mutex>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.as_tuple;
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.connect_result_t;
+import beman.execution.detail.decayed_tuple;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.env;
+import beman.execution.detail.get_allocator;
+import beman.execution.detail.get_env;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.inplace_stop_source;
+import beman.execution.detail.join_env;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.meta.combine;
+import beman.execution.detail.meta.prepend;
+import beman.execution.detail.meta.unique;
+import beman.execution.detail.prop;
+import beman.execution.detail.queryable;
+import beman.execution.detail.receiver;
+import beman.execution.detail.scope_token;
+import beman.execution.detail.sender;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.spawn_get_allocator;
+import beman.execution.detail.start;
+import beman.execution.detail.stop_when;
+import beman.execution.detail.write_env;
+#else
 #include <beman/execution/detail/as_tuple.hpp>
-#include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
@@ -18,26 +59,21 @@
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
-#include <beman/execution/detail/stop_when.hpp>
+#include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/start.hpp>
+#include <beman/execution/detail/stop_when.hpp>
 #include <beman/execution/detail/write_env.hpp>
-
-#include <exception>
-#include <memory>
-#include <mutex>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -238,20 +274,30 @@ class spawn_future_t {
     auto operator()(Sndr&& sndr, Tok&& tok) const {
         return (*this)(::std::forward<Sndr>(sndr), ::std::forward<Tok>(tok), ::beman::execution::env<>{});
     }
+
+  private:
+    template <typename, typename>
+    struct get_signatures;
+    template <typename State, typename Deleter, typename Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::spawn_future_t,
+                                                                   ::std::unique_ptr<State, Deleter>>,
+                          Env> {
+        using type = typename State::sigs_t;
+    };
+
+  public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+    }
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct start_impl {
+            auto operator()(auto& state, auto& rcvr) const noexcept -> void { state->consume(rcvr); }
+        };
+        static constexpr auto start{start_impl{}};
+    };
 };
 
-template <typename State, typename Deleter, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::spawn_future_t,
-                                             ::std::unique_ptr<State, Deleter>>,
-    Env> {
-    using type = typename State::sigs_t;
-};
-
-template <>
-struct impls_for<spawn_future_t> : ::beman::execution::detail::default_impls {
-    static constexpr auto start{[](auto& state, auto& rcvr) noexcept -> void { state->consume(rcvr); }};
-};
 } // namespace beman::execution::detail
 
 namespace beman::execution {

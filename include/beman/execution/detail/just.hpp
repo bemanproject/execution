@@ -5,18 +5,37 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_JUST
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/set_error.hpp>
-#include <beman/execution/detail/set_stopped.hpp>
-#include <beman/execution/detail/set_value.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/movable_value.hpp>
-#include <beman/execution/detail/product_type.hpp>
-#include <beman/execution/detail/completion_signatures_for.hpp>
-#include <beman/execution/detail/impls_for.hpp>
-#include <beman/execution/detail/default_impls.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <memory>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.default_impls;
+import beman.execution.detail.impls_for;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.movable_value;
+import beman.execution.detail.product_type;
+import beman.execution.detail.sender;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+#else
+#include <beman/execution/detail/completion_signatures_for.hpp>
+#include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/impls_for.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/movable_value.hpp>
+#include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/set_error.hpp>
+#include <beman/execution/detail/set_stopped.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -26,6 +45,7 @@ namespace beman::execution::detail {
 template <typename Completion, typename... T>
 concept just_size = (!::std::same_as<Completion, ::beman::execution::set_error_t> or 1u == sizeof...(T)) &&
                     (!::std::same_as<Completion, ::beman::execution::set_stopped_t> or 0u == sizeof...(T));
+
 template <typename Completion>
 struct just_t {
     template <typename... T>
@@ -39,27 +59,34 @@ struct just_t {
     static auto affine_on(Sender&& sndr, const auto&) noexcept {
         return ::std::forward<Sender>(sndr);
     }
-};
 
-template <typename Completion, typename... T, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<just_t<Completion>, ::beman::execution::detail::product_type<T...>>,
-    Env> {
-    using type = ::beman::execution::completion_signatures<Completion(T...)>;
-};
-
-template <typename Completion>
-struct impls_for<just_t<Completion>> : ::beman::execution::detail::default_impls {
-    struct start_impl {
-        template <typename State>
-        auto operator()(State& state, auto& receiver) const noexcept -> void {
-            [&state, &receiver]<::std::size_t... I>(::std::index_sequence<I...>) {
-                Completion()(::std::move(receiver), ::std::move(state.template get<I>())...);
-            }(::std::make_index_sequence<State::size()>{});
-        }
+  private:
+    template <typename>
+    struct get_signatures;
+    template <typename C, typename... T>
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<just_t<C>, ::beman::execution::detail::product_type<T...>>> {
+        using type = ::beman::execution::completion_signatures<::std::remove_cvref_t<C>(T...)>;
     };
-    static constexpr auto start{start_impl{}};
+
+  public:
+    template <::beman::execution::sender Sender, typename...>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<::std::remove_cvref_t<Sender>>::type{};
+    }
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct start_impl {
+            template <typename State>
+            auto operator()(State& state, auto& receiver) const noexcept -> void {
+                [&state, &receiver]<::std::size_t... I>(::std::index_sequence<I...>) {
+                    Completion()(::std::move(receiver), ::std::move(state.template get<I>())...);
+                }(::std::make_index_sequence<State::size()>{});
+            }
+        };
+        static constexpr auto start{start_impl{}};
+    };
 };
+
 } // namespace beman::execution::detail
 
 #include <beman/execution/detail/suppress_pop.hpp>

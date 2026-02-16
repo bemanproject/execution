@@ -1,16 +1,24 @@
 // src/beman/execution/tests/exec-just.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/just.hpp>
+#include <concepts>
+#include <memory>
+#include <memory_resource>
+#include <string>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
-#include <test/execution.hpp>
-#include <string>
-#include <memory_resource>
-
 #include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -28,12 +36,9 @@ auto test_just_constraints(CPO const& cpo, T&&... args) -> void {
     static_assert(Expect == requires { cpo(::std::forward<T>(args)...); });
     if constexpr (requires { cpo(::std::forward<T>(args)...); }) {
         auto sender{cpo(::std::forward<T>(args)...)};
-        using sender_t = decltype(sender);
 
         static_assert(test_std::sender<decltype(cpo(::std::forward<T>(args)...))>);
         static_assert(test_std::sender_in<decltype(cpo(::std::forward<T>(args)...))>);
-        static_assert(std::same_as<test_std::completion_signatures<Completion(std::remove_cvref_t<T>...)>,
-                                   test_detail::completion_signatures_for<sender_t, test_std::env<>>>);
         static_assert(std::same_as<test_std::completion_signatures<Completion(std::remove_cvref_t<T>...)>,
                                    decltype(beman::execution::get_completion_signatures(sender, test_std::env<>{}))>);
     }

@@ -4,6 +4,7 @@
 #include <test/stop_token.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail;
 #else
 #include <beman/execution/stop_token.hpp>
 #endif

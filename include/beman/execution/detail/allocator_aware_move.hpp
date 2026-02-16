@@ -5,12 +5,22 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ALLOCATOR_AWARE_MOVE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/product_type.hpp>
-#include <beman/execution/detail/get_allocator.hpp>
-#include <beman/execution/detail/get_env.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <exception>
 #include <memory>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.get_allocator;
+import beman.execution.detail.get_env;
+import beman.execution.detail.product_type;
+#else
+#include <beman/execution/detail/get_allocator.hpp>
+#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/product_type.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

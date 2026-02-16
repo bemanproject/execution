@@ -5,13 +5,21 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/nostopstate.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <atomic>
 #include <memory>
 #include <mutex>
 #include <thread>
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.nostopstate;
+#else
+#include <beman/execution/detail/nostopstate.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -11,6 +11,11 @@
 #else
 #define BEMAN_EXECUTION_DELETE(msg) delete
 #endif
+#if defined(__GNUC__) && !defined(__clang__)
+#define BEMAN_SPECIALIZE_EXPORT
+#else
+#define BEMAN_SPECIALIZE_EXPORT template <>
+#endif
 
 // ----------------------------------------------------------------------------
 /*!

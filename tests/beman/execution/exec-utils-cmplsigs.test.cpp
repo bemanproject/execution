@@ -1,6 +1,14 @@
 // src/beman/execution/tests/exec-utils-cmplsigs.test.cpp           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <exception>
+#include <variant>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/sends_stopped.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
@@ -8,9 +16,7 @@
 #include <beman/execution/detail/indirect_meta_apply.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
-#include <concepts>
-#include <exception>
+#endif
 
 // ----------------------------------------------------------------------------
 

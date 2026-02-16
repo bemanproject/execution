@@ -5,9 +5,13 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE
 
 #include <beman/execution/detail/common.hpp>
-#include <exception>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
+#include <exception>
 #include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 

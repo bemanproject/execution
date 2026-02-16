@@ -1,43 +1,103 @@
 module;
-// src/beman/execution/execution-using.cppm
+// src/beman/execution/execution.cppm
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/execution.hpp>
-#include <beman/execution/stop_token.hpp>
+//-dk:TODO #include <cstddef>
+//-dk:TODO #include <tuple>
 
 export module beman.execution;
 
-namespace beman::execution {
-export using beman::execution::detail::pipeable::operator|;
+import beman.execution.detail.affine_on;
+import beman.execution.detail.apply_sender;
+import beman.execution.detail.as_awaitable;
+export import beman.execution.detail.associate; // [exec.associate]
+import beman.execution.detail.bulk;
+import beman.execution.detail.check_type_alias_exist;
+export import beman.execution.detail.completion_signatures;      // [exec.util.cmplsig]
+export import beman.execution.detail.completion_signatures_of_t; // [exec.getcomplsigs], completion signatures
+import beman.execution.detail.connect;
+export import beman.execution.detail.connect_result_t; // [exec.connect], the connect sender algorithm
+import beman.execution.detail.continues_on;
+import beman.execution.detail.counting_scope;
+import beman.execution.detail.default_domain;
+export import beman.execution.detail.env;
+export import beman.execution.detail.env_of_t;
+export import beman.execution.detail.error_types_of_t; // [exec.getcomplsigs], completion signatures
+import beman.execution.detail.forwarding_query;
+import beman.execution.detail.get_allocator;
+export import beman.execution.detail.get_completion_scheduler;
+export import beman.execution.detail.get_completion_signatures; // [exec.getcomplsigs], completion signatures
+import beman.execution.detail.get_delegation_scheduler;
+import beman.execution.detail.get_domain;
+import beman.execution.detail.get_env;
+import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_stop_token;
+export import beman.execution.detail.inplace_stop_source; // [stopsource.inplace], class inplace_stop_source
+import beman.execution.detail.into_variant;
+export import beman.execution.detail.just;
+import beman.execution.detail.let;
+import beman.execution.detail.never_stop_token;
+import beman.execution.detail.nostopstate;
+import beman.execution.detail.on;
+export import beman.execution.detail.operation_state; // [exec.opstate], operation states
+import beman.execution.detail.prop;
+import beman.execution.detail.read_env;
+import beman.execution.detail.run_loop;
+import beman.execution.detail.schedule;
+import beman.execution.detail.schedule_from;
+export import beman.execution.detail.schedule_result_t;
+export import beman.execution.detail.scheduler; // [exec.sched], schedulers
+export import beman.execution.detail.scheduler_t;
+export import beman.execution.detail.scope_association; // [exec.scope.concepts]
+export import beman.execution.detail.scope_token;       // [exec.scope.concepts]
+import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.simple_counting_scope;
+import beman.execution.detail.spawn;
+import beman.execution.detail.spawn_future;
+//-dk:TODO import beman.execution.detail.split;
+import beman.execution.detail.start;
+import beman.execution.detail.starts_on;
+export import beman.execution.detail.stop_callback_for_t;
+export import beman.execution.detail.stop_source; // [stopsource], class stop_source
+import beman.execution.detail.stop_token_of_t;
+import beman.execution.detail.stoppable_source;
+import beman.execution.detail.sync_wait;
+export import beman.execution.detail.tag_of_t; // [exec.getcomplsigs], completion signatures
+import beman.execution.detail.then;
+import beman.execution.detail.transform_sender;
+import beman.execution.detail.valid_completion_for;
+export import beman.execution.detail.value_types_of_t; // [exec.getcomplsigs], completion signatures
+import beman.execution.detail.when_all;
+import beman.execution.detail.when_all_with_variant;
+export import beman.execution.detail.with_awaitable_senders; // [exec.with.awaitable.senders]
+import beman.execution.detail.write_env;
 
 // [stoptoken.concepts], stop token concepts
-export using ::beman::execution::stoppable_token;
-export using ::beman::execution::unstoppable_token;
+export import beman.execution.detail.stoppable_token;
+export import beman.execution.detail.unstoppable_token;
 
-// [stoptoken], class stop_token
-export using ::beman::execution::stop_token;
+// [exec.recv], receivers
+export import beman.execution.detail.receiver;
+export import beman.execution.detail.receiver_of;
 
-// [stopsource], class stop_source
-export using ::beman::execution::stop_source;
+// [exec.snd], senders
+export import beman.execution.detail.sender;
+export import beman.execution.detail.sender_in;
+//-dk:TODO export using ::beman::execution::sender_to;
+
+export import beman.execution.detail.sends_stopped;
+
+namespace beman::execution {
+export using ::beman::execution::operator|;
 
 export using ::beman::execution::nostopstate_t;
 export using ::beman::execution::nostopstate;
 
-// [stopcallback], class template stop_callback
-export using ::beman::execution::stop_callback;
-
 // [stoptoken.never], class never_stop_token
 export using ::beman::execution::never_stop_token;
-
-// [stoptoken.inplace], class inplace_stop_token
-export using ::beman::execution::inplace_stop_token;
-
-// [stopsource.inplace], class inplace_stop_source
-export using ::beman::execution::inplace_stop_source;
-
-// [stopcallback.inplace], class template inplace_stop_callback
-export using ::beman::execution::inplace_stop_callback;
-export using ::beman::execution::stop_callback_for_t;
 
 #if 0
     //-dk:TODO enable the execution policies
@@ -70,32 +130,18 @@ export using ::beman::execution::get_domain_t;
 export using ::beman::execution::get_scheduler_t;
 export using ::beman::execution::get_delegation_scheduler_t;
 //-dk:TODO export using ::beman::execution::get_forward_progress_guarantee_t;
-export using ::beman::execution::get_completion_scheduler_t;
 
 export using ::beman::execution::get_domain;
 export using ::beman::execution::get_scheduler;
 export using ::beman::execution::get_delegation_scheduler;
 //-dk:TODO export using ::beman::execution::forward_progress_guarantee;
 //-dk:TODO export using ::beman::execution::get_forward_progress_guarantee;
-export using ::beman::execution::get_completion_scheduler;
 
-export using ::beman::execution::env;
 export using ::beman::execution::get_env_t;
 export using ::beman::execution::get_env;
 
-export using ::beman::execution::env_of_t;
-
 // [exec.domain.default], execution_domains
 export using ::beman::execution::default_domain;
-
-// [exec.sched], schedulers
-export using ::beman::execution::scheduler_t;
-export using ::beman::execution::scheduler;
-
-// [exec.recv], receivers
-export using ::beman::execution::receiver_t;
-export using ::beman::execution::receiver;
-export using ::beman::execution::receiver_of;
 
 export using ::beman::execution::set_value_t;
 export using ::beman::execution::set_error_t;
@@ -106,25 +152,8 @@ export using ::beman::execution::set_error;
 export using ::beman::execution::set_stopped;
 
 // [exec.opstate], operation states
-export using ::beman::execution::operation_state_t;
-export using ::beman::execution::operation_state;
 export using ::beman::execution::start_t;
 export using ::beman::execution::start;
-
-// [exec.snd], senders
-export using ::beman::execution::sender_t;
-export using ::beman::execution::sender;
-export using ::beman::execution::sender_in;
-//-dk:TODO export using ::beman::execution::sender_to;
-
-// [exec.getcomplsigs], completion signatures
-export using ::beman::execution::get_completion_signatures_t;
-export using ::beman::execution::get_completion_signatures;
-export using ::beman::execution::completion_signatures_of_t;
-export using ::beman::execution::value_types_of_t;
-export using ::beman::execution::error_types_of_t;
-export using ::beman::execution::sends_stopped;
-export using ::beman::execution::tag_of_t;
 
 // [exec.snd.transform], sender transformations
 export using ::beman::execution::transform_sender;
@@ -138,21 +167,12 @@ export using ::beman::execution::apply_sender;
 // [exec.connect], the connect sender algorithm
 export using ::beman::execution::connect_t;
 export using ::beman::execution::connect;
-export using ::beman::execution::connect_result_t;
 
 // [exec.factories], sender factories
-export using ::beman::execution::just_t;
-export using ::beman::execution::just_error_t;
-export using ::beman::execution::just_stopped_t;
 export using ::beman::execution::schedule_t;
 
-export using ::beman::execution::just;
-export using ::beman::execution::just_error;
-export using ::beman::execution::just_stopped;
 export using ::beman::execution::schedule;
 export using ::beman::execution::read_env;
-
-export using ::beman::execution::schedule_result_t;
 
 // [exec.adapt], sender adaptors
 export using ::beman::execution::sender_adaptor_closure;
@@ -168,7 +188,7 @@ export using ::beman::execution::let_value_t;
 export using ::beman::execution::let_error_t;
 export using ::beman::execution::let_stopped_t;
 export using ::beman::execution::bulk_t;
-export using ::beman::execution::split_t;
+//-dk:TODO export using ::beman::execution::split_t;
 export using ::beman::execution::when_all_t;
 export using ::beman::execution::when_all_with_variant_t;
 export using ::beman::execution::into_variant_t;
@@ -186,15 +206,12 @@ export using ::beman::execution::let_value;
 export using ::beman::execution::let_error;
 export using ::beman::execution::let_stopped;
 export using ::beman::execution::bulk;
-export using ::beman::execution::split;
+//-dk:TODO export using ::beman::execution::split;
 export using ::beman::execution::when_all;
 export using ::beman::execution::when_all_with_variant;
 export using ::beman::execution::into_variant;
 //-dk:TODO export using ::beman::execution::stopped_as_optional;
 //-dk:TODO export using ::beman::execution::stopped_as_error;
-
-// [exec.util.cmplsig]
-export using ::beman::execution::completion_signatures;
 
 // [exec.util.cmplsig.trans]
 //-dk:TODO export using ::beman::execution::transform_completion_signatures;
@@ -214,9 +231,6 @@ export using ::beman::execution::sync_wait;
 export using ::beman::execution::as_awaitable_t;
 export using ::beman::execution::as_awaitable;
 
-// [exec.with.awaitable.senders]
-export using ::beman::execution::with_awaitable_senders;
-
 //-dk:TODO add section
 export using ::beman::execution::prop;
 export using ::beman::execution::write_env_t;
@@ -228,35 +242,30 @@ export using ::beman::execution::read_env;
 export using ::beman::execution::simple_counting_scope;
 export using ::beman::execution::counting_scope;
 
-// [exec.scope.concepts]
-export using ::beman::execution::scope_association;
-export using ::beman::execution::scope_token;
-
-// [exec.associate]
-export using ::beman::execution::associate;
-
 // [exec.spawn]
 export using ::beman::execution::spawn;
 export using ::beman::execution::spawn_future;
 
+#if 0
 namespace detail {
+export using ::beman::execution::detail::await_result_type;
 export using ::beman::execution::detail::basic_sender;
+export using ::beman::execution::detail::connect_all;
+export using ::beman::execution::detail::connect_all_t;
+export using ::beman::execution::detail::env_promise;
+export using ::beman::execution::detail::is_product_type_c;
 export using ::beman::execution::detail::product_type;
 export using ::beman::execution::detail::product_type_base;
-export using ::beman::execution::detail::is_product_type_c;
-export using ::beman::execution::detail::env_promise;
-export using ::beman::execution::detail::await_result_type;
-export using ::beman::execution::detail::simple_allocator;
 export using ::beman::execution::detail::sync_wait_env;
+export using ::beman::execution::detail::sync_wait_receiver;
 export using ::beman::execution::detail::sync_wait_result_type;
 export using ::beman::execution::detail::sync_wait_state;
-export using ::beman::execution::detail::sync_wait_receiver;
-export using ::beman::execution::detail::connect_all_t;
-export using ::beman::execution::detail::connect_all;
 } // namespace detail
+#endif
 
 } // namespace beman::execution
 
+#if 0
 namespace std {
 export template <typename T>
     requires ::beman::execution::detail::is_product_type_c<T>
@@ -266,3 +275,4 @@ export template <::std::size_t I, typename T>
     requires ::beman::execution::detail::is_product_type_c<T>
 struct tuple_element<I, T>;
 } // namespace std
+#endif

@@ -5,14 +5,26 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE_TASK
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/with_await_transform.hpp>
-#include <beman/execution/detail/operation_state.hpp>
-#include <beman/execution/detail/set_stopped.hpp>
-#include <beman/execution/detail/env_of_t.hpp>
-#include <beman/execution/detail/get_env.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
 #include <exception>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.env_of_t;
+import beman.execution.detail.get_env;
+import beman.execution.detail.operation_state;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.with_await_transform;
+#else
+#include <beman/execution/detail/env_of_t.hpp>
+#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/set_stopped.hpp>
+#include <beman/execution/detail/with_await_transform.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

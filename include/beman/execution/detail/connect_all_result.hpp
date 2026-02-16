@@ -5,10 +5,17 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_ALL_RESULT
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_state;
+import beman.execution.detail.call_result_t;
+import beman.execution.detail.connect_all;
+import beman.execution.detail.indices_for;
+#else
 #include <beman/execution/detail/basic_state.hpp>
-#include <beman/execution/detail/connect_all.hpp>
 #include <beman/execution/detail/call_result_t.hpp>
+#include <beman/execution/detail/connect_all.hpp>
 #include <beman/execution/detail/indices_for.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 

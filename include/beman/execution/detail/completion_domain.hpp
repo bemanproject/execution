@@ -5,12 +5,27 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_DOMAIN
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.default_domain;
+import beman.execution.detail.get_completion_scheduler;
+import beman.execution.detail.get_domain;
+import beman.execution.detail.get_env;
+import beman.execution.detail.sender;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+#else
 #include <beman/execution/detail/default_domain.hpp>
-#include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <concepts>
+#endif
 
 // ----------------------------------------------------------------------------
 
