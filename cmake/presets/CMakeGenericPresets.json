@@ -13,6 +13,7 @@
           "value": "${sourceDir}/stagedir"
         },
         "BEMAN_USE_MODULES": true,
+        "BEMAN_USE_STD_MODULE": true,
         "CMAKE_CXX_STANDARD": "23",
         "CMAKE_CXX_EXTENSIONS": true,
         "CMAKE_CXX_STANDARD_REQUIRED": true,

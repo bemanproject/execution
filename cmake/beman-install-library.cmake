@@ -116,6 +116,10 @@ function(beman_install_library name)
     endif()
 
     # gersemi: off
+    set(_version_suffix)
+    set(_include_install_dir)
+    set(_lib_install_dir)
+    set(_bin_install_dir)
     # NOTE: If one of this variables is not set, the default DESTINATION is used! CK
     if(BEMAN_VERSION_SUFFIX)
         set(_version_suffix "-${PROJECT_VERSION}")

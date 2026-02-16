@@ -68,7 +68,7 @@ jobs:
                     { "stdlibs": ["libc++"],
                       "tests": [
                         "Debug.Default", "Release.Default", "Release.MaxSan",
-                        "Debug.Dynamic"
+                        "Debug.Dynamic", "Release.Dynamic"
                       ]
                     }
                   ]
@@ -96,7 +96,8 @@ jobs:
                 { "cxxversions": ["c++23"],
                   "tests": [
                     { "stdlibs": ["stl"],
-                      "tests": ["Debug.Default", "Release.Default", "Release.MaxSan"]
+                      "tests": ["Debug.Default", "Release.Default", "Release.MaxSan,
+                        "Debug.Dynamic", "Release.Dynamic"
                     }
                   ]
                 }
