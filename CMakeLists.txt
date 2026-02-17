@@ -29,7 +29,7 @@ if(BEMAN_USE_MODULES)
 
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
-    add_library(${TARGET_PREFIX})
+    add_library(${TARGET_PREFIX} STATIC) # FIXME: only static yet! CK
     add_library(beman::execution ALIAS ${TARGET_PREFIX})
     target_compile_features(
         ${TARGET_PREFIX}
@@ -60,8 +60,8 @@ if(BEMAN_USE_MODULES)
             DLL_NAME_WITH_SOVERSION TRUE
     )
 
-    # FIXME: Quickfix only to prevent linker problems on windows? CK
-    if(WIN32 AND BEMAN_EXEMPLAR_BUILD_SHARED)
+    # FIXME: Quickfix only to prevent linker problems on windows dll? CK
+    if(WIN32 AND BUILD_SHARED_LIBS)
         set_target_properties(
             ${TARGET_PREFIX}
             PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON
