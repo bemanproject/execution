@@ -21,6 +21,7 @@ include(GNUInstallDirs)
 #     [NAMESPACE <namespace>]
 #     [EXPORT_NAME <export-name>]
 #     [DESTINATION <install-prefix>]
+#     [VERSION_SUFFIX]
 #   )
 #
 # Arguments:
@@ -50,6 +51,9 @@ include(GNUInstallDirs)
 # DESTINATION (optional)
 #   The install destination for CXX_MODULES.
 #   Defaults to ${CMAKE_INSTALL_LIBDIR}/cmake/${name}/modules.
+#
+# VERSION_SUFFIX (optional)
+#   option to enable the versioning of install destinations
 #
 # Brief
 # -----
@@ -84,7 +88,7 @@ function(beman_install_library name)
     # ----------------------------
     # Argument parsing
     # ----------------------------
-    set(options)
+    set(options VERSION_SUFFIX)
     set(oneValueArgs NAMESPACE EXPORT_NAME DESTINATION)
     set(multiValueArgs TARGETS DEPENDENCIES)
 
@@ -111,9 +115,20 @@ function(beman_install_library name)
         return()
     endif()
 
-    set(_config_install_dir
-        "${CMAKE_INSTALL_LIBDIR}/cmake/${name}-${PROJECT_VERSION}"
-    )
+    # gersemi: off
+    set(_version_suffix)
+    set(_include_install_dir)
+    set(_lib_install_dir)
+    set(_bin_install_dir)
+    # NOTE: If one of this variables is not set, the default DESTINATION is used! CK
+    if(BEMAN_VERSION_SUFFIX)
+        set(_version_suffix "-${PROJECT_VERSION}")
+        set(_include_install_dir DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/beman${_version_suffix})
+        # set(_lib_install_dir DESTINATION ${CMAKE_INSTALL_LIBDIR}/beman${_version_suffix})
+        # set(_bin_install_dir DESTINATION ${CMAKE_INSTALL_BINDIR}/beman${_version_suffix})
+    endif()
+    set(_config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${name}${_version_suffix}")
+    # gersemi: on
 
     # ----------------------------
     # Defaults
@@ -131,6 +146,10 @@ function(beman_install_library name)
     endif()
 
     string(REPLACE "beman." "" install_component_name "${name}")
+    message(
+        VERBOSE
+        "beman-install-library(${name}): COMPONENT '${install_component_name}'"
+    )
 
     # --------------------------------------------------
     # Install each target with all of its file sets
@@ -161,7 +180,7 @@ function(beman_install_library name)
         )
         message(
             VERBOSE
-            "beman_install_library(${name}): COMPONENT ${component_name} for TARGET '${_tgt}'"
+            "beman_install_library(${name}): EXPORT_NAME ${component_name} for TARGET '${_tgt}'"
         )
 
         # Get the list of interface header sets, exact one expected!
@@ -181,9 +200,9 @@ function(beman_install_library name)
                     APPEND _install_header_set_args
                     FILE_SET
                     "${_install_header_set}"
-                    DESTINATION
-                    "${CMAKE_INSTALL_INCLUDEDIR}/beman-${PROJECT_VERSION}"
-                    # TODO(CK) COMPONENT "${_install_headers_component}"
+                    ${_include_install_dir}
+                    COMPONENT
+                    "${install_component_name}_Development"
                 )
             endforeach()
         else()
@@ -199,27 +218,41 @@ function(beman_install_library name)
             )
             install(
                 TARGETS "${_tgt}"
-                COMPONENT "${install_component_name}"
                 EXPORT ${BEMAN_EXPORT_NAME}
                 ARCHIVE
-                    DESTINATION ${CMAKE_INSTALL_LIBDIR}/beman-${PROJECT_VERSION}
-                LIBRARY # DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                RUNTIME # DESTINATION ${CMAKE_INSTALL_BINDIR}
-                    ${_install_header_set_args} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-                FILE_SET ${_module_sets} DESTINATION "${BEMAN_DESTINATION}"
+                    ${_lib_install_dir}
+                    COMPONENT "${install_component_name}_Development"
+                LIBRARY
+                    ${_lib_install_dir}
+                    COMPONENT "${install_component_name}_Runtime"
+                    NAMELINK_COMPONENT "${install_component_name}_Development"
+                RUNTIME
+                    ${_bin_install_dir}
+                    COMPONENT "${install_component_name}_Runtime"
+                ${_install_header_set_args}
+                FILE_SET ${_module_sets}
+                    DESTINATION "${BEMAN_DESTINATION}"
+                    COMPONENT "${install_component_name}_Development"
                 # NOTE: There's currently no convention for this location! CK
                 CXX_MODULES_BMI
                 # TODO(CK): DESTINATION ${_config_install_dir}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
+                COMPONENT "${install_component_name}_Development"
             )
         else()
             install(
                 TARGETS "${_tgt}"
-                COMPONENT "${install_component_name}"
                 EXPORT ${BEMAN_EXPORT_NAME}
-                ARCHIVE # DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                LIBRARY # DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                RUNTIME # DESTINATION ${CMAKE_INSTALL_BINDIR}
-                    ${_install_header_set_args} # DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+                ARCHIVE
+                    ${_lib_install_dir}
+                    COMPONENT "${install_component_name}_Development"
+                LIBRARY
+                    ${_lib_install_dir}
+                    COMPONENT "${install_component_name}_Runtime"
+                    NAMELINK_COMPONENT "${install_component_name}_Development"
+                RUNTIME
+                    ${_bin_install_dir}
+                    COMPONENT "${install_component_name}_Runtime"
+                ${_install_header_set_args}
             )
         endif()
     endforeach()
@@ -233,7 +266,7 @@ function(beman_install_library name)
         NAMESPACE ${BEMAN_NAMESPACE}
         CXX_MODULES_DIRECTORY cxx-modules
         DESTINATION ${_config_install_dir}
-        COMPONENT "${install_component_name}"
+        COMPONENT "${install_component_name}_Development"
     )
     # gersemi: on
 
@@ -304,7 +337,7 @@ function(beman_install_library name)
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config.cmake"
                 "${CMAKE_CURRENT_BINARY_DIR}/${name}-config-version.cmake"
             DESTINATION ${_config_install_dir}
-            COMPONENT "${install_component_name}"
+            COMPONENT "${install_component_name}_Development"
         )
     else()
         message(

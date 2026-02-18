@@ -71,8 +71,9 @@ endif()
 BEMAN_USE_STD_MODULE:BOOL=ON
 # -> "Check if 'import std;' is possible with the toolchain?"
 
-if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
+if(BEMAN_USE_MODULES AND BEMAN_HAS_IMPORT_STD)
     target_compile_definitions(beman.execution PUBLIC BEMAN_HAS_IMPORT_STD)
+    set_target_properties(beman.execution PROPERTIES CXX_MODULE_STD ON)
 endif()
 ```
 

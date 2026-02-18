@@ -8,6 +8,7 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "BEMAN_USE_MODULES": true,
+        "BEMAN_USE_STD_MODULE": true,
         "CMAKE_CXX_STANDARD": "23",
         "CMAKE_CXX_EXTENSIONS": true,
         "CMAKE_CXX_STANDARD_REQUIRED": true,
@@ -72,6 +73,7 @@
         "_debug-base"
       ],
       "cacheVariables": {
+        "BEMAN_USE_STD_MODULE": false,
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/llvm-libc++-toolchain.cmake"
       },
       "environment": {
@@ -87,6 +89,7 @@
         "_release-base"
       ],
       "cacheVariables": {
+        "BEMAN_USE_STD_MODULE": false,
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/llvm-libc++-toolchain.cmake"
       },
       "environment": {
