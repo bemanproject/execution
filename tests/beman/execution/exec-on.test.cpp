@@ -24,30 +24,22 @@ import beman.execution.detail;
 // ----------------------------------------------------------------------------
 
 namespace {
-struct both : test_std::sender_adaptor_closure<both> {
-    using sender_concept = test_std::sender_t;
-};
-
-static_assert(test_std::sender<both>);
-static_assert(test_detail::is_sender_adaptor_closure<both>);
-
-template <test_std::scheduler                    Sch,
-          test_std::sender                       Sndr,
-          test_detail::is_sender_adaptor_closure Closure,
-          typename Both>
-auto test_interface(Sch sch, Sndr sndr, Closure closure, Both both) -> void {
+template <test_std::scheduler Sch, test_std::sender Sndr, test_detail::is_sender_adaptor_closure Closure>
+auto test_interface(Sch sch, Sndr sndr, Closure closure) -> void {
     static_assert(requires {
         { test_std::on(sch, sndr) } -> test_std::sender;
     });
-    static_assert(not requires { test_std::on(sch, both); });
     static_assert(requires {
         { test_std::on(sndr, sch, closure) } -> test_std::sender;
     });
-    static_assert(not requires { test_std::on(both, sch, closure); });
+    static_assert(requires {
+        { test_std::on(sch, closure) } -> test_detail::is_sender_adaptor_closure;
+    });
 
     auto sndr1{test_std::on(sch, sndr)};
     auto sndr2{test_std::on(sndr, sch, closure)};
-    test::use(sndr1, sndr2);
+    auto sndr3{test_std::on(sch, closure)};
+    test::use(sndr1, sndr2, sndr3);
 }
 
 template <test_detail::sender_for<test_std::on_t> OutSndr>
@@ -81,7 +73,7 @@ TEST(exec_on) {
     static_assert(std::same_as<const test_std::on_t, decltype(test_std::on)>);
     static_assert(test_detail::is_sender_adaptor_closure<decltype(test_std::then([] {}))>);
     static_assert(not test_detail::is_sender_adaptor_closure<decltype(test_std::just([] {}))>);
-    test_interface(pool.get_scheduler(), test_std::just(), test_std::then([] {}), both{});
+    test_interface(pool.get_scheduler(), test_std::just(), test_std::then([] {}));
 
     test_transform_env(test_detail::make_sender(test_std::on, pool.get_scheduler(), test_std::just()));
     test_transform_env(test_detail::make_sender(

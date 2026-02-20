@@ -65,7 +65,6 @@ export import beman.execution.detail.queryable;
 export import beman.execution.detail.sched_attrs;
 export import beman.execution.detail.sched_env;
 export import beman.execution.detail.sender;
-export import beman.execution.detail.sender_adaptor;
 export import beman.execution.detail.sender_adaptor_closure;
 export import beman.execution.detail.sender_decompose;
 export import beman.execution.detail.sender_for;

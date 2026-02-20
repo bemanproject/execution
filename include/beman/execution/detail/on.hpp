@@ -27,7 +27,6 @@ import beman.execution.detail.query_with_default;
 import beman.execution.detail.sched_env;
 import beman.execution.detail.scheduler;
 import beman.execution.detail.sender;
-import beman.execution.detail.sender_adaptor;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.set_value;
@@ -157,8 +156,8 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     }
     template <::beman::execution::scheduler Sch, ::beman::execution::detail::is_sender_adaptor_closure Closure>
     auto operator()(Sch&& sch, Closure&& closure) const {
-        return ::beman::execution::detail::sender_adaptor{
-            *this, ::std::forward<Sch>(sch), ::std::forward<Closure>(closure)};
+        return ::beman::execution::detail::make_sender_adaptor(
+            *this, ::std::forward<Sch>(sch), ::std::forward<Closure>(closure));
     }
 };
 

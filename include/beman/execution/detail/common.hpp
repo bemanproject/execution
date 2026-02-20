@@ -59,7 +59,20 @@ namespace execution {
  * \brief Namespace for implementation details related to beman::execution
  * \internal
  */
-namespace detail {}
+namespace detail {
+
+/*!
+ * \namespace beman::execution::detail::pipeable
+ * \brief Namespace for ADL isolation of sender adaptor closure pipe operators.
+ *
+ * \details
+ * The operator| overloads for sender adaptor closures are placed in this
+ * namespace so they are only found via argument-dependent lookup when one
+ * of the arguments derives from sender_adaptor_closure.
+ * \internal
+ */
+namespace pipeable {}
+} // namespace detail
 } // namespace execution
 } // namespace beman
 

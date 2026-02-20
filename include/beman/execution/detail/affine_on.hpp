@@ -31,7 +31,6 @@ import beman.execution.detail.schedule;
 import beman.execution.detail.schedule_from;
 import beman.execution.detail.scheduler;
 import beman.execution.detail.sender;
-import beman.execution.detail.sender_adaptor;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.sender_has_affine_on;
@@ -53,7 +52,6 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/schedule_from.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/sender_has_affine_on.hpp>
@@ -108,7 +106,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
      *
      * @return A sender adaptor for the affine_on_t.
      */
-    auto operator()() const { return ::beman::execution::detail::sender_adaptor{*this}; }
+    auto operator()() const { return ::beman::execution::detail::make_sender_adaptor(*this); }
 
     /**
      * @brief affine_on is implemented by transforming it into a use of schedule_from.

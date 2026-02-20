@@ -28,7 +28,7 @@ import beman.execution.detail.make_sender;
 import beman.execution.detail.nothrow_callable;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender;
-import beman.execution.detail.sender_adaptor;
+import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
 import beman.execution.detail.start;
@@ -118,7 +118,7 @@ struct associate_t {
 
     template <::beman::execution::scope_token Token>
     auto operator()(Token token) const {
-        return ::beman::execution::detail::sender_adaptor{*this, ::std::move(token)};
+        return ::beman::execution::detail::make_sender_adaptor(*this, ::std::move(token));
     }
 
   public:

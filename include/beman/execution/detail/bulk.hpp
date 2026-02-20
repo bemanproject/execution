@@ -28,7 +28,6 @@ import beman.execution.detail.meta.unique;
 import beman.execution.detail.movable_value;
 import beman.execution.detail.product_type;
 import beman.execution.detail.sender;
-import beman.execution.detail.sender_adaptor;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_value;
@@ -84,7 +83,8 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
     template <class Shape, class f>
         requires(std::is_integral_v<Shape> && ::beman::execution::detail::movable_value<f>)
     auto operator()(Shape&& shape, f&& fun) const {
-        return beman::execution::detail::sender_adaptor{*this, std::forward<Shape>(shape), std::forward<f>(fun)};
+        return ::beman::execution::detail::make_sender_adaptor(
+            *this, std::forward<Shape>(shape), std::forward<f>(fun));
     }
 
     template <class Sender, class Shape, class f>

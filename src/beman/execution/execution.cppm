@@ -91,7 +91,6 @@ export import beman.execution.detail.sender_in;
 export import beman.execution.detail.sends_stopped;
 
 namespace beman::execution {
-export using ::beman::execution::operator|;
 
 export using ::beman::execution::nostopstate_t;
 export using ::beman::execution::nostopstate;
@@ -176,6 +175,10 @@ export using ::beman::execution::read_env;
 
 // [exec.adapt], sender adaptors
 export using ::beman::execution::sender_adaptor_closure;
+
+namespace detail::pipeable {
+export using ::beman::execution::detail::pipeable::operator|;
+}
 
 export using ::beman::execution::starts_on_t;
 export using ::beman::execution::continues_on_t;

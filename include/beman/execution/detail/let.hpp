@@ -49,7 +49,7 @@ import beman.execution.detail.movable_value;
 import beman.execution.detail.receiver;
 import beman.execution.detail.sched_env;
 import beman.execution.detail.sender;
-import beman.execution.detail.sender_adaptor;
+import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
@@ -99,7 +99,7 @@ template <typename Completion>
 struct let_t {
     template <::beman::execution::detail::movable_value Fun>
     auto operator()(Fun&& fun) const {
-        return ::beman::execution::detail::sender_adaptor{*this, ::std::forward<Fun>(fun)};
+        return ::beman::execution::detail::make_sender_adaptor(*this, ::std::forward<Fun>(fun));
     }
     template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
     auto operator()(Sender&& sender, Fun&& fun) const {

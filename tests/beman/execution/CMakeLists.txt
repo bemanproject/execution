@@ -46,6 +46,7 @@ list(
     exec-scope-concepts.test
     exec-scope-counting.test
     exec-scope-simple-counting.test
+    exec-sender-adaptor-closure.test
     exec-set-error.test
     exec-set-stopped.test
     exec-set-value.test
