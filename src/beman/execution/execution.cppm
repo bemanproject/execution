@@ -91,7 +91,6 @@ export import beman.execution.detail.sender_in;
 export import beman.execution.detail.sends_stopped;
 
 namespace beman::execution {
-export using ::beman::execution::operator|;
 
 export using ::beman::execution::nostopstate_t;
 export using ::beman::execution::nostopstate;

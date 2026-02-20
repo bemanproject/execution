@@ -6,9 +6,10 @@ module;
 
 export module beman.execution.detail.sender_adaptor_closure;
 
-namespace beman::execution {
-export using ::beman::execution::operator|;
-}
+namespace beman::execution::detail::pipeable {
+export using ::beman::execution::detail::pipeable::closure_t;
+export using ::beman::execution::detail::pipeable::operator|;
+} // namespace beman::execution::detail::pipeable
 namespace beman::execution::detail {
 export using ::beman::execution::detail::is_sender_adaptor_closure;
 export using ::beman::execution::detail::sender_adaptor_closure_for;

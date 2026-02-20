@@ -34,14 +34,22 @@ import beman.execution.detail.product_type;
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution {
+namespace beman::execution::detail::pipeable {
+/*!
+ * \brief ADL anchor tag type inherited by sender_adaptor_closure.
+ * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \internal
+ */
+struct closure_t {};
+} // namespace beman::execution::detail::pipeable
 
+namespace beman::execution {
 /*!
  * \brief CRTP base class for pipeable sender adaptor closure objects.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
 template <detail::class_type D>
-struct sender_adaptor_closure {};
+struct sender_adaptor_closure : detail::pipeable::closure_t {};
 
 } // namespace beman::execution
 
@@ -163,7 +171,7 @@ make_sender_adaptor(Tag&& tag,
 }
 } // namespace beman::execution::detail
 
-namespace beman::execution {
+namespace beman::execution::detail::pipeable {
 
 /*!
  * \brief Pipe operator connecting a sender to a pipeable sender adaptor closure.
@@ -188,7 +196,7 @@ constexpr auto operator|(Inner&& inner,
     return {{}, std::forward<Inner>(inner), std::forward<Outer>(outer)};
 }
 
-} // namespace beman::execution
+} // namespace beman::execution::detail::pipeable
 
 // ----------------------------------------------------------------------------
 
