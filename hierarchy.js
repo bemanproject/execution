@@ -13,6 +13,15 @@ var hierarchy =
     [ "CallbackFun", null, [
       [ "beman::execution::stop_callback< CallbackFun >", "classbeman_1_1execution_1_1stop__callback.html", null ]
     ] ],
+    [ "beman::execution::detail::pipeable::closure_t", null, [
+      [ "beman::execution::sender_adaptor_closure< affine_on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< bound_sender_adaptor_closure< Adaptor, BoundArgs... > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< bulk_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< composed_sender_adaptor_closure< Inner, Outer > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< then_t< Completion > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< D >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ]
+    ] ],
     [ "beman::execution::completion_signatures<... >", "structbeman_1_1execution_1_1completion__signatures.html", null ],
     [ "tst::connector< Sndr, Rcvr >", "structtst_1_1connector.html", null ],
     [ "tst::connector< inner_sender, Receiver >", "structtst_1_1connector.html", null ],
@@ -60,14 +69,6 @@ var hierarchy =
     [ "beman::execution::schedule_t", "structbeman_1_1execution_1_1schedule__t.html", null ],
     [ "beman::execution::scheduler_t", "structbeman_1_1execution_1_1scheduler__t.html", null ],
     [ "tst::repeat_effect_unilt_t::sender< Child, Fun >", "structtst_1_1repeat__effect__unilt__t_1_1sender.html", null ],
-    [ "beman::execution::detail::pipeable::sender_adaptor_closure_base", null, [
-      [ "beman::execution::sender_adaptor_closure< affine_on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< bulk_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< sender_adaptor< Adaptor, T... > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< then_t< Completion > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< typename >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ]
-    ] ],
     [ "beman::execution::sender_t", "structbeman_1_1execution_1_1sender__t.html", null ],
     [ "beman::execution::set_error_t", "structbeman_1_1execution_1_1set__error__t.html", null ],
     [ "beman::execution::set_stopped_t", "structbeman_1_1execution_1_1set__stopped__t.html", null ],
