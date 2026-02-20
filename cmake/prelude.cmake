@@ -18,8 +18,12 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
 # ---------------------------------------------------------------------------
+# The CMAKE_EXPERIMENTAL_CXX_IMPORT_STD is not longer needed expect on OSX
+# ---------------------------------------------------------------------------
 if(NOT BEMAN_USE_STD_MODULE OR CMAKE_VERSION VERSION_GREATER_EQUAL 4.3)
-    return()
+    if(NOT APPLE)
+        return()
+    endif()
 endif()
 # ---------------------------------------------------------------------------
 
@@ -27,7 +31,7 @@ endif()
 # ---------------------------------------------------------------------------
 # check if import std; is supported by CMAKE_CXX_COMPILER
 # ---------------------------------------------------------------------------
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2 AND CMAKE_VERSION VERSION_LESS 4.3)
     if(PROJECT_NAME)
         message(
             WARNING
@@ -39,10 +43,10 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
 endif()
 # gersemi: on
 
-# TODO(CK): Do we need this HACK for linux too?
-# if(NOT APPLE)
-#     return()
-# endif()
+# TODO(CK): Do we need this HACK still for linux too?
+if(NOT APPLE)
+    return()
+endif()
 
 # FIXME: clang++ we still needs to export CXX=clang++
 if("$ENV{CXX}" STREQUAL "" AND CMAKE_CXX_COMPILER)
@@ -76,6 +80,8 @@ if(
         add_link_options(-L${LLVM_DIR}/lib/c++)
         include_directories(SYSTEM ${LLVM_DIR}/include)
 
+        # /usr/local/Cellar/llvm/21.1.8_1/lib/c++/libc++.modules.json
+        # "/usr/local/Cellar/llvm/21.1.8_1/share/libc++/v1/std.cppm",
         set(CMAKE_CXX_STDLIB_MODULES_JSON
             ${LLVM_DIR}/lib/c++/libc++.modules.json
         )
