@@ -32,7 +32,6 @@ import beman.execution.detail.schedule_from;
 import beman.execution.detail.scheduler;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
-import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.sender_has_affine_on;
 import beman.execution.detail.set_value;
@@ -53,7 +52,6 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/schedule_from.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/sender_has_affine_on.hpp>
