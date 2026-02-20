@@ -303,7 +303,7 @@ struct closure_t : test_std::sender_adaptor_closure<closure_t> {
 constexpr closure_t closure{};
 
 auto test_sender_adaptor_closure() -> void {
-    use(test_std::sender_adaptor_closure<int>{});
+    // use(test_std::sender_adaptor_closure<int>{}); // commented out: not valid usage. int does not satisfy class_type
     struct sender {
         using sender_concept = test_std::sender_t;
     };
@@ -325,7 +325,7 @@ struct arg_closure_t {
     auto operator()(Sender&&, int) const -> adapted_sender<Sender> {
         return {};
     }
-    auto operator()(int value) const { return test_detail::sender_adaptor<arg_closure_t, int>{*this, value, {}}; }
+    auto operator()(int value) const { return test_detail::make_sender_adaptor(*this, value); }
 };
 constexpr arg_closure_t arg_closure{};
 
@@ -336,7 +336,7 @@ auto test_sender_adaptor() -> void {
     static_assert(test_std::sender<sender>);
 
     auto closure_{arg_closure(17)};
-    static_assert(std::same_as<test_detail::sender_adaptor<arg_closure_t, int>, decltype(closure_)>);
+    static_assert(std::same_as<test_detail::bound_sender_adaptor_closure<arg_closure_t, int>, decltype(closure_)>);
     auto direct{closure_(sender{})};
     test::use(direct);
     static_assert(std::same_as<adapted_sender<sender>, decltype(direct)>);

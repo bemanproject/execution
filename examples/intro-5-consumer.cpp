@@ -128,7 +128,7 @@ struct expected_to_channel_t {
     sender<std::remove_cvref_t<CSender>> operator()(CSender&& child_sender) const {
         return {std::forward<CSender>(child_sender)};
     }
-    auto operator()() const { return ex::detail::sender_adaptor{*this}; }
+    auto operator()() const { return ex::detail::make_sender_adaptor(*this); }
 };
 inline constexpr expected_to_channel_t expected_to_channel{};
 

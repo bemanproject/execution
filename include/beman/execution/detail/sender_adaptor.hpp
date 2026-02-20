@@ -28,28 +28,14 @@ import beman.execution.detail.sender_decompose;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <typename Adaptor, typename... T> //-dk:TODO detail export
-struct sender_adaptor : ::beman::execution::detail::product_type<::std::decay_t<Adaptor>, ::std::decay_t<T>...>,
-                        ::beman::execution::sender_adaptor_closure<sender_adaptor<Adaptor, T...>> {
-    template <::beman::execution::sender Sender, typename Self>
-    static auto apply(Sender&& sender, Self&& self) {
-        return [&self, &sender]<::std::size_t... I>(::std::index_sequence<I...>) {
-            auto&& fun(self.template get<0>());
-            return fun(::std::forward<Sender>(sender),
-                       ::beman::execution::detail::forward_like<Self>(self.template get<I + 1>())...);
-        }(::std::make_index_sequence<sender_adaptor::size() - 1u>{});
-    }
-    template <::beman::execution::sender Sender>
-    auto operator()(Sender&& sender) {
-        return apply(::std::forward<Sender>(sender), ::std::move(*this));
-    }
-    template <::beman::execution::sender Sender>
-    auto operator()(Sender&& sender) const {
-        return apply(::std::forward<Sender>(sender), *this);
-    }
-};
+
 template <typename... T>
-sender_adaptor(T&&...) -> sender_adaptor<T...>;
+using sender_adaptor
+    [[deprecated("sender_adaptor is deprecated and layout incompatible with previous versions."
+                 " Use make_sender_adaptor(adaptor, args...) instead. "
+                 "The implementation now uses bound_sender_adaptor_closure, which stores the adaptor with "
+                 "[[no_unique_address]] and keeps bound arguments in product_type.")]] =
+        bound_sender_adaptor_closure<std::decay_t<T>...>;
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------

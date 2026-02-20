@@ -30,7 +30,6 @@ import beman.execution.detail.meta.unique;
 import beman.execution.detail.movable_value;
 import beman.execution.detail.nested_sender_has_affine_on;
 import beman.execution.detail.sender;
-import beman.execution.detail.sender_adaptor;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
@@ -108,7 +107,7 @@ template <typename Completion>
 struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
     template <::beman::execution::detail::movable_value Fun>
     auto operator()(Fun&& fun) const {
-        return ::beman::execution::detail::sender_adaptor{*this, ::std::forward<Fun>(fun)};
+        return ::beman::execution::detail::make_sender_adaptor(*this, std::forward<decltype(fun)>(fun));
     }
     template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
     auto operator()(Sender&& sender, Fun&& fun) const {

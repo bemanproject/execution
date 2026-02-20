@@ -27,7 +27,7 @@ import beman.execution.detail.sched_attrs;
 import beman.execution.detail.schedule_from;
 import beman.execution.detail.scheduler;
 import beman.execution.detail.sender;
-import beman.execution.detail.sender_adaptor;
+import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.transform_sender;
 #else
@@ -70,7 +70,7 @@ struct continues_on_t {
     }
     template <::beman::execution::scheduler Scheduler>
     auto operator()(Scheduler&& scheduler) const {
-        return ::beman::execution::detail::sender_adaptor{*this, ::std::forward<Scheduler>(scheduler)};
+        return ::beman::execution::detail::make_sender_adaptor(*this, ::std::forward<Scheduler>(scheduler));
     }
     template <::beman::execution::sender Sender, ::beman::execution::scheduler Scheduler>
     auto operator()(Sender&& sender, Scheduler&& scheduler) const {
