@@ -303,7 +303,7 @@ struct closure_t : test_std::sender_adaptor_closure<closure_t> {
 constexpr closure_t closure{};
 
 auto test_sender_adaptor_closure() -> void {
-    // use(test_std::sender_adaptor_closure<int>{}); // commented out: not valid usage. int does not satisfy class_type
+    use(test_std::sender_adaptor_closure<closure_t>{});
     struct sender {
         using sender_concept = test_std::sender_t;
     };
