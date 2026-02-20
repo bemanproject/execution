@@ -53,7 +53,7 @@ namespace beman::execution::detail {
  * \internal
  */
 template <class T>
-auto is_sender_adaptor_closure_base(const sender_adaptor_closure<T>&) -> T;
+auto get_sender_adaptor_closure_base(const sender_adaptor_closure<T>&) -> T;
 
 /*!
  * \brief Checks that T has exactly one sender_adaptor_closure base where U == decay_t<T>.
@@ -62,7 +62,7 @@ auto is_sender_adaptor_closure_base(const sender_adaptor_closure<T>&) -> T;
  */
 template <class T>
 concept has_unique_sender_adaptor_closure_base = requires(const T& s) {
-    { is_sender_adaptor_closure_base(s) } -> std::same_as<std::decay_t<T>>;
+    { get_sender_adaptor_closure_base(s) } -> std::same_as<std::decay_t<T>>;
 };
 
 /*!

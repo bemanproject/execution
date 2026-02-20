@@ -12,7 +12,7 @@ export using ::beman::execution::operator|;
 namespace beman::execution::detail {
 export using ::beman::execution::detail::is_sender_adaptor_closure;
 export using ::beman::execution::detail::sender_adaptor_closure_for;
-export using ::beman::execution::detail::is_sender_adaptor_closure_base;
+export using ::beman::execution::detail::get_sender_adaptor_closure_base;
 export using ::beman::execution::detail::apply_cvref_t;
 export using ::beman::execution::detail::composed_sender_adaptor_closure;
 export using ::beman::execution::detail::bound_sender_adaptor_closure;
