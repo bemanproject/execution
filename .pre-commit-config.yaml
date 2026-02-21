@@ -16,7 +16,7 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-        files: ^.*\.(cmake|cpp|hpp|txt|md|json|in|yaml|yml|py|toml)$
+        files: ^.*\.(cmake|cpp|cppm|hpp|txt|md|mds|json|js|in|yaml|yml|py|toml)$
         args: ["--write", "--ignore-words", ".codespellignore" ]
 
   # Clang-format for C++
@@ -27,7 +27,7 @@ repos:
     rev: v21.1.8
     hooks:
       - id: clang-format
-        types_or: [c++, c, json]
+        types_or: [c++, c, json, javascript]
         exclude: docs/TODO.json
 
   # CMake linting and formatting
