@@ -13,6 +13,7 @@
         "CMAKE_CXX_EXTENSIONS": true,
         "CMAKE_CXX_STANDARD_REQUIRED": true,
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_INSTALL_MESSAGE": "LAZY",
         "CMAKE_SKIP_TEST_ALL_DEPENDENCY": false,
         "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "infra/cmake/use-fetch-content.cmake"
       }
@@ -105,6 +106,7 @@
         "_debug-base"
       ],
       "cacheVariables": {
+        "BEMAN_USE_STD_MODULE": false,
         "BEMAN_USE_MODULES": false,
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/appleclang-toolchain.cmake"
       }
@@ -117,6 +119,7 @@
         "_release-base"
       ],
       "cacheVariables": {
+        "BEMAN_USE_STD_MODULE": false,
         "BEMAN_USE_MODULES": false,
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/appleclang-toolchain.cmake"
       }
