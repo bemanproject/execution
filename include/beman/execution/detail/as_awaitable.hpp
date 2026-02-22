@@ -11,6 +11,7 @@ import std;
 #include <coroutine>
 #include <type_traits>
 #include <utility>
+#include <iostream> //-d:TODO remove
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.awaitable_sender;
@@ -34,7 +35,9 @@ namespace beman::execution {
 struct as_awaitable_t {
     template <typename Expr, typename Promise>
     auto operator()(Expr&& expr, Promise& promise) const {
+        std::cout << "as_awaitable_t::operator()(Expr&& expr, Promise& promise) called\n"; //-d:TODO remove
         if constexpr (requires { ::std::forward<Expr>(expr).as_awaitable(promise); }) {
+            std::cout << "   has as_awaitable\n"; //-d:TODO remove
             static_assert(
                 ::beman::execution::detail::is_awaitable<decltype(::std::forward<Expr>(expr).as_awaitable(promise)),
                                                          Promise>,
@@ -43,8 +46,10 @@ struct as_awaitable_t {
         } else if constexpr (::beman::execution::detail::
                                  is_awaitable<Expr, ::beman::execution::detail::unspecified_promise> ||
                              !::beman::execution::detail::awaitable_sender<Expr, Promise>) {
+            std::cout << "   it is an awaitable\n"; //-d:TODO remove
             return ::std::forward<Expr>(expr);
         } else {
+            std::cout << "   otherwise\n"; //-d:TODO remove
             return ::beman::execution::detail::sender_awaitable<Expr, Promise>{::std::forward<Expr>(expr), promise};
         }
     }

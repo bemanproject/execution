@@ -12,6 +12,7 @@ import std;
 #include <concepts>
 #include <type_traits>
 #include <utility>
+#include <iostream> //-d:TODO remove
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.completion_signatures;
@@ -95,6 +96,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
      */
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
+        std::cout << "affine_on_t::operator()(Sender&& sender) called\n"; //-d:TODO remove
         return ::beman::execution::transform_sender(
             ::beman::execution::detail::get_domain_early(sender),
             ::beman::execution::detail::make_sender(
@@ -140,6 +142,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             } -> ::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>;
         }
     static auto transform_sender(Sender&& sender, const Env& ev) {
+        std::cout << "affine_on_t::transform_sender(Sender&& sender, const Env& ev) called\n"; //-d:TODO remove
         //[[maybe_unused]] auto& [tag, data, child] = sender;
         auto& child       = sender.template get<2>();
         using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
