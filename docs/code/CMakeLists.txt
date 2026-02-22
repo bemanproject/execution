@@ -10,11 +10,11 @@ set(EXAMPLES)
 # endif()
 
 foreach(EXAMPLE ${EXAMPLES})
-    set(EXAMPLE_TARGET ${TARGET_PREFIX}.tutorial.${EXAMPLE})
+    set(EXAMPLE_TARGET ${BEMAN_EXECUTION_TARGET_PREFIX}.tutorial.${EXAMPLE})
     add_executable(${EXAMPLE_TARGET})
     target_sources(${EXAMPLE_TARGET} PRIVATE ${EXAMPLE}.cpp)
     target_link_libraries(
         ${EXAMPLE_TARGET}
-        PRIVATE ${TARGET_NAMESPACE}::${TARGET_NAME}
+        PRIVATE beman::${BEMAN_EXECUTION_TARGET_NAME}
     )
 endforeach()

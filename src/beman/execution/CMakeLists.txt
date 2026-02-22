@@ -3,11 +3,11 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-add_library(${TARGET_NAME} INTERFACE)
-add_library(beman::execution_headers ALIAS ${TARGET_NAME})
+add_library(${BEMAN_EXECUTION_TARGET_NAME} INTERFACE)
+add_library(beman::execution_headers ALIAS ${BEMAN_EXECUTION_TARGET_NAME})
 
 target_sources(
-    ${TARGET_NAME}
+    ${BEMAN_EXECUTION_TARGET_NAME}
     PUBLIC
         FILE_SET public_headers
             TYPE HEADERS
@@ -195,7 +195,7 @@ target_sources(
 
 if(BEMAN_USE_MODULES)
     target_sources(
-        ${TARGET_PREFIX}
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
         PRIVATE
             execution.cpp # TODO(CK): check if really needed!
         PUBLIC
@@ -372,15 +372,24 @@ if(BEMAN_USE_MODULES)
                     with_awaitable_senders.cppm
                     write_env.cppm
     )
-    target_compile_definitions(${TARGET_PREFIX} PUBLIC BEMAN_HAS_MODULES)
-    target_link_libraries(${TARGET_PREFIX} PUBLIC ${TARGET_NAME})
+    target_compile_definitions(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PUBLIC BEMAN_HAS_MODULES
+    )
+    target_link_libraries(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PUBLIC ${BEMAN_EXECUTION_TARGET_NAME}
+    )
 endif()
 
 get_property(
     DETAIL_HEADER_FILES
-    TARGET ${TARGET_NAME}
+    TARGET ${BEMAN_EXECUTION_TARGET_NAME}
     PROPERTY HEADER_SET_detail_headers
 )
 source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
-set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
+set_target_properties(
+    ${BEMAN_EXECUTION_TARGET_NAME}
+    PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON
+)
