@@ -15,9 +15,11 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.awaitable_sender;
+import beman.execution.detail.get_domain_late;
 import beman.execution.detail.is_awaitable;
 import beman.execution.detail.sender_awaitable;
 import beman.execution.detail.unspecified_promise;
+import beman.execution.detail.transform_sender;
 #else
 #include <beman/execution/detail/awaitable_sender.hpp>
 #include <beman/execution/detail/is_awaitable.hpp>
@@ -36,13 +38,16 @@ struct as_awaitable_t {
     template <typename Expr, typename Promise>
     auto operator()(Expr&& expr, Promise& promise) const {
         std::cout << "as_awaitable_t::operator()(Expr&& expr, Promise& promise) called\n"; //-d:TODO remove
-        if constexpr (requires { ::std::forward<Expr>(expr).as_awaitable(promise); }) {
+        if constexpr (requires { ::beman::execution::transform_sender(
+                ::beman::execution::detail::get_domain_early(expr),
+                ::std::forward<Expr>(expr)).as_awaitable(promise); }) {
             std::cout << "   has as_awaitable\n"; //-d:TODO remove
-            static_assert(
-                ::beman::execution::detail::is_awaitable<decltype(::std::forward<Expr>(expr).as_awaitable(promise)),
-                                                         Promise>,
-                "as_awaitable must return an awaitable");
-            return ::std::forward<Expr>(expr).as_awaitable(promise);
+            //static_assert(
+            //    ::beman::execution::detail::is_awaitable<decltype(::std::forward<Expr>(expr).as_awaitable(promise)),
+            //                                             Promise>,
+            //    "as_awaitable must return an awaitable");
+            return ::beman::execution::transform_sender(::beman::execution::detail::get_domain_early(expr),
+                    ::std::forward<Expr>(expr)).as_awaitable(promise);
         } else if constexpr (::beman::execution::detail::
                                  is_awaitable<Expr, ::beman::execution::detail::unspecified_promise> ||
                              !::beman::execution::detail::awaitable_sender<Expr, Promise>) {
@@ -50,6 +55,7 @@ struct as_awaitable_t {
             return ::std::forward<Expr>(expr);
         } else {
             std::cout << "   otherwise\n"; //-d:TODO remove
+            //static_assert(std::same_as<Expr, void>);
             return ::beman::execution::detail::sender_awaitable<Expr, Promise>{::std::forward<Expr>(expr), promise};
         }
     }

@@ -12,7 +12,8 @@ import std;
 #include <concepts>
 #include <type_traits>
 #include <utility>
-#include <iostream> //-d:TODO remove
+#include <memory> //-dk:TODO remove
+#include <iostream> //-dk:TODO remove
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.completion_signatures;
@@ -96,6 +97,7 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
      */
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
+        std::unique_ptr<char const, decltype([](char const* msg) { std::cout << msg; })> guard("affine_on_t::operator()(Sender&& sender) done\n"); //-d:TODO remove
         std::cout << "affine_on_t::operator()(Sender&& sender) called\n"; //-d:TODO remove
         return ::beman::execution::transform_sender(
             ::beman::execution::detail::get_domain_early(sender),
@@ -142,15 +144,18 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             } -> ::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>;
         }
     static auto transform_sender(Sender&& sender, const Env& ev) {
-        std::cout << "affine_on_t::transform_sender(Sender&& sender, const Env& ev) called\n"; //-d:TODO remove
-        //[[maybe_unused]] auto& [tag, data, child] = sender;
         auto& child       = sender.template get<2>();
-        using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
+        std::cout << "affine_on_t::transform_sender(Sender&& sender, const Env& ev) called\n"; //-d:TODO remove
 
-        if constexpr (::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>) {
+        if constexpr (::beman::execution::detail::nested_sender_has_affine_on<::std::remove_cvref_t<Sender>, Env>) {
+            std::cout << "   affine_on using custom version\n";
+            using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
             constexpr child_tag_t t{};
+            using tsk = decltype(t.affine_on(::beman::execution::detail::forward_like<Sender>(child), ev));
+            static_assert(::std::same_as<tsk, decltype(::beman::execution::detail::forward_like<Sender>(child))>);
             return t.affine_on(::beman::execution::detail::forward_like<Sender>(child), ev);
         } else {
+            std::cout << "   affine_on using default version\n";
             return ::beman::execution::write_env(
                 ::beman::execution::schedule_from(
                     ::beman::execution::get_scheduler(ev),

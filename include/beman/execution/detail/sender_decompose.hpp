@@ -54,11 +54,17 @@ auto get_sender_data(Sender&& sender) {
     if constexpr (requires {
                       sender.template get<0>();
                       sender.size();
-                  })
+                  }) {
+        if constexpr (sender_type::size() < 2u) {
+            static_assert(1 < sender_type::size(), "sender must have at least 2 elements");
+        }
+        else {
         return [&sender]<::std::size_t... I>(::std::index_sequence<I...>) {
             return ::beman::execution::detail::sender_data{
                 sender.template get<0>(), sender.template get<1>(), ::std::tie(sender.template get<2 + I>()...)};
         }(::std::make_index_sequence<::std::decay_t<decltype(sender)>::size() - 2u>{});
+        }
+    }
     else if constexpr (requires { sender_type{at, at, at, at, at, at}; }) {
         auto&& [tag, data, c0, c1, c2, c3] = sender;
         return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1, c2, c3)};
