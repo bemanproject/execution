@@ -204,7 +204,7 @@ pipe notation.
 	    result of the algorithm is the value returned from this
 	    invocation (if any). If the invocation of <code>_fun_</code>
 	    throws, the algorithm completes with an error
-      provding an `std::exception_ptr` to caught exception. If
+      providing an `std::exception_ptr` to caught exception. If
       <code>_sender_</code> doesn't complete accordingly to the
       algorithm's name, the completion is forwarded.
 	        </details>

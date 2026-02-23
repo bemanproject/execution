@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-cmake_minimum_required(VERSION 3.30...4.2)
+cmake_minimum_required(VERSION 3.30...4.3)
 
 include(../cmake/prelude.cmake)
 
@@ -12,7 +12,7 @@ project(beman_execution.example LANGUAGES CXX)
 if(PROJECT_IS_TOP_LEVEL)
     include(../cmake/cxx-modules-rules.cmake)
 
-    find_package(beman.execution 0.2.0 EXACT REQUIRED)
+    find_package(beman.execution 0.3.0 EXACT REQUIRED)
 
     enable_testing()
 endif()

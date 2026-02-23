@@ -4,7 +4,6 @@ Language:        Json
 IndentWidth:     2
 UseTab:          Never
 ---
-BasedOnStyle:    LLVM
 Language:        JavaScript
 IndentWidth:     4
 UseTab:          Never
