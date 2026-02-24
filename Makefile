@@ -59,9 +59,14 @@ ifeq (${hostSystemName},Darwin)
 
   ifeq ($(origin CXX),default)
     $(info CXX is using the built-in default: $(CXX))
-    export CXX=g++-15
-    CXXLIB=libstdc++
-    export CXXFLAGS=-stdlib=$(CXXLIB)
+    ifeq ($(shell uname -m),arm64)
+        export CXX=clang++
+        CXXLIB=libc++
+    else
+        export CXX=g++-15
+        CXXLIB=libstdc++
+    endif
+    export CXX_FLAGS=-stdlib=$(CXXLIB)
   endif
   export GCOV="gcov"
 else ifeq (${hostSystemName},Linux)
@@ -120,6 +125,7 @@ doc:
 # NOTE: cmake configure to only test without modules! CK
 # ==========================================================
 build build-interface:
+	@echo CXX=$(CXX) CXX_FLAGS=$(CXX_FLAGS)
 	cmake -G Ninja -S $(SOURCEDIR) -B $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
 	  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
 	  -D CMAKE_SKIP_INSTALL_RULES=ON \
@@ -130,7 +136,8 @@ build build-interface:
 	  -D BEMAN_USE_STD_MODULE=OFF \
 	  -D CMAKE_BUILD_TYPE=Release \
 	  -D CMAKE_SKIP_TEST_ALL_DEPENDENCY=OFF \
-	  -D CMAKE_CXX_COMPILER=$(CXX) --log-level=VERBOSE --fresh
+	  -D CMAKE_CXX_COMPILER=$(CXX) --log-level=VERBOSE --fresh \
+	  -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	# XXX -D CMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD) --target all_verify_interface_header_sets
 	cmake --build $(BUILD) --target all
