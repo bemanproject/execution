@@ -259,6 +259,7 @@ if(BEMAN_USE_MODULES)
                     fwd_env.cppm
                     gather_signatures.cppm
                     get_allocator.cppm
+                    get_await_completion_adaptor.cppm
                     get_awaiter.cppm
                     get_completion_scheduler.cppm
                     get_completion_signatures.cppm
