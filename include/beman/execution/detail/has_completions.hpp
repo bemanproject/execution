@@ -16,11 +16,13 @@ import beman.execution.detail.valid_completion_for;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
+
+template <typename Receiver, ::beman::execution::detail::valid_completion_for<Receiver>... Signatures>
+auto has_completions_test(::beman::execution::completion_signatures<Signatures...>*) noexcept -> void {}
+
 template <typename Receiver, typename Completions>
-concept has_completions = requires(Completions* completions) {
-    []<::beman::execution::detail::valid_completion_for<Receiver>... Signatures>(
-        ::beman::execution::completion_signatures<Signatures...>*) {}(completions);
-};
+concept has_completions =
+    requires(Completions* completions) { ::beman::execution::detail::has_completions_test<Receiver>(completions); };
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
