@@ -79,6 +79,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/fwd_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/gather_signatures.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_allocator.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_await_completion_adaptor.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_awaiter.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_completion_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_completion_signatures.hpp
