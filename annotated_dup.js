@@ -8,6 +8,7 @@ var annotated_dup =
         [ "default_domain", "structbeman_1_1execution_1_1default__domain.html", null ],
         [ "env", "structbeman_1_1execution_1_1env.html", null ],
         [ "get_allocator_t", "structbeman_1_1execution_1_1get__allocator__t.html", null ],
+        [ "get_await_completion_adaptor_t", "structbeman_1_1execution_1_1get__await__completion__adaptor__t.html", null ],
         [ "get_completion_scheduler_t", "structbeman_1_1execution_1_1get__completion__scheduler__t.html", null ],
         [ "get_completion_signatures_t", "structbeman_1_1execution_1_1get__completion__signatures__t.html", null ],
         [ "get_delegation_scheduler_t", "structbeman_1_1execution_1_1get__delegation__scheduler__t.html", null ],

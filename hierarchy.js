@@ -39,6 +39,7 @@ var hierarchy =
       [ "beman::execution::get_scheduler_t", "structbeman_1_1execution_1_1get__scheduler__t.html", null ]
     ] ],
     [ "beman::execution::get_allocator_t", "structbeman_1_1execution_1_1get__allocator__t.html", null ],
+    [ "beman::execution::get_await_completion_adaptor_t", "structbeman_1_1execution_1_1get__await__completion__adaptor__t.html", null ],
     [ "beman::execution::get_completion_signatures_t", "structbeman_1_1execution_1_1get__completion__signatures__t.html", null ],
     [ "beman::execution::get_delegation_scheduler_t", "structbeman_1_1execution_1_1get__delegation__scheduler__t.html", null ],
     [ "beman::execution::get_domain_t", "structbeman_1_1execution_1_1get__domain__t.html", null ],

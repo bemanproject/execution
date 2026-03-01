@@ -56,6 +56,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "fwd_env.hpp", "fwd__env_8hpp_source.html", null ],
     [ "gather_signatures.hpp", "gather__signatures_8hpp_source.html", null ],
     [ "get_allocator.hpp", "get__allocator_8hpp_source.html", null ],
+    [ "get_await_completion_adaptor.hpp", "get__await__completion__adaptor_8hpp_source.html", null ],
     [ "get_awaiter.hpp", "get__awaiter_8hpp_source.html", null ],
     [ "get_completion_scheduler.hpp", "get__completion__scheduler_8hpp_source.html", null ],
     [ "get_completion_signatures.hpp", "get__completion__signatures_8hpp_source.html", null ],
