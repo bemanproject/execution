@@ -240,10 +240,10 @@ struct let_t {
             using unique_t    = ::beman::execution::detail::meta::unique<tuples_t>;
             using args_t      = ::beman::execution::detail::meta::prepend<std::monostate, unique_t>;
             using ops_t       = ::beman::execution::detail::meta::prepend<
-                      ::std::monostate,
-                      ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::transform<
-                          to_state<fun_t, ::std::remove_cvref_t<Receiver>, env_t>::template trans,
-                          tuples_t>>>;
+                ::std::monostate,
+                ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::transform<
+                    to_state<fun_t, ::std::remove_cvref_t<Receiver>, env_t>::template trans,
+                    tuples_t>>>;
 
             struct state_t {
                 fun_t  fun;

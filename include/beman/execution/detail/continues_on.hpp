@@ -104,7 +104,7 @@ auto get_domain_late(Sender&& sender, Env&&) {
 #else
 template <typename Env, typename... T>
 auto get_domain_late(
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, T...> const& sender, Env&&) {
+    const ::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, T...>& sender, Env&&) {
 #endif
     auto scheduler{sender.template get<1>()};
     return ::beman::execution::detail::query_with_default(

@@ -21,7 +21,7 @@ TEST(env) {
     [[maybe_unused]] test_std::env<> e0{};
     [[maybe_unused]] test_std::env   e1{test_std::prop(test_std::get_allocator, std::allocator<int>{})};
     [[maybe_unused]] test_std::env   e2{test_std::prop(test_std::get_allocator, std::allocator<int>{}),
-                                      test_std::prop(test_std::get_stop_token, source.get_token())};
+                                        test_std::prop(test_std::get_stop_token, source.get_token())};
     [[maybe_unused]] auto            a1 = e1.query(test_std::get_allocator);
     [[maybe_unused]] auto            a2 = e2.query(test_std::get_allocator);
     [[maybe_unused]] auto            s2 = e2.query(test_std::get_stop_token);
