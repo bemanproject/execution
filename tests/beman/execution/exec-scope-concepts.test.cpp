@@ -32,7 +32,7 @@ static_assert(not std::copyable<non_copyable>);
 
 struct empty {};
 
-template <test_std::sender S>
+template <typename S>
 struct wrap {
     using sender_concept = test_std::sender_t;
     std::remove_cvref_t<S> sndr;
