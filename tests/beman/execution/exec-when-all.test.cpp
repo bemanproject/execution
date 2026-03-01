@@ -97,7 +97,7 @@ struct test_sender {
         auto          set_error(auto&& error) && noexcept -> void {
             if constexpr (std::same_as<Tag, test_std::set_error_t> && 1u == std::tuple_size_v<Result>)
                 if constexpr (std::same_as<std::decay_t<std::tuple_element_t<0, Result>>,
-                                                    std::decay_t<decltype(error)>>)
+                                           std::decay_t<decltype(error)>>)
                     test_std::set_value(std::move(receiver), this->expect == std::tie(error));
                 else
                     test_std::set_value(std::move(receiver), false);

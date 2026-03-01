@@ -83,9 +83,9 @@ struct into_variant_t {
         static consteval auto get() {
             using variant_type = ::beman::execution::value_types_of_t<Child, Env>;
             using value_types  = ::std::conditional_t<
-                 ::std::same_as<variant_type, ::beman::execution::detail::empty_variant>,
-                 ::beman::execution::completion_signatures<>,
-                 ::beman::execution::completion_signatures<::beman::execution::set_value_t(variant_type)>>;
+                ::std::same_as<variant_type, ::beman::execution::detail::empty_variant>,
+                ::beman::execution::completion_signatures<>,
+                ::beman::execution::completion_signatures<::beman::execution::set_value_t(variant_type)>>;
 
             using error_types = ::beman::execution::error_types_of_t<Child, Env, make_error_types>;
             using stopped_types =

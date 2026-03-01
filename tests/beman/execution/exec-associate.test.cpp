@@ -191,7 +191,7 @@ TEST(exec_associate) {
     {
         auto snd = test_std::just(true) | test_std::associate(expired_token{}) |
                    test_std::upon_stopped([]() noexcept { return false; });
-        auto r = test_std::sync_wait(std::move(snd));
+        auto r   = test_std::sync_wait(std::move(snd));
         ASSERT(r.has_value());
         ASSERT((std::get<0>(r.value()) == false));
     }
