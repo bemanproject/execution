@@ -5,6 +5,12 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_HAS_COMPLETIONS
 
 #include <beman/execution/detail/common.hpp>
+
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <type_traits>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.valid_completion_for;
@@ -17,12 +23,15 @@ import beman.execution.detail.valid_completion_for;
 
 namespace beman::execution::detail {
 
+template <typename Receiver, typename Completions>
+struct has_completions_impl : std::false_type {};
+
 template <typename Receiver, ::beman::execution::detail::valid_completion_for<Receiver>... Signatures>
-auto has_completions_test(::beman::execution::completion_signatures<Signatures...>*) noexcept -> void {}
+struct has_completions_impl<Receiver, ::beman::execution::completion_signatures<Signatures...>> : std::true_type {};
 
 template <typename Receiver, typename Completions>
-concept has_completions =
-    requires(Completions* completions) { ::beman::execution::detail::has_completions_test<Receiver>(completions); };
+concept has_completions = has_completions_impl<Receiver, Completions>::value;
+
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
