@@ -196,7 +196,7 @@ $(document).ready(function(){initNavTree('continues__on_8hpp_source.html',''); i
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="preprocessor">#else</span></div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Env, <span class="keyword">typename</span>... T&gt;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="keyword">auto</span> get_domain_late(</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    ::beman::execution::detail::basic_sender&lt;::beman::execution::detail::continues_on_t, T...&gt; <span class="keyword">const</span>&amp; sender, Env&amp;&amp;) {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    const ::beman::execution::detail::basic_sender&lt;::beman::execution::detail::continues_on_t, T...&gt;&amp; sender, Env&amp;&amp;) {</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keyword">auto</span> scheduler{sender.template get&lt;1&gt;()};</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    return ::beman::execution::detail::query_with_default(</div>

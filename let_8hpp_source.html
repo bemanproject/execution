@@ -342,10 +342,10 @@ $(document).ready(function(){initNavTree('let_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <span class="keyword">using </span>unique_t    = ::beman::execution::detail::meta::unique&lt;tuples_t&gt;;</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            <span class="keyword">using </span>args_t      = ::beman::execution::detail::meta::prepend&lt;std::monostate, unique_t&gt;;</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            <span class="keyword">using </span>ops_t       = ::beman::execution::detail::meta::prepend&lt;</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>                      ::std::monostate,</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                      ::beman::execution::detail::meta::unique&lt;::beman::execution::detail::meta::transform&lt;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                          to_state&lt;fun_t, ::std::remove_cvref_t&lt;Receiver&gt;, env_t&gt;::template trans,</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                          tuples_t&gt;&gt;&gt;;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>                ::std::monostate,</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                ::beman::execution::detail::meta::unique&lt;::beman::execution::detail::meta::transform&lt;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                    to_state&lt;fun_t, ::std::remove_cvref_t&lt;Receiver&gt;, env_t&gt;::template trans,</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    tuples_t&gt;&gt;&gt;;</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            <span class="keyword">struct </span>state_t {</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                fun_t  fun;</div>
