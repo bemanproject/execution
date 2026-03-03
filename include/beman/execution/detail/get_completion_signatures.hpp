@@ -93,7 +93,7 @@ consteval auto get_completion_signatures() -> ::beman::execution::detail::valid_
                        })
         return get_complsigs.template operator()<new_sender_type>();
     else if constexpr (::beman::execution::detail::is_awaitable<new_sender_type,
-                                                                ::beman::execution::detail::env_promise<Env...>>) {
+                                                                ::beman::execution::detail::env_promise<Env>...>) {
         using result_type = ::beman::execution::detail::
             await_result_type<new_sender_type, ::beman::execution::detail::env_promise<::std::tuple<Env...>>>;
         if constexpr (::std::same_as<void, result_type>) {
