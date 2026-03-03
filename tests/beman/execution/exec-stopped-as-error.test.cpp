@@ -9,11 +9,11 @@
 import beman.execution;
 import beman.execution.detail;
 #else
-#include <beman/test_std/detail/just.hpp>
-#include <beman/test_std/detail/receiver.hpp>
-#include <beman/test_std/detail/sender.hpp>
-#include <beman/test_std/detail/stopped_as_error.hpp>
-#include <beman/test_std/detail/sync_wait.hpp>
+#include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/stopped_as_error.hpp>
+#include <beman/execution/detail/sync_wait.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -37,6 +37,7 @@ struct optional_sender {
         struct state {
             using operation_state_concept = test_std::operation_state_t;
             auto start() & noexcept -> void {
+                test::use_type<operation_state_concept>(); // make -Werror=unused-local-typedefs happy
                 if (opt_) {
                     test_std::set_value(std::move(rcvr_), *opt_);
                 } else {
