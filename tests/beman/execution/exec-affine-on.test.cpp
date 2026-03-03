@@ -81,7 +81,7 @@ struct test_scheduler {
         }
     };
     struct sender {
-        using sender_concept        = test_std::sender_t;
+        using sender_concept = test_std::sender_t;
         template <typename, typename...>
         static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
             return {};

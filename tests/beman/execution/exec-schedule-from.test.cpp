@@ -30,7 +30,7 @@ struct scheduler {
             std::remove_cvref_t<Receiver> receiver;
             auto start() & noexcept -> void { test_std::set_value(::std::move(this->receiver)); }
         };
-        using sender_concept        = test_std::sender_t;
+        using sender_concept = test_std::sender_t;
         template <typename, typename...>
         static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
             return {};
@@ -46,7 +46,7 @@ struct scheduler {
     auto operator==(const scheduler&) const -> bool = default;
 };
 struct sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept = test_std::sender_t;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
         return {};

@@ -1028,30 +1028,30 @@ auto test_basic_operation() -> void {
     ASSERT(data == 4);
 }
 
-    struct arg {};
-    struct local_env {};
-    struct completion_signatures_for_sender {
-        using sender_concept = test_std::sender_t;
-        using empty_env_sigs = test_std::completion_signatures<test_std::set_value_t(arg)>;
-        using env_sigs       = test_std::completion_signatures<test_std::set_value_t(arg, arg)>;
+struct arg {};
+struct local_env {};
+struct completion_signatures_for_sender {
+    using sender_concept = test_std::sender_t;
+    using empty_env_sigs = test_std::completion_signatures<test_std::set_value_t(arg)>;
+    using env_sigs       = test_std::completion_signatures<test_std::set_value_t(arg, arg)>;
 
-        template <typename, typename... E>
-        static consteval auto get_completion_signatures() {
-            if constexpr (sizeof...(E) == 1) {
-                if constexpr ((std::same_as<test_std::env<>, E> && ... && true)) {
-                    return empty_env_sigs{};
-                } else if constexpr ((std::same_as<local_env, E> && ... && true)) {
-                    return env_sigs{};
-                }
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() {
+        if constexpr (sizeof...(E) == 1) {
+            if constexpr ((std::same_as<test_std::env<>, E> && ... && true)) {
+                return empty_env_sigs{};
+            } else if constexpr ((std::same_as<local_env, E> && ... && true)) {
+                return env_sigs{};
             }
         }
-    };
+    }
+};
 
-    auto test_completion_signatures_for() -> void {
-        struct bad_env {};
-        static_assert(test_std::sender_in<completion_signatures_for_sender, test_std::env<>>);
-        static_assert(test_std::sender_in<completion_signatures_for_sender, local_env>);
-        //-dk:TODO restore test static_assert(not test_std::sender_in<completion_signatures_for_sender, bad_env>);
+auto test_completion_signatures_for() -> void {
+    struct bad_env {};
+    static_assert(test_std::sender_in<completion_signatures_for_sender, test_std::env<>>);
+    static_assert(test_std::sender_in<completion_signatures_for_sender, local_env>);
+    //-dk:TODO restore test static_assert(not test_std::sender_in<completion_signatures_for_sender, bad_env>);
 
 #if 0
         //-dk:TODO restore completion_signatures_for tests or remove completion_signatures for
@@ -1064,11 +1064,11 @@ auto test_basic_operation() -> void {
             completion_signatures_for_sender::env_sigs
         >);
 #endif
-        static_assert(
-            not test_detail::valid_completion_signatures<test_detail::no_completion_signatures_defined_in_sender>);
-        static_assert(std::same_as<test_detail::completion_signatures_for<completion_signatures_for_sender, bad_env>,
-                                   test_detail::no_completion_signatures_defined_in_sender>);
-    }
+    static_assert(
+        not test_detail::valid_completion_signatures<test_detail::no_completion_signatures_defined_in_sender>);
+    static_assert(std::same_as<test_detail::completion_signatures_for<completion_signatures_for_sender, bad_env>,
+                               test_detail::no_completion_signatures_defined_in_sender>);
+}
 
 struct basic_sender_tag {
     template <typename>

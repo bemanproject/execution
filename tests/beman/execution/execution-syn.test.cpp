@@ -53,7 +53,7 @@ struct no_value_env {};
 struct single_type_sender {
     struct arg {};
     struct error {};
-    using sender_concept  = test_std::sender_t;
+    using sender_concept      = test_std::sender_t;
     using test_signatures     = test_std::completion_signatures<test_std::set_error_t(error),
                                                                 test_std::set_error_t(int),
                                                                 test_std::set_value_t(arg&),
@@ -79,7 +79,7 @@ struct single_type_sender {
 
 struct void_sender {
     struct error {};
-    using sender_concept        = test_std::sender_t;
+    using sender_concept = test_std::sender_t;
     template <typename, typename...>
     static consteval auto get_completion_signatures() {
         return test_std::completion_signatures<test_std::set_error_t(error),
@@ -91,7 +91,7 @@ struct void_sender {
 
 struct no_value_sender {
     struct error {};
-    using sender_concept        = test_std::sender_t;
+    using sender_concept = test_std::sender_t;
     template <typename, typename...>
     static consteval auto get_completion_signatures() {
 
@@ -104,7 +104,7 @@ struct no_value_sender {
 struct multi_single_sender {
     struct arg {};
     struct error {};
-    using sender_concept        = test_std::sender_t;
+    using sender_concept = test_std::sender_t;
     template <typename, typename...>
     static consteval auto get_completion_signatures() {
         return test_std::completion_signatures<test_std::set_error_t(error),
@@ -118,7 +118,7 @@ struct multi_single_sender {
 struct multi_type_sender {
     struct arg {};
     struct error {};
-    using sender_concept        = test_std::sender_t;
+    using sender_concept = test_std::sender_t;
     template <typename, typename...>
     static consteval auto get_completion_signatures() {
         return test_std::completion_signatures<test_std::set_error_t(error),
@@ -183,7 +183,7 @@ struct sender_with_get {
     using sender_concept = test_std::sender_t;
 
     using empty_sigs = test_std::completion_signatures<test_std::set_value_t(arg), test_std::set_stopped_t()>;
-    using env_sigs = test_std::completion_signatures<test_std::set_value_t(arg, arg), test_std::set_stopped_t()>;
+    using env_sigs   = test_std::completion_signatures<test_std::set_value_t(arg, arg), test_std::set_stopped_t()>;
 
     template <typename, typename... E>
     static consteval auto get_completion_signatures() {

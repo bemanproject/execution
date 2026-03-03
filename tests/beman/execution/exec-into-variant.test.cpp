@@ -27,7 +27,7 @@ struct sender {
 };
 template <typename Signatures = test_std::completion_signatures<>, typename... T>
 struct sender_in {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept = test_std::sender_t;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> Signatures {
         return {};

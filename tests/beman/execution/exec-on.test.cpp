@@ -120,7 +120,7 @@ TEST(exec_on) {
     assert(on_id != std::this_thread::get_id());
 
 #if 0
-    //-dk:TODO 
+    //-dk:TODO
     test_std::sync_wait(test_std::just(17) | test_std::on(pool.get_scheduler(), test_std::then([&on_id](int val) {
                                                               assert(val == 17);
                                                               on_id = std::this_thread::get_id();
