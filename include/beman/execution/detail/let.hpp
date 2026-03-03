@@ -174,8 +174,8 @@ struct let_t {
         template <template <typename...> class L, typename... C>
         struct get_completions<L<C...>> {
             using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
-                decltype(::beman::execution::get_completion_signatures<typename apply_decayed<C>::sender_type,
-                                                                       Env...>())...>>;
+                ::beman::execution::completion_signatures<>,
+                ::beman::execution::completion_signatures_of_t<typename apply_decayed<C>::sender_type, Env...>...>>;
         };
 
         using upstream_env         = typename let_upstream_env_helper<Child, 0 < sizeof...(Env), Env...>::type;
@@ -183,8 +183,9 @@ struct let_t {
         using other_completions    = ::beman::execution::detail::meta::filter<other_completion, upstream_completions>;
         using matching_completions =
             ::beman::execution::detail::meta::filter<matching_completion, upstream_completions>;
-        using type = ::beman::execution::detail::meta::combine<typename get_completions<matching_completions>::type,
-                                                               other_completions>;
+        using type = ::beman::execution::detail::meta::unique<
+            ::beman::execution::detail::meta::combine<typename get_completions<matching_completions>::type,
+                                                      other_completions>>;
     };
 
   public:

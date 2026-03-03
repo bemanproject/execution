@@ -21,11 +21,11 @@ import beman.execution.detail.is_awaiter;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <typename T, typename Promise>
-concept is_awaitable = requires(Promise& promise) {
+template <typename T, typename... Promise>
+concept is_awaitable = requires(Promise&... promise) {
     {
-        ::beman::execution::detail::get_awaiter(::std::declval<T>(), promise)
-    } -> ::beman::execution::detail::is_awaiter<Promise>;
+        ::beman::execution::detail::get_awaiter(::std::declval<T>(), promise...)
+    } -> ::beman::execution::detail::is_awaiter<Promise...>;
 };
 } // namespace beman::execution::detail
 

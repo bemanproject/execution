@@ -58,6 +58,8 @@ list(
     exec-spawn.test
     exec-starts-on.test
     exec-stop-when.test
+    exec-stopped-as-error.test
+    exec-stopped-as-optional.test
     exec-sync-wait.test
     exec-then.test
     exec-utils-cmplsigs.test

@@ -25,6 +25,7 @@ export import beman.execution.detail.env_of_t;
 export import beman.execution.detail.error_types_of_t; // [exec.getcomplsigs], completion signatures
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
+import beman.execution.detail.get_await_completion_adaptor;
 export import beman.execution.detail.get_completion_scheduler;
 export import beman.execution.detail.get_completion_signatures; // [exec.getcomplsigs], completion signatures
 import beman.execution.detail.get_delegation_scheduler;
@@ -64,6 +65,8 @@ export import beman.execution.detail.stop_callback_for_t;
 export import beman.execution.detail.stop_source; // [stopsource], class stop_source
 import beman.execution.detail.stop_token_of_t;
 import beman.execution.detail.stoppable_source;
+import beman.execution.detail.stopped_as_error;
+import beman.execution.detail.stopped_as_optional;
 import beman.execution.detail.sync_wait;
 export import beman.execution.detail.tag_of_t; // [exec.getcomplsigs], completion signatures
 import beman.execution.detail.then;
@@ -128,11 +131,13 @@ export using ::beman::execution::stop_token_of_t;
 export using ::beman::execution::get_domain_t;
 export using ::beman::execution::get_scheduler_t;
 export using ::beman::execution::get_delegation_scheduler_t;
+export using ::beman::execution::get_await_completion_adaptor_t;
 //-dk:TODO export using ::beman::execution::get_forward_progress_guarantee_t;
 
 export using ::beman::execution::get_domain;
 export using ::beman::execution::get_scheduler;
 export using ::beman::execution::get_delegation_scheduler;
+export using ::beman::execution::get_await_completion_adaptor;
 //-dk:TODO export using ::beman::execution::forward_progress_guarantee;
 //-dk:TODO export using ::beman::execution::get_forward_progress_guarantee;
 
@@ -195,8 +200,8 @@ export using ::beman::execution::bulk_t;
 export using ::beman::execution::when_all_t;
 export using ::beman::execution::when_all_with_variant_t;
 export using ::beman::execution::into_variant_t;
-//-dk:TODO export using ::beman::execution::stopped_as_optional_t;
-//-dk:TODO export using ::beman::execution::stopped_as_error_t;
+export using ::beman::execution::stopped_as_optional_t;
+export using ::beman::execution::stopped_as_error_t;
 
 export using ::beman::execution::starts_on;
 export using ::beman::execution::continues_on;
@@ -213,8 +218,8 @@ export using ::beman::execution::bulk;
 export using ::beman::execution::when_all;
 export using ::beman::execution::when_all_with_variant;
 export using ::beman::execution::into_variant;
-//-dk:TODO export using ::beman::execution::stopped_as_optional;
-//-dk:TODO export using ::beman::execution::stopped_as_error;
+export using ::beman::execution::stopped_as_optional;
+export using ::beman::execution::stopped_as_error;
 
 // [exec.util.cmplsig.trans]
 //-dk:TODO export using ::beman::execution::transform_completion_signatures;
