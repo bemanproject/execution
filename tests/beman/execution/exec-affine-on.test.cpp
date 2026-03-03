@@ -81,8 +81,11 @@ struct test_scheduler {
         }
     };
     struct sender {
-        using sender_concept        = test_std::sender_t;
-        using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+        using sender_concept = test_std::sender_t;
+        template <typename, typename...>
+        static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
+            return {};
+        }
         data* data_;
         struct env {
             data* data_;
@@ -152,7 +155,7 @@ TEST(affine_on) {
     static_assert(test_std::sender<decltype(test_std::affine_on(test_std::just(42)))>);
     static_assert(test_std::sender<decltype(test_std::just(42) | test_std::affine_on())>);
 
-    static_assert(not test_std::sender_in<decltype(test_std::affine_on(test_std::just(42))), test_std::env<>>);
+    static_assert(test_std::sender_in<decltype(test_std::affine_on(test_std::just(42))), test_std::env<>>);
 
     test_std::run_loop loop;
     auto               r{receiver(loop.get_scheduler())};

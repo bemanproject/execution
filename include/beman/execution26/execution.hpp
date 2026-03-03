@@ -36,7 +36,6 @@ using ::beman::execution::get_allocator_t;
 using ::beman::execution::get_completion_scheduler;
 using ::beman::execution::get_completion_scheduler_t;
 using ::beman::execution::get_completion_signatures;
-using ::beman::execution::get_completion_signatures_t;
 using ::beman::execution::get_delegation_scheduler;
 using ::beman::execution::get_delegation_scheduler_t;
 using ::beman::execution::get_domain;

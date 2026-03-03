@@ -7,6 +7,5 @@ module;
 export module beman.execution.detail.get_completion_signatures;
 
 namespace beman::execution {
-export using beman::execution::get_completion_signatures_t;
 export using beman::execution::get_completion_signatures;
 } // namespace beman::execution

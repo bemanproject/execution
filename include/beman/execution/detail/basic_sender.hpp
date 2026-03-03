@@ -64,7 +64,6 @@ inline constexpr sub_apply_t sub_apply{};
 template <typename Tag, typename Data, typename... Child>
 struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child...> {
     //-dk:TODO friend struct ::beman::execution::detail::connect_t;
-    //-dk:TODO friend struct ::beman::execution::get_completion_signatures_t;
     using sender_concept = ::beman::execution::sender_t;
     using indices_for    = ::std::index_sequence_for<Child...>;
     static constexpr ::std::integral_constant<::std::size_t, sizeof...(Child) + 2> size{};
@@ -111,7 +110,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
     }
 #endif
     template <::beman::execution::detail::decays_to<basic_sender> Self, typename... Env>
-    consteval auto get_completion_signatures(this Self&&, Env&&...) noexcept {
+    static consteval auto get_completion_signatures() noexcept {
         if constexpr (requires { Tag::template get_completion_signatures<Self, Env...>(); })
             return Tag::template get_completion_signatures<Self, Env...>();
         else

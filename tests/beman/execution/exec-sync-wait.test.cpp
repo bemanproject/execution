@@ -36,6 +36,10 @@ struct sender_in {
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(bool, int),
                                                                   test_std::set_error_t(error),
                                                                   test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {
@@ -56,6 +60,10 @@ struct send_error {
     using sender_concept        = test_std::sender_t;
     using completion_signatures = test_std::
         completion_signatures<test_std::set_value_t(), test_std::set_error_t(error), test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {
@@ -79,6 +87,10 @@ struct send_stopped {
     using sender_concept        = test_std::sender_t;
     using completion_signatures = test_std::
         completion_signatures<test_std::set_value_t(), test_std::set_error_t(error), test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {

@@ -29,8 +29,11 @@ struct scheduler {
             std::remove_cvref_t<Receiver> receiver;
             auto start() & noexcept -> void { test_std::set_value(::std::move(this->receiver)); }
         };
-        using sender_concept        = test_std::sender_t;
-        using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+        using sender_concept = test_std::sender_t;
+        template <typename, typename...>
+        static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
+            return {};
+        }
         auto get_env() const noexcept -> env { return {}; }
         template <test_std::receiver Receiver>
         auto connect(Receiver&& receiver) -> state<Receiver> {
@@ -42,8 +45,11 @@ struct scheduler {
     auto operator==(const scheduler&) const -> bool = default;
 };
 struct sender {
-    using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+    using sender_concept = test_std::sender_t;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {
@@ -69,8 +75,8 @@ template <typename Scheduler, typename Sender>
 auto test_use(Scheduler&& scheduler, Sender&& sender) -> void {
     auto s{test_std::starts_on(::std::forward<Scheduler>(scheduler), ::std::forward<Sender>(sender))};
     test::use(s);
-    // test::check_type<void>(s);
-    // test::check_type<void>(test_std::get_completion_signatures(s, test_std::test_std::env<>{}));
+    //-dk:TODO test::check_type<void>(s);
+    //-dk:TODO test::check_type<void>(test_std::get_completion_signatures(s, test_std::test_std::env<>{}));
     test_std::sync_wait(std::move(s));
 }
 } // namespace

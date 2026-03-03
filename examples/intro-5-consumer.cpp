@@ -112,6 +112,10 @@ struct expected_to_channel_t {
         // -> + sends_stopped<CSender...> -> set_stopped_t()
         // -> unique
         using completion_signatures = ex::completion_signatures<ex::set_value_t(success), ex::set_error_t(failure)>;
+        template <typename...>
+        static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+            return {};
+        }
         CSender child_sender;
 
         template <ex::receiver Receiver>

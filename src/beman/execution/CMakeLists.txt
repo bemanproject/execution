@@ -68,6 +68,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decays_to.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_impls.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/emplace_from.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env_of_t.hpp
@@ -101,6 +102,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/intrusive_stack.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_awaitable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_awaiter.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_constant.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/join_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/just.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/let.hpp
@@ -248,6 +250,7 @@ if(BEMAN_USE_MODULES)
                     decays_to.cppm
                     default_domain.cppm
                     default_impls.cppm
+                    dependent_sender_error.cppm
                     emplace_from.cppm
                     enable_sender.cppm
                     env_of_t.cppm
@@ -282,6 +285,7 @@ if(BEMAN_USE_MODULES)
                     intrusive_stack.cppm
                     is_awaitable.cppm
                     is_awaiter.cppm
+                    is_constant.cppm
                     is_sender.cppm
                     join_env.cppm
                     just.cppm

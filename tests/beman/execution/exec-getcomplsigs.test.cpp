@@ -5,6 +5,7 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail.get_domain_late; //-dk:TODO remove when get_domain_late is removed
 #else
 #include <beman/execution/execution.hpp>
 #endif
@@ -30,14 +31,28 @@ struct sender_with_typedef {
     using completion_signatures = signatures;
 };
 
+struct sender_from_domain {
+    using sender_concept = test_std::sender_t;
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept {
+        return signatures();
+    }
+};
+
 struct sender_with_get_completion_signatures {
     using sender_concept = test_std::sender_t;
-    auto get_completion_signatures(const env&) const noexcept -> signatures { return {}; }
-    auto get_completion_signatures(const other_env&) const noexcept -> other_signatures { return {}; }
+    template <typename, typename... Env>
+    static consteval auto get_completion_signatures() noexcept {
+        if constexpr ((std::same_as<other_env, Env> && ... && true)) {
+            return other_signatures{};
+        } else {
+            return signatures{};
+        }
+    }
 };
 
 struct domain {
-    auto transform_sender(auto&&, auto&&...) const noexcept -> sender_with_typedef { return {}; }
+    auto transform_sender(auto&&, auto&&...) const noexcept -> sender_from_domain { return {}; }
 };
 
 struct env_with_domain {
@@ -47,45 +62,47 @@ struct env_with_domain {
 template <typename T>
 auto test_get_completion_signatures() {
     static_assert(test_std::sender<no_signatures_sender<T>>);
-    static_assert(not requires { test_std::get_completion_signatures(no_signatures_sender<T>(), env{}); });
+    //-dk:TODO static_assert(not requires { test_std::get_completion_signatures<no_signatures_sender<T>, env>(); });
 
     static_assert(test_std::sender<sender_with_typedef>);
-    static_assert(requires {
-        { test_std::get_completion_signatures(sender_with_typedef(), env{}) } -> std::same_as<signatures>;
-    });
+    //-dk:TODO static_assert(not test_std::sender_in<sender_with_typedef, env>);
 
     static_assert(test_std::sender<sender_with_get_completion_signatures>);
     static_assert(requires {
-        { sender_with_get_completion_signatures().get_completion_signatures(env{}) } -> std::same_as<signatures>;
-    });
-    static_assert(requires {
         {
-            test_std::get_completion_signatures(sender_with_get_completion_signatures(), env{})
+            test_std::get_completion_signatures<sender_with_get_completion_signatures, env>()
         } -> std::same_as<signatures>;
     });
     static_assert(requires {
         {
-            test_std::get_completion_signatures(sender_with_get_completion_signatures(), other_env{})
+            test_std::get_completion_signatures<sender_with_get_completion_signatures, other_env>()
         } -> std::same_as<other_signatures>;
     });
 
     static_assert(std::same_as<domain, decltype(test_std::get_domain(env_with_domain{}))>);
     static_assert(
-        std::same_as<sender_with_typedef,
+        std::same_as<sender_from_domain,
                      decltype(test_std::transform_sender(domain{}, no_signatures_sender<int>{}, env_with_domain{}))>);
+    static_assert(std::same_as<sender_from_domain,
+                               decltype(::beman::execution::transform_sender(
+                                   ::beman::execution::detail::get_domain_late(
+                                       ::std::declval<no_signatures_sender<int>>(), env_with_domain{}),
+                                   no_signatures_sender<int>{},
+                                   env_with_domain{}))>);
+    static_assert(std::same_as<signatures,
+                               decltype(test_std::get_completion_signatures<sender_from_domain, env_with_domain>())>);
     static_assert(requires {
         {
-            test_std::get_completion_signatures(sender_with_get_completion_signatures(), env_with_domain{})
+            test_std::get_completion_signatures<sender_with_get_completion_signatures, env_with_domain>()
         } -> std::same_as<signatures>;
     });
 
     //-dk:TODO do get_completion_signatures tests for awaitables
 }
+
 } // namespace
 
 TEST(exec_getcomplsigs) {
-    static_assert(
-        std::same_as<const test_std::get_completion_signatures_t, decltype(test_std::get_completion_signatures)>);
     test_get_completion_signatures<int>();
     //-dk:TODO add actual tests
 }

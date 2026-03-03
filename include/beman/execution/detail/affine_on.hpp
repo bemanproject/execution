@@ -14,7 +14,9 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.env;
 import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
@@ -130,16 +132,18 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
         requires ::beman::execution::detail::sender_for<Sender, affine_on_t> && requires(const Env& env) {
             { ::beman::execution::get_scheduler(env) } -> ::beman::execution::scheduler;
             { ::beman::execution::schedule(::beman::execution::get_scheduler(env)) } -> ::beman::execution::sender;
-            {
-                ::beman::execution::get_completion_signatures(
-                    ::beman::execution::schedule(::beman::execution::get_scheduler(env)),
-                    ::beman::execution::detail::join_env(
-                        ::beman::execution::env{::beman::execution::prop{
-                            ::beman::execution::get_stop_token, ::beman::execution::never_stop_token{}, {}}},
-                        env))
-            } -> ::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>;
         }
     static auto transform_sender(Sender&& sender, const Env& ev) {
+        static_assert(requires {
+            {
+                ::beman::execution::get_completion_signatures<
+                    decltype(::beman::execution::schedule(::beman::execution::get_scheduler(ev))),
+                    decltype(::beman::execution::detail::join_env(
+                        ::beman::execution::env{::beman::execution::prop{
+                            ::beman::execution::get_stop_token, ::beman::execution::never_stop_token{}, {}}},
+                        ev))>()
+            } -> ::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>;
+        });
         //[[maybe_unused]] auto& [tag, data, child] = sender;
         auto& child       = sender.template get<2>();
         using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
@@ -154,6 +158,20 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
                     ::beman::execution::write_env(::beman::execution::detail::forward_like<Sender>(child), ev)),
                 beman::execution::detail::affine_on_env(ev));
         }
+    }
+    template <typename, typename...>
+    struct get_signatures;
+
+    template <typename Data, typename Child, typename... Env>
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::affine_on_t, Data, Child>,
+        Env...> {
+        using type = ::beman::execution::completion_signatures_of_t<Child, Env...>;
+    };
+
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
     }
 };
 

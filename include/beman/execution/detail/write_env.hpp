@@ -39,6 +39,14 @@ import beman.execution.detail.sender;
 
 namespace beman::execution::detail {
 
+template <typename NewEnv, bool, typename... Env>
+struct write_env_env_type {
+    using type = decltype(::beman::execution::detail::join_env(::std::declval<NewEnv>(), ::std::declval<Env>()...));
+};
+template <typename NewEnv>
+struct write_env_env_type<NewEnv, false> {
+    using type = NewEnv;
+};
 struct write_env_t {
     template <::beman::execution::sender Sender, ::beman::execution::detail::queryable Env>
     constexpr auto operator()(Sender&& sender, Env&& env) const {
@@ -52,15 +60,15 @@ struct write_env_t {
     }
 
   private:
-    template <typename, typename>
+    template <typename, typename...>
     struct get_signatures;
-    template <typename NewEnv, typename Child, typename Env>
+    template <typename NewEnv, typename Child, typename... Env>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::write_env_t, NewEnv, Child>,
-        Env> {
-        using type = decltype(::beman::execution::get_completion_signatures(
-            ::std::declval<Child>(),
-            ::beman::execution::detail::join_env(::std::declval<NewEnv>(), ::std::declval<Env>())));
+        Env...> {
+        using type = decltype(::beman::execution::get_completion_signatures<
+                              Child,
+                              typename write_env_env_type<NewEnv, 0 < sizeof...(Env), Env...>::type>());
     };
 
   public:

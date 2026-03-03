@@ -122,6 +122,14 @@ auto test_sender() -> void {
     static_assert(test_std::sender<own_sender>);
 }
 
+struct sender_in {
+    using sender_concept = test_std::sender_t;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> test_std::completion_signatures<> {
+        return {};
+    }
+};
+
 auto test_sender_in() -> void {
     struct non_queryable {
         non_queryable()                                        = default;
@@ -133,11 +141,6 @@ auto test_sender_in() -> void {
     };
     struct queryable {};
     struct non_sender_in {};
-    struct sender_in {
-        using sender_concept        = test_std::sender_t;
-        using completion_signatures = test_std::completion_signatures<>;
-    };
-
     static_assert(test_std::sender<sender_in>);
     static_assert(not test_std::sender_in<non_sender_in>);
     static_assert(not test_std::sender_in<sender_in, non_queryable>);

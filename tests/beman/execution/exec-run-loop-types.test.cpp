@@ -88,12 +88,14 @@ TEST(exec_run_loop_types) {
         auto                         query(const test_std::get_stop_token_t&) const noexcept { return this->token; }
     };
     static_assert(::std::same_as<test_std::completion_signatures<test_std::set_value_t()>,
-                                 decltype(test_std::get_completion_signatures(sender, env{}))>);
+                                 decltype(test_std::get_completion_signatures<decltype(sender), env>())>);
     static_assert(
         ::std::same_as<test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>,
-                       decltype(test_std::get_completion_signatures(sender, token_env{source.get_token()}))>);
+                       decltype(test_std::get_completion_signatures<decltype(sender),
+                                                                    decltype(token_env{source.get_token()})>())>);
     // p7:
-    static_assert(test_std::receiver_of<receiver, decltype(test_std::get_completion_signatures(sender, env{}))>);
+    static_assert(
+        test_std::receiver_of<receiver, decltype(test_std::get_completion_signatures<decltype(sender), env>())>);
     // p7.1:
     static_assert(requires {
         { test_std::connect(sender, receiver{}) } noexcept -> test_std::operation_state;

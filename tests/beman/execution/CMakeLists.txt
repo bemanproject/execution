@@ -20,6 +20,7 @@ list(
     exec-env.test
     exec-fwd-env.test
     exec-general.test
+    exec-getcomplsigs.test
     exec-get-allocator.test
     exec-get-compl-sched.test
     exec-get-delegation-scheduler.test
@@ -27,7 +28,6 @@ list(
     exec-get-env.test
     exec-get-scheduler.test
     exec-get-stop-token.test
-    exec-getcomplsigs.test
     exec-into-variant.test
     exec-just.test
     exec-let.test

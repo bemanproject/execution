@@ -45,6 +45,10 @@ static_assert(ex::receiver<receiver>);
 struct await_stop {
     using sender_concept        = ex::sender_t;
     using completion_signatures = ex::completion_signatures<ex::set_value_t(), ex::set_stopped_t()>;
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+        return {};
+    }
 
     template <ex::receiver Receiver>
     struct state {
@@ -82,6 +86,10 @@ template <ex::sender Sender>
 struct eager {
     using sender_concept        = ex::sender_t;
     using completion_signatures = ex::completion_signatures<ex::set_value_t(), ex::set_stopped_t()>;
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+        return {};
+    }
 
     Sender sender;
 

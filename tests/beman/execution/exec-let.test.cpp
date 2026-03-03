@@ -32,6 +32,10 @@ template <typename... Sigs>
 struct test_sender {
     using sender_concept        = test_std::sender_t;
     using completion_signatures = test_std::completion_signatures<Sigs...>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return completion_signatures{};
+    }
 
     struct state {
         using operation_state_concept = test_std::operation_state_t;
@@ -59,7 +63,7 @@ auto test_let_value() {
                                    test_std::set_error_t(char)>();
             })};
     static_assert(test_std::sender<decltype(s2)>);
-    using type = decltype(test_std::get_completion_signatures(s2, test_std::env<>{}));
+    using type = decltype(test_std::get_completion_signatures<decltype(s2), test_std::env<>>());
     static_assert(std::same_as<type, type>);
     // static_assert(std::same_as<void, type>);
 
@@ -108,7 +112,7 @@ auto test_let_value_allocator() -> void {
     auto             s{ex::just(std::span(values)) | ex::let_value(fun()) | ex::then([](auto&&) noexcept {})};
     static_assert(test_std::sender<decltype(s)>);
     static_assert(test_std::sender_in<decltype(s)>);
-    // static_assert(std::same_as<void, decltype(test_std::get_completion_signatures(s, test_std::env<>{}))>);
+    //-dk:TODO static_assert(std::same_as<void, decltype(test_std::get_completion_signatures(s, test_std::env<>{}))>);
     ex::sync_wait(s);
 }
 

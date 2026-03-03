@@ -47,6 +47,10 @@ template <typename... T>
 struct sender {
     using sender_concept        = test_std::sender_t;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(T...)>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     struct state_base {
         virtual ~state_base()               = default;
@@ -448,7 +452,7 @@ auto test_spawn_future() {
             using exp_type  = test_std::completion_signatures<test_std::set_stopped_t(),
                                                               test_std::set_value_t(int),
                                                               test_std::set_error_t(std::exception_ptr)>;
-            using comp_type = decltype(test_std::get_completion_signatures(std::move(sndr), test_std::env<>{}));
+            using comp_type = decltype(test_std::get_completion_signatures<decltype(sndr), test_std::env<>>());
             static_assert(test_detail::meta::contain_same<exp_type, comp_type>);
 
             handle->complete(17);

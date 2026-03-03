@@ -134,9 +134,9 @@ struct beman::execution::detail::stop_when_t::sender {
         }
     };
 
-    template <typename E>
-    auto get_completion_signatures(const E& e) const noexcept {
-        return ::beman::execution::get_completion_signatures(this->sndr, e);
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() noexcept {
+        return ::beman::execution::get_completion_signatures<std::remove_cvref_t<Sndr>, E...>();
     }
     template <::beman::execution::receiver Rcvr>
     auto connect(Rcvr&& rcvr) && -> state<Rcvr> {

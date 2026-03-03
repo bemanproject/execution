@@ -17,6 +17,10 @@ namespace ex = beman::execution;
 struct task {
     using sender_concept        = ex::sender_t;
     using completion_signatures = ex::completion_signatures<ex::set_value_t()>;
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+        return {};
+    }
 
     struct base {
         virtual void complete_value() noexcept   = 0;
