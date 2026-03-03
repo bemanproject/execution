@@ -30,6 +30,9 @@ var hierarchy =
     [ "beman::execution::detail::env_base< Envs >", null, [
       [ "beman::execution::env< Envs >", "structbeman_1_1execution_1_1env.html", null ]
     ] ],
+    [ "std::exception", null, [
+      [ "beman::execution::dependent_sender_error", "structbeman_1_1execution_1_1dependent__sender__error.html", null ]
+    ] ],
     [ "tst::timer::when_done_sender::state< Receiver >::execute", "structtst_1_1timer_1_1when__done__sender_1_1state_1_1execute.html", null ],
     [ "std::false_type", null, [
       [ "tst::add_set_value< Sender >::is_set_value< S >", "structtst_1_1add__set__value_1_1is__set__value.html", null ]
@@ -40,7 +43,6 @@ var hierarchy =
     ] ],
     [ "beman::execution::get_allocator_t", "structbeman_1_1execution_1_1get__allocator__t.html", null ],
     [ "beman::execution::get_await_completion_adaptor_t", "structbeman_1_1execution_1_1get__await__completion__adaptor__t.html", null ],
-    [ "beman::execution::get_completion_signatures_t", "structbeman_1_1execution_1_1get__completion__signatures__t.html", null ],
     [ "beman::execution::get_delegation_scheduler_t", "structbeman_1_1execution_1_1get__delegation__scheduler__t.html", null ],
     [ "beman::execution::get_domain_t", "structbeman_1_1execution_1_1get__domain__t.html", null ],
     [ "beman::execution::get_env_t", "structbeman_1_1execution_1_1get__env__t.html", null ],
