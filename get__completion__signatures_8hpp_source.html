@@ -195,7 +195,7 @@ $(document).ready(function(){initNavTree('get__completion__signatures_8hpp_sourc
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                       })</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keywordflow">return</span> get_complsigs.template <span class="keyword">operator</span>()&lt;new_sender_type&gt;();</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::beman::execution::detail::is_awaitable&lt;new_sender_type,</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                                                                ::beman::execution::detail::env_promise&lt;Env...&gt;&gt;) {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                                                                ::beman::execution::detail::env_promise&lt;Env&gt;...&gt;) {</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="keyword">using </span>result_type = ::beman::execution::detail::</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            await_result_type&lt;new_sender_type, ::beman::execution::detail::env_promise&lt;::std::tuple&lt;Env...&gt;&gt;&gt;;</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::std::same_as&lt;void, result_type&gt;) {</div>

@@ -19,6 +19,8 @@ var hierarchy =
       [ "beman::execution::sender_adaptor_closure< bulk_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< composed_sender_adaptor_closure< Inner, Outer > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< stopped_as_error_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< stopped_as_optional_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< then_t< Completion > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< D >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ]
     ] ],

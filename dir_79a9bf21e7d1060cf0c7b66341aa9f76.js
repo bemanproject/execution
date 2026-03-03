@@ -152,6 +152,8 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "stop_when.hpp", "stop__when_8hpp_source.html", null ],
     [ "stoppable_source.hpp", "stoppable__source_8hpp_source.html", null ],
     [ "stoppable_token.hpp", "stoppable__token_8hpp_source.html", null ],
+    [ "stopped_as_error.hpp", "stopped__as__error_8hpp_source.html", null ],
+    [ "stopped_as_optional.hpp", "stopped__as__optional_8hpp_source.html", null ],
     [ "suppress_pop.hpp", "suppress__pop_8hpp_source.html", null ],
     [ "suppress_push.hpp", "suppress__push_8hpp_source.html", null ],
     [ "suspend_complete.hpp", "suspend__complete_8hpp_source.html", null ],

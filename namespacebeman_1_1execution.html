@@ -313,6 +313,12 @@ template&lt;class Token , class CallbackFun &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a0723e69a00079eaf4cef95dbc668890c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>stop_token_of_t</b> = ::std::remove_cvref_t&lt; decltype(::beman::execution::get_stop_token(::std::declval&lt; T &gt;()))&gt;</td></tr>
 <tr class="separator:a0723e69a00079eaf4cef95dbc668890c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a547b4f4e81b87106d1d11457b913fef0"><td class="memItemLeft" align="right" valign="top"><a id="a547b4f4e81b87106d1d11457b913fef0" name="a547b4f4e81b87106d1d11457b913fef0"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>stopped_as_error_t</b> = ::beman::execution::detail::stopped_as_error_t</td></tr>
+<tr class="separator:a547b4f4e81b87106d1d11457b913fef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4557bf3df190189b047bbcd3b83f26c"><td class="memItemLeft" align="right" valign="top"><a id="ae4557bf3df190189b047bbcd3b83f26c" name="ae4557bf3df190189b047bbcd3b83f26c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>stopped_as_optional_t</b> = ::beman::execution::detail::stopped_as_optional_t</td></tr>
+<tr class="separator:ae4557bf3df190189b047bbcd3b83f26c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8489dd5027adc6e6cb41ced184520df9"><td class="memItemLeft" align="right" valign="top"><a id="a8489dd5027adc6e6cb41ced184520df9" name="a8489dd5027adc6e6cb41ced184520df9"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sync_wait_t</b> = ::beman::execution::detail::sync_wait_t</td></tr>
 <tr class="separator:a8489dd5027adc6e6cb41ced184520df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -516,6 +522,12 @@ constexpr <a class="el" href="structbeman_1_1execution_1_1start__t.html">start_t
 <tr class="memitem:a95377102421566b05cd68f612ce76c0d"><td class="memItemLeft" align="right" valign="top"><a id="a95377102421566b05cd68f612ce76c0d" name="a95377102421566b05cd68f612ce76c0d"></a>
 constexpr ::beman::execution::detail::starts_on_t&#160;</td><td class="memItemRight" valign="bottom"><b>starts_on</b> {}</td></tr>
 <tr class="separator:a95377102421566b05cd68f612ce76c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e5cfa2bf3007655d14a860261b27739"><td class="memItemLeft" align="right" valign="top"><a id="a4e5cfa2bf3007655d14a860261b27739" name="a4e5cfa2bf3007655d14a860261b27739"></a>
+constexpr stopped_as_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>stopped_as_error</b> {}</td></tr>
+<tr class="separator:a4e5cfa2bf3007655d14a860261b27739"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaea80e967a9f3c9805b2854d7ca04c39"><td class="memItemLeft" align="right" valign="top"><a id="aaea80e967a9f3c9805b2854d7ca04c39" name="aaea80e967a9f3c9805b2854d7ca04c39"></a>
+constexpr stopped_as_optional_t&#160;</td><td class="memItemRight" valign="bottom"><b>stopped_as_optional</b> {}</td></tr>
+<tr class="separator:aaea80e967a9f3c9805b2854d7ca04c39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43774ecef52b77ef5d3f668bfcc51519"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution::sync_wait_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519">sync_wait</a> {}</td></tr>
 <tr class="memdesc:a43774ecef52b77ef5d3f668bfcc51519"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>sync_wait(<em>sender</em>)</code> starts <code><em>sender</em></code> and waits for its completion.  <br /></td></tr>
 <tr class="separator:a43774ecef52b77ef5d3f668bfcc51519"><td class="memSeparator" colspan="2">&#160;</td></tr>

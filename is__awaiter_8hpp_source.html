@@ -121,8 +121,8 @@ $(document).ready(function(){initNavTree('is__awaiter_8hpp_source.html',''); ini
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span>beman::execution::detail {</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Awaiter, <span class="keyword">typename</span> Promise&gt;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">concept </span>is_awaiter = <span class="keyword">requires</span>(Awaiter&amp; awaiter, ::std::coroutine_handle&lt;Promise&gt; handle) {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Awaiter, <span class="keyword">typename</span>... Promise&gt;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">concept </span>is_awaiter = <span class="keyword">requires</span>(Awaiter&amp; awaiter, ::std::coroutine_handle&lt;Promise...&gt; handle) {</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    awaiter.await_ready() ? 1 : 0;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    { awaiter.await_suspend(handle) } -&gt; ::beman::execution::detail::await_suspend_result;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    awaiter.await_resume();</div>
