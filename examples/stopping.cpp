@@ -55,9 +55,9 @@ struct inject_cancel_sender {
         auto set_stopped() noexcept -> void { ex::set_stopped(std::move(inner_receiver)); }
     };
 
-    template <typename E>
-    auto get_completion_signatures(const E&) {
-        return ex::get_completion_signatures(this->sender, env{ex::inplace_stop_token{}});
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() {
+        return ex::get_completion_signatures<Sender, decltype(env{ex::inplace_stop_token{}})>();
     }
 
     ex::inplace_stop_token token{};

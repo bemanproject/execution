@@ -145,8 +145,9 @@ struct logger_t {
         state(Sndr&& s, Rcvr&& r, Log&& l)
             : inner(ex::connect(std::forward<Sndr>(s), std::forward<Rcvr>(r))), log(std::forward<Log>(l)) {}
         auto start() & noexcept -> void {
-            this->log(meta::type<decltype(ex::get_completion_signatures(std::declval<Sndr>(),
-                                                                        ex::get_env(std::declval<Rcvr>())))>::name());
+            this->log(meta::type<
+                      decltype(ex::get_completion_signatures<Sndr, decltype(ex::get_env(std::declval<Rcvr>()))>())>::
+                          name());
             ex::start(this->inner);
         }
     };
@@ -158,9 +159,9 @@ struct logger_t {
         Sndr sndr;
         Log  log;
 
-        template <typename Env>
-        auto get_completion_signatures(const Env& env) const noexcept {
-            return ex::get_completion_signatures(this->sndr, env);
+        template <typename, typename... Env>
+        static consteval auto get_completion_signatures() noexcept {
+            return ex::get_completion_signatures<Sndr, Env...>();
         }
 
         template <ex::receiver Receiver>

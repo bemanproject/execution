@@ -110,8 +110,7 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
                                                                    ::beman::execution::detail::product_type<Shape, F>,
                                                                    Sender>,
                           Env> {
-        using completions =
-            decltype(::beman::execution::get_completion_signatures(std::declval<Sender>(), std::declval<Env>()));
+        using completions = decltype(::beman::execution::get_completion_signatures<Sender, Env>());
         using type = ::beman::execution::detail::meta::unique<
             ::beman::execution::detail::meta::combine<fixed_completions<F, Shape, completions>>>;
     };

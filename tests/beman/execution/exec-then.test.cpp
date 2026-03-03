@@ -51,6 +51,10 @@ template <typename... T>
 struct sender {
     using sender_concept        = test_std::sender_t;
     using completion_signatures = test_std::completion_signatures<T...>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 };
 
 template <bool Expect>

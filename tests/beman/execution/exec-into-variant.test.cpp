@@ -28,7 +28,10 @@ struct sender {
 template <typename Signatures = test_std::completion_signatures<>, typename... T>
 struct sender_in {
     using sender_concept        = test_std::sender_t;
-    using completion_signatures = Signatures;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> Signatures {
+        return {};
+    }
     decltype(test_std::just(std::declval<T>()...)) inner_sender;
 
     template <typename Receiver>
@@ -59,16 +62,17 @@ auto test_into_variant(auto&& sender) -> void {
         static_assert(test_std::receiver<receiver>);
         static_assert(requires {
             typename std::decay_t<decltype(sender)>;
-            typename std::decay_t<decltype(sender)>::completion_signatures;
-            test_std::get_completion_signatures(sender, test_std::env<>{});
+            std::decay_t<decltype(sender)>::template get_completion_signatures<decltype(sender), test_std::env<>>();
+            test_std::get_completion_signatures<decltype(sender), test_std::env<>>();
             typename test_std::value_types_of_t<std::decay_t<decltype(sender)>, test_std::env<>>;
             test_std::into_variant(sender);
             test_std::connect(test_std::into_variant(sender), receiver{});
             { test_std::connect(test_std::into_variant(sender), receiver{}) } -> test_std::operation_state;
         });
-        static_assert(std::same_as<Signatures,
-                                   decltype(test_std::get_completion_signatures(test_std::into_variant(sender),
-                                                                                test_std::env<>{}))>);
+        static_assert(
+            std::same_as<Signatures,
+                         decltype(test_std::get_completion_signatures<decltype(test_std::into_variant(sender)),
+                                                                      test_std::env<>>())>);
         bool called{false};
         auto op{test_std::connect(test_std::into_variant(sender), receiver{&called})};
         ASSERT(not called);

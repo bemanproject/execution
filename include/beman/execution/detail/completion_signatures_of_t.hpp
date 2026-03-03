@@ -24,10 +24,9 @@ namespace beman::execution {
  * \brief Alias to access the completion signatures of a sender
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-template <typename Sender, typename Env = ::beman::execution::env<>>
-    requires ::beman::execution::sender_in<Sender, Env>
-using completion_signatures_of_t =
-    ::beman::execution::detail::call_result_t<::beman::execution::get_completion_signatures_t, Sender, Env>;
+template <typename Sender, typename... Env>
+    requires ::beman::execution::sender_in<Sender, Env...>
+using completion_signatures_of_t = decltype(::beman::execution::get_completion_signatures<Sender, Env...>());
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------

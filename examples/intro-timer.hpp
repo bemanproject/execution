@@ -34,6 +34,10 @@ struct intro::timer {
     struct sender {
         using sender_concept        = ex::sender_t;
         using completion_signatures = ex::completion_signatures<ex::set_value_t()>;
+        template <typename...>
+        static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+            return {};
+        }
         timer*                    self;
         std::chrono::milliseconds ms;
         template <typename R>
@@ -104,6 +108,10 @@ struct intro::timer {
     struct run_sender {
         using sender_concept        = ex::sender_t;
         using completion_signatures = ex::completion_signatures<ex::set_value_t()>;
+        template <typename...>
+        static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+            return {};
+        }
 
         timer* self;
 

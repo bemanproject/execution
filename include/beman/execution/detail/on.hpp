@@ -11,6 +11,8 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.continues_on;
 import beman.execution.detail.default_domain;
 import beman.execution.detail.forward_like;
@@ -75,8 +77,8 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     template <typename>
     struct env_needs_get_scheduler {
         using sender_concept = ::beman::execution::sender_t;
-        template <typename Env>
-        auto get_completion_signatures(Env&&) const {
+        template <typename, typename Env>
+        static constexpr auto get_completion_signatures() {
             return env_needs_get_scheduler<Env>{};
         }
     };
@@ -158,6 +160,18 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     auto operator()(Sch&& sch, Closure&& closure) const {
         return ::beman::execution::detail::make_sender_adaptor(
             *this, ::std::forward<Sch>(sch), ::std::forward<Closure>(closure));
+    }
+    template <typename, typename...>
+    struct get_signatures;
+    template <typename Data, ::beman::execution::sender Sndr, typename... Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Data, Sndr>,
+                          Env...> {
+        using type = ::beman::execution::completion_signatures_of_t<Sndr, Env...>;
+    };
+
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
 };
 

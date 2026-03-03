@@ -123,19 +123,19 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
     }
 
   private:
-    template <typename, typename>
+    template <typename, typename...>
     struct get_signatures;
-    template <typename Comp, typename Fun, typename Child, typename Env>
+    template <typename Comp, typename Fun, typename Child, typename... Env>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::then_t<Comp>, Fun, Child>,
-        Env> {
+        Env...> {
         using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
             ::beman::execution::detail::meta::transform<
                 ::beman::execution::detail::then_transform_t<Fun, Comp>::template transform,
-                ::beman::execution::completion_signatures_of_t<Child, Env>>,
+                ::beman::execution::completion_signatures_of_t<Child, Env...>>,
             ::std::conditional_t<
                 ::beman::execution::detail::
-                    then_exception<Comp, Fun, ::beman::execution::completion_signatures_of_t<Child, Env>>::value,
+                    then_exception<Comp, Fun, ::beman::execution::completion_signatures_of_t<Child, Env...>>::value,
                 ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>,
                 ::beman::execution::completion_signatures<>>>>;
     };

@@ -24,6 +24,10 @@ template <typename... C>
 struct multi_sender {
     using sender_concept        = test_std::sender_t;
     using completion_signatures = test_std::completion_signatures<C...>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 };
 
 template <int>
@@ -36,6 +40,10 @@ struct domain_sender {
     };
     using sender_concept        = test_std::sender_t;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
     auto get_env() const noexcept -> env { return {}; }
 };
 
@@ -48,7 +56,7 @@ auto test_when_all_breathing() -> void {
     auto s{test_std::when_all(test_std::just(), test_std::just(3, true), test_std::just(1.5))};
     static_assert(test_std::sender<decltype(s)>);
     test::check_type<test_std::completion_signatures<test_std::set_value_t(int, bool, double)>>(
-        test_std::get_completion_signatures(s, test_std::env<>{}));
+        test_std::get_completion_signatures<decltype(s), test_std::env<>>());
     auto res{test_std::sync_wait(s)};
     ASSERT(res.has_value());
     ASSERT((*res == std::tuple{3, true, 1.5}));
@@ -57,6 +65,10 @@ auto test_when_all_breathing() -> void {
 struct await_cancel {
     using sender_concept        = test_std::sender_t;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {
@@ -88,6 +100,10 @@ template <typename Sender, typename Tag, typename... T>
 struct test_sender {
     using sender_concept        = test_std::sender_t;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(bool)>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Result, typename Receiver>
     struct upstream {
@@ -155,8 +171,9 @@ struct add_value_sig<test_std::completion_signatures<S...>> {
 template <typename Sender>
 struct add_value {
     using sender_concept = test_std::sender_t;
-    auto get_completion_signatures(const auto& env) const noexcept {
-        using signatures = decltype(test_std::get_completion_signatures(sender, env));
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() noexcept {
+        using signatures = decltype(test_std::get_completion_signatures<Sender, E...>());
         return typename add_value_sig<signatures>::type{};
     }
     Sender sender;

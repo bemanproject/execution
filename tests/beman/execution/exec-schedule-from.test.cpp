@@ -31,7 +31,10 @@ struct scheduler {
             auto start() & noexcept -> void { test_std::set_value(::std::move(this->receiver)); }
         };
         using sender_concept        = test_std::sender_t;
-        using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+        template <typename, typename...>
+        static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
+            return {};
+        }
         auto get_env() const noexcept -> env { return {}; }
         template <test_std::receiver Receiver>
         auto connect(Receiver&& receiver) -> state<Receiver> {
@@ -44,7 +47,10 @@ struct scheduler {
 };
 struct sender {
     using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {

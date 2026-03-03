@@ -50,8 +50,8 @@ struct read_env_t {
     template <typename Query, typename Env>
     struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::read_env_t, Query>,
                           Env> {
-        using set_value_type =
-            ::beman::execution::set_value_t(decltype(::std::declval<Query>()(::std::as_const(::std::declval<Env>()))));
+        using set_value_type = ::beman::execution::set_value_t(
+            decltype(::std::declval<Query>()(::std::as_const(::std::declval<::std::add_lvalue_reference_t<Env>>()))));
         using set_error_type = ::beman::execution::set_error_t(::std::exception_ptr);
         using type = ::std::conditional_t<noexcept(::std::declval<Query>()(::std::declval<const Env&>())),
                                           ::beman::execution::completion_signatures<set_value_type>,

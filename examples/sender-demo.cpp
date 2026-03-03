@@ -43,6 +43,10 @@ template <typename T>
 struct just_sender {
     using sender_concept        = ex::sender_t;
     using completion_signatures = ex::completion_signatures<ex::set_value_t(T)>;
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+        return {};
+    }
 
     T value;
     template <ex::receiver Receiver>

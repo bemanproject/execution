@@ -92,8 +92,7 @@ TEST(execution_modules) {
     //-dk:TODO static_assert(not test_std::sender_to<int, int>);
 
     // [exec.getcomplsigs], completion signatures
-    test::use_type<test_std::get_completion_signatures_t>();
-    test::use(test_std::get_completion_signatures);
+    test::use(test_std::get_completion_signatures<decltype(test_std::just()), test_std::env<>>());
 
     test::use_template<test_std::completion_signatures_of_t>();
 #if !defined(__GNUC__) || defined(__clang__)

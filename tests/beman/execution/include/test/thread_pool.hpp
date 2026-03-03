@@ -99,9 +99,13 @@ struct test::thread_pool {
             void run() override { test_std::set_value(std::move(this->receiver)); }
         };
         struct sender {
-            using sender_concept        = test_std::sender_t;
-            using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+            using sender_concept = test_std::sender_t;
             test::thread_pool* pool;
+            template <typename, typename...>
+            static consteval auto get_completion_signatures()
+                -> test_std::completion_signatures<test_std::set_value_t()> {
+                return {};
+            }
             template <typename Receiver>
             state<Receiver> connect(Receiver&& receiver) {
                 return state<Receiver>(std::forward<Receiver>(receiver), pool);

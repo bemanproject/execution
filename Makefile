@@ -14,7 +14,7 @@ SANITIZERS := run
 #     SANITIZERS += asan # TODO: tsan msan
 # endif
 
-.PHONY: default release debug doc run update check ce todo distclean clean codespell clang-tidy build test install all format unstage $(SANITIZERS) module build-module test-module build-interface
+.PHONY: default release debug doc run update check ce todo distclean clean codespell clang-tidy build test install all format unstage $(SANITIZERS) module build-module test-module build-interface run-ci
 
 SYSROOT   ?=
 TOOLCHAIN ?=
@@ -205,6 +205,9 @@ clang-tidy: $(BUILD)/compile_commands.json
 
 codespell:
 	pre-commit run $@
+
+run-ci:
+	/Library/Frameworks/Python.framework/Versions/3.14/bin/beman-local-ci -p 2
 
 # ==========================================================
 format:

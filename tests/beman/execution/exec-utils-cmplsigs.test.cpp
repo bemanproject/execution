@@ -44,7 +44,6 @@ struct sender {
                                         test_std::set_value_t(),
                                         test_std::set_value_t(arg<0>, arg<1>&, arg<2>&&, const arg<3>&),
                                         test_std::set_stopped_t()>;
-    auto get_completion_signatures(test_std::env<>) const noexcept { return empty_signatures(); }
     using env_signatures =
         test_std::completion_signatures<test_std::set_error_t(const error&),
                                         test_std::set_error_t(std::exception_ptr),
@@ -53,9 +52,19 @@ struct sender {
                                         test_std::set_value_t(const arg<1>&),
                                         test_std::set_value_t(arg<0>, arg<1>&, arg<2>&&, const arg<3>&),
                                         test_std::set_stopped_t()>;
-    auto get_completion_signatures(env) const noexcept { return env_signatures(); }
     using none_signatures = test_std::completion_signatures<>;
-    auto get_completion_signatures(none_env) const noexcept { return none_signatures(); }
+
+    template <typename S, typename... E>
+    static consteval auto get_completion_signatures() noexcept {
+        if constexpr (sizeof...(E) == 0)
+            return empty_signatures();
+        else if constexpr ((std::same_as<test_std::env<>, E> && ... && true))
+            return empty_signatures();
+        else if constexpr ((std::same_as<env, E> && ... && true))
+            return env_signatures();
+        else if constexpr ((std::same_as<none_env, E> && ... && true))
+            return none_signatures();
+    }
 };
 
 auto test_completion_signature() {
@@ -184,9 +193,8 @@ auto test_gather_signatures() -> void {
 }
 
 auto test_value_types_of_t() -> void {
-    static_assert(test_std::sender_in<sender, test_std::env<>>);
-    static_assert(
-        std::same_as<sender::empty_signatures, test_std::completion_signatures_of_t<sender, test_std::env<>>>);
+    static_assert(test_std::sender_in<sender>);
+    static_assert(std::same_as<sender::empty_signatures, test_std::completion_signatures_of_t<sender>>);
     static_assert(test_std::sender_in<sender, env>);
     static_assert(std::same_as<sender::env_signatures, test_std::completion_signatures_of_t<sender, env>>);
     static_assert(test_std::sender_in<sender, none_env>);

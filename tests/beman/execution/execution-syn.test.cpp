@@ -54,56 +54,78 @@ struct single_type_sender {
     struct arg {};
     struct error {};
     using sender_concept  = test_std::sender_t;
-    using test_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                            test_std::set_error_t(int),
-                                                            test_std::set_value_t(arg&),
-                                                            test_std::set_stopped_t()>;
-    auto get_completion_signatures(const test_env&) const noexcept { return test_signatures(); }
-    using empty_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                             test_std::set_error_t(int),
-                                                             test_std::set_value_t(bool&),
-                                                             test_std::set_stopped_t()>;
-    auto get_completion_signatures(const test_std::env<>&) const noexcept { return empty_signatures(); }
+    using test_signatures     = test_std::completion_signatures<test_std::set_error_t(error),
+                                                                test_std::set_error_t(int),
+                                                                test_std::set_value_t(arg&),
+                                                                test_std::set_stopped_t()>;
+    using empty_signatures    = test_std::completion_signatures<test_std::set_error_t(error),
+                                                                test_std::set_error_t(int),
+                                                                test_std::set_value_t(bool&),
+                                                                test_std::set_stopped_t()>;
     using no_value_signatures = test_std::
         completion_signatures<test_std::set_error_t(error), test_std::set_error_t(int), test_std::set_stopped_t()>;
-    auto get_completion_signatures(const no_value_env&) const noexcept { return no_value_signatures(); }
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() {
+        if constexpr (sizeof...(E) == 0)
+            return test_signatures();
+        else if constexpr ((std::same_as<test_std::env<>, E> && ... && true))
+            return empty_signatures();
+        else if constexpr ((std::same_as<test_env, E> && ... && true))
+            return test_signatures();
+        else if constexpr ((std::same_as<no_value_env, E> && ... && true))
+            return no_value_signatures();
+    }
 };
 
 struct void_sender {
     struct error {};
     using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                                  test_std::set_error_t(int),
-                                                                  test_std::set_value_t(),
-                                                                  test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return test_std::completion_signatures<test_std::set_error_t(error),
+                                               test_std::set_error_t(int),
+                                               test_std::set_value_t(),
+                                               test_std::set_stopped_t()>{};
+    }
 };
 
 struct no_value_sender {
     struct error {};
     using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::
-        completion_signatures<test_std::set_error_t(error), test_std::set_error_t(int), test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+
+        return test_std::completion_signatures<test_std::set_error_t(error),
+                                               test_std::set_error_t(int),
+                                               test_std::set_stopped_t()>{};
+    }
 };
 
 struct multi_single_sender {
     struct arg {};
     struct error {};
     using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                                  test_std::set_error_t(int),
-                                                                  test_std::set_value_t(arg&),
-                                                                  test_std::set_value_t(int),
-                                                                  test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return test_std::completion_signatures<test_std::set_error_t(error),
+                                               test_std::set_error_t(int),
+                                               test_std::set_value_t(arg&),
+                                               test_std::set_value_t(int),
+                                               test_std::set_stopped_t()>{};
+    }
 };
 
 struct multi_type_sender {
     struct arg {};
     struct error {};
     using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                                  test_std::set_error_t(int),
-                                                                  test_std::set_value_t(arg&, const bool&, int),
-                                                                  test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return test_std::completion_signatures<test_std::set_error_t(error),
+                                               test_std::set_error_t(int),
+                                               test_std::set_value_t(arg&, const bool&, int),
+                                               test_std::set_stopped_t()>{};
+    }
 };
 
 auto test_schedule_result_t() -> void {
@@ -148,6 +170,10 @@ struct sender_in {
     using sender_concept = test_std::sender_t;
     using completion_signatures =
         test_std::completion_signatures<test_std::set_value_t(arg), test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return completion_signatures();
+    }
 };
 
 struct env {};
@@ -157,10 +183,17 @@ struct sender_with_get {
     using sender_concept = test_std::sender_t;
 
     using empty_sigs = test_std::completion_signatures<test_std::set_value_t(arg), test_std::set_stopped_t()>;
-    auto get_completion_signatures(test_std::env<>) const noexcept { return empty_sigs{}; }
-
     using env_sigs = test_std::completion_signatures<test_std::set_value_t(arg, arg), test_std::set_stopped_t()>;
-    auto get_completion_signatures(env) const noexcept { return env_sigs{}; }
+
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() {
+        if constexpr (sizeof...(E) == 0)
+            return empty_sigs();
+        else if constexpr ((std::same_as<test_std::env<>, E> && ... && true))
+            return empty_sigs();
+        else if constexpr ((std::same_as<env, E> && ... && true))
+            return env_sigs();
+    }
 };
 
 template <typename T>
