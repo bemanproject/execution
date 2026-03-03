@@ -5,6 +5,7 @@
 #include <optional>
 #include <system_error>
 #include <test/execution.hpp>
+#include <test/optional_sender.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
@@ -18,41 +19,6 @@ import beman.execution.detail;
 
 // ----------------------------------------------------------------------------
 namespace {
-template <typename T>
-struct optional_sender {
-    using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_value_t(T), test_std::set_stopped_t()>;
-
-    optional_sender() = default;
-
-    explicit optional_sender(T value) noexcept : opt(value) {}
-
-    template <typename, typename...>
-    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
-        return {};
-    }
-
-    template <test_std::receiver_of<completion_signatures> Rcvr>
-    auto connect(Rcvr rcvr) && noexcept -> auto {
-        struct state {
-            using operation_state_concept = test_std::operation_state_t;
-            auto start() & noexcept -> void {
-                test::use_type<operation_state_concept>(); // make -Werror=unused-local-typedefs happy
-                if (opt_) {
-                    test_std::set_value(std::move(rcvr_), *opt_);
-                } else {
-                    test_std::set_stopped(std::move(rcvr_));
-                }
-            }
-
-            Rcvr             rcvr_;
-            std::optional<T> opt_;
-        };
-        return state{rcvr, std::move(opt)};
-    }
-
-    std::optional<T> opt;
-};
 
 auto test_stopped_as_error_signatures() -> void {
     test_std::sender auto sndr1 = test_std::just(42) | test_std::stopped_as_error(-1);
@@ -61,7 +27,7 @@ auto test_stopped_as_error_signatures() -> void {
     auto [i] = test_std::sync_wait(std::move(sndr1)).value();
     ASSERT(i == 42);
 
-    test_std::sender auto sndr2 = test_std::stopped_as_error(optional_sender<int>{}, 114514);
+    test_std::sender auto sndr2 = test_std::stopped_as_error(test::optional_sender<int>{}, 114514);
     using sigs_of_sndr2         = test_std::completion_signatures_of_t<decltype(sndr2), test_detail::sync_wait_env>;
     static_assert(
         std::same_as<sigs_of_sndr2,
@@ -75,8 +41,8 @@ auto test_stopped_as_error_signatures() -> void {
 
 auto test_stopped_as_std_error_code() -> void {
     try {
-        auto snd =
-            test_std::stopped_as_error(optional_sender<int>{}, std::make_error_code(std::errc::operation_canceled));
+        auto snd = test_std::stopped_as_error(test::optional_sender<int>{},
+                                              std::make_error_code(std::errc::operation_canceled));
         test_std::sync_wait(std::move(snd));
     } catch (const std::system_error& e) {
         ASSERT(e.code() == std::errc::operation_canceled);
