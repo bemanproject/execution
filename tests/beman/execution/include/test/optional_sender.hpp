@@ -10,8 +10,13 @@
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
+#include <beman/execution/detail/completion_signatures.hpp>
+#include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/receiver_of.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/set_stopped.hpp>
+#include <beman/execution/detail/set_value.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
