@@ -77,6 +77,7 @@ import beman.execution.detail.when_all;
 import beman.execution.detail.when_all_with_variant;
 export import beman.execution.detail.with_awaitable_senders; // [exec.with.awaitable.senders]
 import beman.execution.detail.write_env;
+import beman.execution.detail.inline_scheduler;
 
 // [stoptoken.concepts], stop token concepts
 export import beman.execution.detail.stoppable_token;
@@ -253,6 +254,9 @@ export using ::beman::execution::counting_scope;
 // [exec.spawn]
 export using ::beman::execution::spawn;
 export using ::beman::execution::spawn_future;
+
+// [exec.inline.scheduler]
+export using ::beman::execution::inline_scheduler;
 
 #if 0
 namespace detail {

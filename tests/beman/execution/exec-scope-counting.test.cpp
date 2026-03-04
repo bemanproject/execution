@@ -4,7 +4,6 @@
 #include <concepts>
 #include <tuple>
 #include <type_traits>
-#include <test/inline_scheduler.hpp>
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
@@ -13,6 +12,7 @@ import beman.execution;
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
+#include <beman/execution/detail/inline_scheduler.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ struct join_receiver {
     using receiver_concept = test_std::receiver_t;
 
     struct env {
-        auto query(const test_std::get_scheduler_t&) const noexcept -> test::inline_scheduler { return {}; }
+        auto query(const test_std::get_scheduler_t&) const noexcept -> test_std::inline_scheduler { return {}; }
     };
 
     bool& called;
