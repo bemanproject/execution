@@ -22,6 +22,7 @@ list(
     exec-general.test
     exec-getcomplsigs.test
     exec-get-allocator.test
+    exec-get-compl-domain.test
     exec-get-compl-sched.test
     exec-get-delegation-scheduler.test
     exec-get-domain.test

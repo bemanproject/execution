@@ -79,17 +79,18 @@ struct get_completion_scheduler_t : ::beman::execution::forwarding_query_t {
     auto operator()(Env&&) const noexcept =
         BEMAN_EXECUTION_DELETE("The environment's query(get_completion_scheduler_t) has to return a scheduler");
 
-    template <typename Env>
+    template <typename Env, typename... E>
         requires requires(const get_completion_scheduler_t&                                  self,
                           const get_completion_scheduler_t<::beman::execution::set_value_t>& value_self,
-                          const ::std::remove_cvref_t<Env>&                                  env) {
-            { env.query(self) } noexcept -> ::beman::execution::detail::almost_scheduler;
+                          const ::std::remove_cvref_t<Env>&                                  env,
+                          const ::std::remove_cvref_t<E>&...                                  e) {
+            { env.query(self, e...) } noexcept -> ::beman::execution::detail::almost_scheduler;
             {
-                ::beman::execution::get_env(::beman::execution::schedule(env.query(self))).query(value_self)
-            } -> ::beman::execution::detail::decayed_same_as<decltype(env.query(self))>;
+                ::beman::execution::get_env(::beman::execution::schedule(env.query(self))).query(value_self, e...)
+            } -> ::beman::execution::detail::decayed_same_as<decltype(env.query(self, e...))>;
         }
-    auto operator()(Env&& env) const noexcept {
-        return ::std::as_const(env).query(*this);
+    auto operator()(Env&& env, E&&... e) const noexcept {
+        return ::std::as_const(env).query(*this, e...);
     }
 };
 
