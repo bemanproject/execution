@@ -11,15 +11,15 @@ export module beman.execution;
 export import beman.execution.detail.affine_on;
 export import beman.execution.detail.associate; // [exec.associate]
 export import beman.execution.detail.bulk;
-export import beman.execution.detail.completion_signatures;      // [exec.util.cmplsig]
 export import beman.execution.detail.completion_signatures_of_t; // [exec.getcomplsigs], completion signatures
-export import beman.execution.detail.connect;
+export import beman.execution.detail.completion_signatures;      // [exec.util.cmplsig]
 export import beman.execution.detail.connect_result_t; // [exec.connect], the connect sender algorithm
+export import beman.execution.detail.connect;
 export import beman.execution.detail.continues_on;
 export import beman.execution.detail.counting_scope;
 export import beman.execution.detail.default_domain;
-export import beman.execution.detail.env;
 export import beman.execution.detail.env_of_t;
+export import beman.execution.detail.env;
 export import beman.execution.detail.error_types_of_t; // [exec.getcomplsigs], completion signatures
 export import beman.execution.detail.forwarding_query;
 export import beman.execution.detail.get_allocator;
@@ -32,6 +32,7 @@ export import beman.execution.detail.get_env;
 export import beman.execution.detail.get_scheduler;
 export import beman.execution.detail.get_stop_token;
 export import beman.execution.detail.indeterminate_domain;
+export import beman.execution.detail.inline_scheduler;
 export import beman.execution.detail.inplace_stop_source; // [stopsource.inplace], class inplace_stop_source
 export import beman.execution.detail.into_variant;
 export import beman.execution.detail.just;
@@ -42,19 +43,19 @@ export import beman.execution.detail.operation_state; // [exec.opstate], operati
 export import beman.execution.detail.prop;
 export import beman.execution.detail.read_env;
 export import beman.execution.detail.run_loop;
-export import beman.execution.detail.schedule;
 export import beman.execution.detail.schedule_from;
 export import beman.execution.detail.schedule_result_t;
-export import beman.execution.detail.scheduler; // [exec.sched], schedulers
+export import beman.execution.detail.schedule;
 export import beman.execution.detail.scheduler_t;
+export import beman.execution.detail.scheduler; // [exec.sched], schedulers
 export import beman.execution.detail.scope_association; // [exec.scope.concepts]
 export import beman.execution.detail.scope_token;       // [exec.scope.concepts]
 export import beman.execution.detail.set_error;
 export import beman.execution.detail.set_stopped;
 export import beman.execution.detail.set_value;
 export import beman.execution.detail.simple_counting_scope;
-export import beman.execution.detail.spawn;
 export import beman.execution.detail.spawn_future;
+export import beman.execution.detail.spawn;
 export import beman.execution.detail.start;
 export import beman.execution.detail.starts_on;
 export import beman.execution.detail.stop_callback_for_t;
@@ -67,8 +68,8 @@ export import beman.execution.detail.sync_wait;
 export import beman.execution.detail.tag_of_t; // [exec.getcomplsigs], completion signatures
 export import beman.execution.detail.then;
 export import beman.execution.detail.value_types_of_t; // [exec.getcomplsigs], completion signatures
-export import beman.execution.detail.when_all;
 export import beman.execution.detail.when_all_with_variant;
+export import beman.execution.detail.when_all;
 export import beman.execution.detail.with_awaitable_senders; // [exec.with.awaitable.senders]
 export import beman.execution.detail.write_env;
 import beman.execution.detail.apply_sender;
@@ -255,6 +256,9 @@ export using ::beman::execution::counting_scope;
 // [exec.spawn]
 export using ::beman::execution::spawn;
 export using ::beman::execution::spawn_future;
+
+// [exec.inline.scheduler]
+export using ::beman::execution::inline_scheduler;
 
 #if 0
 namespace detail {

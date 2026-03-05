@@ -100,6 +100,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/indeterminate_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/indices_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/indirect_meta_apply.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/inline_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/inplace_stop_source.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/into_variant.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/intrusive_stack.hpp
@@ -289,6 +290,7 @@ if(BEMAN_USE_MODULES)
                     indeterminate_domain.cppm
                     indices_for.cppm
                     indirect_meta_apply.cppm
+                    inline_scheduler.cppm
                     inplace_stop_source.cppm
                     into_variant.cppm
                     intrusive_stack.cppm
