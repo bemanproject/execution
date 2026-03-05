@@ -35,6 +35,7 @@ CMakeUserPresets.json
 *.app
 
 build
+cmake-build-*
 .DS_store
 .vs
 .cache
