@@ -20,6 +20,7 @@ import beman.execution.detail.counting_scope;
 import beman.execution.detail.env;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
+import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_delegation_scheduler;
@@ -73,6 +74,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_delegation_scheduler.hpp>

@@ -35,6 +35,7 @@ list(
     exec-opstate-start.test
     exec-opstate.test
     exec-prop.test
+    exec-queries-expos.test
     exec-read-env.test
     exec-recv-concepts.test
     exec-recv.test
@@ -110,6 +111,18 @@ list(
     thread.test
     utilities.test
 )
+
+option(
+    BEMAN_EXECUTION_TEST_CASE
+    "The name of the test ase to build. Values: e.g., stoptoken-never."
+    ""
+)
+
+if(BEMAN_EXECUTION_TEST_CASE)
+    if(NOT ${BEMAN_EXECUTION_TEST_CASE} STREQUAL "*")
+        set(execution_tests ${BEMAN_EXECUTION_TEST_CASE}.test)
+    endif()
+endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

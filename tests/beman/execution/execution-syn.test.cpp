@@ -8,6 +8,17 @@
 import beman.execution;
 import beman.execution.detail;
 #else
+#include <beman/execution/detail/forwarding_query.hpp>
+#include <beman/execution/detail/get_allocator.hpp>
+#include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_delegation_scheduler.hpp>
+//-dk:TODO #include <beman/execution/detail/get_forward_progress_guarantee.hpp>
+#include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
+#include <beman/execution/detail/get_await_completion_adaptor.hpp>
+#include <beman/execution/detail/indeterminate_domain.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/decays_to.hpp>
@@ -31,6 +42,28 @@ import beman.execution.detail;
 
 namespace {
 auto use(auto&&) -> void {}
+
+auto test_queries() -> void {
+    // std
+    static_assert(
+        std::same_as<test_std::forwarding_query_t, std::remove_cvref_t<decltype(test_std::forwarding_query)>>);
+    static_assert(std::same_as<test_std::get_allocator_t, std::remove_cvref_t<decltype(test_std::get_allocator)>>);
+    static_assert(std::same_as<test_std::get_stop_token_t, std::remove_cvref_t<decltype(test_std::get_stop_token)>>);
+
+    // std::execution
+    static_assert(std::same_as<test_std::get_domain_t, std::remove_cvref_t<decltype(test_std::get_domain)>>);
+    static_assert(std::same_as<test_std::get_scheduler_t, std::remove_cvref_t<decltype(test_std::get_scheduler)>>);
+    static_assert(std::same_as<test_std::get_delegation_scheduler_t,
+                               std::remove_cvref_t<decltype(test_std::get_delegation_scheduler)>>);
+    static_assert(
+        std::same_as<test_std::get_completion_scheduler_t<test_std::set_value_t>,
+                     std::remove_cvref_t<decltype(test_std::get_completion_scheduler<test_std::set_value_t>)>>);
+    static_assert(std::same_as<test_std::get_completion_domain_t<>,
+                               std::remove_cvref_t<decltype(test_std::get_completion_domain<>)>>);
+    static_assert(std::same_as<test_std::get_await_completion_adaptor_t,
+                               std::remove_cvref_t<decltype(test_std::get_await_completion_adaptor)>>);
+}
+
 struct scheduler {
     struct env {
         template <test_detail::completion_tag Tag>
@@ -381,9 +414,15 @@ auto test_sender_adaptor() -> void {
 auto test_as_awaitable() -> void {
     static_assert(std::same_as<const test_std::as_awaitable_t, decltype(test_std::as_awaitable)>);
 }
+
+auto test_exec_env() -> void {
+    test::type_exists<test_std::env<>>();
+    test::type_exists<test_std::indeterminate_domain<>>();
+}
 } // namespace
 
 TEST(execution_syn) {
+    test_queries();
     test_schedule_result_t();
     test_env_of_t();
     test_decayed_tuple();
@@ -397,4 +436,5 @@ TEST(execution_syn) {
     test_sender_adaptor_closure();
     test_sender_adaptor();
     test_as_awaitable();
+    test_exec_env();
 }
