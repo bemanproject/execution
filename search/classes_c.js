@@ -2,7 +2,7 @@ var searchData=
 [
   ['schedule_5ft_0',['schedule_t',['../structbeman_1_1execution_1_1schedule__t.html',1,'beman::execution']]],
   ['scheduler_5ft_1',['scheduler_t',['../structbeman_1_1execution_1_1scheduler__t.html',1,'beman::execution']]],
-  ['sender_2',['sender',['../structtst_1_1repeat__effect__unilt__t_1_1sender.html',1,'tst::repeat_effect_unilt_t']]],
+  ['sender_2',['sender',['../structbeman_1_1execution_1_1inline__scheduler_1_1sender.html',1,'beman::execution::inline_scheduler::sender'],['../structtst_1_1repeat__effect__unilt__t_1_1sender.html',1,'tst::repeat_effect_unilt_t::sender&lt; Child, Fun &gt;']]],
   ['sender_5fadaptor_5fclosure_3',['sender_adaptor_closure',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5fadaptor_5fclosure_3c_20affine_5fon_5ft_20_3e_4',['sender_adaptor_closure&lt; affine_on_t &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5fadaptor_5fclosure_3c_20bound_5fsender_5fadaptor_5fclosure_3c_20adaptor_2c_20boundargs_2e_2e_2e_20_3e_20_3e_5',['sender_adaptor_closure&lt; bound_sender_adaptor_closure&lt; Adaptor, BoundArgs... &gt; &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
@@ -20,7 +20,7 @@ var searchData=
   ['simple_5fcounting_5fscope_17',['simple_counting_scope',['../classbeman_1_1execution_1_1simple__counting__scope.html',1,'beman::execution']]],
   ['split_5ft_18',['split_t',['../structsplit__t.html',1,'']]],
   ['start_5ft_19',['start_t',['../structbeman_1_1execution_1_1start__t.html',1,'beman::execution']]],
-  ['state_20',['state',['../structtst_1_1repeat__effect__unilt__t_1_1sender_1_1state.html',1,'tst::repeat_effect_unilt_t::sender&lt; Child, Fun &gt;::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1resume__after__sender_1_1state.html',1,'tst::timer::resume_after_sender::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1when__done__sender_1_1state.html',1,'tst::timer::when_done_sender::state&lt; Receiver &gt;']]],
+  ['state_20',['state',['../structbeman_1_1execution_1_1inline__scheduler_1_1state.html',1,'beman::execution::inline_scheduler::state&lt; Rcvr &gt;'],['../structtst_1_1repeat__effect__unilt__t_1_1sender_1_1state.html',1,'tst::repeat_effect_unilt_t::sender&lt; Child, Fun &gt;::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1resume__after__sender_1_1state.html',1,'tst::timer::resume_after_sender::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1when__done__sender_1_1state.html',1,'tst::timer::when_done_sender::state&lt; Receiver &gt;']]],
   ['stop_5fcallback_21',['stop_callback',['../classbeman_1_1execution_1_1stop__callback.html',1,'beman::execution']]],
   ['stop_5fsource_22',['stop_source',['../classbeman_1_1execution_1_1stop__source.html',1,'beman::execution']]],
   ['stop_5ftoken_23',['stop_token',['../classbeman_1_1execution_1_1stop__token.html',1,'beman::execution']]]

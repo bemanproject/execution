@@ -74,6 +74,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "impls_for.hpp", "impls__for_8hpp_source.html", null ],
     [ "indices_for.hpp", "indices__for_8hpp_source.html", null ],
     [ "indirect_meta_apply.hpp", "indirect__meta__apply_8hpp_source.html", null ],
+    [ "inline_scheduler.hpp", "inline__scheduler_8hpp_source.html", null ],
     [ "inplace_stop_source.hpp", "inplace__stop__source_8hpp_source.html", null ],
     [ "into_variant.hpp", "into__variant_8hpp_source.html", null ],
     [ "intrusive_stack.hpp", "intrusive__stack_8hpp_source.html", null ],

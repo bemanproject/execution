@@ -14,6 +14,7 @@ var namespacebeman_1_1execution =
     [ "get_env_t", "structbeman_1_1execution_1_1get__env__t.html", null ],
     [ "get_scheduler_t", "structbeman_1_1execution_1_1get__scheduler__t.html", null ],
     [ "get_stop_token_t", "structbeman_1_1execution_1_1get__stop__token__t.html", null ],
+    [ "inline_scheduler", "structbeman_1_1execution_1_1inline__scheduler.html", "structbeman_1_1execution_1_1inline__scheduler" ],
     [ "inplace_stop_callback", "classbeman_1_1execution_1_1inplace__stop__callback.html", null ],
     [ "inplace_stop_source", "classbeman_1_1execution_1_1inplace__stop__source.html", null ],
     [ "inplace_stop_token", "classbeman_1_1execution_1_1inplace__stop__token.html", null ],
