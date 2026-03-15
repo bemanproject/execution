@@ -86,6 +86,14 @@ The following instructions build the library and the examples:
 The implementation compiles and passes tests using [clang](https://clang.llvm.org/),
 [gcc](http://gcc.gnu.org), and [MSVC++](https://visualstudio.microsoft.com/vs/features/cplusplus/).
 
+### Supported Platforms
+
+| Compiler | Version | C++ Standards | Standard Library |
+|----------|---------|---------------|------------------|
+| GCC      | 15-14   | C++26, C++23  | libstdc++        |
+| Clang    | 22-19   | C++26, C++23  | libc++           |
+| MSVC     | latest  | C++23         | MSVC STL         |
+
 ## Examples
 
 - `<stop_token>` example: [Compiler Explorer](https://godbolt.org/z/4r4x9q1r7)
