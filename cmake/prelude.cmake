@@ -17,33 +17,42 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
+# gersemi: off
 # ---------------------------------------------------------------------------
 # The CMAKE_EXPERIMENTAL_CXX_IMPORT_STD is not longer needed except for OSX
 # ---------------------------------------------------------------------------
-if(NOT BEMAN_USE_STD_MODULE OR CMAKE_VERSION VERSION_GREATER_EQUAL 4.3)
+if(NOT BEMAN_USE_STD_MODULE OR CMAKE_VERSION VERSION_GREATER_EQUAL 4.4)
     if(NOT APPLE)
         return()
     endif()
 endif()
 # ---------------------------------------------------------------------------
 
-# gersemi: off
 # ---------------------------------------------------------------------------
 # check if import std; is supported by CMAKE_CXX_COMPILER
 # ---------------------------------------------------------------------------
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2 AND CMAKE_VERSION VERSION_LESS 4.3)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2 AND CMAKE_VERSION VERSION_LESS 4.4)
     if(PROJECT_NAME)
         message(
             WARNING
             "This CMake file has to be included before first project() command call!"
         )
     endif()
+endif()
 
+# ---------------------------------------------------------------------------
+# check if import std; is supported by CMAKE_CXX_COMPILER
+# ---------------------------------------------------------------------------
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.3 AND CMAKE_VERSION VERSION_LESS 4.4)
+    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
+elseif(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2 AND CMAKE_VERSION VERSION_LESS 4.3)
     set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 endif()
 # gersemi: on
 
+# ---------------------------------------------------------------------------
 # TODO(CK): Do we need this HACK still for linux too?
+# ---------------------------------------------------------------------------
 if(NOT APPLE)
     return()
 endif()

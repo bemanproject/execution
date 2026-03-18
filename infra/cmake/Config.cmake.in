@@ -1,4 +1,4 @@
-# cmake/Config.cmake.in -*-cmake-*-
+# cmake/Config.cmake.in -*-makefile-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 include(CMakeFindDependencyMacro)

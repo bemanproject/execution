@@ -1,7 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-cmake_minimum_required(VERSION 3.30)
-
 include_guard(GLOBAL)
 
 include(CMakePackageConfigHelpers)
@@ -21,7 +19,6 @@ include(GNUInstallDirs)
 #     [NAMESPACE <namespace>]
 #     [EXPORT_NAME <export-name>]
 #     [DESTINATION <install-prefix>]
-#     [VERSION_SUFFIX]
 #   )
 #
 # Arguments:
@@ -51,9 +48,6 @@ include(GNUInstallDirs)
 # DESTINATION (optional)
 #   The install destination for CXX_MODULES.
 #   Defaults to ${CMAKE_INSTALL_LIBDIR}/cmake/${name}/modules.
-#
-# VERSION_SUFFIX (optional)
-#   option to enable the versioning of install destinations
 #
 # Brief
 # -----
@@ -88,7 +82,6 @@ function(beman_install_library name)
     # ----------------------------
     # Argument parsing
     # ----------------------------
-    set(options VERSION_SUFFIX)
     set(oneValueArgs NAMESPACE EXPORT_NAME DESTINATION)
     set(multiValueArgs TARGETS DEPENDENCIES)
 
@@ -115,20 +108,7 @@ function(beman_install_library name)
         return()
     endif()
 
-    # gersemi: off
-    set(_version_suffix)
-    set(_include_install_dir)
-    set(_lib_install_dir)
-    set(_bin_install_dir)
-    # NOTE: If one of this variables is not set, the default DESTINATION is used! CK
-    if(BEMAN_VERSION_SUFFIX)
-        set(_version_suffix "-${PROJECT_VERSION}")
-        set(_include_install_dir DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/beman${_version_suffix})
-        # set(_lib_install_dir DESTINATION ${CMAKE_INSTALL_LIBDIR}/beman${_version_suffix})
-        # set(_bin_install_dir DESTINATION ${CMAKE_INSTALL_BINDIR}/beman${_version_suffix})
-    endif()
-    set(_config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${name}${_version_suffix}")
-    # gersemi: on
+    set(_config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${name}")
 
     # ----------------------------
     # Defaults
@@ -197,10 +177,10 @@ function(beman_install_library name)
             )
             foreach(_install_header_set IN LISTS _available_header_sets)
                 list(
-                    APPEND _install_header_set_args
+                    APPEND
+                    _install_header_set_args
                     FILE_SET
                     "${_install_header_set}"
-                    ${_include_install_dir}
                     COMPONENT
                     "${install_component_name}_Development"
                 )
@@ -219,39 +199,30 @@ function(beman_install_library name)
             install(
                 TARGETS "${_tgt}"
                 EXPORT ${BEMAN_EXPORT_NAME}
-                ARCHIVE
-                    ${_lib_install_dir}
-                    COMPONENT "${install_component_name}_Development"
+                ARCHIVE COMPONENT "${install_component_name}_Development"
                 LIBRARY
-                    ${_lib_install_dir}
                     COMPONENT "${install_component_name}_Runtime"
                     NAMELINK_COMPONENT "${install_component_name}_Development"
-                RUNTIME
-                    ${_bin_install_dir}
-                    COMPONENT "${install_component_name}_Runtime"
+                RUNTIME COMPONENT "${install_component_name}_Runtime"
                 ${_install_header_set_args}
                 FILE_SET ${_module_sets}
                     DESTINATION "${BEMAN_DESTINATION}"
                     COMPONENT "${install_component_name}_Development"
                 # NOTE: There's currently no convention for this location! CK
                 CXX_MODULES_BMI
-                # TODO(CK): DESTINATION ${_config_install_dir}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
-                COMPONENT "${install_component_name}_Development"
+                    DESTINATION
+                        ${_config_install_dir}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
+                    COMPONENT "${install_component_name}_Development"
             )
         else()
             install(
                 TARGETS "${_tgt}"
                 EXPORT ${BEMAN_EXPORT_NAME}
-                ARCHIVE
-                    ${_lib_install_dir}
-                    COMPONENT "${install_component_name}_Development"
+                ARCHIVE COMPONENT "${install_component_name}_Development"
                 LIBRARY
-                    ${_lib_install_dir}
                     COMPONENT "${install_component_name}_Runtime"
                     NAMELINK_COMPONENT "${install_component_name}_Development"
-                RUNTIME
-                    ${_bin_install_dir}
-                    COMPONENT "${install_component_name}_Runtime"
+                RUNTIME COMPONENT "${install_component_name}_Runtime"
                 ${_install_header_set_args}
             )
         endif()
@@ -272,6 +243,11 @@ function(beman_install_library name)
 
     # ----------------------------------------
     # Config file installation logic
+    #
+    # Precedence (highest to lowest):
+    #   1. Per-package variable <PREFIX>_INSTALL_CONFIG_FILE_PACKAGE
+    #   2. Allow-list BEMAN_INSTALL_CONFIG_FILE_PACKAGES (if defined)
+    #   3. Default: ON
     # ----------------------------------------
     string(TOUPPER "${name}" _pkg_upper)
     string(REPLACE "." "_" _pkg_prefix "${_pkg_upper}")
@@ -284,30 +260,26 @@ function(beman_install_library name)
 
     set(_pkg_var "${_pkg_prefix}_INSTALL_CONFIG_FILE_PACKAGE")
 
-    if(NOT DEFINED ${_pkg_var})
-        set(${_pkg_var}
-            OFF
-            CACHE BOOL
-            "Install CMake package config files for ${name}"
-        )
+    # Default: install config files
+    set(_install_config ON)
+
+    # If the allow-list is defined, only install for packages in the list
+    if(DEFINED BEMAN_INSTALL_CONFIG_FILE_PACKAGES)
+        if(NOT "${name}" IN_LIST BEMAN_INSTALL_CONFIG_FILE_PACKAGES)
+            set(_install_config OFF)
+        endif()
     endif()
 
-    set(_install_config OFF)
-
-    if(${_pkg_var})
-        set(_install_config ON)
-    elseif(BEMAN_INSTALL_CONFIG_FILE_PACKAGES)
-        list(FIND BEMAN_INSTALL_CONFIG_FILE_PACKAGES "${name}" _idx)
-        if(NOT _idx EQUAL -1)
-            set(_install_config ON)
-        endif()
+    # Per-package override takes highest precedence
+    if(DEFINED ${_pkg_var})
+        set(_install_config ${${_pkg_var}})
     endif()
 
     # ----------------------------------------
     # expand dependencies
     # ----------------------------------------
     set(_beman_find_deps "")
-    foreach(dep IN ITEMS ${BEMAN_DEPENDENCIES})
+    foreach(dep IN LISTS BEMAN_DEPENDENCIES)
         message(
             VERBOSE
             "beman-install-library(${name}): Add find_dependency(${dep})"
