@@ -108,7 +108,7 @@ add_subdirectory(src/beman/execution)
 
 #===============================================================================
 # NOTE: this must be done before tests! CK
-include(./cmake/beman-install-library.cmake)
+include(infra/cmake/beman-install-library.cmake)
 beman_install_library(${BEMAN_EXECUTION_TARGET_PREFIX} TARGETS ${BEMAN_EXECUTION_TARGET_NAME} ${BEMAN_EXECUTION_TARGET_PREFIX}
     DEPENDENCIES Threads
 )
