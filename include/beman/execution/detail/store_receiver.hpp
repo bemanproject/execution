@@ -1,4 +1,4 @@
-// include/beman/execution/detail/store_receiver.hpp                  -*-C++-*-
+//-dk:TODO rRW/// include/beman/execution/detail/store_receiver.hpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_STORE_RECEIVER
@@ -70,7 +70,7 @@ struct store_receiver_t {
         state_t op_state;
         template <::beman::execution::sender S, typename T, ::beman::execution::receiver R>
         state(S&& sndr, T&& trans, R&& r)
-            : rcvr(::std::forward<Rcvr>(::std::forward<R>(r))),
+            : rcvr(::std::forward<R>(r)),
               op_state(::beman::execution::connect(
                   ::std::forward<T>(trans)(::std::forward<S>(sndr), ::beman::execution::get_env(this->rcvr)),
                   receiver<Rcvr>{::std::addressof(this->rcvr)})) {}
@@ -81,7 +81,8 @@ struct store_receiver_t {
         using sender_concept = ::beman::execution::sender_t;
         template <typename... Env>
         static consteval auto get_completion_signatures(Env&&... env) noexcept {
-            return ::beman::execution::get_completion_signatures<::std::remove_cvref_t<Sndr>, Env...>();
+            return ::beman::execution::
+                get_completion_signatures<decltype(::std::declval<Trans>()(::std::declval<Sndr>())), Env...>();
         }
         ::std::remove_cvref_t<Sndr>  sndr;
         ::std::remove_cvref_t<Trans> trans;

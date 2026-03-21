@@ -189,6 +189,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/transform_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/type_list.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unspecified_promise.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_signatures.hpp
@@ -378,6 +379,7 @@ if(BEMAN_USE_MODULES)
                     transform_sender.cppm
                     type_list.cppm
                     unspecified_promise.cppm
+                    unstoppable.cppm
                     unstoppable_token.cppm
                     valid_completion_for.cppm
                     valid_completion_signatures.cppm
