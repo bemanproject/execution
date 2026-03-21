@@ -17,6 +17,7 @@ if(PROJECT_IS_TOP_LEVEL)
     enable_testing()
 endif()
 
+set(TODO stop_token) #-dk:TODO
 set(EXAMPLES
     allocator
     doc-just
@@ -29,7 +30,6 @@ set(EXAMPLES
     playground
     sender-demo
     stackoverflow
-    stop_token
     stopping
     when_all-cancel
 )

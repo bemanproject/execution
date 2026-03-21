@@ -178,6 +178,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stoppable_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stopped_as_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stopped_as_optional.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/store_receiver.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suppress_pop.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suppress_push.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suspend_complete.hpp
@@ -368,6 +369,7 @@ if(BEMAN_USE_MODULES)
                     stoppable_token.cppm
                     stopped_as_error.cppm
                     stopped_as_optional.cppm
+                    store_receiver.cppm
                     suspend_complete.cppm
                     sync_wait.cppm
                     sync_wait_with_variant.cppm

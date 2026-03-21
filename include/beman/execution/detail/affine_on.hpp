@@ -37,6 +37,7 @@ import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.sender_has_affine_on;
 import beman.execution.detail.set_value;
+import beman.execution.detail.store_receiver;
 import beman.execution.detail.tag_of_t;
 import beman.execution.detail.transform_sender;
 import beman.execution.detail.write_env;
@@ -57,6 +58,8 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/sender_has_affine_on.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/store_receiver.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/write_env.hpp>
@@ -152,11 +155,17 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             constexpr child_tag_t t{};
             return t.affine_on(::beman::execution::detail::forward_like<Sender>(child), ev);
         } else {
-            return ::beman::execution::write_env(
-                ::beman::execution::schedule_from(
-                    ::beman::execution::get_scheduler(ev),
-                    ::beman::execution::write_env(::beman::execution::detail::forward_like<Sender>(child), ev)),
-                beman::execution::detail::affine_on_env(ev));
+            return
+                ::beman::execution::detail::store_receiver(
+                    ::beman::execution::detail::forward_like<Sender>(child),
+                    []<typename Child>(Child&& child, const auto& ev) {
+                        return ::beman::execution::write_env(
+                            ::beman::execution::schedule_from(
+                                ::beman::execution::get_scheduler(ev),
+                                ::beman::execution::write_env(::std::forward<Child>(child), ev)),
+                            ::beman::execution::detail::affine_on_env(ev))
+                            ;
+                    });
         }
     }
     template <typename, typename...>
