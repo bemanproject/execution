@@ -43,80 +43,71 @@ import beman.execution.detail.start;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-    struct store_receiver_t {
-        template <::beman::execution::receiver Rcvr>
-        struct receiver {
-            using receiver_concept = ::beman::execution::receiver_t;
-            Rcvr* rcvr;
-            template <typename... Args>
-            auto set_value(Args&&... args) && noexcept -> void {
-                ::beman::execution::set_value(::std::move(*this->rcvr), ::std::forward<Args>(args)...);
-            }
-            template <typename Error>
-            auto set_error(Error&& error) && noexcept -> void {
-                ::beman::execution::set_error(::std::move(*this->rcvr), ::std::forward<Error>(error));
-            }
-            auto set_stopped() && noexcept -> void {
-                ::beman::execution::set_stopped(::std::move(*this->rcvr)); 
-            }
-            auto get_env() const noexcept {
-                return ::beman::execution::get_env(*this->rcvr);
-            }
-        };
-        template <::beman::execution::sender Sndr, typename Trans, ::beman::execution::receiver Rcvr>
-        struct state {
-            using operation_state_concept = ::beman::execution::operation_state_t;
-            using env_t = ::beman::execution::env_of_t<Rcvr>;
-            using state_t = ::beman::execution::connect_result_t<
-                decltype(::std::declval<Trans>()(::std::declval<Sndr>(), ::std::declval<env_t>())),
-                receiver<Rcvr>>;
-            Rcvr rcvr;
-            state_t op_state;
-            template <::beman::execution::sender S, typename T, ::beman::execution::receiver R>
-            state(S&& sndr, T&& trans, R&& r) :
-                rcvr(::std::forward<Rcvr>(::std::forward<R>(r)))
-                ,op_state(
-                    ::beman::execution::connect(
-                        ::std::forward<T>(trans)(::std::forward<S>(sndr), ::beman::execution::get_env(this->rcvr)),
-                        receiver<Rcvr>{::std::addressof(this->rcvr)}
-                    )
-                )
-                {}
-            auto start() & noexcept {
-                ::beman::execution::start(this->op_state);
-            }
-        };
-        template <::beman::execution::sender Sndr, typename Trans>
-        struct sender {
-            using sender_concept = ::beman::execution::sender_t;
-            template <typename... Env>
-            static consteval auto get_completion_signatures(Env&&... env) noexcept {
-                return ::beman::execution::get_completion_signatures<::std::remove_cvref_t<Sndr>, Env...>();
-            }
-            ::std::remove_cvref_t<Sndr>  sndr;
-            ::std::remove_cvref_t<Trans> trans;
+struct store_receiver_t {
+    template <::beman::execution::receiver Rcvr>
+    struct receiver {
+        using receiver_concept = ::beman::execution::receiver_t;
+        Rcvr* rcvr;
+        template <typename... Args>
+        auto set_value(Args&&... args) && noexcept -> void {
+            ::beman::execution::set_value(::std::move(*this->rcvr), ::std::forward<Args>(args)...);
+        }
+        template <typename Error>
+        auto set_error(Error&& error) && noexcept -> void {
+            ::beman::execution::set_error(::std::move(*this->rcvr), ::std::forward<Error>(error));
+        }
+        auto set_stopped() && noexcept -> void { ::beman::execution::set_stopped(::std::move(*this->rcvr)); }
+        auto get_env() const noexcept { return ::beman::execution::get_env(*this->rcvr); }
+    };
+    template <::beman::execution::sender Sndr, typename Trans, ::beman::execution::receiver Rcvr>
+    struct state {
+        using operation_state_concept = ::beman::execution::operation_state_t;
+        using env_t                   = ::beman::execution::env_of_t<Rcvr>;
+        using state_t = ::beman::execution::connect_result_t<decltype(::std::declval<Trans>()(
+                                                                 ::std::declval<Sndr>(), ::std::declval<env_t>())),
+                                                             receiver<Rcvr>>;
+        Rcvr    rcvr;
+        state_t op_state;
+        template <::beman::execution::sender S, typename T, ::beman::execution::receiver R>
+        state(S&& sndr, T&& trans, R&& r)
+            : rcvr(::std::forward<Rcvr>(::std::forward<R>(r))),
+              op_state(::beman::execution::connect(
+                  ::std::forward<T>(trans)(::std::forward<S>(sndr), ::beman::execution::get_env(this->rcvr)),
+                  receiver<Rcvr>{::std::addressof(this->rcvr)})) {}
+        auto start() & noexcept { ::beman::execution::start(this->op_state); }
+    };
+    template <::beman::execution::sender Sndr, typename Trans>
+    struct sender {
+        using sender_concept = ::beman::execution::sender_t;
+        template <typename... Env>
+        static consteval auto get_completion_signatures(Env&&... env) noexcept {
+            return ::beman::execution::get_completion_signatures<::std::remove_cvref_t<Sndr>, Env...>();
+        }
+        ::std::remove_cvref_t<Sndr>  sndr;
+        ::std::remove_cvref_t<Trans> trans;
 
-            template <::beman::execution::receiver Receiver>
-            auto connect(Receiver&& r) && {
-                static_assert(::beman::execution::operation_state<state<Sndr, Trans, ::std::remove_cvref_t<Receiver>>>);
-                return state<Sndr, Trans, ::std::remove_cvref_t<Receiver>>(::std::move(this->sndr), ::std::move(this->trans), ::std::forward<Receiver>(r));
-            }
-            template <::beman::execution::receiver Receiver>
-            auto connect(Receiver&& r) const& {
-                static_assert(::beman::execution::operation_state<state<Sndr, Trans, ::std::remove_cvref_t<Receiver>>>);
-                return state<Sndr, Trans, ::std::remove_cvref_t<Receiver>>(this->sndr, this->trans, ::std::forward<Receiver>(r));
-            }
-        };
-        template <::beman::execution::sender Sndr, typename Trans>
-        auto operator()(Sndr&& sndr, Trans&& trans) const {
-            static_assert(::beman::execution::sender<sender<Sndr, Trans>>);
-            return sender<Sndr, Trans>{::std::forward<Sndr>(sndr), ::std::forward<Trans>(trans)};
+        template <::beman::execution::receiver Receiver>
+        auto connect(Receiver&& r) && {
+            static_assert(::beman::execution::operation_state<state<Sndr, Trans, ::std::remove_cvref_t<Receiver>>>);
+            return state<Sndr, Trans, ::std::remove_cvref_t<Receiver>>(
+                ::std::move(this->sndr), ::std::move(this->trans), ::std::forward<Receiver>(r));
+        }
+        template <::beman::execution::receiver Receiver>
+        auto connect(Receiver&& r) const& {
+            static_assert(::beman::execution::operation_state<state<Sndr, Trans, ::std::remove_cvref_t<Receiver>>>);
+            return state<Sndr, Trans, ::std::remove_cvref_t<Receiver>>(
+                this->sndr, this->trans, ::std::forward<Receiver>(r));
         }
     };
+    template <::beman::execution::sender Sndr, typename Trans>
+    auto operator()(Sndr&& sndr, Trans&& trans) const {
+        static_assert(::beman::execution::sender<sender<Sndr, Trans>>);
+        return sender<Sndr, Trans>{::std::forward<Sndr>(sndr), ::std::forward<Trans>(trans)};
+    }
+};
 
-    inline constexpr store_receiver_t store_receiver{};
-}
-
+inline constexpr store_receiver_t store_receiver{};
+} // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
 

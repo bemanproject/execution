@@ -48,7 +48,7 @@ import beman.execution.detail.unspecified_promise;
 namespace beman::execution::detail {
 template <class Sndr, class Promise>
 class sender_awaitable {
-    static inline constexpr bool enable_defence{true};
+    inline static constexpr bool enable_defence{true};
     struct unit {};
     using value_type =
         ::beman::execution::detail::single_sender_value_type<Sndr, ::beman::execution::env_of_t<Promise>>;

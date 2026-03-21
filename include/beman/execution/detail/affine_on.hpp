@@ -155,17 +155,15 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             constexpr child_tag_t t{};
             return t.affine_on(::beman::execution::detail::forward_like<Sender>(child), ev);
         } else {
-            return
-                ::beman::execution::detail::store_receiver(
-                    ::beman::execution::detail::forward_like<Sender>(child),
-                    []<typename Child>(Child&& child, const auto& ev) {
-                        return ::beman::execution::write_env(
-                            ::beman::execution::schedule_from(
-                                ::beman::execution::get_scheduler(ev),
-                                ::beman::execution::write_env(::std::forward<Child>(child), ev)),
-                            ::beman::execution::detail::affine_on_env(ev))
-                            ;
-                    });
+            return ::beman::execution::detail::store_receiver(
+                ::beman::execution::detail::forward_like<Sender>(child),
+                []<typename Child>(Child&& child, const auto& ev) {
+                    return ::beman::execution::write_env(
+                        ::beman::execution::schedule_from(
+                            ::beman::execution::get_scheduler(ev),
+                            ::beman::execution::write_env(::std::forward<Child>(child), ev)),
+                        ::beman::execution::detail::affine_on_env(ev));
+                });
         }
     }
     template <typename, typename...>

@@ -7,5 +7,5 @@ module;
 export module beman.execution.detail.store_receiver;
 
 namespace beman::execution::detail {
-    export using beman::execution::detail::store_receiver;
+export using beman::execution::detail::store_receiver;
 } // namespace beman::execution::detail
