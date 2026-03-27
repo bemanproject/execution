@@ -19,6 +19,7 @@ import beman.execution.detail.completion_signatures;
 import beman.execution.detail.env;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_env;
+import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.immovable;
 import beman.execution.detail.operation_state;
@@ -32,6 +33,7 @@ import beman.execution.detail.unstoppable_token;
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/get_forward_progress_guarantee.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/immovable.hpp>
 #include <beman/execution/detail/operation_state.hpp>
@@ -113,6 +115,11 @@ class run_loop {
 
         auto schedule() noexcept -> sender { return {this->loop}; }
         auto operator==(const scheduler&) const -> bool = default;
+
+        static constexpr auto query(::beman::execution::get_forward_progress_guarantee_t) noexcept
+            -> ::beman::execution::forward_progress_guarantee {
+            return ::beman::execution::forward_progress_guarantee::parallel;
+        }
     };
 
     enum class state : unsigned char { starting, running, finishing };

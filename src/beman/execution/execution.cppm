@@ -31,6 +31,7 @@ export import beman.execution.detail.get_completion_signatures; // [exec.getcomp
 import beman.execution.detail.get_delegation_scheduler;
 import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
+import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_scheduler;
 import beman.execution.detail.get_stop_token;
 export import beman.execution.detail.inplace_stop_source; // [stopsource.inplace], class inplace_stop_source
@@ -133,14 +134,14 @@ export using ::beman::execution::get_domain_t;
 export using ::beman::execution::get_scheduler_t;
 export using ::beman::execution::get_delegation_scheduler_t;
 export using ::beman::execution::get_await_completion_adaptor_t;
-//-dk:TODO export using ::beman::execution::get_forward_progress_guarantee_t;
+export using ::beman::execution::get_forward_progress_guarantee_t;
 
 export using ::beman::execution::get_domain;
 export using ::beman::execution::get_scheduler;
 export using ::beman::execution::get_delegation_scheduler;
 export using ::beman::execution::get_await_completion_adaptor;
-//-dk:TODO export using ::beman::execution::forward_progress_guarantee;
-//-dk:TODO export using ::beman::execution::get_forward_progress_guarantee;
+export using ::beman::execution::forward_progress_guarantee;
+export using ::beman::execution::get_forward_progress_guarantee;
 
 export using ::beman::execution::get_env_t;
 export using ::beman::execution::get_env;
