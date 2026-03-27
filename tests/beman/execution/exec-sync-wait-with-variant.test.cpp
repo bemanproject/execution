@@ -4,6 +4,7 @@
 #include <exception>
 #include <concepts>
 #include <utility>
+#include <string>
 #include <tuple>
 #include <variant>
 #include <test/execution.hpp>
