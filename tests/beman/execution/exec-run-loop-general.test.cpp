@@ -28,4 +28,7 @@ TEST(exec_run_loop_general) {
     });
     static_assert(requires { rl.run(); });
     static_assert(requires { rl.finish(); });
+
+    ASSERT(test_std::get_forward_progress_guarantee(rl.get_scheduler()) ==
+           test_std::forward_progress_guarantee::parallel);
 }

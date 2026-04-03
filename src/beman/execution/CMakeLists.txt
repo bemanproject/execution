@@ -89,6 +89,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_domain_early.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_domain_late.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_env.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_forward_progress_guarantee.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_stop_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/has_as_awaitable.hpp
@@ -275,6 +276,7 @@ if(BEMAN_USE_MODULES)
                     get_domain_late.cppm
                     get_domain.cppm
                     get_env.cppm
+                    get_forward_progress_guarantee.cppm
                     get_scheduler.cppm
                     get_stop_token.cppm
                     has_as_awaitable.cppm
