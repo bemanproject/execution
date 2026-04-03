@@ -69,6 +69,7 @@ import beman.execution.detail.stoppable_source;
 import beman.execution.detail.stopped_as_error;
 import beman.execution.detail.stopped_as_optional;
 import beman.execution.detail.sync_wait;
+import beman.execution.detail.sync_wait_with_variant;
 export import beman.execution.detail.tag_of_t; // [exec.getcomplsigs], completion signatures
 import beman.execution.detail.then;
 import beman.execution.detail.transform_sender;
@@ -232,10 +233,10 @@ export using ::beman::execution::run_loop;
 
 // [exec.consumers], consumers
 export using ::beman::execution::sync_wait_t;
-//-dk:TODO export using ::beman::execution::sync_wait_with_variant_t;
+export using ::beman::execution::sync_wait_with_variant_t;
 
 export using ::beman::execution::sync_wait;
-//-dk:TODO export using ::beman::execution::sync_wait_with_variant;
+export using ::beman::execution::sync_wait_with_variant;
 
 // [exec.as.awaitable]
 export using ::beman::execution::as_awaitable_t;

@@ -182,6 +182,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suppress_push.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suspend_complete.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sync_wait.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sync_wait_with_variant.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/tag_of_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/then.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/transform_sender.hpp
@@ -369,6 +370,7 @@ if(BEMAN_USE_MODULES)
                     stopped_as_optional.cppm
                     suspend_complete.cppm
                     sync_wait.cppm
+                    sync_wait_with_variant.cppm
                     tag_of_t.cppm
                     then.cppm
                     transform_sender.cppm

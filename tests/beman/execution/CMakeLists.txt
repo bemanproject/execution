@@ -61,6 +61,7 @@ list(
     exec-stopped-as-error.test
     exec-stopped-as-optional.test
     exec-sync-wait.test
+    exec-sync-wait-with-variant.test
     exec-then.test
     exec-utils-cmplsigs.test
     exec-when-all.test

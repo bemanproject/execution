@@ -20,10 +20,12 @@ import beman.execution.detail.counting_scope;
 import beman.execution.detail.env;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
+import beman.execution.detail.get_await_completion_adaptor;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_delegation_scheduler;
 import beman.execution.detail.get_domain;
+import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
 import beman.execution.detail.get_stop_token;
@@ -52,7 +54,10 @@ import beman.execution.detail.spawn;
 //-dk:TODO? import beman.execution.detail.split;
 import beman.execution.detail.start;
 import beman.execution.detail.starts_on;
+import beman.execution.detail.stopped_as_error;
+import beman.execution.detail.stopped_as_optional;
 import beman.execution.detail.sync_wait;
+import beman.execution.detail.sync_wait_with_variant;
 import beman.execution.detail.then;
 import beman.execution.detail.valid_completion_for;
 import beman.execution.detail.valid_completion_signatures;
@@ -73,10 +78,12 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
+#include <beman/execution/detail/get_await_completion_adaptor.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_delegation_scheduler.hpp>
 #include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_forward_progress_guarantee.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
@@ -105,7 +112,10 @@ import beman.execution.detail.write_env;
 //-dk:TODO? #include <beman/execution/detail/split.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/starts_on.hpp>
+#include <beman/execution/detail/stopped_as_error.hpp>
+#include <beman/execution/detail/stopped_as_optional.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
+#include <beman/execution/detail/sync_wait_with_variant.hpp>
 #include <beman/execution/detail/then.hpp>
 #include <beman/execution/detail/valid_completion_for.hpp>
 #include <beman/execution/detail/valid_completion_signatures.hpp>
