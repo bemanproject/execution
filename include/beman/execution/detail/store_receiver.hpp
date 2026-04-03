@@ -1,4 +1,4 @@
-//-dk:TODO rRW/// include/beman/execution/detail/store_receiver.hpp                  -*-C++-*-
+// include/beman/execution/detail/store_receiver.hpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_STORE_RECEIVER

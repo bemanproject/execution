@@ -107,7 +107,23 @@ endif
 # TODO: beman.execution.examples.modules
 # FIXME: beman.execution.execution-module.test beman.execution.stop-token-module.test
 
-default: module
+default: simple
+
+SIMPLE_BUILD = build/simple-$(shell uname -s)
+
+.PHONY: simple simple-configure simple-build simple-test
+
+simple: simple-test
+
+simple-config:
+	cmake -G Ninja -S . -B $(SIMPLE_BUILD) -DBEMAN_USE_MODULES=OFF -DCXXFLAGS=
+
+simple-build: simple-config
+	CXXFLAGS= cmake --build $(SIMPLE_BUILD)
+
+simple-test: simple-build
+	ctest --test-dir $(SIMPLE_BUILD)
+
 
 all: $(SANITIZERS)
 
