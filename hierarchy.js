@@ -49,6 +49,7 @@ var hierarchy =
     [ "beman::execution::get_delegation_scheduler_t", "structbeman_1_1execution_1_1get__delegation__scheduler__t.html", null ],
     [ "beman::execution::get_domain_t", "structbeman_1_1execution_1_1get__domain__t.html", null ],
     [ "beman::execution::get_env_t", "structbeman_1_1execution_1_1get__env__t.html", null ],
+    [ "beman::execution::get_forward_progress_guarantee_t", "structbeman_1_1execution_1_1get__forward__progress__guarantee__t.html", null ],
     [ "beman::execution::get_stop_token_t", "structbeman_1_1execution_1_1get__stop__token__t.html", null ],
     [ "beman::execution::detail::immovable", null, [
       [ "beman::execution::detail::counting_scope_base", null, [

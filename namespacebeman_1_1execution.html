@@ -101,6 +101,7 @@ $(document).ready(function(){initNavTree('namespacebeman_1_1execution.html','');
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#concepts">Concepts</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">beman::execution Namespace Reference</div></div>
@@ -138,6 +139,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1get__domain__t.html">get_domain_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1get__env__t.html">get_env_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1get__forward__progress__guarantee__t.html">get_forward_progress_guarantee_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1get__scheduler__t.html">get_scheduler_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -354,6 +357,14 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>when_all_with_varian
 using&#160;</td><td class="memItemRight" valign="bottom"><b>write_env_t</b> = ::beman::execution::detail::write_env_t</td></tr>
 <tr class="separator:ae08b2d0f0e8241817d5e513308337252"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a58e2f01aac828eb268bedcff757ef5fd"><td class="memItemLeft" align="right" valign="top"><a id="a58e2f01aac828eb268bedcff757ef5fd" name="a58e2f01aac828eb268bedcff757ef5fd"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>forward_progress_guarantee</b> { <b>concurrent</b>
+, <b>parallel</b>
+, <b>weakly_parallel</b>
+ }</td></tr>
+<tr class="separator:a58e2f01aac828eb268bedcff757ef5fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a14b1351ec5d8ea786854eb581fcb9ea8"><td class="memTemplParams" colspan="2"><a id="a14b1351ec5d8ea786854eb581fcb9ea8" name="a14b1351ec5d8ea786854eb581fcb9ea8"></a>
@@ -452,6 +463,9 @@ constexpr <a class="el" href="structbeman_1_1execution_1_1get__domain__t.html">g
 <tr class="memitem:a6fa02c8479269b757d86df447c65fb4f"><td class="memItemLeft" align="right" valign="top"><a id="a6fa02c8479269b757d86df447c65fb4f" name="a6fa02c8479269b757d86df447c65fb4f"></a>
 constexpr <a class="el" href="structbeman_1_1execution_1_1get__env__t.html">get_env_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_env</b> {}</td></tr>
 <tr class="separator:a6fa02c8479269b757d86df447c65fb4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eea8752f5abf9ca671b51f1ec4716e8"><td class="memItemLeft" align="right" valign="top"><a id="a0eea8752f5abf9ca671b51f1ec4716e8" name="a0eea8752f5abf9ca671b51f1ec4716e8"></a>
+constexpr <a class="el" href="structbeman_1_1execution_1_1get__forward__progress__guarantee__t.html">get_forward_progress_guarantee_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_forward_progress_guarantee</b> {}</td></tr>
+<tr class="separator:a0eea8752f5abf9ca671b51f1ec4716e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac72a28f06f4e41eea97c9d4ee1749a93"><td class="memItemLeft" align="right" valign="top"><a id="ac72a28f06f4e41eea97c9d4ee1749a93" name="ac72a28f06f4e41eea97c9d4ee1749a93"></a>
 constexpr <a class="el" href="structbeman_1_1execution_1_1get__scheduler__t.html">get_scheduler_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_scheduler</b> {}</td></tr>
 <tr class="separator:ac72a28f06f4e41eea97c9d4ee1749a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
