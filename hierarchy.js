@@ -93,6 +93,7 @@ var hierarchy =
     ] ],
     [ "beman::execution::stop_source", "classbeman_1_1execution_1_1stop__source.html", null ],
     [ "beman::execution::stop_token", "classbeman_1_1execution_1_1stop__token.html", null ],
+    [ "beman::execution::sync_wait_with_variant_t", "structbeman_1_1execution_1_1sync__wait__with__variant__t.html", null ],
     [ "tst::timer", "classtst_1_1timer.html", null ],
     [ "tst::timer::token", "classtst_1_1timer_1_1token.html", null ],
     [ "beman::execution::detail::counting_scope_base::token_base", null, [

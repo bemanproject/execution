@@ -39,6 +39,7 @@ var annotated_dup =
         [ "stop_callback", "classbeman_1_1execution_1_1stop__callback.html", null ],
         [ "stop_source", "classbeman_1_1execution_1_1stop__source.html", null ],
         [ "stop_token", "classbeman_1_1execution_1_1stop__token.html", null ],
+        [ "sync_wait_with_variant_t", "structbeman_1_1execution_1_1sync__wait__with__variant__t.html", null ],
         [ "with_awaitable_senders", "structbeman_1_1execution_1_1with__awaitable__senders.html", null ]
       ] ]
     ] ],

@@ -23,5 +23,6 @@ var searchData=
   ['state_20',['state',['../structbeman_1_1execution_1_1inline__scheduler_1_1state.html',1,'beman::execution::inline_scheduler::state&lt; Rcvr &gt;'],['../structtst_1_1repeat__effect__unilt__t_1_1sender_1_1state.html',1,'tst::repeat_effect_unilt_t::sender&lt; Child, Fun &gt;::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1resume__after__sender_1_1state.html',1,'tst::timer::resume_after_sender::state&lt; Receiver &gt;'],['../structtst_1_1timer_1_1when__done__sender_1_1state.html',1,'tst::timer::when_done_sender::state&lt; Receiver &gt;']]],
   ['stop_5fcallback_21',['stop_callback',['../classbeman_1_1execution_1_1stop__callback.html',1,'beman::execution']]],
   ['stop_5fsource_22',['stop_source',['../classbeman_1_1execution_1_1stop__source.html',1,'beman::execution']]],
-  ['stop_5ftoken_23',['stop_token',['../classbeman_1_1execution_1_1stop__token.html',1,'beman::execution']]]
+  ['stop_5ftoken_23',['stop_token',['../classbeman_1_1execution_1_1stop__token.html',1,'beman::execution']]],
+  ['sync_5fwait_5fwith_5fvariant_5ft_24',['sync_wait_with_variant_t',['../structbeman_1_1execution_1_1sync__wait__with__variant__t.html',1,'beman::execution']]]
 ];

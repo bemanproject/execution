@@ -160,6 +160,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "suppress_push.hpp", "suppress__push_8hpp_source.html", null ],
     [ "suspend_complete.hpp", "suspend__complete_8hpp_source.html", null ],
     [ "sync_wait.hpp", "sync__wait_8hpp_source.html", null ],
+    [ "sync_wait_with_variant.hpp", "sync__wait__with__variant_8hpp_source.html", null ],
     [ "tag_of_t.hpp", "tag__of__t_8hpp_source.html", null ],
     [ "then.hpp", "then_8hpp_source.html", null ],
     [ "transform_sender.hpp", "transform__sender_8hpp_source.html", null ],

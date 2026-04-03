@@ -28,5 +28,6 @@ var searchData=
   ['stop_5fsource_25',['stop_source',['../classbeman_1_1execution_1_1stop__source.html',1,'beman::execution']]],
   ['stop_5ftoken_26',['stop_token',['../classbeman_1_1execution_1_1stop__token.html',1,'beman::execution']]],
   ['supporting_20modules_27',['Supporting Modules',['../md_docs_modules.html',1,'']]],
-  ['sync_5fwait_28',['sync_wait',['../namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519',1,'beman::execution']]]
+  ['sync_5fwait_28',['sync_wait',['../namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519',1,'beman::execution']]],
+  ['sync_5fwait_5fwith_5fvariant_5ft_29',['sync_wait_with_variant_t',['../structbeman_1_1execution_1_1sync__wait__with__variant__t.html',1,'beman::execution']]]
 ];
