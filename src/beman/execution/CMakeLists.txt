@@ -178,6 +178,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stoppable_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stopped_as_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stopped_as_optional.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/store_receiver.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suppress_pop.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suppress_push.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suspend_complete.hpp
@@ -188,6 +189,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/transform_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/type_list.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unspecified_promise.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_signatures.hpp
@@ -368,6 +370,7 @@ if(BEMAN_USE_MODULES)
                     stoppable_token.cppm
                     stopped_as_error.cppm
                     stopped_as_optional.cppm
+                    store_receiver.cppm
                     suspend_complete.cppm
                     sync_wait.cppm
                     sync_wait_with_variant.cppm
@@ -376,6 +379,7 @@ if(BEMAN_USE_MODULES)
                     transform_sender.cppm
                     type_list.cppm
                     unspecified_promise.cppm
+                    unstoppable.cppm
                     unstoppable_token.cppm
                     valid_completion_for.cppm
                     valid_completion_signatures.cppm

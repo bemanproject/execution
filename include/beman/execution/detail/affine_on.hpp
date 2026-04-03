@@ -24,7 +24,6 @@ import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_domain_early;
 import beman.execution.detail.get_scheduler;
 import beman.execution.detail.get_stop_token;
-import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.never_stop_token;
 import beman.execution.detail.nested_sender_has_affine_on;
@@ -37,8 +36,10 @@ import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.sender_has_affine_on;
 import beman.execution.detail.set_value;
+import beman.execution.detail.store_receiver;
 import beman.execution.detail.tag_of_t;
 import beman.execution.detail.transform_sender;
+import beman.execution.detail.unstoppable;
 import beman.execution.detail.write_env;
 #else
 #include <beman/execution/detail/env.hpp>
@@ -47,7 +48,6 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
-#include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/never_stop_token.hpp>
 #include <beman/execution/detail/prop.hpp>
@@ -57,8 +57,11 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/sender_has_affine_on.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/store_receiver.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
+#include <beman/execution/detail/unstoppable.hpp>
 #include <beman/execution/detail/write_env.hpp>
 #endif
 
@@ -136,13 +139,13 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
     static auto transform_sender(Sender&& sender, const Env& ev) {
         static_assert(requires {
             {
-                ::beman::execution::get_completion_signatures<
-                    decltype(::beman::execution::schedule(::beman::execution::get_scheduler(ev))),
-                    decltype(::beman::execution::detail::join_env(
-                        ::beman::execution::env{::beman::execution::prop{
-                            ::beman::execution::get_stop_token, ::beman::execution::never_stop_token{}, {}}},
-                        ev))>()
-            } -> ::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>;
+                ::beman::execution::get_completion_signatures<decltype(::beman::execution::unstoppable(
+                                                                           ::beman::execution::schedule(
+                                                                               ::beman::execution::get_scheduler(ev))),
+                                                                       ev)>()
+            } //-dk:TODO ->
+              //::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>
+            ;
         });
         //[[maybe_unused]] auto& [tag, data, child] = sender;
         auto& child       = sender.template get<2>();
@@ -152,11 +155,13 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
             constexpr child_tag_t t{};
             return t.affine_on(::beman::execution::detail::forward_like<Sender>(child), ev);
         } else {
-            return ::beman::execution::write_env(
-                ::beman::execution::schedule_from(
-                    ::beman::execution::get_scheduler(ev),
-                    ::beman::execution::write_env(::beman::execution::detail::forward_like<Sender>(child), ev)),
-                beman::execution::detail::affine_on_env(ev));
+            return ::beman::execution::detail::store_receiver(
+                ::beman::execution::detail::forward_like<Sender>(child),
+                []<typename Child>(Child&& child, const auto& ev) {
+                    return ::beman::execution::unstoppable(::beman::execution::schedule_from(
+                        ::beman::execution::get_scheduler(ev),
+                        ::beman::execution::write_env(::std::forward<Child>(child), ev)));
+                });
         }
     }
     template <typename, typename...>

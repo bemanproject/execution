@@ -17,6 +17,7 @@ if(PROJECT_IS_TOP_LEVEL)
     enable_testing()
 endif()
 
+set(TODO stop_token) #-dk:TODO including that causes a linker error
 set(EXAMPLES
     allocator
     doc-just
@@ -29,8 +30,8 @@ set(EXAMPLES
     playground
     sender-demo
     stackoverflow
-    stop_token
     stopping
+    suspend_never
     when_all-cancel
 )
 

@@ -12,7 +12,6 @@ import std;
 #include <concepts>
 #include <coroutine>
 #include <exception>
-#include <thread>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -49,20 +48,19 @@ import beman.execution.detail.unspecified_promise;
 namespace beman::execution::detail {
 template <class Sndr, class Promise>
 class sender_awaitable {
+    inline static constexpr bool enable_defence{true};
     struct unit {};
     using value_type =
         ::beman::execution::detail::single_sender_value_type<Sndr, ::beman::execution::env_of_t<Promise>>;
     using result_type  = ::std::conditional_t<::std::is_void_v<value_type>, unit, value_type>;
     using variant_type = ::std::variant<::std::monostate, result_type, ::std::exception_ptr>;
-    using data_type = ::std::tuple<variant_type, ::std::atomic<::std::thread::id>, ::std::coroutine_handle<Promise>>;
+    using data_type    = ::std::tuple<variant_type, ::std::atomic<bool>, ::std::coroutine_handle<Promise>>;
 
     struct awaitable_receiver {
         using receiver_concept = ::beman::execution::receiver_t;
 
         void resume() {
-            std::thread::id id(::std::this_thread::get_id());
-            if (not ::std::get<1>(*result_ptr_)
-                        .compare_exchange_strong(id, ::std::thread::id{}, std::memory_order_acq_rel)) {
+            if (not enable_defence || ::std::get<1>(*result_ptr_).exchange(true, std::memory_order_acq_rel)) {
                 ::std::get<2>(*result_ptr_).resume();
             }
         }
@@ -85,9 +83,7 @@ class sender_awaitable {
         }
 
         void set_stopped() && noexcept {
-            std::thread::id id(::std::this_thread::get_id());
-            if (not ::std::get<1>(*result_ptr_)
-                        .compare_exchange_strong(id, ::std::thread::id{}, ::std::memory_order_acq_rel)) {
+            if (not enable_defence || ::std::get<1>(*result_ptr_).exchange(true, ::std::memory_order_acq_rel)) {
                 static_cast<::std::coroutine_handle<>>(::std::get<2>(*result_ptr_).promise().unhandled_stopped())
                     .resume();
             }
@@ -107,16 +103,14 @@ class sender_awaitable {
 
   public:
     sender_awaitable(Sndr&& sndr, Promise& p)
-        : result{::std::monostate{}, ::std::this_thread::get_id(), ::std::coroutine_handle<Promise>::from_promise(p)},
+        : result{::std::monostate{}, false, ::std::coroutine_handle<Promise>::from_promise(p)},
           state{::beman::execution::connect(::std::forward<Sndr>(sndr),
                                             sender_awaitable::awaitable_receiver{::std::addressof(result)})} {}
 
     static constexpr bool     await_ready() noexcept { return false; }
     ::std::coroutine_handle<> await_suspend(::std::coroutine_handle<Promise> handle) noexcept {
         ::beman::execution::start(state);
-        ::std::thread::id id(::std::this_thread::get_id());
-        if (not ::std::get<1>(this->result)
-                    .compare_exchange_strong(id, ::std::thread::id{}, ::std::memory_order_acq_rel)) {
+        if (enable_defence && ::std::get<1>(this->result).exchange(true, std::memory_order_acq_rel)) {
             if (::std::holds_alternative<::std::monostate>(::std::get<0>(this->result))) {
                 return ::std::get<2>(this->result).promise().unhandled_stopped();
             }
