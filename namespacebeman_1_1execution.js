@@ -47,6 +47,7 @@ var namespacebeman_1_1execution =
     [ "scope_token", "conceptbeman_1_1execution_1_1scope__token.html", null ],
     [ "sender", "conceptbeman_1_1execution_1_1sender.html", null ],
     [ "sender_in", "conceptbeman_1_1execution_1_1sender__in.html", null ],
+    [ "sender_to", "conceptbeman_1_1execution_1_1sender__to.html", null ],
     [ "stoppable_token", "conceptbeman_1_1execution_1_1stoppable__token.html", null ],
     [ "unstoppable_token", "conceptbeman_1_1execution_1_1unstoppable__token.html", null ],
     [ "affine_on_t", "namespacebeman_1_1execution.html#a1f94aa0e5e5a137c6565d439e868320b", null ],

@@ -10,6 +10,7 @@ var concepts =
         [ "scope_token", "conceptbeman_1_1execution_1_1scope__token.html", null ],
         [ "sender", "conceptbeman_1_1execution_1_1sender.html", null ],
         [ "sender_in", "conceptbeman_1_1execution_1_1sender__in.html", null ],
+        [ "sender_to", "conceptbeman_1_1execution_1_1sender__to.html", null ],
         [ "stoppable_token", "conceptbeman_1_1execution_1_1stoppable__token.html", null ],
         [ "unstoppable_token", "conceptbeman_1_1execution_1_1unstoppable__token.html", null ]
       ] ]

@@ -11,6 +11,7 @@ var searchData=
   ['scope_5ftoken_8',['scope_token',['../conceptbeman_1_1execution_1_1scope__token.html',1,'beman::execution']]],
   ['sender_9',['sender',['../conceptbeman_1_1execution_1_1sender.html',1,'beman::execution']]],
   ['sender_5fin_10',['sender_in',['../conceptbeman_1_1execution_1_1sender__in.html',1,'beman::execution']]],
-  ['stoppable_5ftoken_11',['stoppable_token',['../conceptbeman_1_1execution_1_1stoppable__token.html',1,'beman::execution']]],
-  ['unstoppable_5ftoken_12',['unstoppable_token',['../conceptbeman_1_1execution_1_1unstoppable__token.html',1,'beman::execution']]]
+  ['sender_5fto_11',['sender_to',['../conceptbeman_1_1execution_1_1sender__to.html',1,'beman::execution']]],
+  ['stoppable_5ftoken_12',['stoppable_token',['../conceptbeman_1_1execution_1_1stoppable__token.html',1,'beman::execution']]],
+  ['unstoppable_5ftoken_13',['unstoppable_token',['../conceptbeman_1_1execution_1_1unstoppable__token.html',1,'beman::execution']]]
 ];
