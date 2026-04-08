@@ -123,9 +123,6 @@ if(
         )
         # gersemi: on
     else()
-        message(
-            STATUS
-            "File does NOT EXISTS! ${CMAKE_CXX_STDLIB_MODULES_JSON}"
-        )
+        message(STATUS "File does NOT EXISTS! ${CMAKE_CXX_STDLIB_MODULES_JSON}")
     endif()
 endif()
