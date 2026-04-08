@@ -8,165 +8,268 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
-#include <algorithm>
 #include <concepts>
 #include <exception>
+#include <execution>
+#include <functional>
 #include <type_traits>
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
-import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.default_impls;
-import beman.execution.detail.get_completion_signatures;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.get_domain_early;
-import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.unique;
-import beman.execution.detail.movable_value;
 import beman.execution.detail.product_type;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.sender_for;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_value;
 import beman.execution.detail.transform_sender;
 #else
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
-#include <beman/execution/detail/completion_signatures_for.hpp>
+#include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
-#include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
-#include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
+#include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
 #endif
 
-namespace beman::execution::detail {
+// ----------------------------------------------------------------------------
 
-template <typename, typename, typename>
-struct fixed_completions_helper;
+namespace beman::execution::detail {
+template <bool IsChunked, typename F, typename Shape, typename... Args>
+struct bulk_traits;
 
 template <typename F, typename Shape, typename... Args>
-struct fixed_completions_helper<F, Shape, completion_signatures<Args...>> {
+struct bulk_traits<true, F, Shape, Args...> { // for bulk_chunked
+    static constexpr bool is_invocable = ::std::is_invocable_v<F&, Shape, Shape, Args&...>;
 
-    template <typename, typename>
-    struct may_throw;
-    template <typename XF, typename Tag, typename... XArgs>
-    struct may_throw<XF, Tag(XArgs...)> {
-        static constexpr bool value =
-            std::same_as<Tag, ::beman::execution::set_value_t> && !::std::is_nothrow_invocable<XF, Shape, XArgs...>();
-    };
-    template <typename XF, typename... Sigs>
-    struct may_throw<XF, completion_signatures<Sigs...>> {
-        static constexpr bool value = (false || ... || may_throw<XF, Sigs>::value);
-    };
+    static constexpr bool is_nothrow_invocable = ::std::is_nothrow_invocable_v<F&, Shape, Shape, Args&...>;
 
-    using type = std::conditional_t<!may_throw<F, Args...>::value,
-                                    completion_signatures<Args...>,
-                                    completion_signatures<Args..., set_error_t(std::exception_ptr)>>;
+    static auto invoke(F& fn, Shape shape, Args&... args) noexcept(is_nothrow_invocable) -> void {
+        if (shape > static_cast<Shape>(0)) [[likely]] {
+            std::invoke(fn, 0, shape, args...);
+        }
+    }
 };
 
-struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
+template <typename F, typename Shape, typename... Args>
+struct bulk_traits<false, F, Shape, Args...> { // for bulk_unchunked
+    static constexpr bool is_invocable = ::std::invocable<F, Shape, Args...>;
 
-    template <class Shape, class f>
-        requires(std::is_integral_v<Shape> && ::beman::execution::detail::movable_value<f>)
-    auto operator()(Shape&& shape, f&& fun) const {
+    static constexpr bool is_nothrow_invocable = ::std::is_nothrow_invocable_v<F, Shape, Args...>;
+
+    static auto invoke(F& fn, Shape shape, Args&... args) noexcept(is_nothrow_invocable) -> void {
+        for (auto i = static_cast<Shape>(0); i < shape; ++i) {
+            std::invoke(fn, i, args...);
+        }
+    }
+};
+
+template <bool IsChunked, typename F, typename Shape, typename Completions>
+struct bulk_transform_signatures;
+
+template <bool IsChunked, typename F, typename Shape, typename... Sigs>
+struct bulk_transform_signatures<IsChunked, F, Shape, completion_signatures<Sigs...>> {
+    template <typename>
+    struct is_nothrow : ::std::true_type {};
+
+    template <typename... Args>
+    struct is_nothrow<::beman::execution::set_value_t(Args...)>
+        : ::std::bool_constant<bulk_traits<IsChunked, F, Shape, Args...>::is_nothrow_invocable> {};
+
+    using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
+        ::beman::execution::completion_signatures<Sigs...>,
+        ::std::conditional_t<
+            (... && is_nothrow<Sigs>::value),
+            ::beman::execution::completion_signatures<>,
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>>>;
+};
+
+template <bool IsChunked>
+struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsChunked>> {
+    template <typename Policy, typename Shape, typename F>
+        requires(::std::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
+                 ::std::copy_constructible<::std::decay_t<F>>)
+    auto operator()(Policy&& policy, Shape shape, F&& f) const {
         return ::beman::execution::detail::make_sender_adaptor(
-            *this, std::forward<Shape>(shape), std::forward<f>(fun));
+            *this, ::std::forward<Policy>(policy), shape, ::std::forward<F>(f));
     }
 
-    template <class Sender, class Shape, class f>
-        requires(::beman::execution::sender<Sender> && std::is_integral_v<Shape> &&
-                 ::beman::execution::detail::movable_value<f>)
-    auto operator()(Sender&& sndr, Shape&& shape, f&& fun) const {
-
-        auto domain{::beman::execution::detail::get_domain_early(sndr)};
-
+    template <typename Sender, typename Policy, typename Shape, typename F>
+        requires(::beman::execution::sender<Sender> && ::std::is_execution_policy_v<::std::remove_cvref_t<Policy>> &&
+                 ::std::integral<Shape> && ::std::copy_constructible<::std::decay_t<F>>)
+    auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const {
         return ::beman::execution::transform_sender(
-            domain,
+            ::beman::execution::detail::get_domain_early(sndr),
             ::beman::execution::detail::make_sender(
-                *this, ::beman::execution::detail::product_type<Shape, f>{shape, fun}, std::forward<Sender>(sndr)));
+                *this,
+                ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
+                    ::std::forward<Policy>(policy), shape, ::std::forward<F>(f)},
+                ::std::forward<Sender>(sndr)));
     }
 
   private:
-    template <typename F, typename Shape, typename Completions>
-    using fixed_completions = typename fixed_completions_helper<F, Shape, Completions>::type;
-    template <typename, typename>
+    template <typename, typename...>
     struct get_signatures;
-    template <class Shape, class F, class Sender, class Env>
-    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::bulk_t,
-                                                                   ::beman::execution::detail::product_type<Shape, F>,
-                                                                   Sender>,
-                          Env> {
-        using completions = decltype(::beman::execution::get_completion_signatures<Sender, Env>());
-        using type        = ::beman::execution::detail::meta::unique<
-            ::beman::execution::detail::meta::combine<fixed_completions<F, Shape, completions>>>;
+    template <typename Policy, typename Shape, typename F, typename Sender, typename... Env>
+    struct get_signatures<
+        ::beman::execution::detail::
+            basic_sender<bulk_algo_t, ::beman::execution::detail::product_type<Policy, Shape, F>, Sender>,
+        Env...> {
+        using type =
+            typename bulk_transform_signatures<IsChunked,
+                                               F,
+                                               Shape,
+                                               ::beman::execution::completion_signatures_of_t<Sender, Env...>>::type;
     };
 
   public:
     template <typename Sender, typename... Env>
-    static consteval auto get_completion_signatures() {
-        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+    static consteval auto get_completion_signatures() noexcept {
+        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
     }
-    struct impls_for : ::beman::execution::detail::default_impls {
 
+    struct impls_for : ::beman::execution::detail::default_impls {
         struct complete_impl {
-            template <class Index, class Shape, class Fun, class Rcvr, class Tag, class... Args>
-                requires(!::std::same_as<Tag, set_value_t> || std::is_invocable_v<Fun, Shape, Args...>)
+            template <typename Index,
+                      typename Policy,
+                      typename Shape,
+                      typename Fun,
+                      typename Receiver,
+                      typename Tag,
+                      typename... Args>
+                requires(!::std::same_as<Tag, set_value_t> ||
+                         bulk_traits<IsChunked, Fun, Shape, Args...>::is_invocable)
             auto operator()(Index,
-                            ::beman::execution::detail::product_type<Shape, Fun>& state,
-                            Rcvr&                                                 rcvr,
+                            ::beman::execution::detail::product_type<Policy, Shape, Fun>& state,
+                            Receiver&                                                     rcvr,
                             Tag,
                             Args&&... args) const noexcept -> void {
-                if constexpr (std::same_as<Tag, set_value_t>) {
-                    auto& [shape, f] = state;
-
-                    using s_type = std::remove_cvref_t<decltype(shape)>;
-
-                    constexpr bool nothrow = noexcept(f(s_type(shape), args...));
-
+                if constexpr (::std::same_as<Tag, set_value_t>) {
+                    auto& [policy, shape, f] = state;
+                    constexpr bool nothrow   = bulk_traits<IsChunked, Fun, Shape, Args...>::is_nothrow_invocable;
                     try {
                         [&]() noexcept(nothrow) {
-                            for (decltype(s_type(shape)) i = 0; i < shape; i++) {
-                                f(s_type(i), args...);
-                            }
-                            Tag()(std::move(rcvr), std::forward<Args>(args)...);
+                            bulk_traits<IsChunked, Fun, Shape, Args...>::invoke(f, shape, args...);
+                            Tag()(::std::move(rcvr), ::std::forward<Args>(args)...);
                         }();
-
                     } catch (...) {
-                        if constexpr (not nothrow) {
-                            ::beman::execution::set_error(std::move(rcvr), std::current_exception());
+                        if constexpr (!nothrow) {
+                            ::beman::execution::set_error(::std::move(rcvr), ::std::current_exception());
                         }
                     }
                 } else {
-                    Tag()(std::move(rcvr), std::forward<Args>(args)...);
+                    Tag()(::std::move(rcvr), ::std::forward<Args>(args)...);
                 }
             }
         };
-        static constexpr auto complete{complete_impl{}};
+        static constexpr complete_impl complete{};
     };
+};
+
+using bulk_chunked_t = bulk_algo_t<true>;
+
+using bulk_unchunked_t = bulk_algo_t<false>;
+
+struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
+    template <typename Policy, typename Shape, typename F>
+        requires(::std::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
+                 ::std::copy_constructible<::std::decay_t<F>>)
+    auto operator()(Policy&& policy, Shape shape, F&& f) const {
+        return ::beman::execution::detail::make_sender_adaptor(
+            *this, ::std::forward<Policy>(policy), shape, ::std::forward<F>(f));
+    }
+
+    template <typename Sender, typename Policy, typename Shape, typename F>
+        requires(::beman::execution::sender<Sender> && ::std::is_execution_policy_v<::std::remove_cvref_t<Policy>> &&
+                 ::std::integral<Shape> && ::std::copy_constructible<::std::decay_t<F>>)
+    auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const {
+        return ::beman::execution::transform_sender(
+            ::beman::execution::detail::get_domain_early(sndr),
+            ::beman::execution::detail::make_sender(
+                *this,
+                ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
+                    ::std::forward<Policy>(policy), shape, ::std::forward<F>(f)},
+                ::std::forward<Sender>(sndr)));
+    }
+
+    template <::beman::execution::detail::sender_for<bulk_t> Sender, typename... Env>
+    auto transform_sender(Sender&& sndr, Env&&...) const {
+        auto data  = ::beman::execution::detail::forward_like<Sender>(sndr.template get<1>());
+        auto child = ::beman::execution::detail::forward_like<Sender>(sndr.template get<2>());
+
+        auto& policy = data.template get<0>();
+        auto& shape  = data.template get<1>();
+        auto& f      = data.template get<2>();
+
+        return bulk_chunked_t{}(::std::move(child),
+                                policy,
+                                shape,
+                                this->wrap_chunked<::std::remove_cvref_t<decltype(shape)>>(::std::move(f)));
+    }
+
+  private:
+    template <typename, typename...>
+    struct get_signatures;
+    template <typename Policy, typename Shape, typename F, typename Sender, typename... Env>
+    struct get_signatures<::beman::execution::detail::
+                              basic_sender<bulk_t, ::beman::execution::detail::product_type<Policy, Shape, F>, Sender>,
+                          Env...> {
+        using type =
+            typename bulk_transform_signatures<false,
+                                               F,
+                                               Shape,
+                                               ::beman::execution::completion_signatures_of_t<Sender, Env...>>::type;
+    };
+
+    template <typename Shape, typename Fn>
+    static auto wrap_chunked(Fn f) noexcept {
+        return [f = std::move(f)]<typename... Args>(Shape begin, Shape end, Args&&... args) noexcept(
+                   ::std::is_nothrow_invocable_v<Fn&, Shape, Args&...>) {
+            while (begin != end) {
+                std::invoke(f, begin++, args...);
+            }
+        };
+    }
+
+  public:
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() noexcept {
+        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
+    }
 };
 
 } // namespace beman::execution::detail
 
-#include <beman/execution/detail/suppress_pop.hpp>
+// ----------------------------------------------------------------------------
 
 namespace beman::execution {
 
-using bulk_t = ::beman::execution::detail::bulk_t;
-inline constexpr ::beman::execution::bulk_t bulk{};
+using bulk_t           = ::beman::execution::detail::bulk_t;
+using bulk_chunked_t   = ::beman::execution::detail::bulk_chunked_t;
+using bulk_unchunked_t = ::beman::execution::detail::bulk_unchunked_t;
+
+inline constexpr ::beman::execution::bulk_t           bulk{};
+inline constexpr ::beman::execution::bulk_chunked_t   bulk_chunked{};
+inline constexpr ::beman::execution::bulk_unchunked_t bulk_unchunked{};
 
 } // namespace beman::execution
 
