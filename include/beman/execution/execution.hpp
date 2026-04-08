@@ -87,6 +87,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/inline_scheduler.hpp>
 #include <beman/execution/detail/into_variant.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/let.hpp>
@@ -102,6 +103,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_in.hpp>
+#include <beman/execution/detail/sender_to.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>

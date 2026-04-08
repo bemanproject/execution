@@ -173,6 +173,17 @@ auto test_sender_for() -> void {
     static_assert(test_std::sender<std_sender>);
     static_assert(not test_detail::sender_for<std_sender, tag_t>);
 }
+
+auto test_sender_to() -> void {
+    struct int_receiver {
+        using receiver_concept = test_std::receiver_t;
+        static auto set_value(int) noexcept -> void {}
+    };
+
+    static_assert(test_std::sender_to<decltype(test_std::just(1)), int_receiver>);
+    static_assert(not test_std::sender_to<decltype(test_std::just()), int_receiver>);
+}
+
 } // namespace
 
 TEST(exec_snd_concepts) {
@@ -183,4 +194,5 @@ TEST(exec_snd_concepts) {
     test_sender_in();
     test_tag_of_t();
     test_sender_for();
+    test_sender_to();
 }
