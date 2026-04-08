@@ -1,7 +1,11 @@
-#include <beman/execution/execution.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <iostream>
 #include <new>
 #include <memory>
+#endif
+#include <beman/execution/execution.hpp>
 
 namespace ex = beman::execution;
 
