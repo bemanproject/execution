@@ -156,6 +156,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_has_affine_on.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_in.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_to.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sends_stopped.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/set_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/set_stopped.hpp
@@ -345,6 +346,7 @@ if(BEMAN_USE_MODULES)
                     sender_has_affine_on.cppm
                     sender_in.cppm
                     sender.cppm
+                    sender_to.cppm
                     sends_stopped.cppm
                     set_error.cppm
                     set_stopped.cppm
