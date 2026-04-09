@@ -33,7 +33,6 @@ set(EXAMPLES
     sender-demo
     stackoverflow
     stopping
-    suspend_never
     when_all-cancel
 )
 
