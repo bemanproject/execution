@@ -347,6 +347,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>upon_error_t</b> = :
 using&#160;</td><td class="memItemRight" valign="bottom"><b>upon_stopped_t</b> = ::beman::execution::detail::then_t&lt;<a class="el" href="structbeman_1_1execution_1_1set__stopped__t.html">::beman::execution::set_stopped_t</a> &gt;</td></tr>
 <tr class="memdesc:a724b0f844f19033a9aff2385c0c2532d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_stopped_t</code> is the type of <code>upon_stopped</code>. <br /></td></tr>
 <tr class="separator:a724b0f844f19033a9aff2385c0c2532d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8d445a77bcb5715967ed383512bf3b4"><td class="memItemLeft" align="right" valign="top"><a id="ac8d445a77bcb5715967ed383512bf3b4" name="ac8d445a77bcb5715967ed383512bf3b4"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>unstoppable_t</b> = ::beman::execution::detail::unstoppable_t</td></tr>
+<tr class="separator:ac8d445a77bcb5715967ed383512bf3b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d065a1873eb0331785f8a5b82b998a9"><td class="memTemplParams" colspan="2"><a id="a0d065a1873eb0331785f8a5b82b998a9" name="a0d065a1873eb0331785f8a5b82b998a9"></a>
 template&lt;typename Sender , typename Env  = ::beman::execution::env&lt;&gt;, template&lt; typename... &gt; class Tuple = ::beman::execution::detail::decayed_tuple, template&lt; typename... &gt; class Variant = ::beman::execution::detail::variant_or_empty&gt; </td></tr>
 <tr class="memitem:a0d065a1873eb0331785f8a5b82b998a9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>value_types_of_t</b> = ::beman::execution::detail::gather_signatures&lt;<a class="el" href="structbeman_1_1execution_1_1set__value__t.html">::beman::execution::set_value_t</a>, <a class="el" href="namespacebeman_1_1execution.html#a9ae9faece7cd1ecdd77f800df873d081">::beman::execution::completion_signatures_of_t</a>&lt; Sender, Env &gt;, Tuple, Variant &gt;</td></tr>
@@ -563,6 +566,9 @@ constexpr <a class="el" href="structbeman_1_1execution_1_1sync__wait__with__vari
 <tr class="memitem:a7e12a82c294cbf0775945930a63025d4"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#a724b0f844f19033a9aff2385c0c2532d">::beman::execution::upon_stopped_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a7e12a82c294cbf0775945930a63025d4">upon_stopped</a> {}</td></tr>
 <tr class="memdesc:a7e12a82c294cbf0775945930a63025d4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>upon_stopped(<em>sender</em>, <em>fun</em>)</code> yields a sender transforming a <code>set_stopped_t()</code> completion  <br /></td></tr>
 <tr class="separator:a7e12a82c294cbf0775945930a63025d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a028612ae2e7b1af6d8914f3cbcbd9198"><td class="memItemLeft" align="right" valign="top"><a id="a028612ae2e7b1af6d8914f3cbcbd9198" name="a028612ae2e7b1af6d8914f3cbcbd9198"></a>
+constexpr ::beman::execution::unstoppable_t&#160;</td><td class="memItemRight" valign="bottom"><b>unstoppable</b> {}</td></tr>
+<tr class="separator:a028612ae2e7b1af6d8914f3cbcbd9198"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada5b779202d31104b192afb6e1092ab2"><td class="memItemLeft" align="right" valign="top"><a id="ada5b779202d31104b192afb6e1092ab2" name="ada5b779202d31104b192afb6e1092ab2"></a>
 constexpr ::beman::execution::when_all_t&#160;</td><td class="memItemRight" valign="bottom"><b>when_all</b> {}</td></tr>
 <tr class="separator:ada5b779202d31104b192afb6e1092ab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
