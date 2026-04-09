@@ -19,7 +19,7 @@ endif()
 
 set(TODO stop_token) #-dk:TODO including that causes a linker error
 set(TODO suspend_never) #-dk:TODO including that causes ASAN errors
-    
+
 set(EXAMPLES
     allocator
     doc-just
