@@ -83,6 +83,7 @@ import beman.execution.detail.inline_scheduler;
 
 // [stoptoken.concepts], stop token concepts
 export import beman.execution.detail.stoppable_token;
+export import beman.execution.detail.unstoppable;
 export import beman.execution.detail.unstoppable_token;
 
 // [exec.recv], receivers
