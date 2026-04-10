@@ -88,13 +88,14 @@ template <bool IsChunked, typename F, typename Shape, typename Completions>
 struct bulk_transform_signatures;
 
 template <bool IsChunked, typename F, typename Shape, typename... Sigs>
-struct bulk_transform_signatures<IsChunked, F, Shape, completion_signatures<Sigs...>> {
+struct bulk_transform_signatures<IsChunked, F, Shape, ::beman::execution::completion_signatures<Sigs...>> {
     template <typename>
     struct is_nothrow : ::std::true_type {};
 
     template <typename... Args>
     struct is_nothrow<::beman::execution::set_value_t(Args...)>
-        : ::std::bool_constant<bulk_traits<IsChunked, F, Shape, Args...>::is_nothrow_invocable> {};
+        : ::std::bool_constant<
+              ::beman::execution::detail::bulk_traits<IsChunked, F, Shape, Args...>::is_nothrow_invocable> {};
 
     using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
         ::beman::execution::completion_signatures<Sigs...>,
@@ -129,6 +130,8 @@ struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsCh
     }
 
   private:
+    static constexpr bool is_chunked = IsChunked;
+
     template <typename, typename...>
     struct get_signatures;
     template <typename Policy, typename Shape, typename F, typename Sender, typename... Env>
@@ -136,11 +139,11 @@ struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsCh
         ::beman::execution::detail::
             basic_sender<bulk_algo_t, ::beman::execution::detail::product_type<Policy, Shape, F>, Sender>,
         Env...> {
-        using type =
-            typename bulk_transform_signatures<IsChunked,
-                                               F,
-                                               Shape,
-                                               ::beman::execution::completion_signatures_of_t<Sender, Env...>>::type;
+        using type = typename ::beman::execution::detail::bulk_transform_signatures<
+            is_chunked,
+            F,
+            Shape,
+            ::beman::execution::completion_signatures_of_t<Sender, Env...>>::type;
     };
 
   public:
@@ -159,7 +162,7 @@ struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsCh
                       typename Tag,
                       typename... Args>
                 requires(!::std::same_as<Tag, set_value_t> ||
-                         bulk_traits<IsChunked, Fun, Shape, Args...>::is_invocable)
+                         ::beman::execution::detail::bulk_traits<is_chunked, Fun, Shape, Args...>::is_invocable)
             auto operator()(Index,
                             ::beman::execution::detail::product_type<Policy, Shape, Fun>& state,
                             Receiver&                                                     rcvr,
@@ -167,10 +170,12 @@ struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsCh
                             Args&&... args) const noexcept -> void {
                 if constexpr (::std::same_as<Tag, set_value_t>) {
                     auto& [policy, shape, f] = state;
-                    constexpr bool nothrow   = bulk_traits<IsChunked, Fun, Shape, Args...>::is_nothrow_invocable;
+                    constexpr bool nothrow =
+                        ::beman::execution::detail::bulk_traits<is_chunked, Fun, Shape, Args...>::is_nothrow_invocable;
                     try {
                         [&]() noexcept(nothrow) {
-                            bulk_traits<IsChunked, Fun, Shape, Args...>::invoke(f, shape, args...);
+                            ::beman::execution::detail::bulk_traits<is_chunked, Fun, Shape, Args...>::invoke(
+                                f, shape, args...);
                             Tag()(::std::move(rcvr), ::std::forward<Args>(args)...);
                         }();
                     } catch (...) {
@@ -187,9 +192,9 @@ struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsCh
     };
 };
 
-using bulk_chunked_t = bulk_algo_t<true>;
+using bulk_chunked_t = ::beman::execution::detail::bulk_algo_t<true>;
 
-using bulk_unchunked_t = bulk_algo_t<false>;
+using bulk_unchunked_t = ::beman::execution::detail::bulk_algo_t<false>;
 
 struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
     template <typename Policy, typename Shape, typename F>
@@ -236,11 +241,11 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
     struct get_signatures<::beman::execution::detail::
                               basic_sender<bulk_t, ::beman::execution::detail::product_type<Policy, Shape, F>, Sender>,
                           Env...> {
-        using type =
-            typename bulk_transform_signatures<false,
-                                               F,
-                                               Shape,
-                                               ::beman::execution::completion_signatures_of_t<Sender, Env...>>::type;
+        using type = typename ::beman::execution::detail::bulk_transform_signatures<
+            false,
+            F,
+            Shape,
+            ::beman::execution::completion_signatures_of_t<Sender, Env...>>::type;
     };
 
     template <typename Shape, typename Fn>

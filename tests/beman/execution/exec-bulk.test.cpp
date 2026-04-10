@@ -2,17 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <cstdlib>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/detail/bulk.hpp>
-#include <beman/execution/detail/just.hpp>
-#include <beman/execution/detail/get_completion_signatures.hpp>
-#include <beman/execution/detail/get_env.hpp>
-#include <beman/execution/detail/sync_wait.hpp>
+#include <beman/execution/execution.hpp>
 #endif
 
 namespace {
@@ -24,9 +21,9 @@ auto test_bulk() {
     auto b0_env         = test_std::get_env(b0);
     auto b0_completions = test_std::get_completion_signatures<decltype(b0), decltype(b0_env)>();
     static_assert(
-        std::is_same_v<decltype(b0_completions),
-                       beman::execution::completion_signatures<beman::execution::set_value_t(),
-                                                               beman::execution::set_error_t(std::exception_ptr)>>,
+        std::is_same_v<
+            decltype(b0_completions),
+            test_std::completion_signatures<test_std::set_value_t(), test_std::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
 
     int counter = 0;
@@ -37,9 +34,9 @@ auto test_bulk() {
     auto b1_env         = test_std::get_env(b0);
     auto b1_completions = test_std::get_completion_signatures<decltype(b1), decltype(b1_env)>();
     static_assert(
-        std::is_same_v<decltype(b1_completions),
-                       beman::execution::completion_signatures<beman::execution::set_value_t(),
-                                                               beman::execution::set_error_t(std::exception_ptr)>>,
+        std::is_same_v<
+            decltype(b1_completions),
+            test_std::completion_signatures<test_std::set_value_t(), test_std::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
     test_std::sync_wait(b1);
     ASSERT(counter == 10);
@@ -56,11 +53,10 @@ auto test_bulk() {
     static_assert(test_std::sender<decltype(b2)>);
     auto b2_env         = test_std::get_env(b2);
     auto b2_completions = test_std::get_completion_signatures<decltype(b2), decltype(b2_env)>();
-    static_assert(
-        std::is_same_v<decltype(b2_completions),
-                       beman::execution::completion_signatures<beman::execution::set_value_t(std::vector<int>),
-                                                               beman::execution::set_error_t(std::exception_ptr)>>,
-        "Completion signatures do not match!");
+    static_assert(std::is_same_v<decltype(b2_completions),
+                                 test_std::completion_signatures<test_std::set_value_t(std::vector<int>),
+                                                                 test_std::set_error_t(std::exception_ptr)>>,
+                  "Completion signatures do not match!");
     test_std::sync_wait(b2);
 
     std::vector<int> expected{9, 20, 33, 52, 70, 90, 112, 136};
@@ -74,8 +70,7 @@ auto test_bulk_noexcept() {
     auto b0             = test_std::bulk(test_std::just(), test_std::seq, 1, [](int) noexcept {});
     auto b0_env         = test_std::get_env(b0);
     auto b0_completions = test_std::get_completion_signatures<decltype(b0), decltype(b0_env)>();
-    static_assert(std::is_same_v<decltype(b0_completions),
-                                 beman::execution::completion_signatures<beman::execution::set_value_t()>>,
+    static_assert(std::is_same_v<decltype(b0_completions), test_std::completion_signatures<test_std::set_value_t()>>,
                   "Completion signatures do not match!");
     static_assert(test_std::sender<decltype(b0)>);
 
@@ -86,8 +81,7 @@ auto test_bulk_noexcept() {
     static_assert(test_std::sender<decltype(b1)>);
     auto b1_env         = test_std::get_env(b0);
     auto b1_completions = test_std::get_completion_signatures<decltype(b1), decltype(b1_env)>();
-    static_assert(std::is_same_v<decltype(b1_completions),
-                                 beman::execution::completion_signatures<beman::execution::set_value_t()>>,
+    static_assert(std::is_same_v<decltype(b1_completions), test_std::completion_signatures<test_std::set_value_t()>>,
                   "Completion signatures do not match!");
     test_std::sync_wait(b1);
     ASSERT(counter == 10);
@@ -100,9 +94,9 @@ auto test_bulk_pipeable() {
     auto b0_env         = test_std::get_env(b0);
     auto b0_completions = test_std::get_completion_signatures<decltype(b0), decltype(b0_env)>();
     static_assert(
-        std::is_same_v<decltype(b0_completions),
-                       beman::execution::completion_signatures<beman::execution::set_value_t(),
-                                                               beman::execution::set_error_t(std::exception_ptr)>>,
+        std::is_same_v<
+            decltype(b0_completions),
+            test_std::completion_signatures<test_std::set_value_t(), test_std::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
 
     int counter = 0;
@@ -113,9 +107,9 @@ auto test_bulk_pipeable() {
     auto b1_env         = test_std::get_env(b0);
     auto b1_completions = test_std::get_completion_signatures<decltype(b1), decltype(b1_env)>();
     static_assert(
-        std::is_same_v<decltype(b1_completions),
-                       beman::execution::completion_signatures<beman::execution::set_value_t(),
-                                                               beman::execution::set_error_t(std::exception_ptr)>>,
+        std::is_same_v<
+            decltype(b1_completions),
+            test_std::completion_signatures<test_std::set_value_t(), test_std::set_error_t(std::exception_ptr)>>,
         "Completion signatures do not match!");
     test_std::sync_wait(b1);
     ASSERT(counter == 10);
@@ -133,11 +127,10 @@ auto test_bulk_pipeable() {
     static_assert(test_std::sender<decltype(b2)>);
     auto b2_env         = test_std::get_env(b2);
     auto b2_completions = test_std::get_completion_signatures<decltype(b2), decltype(b2_env)>();
-    static_assert(
-        std::is_same_v<decltype(b2_completions),
-                       beman::execution::completion_signatures<beman::execution::set_value_t(std::vector<int>),
-                                                               beman::execution::set_error_t(std::exception_ptr)>>,
-        "Completion signatures do not match!");
+    static_assert(std::is_same_v<decltype(b2_completions),
+                                 test_std::completion_signatures<test_std::set_value_t(std::vector<int>),
+                                                                 test_std::set_error_t(std::exception_ptr)>>,
+                  "Completion signatures do not match!");
     test_std::sync_wait(b2);
 
     std::vector<int> expected{9, 20, 33, 52, 70, 90, 112, 136};
@@ -311,8 +304,7 @@ auto test_bulk_chunked_noexcept() {
     auto b0             = test_std::bulk_chunked(test_std::just(), test_std::seq, 1, [](int, int) noexcept {});
     auto b0_env         = test_std::get_env(b0);
     auto b0_completions = test_std::get_completion_signatures<decltype(b0), decltype(b0_env)>();
-    static_assert(std::is_same_v<decltype(b0_completions),
-                                 beman::execution::completion_signatures<beman::execution::set_value_t()>>,
+    static_assert(std::is_same_v<decltype(b0_completions), test_std::completion_signatures<test_std::set_value_t()>>,
                   "Chunked noexcept completion signatures do not match!");
 }
 
@@ -320,8 +312,7 @@ auto test_bulk_unchunked_noexcept() {
     auto b0             = test_std::bulk_unchunked(test_std::just(), test_std::seq, 1, [](int) noexcept {});
     auto b0_env         = test_std::get_env(b0);
     auto b0_completions = test_std::get_completion_signatures<decltype(b0), decltype(b0_env)>();
-    static_assert(std::is_same_v<decltype(b0_completions),
-                                 beman::execution::completion_signatures<beman::execution::set_value_t()>>,
+    static_assert(std::is_same_v<decltype(b0_completions), test_std::completion_signatures<test_std::set_value_t()>>,
                   "Unchunked noexcept completion signatures do not match!");
 }
 
