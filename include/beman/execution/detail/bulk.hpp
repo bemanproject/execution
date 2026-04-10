@@ -10,7 +10,6 @@ import std;
 #else
 #include <concepts>
 #include <exception>
-#include <execution>
 #include <functional>
 #include <type_traits>
 #include <utility>
@@ -20,6 +19,7 @@ import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.execution_policy;
 import beman.execution.detail.forward_like;
 import beman.execution.detail.get_domain_early;
 import beman.execution.detail.make_sender;
@@ -37,6 +37,7 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/execution_policy.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/make_sender.hpp>
@@ -106,7 +107,7 @@ struct bulk_transform_signatures<IsChunked, F, Shape, completion_signatures<Sigs
 template <bool IsChunked>
 struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsChunked>> {
     template <typename Policy, typename Shape, typename F>
-        requires(::std::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
+        requires(::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)
     auto operator()(Policy&& policy, Shape shape, F&& f) const {
         return ::beman::execution::detail::make_sender_adaptor(
@@ -114,8 +115,9 @@ struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsCh
     }
 
     template <typename Sender, typename Policy, typename Shape, typename F>
-        requires(::beman::execution::sender<Sender> && ::std::is_execution_policy_v<::std::remove_cvref_t<Policy>> &&
-                 ::std::integral<Shape> && ::std::copy_constructible<::std::decay_t<F>>)
+        requires(::beman::execution::sender<Sender> &&
+                 ::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
+                 ::std::copy_constructible<::std::decay_t<F>>)
     auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const {
         return ::beman::execution::transform_sender(
             ::beman::execution::detail::get_domain_early(sndr),
@@ -191,7 +193,7 @@ using bulk_unchunked_t = bulk_algo_t<false>;
 
 struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
     template <typename Policy, typename Shape, typename F>
-        requires(::std::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
+        requires(::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)
     auto operator()(Policy&& policy, Shape shape, F&& f) const {
         return ::beman::execution::detail::make_sender_adaptor(
@@ -199,8 +201,9 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
     }
 
     template <typename Sender, typename Policy, typename Shape, typename F>
-        requires(::beman::execution::sender<Sender> && ::std::is_execution_policy_v<::std::remove_cvref_t<Policy>> &&
-                 ::std::integral<Shape> && ::std::copy_constructible<::std::decay_t<F>>)
+        requires(::beman::execution::sender<Sender> &&
+                 ::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
+                 ::std::copy_constructible<::std::decay_t<F>>)
     auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const {
         return ::beman::execution::transform_sender(
             ::beman::execution::detail::get_domain_early(sndr),

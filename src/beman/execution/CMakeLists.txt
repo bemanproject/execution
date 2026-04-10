@@ -69,6 +69,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_impls.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender_error.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/execution_policy.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/emplace_from.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env_of_t.hpp
@@ -259,6 +260,7 @@ if(BEMAN_USE_MODULES)
                     default_domain.cppm
                     default_impls.cppm
                     dependent_sender_error.cppm
+                    execution_policy.cppm
                     emplace_from.cppm
                     enable_sender.cppm
                     env_of_t.cppm

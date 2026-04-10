@@ -23,6 +23,7 @@ import beman.execution.detail.default_domain;
 export import beman.execution.detail.env;
 export import beman.execution.detail.env_of_t;
 export import beman.execution.detail.error_types_of_t; // [exec.getcomplsigs], completion signatures
+export import beman.execution.detail.execution_policy;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
