@@ -34,8 +34,11 @@ using ::std::execution::unseq;
 using ::std::execution::unsequenced_policy;
 #endif
 
-using ::std::is_execution_policy;
-using ::std::is_execution_policy_v;
+template <typename T>
+struct is_execution_policy : ::std::is_execution_policy<T> {};
+
+template <typename T>
+inline constexpr bool is_execution_policy_v = ::beman::execution::is_execution_policy<T>::value;
 
 #else
 
