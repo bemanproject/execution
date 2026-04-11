@@ -12,12 +12,14 @@ import beman.execution.detail.affine_on;
 import beman.execution.detail.as_except_ptr;
 import beman.execution.detail.associate;
 import beman.execution.detail.bulk;
+import beman.execution.detail.execution_policy;
 import beman.execution.detail.completion_signature;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.connect;
 import beman.execution.detail.continues_on;
 import beman.execution.detail.counting_scope;
 import beman.execution.detail.env;
+import beman.execution.detail.execution_policy;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
@@ -29,6 +31,7 @@ import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
 import beman.execution.detail.get_stop_token;
+import beman.execution.detail.inline_scheduler;
 import beman.execution.detail.into_variant;
 import beman.execution.detail.just;
 import beman.execution.detail.let;
@@ -44,6 +47,7 @@ import beman.execution.detail.scheduler;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_in;
+import beman.execution.detail.sender_to;
 import beman.execution.detail.sender;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
@@ -76,6 +80,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/counting_scope.hpp>
 #include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/execution_policy.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_await_completion_adaptor.hpp>
