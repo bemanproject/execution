@@ -16,6 +16,7 @@ var hierarchy =
     [ "beman::execution::detail::pipeable::closure_t", null, [
       [ "beman::execution::sender_adaptor_closure< affine_on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< bound_sender_adaptor_closure< Adaptor, BoundArgs... > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< bulk_algo_t< IsChunked > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< bulk_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< composed_sender_adaptor_closure< Inner, Outer > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
@@ -38,6 +39,7 @@ var hierarchy =
     ] ],
     [ "tst::timer::when_done_sender::state< Receiver >::execute", "structtst_1_1timer_1_1when__done__sender_1_1state_1_1execute.html", null ],
     [ "std::false_type", null, [
+      [ "beman::execution::is_execution_policy< typename >", "structbeman_1_1execution_1_1is__execution__policy.html", null ],
       [ "tst::add_set_value< Sender >::is_set_value< S >", "structtst_1_1add__set__value_1_1is__set__value.html", null ]
     ] ],
     [ "beman::execution::detail::forwarding_query_t", null, [
@@ -66,6 +68,8 @@ var hierarchy =
     [ "beman::execution::nostopstate_t", "structbeman_1_1execution_1_1nostopstate__t.html", null ],
     [ "beman::execution::operation_state_t", "structbeman_1_1execution_1_1operation__state__t.html", null ],
     [ "tst::repeat_effect_unilt_t::sender< Child, Fun >::state< Receiver >::own_receiver", "structtst_1_1repeat__effect__unilt__t_1_1sender_1_1state_1_1own__receiver.html", null ],
+    [ "beman::execution::parallel_policy", "structbeman_1_1execution_1_1parallel__policy.html", null ],
+    [ "beman::execution::parallel_unsequenced_policy", "structbeman_1_1execution_1_1parallel__unsequenced__policy.html", null ],
     [ "tst::timer::when_done_sender::state< Receiver >::pred", "structtst_1_1timer_1_1when__done__sender_1_1state_1_1pred.html", null ],
     [ "beman::execution::prop< Query, Value >", "structbeman_1_1execution_1_1prop.html", null ],
     [ "receiver", "structreceiver.html", null ],
@@ -79,6 +83,7 @@ var hierarchy =
     [ "beman::execution::inline_scheduler::sender", "structbeman_1_1execution_1_1inline__scheduler_1_1sender.html", null ],
     [ "tst::repeat_effect_unilt_t::sender< Child, Fun >", "structtst_1_1repeat__effect__unilt__t_1_1sender.html", null ],
     [ "beman::execution::sender_t", "structbeman_1_1execution_1_1sender__t.html", null ],
+    [ "beman::execution::sequenced_policy", "structbeman_1_1execution_1_1sequenced__policy.html", null ],
     [ "beman::execution::set_error_t", "structbeman_1_1execution_1_1set__error__t.html", null ],
     [ "beman::execution::set_stopped_t", "structbeman_1_1execution_1_1set__stopped__t.html", null ],
     [ "beman::execution::set_value_t", "structbeman_1_1execution_1_1set__value__t.html", null ],
@@ -101,8 +106,13 @@ var hierarchy =
       [ "beman::execution::simple_counting_scope::token", "classbeman_1_1execution_1_1simple__counting__scope_1_1token.html", null ]
     ] ],
     [ "std::true_type", null, [
+      [ "beman::execution::is_execution_policy< ::beman::execution::parallel_policy >", "structbeman_1_1execution_1_1is__execution__policy_3_01_1_1beman_1_1execution_1_1parallel__policy_01_4.html", null ],
+      [ "beman::execution::is_execution_policy< ::beman::execution::parallel_unsequenced_policy >", "structbeman_1_1execution_1_1is__execution__policy_3_01_1_1beman_1_1execution_1_1parallel__unsequenced__policy_01_4.html", null ],
+      [ "beman::execution::is_execution_policy< ::beman::execution::sequenced_policy >", "structbeman_1_1execution_1_1is__execution__policy_3_01_1_1beman_1_1execution_1_1sequenced__policy_01_4.html", null ],
+      [ "beman::execution::is_execution_policy< ::beman::execution::unsequenced_policy >", "structbeman_1_1execution_1_1is__execution__policy_3_01_1_1beman_1_1execution_1_1unsequenced__policy_01_4.html", null ],
       [ "tst::add_set_value< Sender >::is_set_value< tst::ex::set_value_t(A...)>", "structtst_1_1add__set__value_1_1is__set__value_3_01tst_1_1ex_1_1set__value__t_07A_8_8_8_08_4.html", null ]
     ] ],
+    [ "beman::execution::unsequenced_policy", "structbeman_1_1execution_1_1unsequenced__policy.html", null ],
     [ "tst::when_all_t", "structtst_1_1when__all__t.html", null ],
     [ "tst::timer::when_done_sender", "classtst_1_1timer_1_1when__done__sender.html", null ],
     [ "beman::execution::with_awaitable_senders< Promise >", "structbeman_1_1execution_1_1with__awaitable__senders.html", null ]
