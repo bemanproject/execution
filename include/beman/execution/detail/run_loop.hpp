@@ -175,10 +175,8 @@ class run_loop {
         }
     }
     auto finish() -> void {
-        {
-            ::std::lock_guard guard(this->mutex);
-            this->current_state = state::finishing;
-        }
+        ::std::lock_guard guard(this->mutex);
+        this->current_state = state::finishing;
         this->condition.notify_one();
     }
 };

@@ -10,6 +10,7 @@ import std;
 #else
 #include <concepts>
 #include <exception>
+#include <functional>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -271,12 +272,9 @@ struct let_t {
                            {}};
         }};
         template <typename Receiver, typename... Args>
-        static auto
-        let_bind(auto& state, Receiver& receiver, Args&&... args) noexcept(noexcept(::beman::execution::connect(
-            ::std::apply(::std::move(state.fun),
-                         ::std::move(state.args.template emplace<::beman::execution::detail::decayed_tuple<Args...>>(
-                             ::std::forward<Args>(args)...))),
-            let_receiver<Receiver, decltype(state.env)>{receiver, state.env}))) {
+        static auto let_bind(auto& state, Receiver& receiver, Args&&... args) noexcept(
+            noexcept(::beman::execution::connect(::std::invoke(::std::move(state.fun), ::std::forward<Args>(args)...),
+                                                 let_receiver<Receiver, decltype(state.env)>{receiver, state.env}))) {
             using args_t = ::beman::execution::detail::decayed_tuple<Args...>;
             auto mkop{[&] {
                 return ::beman::execution::connect(
