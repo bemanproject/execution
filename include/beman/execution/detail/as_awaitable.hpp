@@ -42,7 +42,7 @@ namespace beman::execution {
  */
 struct as_awaitable_t {
     template <typename Expr, typename Promise>
-    auto operator()(Expr&& expr, Promise& promise) const {
+    auto operator()(Expr&& expr, Promise& promise) const -> decltype(auto) {
         if constexpr (requires { ::std::forward<Expr>(expr).as_awaitable(promise); }) {
             static_assert(
                 ::beman::execution::detail::is_awaitable<decltype(::std::forward<Expr>(expr).as_awaitable(promise)),

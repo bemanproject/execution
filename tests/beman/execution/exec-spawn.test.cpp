@@ -10,6 +10,8 @@
 import beman.execution;
 import beman.execution.detail;
 #else
+#include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/spawn.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
@@ -188,11 +190,15 @@ auto test_spawn() {
         ASSERT(associated == false);
         ASSERT(disassociated == false);
     }
+    static_assert(requires {
+        test_std::spawn(test_std::just_error(0) | test_std::let_error([](int) noexcept { return test_std::just(); }),
+                        std::declval<token<true>>());
+    });
 }
 
 } // namespace
 
-TEST(exec_spawn_future) {
+TEST(exec_spawn) {
     static_assert(std::same_as<decltype(test_std::spawn), const test_std::spawn_t>);
     test_overload<true>(sender<true>{}, token<true>{}, env{});
     test_overload<false>(sender<false>{}, token<true>{}, env{});
