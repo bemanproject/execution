@@ -94,9 +94,8 @@ export import beman.execution.detail.receiver_of;
 // [exec.snd], senders
 export import beman.execution.detail.sender;
 export import beman.execution.detail.sender_in;
-//-dk:TODO export using ::beman::execution::sender_to;
 export import beman.execution.detail.sender_to;
-
+export import beman.execution.detail.dependent_sender;
 export import beman.execution.detail.sends_stopped;
 
 namespace beman::execution {

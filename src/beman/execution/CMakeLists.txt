@@ -68,6 +68,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decays_to.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_impls.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/execution_policy.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/emplace_from.hpp
@@ -259,6 +260,7 @@ if(BEMAN_USE_MODULES)
                     decays_to.cppm
                     default_domain.cppm
                     default_impls.cppm
+                    dependent_sender.cppm
                     dependent_sender_error.cppm
                     execution_policy.cppm
                     emplace_from.cppm

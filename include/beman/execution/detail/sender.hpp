@@ -42,7 +42,10 @@ concept enable_sender =
 } // namespace beman::execution::detail
 namespace beman::execution {
 template <typename Sender>
-concept sender = ::beman::execution::detail::enable_sender<::std::remove_cvref_t<Sender>> &&
+inline constexpr bool enable_sender = ::beman::execution::detail::enable_sender<Sender>;
+
+template <typename Sender>
+concept sender = ::beman::execution::enable_sender<::std::remove_cvref_t<Sender>> &&
                  requires(const ::std::remove_cvref_t<Sender>& sndr) {
                      { ::beman::execution::get_env(sndr) } -> ::beman::execution::detail::queryable;
                  } && ::std::move_constructible<::std::remove_cvref_t<Sender>> &&

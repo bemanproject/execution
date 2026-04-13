@@ -17,6 +17,7 @@ import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.env_of_t;
 import beman.execution.detail.get_env;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
@@ -27,6 +28,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
@@ -53,24 +55,27 @@ struct read_env_t {
         using set_value_type = ::beman::execution::set_value_t(
             decltype(::std::declval<Query>()(::std::as_const(::std::declval<::std::add_lvalue_reference_t<Env>>()))));
         using set_error_type = ::beman::execution::set_error_t(::std::exception_ptr);
-        using type = ::std::conditional_t<noexcept(::std::declval<Query>()(::std::declval<const Env&>())),
-                                          ::beman::execution::completion_signatures<set_value_type>,
-                                          ::beman::execution::completion_signatures<set_value_type, set_error_type>>;
+        using type           = ::std::conditional_t<noexcept(::std::declval<Query>()(::std::declval<const Env&>())),
+                                                    ::beman::execution::completion_signatures<set_value_type>,
+                                                    ::beman::execution::completion_signatures<set_value_type, set_error_type>>;
     };
 
   public:
-    template <typename Sender, typename... Env>
+    template <typename Sender, typename Env>
     static consteval auto get_completion_signatures() {
-        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
+        return typename get_signatures<::std::remove_cvref_t<Sender>, Env>::type{};
     }
     struct impls_for : ::beman::execution::detail::default_impls {
         struct start_impl {
-            auto operator()(auto query, auto& receiver) const noexcept -> void {
+            template <typename Query, typename Receiver>
+            auto operator()(Query query, Receiver& receiver) const noexcept -> void {
                 try {
                     auto env{::beman::execution::get_env(receiver)};
                     ::beman::execution::set_value(::std::move(receiver), query(env));
                 } catch (...) {
-                    ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                    if constexpr (!std::is_nothrow_invocable_v<Query, ::beman::execution::env_of_t<Receiver>>) {
+                        ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                    }
                 }
             }
         };
