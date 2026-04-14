@@ -45,6 +45,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "decays_to.hpp", "decays__to_8hpp_source.html", null ],
     [ "default_domain.hpp", "default__domain_8hpp_source.html", null ],
     [ "default_impls.hpp", "default__impls_8hpp_source.html", null ],
+    [ "dependent_sender.hpp", "dependent__sender_8hpp_source.html", null ],
     [ "dependent_sender_error.hpp", "dependent__sender__error_8hpp_source.html", null ],
     [ "emplace_from.hpp", "emplace__from_8hpp_source.html", null ],
     [ "env.hpp", "env_8hpp_source.html", null ],

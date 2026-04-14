@@ -48,6 +48,7 @@ var namespacebeman_1_1execution =
     [ "sync_wait_with_variant_t", "structbeman_1_1execution_1_1sync__wait__with__variant__t.html", null ],
     [ "unsequenced_policy", "structbeman_1_1execution_1_1unsequenced__policy.html", null ],
     [ "with_awaitable_senders", "structbeman_1_1execution_1_1with__awaitable__senders.html", null ],
+    [ "dependent_sender", "conceptbeman_1_1execution_1_1dependent__sender.html", null ],
     [ "operation_state", "conceptbeman_1_1execution_1_1operation__state.html", null ],
     [ "receiver", "conceptbeman_1_1execution_1_1receiver.html", null ],
     [ "receiver_of", "conceptbeman_1_1execution_1_1receiver__of.html", null ],
