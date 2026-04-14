@@ -81,6 +81,8 @@ struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_
   private:
     template <typename, typename...>
     struct get_signatures;
+    template <typename Sender>
+    struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
     template <::beman::execution::sender Child, typename State, typename Env>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::into_variant_t, State, Child>,
@@ -101,21 +103,6 @@ struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_
             using type = ::beman::execution::detail::meta::
                 combine<value_types, ::beman::execution::detail::meta::combine<error_types, stopped_types>>;
             return type{};
-        }
-    };
-
-    template <::beman::execution::sender Child, typename State>
-    struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::into_variant_t, State, Child>> {
-        using into_variant_sender =
-            ::beman::execution::detail::basic_sender<::beman::execution::detail::into_variant_t, State, Child>;
-
-        static consteval auto get() {
-            if constexpr (::beman::execution::dependent_sender<Child>) {
-                throw ::beman::execution::detail::dependent_sender_error<into_variant_sender>{};
-            } else {
-                return get_signatures<into_variant_sender, ::beman::execution::env<>>::get();
-            }
         }
     };
 

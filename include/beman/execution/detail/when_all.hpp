@@ -130,6 +130,8 @@ struct when_all_t {
   private:
     template <typename, typename...>
     struct get_signatures;
+    template <typename Sender>
+    struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
     template <typename Data, typename Env, typename... Sender>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::when_all_t, Data, Sender...>,
@@ -153,26 +155,12 @@ struct when_all_t {
                                  ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
                                  ::beman::execution::completion_signatures<>>;
         using type = ::beman::execution::detail::meta::combine<value_types, error_types, stopped_types>;
-        static consteval auto get() noexcept -> type { return {}; }
-    };
-    template <typename Data, typename... Sender>
-    struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::when_all_t, Data, Sender...>> {
-        using when_all_sender =
-            ::beman::execution::detail::basic_sender<::beman::execution::detail::when_all_t, Data, Sender...>;
-        static consteval auto get() {
-            if constexpr ((... || ::beman::execution::dependent_sender<Sender>)) {
-                throw ::beman::execution::detail::dependent_sender_error<when_all_sender>{};
-            } else {
-                return get_signatures<when_all_sender, ::beman::execution::env<>>::get();
-            }
-        }
     };
 
   public:
     template <typename Sender, typename... Env>
     static consteval auto get_completion_signatures() {
-        return get_signatures<std::remove_cvref_t<Sender>, Env...>::get();
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
