@@ -17,6 +17,7 @@ import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.connect;
 import beman.execution.detail.connect_all;
 import beman.execution.detail.decays_to;
+import beman.execution.detail.dependent_sender;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.product_type;
@@ -28,6 +29,7 @@ import beman.execution.detail.sender_decompose;
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/decays_to.hpp>
+#include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/product_type.hpp>
@@ -110,6 +112,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
     }
 #endif
     template <::beman::execution::detail::decays_to<basic_sender> Self, typename... Env>
+        requires(sizeof...(Env) == 1) || (... && !::beman::execution::dependent_sender<Child>)
     static consteval auto get_completion_signatures() noexcept {
         if constexpr (requires { Tag::template get_completion_signatures<Self, Env...>(); })
             return Tag::template get_completion_signatures<Self, Env...>();

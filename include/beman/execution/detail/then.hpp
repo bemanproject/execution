@@ -21,6 +21,9 @@ import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.dependent_sender;
+import beman.execution.detail.dependent_sender_error;
+import beman.execution.detail.env;
 import beman.execution.detail.get_domain_early;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
@@ -41,6 +44,9 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/dependent_sender.hpp>
+#include <beman/execution/detail/dependent_sender_error.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
@@ -125,17 +131,19 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
   private:
     template <typename, typename...>
     struct get_signatures;
-    template <typename Comp, typename Fun, typename Child, typename... Env>
+    template <typename Sender>
+    struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
+    template <typename Comp, typename Fun, typename Child, typename Env>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::then_t<Comp>, Fun, Child>,
-        Env...> {
+        Env> {
         using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
             ::beman::execution::detail::meta::transform<
                 ::beman::execution::detail::then_transform_t<Fun, Comp>::template transform,
-                ::beman::execution::completion_signatures_of_t<Child, Env...>>,
+                ::beman::execution::completion_signatures_of_t<Child, Env>>,
             ::std::conditional_t<
                 ::beman::execution::detail::
-                    then_exception<Comp, Fun, ::beman::execution::completion_signatures_of_t<Child, Env...>>::value,
+                    then_exception<Comp, Fun, ::beman::execution::completion_signatures_of_t<Child, Env>>::value,
                 ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>,
                 ::beman::execution::completion_signatures<>>>>;
     };

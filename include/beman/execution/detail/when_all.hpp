@@ -26,6 +26,8 @@ import beman.execution.detail.decayed_tuple;
 import beman.execution.detail.decayed_type_list;
 import beman.execution.detail.default_domain;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.dependent_sender;
+import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
 import beman.execution.detail.error_types_of_t;
@@ -63,6 +65,8 @@ import beman.execution.detail.value_types_of_t;
 #include <beman/execution/detail/decayed_type_list.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/dependent_sender.hpp>
+#include <beman/execution/detail/dependent_sender_error.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
@@ -102,15 +106,27 @@ struct when_all_value_types<::beman::execution::detail::type_list<T...>> {
     using type = ::beman::execution::completion_signatures<::beman::execution::set_value_t(T...)>;
 };
 
+template <typename Sender>
+concept valid_when_all_sender = ::beman::execution::dependent_sender<Sender> ||
+                                ::beman::execution::detail::meta::size_v<
+                                    ::beman::execution::value_types_of_t<Sender,
+                                                                         ::beman::execution::env<>,
+                                                                         ::std::tuple,
+                                                                         ::beman::execution::detail::type_list>> == 1u;
+
+inline constexpr auto make_when_all_env = [](const ::beman::execution::inplace_stop_source& stop_src,
+                                             const auto&                                    env) noexcept {
+    return ::beman::execution::detail::join_env(
+        ::beman::execution::detail::make_env(::beman::execution::get_stop_token, stop_src.get_token()), env);
+};
+
+template <typename Env>
+using when_all_env =
+    decltype(make_when_all_env(::std::declval<::beman::execution::inplace_stop_source>(), ::std::declval<Env>()));
+
 struct when_all_t {
     template <::beman::execution::sender... Sender>
-        requires(0u != sizeof...(Sender)) &&
-                ((::beman::execution::detail::meta::size_v<
-                      ::beman::execution::value_types_of_t<Sender,
-                                                           ::beman::execution::env<>,
-                                                           ::std::tuple,
-                                                           ::beman::execution::detail::type_list>> == 1u) &&
-                 ...) &&
+        requires(0u != sizeof...(Sender)) && (... && beman::execution::detail::valid_when_all_sender<Sender>) &&
                 requires(Sender&&... s) {
                     typename ::std::common_type_t<decltype(::beman::execution::detail::get_domain_early(s))...>;
                 }
@@ -122,8 +138,10 @@ struct when_all_t {
     }
 
   private:
-    template <typename, typename>
+    template <typename, typename...>
     struct get_signatures;
+    template <typename Sender>
+    struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
     template <typename Data, typename Env, typename... Sender>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::when_all_t, Data, Sender...>,
@@ -170,20 +188,30 @@ struct when_all_t {
         struct get_env_impl {
             template <typename State, typename Receiver>
             auto operator()(auto&&, State& state, const Receiver& receiver) const noexcept {
-                return ::beman::execution::detail::join_env(
-                    ::beman::execution::detail::make_env(::beman::execution::get_stop_token,
-                                                         state.stop_src.get_token()),
-                    ::beman::execution::get_env(receiver));
+                return make_when_all_env(state.stop_src, ::beman::execution::get_env(receiver));
             }
         };
         static constexpr auto get_env{get_env_impl{}};
 
         enum class disposition : unsigned char { started, error, stopped };
 
+        template <typename... Values>
+        struct is_nothrow_decay_copy_constructible
+            : ::std::bool_constant<(... && ::std::is_nothrow_constructible_v<::std::decay_t<Values>, Values>)> {};
+
         template <typename Receiver, typename... Sender>
         struct state_type {
             struct nonesuch {};
-            using env_t        = ::beman::execution::env_of_t<Receiver>;
+            using env_t     = ::beman::execution::env_of_t<Receiver>;
+            using copy_fail = ::std::conditional_t<
+                (... && ::beman::execution::value_types_of_t<Sender,
+                                                             env_t,
+                                                             is_nothrow_decay_copy_constructible,
+                                                             ::std::type_identity_t>::value) &&
+                    (... &&
+                     ::beman::execution::error_types_of_t<Sender, env_t, is_nothrow_decay_copy_constructible>::value),
+                nonesuch,
+                std::exception_ptr>;
             using values_tuple = ::std::tuple<
                 ::beman::execution::
                     value_types_of_t<Sender, env_t, ::beman::execution::detail::decayed_tuple, ::std::optional>...>;
@@ -192,7 +220,7 @@ struct when_all_t {
                 ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::prepend<
                     nonesuch,
                     ::beman::execution::detail::meta::prepend<
-                        ::std::exception_ptr,
+                        copy_fail,
                         ::beman::execution::detail::meta::combine<::beman::execution::detail::meta::to<
                             ::beman::execution::detail::type_list,
                             ::beman::execution::detail::meta::combine<::beman::execution::error_types_of_t<
@@ -224,21 +252,21 @@ struct when_all_t {
                 } break;
                 case disposition::error:
                     this->on_stop.reset();
-                    try {
-                        ::std::visit(
-                            [&]<typename Error>(Error& error) noexcept {
-                                if constexpr (!::std::same_as<Error, nonesuch>) {
-                                    ::beman::execution::set_error(::std::move(recvr), ::std::move(error));
-                                }
-                            },
-                            this->errors);
-                    } catch (...) {
-                        ::beman::execution::set_error(::std::move(recvr), ::std::current_exception());
-                    }
+                    ::std::visit(
+                        [&]<typename Error>(Error& error) noexcept {
+                            if constexpr (!::std::same_as<Error, nonesuch>) {
+                                ::beman::execution::set_error(::std::move(recvr), ::std::move(error));
+                            }
+                        },
+                        this->errors);
                     break;
                 case disposition::stopped:
-                    this->on_stop.reset();
-                    ::beman::execution::set_stopped(::std::move(recvr));
+                    if constexpr ((... ||
+                                   ::beman::execution::
+                                       sends_stopped<Sender, when_all_env<::beman::execution::env_of_t<Receiver>>>)) {
+                        this->on_stop.reset();
+                        ::beman::execution::set_stopped(::std::move(recvr));
+                    }
                     break;
                 }
             }
@@ -282,12 +310,7 @@ struct when_all_t {
                 state.receiver = &receiver;
                 state.on_stop.emplace(::beman::execution::get_stop_token(::beman::execution::get_env(receiver)),
                                       ::beman::execution::detail::on_stop_request{state});
-                if (state.stop_src.stop_requested()) {
-                    state.on_stop.reset();
-                    ::beman::execution::set_stopped(std::move(receiver));
-                } else {
-                    (::beman::execution::start(ops), ...);
-                }
+                (::beman::execution::start(ops), ...);
             }
         };
         static constexpr auto start{start_impl{}};
@@ -297,11 +320,16 @@ struct when_all_t {
                 if constexpr (::std::same_as<Set, ::beman::execution::set_error_t>) {
                     if (disposition::error != state.disp.exchange(disposition::error)) {
                         state.stop_src.request_stop();
+                        using error_t          = typename std::type_identity<Args...>::type;
+                        constexpr bool nothrow = ::std::is_nothrow_constructible_v<::std::decay_t<error_t>, error_t>;
                         try {
-                            state.errors.template emplace<typename ::std::decay<Args...>::type>(
-                                ::std::forward<Args>(args)...);
+                            [&]() noexcept(nothrow) {
+                                state.errors.template emplace<::std::decay_t<error_t>>(::std::forward<Args>(args)...);
+                            }();
                         } catch (...) {
-                            state.errors.template emplace<::std::exception_ptr>(::std::current_exception());
+                            if constexpr (!nothrow) {
+                                state.errors.template emplace<::std::exception_ptr>(::std::current_exception());
+                            }
                         }
                     }
                 } else if constexpr (::std::same_as<Set, ::beman::execution::set_stopped_t>) {
@@ -311,13 +339,17 @@ struct when_all_t {
                     }
                 } else if constexpr (!::std::same_as<decltype(State::values), ::std::tuple<>>) {
                     if (state.disp == disposition::started) {
-                        auto& opt = ::std::get<Index::value>(state.values);
+                        auto& opt              = ::std::get<Index::value>(state.values);
+                        using decayed_tuple_t  = typename ::std::decay_t<decltype(opt)>::value_type;
+                        constexpr bool nothrow = std::is_nothrow_constructible_v<decayed_tuple_t, Args...>;
                         try {
-                            opt.emplace(::std::forward<Args>(args)...);
+                            [&]() noexcept(nothrow) { opt.emplace(::std::forward<Args>(args)...); }();
                         } catch (...) {
-                            if (disposition::error != state.disp.exchange(disposition::error)) {
-                                state.stop_src.request_stop();
-                                state.errors.template emplace<::std::exception_ptr>(::std::current_exception());
+                            if constexpr (!nothrow) {
+                                if (disposition::error != state.disp.exchange(disposition::error)) {
+                                    state.stop_src.request_stop();
+                                    state.errors.template emplace<::std::exception_ptr>(::std::current_exception());
+                                }
                             }
                         }
                     }

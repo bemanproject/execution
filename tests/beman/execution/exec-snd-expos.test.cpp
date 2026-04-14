@@ -1146,7 +1146,10 @@ auto test_basic_sender() -> void {
     static_assert(
         std::same_as<basic_sender_tag::sender,
                      decltype(test_std::transform_sender(test_std::default_domain{}, basic_sender{}, local_env{}))>);
-    static_assert(test_std::sender_in<basic_sender>);
+    static_assert(test_std::dependent_sender<sender0>);
+    // According to https://eel.is/c++draft/exec#adapt.general-3.5, basic_sender shall be a dependent-sender
+    static_assert(test_std::dependent_sender<basic_sender>);
+    static_assert(test_std::sender_in<basic_sender, local_env>);
 #if 0
         //-dk:TODO restore completion_sigatures_for test
         static_assert(std::same_as<

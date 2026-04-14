@@ -17,6 +17,17 @@
 #define BEMAN_SPECIALIZE_EXPORT template <>
 #endif
 
+#define BEMAN_EXECUTION_TRY_EVAL(rcvr, expr)                                                    \
+    do {                                                                                        \
+        try {                                                                                   \
+            (expr);                                                                             \
+        } catch (...) {                                                                         \
+            if constexpr (!noexcept((expr))) {                                                  \
+                ::beman::execution::set_error(::std::move((rcvr)), ::std::current_exception()); \
+            }                                                                                   \
+        }                                                                                       \
+    } while (false)
+
 // ----------------------------------------------------------------------------
 /*!
  * \mainpage Asynchronous Operation Support

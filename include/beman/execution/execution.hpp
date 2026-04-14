@@ -18,6 +18,7 @@ import beman.execution.detail.completion_signatures;
 import beman.execution.detail.connect;
 import beman.execution.detail.continues_on;
 import beman.execution.detail.counting_scope;
+import beman.execution.detail.dependent_sender;
 import beman.execution.detail.env;
 import beman.execution.detail.execution_policy;
 import beman.execution.detail.forwarding_query;
@@ -79,6 +80,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/counting_scope.hpp>
+#include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/execution_policy.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
