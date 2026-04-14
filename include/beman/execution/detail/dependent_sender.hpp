@@ -3,14 +3,13 @@
 
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DEPENDENT_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DEPENDENT_SENDER
-#include "completion_signatures_for.hpp"
 
+#include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
 #include <concepts>
 #endif
-#include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.sender;

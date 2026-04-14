@@ -114,6 +114,16 @@ concept valid_when_all_sender = ::beman::execution::dependent_sender<Sender> ||
                                                                          ::std::tuple,
                                                                          ::beman::execution::detail::type_list>> == 1u;
 
+inline constexpr auto make_when_all_env = [](const ::beman::execution::inplace_stop_source& stop_src,
+                                             const auto&                                    env) noexcept {
+    return ::beman::execution::detail::join_env(
+        ::beman::execution::detail::make_env(::beman::execution::get_stop_token, stop_src.get_token()), env);
+};
+
+template <typename Env>
+using when_all_env =
+    decltype(make_when_all_env(::std::declval<::beman::execution::inplace_stop_source>(), ::std::declval<Env>()));
+
 struct when_all_t {
     template <::beman::execution::sender... Sender>
         requires(0u != sizeof...(Sender)) && (... && beman::execution::detail::valid_when_all_sender<Sender>) &&
@@ -164,15 +174,6 @@ struct when_all_t {
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
-        static constexpr auto make_when_all_env = [](const ::beman::execution::inplace_stop_source& stop_src,
-                                                     const auto&                                    env) noexcept {
-            return ::beman::execution::detail::join_env(
-                ::beman::execution::detail::make_env(::beman::execution::get_stop_token, stop_src.get_token()), env);
-        };
-        template <typename Env>
-        using when_all_env =
-            decltype(make_when_all_env(std::declval<::beman::execution::inplace_stop_source>(), std::declval<Env>()));
-
         struct get_attrs_impl {
             auto operator()(auto&&, auto&&... sender) const {
                 using common_t =

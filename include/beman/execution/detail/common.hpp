@@ -22,7 +22,7 @@
         try {                                                                                   \
             (expr);                                                                             \
         } catch (...) {                                                                         \
-            if constexpr (!noexcept((expr))) {                                                   \
+            if constexpr (!noexcept((expr))) {                                                  \
                 ::beman::execution::set_error(::std::move((rcvr)), ::std::current_exception()); \
             }                                                                                   \
         }                                                                                       \

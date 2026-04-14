@@ -55,9 +55,9 @@ struct read_env_t {
         using set_value_type = ::beman::execution::set_value_t(
             decltype(::std::declval<Query>()(::std::as_const(::std::declval<::std::add_lvalue_reference_t<Env>>()))));
         using set_error_type = ::beman::execution::set_error_t(::std::exception_ptr);
-        using type           = ::std::conditional_t<noexcept(::std::declval<Query>()(::std::declval<const Env&>())),
-                                                    ::beman::execution::completion_signatures<set_value_type>,
-                                                    ::beman::execution::completion_signatures<set_value_type, set_error_type>>;
+        using type = ::std::conditional_t<noexcept(::std::declval<Query>()(::std::declval<const Env&>())),
+                                          ::beman::execution::completion_signatures<set_value_type>,
+                                          ::beman::execution::completion_signatures<set_value_type, set_error_type>>;
     };
 
   public:
