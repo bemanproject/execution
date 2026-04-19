@@ -31,8 +31,8 @@ repos:
         exclude: docs/TODO.json
 
   # CMake linting and formatting
-  - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.26.1
+  - repo: https://github.com/BlankSpruce/gersemi-pre-commit
+    rev: 0.27.2
     hooks:
       - id: gersemi
         name: CMake linting
