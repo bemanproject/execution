@@ -234,6 +234,10 @@ auto test_when_all() -> void {
                           await_cancel(),
                           add_value{test_std::just_stopped()},
                           test_std::just(true, 3.5));
+
+    test_std::sync_wait(test_std::read_env(test_std::get_stop_token));
+    test_std::sync_wait(
+        test_std::when_all(test_std::read_env(test_std::get_stop_token) | test_std::then([](auto&&) {})));
 }
 
 auto test_when_all_with_variant() -> void {
@@ -265,7 +269,6 @@ TEST(exec_when_all) {
     static_assert(std::same_as<const test_std::when_all_with_variant_t, decltype(test_std::when_all_with_variant)>);
 
     try {
-
         test_when_all();
         test_when_all_with_variant();
     } catch (...) {
