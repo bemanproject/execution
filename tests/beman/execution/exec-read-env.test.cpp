@@ -9,12 +9,15 @@ import beman.execution;
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/sync_wait.hpp>
+#include <beman/execution/detail/when_all.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -74,7 +77,24 @@ auto test_read_env_completions() -> void {
     auto r{test_std::read_env(test_std::get_stop_token)};
     test::check_type<test_std::completion_signatures<test_std::set_value_t(test_std::never_stop_token)>>(
         test_std::get_completion_signatures<decltype(r), test_std::env<>>());
+    test::check_type<test_std::completion_signatures<test_std::set_value_t(test_std::never_stop_token)>>(
+        test_std::get_completion_signatures<decltype(r), decltype(test_std::env{})>());
+    test::check_type<test_std::completion_signatures<test_std::set_value_t(test_std::inplace_stop_token)>>(
+        test_std::get_completion_signatures<decltype(r),
+                                            decltype(test_std::env{
+                                                test_std::prop{test_std::get_stop_token,
+                                                               std::declval<test_std::inplace_stop_token>()}})>());
+    test::check_type<test_std::completion_signatures<test_std::set_value_t(test_std::inplace_stop_token)>>(
+        test_std::get_completion_signatures<
+            decltype(r),
+            decltype(test_detail::join_env(
+                test_std::env{test_std::prop{test_std::get_stop_token, std::declval<test_std::inplace_stop_token>()}},
+                test_std::env{
+                    test_std::prop{test_std::get_stop_token, std::declval<test_std::never_stop_token>()}}))>());
     test::use(r);
+
+    test_std::sync_wait(test_std::read_env(test_std::get_stop_token));
+    test_std::sync_wait(test_std::when_all(test_std::read_env(test_std::get_scheduler)));
 }
 } // namespace
 

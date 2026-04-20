@@ -16,6 +16,7 @@ import std;
 #include <type_traits>
 #include <utility>
 #include <variant>
+#include <iostream> //-dk:TODO remove
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
@@ -47,6 +48,7 @@ import beman.execution.detail.meta.to;
 import beman.execution.detail.meta.transform;
 import beman.execution.detail.meta.unique;
 import beman.execution.detail.on_stop_request;
+import beman.execution.detail.prop;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_in;
 import beman.execution.detail.sends_stopped;
@@ -85,6 +87,7 @@ import beman.execution.detail.value_types_of_t;
 #include <beman/execution/detail/meta_transform.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/on_stop_request.hpp>
+#include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/sends_stopped.hpp>
@@ -117,12 +120,19 @@ concept valid_when_all_sender = ::beman::execution::dependent_sender<Sender> ||
 inline constexpr auto make_when_all_env = [](const ::beman::execution::inplace_stop_source& stop_src,
                                              const auto&                                    env) noexcept {
     return ::beman::execution::detail::join_env(
-        ::beman::execution::detail::make_env(::beman::execution::get_stop_token, stop_src.get_token()), env);
+        ::beman::execution::env{::beman::execution::prop{::beman::execution::get_stop_token, stop_src.get_token()}},
+        env);
 };
 
 template <typename Env>
 using when_all_env =
     decltype(make_when_all_env(::std::declval<::beman::execution::inplace_stop_source>(), ::std::declval<Env>()));
+
+static_assert(std::same_as<::beman::execution::never_stop_token,
+                           decltype(::beman::execution::get_stop_token(::std::declval<::beman::execution::env<>>()))>);
+static_assert(std::same_as<::beman::execution::inplace_stop_token,
+                           decltype(::beman::execution::get_stop_token(
+                               ::std::declval<when_all_env<::beman::execution::env<>>>()))>);
 
 struct when_all_t {
     template <::beman::execution::sender... Sender>
@@ -188,6 +198,7 @@ struct when_all_t {
         struct get_env_impl {
             template <typename State, typename Receiver>
             auto operator()(auto&&, State& state, const Receiver& receiver) const noexcept {
+                std::cout << "when_all::get_env()\n";
                 return make_when_all_env(state.stop_src, ::beman::execution::get_env(receiver));
             }
         };
@@ -202,7 +213,7 @@ struct when_all_t {
         template <typename Receiver, typename... Sender>
         struct state_type {
             struct nonesuch {};
-            using env_t     = ::beman::execution::env_of_t<Receiver>;
+            using env_t     = when_all_env<::beman::execution::env_of_t<Receiver>>;
             using copy_fail = ::std::conditional_t<
                 (... && ::beman::execution::value_types_of_t<Sender,
                                                              env_t,
@@ -291,7 +302,7 @@ struct when_all_t {
 
         template <typename Receiver>
         struct make_state {
-            template <::beman::execution::sender_in<::beman::execution::env_of_t<Receiver>>... Sender>
+            template <::beman::execution::sender_in<when_all_env<::beman::execution::env_of_t<Receiver>>>... Sender>
             auto operator()(auto, auto, Sender&&...) const {
                 return state_type<Receiver, Sender...>{};
             }
