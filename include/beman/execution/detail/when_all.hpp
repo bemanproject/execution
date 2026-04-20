@@ -46,6 +46,7 @@ import beman.execution.detail.meta.size;
 import beman.execution.detail.meta.to;
 import beman.execution.detail.meta.transform;
 import beman.execution.detail.meta.unique;
+import beman.execution.detail.never_stop_token;
 import beman.execution.detail.on_stop_request;
 import beman.execution.detail.prop;
 import beman.execution.detail.sender;
