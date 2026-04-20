@@ -113,6 +113,7 @@ struct operation_state : test_detail::immovable {
 struct sender0 {
     struct env {};
     using sender_concept = test_std::sender_t;
+    using is_basic_sender_tag = void;
     using indices_for    = ::std::index_sequence_for<>;
     tag  t{};
     int* data{};
@@ -125,6 +126,7 @@ struct sender0 {
 
 struct sender1 {
     using sender_concept = test_std::sender_t;
+    using is_basic_sender_tag = void;
     using indices_for    = ::std::index_sequence_for<sender0>;
     tag     t{};
     int*    data{};
@@ -137,6 +139,7 @@ struct sender1 {
 
 struct sender2 {
     using sender_concept = test_std::sender_t;
+    using is_basic_sender_tag = void;
     using indices_for    = ::std::index_sequence_for<sender0, sender0>;
     tag     t{};
     int*    data{};
@@ -150,6 +153,7 @@ struct sender2 {
 
 struct sender3 {
     using sender_concept = test_std::sender_t;
+    using is_basic_sender_tag = void;
     using indices_for    = ::std::index_sequence_for<sender0, sender0, sender0>;
     tag     t{};
     int*    data{};
@@ -164,6 +168,7 @@ struct sender3 {
 
 struct sender4 {
     using sender_concept = test_std::sender_t;
+    using is_basic_sender_tag = void;
     using indices_for    = ::std::index_sequence_for<sender0, sender0, sender0, sender0>;
     tag     t{};
     int*    data{};
@@ -547,21 +552,25 @@ auto test_default_impls_get_state() -> void {
         auto operator==(const data&) const -> bool = default;
     };
     struct local_sender0 {
+        using is_basic_sender_tag = void;
         local_tag t{};
         data      d{1, 2};
     };
     struct local_sender1 {
+        using is_basic_sender_tag = void;
         local_tag t{};
         data      d{1, 2};
         int       i1{};
     };
     struct local_sender2 {
+        using is_basic_sender_tag = void;
         local_tag t{};
         data      d{1, 2};
         int       i1{};
         int       i2{};
     };
     struct local_sender3 {
+        using is_basic_sender_tag = void;
         local_tag t{};
         data      d{1, 2};
         int       i1{};
@@ -569,6 +578,7 @@ auto test_default_impls_get_state() -> void {
         int       i3{};
     };
     struct local_sender4 {
+        using is_basic_sender_tag = void;
         local_tag t{};
         data      d{1, 2};
         int       i1{};
@@ -665,6 +675,7 @@ auto test_state_type() -> void {
     };
     struct state {};
     struct sender {
+        using is_basic_sender_tag = void;
         local_tag t;
         state     s;
     };
@@ -679,6 +690,7 @@ auto test_basic_state() -> void {
     };
     struct data {};
     struct local_sender {
+        using is_basic_sender_tag = void;
         local_tag t;
         data      d;
     };
@@ -717,10 +729,12 @@ auto test_env_type() -> void {
     struct data {};
     struct local_env {};
     struct local_sender {
+        using is_basic_sender_tag = void;
         local_tag t;
         data      d;
     };
     struct sender_with_env {
+        using is_basic_sender_tag = void;
         local_tag t;
         data      d;
         auto      get_env() const noexcept -> local_env { return {}; }
@@ -750,6 +764,7 @@ auto test_basic_receiver() -> void {
         auto operator==(const err&) const -> bool = default;
     };
     struct local_sender {
+        using is_basic_sender_tag = void;
         local_tag t{};
         data      d{};
     };
@@ -1099,6 +1114,7 @@ struct basic_sender_tag {
 struct data {};
 struct tagged_sender : test_detail::product_type<basic_sender_tag, data, sender0> {
     using sender_concept = test_std::sender_t;
+    using is_basic_sender_tag = void;
 };
 } // namespace
 namespace std {
