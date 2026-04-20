@@ -166,12 +166,12 @@ struct when_all_t {
         using value_types =
             typename ::beman::execution::detail::when_all_value_types<::beman::execution::detail::meta::combine<
                 ::beman::execution::
-                    value_types_of_t<Sender, Env, ::beman::execution::detail::type_list, ::std::type_identity_t>...>>::
+                    value_types_of_t<Sender, when_all_env<Env>, ::beman::execution::detail::type_list, ::std::type_identity_t>...>>::
                 type;
         using error_types = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
-            ::beman::execution::error_types_of_t<Sender, Env, error_comps>...>>;
+            ::beman::execution::error_types_of_t<Sender, when_all_env<Env>, error_comps>...>>;
         using stopped_types =
-            ::std::conditional_t<(false || ... || ::beman::execution::sends_stopped<Sender, Env>),
+            ::std::conditional_t<(false || ... || ::beman::execution::sends_stopped<Sender, when_all_env<Env>>),
                                  ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
                                  ::beman::execution::completion_signatures<>>;
         using type = ::beman::execution::detail::meta::combine<value_types, error_types, stopped_types>;

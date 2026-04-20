@@ -5,6 +5,7 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail.join_env;
 #else
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/common.hpp>
@@ -94,6 +95,7 @@ auto test_read_env_completions() -> void {
     test::use(r);
 
     test_std::sync_wait(test_std::read_env(test_std::get_stop_token));
+    test_std::sync_wait(test_std::when_all(test_std::read_env(test_std::get_stop_token)));
     test_std::sync_wait(test_std::when_all(test_std::read_env(test_std::get_scheduler)));
 }
 } // namespace
