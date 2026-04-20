@@ -16,7 +16,6 @@ import std;
 #include <type_traits>
 #include <utility>
 #include <variant>
-#include <iostream> //-dk:TODO remove
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
@@ -198,7 +197,6 @@ struct when_all_t {
         struct get_env_impl {
             template <typename State, typename Receiver>
             auto operator()(auto&&, State& state, const Receiver& receiver) const noexcept {
-                std::cout << "when_all::get_env()\n";
                 return make_when_all_env(state.stop_src, ::beman::execution::get_env(receiver));
             }
         };
