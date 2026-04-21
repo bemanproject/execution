@@ -51,10 +51,12 @@ auto get_sender_data(Sender&& sender) {
     using sender_type = ::std::remove_cvref_t<Sender>;
     static constexpr ::beman::execution::detail::sender_convert_to_any_t at{};
 
-    if constexpr (requires {
-                      sender.template get<0>();
-                      sender.size();
-                  })
+    if constexpr (!requires { typename sender_type::is_basic_sender_tag; }) {
+        return ::beman::execution::detail::sender_meta<void, void, void>{};
+    } else if constexpr (requires {
+                             sender.template get<0>();
+                             sender.size();
+                         })
         return [&sender]<::std::size_t... I>(::std::index_sequence<I...>) {
             return ::beman::execution::detail::sender_data{
                 sender.template get<0>(), sender.template get<1>(), ::std::tie(sender.template get<2 + I>()...)};

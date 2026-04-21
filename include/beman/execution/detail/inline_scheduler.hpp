@@ -60,11 +60,6 @@ struct inline_scheduler {
 
         static constexpr auto get_env() noexcept -> env { return {}; }
 
-        template <typename, typename...>
-        static consteval auto get_completion_signatures() noexcept -> completion_signatures {
-            return {};
-        }
-
         template <::beman::execution::receiver Rcvr>
         auto connect(Rcvr&& receiver) noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Rcvr>, Rcvr>)
             -> state<Rcvr> {
