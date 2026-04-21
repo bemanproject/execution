@@ -52,7 +52,7 @@ auto get_sender_data(Sender&& sender) {
     static constexpr ::beman::execution::detail::sender_convert_to_any_t at{};
 
     if constexpr (!requires { typename sender_type::is_basic_sender_tag; }) {
-        return ::beman::execution::detail::sender_meta<void, void, Sender>{};
+        return ::beman::execution::detail::sender_meta<void, void, void>{};
     } else if constexpr (requires {
                              sender.template get<0>();
                              sender.size();
