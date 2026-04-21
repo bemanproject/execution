@@ -66,9 +66,9 @@ inline constexpr sub_apply_t sub_apply{};
 template <typename Tag, typename Data, typename... Child>
 struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child...> {
     //-dk:TODO friend struct ::beman::execution::detail::connect_t;
-    using sender_concept = ::beman::execution::sender_t;
+    using sender_concept      = ::beman::execution::sender_t;
     using is_basic_sender_tag = void; //-dk:TODO need a better way to detect this is a basic sender
-    using indices_for    = ::std::index_sequence_for<Child...>;
+    using indices_for         = ::std::index_sequence_for<Child...>;
     static constexpr ::std::integral_constant<::std::size_t, sizeof...(Child) + 2> size{};
 
     auto get_env() const noexcept -> decltype(auto) {

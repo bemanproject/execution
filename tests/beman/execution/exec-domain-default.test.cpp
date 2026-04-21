@@ -62,7 +62,7 @@ struct tag {
 
 template <bool Noexcept>
 struct tagged_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept      = test_std::sender_t;
     using is_basic_sender_tag = void;
     tag<Noexcept> t{};
     int           value{17};

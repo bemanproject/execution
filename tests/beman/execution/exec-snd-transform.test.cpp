@@ -44,9 +44,9 @@ struct tag {
 
 template <int I>
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept      = test_std::sender_t;
     using is_basic_sender_tag = void;
-    using index_type     = std::integral_constant<int, I>;
+    using index_type          = std::integral_constant<int, I>;
     tag<I> t;
     int    value{};
 };

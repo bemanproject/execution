@@ -112,9 +112,9 @@ struct operation_state : test_detail::immovable {
 
 struct sender0 {
     struct env {};
-    using sender_concept = test_std::sender_t;
+    using sender_concept      = test_std::sender_t;
     using is_basic_sender_tag = void;
-    using indices_for    = ::std::index_sequence_for<>;
+    using indices_for         = ::std::index_sequence_for<>;
     tag  t{};
     int* data{};
     template <typename Receiver>
@@ -125,9 +125,9 @@ struct sender0 {
 };
 
 struct sender1 {
-    using sender_concept = test_std::sender_t;
+    using sender_concept      = test_std::sender_t;
     using is_basic_sender_tag = void;
-    using indices_for    = ::std::index_sequence_for<sender0>;
+    using indices_for         = ::std::index_sequence_for<sender0>;
     tag     t{};
     int*    data{};
     sender0 c0{};
@@ -138,9 +138,9 @@ struct sender1 {
 };
 
 struct sender2 {
-    using sender_concept = test_std::sender_t;
+    using sender_concept      = test_std::sender_t;
     using is_basic_sender_tag = void;
-    using indices_for    = ::std::index_sequence_for<sender0, sender0>;
+    using indices_for         = ::std::index_sequence_for<sender0, sender0>;
     tag     t{};
     int*    data{};
     sender0 c0{};
@@ -152,9 +152,9 @@ struct sender2 {
 };
 
 struct sender3 {
-    using sender_concept = test_std::sender_t;
+    using sender_concept      = test_std::sender_t;
     using is_basic_sender_tag = void;
-    using indices_for    = ::std::index_sequence_for<sender0, sender0, sender0>;
+    using indices_for         = ::std::index_sequence_for<sender0, sender0, sender0>;
     tag     t{};
     int*    data{};
     sender0 c0{};
@@ -167,9 +167,9 @@ struct sender3 {
 };
 
 struct sender4 {
-    using sender_concept = test_std::sender_t;
+    using sender_concept      = test_std::sender_t;
     using is_basic_sender_tag = void;
-    using indices_for    = ::std::index_sequence_for<sender0, sender0, sender0, sender0>;
+    using indices_for         = ::std::index_sequence_for<sender0, sender0, sender0, sender0>;
     tag     t{};
     int*    data{};
     sender0 c0{};
@@ -1113,7 +1113,7 @@ struct basic_sender_tag {
 
 struct data {};
 struct tagged_sender : test_detail::product_type<basic_sender_tag, data, sender0> {
-    using sender_concept = test_std::sender_t;
+    using sender_concept      = test_std::sender_t;
     using is_basic_sender_tag = void;
 };
 } // namespace

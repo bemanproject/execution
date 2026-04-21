@@ -79,14 +79,15 @@ struct store_receiver_t {
     template <::beman::execution::sender Sndr, typename Trans>
     struct sender {
         using sender_concept = ::beman::execution::sender_t;
-        using trans_t = ::std::remove_cvref_t<Trans>;
+        using trans_t        = ::std::remove_cvref_t<Trans>;
         template <typename, typename... Env>
         static consteval auto get_completion_signatures() noexcept {
-            return ::beman::execution::
-                get_completion_signatures<decltype(::std::declval<trans_t>()(::std::declval<Sndr>(), ::std::declval<Env>()...)), Env...>();
+            return ::beman::execution::get_completion_signatures<
+                decltype(::std::declval<trans_t>()(::std::declval<Sndr>(), ::std::declval<Env>()...)),
+                Env...>();
         }
-        ::std::remove_cvref_t<Sndr>  sndr;
-        trans_t trans;
+        ::std::remove_cvref_t<Sndr> sndr;
+        trans_t                     trans;
 
         template <::beman::execution::receiver Receiver>
         auto connect(Receiver&& r) && {
