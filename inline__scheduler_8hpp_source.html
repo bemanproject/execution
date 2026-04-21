@@ -162,27 +162,22 @@ $(document).ready(function(){initNavTree('inline__scheduler_8hpp_source.html',''
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> get_env() <span class="keyword">noexcept</span> -&gt; <a class="code hl_struct" href="structbeman_1_1execution_1_1inline__scheduler_1_1env.html">env</a> { <span class="keywordflow">return</span> {}; }</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>...&gt;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">static</span> <span class="keyword">consteval</span> <span class="keyword">auto</span> get_completion_signatures() <span class="keyword">noexcept</span> -&gt; <a class="code hl_struct" href="structbeman_1_1execution_1_1completion__signatures.html">completion_signatures</a> {</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        }</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keyword">template</span> &lt;::beman::execution::receiver Rcvr&gt;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keyword">auto</span> <a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(Rcvr&amp;&amp; <a class="code hl_concept" href="conceptbeman_1_1execution_1_1receiver.html">receiver</a>) <span class="keyword">noexcept</span>(::std::is_nothrow_constructible_v&lt;::std::remove_cvref_t&lt;Rcvr&gt;, Rcvr&gt;)</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            -&gt; <a class="code hl_struct" href="structbeman_1_1execution_1_1inline__scheduler_1_1state.html">state&lt;Rcvr&gt;</a> {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            <span class="keywordflow">return</span> {::std::forward&lt;Rcvr&gt;(<a class="code hl_concept" href="conceptbeman_1_1execution_1_1receiver.html">receiver</a>)};</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        }</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    };</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> schedule() noexcept -&gt; <a class="code hl_concept" href="conceptbeman_1_1execution_1_1sender.html">sender</a> { <span class="keywordflow">return</span> {}; }</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">auto</span> operator==(<span class="keyword">const</span> inline_scheduler&amp;) <span class="keyword">const</span> -&gt; <span class="keywordtype">bool</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>};</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_DETAIL_EXECUTION_INLINE_SCHEDULER</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">template</span> &lt;::beman::execution::receiver Rcvr&gt;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">auto</span> <a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(Rcvr&amp;&amp; <a class="code hl_concept" href="conceptbeman_1_1execution_1_1receiver.html">receiver</a>) <span class="keyword">noexcept</span>(::std::is_nothrow_constructible_v&lt;::std::remove_cvref_t&lt;Rcvr&gt;, Rcvr&gt;)</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            -&gt; <a class="code hl_struct" href="structbeman_1_1execution_1_1inline__scheduler_1_1state.html">state&lt;Rcvr&gt;</a> {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keywordflow">return</span> {::std::forward&lt;Rcvr&gt;(<a class="code hl_concept" href="conceptbeman_1_1execution_1_1receiver.html">receiver</a>)};</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        }</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    };</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> schedule() noexcept -&gt; <a class="code hl_concept" href="conceptbeman_1_1execution_1_1sender.html">sender</a> { <span class="keywordflow">return</span> {}; }</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">auto</span> operator==(<span class="keyword">const</span> inline_scheduler&amp;) <span class="keyword">const</span> -&gt; <span class="keywordtype">bool</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>};</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>} <span class="comment">// namespace beman::execution</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_DETAIL_EXECUTION_INLINE_SCHEDULER</span></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1receiver_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1receiver.html">beman::execution::receiver</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:28</div></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1sender_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1sender.html">beman::execution::sender</a></div><div class="ttdef"><b>Definition:</b> sender.hpp:48</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_1_1detail_html"><div class="ttname"><a href="namespacebeman_1_1execution_1_1detail.html">beman::execution::detail</a></div><div class="ttdef"><b>Definition:</b> affine_on.hpp:70</div></div>

@@ -153,45 +153,47 @@ $(document).ready(function(){initNavTree('sender__decompose_8hpp_source.html',''
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">using </span>sender_type = ::std::remove_cvref_t&lt;Sender&gt;;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">static</span> constexpr ::beman::execution::detail::sender_convert_to_any_t at{};</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                      sender.template get&lt;0&gt;();</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                      sender.size();</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                  })</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">return</span> [&amp;sender]&lt;::std::size_t... I&gt;(::std::index_sequence&lt;I...&gt;) {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            return ::beman::execution::detail::sender_data{</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                sender.template get&lt;0&gt;(), sender.template get&lt;1&gt;(), ::std::tie(sender.template get&lt;2 + I&gt;()...)};</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        }(::std::make_index_sequence&lt;::std::decay_t&lt;<span class="keyword">decltype</span>(sender)&gt;::size() - 2u&gt;{});</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at, at, at, at, at}; }) {</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data, c0, c1, c2, c3] = sender;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1, c2, c3)};</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at, at, at, at}; }) {</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data, c0, c1, c2] = sender;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1, c2)};</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at, at, at}; }) {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data, c0, c1] = sender;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1)};</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at, at}; }) {</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data, c0] = sender;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0)};</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at}; }) {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data] = sender;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tuple&lt;&gt;{}};</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        return ::beman::execution::detail::sender_meta&lt;void, void, void&gt;{};</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    }</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender&gt;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">auto</span> get_sender_meta(Sender&amp;&amp; sender) {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">using </span>type = <span class="keyword">decltype</span>(get_sender_data(sender));</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">return</span> sender_meta&lt;typename type::tag_type, typename type::data_type, typename type::children_type&gt;{};</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>}</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!<span class="keyword">requires</span> { <span class="keyword">typename</span> sender_type::is_basic_sender_tag; }) {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        return ::beman::execution::detail::sender_meta&lt;void, void, void&gt;{};</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                             sender.template get&lt;0&gt;();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                             sender.size();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                         })</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordflow">return</span> [&amp;sender]&lt;::std::size_t... I&gt;(::std::index_sequence&lt;I...&gt;) {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            return ::beman::execution::detail::sender_data{</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                sender.template get&lt;0&gt;(), sender.template get&lt;1&gt;(), ::std::tie(sender.template get&lt;2 + I&gt;()...)};</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        }(::std::make_index_sequence&lt;::std::decay_t&lt;<span class="keyword">decltype</span>(sender)&gt;::size() - 2u&gt;{});</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at, at, at, at, at}; }) {</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data, c0, c1, c2, c3] = sender;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1, c2, c3)};</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at, at, at, at}; }) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data, c0, c1, c2] = sender;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1, c2)};</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at, at, at}; }) {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data, c0, c1] = sender;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0, c1)};</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at, at}; }) {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data, c0] = sender;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tie(c0)};</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { sender_type{at, at}; }) {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">auto</span>&amp;&amp; [tag, data] = sender;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        return ::beman::execution::detail::sender_data{tag, data, ::std::tuple&lt;&gt;{}};</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        return ::beman::execution::detail::sender_meta&lt;void, void, void&gt;{};</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>}</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender&gt;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keyword">auto</span> get_sender_meta(Sender&amp;&amp; sender) {</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">using </span>type = <span class="keyword">decltype</span>(get_sender_data(sender));</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">return</span> sender_meta&lt;typename type::tag_type, typename type::data_type, typename type::children_type&gt;{};</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>} <span class="comment">// namespace beman::execution::detail</span></div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_DECOMPOSE</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_SENDER_DECOMPOSE</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
