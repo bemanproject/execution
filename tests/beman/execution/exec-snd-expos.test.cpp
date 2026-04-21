@@ -764,9 +764,9 @@ auto test_basic_receiver() -> void {
         auto operator==(const err&) const -> bool = default;
     };
     struct local_sender {
-        using is_basic_sender_tag = void;
-        local_tag t{};
-        data      d{};
+        using is_basic_sender_tag = local_tag;
+        is_basic_sender_tag t{};
+        data                d{};
     };
     struct local_receiver {
         T    value{};
@@ -781,6 +781,7 @@ auto test_basic_receiver() -> void {
         T value;
     };
     using basic_receiver = test_detail::basic_receiver<local_sender, local_receiver, index>;
+    static_assert(requires { typename local_sender::is_basic_sender_tag; });
     static_assert(test_std::receiver<basic_receiver>);
     static_assert(std::same_as<local_tag, typename basic_receiver::tag_t>);
     static_assert(
