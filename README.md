@@ -5,9 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 <img src="https://github.com/bemanproject/beman/blob/main/images/logos/beman_logo-beman_library_under_development.png" style="width:5%; height:auto;">
 
-![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg)
-![Target Standard](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg)
-[![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)
+![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)
 
 `beman.execution` provides the basic vocabulary for asynchronous
 programming as well as important algorithms implemented in terms
