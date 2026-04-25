@@ -94,6 +94,10 @@ The implementation compiles and passes tests using [clang](https://clang.llvm.or
 | Clang    | 22-19   | C++26, C++23  | libc++           |
 | MSVC     | latest  | C++23         | MSVC STL         |
 
+## License
+
+beman.execution is licensed under the Apache License v2.0 with LLVM Exceptions.
+
 ## Examples
 
 - `<stop_token>` example: [Compiler Explorer](https://godbolt.org/z/4r4x9q1r7)
