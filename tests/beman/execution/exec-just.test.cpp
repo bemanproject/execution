@@ -6,6 +6,7 @@
 #include <memory_resource>
 #include <string>
 #include <test/execution.hpp>
+#include <test/completion_test.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
@@ -201,6 +202,13 @@ auto test_just_allocator() -> void {
     test::use(state);
     ASSERT(resource.count == 2u);
 }
+
+auto test_completion_signatures() -> void {
+    test_std::sync_wait(test::completion_test(test_std::just()));
+    test_std::sync_wait(test::completion_test(test_std::just(1, 2, 3)));
+    test_std::sync_wait(test::completion_test(test_std::just_error(1)));
+    test_std::sync_wait(test::completion_test(test_std::just_stopped()));
+}
 } // namespace
 
 TEST(exec_just) {
@@ -211,6 +219,7 @@ TEST(exec_just) {
     try {
         test_just_constraints();
         test_just();
+        test_completion_signatures();
 #ifndef _MSC_VER
         //-dk:TODO re-enable allocator test for MSVC++
         test_just_allocator();
