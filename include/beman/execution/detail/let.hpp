@@ -297,8 +297,9 @@ struct let_t {
                     try {
                         let_bind(state, receiver, ::std::forward<Args>(args)...);
                     } catch (...) {
-                        if constexpr (not noexcept(let_bind(state, receiver, ::std::forward<Args>(args)...)))
+                        if constexpr (not noexcept(let_bind(state, receiver, ::std::forward<Args>(args)...))) {
                             ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                        }
                     }
                 } else {
                     Tag()(::std::move(receiver), ::std::forward<Args>(args)...);

@@ -59,7 +59,9 @@ struct starts_on_t {
         return ::beman::execution::let_value(
             ::beman::execution::schedule(scheduler),
             [new_sender = ::beman::execution::detail::forward_like<Sender>(new_sender)]() mutable noexcept(
-                ::std::is_nothrow_constructible_v<::std::decay_t<Sender>>) { return ::std::move(new_sender); });
+                ::std::is_nothrow_constructible_v<::std::decay_t<Sender>, Sender>) {
+                return ::std::move(new_sender);
+            });
     }
 
     template <::beman::execution::scheduler Scheduler, ::beman::execution::sender Sender>

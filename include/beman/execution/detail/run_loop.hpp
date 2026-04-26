@@ -161,7 +161,7 @@ class run_loop {
     auto operator=(const run_loop&) -> run_loop& = delete;
     auto operator=(run_loop&&) -> run_loop&      = delete;
 
-    auto get_scheduler() -> scheduler { return {this}; }
+    auto get_scheduler() noexcept -> scheduler { return {this}; }
 
     auto run() -> void {
         if (::std::lock_guard guard(this->mutex);
