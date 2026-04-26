@@ -47,15 +47,15 @@ struct product_type_base<::std::index_sequence<I...>, T...>
     }
 
     template <::std::size_t J>
-    auto get() & -> decltype(auto) {
+    auto get() & noexcept -> decltype(auto) {
         return this->element_get<J>(*this);
     }
     template <::std::size_t J>
-    auto get() && -> decltype(auto) {
+    auto get() && noexcept -> decltype(auto) {
         return this->element_get<J>(::std::move(*this));
     }
     template <::std::size_t J>
-    auto get() const& -> decltype(auto) {
+    auto get() const& noexcept -> decltype(auto) {
         return this->element_get<J>(*this);
     }
 

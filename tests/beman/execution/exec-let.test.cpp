@@ -123,6 +123,13 @@ auto test_let_value_env() -> void {
                   ex::then([](auto s) { static_assert(ex::scheduler<decltype(s)>); }));
 }
 
+struct all_receiver {
+    using receiver_concept = test_std::receiver_t;
+    auto set_value(auto&&...) && noexcept {}
+    auto set_error(auto&&) && noexcept {}
+    auto set_stopped() && noexcept {}
+};
+
 auto test_completion_signatures() -> void {
     test_std::sync_wait(
         test::completion_test(test_std::just() | test_std::let_value([]() { return test_std::just(); })));
@@ -130,6 +137,28 @@ auto test_completion_signatures() -> void {
         test::completion_test(test_std::just() | test_std::let_value([]() noexcept { return test_std::just(); })));
     test_std::sync_wait(test::completion_test(
         test_std::just() | test_std::let_value([]() noexcept { return test_std::just_error(std::exception_ptr{}); })));
+
+    test_std::sync_wait(test::completion_test(test_std::let_value(
+        test_std::just(),
+        []() noexcept { return test_std::just(); })));
+    static_assert(
+        std::is_nothrow_move_constructible_v<decltype(test_std::just() | test_std::then([]() noexcept {}))>);
+    static_assert(
+        requires{test_std::connect(test_std::just() | test_std::then([]() noexcept {}), all_receiver{}); });
+    static_assert(noexcept(all_receiver{}));
+    static_assert(noexcept(test_std::just()));
+    static_assert(noexcept(test_std::just().connect(all_receiver{})));
+    static_assert(
+        noexcept(test_std::connect(test_std::just(), all_receiver{})));
+    static_assert(noexcept(ex::then(test_std::just(), []() noexcept {})));
+    static_assert(noexcept(test_std::just() | ex::then([]() noexcept {})));
+    static_assert(
+        noexcept((test_std::just() | test_std::then([]() noexcept {})).connect(all_receiver{})));
+    static_assert(
+        noexcept(test_std::connect(test_std::just() | test_std::then([]() noexcept {}), all_receiver{})));
+    test_std::sync_wait(test::completion_test(test_std::let_value(
+        test_std::just(),
+        []() noexcept { return test_std::just() | test_std::then([]() noexcept {}); })));
 }
 } // namespace
 

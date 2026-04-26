@@ -112,11 +112,16 @@ struct then_exception<Comp, Fun, ::beman::execution::completion_signatures<Compl
 template <typename Completion>
 struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
     template <::beman::execution::detail::movable_value Fun>
-    auto operator()(Fun&& fun) const {
+    auto operator()(Fun&& fun) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Fun>, Fun>)
+    {
         return ::beman::execution::detail::make_sender_adaptor(*this, std::forward<decltype(fun)>(fun));
     }
     template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
-    auto operator()(Sender&& sender, Fun&& fun) const {
+    auto operator()(Sender&& sender, Fun&& fun) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> && 
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Fun>, Fun>)
+    {
         auto domain{::beman::execution::detail::get_domain_early(sender)};
         return ::beman::execution::transform_sender(
             domain,

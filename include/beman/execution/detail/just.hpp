@@ -51,7 +51,7 @@ struct just_t {
     template <typename... T>
         requires ::beman::execution::detail::just_size<Completion, T...> &&
                  (::beman::execution::detail::movable_value<T> && ...)
-    auto operator()(T&&... arg) const {
+    auto operator()(T&&... arg) const noexcept((::std::is_nothrow_constructible_v<::std::remove_cvref_t<T>, T> && ...)) {
         return ::beman::execution::detail::make_sender(
             *this, ::beman::execution::detail::product_type{::std::forward<T>(arg)...});
     }

@@ -3,6 +3,7 @@
 
 #include <concepts>
 #include <test/execution.hpp>
+#include <test/completion_test.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -79,6 +80,24 @@ auto test_use(Scheduler&& scheduler, Sender&& sender) -> void {
     //-dk:TODO test::check_type<void>(test_std::get_completion_signatures(s, test_std::test_std::env<>{}));
     test_std::sync_wait(std::move(s));
 }
+
+auto test_starts_on_completions() {
+    test_std::sync_wait(test::completion_test(test_std::starts_on(test_std::inline_scheduler(),
+        test_std::just())));
+    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() noexcept {})));
+    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() noexcept {})));
+    test_std::sync_wait(test::completion_test(test_std::let_value(
+        test_std::just(),
+        []() noexcept { return test_std::just(); })));
+    test_std::sync_wait(test::completion_test(test_std::let_value(
+        test_std::just(),
+        []() noexcept { return test_std::just() | test_std::then([]() noexcept {}); })));
+    test_std::sync_wait(test::completion_test(test_std::let_value(
+        test_std::schedule(test_std::inline_scheduler()),
+        []() noexcept { return test_std::just() | test_std::then([]() noexcept {}); })));
+    test_std::sync_wait(test::completion_test(test_std::starts_on(test_std::inline_scheduler(),
+        test_std::just() | test_std::then([]() noexcept {}))));
+}
 } // namespace
 
 TEST(exec_starts_on) {
@@ -94,4 +113,5 @@ TEST(exec_starts_on) {
     test_constraints<true>(scheduler{}, sender{});
 
     test_use(scheduler{}, sender{});
+    test_starts_on_completions();
 }

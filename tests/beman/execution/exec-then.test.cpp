@@ -7,6 +7,7 @@
 #include <tuple>
 #include <utility>
 #include <test/execution.hpp>
+#include <test/completion_test.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -257,6 +258,12 @@ auto test_then_env() -> void {
     }
 }
 
+auto test_then_completions() {
+    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([](){})));
+    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() noexcept {})));
+    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([](auto&&...) noexcept {})));
+}
+
 } // namespace
 
 TEST(exec_then) {
@@ -275,4 +282,5 @@ TEST(exec_then) {
     test_then_allocator();
 
     test_then_env();
+    test_then_completions();
 }
