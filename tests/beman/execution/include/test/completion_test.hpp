@@ -9,18 +9,11 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
-#include <algorithm>
-#include <array>
-#include <atomic>
-#include <cassert>
-#include <chrono>
 #include <concepts>
-#include <condition_variable>
 #include <cstddef>
 #include <functional>
-#include <mutex>
-#include <ranges>
-#include <thread>
+#include <utility>
+#include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.completion_signatures;
@@ -93,7 +86,10 @@ struct completion_test {
                                                                          ::beman::execution::env_of_t<Receiver>>())> {
             using receiver_concept = ::beman::execution::receiver_t;
             state* st;
-            auto   complete() const noexcept -> void override {
+            auto   get_env() const noexcept -> ::beman::execution::env_of_t<Receiver> {
+                return ::beman::execution::get_env(this->st->receiver);
+            }
+            auto complete() const noexcept -> void override {
                 ::beman::execution::set_value(std::move(this->st->receiver));
             }
             inner_receiver(state* s) : st(s) {}
@@ -114,7 +110,7 @@ struct completion_test {
     Sender sender;
 
     template <::beman::execution::receiver Receiver>
-    auto connect(Receiver&& r) && noexcept {
+    auto connect(Receiver&& r) && {
         return state<Receiver>{std::forward<Receiver>(r), std::move(this->sender)};
     }
 };

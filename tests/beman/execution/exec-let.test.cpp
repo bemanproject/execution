@@ -4,6 +4,7 @@
 #include <array>
 #include <cstdlib>
 #include <concepts>
+#include <exception>
 #include <memory_resource>
 #include <span>
 #include <vector>
