@@ -149,15 +149,15 @@ $(document).ready(function(){initNavTree('product__type_8hpp_source.html',''); i
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">template</span> &lt;::std::<span class="keywordtype">size_t</span> J&gt;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">auto</span> get() &amp; -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">auto</span> get() &amp; <span class="keyword">noexcept</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keywordflow">return</span> this-&gt;element_get&lt;J&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">template</span> &lt;::std::<span class="keywordtype">size_t</span> J&gt;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">auto</span> get() &amp;&amp; -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">auto</span> get() &amp;&amp; <span class="keyword">noexcept</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">return</span> this-&gt;element_get&lt;J&gt;(::std::move(*<span class="keyword">this</span>));</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">template</span> &lt;::std::<span class="keywordtype">size_t</span> J&gt;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">auto</span> get() const&amp; -&gt; decltype(auto) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">auto</span> get() const&amp; noexcept -&gt; decltype(auto) {</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordflow">return</span> this-&gt;element_get&lt;J&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
