@@ -119,7 +119,7 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
     }
     template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
     auto operator()(Sender&& sender, Fun&& fun) const
-        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> && 
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
                  ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Fun>, Fun>)
     {
         auto domain{::beman::execution::detail::get_domain_early(sender)};

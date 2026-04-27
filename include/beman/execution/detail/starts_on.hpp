@@ -59,7 +59,7 @@ struct starts_on_t {
         return ::beman::execution::let_value(
             ::beman::execution::schedule(scheduler),
             [new_sender = ::beman::execution::detail::forward_like<Sender>(new_sender)]() mutable noexcept(
-                ::std::is_nothrow_constructible_v<::std::decay_t<Sender>, Sender>) {
+                ::std::is_nothrow_move_constructible_v<::std::remove_cvref_t<Sender>>) {
                 return ::std::move(new_sender);
             });
     }

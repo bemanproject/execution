@@ -85,7 +85,6 @@ auto test_starts_on_completions() {
     test_std::sync_wait(test::completion_test(test_std::starts_on(test_std::inline_scheduler(),
         test_std::just())));
     test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() noexcept {})));
-    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() noexcept {})));
     test_std::sync_wait(test::completion_test(test_std::let_value(
         test_std::just(),
         []() noexcept { return test_std::just(); })));
