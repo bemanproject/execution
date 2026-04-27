@@ -259,7 +259,7 @@ auto test_then_env() -> void {
 }
 
 auto test_then_completions() {
-    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([](){})));
+    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() {})));
     test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() noexcept {})));
     test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([](auto&&...) noexcept {})));
 }
