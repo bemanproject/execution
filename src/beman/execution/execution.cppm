@@ -43,6 +43,7 @@ import beman.execution.detail.never_stop_token;
 import beman.execution.detail.nostopstate;
 import beman.execution.detail.on;
 export import beman.execution.detail.operation_state; // [exec.opstate], operation states
+import beman.execution.detail.parallel_scheduler;
 import beman.execution.detail.prop;
 import beman.execution.detail.read_env;
 import beman.execution.detail.run_loop;
@@ -236,6 +237,10 @@ export using ::beman::execution::stopped_as_error;
 
 // [exec.run.loop], run_loop
 export using ::beman::execution::run_loop;
+
+// [exec.parallel.scheduler], parallel scheduler
+export using ::beman::execution::parallel_scheduler;
+export using ::beman::execution::get_parallel_scheduler;
 
 // [exec.consumers], consumers
 export using ::beman::execution::sync_wait_t;

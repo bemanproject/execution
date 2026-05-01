@@ -133,6 +133,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/on_stop_request.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state_task.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/parallel_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/product_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/prop.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/query_with_default.hpp
@@ -327,6 +328,7 @@ if(BEMAN_USE_MODULES)
                     on.cppm
                     operation_state_task.cppm
                     operation_state.cppm
+                    parallel_scheduler.cppm
                     product_type.cppm
                     prop.cppm
                     query_with_default.cppm
