@@ -67,6 +67,21 @@ struct bulk_item_receiver_proxy : receiver_proxy {
     virtual auto execute(::std::size_t, ::std::size_t) noexcept -> void = 0;
 };
 
+struct parallel_scheduler_backend {
+    virtual ~parallel_scheduler_backend() = default;
+
+    virtual auto schedule(receiver_proxy&, ::std::span<::std::byte>) noexcept -> void = 0;
+    virtual auto schedule_bulk_chunked(::std::size_t,
+                                       bulk_item_receiver_proxy&,
+                                       ::std::span<::std::byte>) noexcept -> void     = 0;
+    virtual auto schedule_bulk_unchunked(::std::size_t,
+                                         bulk_item_receiver_proxy&,
+                                         ::std::span<::std::byte>) noexcept -> void   = 0;
+};
+
+// TODO(P2079R10): provide the project-supported link-time replaceability hook.
+auto query_parallel_scheduler_backend() -> ::std::shared_ptr<parallel_scheduler_backend>;
+
 } // namespace beman::execution::system_context_replaceability
 
 namespace beman::execution {
