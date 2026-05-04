@@ -22,7 +22,7 @@ struct empty_domain {};
 
 template <kind>
 struct final_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     using index_type     = std::integral_constant<int, 0>;
     int  value{};
     auto operator==(const final_sender&) const -> bool = default;
@@ -44,7 +44,7 @@ struct tag {
 
 template <int I>
 struct sender {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     using index_type          = std::integral_constant<int, I>;
     tag<I> t;

@@ -50,7 +50,7 @@ import beman.execution.detail.schedule;
 import beman.execution.detail.schedule_from;
 export import beman.execution.detail.schedule_result_t;
 export import beman.execution.detail.scheduler; // [exec.sched], schedulers
-export import beman.execution.detail.scheduler_t;
+export import beman.execution.detail.scheduler_tag;
 export import beman.execution.detail.scope_association; // [exec.scope.concepts]
 export import beman.execution.detail.scope_token;       // [exec.scope.concepts]
 import beman.execution.detail.sender_adaptor_closure;

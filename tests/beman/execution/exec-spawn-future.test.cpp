@@ -45,7 +45,7 @@ static_assert(not test_std::sender<non_sender>);
 
 template <typename... T>
 struct sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(T...)>;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> completion_signatures {
@@ -58,7 +58,7 @@ struct sender {
     };
     template <test_std::receiver Rcvr>
     struct state : state_base {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         std::remove_cvref_t<Rcvr> rcvr;
         state_base**              handle{};
         auto complete(T... a) -> void override { test_std::set_value(std::move(this->rcvr), a...); }
@@ -290,7 +290,7 @@ struct alloc_env {
 };
 
 struct alloc_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     int value{};
 
     auto get_env() const noexcept -> alloc_env { return alloc_env{this->value}; }
@@ -341,7 +341,7 @@ auto test_get_allocator() {
 }
 
 struct rcvr {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     auto set_value(auto&&...) && noexcept -> void {}
     auto set_error(auto&&) && noexcept -> void {}

@@ -26,11 +26,11 @@ struct scheduler {
     struct sender {
         template <typename Receiver>
         struct state {
-            using operation_state_concept = test_std::operation_state_t;
+            using operation_state_concept = test_std::operation_state_tag;
             std::remove_cvref_t<Receiver> receiver;
             auto start() & noexcept -> void { test_std::set_value(::std::move(this->receiver)); }
         };
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         template <typename, typename...>
         static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
             return {};
@@ -41,12 +41,12 @@ struct scheduler {
             return {std::forward<Receiver>(receiver)};
         }
     };
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     auto schedule() -> sender { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
 };
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
         return {};
@@ -54,7 +54,7 @@ struct sender {
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         std::remove_cvref_t<Receiver> receiver;
         auto                          start() & noexcept -> void { test_std::set_value(::std::move(this->receiver)); }
     };

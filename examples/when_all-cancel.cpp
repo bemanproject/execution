@@ -31,7 +31,7 @@ struct env {
 };
 
 struct receiver {
-    using receiver_concept = ex::receiver_t;
+    using receiver_concept = ex::receiver_tag;
     ex::inplace_stop_source* source;
 
     auto set_value() && noexcept -> void { std::cout << "set_value\n"; }
@@ -43,7 +43,7 @@ struct receiver {
 static_assert(ex::receiver<receiver>);
 
 struct await_stop {
-    using sender_concept        = ex::sender_t;
+    using sender_concept        = ex::sender_tag;
     using completion_signatures = ex::completion_signatures<ex::set_value_t(), ex::set_stopped_t()>;
     template <typename...>
     static consteval auto get_completion_signatures() noexcept -> completion_signatures {
@@ -62,7 +62,7 @@ struct await_stop {
                 std::cout << "await_stop stopping done\n";
             }
         };
-        using operation_state_concept = ex::operation_state_t;
+        using operation_state_concept = ex::operation_state_tag;
         using token_t                 = decltype(ex::get_stop_token(ex::get_env(std::declval<Receiver>())));
         using callback_t              = ex::stop_callback_for_t<token_t, stop_t>;
 
@@ -84,7 +84,7 @@ static_assert(ex::operation_state<await_stop::state<receiver>>);
 
 template <ex::sender Sender>
 struct eager {
-    using sender_concept        = ex::sender_t;
+    using sender_concept        = ex::sender_tag;
     using completion_signatures = ex::completion_signatures<ex::set_value_t(), ex::set_stopped_t()>;
     template <typename...>
     static consteval auto get_completion_signatures() noexcept -> completion_signatures {
@@ -95,9 +95,9 @@ struct eager {
 
     template <ex::receiver Receiver>
     struct state {
-        using operation_state_concept = ex::operation_state_t;
+        using operation_state_concept = ex::operation_state_tag;
         struct receiver {
-            using receiver_concept = ex::receiver_t;
+            using receiver_concept = ex::receiver_tag;
             state* st;
             auto   set_value() && noexcept -> void { ex::set_value(std::move(st->outer_receiver)); }
             template <typename E>

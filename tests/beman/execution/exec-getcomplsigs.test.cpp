@@ -23,16 +23,16 @@ struct other_env {};
 
 template <typename>
 struct no_signatures_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 
 struct sender_with_typedef {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = signatures;
 };
 
 struct sender_from_domain {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename...>
     static consteval auto get_completion_signatures() noexcept {
         return signatures();
@@ -40,7 +40,7 @@ struct sender_from_domain {
 };
 
 struct sender_with_get_completion_signatures {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename, typename... Env>
     static consteval auto get_completion_signatures() noexcept {
         if constexpr ((std::same_as<other_env, Env> && ... && true)) {

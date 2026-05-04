@@ -147,7 +147,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule_from.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule_result_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler_t.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler_tag.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_association.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender.hpp
@@ -340,7 +340,7 @@ if(BEMAN_USE_MODULES)
                     schedule_from.cppm
                     schedule_result_t.cppm
                     schedule.cppm
-                    scheduler_t.cppm
+                    scheduler_tag.cppm
                     scheduler.cppm
                     scope_association.cppm
                     scope_token.cppm

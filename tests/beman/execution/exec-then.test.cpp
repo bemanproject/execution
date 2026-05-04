@@ -36,7 +36,7 @@ struct get_value_t : test_std::forwarding_query_t {
 };
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     auto set_error(auto&&) && noexcept -> void {}
     auto set_stopped() && noexcept -> void {}
@@ -50,7 +50,7 @@ struct receiver {
 
 template <typename... T>
 struct sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<T...>;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> completion_signatures {
@@ -185,7 +185,7 @@ struct memory_env {
     auto                              query(const test_std::get_allocator_t&) const noexcept { return allocator; }
 };
 struct memory_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     std::pmr::polymorphic_allocator<> allocator;
     auto                              get_env() const noexcept { return memory_env{this->allocator}; }
 

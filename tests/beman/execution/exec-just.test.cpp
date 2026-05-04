@@ -68,7 +68,7 @@ auto test_just_constraints() -> void {
 
 template <typename... T>
 struct value_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     bool*                                         called{};
     test_detail::product_type<std::decay_t<T>...> expect{};
 
@@ -85,7 +85,7 @@ value_receiver(bool*, T&&...) -> value_receiver<T...>;
 
 template <typename T>
 struct error_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     bool*           called;
     std::decay_t<T> error;
@@ -100,7 +100,7 @@ template <typename E>
 error_receiver(bool*, E&&) -> error_receiver<E>;
 
 struct stopped_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     bool* called;
 
@@ -164,7 +164,7 @@ struct memory_env {
     auto                              query(const test_std::get_allocator_t&) const noexcept { return allocator; }
 };
 struct memory_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     std::pmr::polymorphic_allocator<> allocator;
     auto                              get_env() const noexcept { return memory_env{this->allocator}; }
 

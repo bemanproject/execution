@@ -7,6 +7,7 @@ module;
 export module beman.execution.detail.operation_state;
 
 namespace beman::execution {
+export using beman::execution::operation_state_tag;
 export using beman::execution::operation_state_t;
 export using beman::execution::operation_state;
 } // namespace beman::execution

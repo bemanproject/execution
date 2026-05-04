@@ -26,13 +26,13 @@ struct env;
 
 template <typename Tag>
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     auto get_env() const noexcept -> env<Tag> { return {}; }
 };
 
 template <typename Tag>
 struct scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     int  value{};
     auto operator==(const scheduler&) const -> bool = default;
     auto schedule() noexcept -> sender<Tag> { return {}; }

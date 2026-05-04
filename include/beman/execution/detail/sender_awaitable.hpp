@@ -57,7 +57,7 @@ class sender_awaitable {
     using data_type    = ::std::tuple<variant_type, ::std::atomic<bool>, ::std::coroutine_handle<Promise>>;
 
     struct awaitable_receiver {
-        using receiver_concept = ::beman::execution::receiver_t;
+        using receiver_concept = ::beman::execution::receiver_tag;
 
         void resume() {
             if (not enable_defence || ::std::get<1>(*result_ptr_).exchange(true, std::memory_order_acq_rel)) {

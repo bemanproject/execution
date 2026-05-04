@@ -16,7 +16,7 @@ namespace {
 struct non_scheduler {};
 
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     int  value{};
     auto operator==(const sender&) const -> bool = default;
 };

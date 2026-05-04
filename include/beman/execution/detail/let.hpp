@@ -204,7 +204,7 @@ struct let_t {
 
         template <typename Receiver, typename Env>
         struct let_receiver {
-            using receiver_concept = ::beman::execution::receiver_t;
+            using receiver_concept = ::beman::execution::receiver_tag;
 
             Receiver& receiver;
             Env       env;

@@ -24,15 +24,15 @@ struct connector {
 inline constexpr struct repeat_effect_unilt_t {
     template <ex::sender Child, typename Fun>
     struct sender {
-        using sender_concept = ex::sender_t;
+        using sender_concept = ex::sender_tag;
         using completion_signatures =
             ex::completion_signatures<ex::set_value_t(), ex::set_error_t(std::exception_ptr), ex::set_stopped_t()>;
 
         template <ex::receiver Receiver>
         struct state {
-            using operation_state_concept = ex::operation_state_t;
+            using operation_state_concept = ex::operation_state_tag;
             struct own_receiver {
-                using receiver_concept = ex::receiver_t;
+                using receiver_concept = ex::receiver_tag;
                 state* s;
                 auto   set_value() && noexcept -> void {
                     static_assert(ex::receiver<own_receiver>);

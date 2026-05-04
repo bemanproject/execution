@@ -22,10 +22,10 @@ import beman.execution.detail;
 namespace {
 struct non_sender {};
 
-struct own_sender_t : test_std::sender_t {};
+struct own_sender_t : test_std::sender_tag {};
 
 struct std_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 struct own_sender {
     using sender_concept = own_sender_t;
@@ -33,20 +33,20 @@ struct own_sender {
 
 struct tag_t {};
 struct tagged_sender {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     tag_t tag;
     int   data;
 };
 struct tagged_sender1 {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     tag_t tag;
     int   data;
     int   child1;
 };
 struct tagged_sender2 {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     tag_t tag;
     int   data;
@@ -54,7 +54,7 @@ struct tagged_sender2 {
     int   child2;
 };
 struct tagged_sender3 {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     tag_t tag;
     int   data;
@@ -63,7 +63,7 @@ struct tagged_sender3 {
     int   child3;
 };
 struct tagged_sender4 {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     tag_t tag;
     int   data;
@@ -73,23 +73,23 @@ struct tagged_sender4 {
     int   child4;
 };
 struct product_sender0 : test_detail::product_type<tag_t, int> {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
 };
 struct product_sender1 : test_detail::product_type<tag_t, int, int> {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
 };
 struct product_sender2 : test_detail::product_type<tag_t, int, int, int> {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
 };
 struct product_sender3 : test_detail::product_type<tag_t, int, int, int, int> {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
 };
 struct product_sender4 : test_detail::product_type<tag_t, int, int, int, int, int> {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
 };
 
@@ -133,7 +133,7 @@ auto test_sender() -> void {
 }
 
 struct sender_in {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> test_std::completion_signatures<> {
         return {};
@@ -186,7 +186,7 @@ auto test_sender_for() -> void {
 
 auto test_sender_to() -> void {
     struct int_receiver {
-        using receiver_concept = test_std::receiver_t;
+        using receiver_concept = test_std::receiver_tag;
         static auto set_value(int) noexcept -> void {}
     };
 

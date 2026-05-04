@@ -137,7 +137,7 @@ namespace {
 struct logger_t {
     template <ex::sender Sndr, ex::receiver Rcvr, typename Log>
     struct state {
-        using operation_state_concept = ex::operation_state_t;
+        using operation_state_concept = ex::operation_state_tag;
         using inner_t                 = decltype(ex::connect(std::declval<Sndr>(), std::declval<Rcvr>()));
 
         inner_t                  inner;
@@ -154,7 +154,7 @@ struct logger_t {
 
     template <ex::sender Sndr, typename Log>
     struct sender {
-        using sender_concept = ex::sender_t;
+        using sender_concept = ex::sender_tag;
 
         Sndr sndr;
         Log  log;

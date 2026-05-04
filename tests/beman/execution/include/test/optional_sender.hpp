@@ -24,7 +24,7 @@ import beman.execution;
 namespace test {
 template <typename T>
 struct optional_sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(T), test_std::set_stopped_t()>;
 
     optional_sender() = default;
@@ -39,7 +39,7 @@ struct optional_sender {
     template <test_std::receiver_of<completion_signatures> Rcvr>
     auto connect(Rcvr rcvr) && noexcept -> auto {
         struct state {
-            using operation_state_concept = test_std::operation_state_t;
+            using operation_state_concept = test_std::operation_state_tag;
             auto start() & noexcept -> void {
                 test::use_type<operation_state_concept>(); // make -Werror=unused-local-typedefs happy
                 if (opt_) {

@@ -66,7 +66,7 @@ struct beman::execution::detail::connect_awaitable_promise
 
 template <typename Receiver>
 struct beman::execution::detail::operation_state_task {
-    using operation_state_concept = ::beman::execution::operation_state_t;
+    using operation_state_concept = ::beman::execution::operation_state_tag;
     using promise_type            = ::beman::execution::detail::connect_awaitable_promise<Receiver>;
 
     explicit operation_state_task(::std::coroutine_handle<> hndl) noexcept : handle(hndl) {}

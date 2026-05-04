@@ -106,7 +106,7 @@ struct spawn_future_state_base<::beman::execution::completion_signatures<Sigs...
 
 template <typename Completions>
 struct spawn_future_receiver {
-    using receiver_concept = ::beman::execution::receiver_t;
+    using receiver_concept = ::beman::execution::receiver_tag;
     using state_t          = ::beman::execution::detail::spawn_future_state_base<Completions>;
 
     state_t* state{};
@@ -156,22 +156,22 @@ struct spawn_future_state
     using traits_t         = ::std::allocator_traits<alloc_t>;
     using spawned_sender_t = ::beman::execution::detail::future_spawned_sender<Sndr, Env>;
     using sigs_t           = ::beman::execution::detail::spawn_future_sigs<Sndr, Env>;
-    using receiver_t       = ::beman::execution::detail::spawn_future_receiver<sigs_t>;
+    using receiver_tag     = ::beman::execution::detail::spawn_future_receiver<sigs_t>;
     static_assert(::beman::execution::sender<spawned_sender_t>);
-    static_assert(::beman::execution::receiver<receiver_t>);
-    using op_t = ::beman::execution::connect_result_t<spawned_sender_t, receiver_t>;
+    static_assert(::beman::execution::receiver<receiver_tag>);
+    using op_t = ::beman::execution::connect_result_t<spawned_sender_t, receiver_tag>;
 
     template <::beman::execution::sender S>
     spawn_future_state(auto a, S&& s, Token tok, Env env)
         : alloc(::std::move(a)),
           op(::beman::execution::write_env(
                  ::beman::execution::detail::stop_when(::std::forward<S>(s), source.get_token()), env),
-             receiver_t{this}),
+             receiver_tag{this}),
           assoc(tok.try_associate()) {
         if (this->assoc) {
             ::beman::execution::start(this->op);
         } else {
-            ::beman::execution::set_stopped(receiver_t{this});
+            ::beman::execution::set_stopped(receiver_tag{this});
         }
     }
     auto complete() noexcept -> void override {

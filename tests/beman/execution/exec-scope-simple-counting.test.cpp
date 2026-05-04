@@ -39,7 +39,7 @@ auto general() -> void {
 }
 
 struct join_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     struct env {
         auto query(const test_std::get_scheduler_t&) const noexcept -> test_std::inline_scheduler { return {}; }

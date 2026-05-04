@@ -17,7 +17,7 @@ namespace {
 // test helpers
 template <class Sender>
 struct wrapping_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     Sender inner;
 
     template <class Self, class Rcvr>
@@ -55,7 +55,7 @@ struct wrong_crtp_closure : test_std::sender_adaptor_closure<identity_closure> {
 struct double_inheritance_closure : identity_closure, test_std::sender_adaptor_closure<double_inheritance_closure> {};
 struct extended_closure : identity_closure {};
 struct both_sender_and_closure : test_std::sender_adaptor_closure<both_sender_and_closure> {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 
 struct incomplete;

@@ -127,7 +127,7 @@ struct schedule_from_t {
     struct impls_for : ::beman::execution::detail::default_impls {
         template <typename State>
         struct upstream_receiver {
-            using receiver_concept = ::beman::execution::receiver_t;
+            using receiver_concept = ::beman::execution::receiver_tag;
             State* state;
 
             auto set_value() && noexcept -> void {
@@ -166,18 +166,18 @@ struct schedule_from_t {
         };
         template <typename Receiver, typename Scheduler, typename Variant>
         struct state_type : state_base<Receiver, Variant> {
-            using receiver_t = upstream_receiver<state_base<Receiver, Variant>>;
+            using receiver_tag = upstream_receiver<state_base<Receiver, Variant>>;
             using operation_t =
-                ::beman::execution::connect_result_t<::beman::execution::schedule_result_t<Scheduler>, receiver_t>;
+                ::beman::execution::connect_result_t<::beman::execution::schedule_result_t<Scheduler>, receiver_tag>;
             operation_t op_state;
 
             static constexpr bool nothrow() {
                 return noexcept(::beman::execution::connect(::beman::execution::schedule(::std::declval<Scheduler>()),
-                                                            receiver_t{nullptr}));
+                                                            receiver_tag{nullptr}));
             }
             explicit state_type(Scheduler& sch, Receiver& rcvr) noexcept(nothrow())
                 : state_base<Receiver, Variant>{rcvr},
-                  op_state(::beman::execution::connect(::beman::execution::schedule(sch), receiver_t{this})) {}
+                  op_state(::beman::execution::connect(::beman::execution::schedule(sch), receiver_tag{this})) {}
         };
 
         struct get_attrs_impl {
