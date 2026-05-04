@@ -75,9 +75,9 @@ auto test_transform_sender(Domain) {
     static_assert(noexcept(Domain::transform_sender(simple_tag{}, simple_sender{})));
     static_assert(noexcept(Domain::transform_sender(simple_tag{}, simple_sender{}, env{})));
     using simple_rvalue_type = decltype(Domain::transform_sender(simple_tag{}, simple_sender{}));
-    static_assert(std::same_as<simple_sender&&, simple_rvalue_type>);
+    static_assert(std::same_as<simple_sender, simple_rvalue_type>);
     using simple_env_rvalue_type = decltype(Domain::transform_sender(simple_tag{}, simple_sender{}, env{}));
-    static_assert(std::same_as<simple_sender&&, simple_env_rvalue_type>);
+    static_assert(std::same_as<simple_sender, simple_env_rvalue_type>);
     simple_sender sender;
     using simple_lvalue_type = decltype(Domain::transform_sender(simple_tag{}, sender));
     static_assert(std::same_as<simple_sender&, simple_lvalue_type>);

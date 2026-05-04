@@ -42,9 +42,9 @@ struct default_domain {
                         Tag(), ::std::forward<Sender>(sender), env...);
                 })
     static constexpr auto
-    transform_sender(Tag, Sender&& sender, const Env&...) noexcept(noexcept(::std::forward<Sender>(sender)))
-        -> ::beman::execution::sender decltype(auto) {
-        return ::std::forward<Sender>(sender);
+    transform_sender(Tag, Sender&& sender, const Env&...) noexcept(::std::is_nothrow_constructible_v<Sender, Sender>)
+        -> Sender {
+        return static_cast<Sender&&>(sender);
     }
 
     template <typename Tag, ::beman::execution::sender Sender, typename... Args>

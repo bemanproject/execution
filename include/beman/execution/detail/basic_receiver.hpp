@@ -72,7 +72,7 @@ template <typename Sender, typename Receiver, typename Index>
         this->complete(Index(),
                        this->op->state,
                        this->op->receiver,
-                       ::beman::execution::set_value_t(),
+                       ::beman::execution::set_value,
                        ::std::forward<Args>(args)...);
     }
 
@@ -81,11 +81,8 @@ template <typename Sender, typename Receiver, typename Index>
         requires ::beman::execution::detail::
             callable<decltype(complete), Index, state_t&, Receiver&, ::beman::execution::set_error_t, Error>
     {
-        this->complete(Index(),
-                       this->op->state,
-                       this->op->receiver,
-                       ::beman::execution::set_error_t(),
-                       ::std::forward<Error>(error));
+        this->complete(
+            Index(), this->op->state, this->op->receiver, ::beman::execution::set_error, ::std::forward<Error>(error));
     }
 
     auto set_stopped() && noexcept -> void

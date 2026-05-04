@@ -211,8 +211,8 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
             ::std::forward<Sender>(sndr));
     }
 
-    template <::beman::execution::detail::sender_for<bulk_t> Sender, typename... Env>
-    auto transform_sender(::beman::execution::set_value_t, Sender&& sndr, Env&&...) const {
+    template <::beman::execution::detail::sender_for<bulk_t> Sender, typename Env>
+    auto transform_sender(::beman::execution::set_value_t, Sender&& sndr, const Env&) const {
         auto data  = ::beman::execution::detail::forward_like<Sender>(sndr.template get<1>());
         auto child = ::beman::execution::detail::forward_like<Sender>(sndr.template get<2>());
 

@@ -8,7 +8,7 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
-#include <concepts>
+#include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.default_domain;
@@ -33,6 +33,10 @@ constexpr auto compl_domain(const Sndr& sndr, const Envs&... envs) noexcept {
         return ::beman::execution::default_domain();
     }
 }
+
+template <typename Tag, typename Sndr, typename... Envs>
+using compl_domain_of_t =
+    decltype(::beman::execution::detail::compl_domain<Tag>(::std::declval<Sndr>(), ::std::declval<const Envs&>()...));
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------

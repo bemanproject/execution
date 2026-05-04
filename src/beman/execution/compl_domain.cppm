@@ -8,4 +8,5 @@ export module beman.execution.detail.compl_domain;
 
 namespace beman::execution::detail {
 export using beman::execution::detail::compl_domain;
+export using beman::execution::detail::compl_domain_of_t;
 } // namespace beman::execution::detail
