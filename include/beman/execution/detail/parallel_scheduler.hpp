@@ -45,6 +45,24 @@ import beman.execution.detail.set_value;
 
 // ----------------------------------------------------------------------------
 
+namespace beman::execution::system_context_replaceability {
+
+struct receiver_proxy {
+    virtual ~receiver_proxy() = default;
+
+    virtual auto set_value() noexcept -> void = 0;
+    virtual auto set_error(::std::exception_ptr) noexcept -> void = 0;
+    virtual auto set_stopped() noexcept -> void = 0;
+
+    template <class P, class Query>
+        requires(::std::same_as<P, ::std::remove_cv_t<P>> && ::std::is_object_v<P> && !::std::is_array_v<P>)
+    auto try_query(Query) noexcept -> ::std::optional<P> {
+        // TODO(P2079R10): forward supported receiver environment queries
+        // through this proxy, especially get_stop_token_t -> inplace_stop_token
+        return ::std::nullopt;
+    }
+};
+
 namespace beman::execution {
 
 class parallel_scheduler {
