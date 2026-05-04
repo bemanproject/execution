@@ -9,4 +9,8 @@ export module beman.execution.detail.parallel_scheduler;
 namespace beman::execution {
 export using beman::execution::parallel_scheduler;
 export using beman::execution::get_parallel_scheduler;
+
+namespace system_context_replaceability {
+export using beman::execution::system_context_replaceability::query_parallel_scheduler_backend;
+} // namespace system_context_replaceability
 } // namespace beman::execution
