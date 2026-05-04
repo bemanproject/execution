@@ -208,7 +208,7 @@ $(document).ready(function(){initNavTree('spawn__future_8hpp_source.html',''); i
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>template &lt;typename Completions&gt;</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>struct spawn_future_receiver {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keyword">using </span>receiver_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1receiver__t.html">::beman::execution::receiver_t</a>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keyword">using </span>receiver_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1receiver__tag.html">::beman::execution::receiver_tag</a>;</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">using </span>state_t          = ::beman::execution::detail::spawn_future_state_base&lt;Completions&gt;;</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    state_t* state{};</div>
@@ -258,22 +258,22 @@ $(document).ready(function(){initNavTree('spawn__future_8hpp_source.html',''); i
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keyword">using </span>traits_t         = ::std::allocator_traits&lt;alloc_t&gt;;</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keyword">using </span>spawned_sender_t = ::beman::execution::detail::future_spawned_sender&lt;Sndr, Env&gt;;</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keyword">using </span>sigs_t           = ::beman::execution::detail::spawn_future_sigs&lt;Sndr, Env&gt;;</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keyword">using </span>receiver_t       = ::beman::execution::detail::spawn_future_receiver&lt;sigs_t&gt;;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keyword">using </span>receiver_tag     = ::beman::execution::detail::spawn_future_receiver&lt;sigs_t&gt;;</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keyword">static_assert</span>(::beman::execution::sender&lt;spawned_sender_t&gt;);</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keyword">static_assert</span>(::beman::execution::receiver&lt;receiver_t&gt;);</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keyword">using </span>op_t = <a class="code hl_typedef" href="namespacebeman_1_1execution.html#a04076b97aa86da382501e357c0b88cf1">::beman::execution::connect_result_t&lt;spawned_sender_t, receiver_t&gt;</a>;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keyword">static_assert</span>(::beman::execution::receiver&lt;receiver_tag&gt;);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keyword">using </span>op_t = <a class="code hl_typedef" href="namespacebeman_1_1execution.html#a04076b97aa86da382501e357c0b88cf1">::beman::execution::connect_result_t&lt;spawned_sender_t, receiver_tag&gt;</a>;</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keyword">template</span> &lt;::beman::execution::sender S&gt;</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    spawn_future_state(<span class="keyword">auto</span> a, S&amp;&amp; s, Token tok, Env env)</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        : alloc(::std::move(a)),</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>          op(::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::write_env(</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                 ::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::detail::stop_when(::std::forward&lt;S&gt;(s), source.get_token()), env),</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>             receiver_t{this}),</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>             receiver_tag{this}),</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>          assoc(tok.try_associate()) {</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        <span class="keywordflow">if</span> (this-&gt;assoc) {</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            ::beman::execution::start(this-&gt;op);</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <a class="code hl_variable" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187">::beman::execution::set_stopped</a>(receiver_t{<span class="keyword">this</span>});</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <a class="code hl_variable" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187">::beman::execution::set_stopped</a>(receiver_tag{<span class="keyword">this</span>});</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        }</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    }</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keyword">auto</span> complete() noexcept -&gt; <span class="keywordtype">void</span><span class="keyword"> override </span>{</div>
@@ -428,7 +428,7 @@ $(document).ready(function(){initNavTree('spawn__future_8hpp_source.html',''); i
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1default__impls_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1default__impls.html">beman::execution::detail::default_impls</a></div><div class="ttdef"><b>Definition:</b> default_impls.hpp:45</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1impls__for_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1impls__for.html">beman::execution::detail::impls_for</a></div><div class="ttdef"><b>Definition:</b> impls_for.hpp:18</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1env_html"><div class="ttname"><a href="structbeman_1_1execution_1_1env.html">beman::execution::env</a></div><div class="ttdef"><b>Definition:</b> env.hpp:50</div></div>
-<div class="ttc" id="astructbeman_1_1execution_1_1receiver__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1receiver__t.html">beman::execution::receiver_t</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:25</div></div>
+<div class="ttc" id="astructbeman_1_1execution_1_1receiver__tag_html"><div class="ttname"><a href="structbeman_1_1execution_1_1receiver__tag.html">beman::execution::receiver_tag</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:25</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__error__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__error__t.html">beman::execution::set_error_t</a></div><div class="ttdoc">Type of the customization point object for error completions.</div><div class="ttdef"><b>Definition:</b> set_error.hpp:22</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__stopped__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__stopped__t.html">beman::execution::set_stopped_t</a></div><div class="ttdoc">Type of the customization point object for cancellation completions.</div><div class="ttdef"><b>Definition:</b> set_stopped.hpp:22</div></div>
 <div class="ttc" id="astructreceiver_html"><div class="ttname"><a href="structreceiver.html">receiver</a></div><div class="ttdef"><b>Definition:</b> tst-basic-timer.cpp:12</div></div>

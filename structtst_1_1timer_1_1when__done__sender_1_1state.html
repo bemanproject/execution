@@ -126,15 +126,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aeefde1a9000d987e542ca202e3758a10"><td class="memItemLeft" align="right" valign="top"><a id="aeefde1a9000d987e542ca202e3758a10" name="aeefde1a9000d987e542ca202e3758a10"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>operation_state_concept</b> = tst::ex::operation_state_t</td></tr>
-<tr class="separator:aeefde1a9000d987e542ca202e3758a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fc12254fc0a6080ccf132fe87a6f839"><td class="memItemLeft" align="right" valign="top"><a id="a9fc12254fc0a6080ccf132fe87a6f839" name="a9fc12254fc0a6080ccf132fe87a6f839"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>scheduler_t</b> = decltype(ex::get_scheduler(ex::get_env(std::declval&lt; Receiver &gt;())))</td></tr>
-<tr class="separator:a9fc12254fc0a6080ccf132fe87a6f839"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8401736b208cbc5eec7d8a4aeb661292"><td class="memItemLeft" align="right" valign="top"><a id="a8401736b208cbc5eec7d8a4aeb661292" name="a8401736b208cbc5eec7d8a4aeb661292"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>inner_sender</b> = decltype(tst::repeat_effect_until(ex::schedule(std::declval&lt; scheduler_t &gt;())|<a class="el" href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3">ex::then</a>(<a class="el" href="structtst_1_1timer_1_1when__done__sender_1_1state_1_1execute.html">execute</a>()), <a class="el" href="structtst_1_1timer_1_1when__done__sender_1_1state_1_1pred.html">pred</a>()))</td></tr>
-<tr class="separator:a8401736b208cbc5eec7d8a4aeb661292"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10828cba9f48ef0e952d2e4ba091cc66"><td class="memItemLeft" align="right" valign="top"><a id="a10828cba9f48ef0e952d2e4ba091cc66" name="a10828cba9f48ef0e952d2e4ba091cc66"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>operation_state_concept</b> = tst::ex::operation_state_tag</td></tr>
+<tr class="separator:a10828cba9f48ef0e952d2e4ba091cc66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b9c5d9c2d02e81b2ac0b8125880df75"><td class="memItemLeft" align="right" valign="top"><a id="a2b9c5d9c2d02e81b2ac0b8125880df75" name="a2b9c5d9c2d02e81b2ac0b8125880df75"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>scheduler_tag</b> = decltype(ex::get_scheduler(ex::get_env(std::declval&lt; Receiver &gt;())))</td></tr>
+<tr class="separator:a2b9c5d9c2d02e81b2ac0b8125880df75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa066f96a4efb09c7c491791f6beb2fd5"><td class="memItemLeft" align="right" valign="top"><a id="aa066f96a4efb09c7c491791f6beb2fd5" name="aa066f96a4efb09c7c491791f6beb2fd5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>inner_sender</b> = decltype(tst::repeat_effect_until(ex::schedule(std::declval&lt; scheduler_tag &gt;())|<a class="el" href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3">ex::then</a>(<a class="el" href="structtst_1_1timer_1_1when__done__sender_1_1state_1_1execute.html">execute</a>()), <a class="el" href="structtst_1_1timer_1_1when__done__sender_1_1state_1_1pred.html">pred</a>()))</td></tr>
+<tr class="separator:aa066f96a4efb09c7c491791f6beb2fd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>

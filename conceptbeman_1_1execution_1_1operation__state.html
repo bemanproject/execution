@@ -103,11 +103,11 @@ $(document).ready(function(){initNavTree('conceptbeman_1_1execution_1_1operation
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> State&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="conceptbeman_1_1execution_1_1operation__state.html">beman::execution::operation_state</a> = </div>
-<div class="line">    ::std::derived_from&lt;typename State::operation_state_concept, ::beman::execution::operation_state_t&gt; &amp;&amp;</div>
+<div class="line">    ::std::derived_from&lt;typename State::operation_state_concept, ::beman::execution::operation_state_tag&gt; &amp;&amp;</div>
 <div class="line">    ::std::is_object_v&lt;State&gt; &amp;&amp; <span class="keyword">requires</span>(State&amp; state) {</div>
 <div class="line">        { ::beman::execution::start(state) } <span class="keyword">noexcept</span>;</div>
 <div class="line">    }</div>
-<div class="ttc" id="aconceptbeman_1_1execution_1_1operation__state_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1operation__state.html">beman::execution::operation_state</a></div><div class="ttdef"><b>Definition:</b> operation_state.hpp:26</div></div>
+<div class="ttc" id="aconceptbeman_1_1execution_1_1operation__state_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1operation__state.html">beman::execution::operation_state</a></div><div class="ttdef"><b>Definition:</b> operation_state.hpp:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

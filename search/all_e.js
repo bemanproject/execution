@@ -1,7 +1,7 @@
 var searchData=
 [
   ['schedule_5ft_0',['schedule_t',['../structbeman_1_1execution_1_1schedule__t.html',1,'beman::execution']]],
-  ['scheduler_5ft_1',['scheduler_t',['../structbeman_1_1execution_1_1scheduler__t.html',1,'beman::execution']]],
+  ['scheduler_5ftag_1',['scheduler_tag',['../structbeman_1_1execution_1_1scheduler__tag.html',1,'beman::execution']]],
   ['sender_2',['sender',['../structbeman_1_1execution_1_1inline__scheduler_1_1sender.html',1,'beman::execution::inline_scheduler::sender'],['../structtst_1_1repeat__effect__unilt__t_1_1sender.html',1,'tst::repeat_effect_unilt_t::sender&lt; Child, Fun &gt;']]],
   ['sender_5fadaptor_5fclosure_3',['sender_adaptor_closure',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5fadaptor_5fclosure_3c_20affine_5fon_5ft_20_3e_4',['sender_adaptor_closure&lt; affine_on_t &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
@@ -14,7 +14,7 @@ var searchData=
   ['sender_5fadaptor_5fclosure_3c_20stopped_5fas_5ferror_5ft_20_3e_11',['sender_adaptor_closure&lt; stopped_as_error_t &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5fadaptor_5fclosure_3c_20stopped_5fas_5foptional_5ft_20_3e_12',['sender_adaptor_closure&lt; stopped_as_optional_t &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5fadaptor_5fclosure_3c_20then_5ft_3c_20completion_20_3e_20_3e_13',['sender_adaptor_closure&lt; then_t&lt; Completion &gt; &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
-  ['sender_5ft_14',['sender_t',['../structbeman_1_1execution_1_1sender__t.html',1,'beman::execution']]],
+  ['sender_5ftag_14',['sender_tag',['../structbeman_1_1execution_1_1sender__tag.html',1,'beman::execution']]],
   ['sequenced_5fpolicy_15',['sequenced_policy',['../structbeman_1_1execution_1_1sequenced__policy.html',1,'beman::execution']]],
   ['set_5ferror_16',['set_error',['../namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80',1,'beman::execution']]],
   ['set_5ferror_5ft_17',['set_error_t',['../structbeman_1_1execution_1_1set__error__t.html',1,'beman::execution']]],

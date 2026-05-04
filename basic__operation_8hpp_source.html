@@ -148,7 +148,7 @@ $(document).ready(function(){initNavTree('basic__operation_8hpp_source.html','')
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">struct </span>basic_operation : ::beman::execution::detail::basic_state&lt;Sender, Receiver&gt; {</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// static_assert(std::same_as&lt;Sender, std::remove_cvref_t&lt;Sender&gt;&gt;);</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">friend</span> struct ::beman::execution::start_t;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">using </span>operation_state_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1operation__state__t.html">::beman::execution::operation_state_t</a>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">using </span>operation_state_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1operation__state__tag.html">::beman::execution::operation_state_tag</a>;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">using </span>tag_t                   = ::beman::execution::tag_of_t&lt;Sender&gt;;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">using </span>inner_ops_t = ::beman::execution::detail::connect_all_result&lt;Sender, Receiver&gt;;</div>
@@ -190,7 +190,7 @@ $(document).ready(function(){initNavTree('basic__operation_8hpp_source.html','')
 <div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:70</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1basic__state_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1basic__state.html">beman::execution::detail::basic_state</a></div><div class="ttdef"><b>Definition:</b> basic_state.hpp:35</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1impls__for_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1impls__for.html">beman::execution::detail::impls_for</a></div><div class="ttdef"><b>Definition:</b> impls_for.hpp:18</div></div>
-<div class="ttc" id="astructbeman_1_1execution_1_1operation__state__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1operation__state__t.html">beman::execution::operation_state_t</a></div><div class="ttdef"><b>Definition:</b> operation_state.hpp:23</div></div>
+<div class="ttc" id="astructbeman_1_1execution_1_1operation__state__tag_html"><div class="ttname"><a href="structbeman_1_1execution_1_1operation__state__tag.html">beman::execution::operation_state_tag</a></div><div class="ttdef"><b>Definition:</b> operation_state.hpp:23</div></div>
 <div class="ttc" id="astructreceiver_html"><div class="ttname"><a href="structreceiver.html">receiver</a></div><div class="ttdef"><b>Definition:</b> tst-basic-timer.cpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

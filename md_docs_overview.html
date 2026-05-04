@@ -133,7 +133,7 @@ Concepts</h2>
 <p>Operation states represent asynchronous operations ready to be <code><a href="‘#start’">start</a></code>ed or executing. Operation state objects are normally neither movable nor copyable. Once <code><a href="‘#start’">start</a></code>ed the object needs to be kept alive until a <a href="‘#completion-signal’">completion signal</a> is received. Users don’t interact with operation states explicitly except when implementing new sender algorithms.</p>
 <p>Required members for <code><em>State</em></code>:</p>
 <ul>
-<li>The type <code>operation_state_concept</code> is an alias for <code>operation_state_t</code> or a type derived thereof.</li>
+<li>The type <code>operation_state_concept</code> is an alias for <code>operation_state_tag</code> or a type derived thereof.</li>
 <li><code><em>state</em>.<a href="‘#start’">start</a>() &amp; noexcept</code></li>
 </ul>
 <details >
@@ -145,7 +145,7 @@ Example</summary>
 <div class="line">template &lt;std::execution::receiver Receiver&gt;</div>
 <div class="line">struct example_state</div>
 <div class="line">{</div>
-<div class="line">    using operation_state_concept = std::execution::operation_state_t;</div>
+<div class="line">    using operation_state_concept = std::execution::operation_state_tag;</div>
 <div class="line">    std::remove_cvref_t&lt;Receiver&gt; receiver;</div>
 <div class="line"> </div>
 <div class="line">    auto start() &amp; noexcept {</div>
@@ -163,7 +163,7 @@ Example</summary>
 <p>Receivers are used to receive <a href="‘#completion-signal’">completion signals</a>: when an asynchronous operation completes the corresponding <a href="‘#completion-signal’">completion signal</a> is called with the appropriate arguments. In addition receivers provide access to the <a href="‘#environment’">environment</a> for the operation via the <a href="‘#get-env’"><code>get_env</code></a> method. Users don’t interact with receivers explicitly except when implementing new sender algorithms.</p>
 <p>Required members for <code><em>Receiver</em></code>:</p>
 <ul>
-<li>The type <code>receiver_concept</code> is an alias for <code>receiver_t</code> or a type derived thereof`.</li>
+<li>The type <code>receiver_concept</code> is an alias for <code>receiver_tag</code> or a type derived thereof`.</li>
 <li>Rvalues of type <code><em>Receiver</em></code> are movable.</li>
 <li>Lvalues of type <code><em>Receiver</em></code> are copyable.</li>
 <li><code><a href="‘#get-env’">std::execution::get_env</a>(<em>receiver</em>)</code> returns an object. By default this operation returns <code><a href="‘env’">std::execution::env&lt;&gt;</a></code>.</li>
@@ -184,7 +184,7 @@ Example</summary>
 <div class="line">template &lt;std::execution::receiver NestedReceiver&gt;</div>
 <div class="line">struct example_receiver</div>
 <div class="line">{</div>
-<div class="line">    using receiver_concept = std::execution::receiver_t;</div>
+<div class="line">    using receiver_concept = std::execution::receiver_tag;</div>
 <div class="line">    std::remove_cvref_t&lt;NestedReceiver&gt; nested;</div>
 <div class="line"> </div>
 <div class="line">    auto get_env() const noexcept {</div>
@@ -222,7 +222,7 @@ Example</summary>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">struct example_receiver</div>
 <div class="line">{</div>
-<div class="line">    using receiver_concept = std::execution::receiver_t;</div>
+<div class="line">    using receiver_concept = std::execution::receiver_tag;</div>
 <div class="line"> </div>
 <div class="line">    auto set_value(int) &amp;&amp; noexcept -&gt;void {}</div>
 <div class="line">    auto set_stopped() &amp;&amp; noexcept -&gt;void {}</div>
@@ -253,7 +253,7 @@ Example</summary>
 <code>scheduler&lt;<em>Scheduler</em>&gt;</code></summary>
 <p>Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href="‘#schedule’">schedule</a></code> operation yielding a <code><a href="‘sender’">sender</a></code> with a value <a href="‘#completion-signal’">completion signal</a> without parameters. The completion is on the respective execution context.</p>
 <p>Requirements for <code><em>Scheduler</em></code>:</p><ul>
-<li>The type <code><em>Scheduler</em>::scheduler_concept</code> is an alias for <code>scheduler_t</code> or a type derived thereof.</li>
+<li>The type <code><em>Scheduler</em>::scheduler_concept</code> is an alias for <code>scheduler_tag</code> or a type derived thereof.</li>
 <li><code><a href="‘#schedule’">schedule</a>(<em>scheduler</em>) -&gt; <a href="‘sender’">sender</a></code></li>
 <li>The <a href="‘#get-completion-scheduler’">value completion scheduler</a> of the <code><a href="‘sender’">sender</a></code>’s <a href="‘#environment’">environment</a> is the <code><em>scheduler</em></code>: <em>scheduler</em> == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;( std::execution::get_env(std::execution::schedule(<em>scheduler</em>)) )</li>
 <li><code>std::equality_comparable&lt;<em>Scheduler</em>&gt;</code></li>
@@ -266,7 +266,7 @@ Example</summary>
 <p></p>
 <p>Senders represent asynchronous work. They may get composed from multiple senders to model a workflow. Senders can’t be run directly. Instead, they are passed to a &lt;a href=‘::sender-consumer’ which <code><a href="‘#connect’">connect</a></code>s the sender to a <code><a href="‘#receiver’">receiver</a></code> to produce an <code><a href="‘#operation-state’">operation_state</a></code> which may get started. When using senders to represent work the inner workings shouldn’t matter. They do become relevant when creating sender algorithms.</p>
 <p>Requirements for <code><em>Sender</em></code>:</p><ul>
-<li>The type <code><em>Sender</em>::sender_concept</code> is an alias for <code>sender_t</code> or a type derived thereof or <code><em>Sender</em></code> is a suitable <em>awaitable</em>.</li>
+<li>The type <code><em>Sender</em>::sender_concept</code> is an alias for <code>sender_tag</code> or a type derived thereof or <code><em>Sender</em></code> is a suitable <em>awaitable</em>.</li>
 <li><code><a href="get_env">std::execution::get_env</a>(<em>sender</em>)</code> is valid. By default this operation returns <code><a href="‘env’">std::execution::env&lt;&gt;</a></code>.</li>
 <li>Rvalues of type <code><em>Sender</em></code> can be moved.</li>
 <li>Lvalues of type <code><em>Sender</em></code> can be copied.</li>
@@ -287,7 +287,7 @@ Example</summary>
 <div class="line">    template &lt;std::execution::receiver Receiver&gt;</div>
 <div class="line">    struct state</div>
 <div class="line">    {</div>
-<div class="line">        using operation_state_concept = std::execution::operation_state_t;</div>
+<div class="line">        using operation_state_concept = std::execution::operation_state_tag;</div>
 <div class="line">        std::remove_cvref_t&lt;Receiver&gt; receiver;</div>
 <div class="line">        int                           value;</div>
 <div class="line">        auto start() &amp; noexcept {</div>
@@ -297,7 +297,7 @@ Example</summary>
 <div class="line">            );</div>
 <div class="line">        }</div>
 <div class="line">    };</div>
-<div class="line">    using sender_concept = std::execution::sender_t;</div>
+<div class="line">    using sender_concept = std::execution::sender_tag;</div>
 <div class="line">    using completion_signatures = std::execution::completion_signatures&lt;</div>
 <div class="line">        std::execution::set_value_t(int)</div>
 <div class="line">    &gt;;</div>
@@ -382,7 +382,7 @@ Example: inactive</summary>
 <div class="line">            this-&gt;state.stop();</div>
 <div class="line">        }</div>
 <div class="line">    };</div>
-<div class="line">    using operation_state_concept = std::execution::operation_state_t;</div>
+<div class="line">    using operation_state_concept = std::execution::operation_state_tag;</div>
 <div class="line">    using env = std::execution::env_of_t&lt;Receiver&gt;;</div>
 <div class="line">    using token = std::execution::stop_callback_of_t&lt;env&gt;;</div>
 <div class="line">    using callback = std::execution::stop_callback_of_t&lt;token, on_cancel&gt;;</div>
@@ -573,7 +573,7 @@ invalid otherwise. </li>
 Example</summary>
 <p>When a <a href="‘#sender’"><code>sender</code></a> doesn’t need to compute the completion signatures based on an <a href="‘#environment’">environment</a> it is easiest to use a the type alias, e.g.: </p><div class="fragment"><div class="line"> {c++}</div>
 <div class="line">struct sender {</div>
-<div class="line">    using sender_concept = std::execution::sender_t;</div>
+<div class="line">    using sender_concept = std::execution::sender_tag;</div>
 <div class="line">    using completion_signatures = std::completion_signatures&lt;</div>
 <div class="line">        std::execution::set_value_t(int),</div>
 <div class="line">        std::execution::set_error_t(std::error_code),</div>
@@ -853,13 +853,13 @@ Helpers</h2>
 <li><code>env_of_t</code></li>
 <li><code>error_types_of_t</code></li>
 <li><code>fwd_env</code></li>
-<li><code>operation_state_t</code></li>
-<li><code>receiver_t</code></li>
+<li><code>operation_state_tag</code></li>
+<li><code>receiver_tag</code></li>
 <li><code>run_loop</code></li>
-<li><code>scheduler_t</code></li>
+<li><code>scheduler_tag</code></li>
 <li><code>schedule_result_t</code></li>
 <li><code>sender_adaptor_closure</code></li>
-<li><code>sender_t</code></li>
+<li><code>sender_tag</code></li>
 <li><code>stop_token_of_t</code></li>
 <li><code>tag_of_t</code></li>
 <li><code>transform_sender</code></li>

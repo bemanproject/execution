@@ -168,7 +168,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1nostopstate__t.html">nostopstate_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1operation__state__t.html">operation_state_t</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1operation__state__tag.html">operation_state_tag</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1parallel__policy.html">parallel_policy</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -176,19 +176,19 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1prop.html">prop</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1receiver__t.html">receiver_t</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1receiver__tag.html">receiver_tag</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1execution_1_1run__loop.html">run_loop</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1schedule__t.html">schedule_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1scheduler__t.html">scheduler_t</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tag type to indicate a class is a scheduler.  <a href="structbeman_1_1execution_1_1scheduler__t.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1scheduler__tag.html">scheduler_tag</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tag type to indicate a class is a scheduler.  <a href="structbeman_1_1execution_1_1scheduler__tag.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1sender__adaptor__closure.html">sender_adaptor_closure</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CRTP base class for pipeable sender adaptor closure objects.  <a href="structbeman_1_1execution_1_1sender__adaptor__closure.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1sender__t.html">sender_t</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1sender__tag.html">sender_tag</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1sequenced__policy.html">sequenced_policy</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -318,9 +318,15 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>let_value_t</b> = ::
 <tr class="memitem:aaa4d0a9aa8369f7770ba909226a37032"><td class="memItemLeft" align="right" valign="top"><a id="aaa4d0a9aa8369f7770ba909226a37032" name="aaa4d0a9aa8369f7770ba909226a37032"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>on_t</b> = ::beman::execution::detail::on_t</td></tr>
 <tr class="separator:aaa4d0a9aa8369f7770ba909226a37032"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9da612469b7a713dc4c8df06587e73bb"><td class="memItemLeft" align="right" valign="top"><a id="a9da612469b7a713dc4c8df06587e73bb" name="a9da612469b7a713dc4c8df06587e73bb"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>operation_state_t</b> = <a class="el" href="structbeman_1_1execution_1_1operation__state__tag.html">operation_state_tag</a></td></tr>
+<tr class="separator:a9da612469b7a713dc4c8df06587e73bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac2b7c9d496e8f6070be16e7fd0fb6b3"><td class="memItemLeft" align="right" valign="top"><a id="aac2b7c9d496e8f6070be16e7fd0fb6b3" name="aac2b7c9d496e8f6070be16e7fd0fb6b3"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>read_env_t</b> = beman::execution::detail::read_env_t</td></tr>
 <tr class="separator:aac2b7c9d496e8f6070be16e7fd0fb6b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88480b80e7856fff2b72f733897c0da0"><td class="memItemLeft" align="right" valign="top"><a id="a88480b80e7856fff2b72f733897c0da0" name="a88480b80e7856fff2b72f733897c0da0"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>receiver_t</b> = <a class="el" href="structbeman_1_1execution_1_1receiver__tag.html">receiver_tag</a></td></tr>
+<tr class="separator:a88480b80e7856fff2b72f733897c0da0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca3fc269b81e5b144fb5e540f08cc968"><td class="memItemLeft" align="right" valign="top"><a id="aca3fc269b81e5b144fb5e540f08cc968" name="aca3fc269b81e5b144fb5e540f08cc968"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>schedule_from_t</b> = beman::execution::detail::schedule_from_t</td></tr>
 <tr class="separator:aca3fc269b81e5b144fb5e540f08cc968"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -328,6 +334,12 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>schedule_from_t</b> 
 template&lt;::beman::execution::scheduler Scheduler&gt; </td></tr>
 <tr class="memitem:a1725c7792650f8912632c997a7b7d8d6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>schedule_result_t</b> = decltype(::beman::execution::schedule(::std::declval&lt; Scheduler &gt;()))</td></tr>
 <tr class="separator:a1725c7792650f8912632c997a7b7d8d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a303e21fab715e54f8927960b0c2e9cf4"><td class="memItemLeft" align="right" valign="top"><a id="a303e21fab715e54f8927960b0c2e9cf4" name="a303e21fab715e54f8927960b0c2e9cf4"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>scheduler_t</b> = <a class="el" href="structbeman_1_1execution_1_1scheduler__tag.html">scheduler_tag</a></td></tr>
+<tr class="separator:a303e21fab715e54f8927960b0c2e9cf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01be3ec12e6666ad8b004e410e9e51d5"><td class="memItemLeft" align="right" valign="top"><a id="a01be3ec12e6666ad8b004e410e9e51d5" name="a01be3ec12e6666ad8b004e410e9e51d5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sender_t</b> = <a class="el" href="structbeman_1_1execution_1_1sender__tag.html">sender_tag</a></td></tr>
+<tr class="separator:a01be3ec12e6666ad8b004e410e9e51d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2e3f7450698863bc16128a74177f7b4"><td class="memItemLeft" align="right" valign="top"><a id="ad2e3f7450698863bc16128a74177f7b4" name="ad2e3f7450698863bc16128a74177f7b4"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>spawn_t</b> = ::beman::execution::detail::spawn_t</td></tr>
 <tr class="separator:ad2e3f7450698863bc16128a74177f7b4"><td class="memSeparator" colspan="2">&#160;</td></tr>

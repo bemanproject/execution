@@ -159,7 +159,7 @@ $(document).ready(function(){initNavTree('sender__awaitable_8hpp_source.html',''
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">using </span>data_type    = ::std::tuple&lt;variant_type, ::std::atomic&lt;bool&gt;, ::std::coroutine_handle&lt;Promise&gt;&gt;;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">struct </span>awaitable_receiver {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">using </span>receiver_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1receiver__t.html">::beman::execution::receiver_t</a>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">using </span>receiver_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1receiver__tag.html">::beman::execution::receiver_tag</a>;</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordtype">void</span> resume() {</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            <span class="keywordflow">if</span> (not enable_defence || ::std::get&lt;1&gt;(*result_ptr_).exchange(<span class="keyword">true</span>, std::memory_order_acq_rel)) {</div>
@@ -247,7 +247,7 @@ $(document).ready(function(){initNavTree('sender__awaitable_8hpp_source.html',''
 <div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:70</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1env__promise_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1env__promise.html">beman::execution::detail::env_promise</a></div><div class="ttdef"><b>Definition:</b> env_promise.hpp:28</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1unspecified__promise_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1unspecified__promise.html">beman::execution::detail::unspecified_promise</a></div><div class="ttdef"><b>Definition:</b> unspecified_promise.hpp:15</div></div>
-<div class="ttc" id="astructbeman_1_1execution_1_1receiver__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1receiver__t.html">beman::execution::receiver_t</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:25</div></div>
+<div class="ttc" id="astructbeman_1_1execution_1_1receiver__tag_html"><div class="ttname"><a href="structbeman_1_1execution_1_1receiver__tag.html">beman::execution::receiver_tag</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

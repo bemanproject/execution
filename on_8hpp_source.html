@@ -178,7 +178,7 @@ $(document).ready(function(){initNavTree('on_8hpp_source.html',''); initResizabl
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keyword">struct </span>env_needs_get_scheduler {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">using </span>sender_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1sender__t.html">::beman::execution::sender_t</a>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">using </span>sender_concept = <a class="code hl_struct" href="structbeman_1_1execution_1_1sender__tag.html">::beman::execution::sender_tag</a>;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span>, <span class="keyword">typename</span> Env&gt;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> get_completion_signatures() {</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            <span class="keywordflow">return</span> env_needs_get_scheduler&lt;Env&gt;{};</div>
@@ -302,7 +302,7 @@ $(document).ready(function(){initNavTree('on_8hpp_source.html',''); initResizabl
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1basic__sender_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1basic__sender.html">beman::execution::detail::basic_sender</a></div><div class="ttdef"><b>Definition:</b> basic_sender.hpp:67</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1product__type_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1product__type.html">beman::execution::detail::product_type</a></div><div class="ttdef"><b>Definition:</b> product_type.hpp:79</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1sender__adaptor__closure_html"><div class="ttname"><a href="structbeman_1_1execution_1_1sender__adaptor__closure.html">beman::execution::sender_adaptor_closure</a></div><div class="ttdoc">CRTP base class for pipeable sender adaptor closure objects.</div><div class="ttdef"><b>Definition:</b> sender_adaptor_closure.hpp:52</div></div>
-<div class="ttc" id="astructbeman_1_1execution_1_1sender__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1sender__t.html">beman::execution::sender_t</a></div><div class="ttdef"><b>Definition:</b> sender.hpp:31</div></div>
+<div class="ttc" id="astructbeman_1_1execution_1_1sender__tag_html"><div class="ttname"><a href="structbeman_1_1execution_1_1sender__tag.html">beman::execution::sender_tag</a></div><div class="ttdef"><b>Definition:</b> sender.hpp:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
