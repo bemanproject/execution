@@ -62,6 +62,7 @@ struct receiver_proxy {
         return ::std::nullopt;
     }
 };
+}// namespace beman::execution::system_context_replaceability
 
 namespace beman::execution {
 
