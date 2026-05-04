@@ -39,9 +39,8 @@ struct connect_t {
     static auto make_new_sender(Sender&& sender, Receiver&& receiver)
         //-dk:TODO this noexcept needs to get confirmed/fixed
         noexcept(true) -> decltype(auto) {
-        return ::beman::execution::transform_sender(
-            ::std::forward<Sender>(sender),
-            ::beman::execution::get_env(receiver));
+        return ::beman::execution::transform_sender(::std::forward<Sender>(sender),
+                                                    ::beman::execution::get_env(receiver));
     }
     template <typename Sender, typename Receiver>
     static constexpr auto connect_noexcept() -> bool {

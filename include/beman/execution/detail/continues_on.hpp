@@ -113,9 +113,9 @@ struct continues_on_t {
         template <typename... E>
         using as_set_error = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
         using type         = ::beman::execution::detail::meta::combine<
-                    decltype(::beman::execution::get_completion_signatures<Sender, Env>()),
-                    ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
-                    ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
+            decltype(::beman::execution::get_completion_signatures<Sender, Env>()),
+            ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
     };
 
   public:

@@ -178,9 +178,7 @@ struct when_all_t {
 
     struct impls_for : ::beman::execution::detail::default_impls {
         struct get_attrs_impl {
-            auto operator()(auto&&, auto&&...) const {
-                return ::beman::execution::env<>{};
-            }
+            auto operator()(auto&&, auto&&...) const { return ::beman::execution::env<>{}; }
         };
         static constexpr auto get_attrs{get_attrs_impl{}};
         struct get_env_impl {

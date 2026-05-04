@@ -49,9 +49,7 @@ struct get_completion_signatures_new_sender<Sender> {
 
 template <typename Sender, typename Env>
 struct get_completion_signatures_new_sender<Sender, Env> {
-    using type = decltype(::beman::execution::transform_sender(
-        ::std::declval<Sender>(),
-        ::std::declval<Env>()));
+    using type = decltype(::beman::execution::transform_sender(::std::declval<Sender>(), ::std::declval<Env>()));
 };
 
 template <typename Sender, typename... Env>

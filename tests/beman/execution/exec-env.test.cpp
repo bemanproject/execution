@@ -22,8 +22,7 @@ struct extra_arg {
 };
 
 struct multi_arg_query_t {
-    constexpr auto operator()(const auto& e) const noexcept(noexcept(e.query(*this)))
-        -> decltype(e.query(*this)) {
+    constexpr auto operator()(const auto& e) const noexcept(noexcept(e.query(*this))) -> decltype(e.query(*this)) {
         return e.query(*this);
     }
     constexpr auto operator()(const auto& e, extra_arg a) const noexcept(noexcept(e.query(*this, a)))
@@ -59,8 +58,7 @@ TEST(env) {
     ASSERT(e3.query(multi_arg_query, extra_arg{99}) == 99);
 
     // Test env with prop that accepts extra args
-    test_std::env e4{test_std::prop(test_std::get_allocator, std::allocator<int>{}),
-                     multi_arg_env{}};
+    test_std::env e4{test_std::prop(test_std::get_allocator, std::allocator<int>{}), multi_arg_env{}};
     ASSERT(e4.query(multi_arg_query) == 42);
     ASSERT(e4.query(multi_arg_query, extra_arg{7}) == 7);
 }

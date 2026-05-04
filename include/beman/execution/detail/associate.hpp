@@ -105,8 +105,7 @@ struct associate_t {
     template <::beman::execution::sender Sender, ::beman::execution::scope_token Token>
     auto operator()(Sender&& sender, Token token) const {
         return ::beman::execution::detail::make_sender(
-            *this,
-            ::beman::execution::detail::associate_data(::std::move(token), ::std::forward<Sender>(sender)));
+            *this, ::beman::execution::detail::associate_data(::std::move(token), ::std::forward<Sender>(sender)));
     }
 
     template <::beman::execution::scope_token Token>

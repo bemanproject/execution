@@ -149,7 +149,7 @@ dev-test: dev-build
 	PATH=/opt/llvm-$(LLVM_VERSION)/bin:$$PATH CXX=clang++ ctest --test-dir $(DEV_DIR) -R beman.execution.$(TESTCASE).test
 
 dev: dev-test
- 
+
 
 # $(SANITIZERS):
 # 	$(MAKE) SANITIZER=$@
