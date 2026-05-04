@@ -87,7 +87,39 @@ auto query_parallel_scheduler_backend() -> ::std::shared_ptr<parallel_scheduler_
 namespace beman::execution {
 
 class parallel_scheduler {
-    // TODO(P2079R10): add scheduler state and operations.
+    using backend_type = ::beman::execution::system_context_replaceability::parallel_scheduler_backend;
+
+  public:
+    using scheduler_concept = ::beman::execution::scheduler_t;
+
+    class sender;
+
+    parallel_scheduler() = delete;
+    ~parallel_scheduler() = default;
+
+    parallel_scheduler(const parallel_scheduler&) noexcept                    = default;
+    parallel_scheduler(parallel_scheduler&&) noexcept                         = default;
+    auto operator=(const parallel_scheduler&) noexcept -> parallel_scheduler& = default;
+    auto operator=(parallel_scheduler&&) noexcept -> parallel_scheduler&      = default;
+
+    auto operator==(const parallel_scheduler& other) const noexcept -> bool {
+        return this->backend_ == other.backend_;
+    }
+
+    static constexpr auto query(::beman::execution::get_forward_progress_guarantee_t) noexcept
+        -> ::beman::execution::forward_progress_guarantee {
+        return ::beman::execution::forward_progress_guarantee::parallel;
+    }
+
+    auto schedule() const noexcept -> sender;
+    // TODO(P2079R10): customize bulk_chunked and bulk_unchunked for this scheduler.
+
+  private:
+    explicit parallel_scheduler(::std::shared_ptr<backend_type> backend) noexcept : backend_(::std::move(backend)) {}
+
+    ::std::shared_ptr<backend_type> backend_;
+
+    friend auto get_parallel_scheduler() -> parallel_scheduler;
 };
 
 // TODO(P2079R10): implement using system_context_replaceability::query_parallel_scheduler_backend().
