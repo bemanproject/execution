@@ -50,9 +50,9 @@ namespace beman::execution::system_context_replaceability {
 struct receiver_proxy {
     virtual ~receiver_proxy() = default;
 
-    virtual auto set_value() noexcept -> void = 0;
+    virtual auto set_value() noexcept -> void                     = 0;
     virtual auto set_error(::std::exception_ptr) noexcept -> void = 0;
-    virtual auto set_stopped() noexcept -> void = 0;
+    virtual auto set_stopped() noexcept -> void                   = 0;
 
     template <class P, class Query>
         requires(::std::same_as<P, ::std::remove_cv_t<P>> && ::std::is_object_v<P> && !::std::is_array_v<P>)
@@ -62,7 +62,12 @@ struct receiver_proxy {
         return ::std::nullopt;
     }
 };
-}// namespace beman::execution::system_context_replaceability
+
+struct bulk_item_receiver_proxy : receiver_proxy {
+    virtual auto execute(::std::size_t, ::std::size_t) noexcept -> void = 0;
+};
+
+} // namespace beman::execution::system_context_replaceability
 
 namespace beman::execution {
 
