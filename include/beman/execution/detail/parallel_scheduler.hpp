@@ -71,12 +71,10 @@ struct parallel_scheduler_backend {
     virtual ~parallel_scheduler_backend() = default;
 
     virtual auto schedule(receiver_proxy&, ::std::span<::std::byte>) noexcept -> void = 0;
-    virtual auto schedule_bulk_chunked(::std::size_t,
-                                       bulk_item_receiver_proxy&,
-                                       ::std::span<::std::byte>) noexcept -> void     = 0;
-    virtual auto schedule_bulk_unchunked(::std::size_t,
-                                         bulk_item_receiver_proxy&,
-                                         ::std::span<::std::byte>) noexcept -> void   = 0;
+    virtual auto schedule_bulk_chunked(::std::size_t, bulk_item_receiver_proxy&, ::std::span<::std::byte>) noexcept
+        -> void = 0;
+    virtual auto schedule_bulk_unchunked(::std::size_t, bulk_item_receiver_proxy&, ::std::span<::std::byte>) noexcept
+        -> void = 0;
 };
 
 // TODO(P2079R10): provide the project-supported link-time replaceability hook.
@@ -94,7 +92,7 @@ class parallel_scheduler {
 
     class sender;
 
-    parallel_scheduler() = delete;
+    parallel_scheduler()  = delete;
     ~parallel_scheduler() = default;
 
     parallel_scheduler(const parallel_scheduler&) noexcept                    = default;
