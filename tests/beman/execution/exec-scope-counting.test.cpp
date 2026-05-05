@@ -11,7 +11,9 @@ import beman.execution;
 #include <beman/execution/detail/counting_scope.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/spawn.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
+#include <beman/execution/detail/then.hpp>
 #include <beman/execution/detail/inline_scheduler.hpp>
 #endif
 
@@ -113,6 +115,17 @@ auto token() -> void {
     ASSERT(true == called);
 }
 
+auto spawn() -> void {
+    constexpr std::size_t    expected = 10;
+    std::size_t              counter  = 0;
+    test_std::counting_scope scope;
+    for (std::size_t i = 0; i < expected; ++i) {
+        test_std::spawn(test_std::just() | test_std::then([&counter]() noexcept { ++counter; }), scope.get_token());
+    }
+    test_std::sync_wait(scope.join());
+    ASSERT(counter == expected);
+}
+
 } // namespace
 
 TEST(exec_scope_counting) {
@@ -120,4 +133,5 @@ TEST(exec_scope_counting) {
     ctor();
     mem();
     token();
+    spawn();
 }
