@@ -160,6 +160,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "stopped_as_error.hpp", "stopped__as__error_8hpp_source.html", null ],
     [ "stopped_as_optional.hpp", "stopped__as__optional_8hpp_source.html", null ],
     [ "store_receiver.hpp", "store__receiver_8hpp_source.html", null ],
+    [ "sub_visit.hpp", "sub__visit_8hpp_source.html", null ],
     [ "suppress_pop.hpp", "suppress__pop_8hpp_source.html", null ],
     [ "suppress_push.hpp", "suppress__push_8hpp_source.html", null ],
     [ "suspend_complete.hpp", "suspend__complete_8hpp_source.html", null ],
