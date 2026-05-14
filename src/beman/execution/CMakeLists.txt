@@ -178,6 +178,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_get_allocator.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/start.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/starts_on.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/state_rep.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/state_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_callback_for_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_source.hpp
