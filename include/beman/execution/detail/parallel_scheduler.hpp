@@ -24,7 +24,7 @@ import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.receiver;
 import beman.execution.detail.scheduler;
-import beman.execution.detail.scheduler_t;
+import beman.execution.detail.scheduler_tag;
 import beman.execution.detail.sender;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
@@ -36,7 +36,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution/detail/scheduler_t.hpp>
+#include <beman/execution/detail/scheduler_tag.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
@@ -88,7 +88,7 @@ class parallel_scheduler {
     using backend_type = ::beman::execution::system_context_replaceability::parallel_scheduler_backend;
 
   public:
-    using scheduler_concept = ::beman::execution::scheduler_t;
+    using scheduler_concept = ::beman::execution::scheduler_tag;
 
     class sender;
 
