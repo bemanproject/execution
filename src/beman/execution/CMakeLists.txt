@@ -98,6 +98,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_forward_progress_guarantee.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_stop_token.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/handle.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/has_as_awaitable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/has_completions.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/immovable.hpp
