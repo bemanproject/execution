@@ -120,6 +120,85 @@ class parallel_scheduler {
     friend auto get_parallel_scheduler() -> parallel_scheduler;
 };
 
+class parallel_scheduler::sender {
+    using backend_type = ::beman::execution::system_context_replaceability::parallel_scheduler_backend;
+
+  public:
+    using sender_concept = ::beman::execution::sender_tag;
+    using completion_signatures =
+        ::beman::execution::completion_signatures<::beman::execution::set_value_t(),
+                                                  ::beman::execution::set_error_t(::std::exception_ptr),
+                                                  ::beman::execution::set_stopped_t()>;
+
+    class env {
+      public:
+        explicit env(::std::shared_ptr<backend_type> backend) noexcept : backend_(::std::move(backend)) {}
+
+        auto
+        query(const ::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>&) const noexcept
+            -> ::beman::execution::parallel_scheduler {
+            return ::beman::execution::parallel_scheduler{this->backend_};
+        }
+
+      private:
+        ::std::shared_ptr<backend_type> backend_;
+    };
+
+    template <::beman::execution::receiver Rcvr>
+    class operation : public ::beman::execution::system_context_replaceability::receiver_proxy {
+      public:
+        using operation_state_concept = ::beman::execution::operation_state_tag;
+
+        operation(::std::shared_ptr<backend_type> backend,
+                  Rcvr&& rcvr) noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Rcvr>, Rcvr>)
+            : backend_(::std::move(backend)), rcvr_(::std::forward<Rcvr>(rcvr)) {}
+
+        auto start() & noexcept -> void {
+            // TODO(P2079R10): define backend storage sizing and stopped-before-start handling.
+            this->backend_->schedule(*this, ::std::span<::std::byte>{this->storage_});
+        }
+
+      private:
+        auto set_value() noexcept -> void override { ::beman::execution::set_value(::std::move(this->rcvr_)); }
+
+        auto set_error(::std::exception_ptr error) noexcept -> void override {
+            ::beman::execution::set_error(::std::move(this->rcvr_), ::std::move(error));
+        }
+
+        auto set_stopped() noexcept -> void override { ::beman::execution::set_stopped(::std::move(this->rcvr_)); }
+
+        ::std::shared_ptr<backend_type> backend_;
+        ::std::remove_cvref_t<Rcvr>     rcvr_;
+        alignas(void*)::std::byte storage_[sizeof(void*) * 4]{};
+    };
+
+    explicit sender(::std::shared_ptr<backend_type> backend) noexcept : backend_(::std::move(backend)) {}
+
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+        return {};
+    }
+
+    auto get_env() const noexcept -> env { return env{this->backend_}; }
+
+    template <::beman::execution::receiver Rcvr>
+    auto connect(Rcvr&& rcvr) & noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Rcvr>, Rcvr>)
+        -> operation<Rcvr> {
+        return operation<Rcvr>{this->backend_, ::std::forward<Rcvr>(rcvr)};
+    }
+
+    template <::beman::execution::receiver Rcvr>
+    auto connect(Rcvr&& rcvr) && noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Rcvr>, Rcvr>)
+        -> operation<Rcvr> {
+        return operation<Rcvr>{::std::move(this->backend_), ::std::forward<Rcvr>(rcvr)};
+    }
+
+  private:
+    ::std::shared_ptr<backend_type> backend_;
+};
+
+inline auto parallel_scheduler::schedule() const noexcept -> sender { return sender{this->backend_}; }
+
 // TODO(P2079R10): implement using system_context_replaceability::query_parallel_scheduler_backend().
 auto get_parallel_scheduler() -> parallel_scheduler;
 
