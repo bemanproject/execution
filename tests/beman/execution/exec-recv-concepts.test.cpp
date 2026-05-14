@@ -20,22 +20,22 @@ struct error {};
 
 template <typename... T>
 struct value_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_value(T...) && noexcept -> void {}
 };
 
 template <typename T>
 struct error_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_error(T) && noexcept -> void {}
 };
 
 struct stopped_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_stopped() && noexcept -> void {}
 };
 
-template <typename Concept = test_std::receiver_t>
+template <typename Concept = test_std::receiver_tag>
 struct multi_receiver {
     using receiver_concept = Concept;
 

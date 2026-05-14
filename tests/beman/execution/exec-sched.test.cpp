@@ -24,7 +24,7 @@ struct env {
 
 template <typename Env>
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     auto get_env() const noexcept { return Env{}; }
 };
 
@@ -34,7 +34,7 @@ struct no_scheduler_concept {
 };
 
 struct not_queryable {
-    using scheduler_concept                                = test_std::scheduler_t;
+    using scheduler_concept                                = test_std::scheduler_tag;
     not_queryable()                                        = default;
     not_queryable(const not_queryable&)                    = default;
     not_queryable(not_queryable&&)                         = default;
@@ -46,17 +46,17 @@ struct not_queryable {
 };
 
 struct no_schedule {
-    using scheduler_concept                           = test_std::scheduler_t;
+    using scheduler_concept                           = test_std::scheduler_tag;
     auto operator==(const no_schedule&) const -> bool = default;
 };
 
 struct not_equality_comparable {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     auto schedule() -> sender<env<not_equality_comparable>> { return {}; }
 };
 
 struct not_copy_constructible {
-    using scheduler_concept                                                  = test_std::scheduler_t;
+    using scheduler_concept                                                  = test_std::scheduler_tag;
     not_copy_constructible(const not_copy_constructible&)                    = delete;
     not_copy_constructible(not_copy_constructible&&)                         = default;
     ~not_copy_constructible()                                                = default;
@@ -67,13 +67,13 @@ struct not_copy_constructible {
 };
 
 struct scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     auto schedule() -> sender<env<scheduler>> { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
 };
 
 struct bad_completion_scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     auto schedule() -> sender<env<scheduler>> { return {}; }
     auto operator==(const bad_completion_scheduler&) const -> bool = default;
 };

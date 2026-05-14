@@ -56,9 +56,9 @@ struct as_awaitable_t {
                 ::beman::execution::detail::query_with_default(::beman::execution::get_await_completion_adaptor,
                                                                ::beman::execution::get_env(expr),
                                                                ::std::identity{});
-            using sender_t = ::std::invoke_result_t<decltype(adaptor), Expr>;
-            if constexpr (::beman::execution::detail::awaitable_sender<sender_t, Promise>) {
-                return ::beman::execution::detail::sender_awaitable<sender_t, Promise>{
+            using sender_tag = ::std::invoke_result_t<decltype(adaptor), Expr>;
+            if constexpr (::beman::execution::detail::awaitable_sender<sender_tag, Promise>) {
+                return ::beman::execution::detail::sender_awaitable<sender_tag, Promise>{
                     adaptor(::std::forward<Expr>(expr)), promise};
             } else if constexpr (::beman::execution::detail::awaitable_sender<Expr, Promise>) {
                 return ::beman::execution::detail::sender_awaitable<Expr, Promise>{::std::forward<Expr>(expr),

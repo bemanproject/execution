@@ -27,7 +27,7 @@ struct env {};
 
 template <bool B>
 struct sender {
-    using sender_concept        = std::conditional_t<B, test_std::sender_t, void>;
+    using sender_concept        = std::conditional_t<B, test_std::sender_tag, void>;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
 
     struct base {
@@ -40,7 +40,7 @@ struct sender {
         std::remove_cvref_t<Rcvr> rcvr;
         base*&                    handle;
 
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         state(auto&& r, base*& h) : rcvr(std::forward<decltype(r)>(r)), handle(h) {}
         auto start() & noexcept { this->handle = this; }
         auto complete() -> void override { test_std::set_value(std::move(this->rcvr)); }

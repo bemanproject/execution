@@ -18,7 +18,7 @@ import beman.execution;
 
 namespace {
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 static_assert(test_std::sender<sender>);
 
@@ -34,7 +34,7 @@ struct empty {};
 
 template <typename S>
 struct wrap {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     std::remove_cvref_t<S> sndr;
     template <typename, typename... E>
     static consteval auto get_completion_signatures() noexcept {
@@ -45,7 +45,7 @@ static_assert(test_std::sender<wrap<sender>>);
 
 template <test_std::sender>
 struct bad {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 
 template <bool Noexcept>

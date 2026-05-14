@@ -14,12 +14,12 @@ import std;
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.queryable;
 import beman.execution.detail.schedule;
-import beman.execution.detail.scheduler_t;
+import beman.execution.detail.scheduler_tag;
 import beman.execution.detail.sender;
 #else
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/schedule.hpp>
-#include <beman/execution/detail/scheduler_t.hpp>
+#include <beman/execution/detail/scheduler_tag.hpp>
 #include <beman/execution/detail/sender.hpp>
 #endif
 
@@ -34,7 +34,7 @@ namespace beman::execution::detail {
  */
 template <typename Scheduler>
 concept almost_scheduler = ::std::derived_from<typename ::std::remove_cvref_t<Scheduler>::scheduler_concept,
-                                               ::beman::execution::scheduler_t> &&
+                                               ::beman::execution::scheduler_tag> &&
                            ::beman::execution::detail::queryable<Scheduler> &&
                            requires(Scheduler&& sched) {
                                {

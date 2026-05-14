@@ -77,14 +77,11 @@ class atomic_intrusive_stack<Next> {
     //!
     //! @return  If the stack is empty, returns an empty stack.
     auto pop_all_and_shutdown() noexcept -> ::beman::execution::detail::intrusive_stack<Next> {
-        auto  stack = ::beman::execution::detail::intrusive_stack<Next>{};
-        void* ptr   = head_.exchange(this);
+        void* ptr = head_.exchange(this);
         if (ptr == this) {
-            return stack;
+            return {};
         }
-        auto item   = static_cast<Item*>(ptr);
-        stack.head_ = item;
-        return stack;
+        return ::beman::execution::detail::intrusive_stack<Next>{static_cast<Item*>(ptr)};
     }
 
   private:

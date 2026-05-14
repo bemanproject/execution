@@ -72,7 +72,7 @@ struct test::thread_pool {
     }
 
     struct scheduler {
-        using scheduler_concept = test_std::scheduler_t;
+        using scheduler_concept = test_std::scheduler_tag;
         struct env {
             test::thread_pool* pool;
 
@@ -83,7 +83,7 @@ struct test::thread_pool {
         };
         template <typename Receiver>
         struct state final : test::thread_pool::node {
-            using operation_state_concept = test_std::operation_state_t;
+            using operation_state_concept = test_std::operation_state_tag;
             std::remove_cvref_t<Receiver> receiver;
             test::thread_pool*            pool;
 
@@ -99,7 +99,7 @@ struct test::thread_pool {
             void run() override { test_std::set_value(std::move(this->receiver)); }
         };
         struct sender {
-            using sender_concept = test_std::sender_t;
+            using sender_concept = test_std::sender_tag;
             test::thread_pool* pool;
             template <typename, typename...>
             static consteval auto get_completion_signatures()

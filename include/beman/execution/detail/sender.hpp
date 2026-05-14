@@ -28,11 +28,13 @@ import beman.execution.detail.queryable;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct sender_t {};
+struct sender_tag {};
+
+using sender_t [[deprecated("sender_t has been renamed sender_tag")]] = sender_tag;
 } // namespace beman::execution
 namespace beman::execution::detail {
 template <typename Sender>
-concept is_sender = ::std::derived_from<typename Sender::sender_concept, ::beman::execution::sender_t>;
+concept is_sender = ::std::derived_from<typename Sender::sender_concept, ::beman::execution::sender_tag>;
 
 template <typename Sender>
 concept enable_sender =

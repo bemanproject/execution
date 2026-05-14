@@ -148,7 +148,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule_from.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule_result_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler_t.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler_tag.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_association.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender.hpp
@@ -195,6 +195,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unspecified_promise.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable_token.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unreachable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_signatures.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_specialization.hpp
@@ -342,7 +343,7 @@ if(BEMAN_USE_MODULES)
                     schedule_from.cppm
                     schedule_result_t.cppm
                     schedule.cppm
-                    scheduler_t.cppm
+                    scheduler_tag.cppm
                     scheduler.cppm
                     scope_association.cppm
                     scope_token.cppm
@@ -389,6 +390,7 @@ if(BEMAN_USE_MODULES)
                     unspecified_promise.cppm
                     unstoppable.cppm
                     unstoppable_token.cppm
+                    unreachable.cppm
                     valid_completion_for.cppm
                     valid_completion_signatures.cppm
                     valid_specialization.cppm

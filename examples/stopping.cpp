@@ -33,11 +33,11 @@ struct env {
 
 template <typename Sender>
 struct inject_cancel_sender {
-    using sender_concept = ex::sender_t;
+    using sender_concept = ex::sender_tag;
 
     template <typename Receiver>
     struct receiver {
-        using receiver_concept = ex::receiver_t;
+        using receiver_concept = ex::receiver_tag;
 
         std::remove_cvref_t<Receiver> inner_receiver;
         ex::inplace_stop_token        token{};
@@ -73,7 +73,7 @@ template <typename S>
 inject_cancel_sender(ex::inplace_stop_token, S&&) -> inject_cancel_sender<std::decay_t<S>>;
 
 struct receiver {
-    using receiver_concept = ex::receiver_t;
+    using receiver_concept = ex::receiver_tag;
     auto set_value(auto&&...) noexcept -> void {}
     auto set_error(auto&&) noexcept -> void {}
     auto set_stopped() noexcept -> void {}

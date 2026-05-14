@@ -29,10 +29,10 @@ struct env {
 };
 
 struct scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
 
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         int  value{};
         auto get_env() const noexcept -> env<true, scheduler> { return {this->value}; }
     };

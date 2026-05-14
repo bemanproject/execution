@@ -22,7 +22,7 @@ import beman.execution.detail;
 
 namespace {
 
-struct timed_scheduler_t : beman::execution::scheduler_t {};
+struct timed_scheduler_t : beman::execution::scheduler_tag {};
 
 class some_thread_pool {
   public:
@@ -55,7 +55,7 @@ struct some_thread_pool_scheduler {
 
     template <class Receiver>
     struct timed_operation {
-        using operation_state_concept = beman::execution::operation_state_t;
+        using operation_state_concept = beman::execution::operation_state_tag;
 
         Receiver                              receiver_;
         some_thread_pool&                     pool_;
@@ -72,7 +72,7 @@ struct some_thread_pool_scheduler {
     };
 
     struct timed_sender {
-        using sender_concept = beman::execution::sender_t;
+        using sender_concept = beman::execution::sender_tag;
 
         using completion_signatures =
             beman::execution::completion_signatures<beman::execution::set_value_t(),

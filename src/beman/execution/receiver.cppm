@@ -7,6 +7,7 @@ module;
 export module beman.execution.detail.receiver;
 
 namespace beman::execution {
+export using beman::execution::receiver_tag;
 export using beman::execution::receiver_t;
 export using beman::execution::receiver;
 } // namespace beman::execution

@@ -60,7 +60,7 @@ inline constexpr struct stop_when_t {
 
 template <::beman::execution::sender Sndr, ::beman::execution::stoppable_token Tok>
 struct beman::execution::detail::stop_when_t::sender {
-    using sender_concept = ::beman::execution::sender_t;
+    using sender_concept = ::beman::execution::sender_tag;
 
     stop_when_t               stop_when{};
     std::remove_cvref_t<Tok>  tok;
@@ -68,7 +68,7 @@ struct beman::execution::detail::stop_when_t::sender {
 
     template <::beman::execution::receiver Rcvr>
     struct state {
-        using operation_state_concept = ::beman::execution::operation_state_t;
+        using operation_state_concept = ::beman::execution::operation_state_tag;
         using rcvr_t                  = ::std::remove_cvref_t<Rcvr>;
         using token1_t                = ::std::remove_cvref_t<Tok>;
         using token2_t =
@@ -97,7 +97,7 @@ struct beman::execution::detail::stop_when_t::sender {
         };
 
         struct receiver {
-            using receiver_concept = ::beman::execution::receiver_t;
+            using receiver_concept = ::beman::execution::receiver_tag;
             base_state* st;
 
             auto get_env() const noexcept -> env { return env{this->st}; }

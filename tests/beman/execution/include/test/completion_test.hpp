@@ -73,7 +73,7 @@ struct completion_test_receiver<::beman::execution::completion_signatures<Sigs..
 
 template <::beman::execution::sender Sender>
 struct completion_test {
-    using sender_concept = ::beman::execution::sender_t;
+    using sender_concept = ::beman::execution::sender_tag;
     template <typename...>
     static consteval auto get_completion_signatures() noexcept {
         return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>();
@@ -81,12 +81,12 @@ struct completion_test {
 
     template <::beman::execution::receiver Receiver>
     struct state {
-        using operation_state_concept = ::beman::execution::operation_state_t;
+        using operation_state_concept = ::beman::execution::operation_state_tag;
         struct inner_receiver
             : test::completion_test_receiver<
                   decltype(::beman::execution::get_completion_signatures<Sender,
                                                                          ::beman::execution::env_of_t<Receiver>>())> {
-            using receiver_concept = ::beman::execution::receiver_t;
+            using receiver_concept = ::beman::execution::receiver_tag;
             state* st;
             auto   get_env() const noexcept -> ::beman::execution::env_of_t<Receiver> {
                 return ::beman::execution::get_env(this->st->receiver);

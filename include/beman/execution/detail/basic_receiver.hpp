@@ -57,7 +57,7 @@ template <typename Sender, typename Receiver, typename Index>
     friend struct ::beman::execution::set_stopped_t;
     friend struct ::beman::execution::set_value_t;
 
-    using receiver_concept                = ::beman::execution::receiver_t;
+    using receiver_concept                = ::beman::execution::receiver_tag;
     using tag_t                           = ::beman::execution::tag_of_t<Sender>;
     using state_t                         = ::beman::execution::detail::state_type<Sender, Receiver>;
     static constexpr const auto& complete = ::beman::execution::detail::get_impls_for<tag_t>::complete();

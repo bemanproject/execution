@@ -70,7 +70,7 @@ struct sync_wait_state {
 
 template <typename Sender> // dk:TODO detail export
 struct sync_wait_receiver {
-    using receiver_concept = ::beman::execution::receiver_t;
+    using receiver_concept = ::beman::execution::receiver_tag;
 
     ::beman::execution::detail::sync_wait_state<Sender>* state{};
 

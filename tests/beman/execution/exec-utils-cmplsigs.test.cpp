@@ -37,7 +37,7 @@ template <typename, typename>
 struct two_types {};
 
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     using empty_signatures =
         test_std::completion_signatures<test_std::set_error_t(error&&),
                                         test_std::set_error_t(const error&),

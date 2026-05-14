@@ -1,8 +1,8 @@
-// include/beman/execution/detail/scheduler_t.hpp                   -*-C++-*-
+// include/beman/execution/detail/scheduler_tag.hpp                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER_T
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER_T
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER_TAG
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER_TAG
 
 #include <beman/execution/detail/common.hpp>
 
@@ -13,9 +13,11 @@ namespace beman::execution {
  * \brief Tag type to indicate a class is a scheduler.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  */
-struct scheduler_t {};
+struct scheduler_tag {};
+
+using scheduler_t [[deprecated("scheduler_t has been renamed scheduler_tag")]] = scheduler_tag;
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER_T
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULER_TAG

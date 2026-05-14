@@ -57,7 +57,7 @@ auto test_transform_sender(OutSndr out_sndr) -> void {
 }
 
 struct on_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     test::thread_pool& pool;
     auto               set_value(auto&&...) && noexcept {}
     auto               set_error(auto&&) && noexcept {}

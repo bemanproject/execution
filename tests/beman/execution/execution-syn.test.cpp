@@ -39,10 +39,10 @@ struct scheduler {
         }
     };
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         auto get_env() const noexcept -> env { return {}; }
     };
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
 
     auto schedule() const noexcept -> sender { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
@@ -53,7 +53,7 @@ struct no_value_env {};
 struct single_type_sender {
     struct arg {};
     struct error {};
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using test_signatures     = test_std::completion_signatures<test_std::set_error_t(error),
                                                                 test_std::set_error_t(int),
                                                                 test_std::set_value_t(arg&),
@@ -79,7 +79,7 @@ struct single_type_sender {
 
 struct void_sender {
     struct error {};
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename, typename...>
     static consteval auto get_completion_signatures() {
         return test_std::completion_signatures<test_std::set_error_t(error),
@@ -91,7 +91,7 @@ struct void_sender {
 
 struct no_value_sender {
     struct error {};
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename, typename...>
     static consteval auto get_completion_signatures() {
 
@@ -104,7 +104,7 @@ struct no_value_sender {
 struct multi_single_sender {
     struct arg {};
     struct error {};
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename, typename...>
     static consteval auto get_completion_signatures() {
         return test_std::completion_signatures<test_std::set_error_t(error),
@@ -118,7 +118,7 @@ struct multi_single_sender {
 struct multi_type_sender {
     struct arg {};
     struct error {};
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename, typename...>
     static consteval auto get_completion_signatures() {
         return test_std::completion_signatures<test_std::set_error_t(error),
@@ -167,7 +167,7 @@ auto test_variant_or_empty() -> void {
 struct sender_in {
     struct arg {};
 
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     using completion_signatures =
         test_std::completion_signatures<test_std::set_value_t(arg), test_std::set_stopped_t()>;
     template <typename, typename...>
@@ -180,7 +180,7 @@ struct env {};
 struct sender_with_get {
     struct arg {};
 
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 
     using empty_sigs = test_std::completion_signatures<test_std::set_value_t(arg), test_std::set_stopped_t()>;
     using env_sigs   = test_std::completion_signatures<test_std::set_value_t(arg, arg), test_std::set_stopped_t()>;
@@ -277,10 +277,10 @@ auto test_single_sender() -> void {
 }
 
 struct connect_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         auto start() noexcept -> void {}
     };
     struct tag {};
@@ -296,7 +296,7 @@ struct connect_sender {
 
 auto test_conect_result_t() -> void {
     struct receiver {
-        using receiver_concept = test_std::receiver_t;
+        using receiver_concept = test_std::receiver_tag;
     };
 
     static_assert(test_std::sender<connect_sender>);
@@ -324,7 +324,7 @@ auto test_decays_to() -> void {
 
 template <test_std::sender>
 struct adapted_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 
 struct closure_t : test_std::sender_adaptor_closure<closure_t> {
@@ -338,7 +338,7 @@ constexpr closure_t closure{};
 auto test_sender_adaptor_closure() -> void {
     use(test_std::sender_adaptor_closure<closure_t>{});
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
     };
     static_assert(test_std::sender<sender>);
 
@@ -364,7 +364,7 @@ constexpr arg_closure_t arg_closure{};
 
 auto test_sender_adaptor() -> void {
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
     };
     static_assert(test_std::sender<sender>);
 

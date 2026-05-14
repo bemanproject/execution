@@ -21,7 +21,7 @@ namespace {
 
 template <typename... Values>
 struct just_variant {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(Values)...>;
 
     template <typename, typename...>
@@ -31,7 +31,7 @@ struct just_variant {
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
 
         auto start() & noexcept -> void {
             std::visit([this](auto v) { test_std::set_value(std::move(receiver), std::move(v)); }, std::move(var));

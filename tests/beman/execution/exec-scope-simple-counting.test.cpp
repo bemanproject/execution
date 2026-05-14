@@ -11,7 +11,9 @@ import beman.execution;
 #include <beman/execution/detail/simple_counting_scope.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/spawn.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
+#include <beman/execution/detail/then.hpp>
 #include <beman/execution/detail/inline_scheduler.hpp>
 #endif
 
@@ -39,7 +41,7 @@ auto general() -> void {
 }
 
 struct join_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     struct env {
         auto query(const test_std::get_scheduler_t&) const noexcept -> test_std::inline_scheduler { return {}; }
@@ -111,6 +113,17 @@ auto token() -> void {
     ASSERT(true == called);
 }
 
+auto spawn() -> void {
+    constexpr std::size_t           expected = 10;
+    std::size_t                     counter  = 0;
+    test_std::simple_counting_scope scope;
+    for (std::size_t i = 0; i < expected; ++i) {
+        test_std::spawn(test_std::just() | test_std::then([&counter]() noexcept { ++counter; }), scope.get_token());
+    }
+    test_std::sync_wait(scope.join());
+    ASSERT(counter == expected);
+}
+
 } // namespace
 
 TEST(exec_scope_simple_counting) {
@@ -118,4 +131,5 @@ TEST(exec_scope_simple_counting) {
     ctor();
     mem();
     token();
+    spawn();
 }

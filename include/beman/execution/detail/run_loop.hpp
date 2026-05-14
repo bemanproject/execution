@@ -24,7 +24,7 @@ import beman.execution.detail.get_stop_token;
 import beman.execution.detail.immovable;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.scheduler;
-import beman.execution.detail.scheduler_t;
+import beman.execution.detail.scheduler_tag;
 import beman.execution.detail.sender;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
@@ -67,7 +67,7 @@ class run_loop {
 
     template <typename Receiver>
     struct opstate : opstate_base {
-        using operation_state_concept = ::beman::execution::operation_state_t;
+        using operation_state_concept = ::beman::execution::operation_state_tag;
 
         run_loop* loop;
         Receiver  receiver;
@@ -89,7 +89,7 @@ class run_loop {
         }
     };
     struct sender {
-        using sender_concept = ::beman::execution::sender_t;
+        using sender_concept = ::beman::execution::sender_tag;
         template <typename, typename... Env>
         static consteval auto get_completion_signatures() noexcept {
             if constexpr (::beman::execution::unstoppable_token<decltype(::beman::execution::get_stop_token(
@@ -109,7 +109,7 @@ class run_loop {
         }
     };
     struct scheduler {
-        using scheduler_concept = ::beman::execution::scheduler_t;
+        using scheduler_concept = ::beman::execution::scheduler_tag;
 
         run_loop* loop;
 

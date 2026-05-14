@@ -100,7 +100,7 @@ struct impls_for : ::beman::execution::detail::default_impls {
 
     template <class Sndr>
     struct split_receiver {
-        using receiver_concept = ::beman::execution::receiver_t;
+        using receiver_concept = ::beman::execution::receiver_tag;
 
         explicit split_receiver(shared_state<Sndr>* state) noexcept : sh_state(state) {
             if (sh_state) {

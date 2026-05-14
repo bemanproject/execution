@@ -28,11 +28,11 @@ struct error : std::exception {
     explicit error(int v) : value(v) {}
 };
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 
 struct sender_in {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(bool, int),
                                                                   test_std::set_error_t(error),
                                                                   test_std::set_stopped_t()>;
@@ -43,7 +43,7 @@ struct sender_in {
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
 
         std::remove_cvref_t<Receiver> receiver;
 
@@ -57,7 +57,7 @@ struct sender_in {
 };
 
 struct send_error {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::
         completion_signatures<test_std::set_value_t(), test_std::set_error_t(error), test_std::set_stopped_t()>;
     template <typename, typename...>
@@ -67,7 +67,7 @@ struct send_error {
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
 
         std::remove_cvref_t<Receiver> receiver;
         int                           value;
@@ -84,7 +84,7 @@ struct send_error {
 };
 
 struct send_stopped {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::
         completion_signatures<test_std::set_value_t(), test_std::set_error_t(error), test_std::set_stopped_t()>;
     template <typename, typename...>
@@ -94,7 +94,7 @@ struct send_stopped {
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
 
         std::remove_cvref_t<Receiver> receiver;
 
