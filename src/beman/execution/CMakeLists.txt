@@ -115,6 +115,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/join_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/just.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/let.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/logger.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/matching_sig.hpp
