@@ -55,7 +55,7 @@ struct transform_sndr_recurse {
     }
 
     template <typename Sndr, typename Env>
-    auto operator()(Sndr&& sndr, const Env& env) const -> decltype(auto) {
+    auto operator()(Sndr&& sndr, const Env& env) const {
         auto next_domain = [&] {
             if constexpr (::std::same_as<Tag, ::beman::execution::start_t>) {
                 static_assert(
@@ -75,7 +75,7 @@ struct transform_sndr_recurse {
 
 namespace beman::execution {
 template <::beman::execution::sender Sndr, typename Env>
-auto transform_sender(Sndr&& sndr, const Env& env) -> ::beman::execution::sender decltype(auto) {
+auto transform_sender(Sndr&& sndr, const Env& env) -> ::beman::execution::sender auto {
     const auto starting_domain   = ::beman::execution::get_domain(env);
     const auto completion_domain = ::beman::execution::detail::compl_domain(sndr, env);
     const auto starting_transform =

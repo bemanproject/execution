@@ -145,8 +145,8 @@ struct associate_t {
             explicit op_state(::std::pair<assoc_t, sender_ref_t> parts, Receiver& r)
                 : assoc(::std::move(parts.first)) {
                 if (assoc) {
-                    ::std::construct_at(::std::addressof(op),
-                                        ::beman::execution::connect(::std::move(*parts.second), ::std::move(r)));
+                    ::new (static_cast<void*>(::std::addressof(op)))
+                        op_t(::beman::execution::connect(::std::move(*parts.second), ::std::move(r)));
                 } else {
                     rcvr = ::std::addressof(r);
                 }
