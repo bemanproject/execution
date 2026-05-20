@@ -20,11 +20,13 @@ import beman.execution.detail.start;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-struct operation_state_t {};
+struct operation_state_tag {};
+
+using operation_state_t [[deprecated("operation_state_t has been renamed operation_state_tag")]] = operation_state_tag;
 
 template <typename State>
 concept operation_state =
-    ::std::derived_from<typename State::operation_state_concept, ::beman::execution::operation_state_t> &&
+    ::std::derived_from<typename State::operation_state_concept, ::beman::execution::operation_state_tag> &&
     ::std::is_object_v<State> && requires(State& state) {
         { ::beman::execution::start(state) } noexcept;
     };

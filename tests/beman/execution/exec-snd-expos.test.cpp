@@ -85,7 +85,7 @@ struct env2 {
 };
 
 struct test_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 
 struct scheduler {
@@ -101,7 +101,7 @@ struct tag {
 
 template <typename Receiver>
 struct operation_state : test_detail::immovable {
-    using operation_state_concept = test_std::operation_state_t;
+    using operation_state_concept = test_std::operation_state_tag;
     int* counter;
     explicit operation_state(int* cntr) : counter(cntr) {}
     auto start() & noexcept -> void { ++*counter; }
@@ -109,7 +109,7 @@ struct operation_state : test_detail::immovable {
 
 struct sender0 {
     struct env {};
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     using indices_for         = ::std::index_sequence_for<>;
     tag  t{};
@@ -122,7 +122,7 @@ struct sender0 {
 };
 
 struct sender1 {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     using indices_for         = ::std::index_sequence_for<sender0>;
     tag     t{};
@@ -135,7 +135,7 @@ struct sender1 {
 };
 
 struct sender2 {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     using indices_for         = ::std::index_sequence_for<sender0, sender0>;
     tag     t{};
@@ -149,7 +149,7 @@ struct sender2 {
 };
 
 struct sender3 {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     using indices_for         = ::std::index_sequence_for<sender0, sender0, sender0>;
     tag     t{};
@@ -164,7 +164,7 @@ struct sender3 {
 };
 
 struct sender4 {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
     using indices_for         = ::std::index_sequence_for<sender0, sender0, sender0, sender0>;
     tag     t{};
@@ -180,7 +180,7 @@ struct sender4 {
 };
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_value(auto&&...) noexcept -> void {}
     auto set_error(auto&&) noexcept -> void {}
     auto set_stopped() noexcept -> void {}
@@ -287,12 +287,12 @@ struct scheduler;
 
 template <typename W>
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     auto get_env() const noexcept -> env<W> { return {}; }
 };
 template <typename W>
 struct scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     auto schedule() noexcept -> sender<W> { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
     auto query(const test_std::get_domain_t&) const noexcept -> domain { return {}; }
@@ -300,7 +300,7 @@ struct scheduler {
 
 template <>
 struct scheduler<none> {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     auto schedule() noexcept -> sender<none> { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
 };
@@ -377,7 +377,7 @@ auto test_query_with_default() -> void {
 
 auto test_get_domain_early() -> void {
     struct plain_sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
     };
     static_assert(test_std::sender<plain_sender>);
 
@@ -385,7 +385,7 @@ auto test_get_domain_early() -> void {
     static_assert(test_std::sender<cd::sender<cd::domain>>);
 
     struct sender_with_domain {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         struct domain {};
         struct env {
             auto query(const test_std::get_domain_t&) const noexcept -> domain { return {}; }
@@ -417,10 +417,10 @@ struct get_domain_late_scheduler {
         }
     };
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         auto get_env() const noexcept -> env { return {}; }
     };
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     auto schedule() noexcept -> sender { return {}; }
     auto operator==(const get_domain_late_scheduler&) const -> bool = default;
     auto query(const test_std::get_domain_t&) const noexcept -> dom { return {}; }
@@ -437,7 +437,7 @@ struct get_domain_late_env {
 
 auto test_get_domain_late() -> void {
     struct no_domain_sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
     };
     static_assert(test_std::sender<no_domain_sender>);
     test_get_domain_late<test_std::default_domain>(no_domain_sender{}, test_std::env<>{});
@@ -460,7 +460,7 @@ auto test_get_domain_late() -> void {
     test_get_domain_late<domain_env::dom>(no_domain_sender{}, domain_env{});
 
     struct scheduler_sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         auto get_env() const noexcept -> get_domain_late_scheduler::env { return {}; }
     };
     static_assert(test_std::sender<scheduler_sender>);
@@ -470,7 +470,7 @@ auto test_get_domain_late() -> void {
     test_get_domain_late<get_domain_late_scheduler::dom>(scheduler_sender{}, test_std::env<>{});
 
     struct env_sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         auto get_env() const noexcept -> get_domain_late_env { return {}; }
     };
     static_assert(test_std::sender<env_sender>);
@@ -1016,7 +1016,7 @@ auto test_basic_operation() -> void {
 struct arg {};
 struct local_env {};
 struct completion_signatures_for_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     using empty_env_sigs = test_std::completion_signatures<test_std::set_value_t(arg)>;
     using env_sigs       = test_std::completion_signatures<test_std::set_value_t(arg, arg)>;
 
@@ -1058,11 +1058,11 @@ auto test_completion_signatures_for() -> void {
 struct basic_sender_tag {
     template <typename>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         auto start() & noexcept -> void {}
     };
     struct sender {
-        using sender_concept        = test_std::sender_t;
+        using sender_concept        = test_std::sender_tag;
         using completion_signatures = test_std::completion_signatures<>;
         template <typename, typename...>
         static consteval auto get_completion_signatures() -> completion_signatures {
@@ -1083,7 +1083,7 @@ struct basic_sender_tag {
 
 struct data {};
 struct tagged_sender : test_detail::product_type<basic_sender_tag, data, sender0> {
-    using sender_concept      = test_std::sender_t;
+    using sender_concept      = test_std::sender_tag;
     using is_basic_sender_tag = void;
 };
 } // namespace
@@ -1211,7 +1211,7 @@ struct write_env_added {
 };
 
 struct write_env_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     bool* result{nullptr};
 
@@ -1220,7 +1220,7 @@ struct write_env_receiver {
 };
 
 struct write_env_sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(bool)>;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> completion_signatures {
@@ -1228,7 +1228,7 @@ struct write_env_sender {
     }
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         std::remove_cvref_t<Receiver> receiver;
 
         auto start() & noexcept -> void {

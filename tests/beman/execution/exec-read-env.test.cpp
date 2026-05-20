@@ -35,7 +35,7 @@ struct env {
 };
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     int   value{};
     bool* called{};

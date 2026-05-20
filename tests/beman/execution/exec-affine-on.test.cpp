@@ -49,7 +49,7 @@ struct awaiter {
 };
 template <test_std::scheduler Sched>
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     Sched    scheduler_;
     awaiter* awaiter_{nullptr};
     auto     set_value(auto&&...) && noexcept -> void { this->awaiter_&& this->awaiter_->complete(); }
@@ -62,7 +62,7 @@ template <test_std::scheduler Sched>
 receiver(Sched, awaiter* = nullptr) -> receiver<Sched>;
 
 struct test_scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
 
     struct data {
         std::size_t connected_{};
@@ -72,7 +72,7 @@ struct test_scheduler {
 
     template <test_std::receiver Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         std::remove_cvref_t<Receiver> receiver_;
         data*                         data_;
         auto                          start() & noexcept -> void {
@@ -81,7 +81,7 @@ struct test_scheduler {
         }
     };
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         template <typename, typename...>
         static consteval auto get_completion_signatures() -> test_std::completion_signatures<test_std::set_value_t()> {
             return {};

@@ -26,7 +26,7 @@ TEST(notify) {
     }
     {
         struct receiver {
-            using receiver_concept = test_std::receiver_t;
+            using receiver_concept = test_std::receiver_tag;
             bool& result;
             auto  set_value() && noexcept -> void { this->result = true; }
         };

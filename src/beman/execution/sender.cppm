@@ -7,6 +7,7 @@ module;
 export module beman.execution.detail.sender;
 
 namespace beman::execution {
+export using beman::execution::sender_tag;
 export using beman::execution::sender_t;
 export using beman::execution::sender;
 export using beman::execution::enable_sender;

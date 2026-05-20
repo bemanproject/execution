@@ -63,7 +63,7 @@ enum class failure : std::uint8_t { fail_one };
 struct expected_to_channel_t {
     template <typename Receiver>
     struct own_receiver {
-        using receiver_concept = ex::receiver_t;
+        using receiver_concept = ex::receiver_tag;
         Receiver* receiver;
         template <typename Value, typename Error>
         auto set_value(tst::expected<Value, Error>&& exp) noexcept -> void {
@@ -88,7 +88,7 @@ struct expected_to_channel_t {
     };
     template <ex::sender CSender, ex::receiver Receiver>
     struct state {
-        using operation_state_concept = ex::operation_state_t;
+        using operation_state_concept = ex::operation_state_tag;
         using child_state_t = decltype(ex::connect(std::declval<CSender>(), std::declval<own_receiver<Receiver>>()));
         Receiver      parent_receiver;
         child_state_t child_state;
@@ -105,7 +105,7 @@ struct expected_to_channel_t {
 
     template <ex::sender CSender>
     struct sender {
-        using sender_concept = ex::sender_t;
+        using sender_concept = ex::sender_tag;
         // value_types_of<CSender....> -> set_value_t(std::expected<T, E>)
         // -> completion_signatures<set_value_t(T), set_error_t(E)>
         // -> + error_type_of<CSender...>

@@ -32,7 +32,7 @@ Operation states represent asynchronous operations ready to be <code><a href=‘
 
 Required members for <code>_State_</code>:
 
-- The type `operation_state_concept` is an alias for `operation_state_t` or a type derived thereof.
+- The type `operation_state_concept` is an alias for `operation_state_tag` or a type derived thereof.
 - <code><i>state</i>.<a href=‘#start’>start</a>() & noexcept</code>
 
 <details>
@@ -44,7 +44,7 @@ This example shows a simple operation state object which immediately completes s
 template <std::execution::receiver Receiver>
 struct example_state
 {
-    using operation_state_concept = std::execution::operation_state_t;
+    using operation_state_concept = std::execution::operation_state_tag;
     std::remove_cvref_t<Receiver> receiver;
 
     auto start() & noexcept {
@@ -67,7 +67,7 @@ Users don’t interact with receivers explicitly except when implementing new se
 
 Required members for <code>_Receiver_</code>:
 
-- The type `receiver_concept` is an alias for `receiver_t` or a type derived thereof`.
+- The type `receiver_concept` is an alias for `receiver_tag` or a type derived thereof`.
 - Rvalues of type <code>_Receiver_</code> are movable.
 - Lvalues of type <code>_Receiver_</code> are copyable.
 - <code><a href=‘#get-env’>std::execution::get_env</a>(_receiver_)</code> returns an object. By default this operation returns <code><a href=‘env’>std::execution::env&lt;&gt;</a></code>.
@@ -88,7 +88,7 @@ The example receiver prints the name of each the received <a href=‘#completion
 template <std::execution::receiver NestedReceiver>
 struct example_receiver
 {
-    using receiver_concept = std::execution::receiver_t;
+    using receiver_concept = std::execution::receiver_tag;
     std::remove_cvref_t<NestedReceiver> nested;
 
     auto get_env() const noexcept {
@@ -128,7 +128,7 @@ The example defines a simple <code><a href=‘#receiver’>receiver</a></code> a
 ```c++
 struct example_receiver
 {
-    using receiver_concept = std::execution::receiver_t;
+    using receiver_concept = std::execution::receiver_tag;
 
     auto set_value(int) && noexcept ->void {}
     auto set_stopped() && noexcept ->void {}
@@ -161,7 +161,7 @@ static_assert(not std::execution::receiver_of<example_receiver,
 Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href=‘#schedule’>schedule</a></code> operation yielding a <code><a href=‘sender’>sender</a></code> with a value <a href=‘#completion-signal’>completion signal</a> without parameters. The completion is on the respective execution context.
 
 Requirements for <code>_Scheduler_</code>:
-- The type <code>_Scheduler_::scheduler_concept</code> is an alias for `scheduler_t` or a type derived thereof.
+- The type <code>_Scheduler_::scheduler_concept</code> is an alias for `scheduler_tag` or a type derived thereof.
 - <code><a href=‘#schedule’>schedule</a>(_scheduler_) -> <a href=‘sender’>sender</a></code>
 - The <a href=‘#get-completion-scheduler’>value completion scheduler</a> of the <code><a href=‘sender’>sender</a></code>’s <a href=‘#environment’>environment</a> is the <code>_scheduler_</code>:
     _scheduler_ == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;(
@@ -176,7 +176,7 @@ Requirements for <code>_Scheduler_</code>:
 Senders represent asynchronous work. They may get composed from multiple senders to model a workflow. Senders can’t be run directly. Instead, they are passed to a <a href=‘#sender-consumer’</a> which <code><a href=‘#connect’>connect</a></code>s the sender to a <code><a href=‘#receiver’>receiver</a></code> to produce an <code><a href=‘#operation-state’>operation_state</a></code> which may get started. When using senders to represent work the inner workings shouldn’t matter. They do become relevant when creating sender algorithms.
 
 Requirements for <code>_Sender_</code>:
-- The type <code>_Sender_::sender_concept</code> is an alias for `sender_t` or a type derived thereof or <code>_Sender_</code> is a suitable _awaitable_.
+- The type <code>_Sender_::sender_concept</code> is an alias for `sender_tag` or a type derived thereof or <code>_Sender_</code> is a suitable _awaitable_.
 - <code><a href='get_env'>std::execution::get_env</a>(_sender_)</code> is valid. By default this operation returns <code><a href=‘env’>std::execution::env&lt;&gt;</a></code>.
 - Rvalues of type <code>_Sender_</code> can be moved.
 - Lvalues of type <code>_Sender_</code> can be copied.
@@ -197,7 +197,7 @@ struct example_sender
     template <std::execution::receiver Receiver>
     struct state
     {
-        using operation_state_concept = std::execution::operation_state_t;
+        using operation_state_concept = std::execution::operation_state_tag;
         std::remove_cvref_t<Receiver> receiver;
         int                           value;
         auto start() & noexcept {
@@ -207,7 +207,7 @@ struct example_sender
             );
         }
     };
-    using sender_concept = std::execution::sender_t;
+    using sender_concept = std::execution::sender_tag;
     using completion_signatures = std::execution::completion_signatures<
         std::execution::set_value_t(int)
     >;
@@ -296,7 +296,7 @@ struct example_state
             this->state.stop();
         }
     };
-    using operation_state_concept = std::execution::operation_state_t;
+    using operation_state_concept = std::execution::operation_state_tag;
     using env = std::execution::env_of_t<Receiver>;
     using token = std::execution::stop_callback_of_t<env>;
     using callback = std::execution::stop_callback_of_t<token, on_cancel>;
@@ -493,7 +493,7 @@ To determine the result the <code><i>sender</i></code> is first transformed usin
 When a <a href=‘#sender’><code>sender</code></a> doesn’t need to compute the completion signatures based on an <a href=‘#environment’>environment</a> it is easiest to use a the type alias, e.g.:
 ```c++
 struct sender {
-    using sender_concept = std::execution::sender_t;
+    using sender_concept = std::execution::sender_tag;
     using completion_signatures = std::completion_signatures<
         std::execution::set_value_t(int),
         std::execution::set_error_t(std::error_code),
@@ -727,13 +727,13 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 - `env_of_t`
 - `error_types_of_t`
 - `fwd_env`
-- `operation_state_t`
-- `receiver_t`
+- `operation_state_tag`
+- `receiver_tag`
 - `run_loop`
-- `scheduler_t`
+- `scheduler_tag`
 - `schedule_result_t`
 - `sender_adaptor_closure`
-- `sender_t`
+- `sender_tag`
 - `stop_token_of_t`
 - `tag_of_t`
 - `transform_sender`

@@ -127,7 +127,7 @@ struct continues_on_t {
     struct impls_for : ::beman::execution::detail::default_impls {
         template <typename State>
         struct upstream_receiver {
-            using receiver_concept = ::beman::execution::receiver_t;
+            using receiver_concept = ::beman::execution::receiver_tag;
             State* state;
 
             auto set_value() && noexcept -> void {

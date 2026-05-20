@@ -23,11 +23,11 @@ import beman.execution;
 namespace {
 struct non_sender {};
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 template <typename Signatures = test_std::completion_signatures<>, typename... T>
 struct sender_in {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> Signatures {
         return {};
@@ -43,7 +43,7 @@ template <typename... T>
 sender_in(T&&...) -> sender_in<T...>;
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     bool* called{};
 
@@ -82,7 +82,7 @@ auto test_into_variant(auto&& sender) -> void {
 }
 
 struct error_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     bool* called{};
 
@@ -101,7 +101,7 @@ auto test_into_variant_error() -> void {
 }
 
 struct stopped_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     bool* called{};
 

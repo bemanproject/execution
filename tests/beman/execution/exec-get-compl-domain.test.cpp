@@ -12,7 +12,7 @@ import beman.execution.detail.set_value;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.sender;
 import beman.execution.detail.scheduler;
-import beman.execution.detail.scheduler_t;
+import beman.execution.detail.scheduler_tag;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.schedule;
@@ -26,7 +26,7 @@ import beman.execution.detail.completion_signatures;
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution/detail/scheduler_t.hpp>
+#include <beman/execution/detail/scheduler_tag.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/schedule.hpp>
@@ -78,16 +78,16 @@ auto test_get_completion_domain_tag() {
 
 template <typename Q>
 struct scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         auto start() noexcept {}
     };
     struct env {
         auto query(test_std::get_completion_scheduler_t<test_std::set_value_t>) const noexcept { return scheduler{}; }
     };
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         static consteval auto get_completion_signatures() {
             return test_std::completion_signatures<test_std::set_value_t()>();
         }

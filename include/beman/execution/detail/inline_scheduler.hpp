@@ -18,7 +18,7 @@ import beman.execution.detail.receiver;
 import beman.execution.detail.set_value;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.scheduler;
-import beman.execution.detail.scheduler_t;
+import beman.execution.detail.scheduler_tag;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.inline_attrs;
 #else
@@ -33,19 +33,19 @@ import beman.execution.detail.inline_attrs;
 
 namespace beman::execution {
 struct inline_scheduler {
-    using scheduler_concept = ::beman::execution::scheduler_t;
+    using scheduler_concept = ::beman::execution::scheduler_tag;
 
     using env = ::beman::execution::detail::inline_attrs<::beman::execution::set_value_t>;
 
     template <::beman::execution::receiver Rcvr>
     struct state {
-        using operation_state_concept = ::beman::execution::operation_state_t;
+        using operation_state_concept = ::beman::execution::operation_state_tag;
         ::std::remove_cvref_t<Rcvr> rcvr;
         auto                        start() & noexcept -> void { ::beman::execution::set_value(::std::move(rcvr)); }
     };
 
     struct sender {
-        using sender_concept        = ::beman::execution::sender_t;
+        using sender_concept        = ::beman::execution::sender_tag;
         using completion_signatures = ::beman::execution::completion_signatures<::beman::execution::set_value_t()>;
         template <typename...>
         static consteval auto get_completion_signatures() noexcept -> completion_signatures {

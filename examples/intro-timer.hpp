@@ -20,7 +20,7 @@ struct intro::timer {
     };
     template <typename Receiver>
     struct state : state_base {
-        using operation_state_concept = ex::operation_state_t;
+        using operation_state_concept = ex::operation_state_tag;
         timer*                        self;
         std::remove_cvref_t<Receiver> receiver;
         std::chrono::milliseconds     ms;
@@ -32,7 +32,7 @@ struct intro::timer {
         void complete() override { ex::set_value(std::move(receiver)); }
     };
     struct sender {
-        using sender_concept        = ex::sender_t;
+        using sender_concept        = ex::sender_tag;
         using completion_signatures = ex::completion_signatures<ex::set_value_t()>;
         template <typename...>
         static consteval auto get_completion_signatures() noexcept -> completion_signatures {
@@ -68,19 +68,19 @@ struct intro::timer {
     template <typename Receiver>
     struct run_state {
         struct recv {
-            using receiver_concept = ex::receiver_t;
+            using receiver_concept = ex::receiver_tag;
             run_state* self;
 
             auto set_value(auto&&...) noexcept -> void { this->self->run_one(); }
             auto set_error(auto&&) noexcept -> void { this->self->run_one(); }
             auto set_stopped() noexcept -> void { this->self->run_one(); }
         };
-        using operation_state_concept = ex::operation_state_t;
-        using scheduler_t             = decltype(ex::get_delegation_scheduler(ex::get_env(std::declval<Receiver&>())));
+        using operation_state_concept = ex::operation_state_tag;
+        using scheduler_tag           = decltype(ex::get_delegation_scheduler(ex::get_env(std::declval<Receiver&>())));
         static_assert(ex::receiver<recv>);
-        static_assert(ex::scheduler<scheduler_t>);
-        static_assert(ex::sender<decltype(ex::schedule(std::declval<scheduler_t>()))>);
-        using state_t = decltype(ex::connect(ex::schedule(std::declval<scheduler_t>()), std::declval<recv>()));
+        static_assert(ex::scheduler<scheduler_tag>);
+        static_assert(ex::sender<decltype(ex::schedule(std::declval<scheduler_tag>()))>);
+        using state_t = decltype(ex::connect(ex::schedule(std::declval<scheduler_tag>()), std::declval<recv>()));
         struct state_ctor {
             state_t state;
             template <typename S, typename R>
@@ -106,7 +106,7 @@ struct intro::timer {
         auto start() & noexcept -> void { this->schedule_one(); }
     };
     struct run_sender {
-        using sender_concept        = ex::sender_t;
+        using sender_concept        = ex::sender_tag;
         using completion_signatures = ex::completion_signatures<ex::set_value_t()>;
         template <typename...>
         static consteval auto get_completion_signatures() noexcept -> completion_signatures {

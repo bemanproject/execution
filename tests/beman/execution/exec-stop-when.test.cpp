@@ -32,12 +32,12 @@ import beman.execution.detail;
 
 namespace {
 struct sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>;
 
     template <test_std::receiver Rcvr>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         using rcvr_t                  = std::remove_cvref_t<Rcvr>;
         using token_t = decltype(test_std::get_stop_token(test_std::get_env(std::declval<const rcvr_t>())));
 
@@ -72,7 +72,7 @@ struct env {
 enum class completion : char { none, value, stopped };
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     test_std::inplace_stop_token token;
     completion&                  comp;

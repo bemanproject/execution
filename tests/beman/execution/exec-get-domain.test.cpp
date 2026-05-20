@@ -47,14 +47,14 @@ struct test_sched_sender;
 struct test_sched_env;
 
 struct test_scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     auto schedule() const -> test_sched_sender;
     auto operator==(const test_scheduler&) const -> bool = default;
     auto query(test_std::get_completion_domain_t<test_std::set_value_t>) const noexcept { return sched_domain{}; }
 };
 
 struct test_sched_state {
-    using operation_state_concept = test_std::operation_state_t;
+    using operation_state_concept = test_std::operation_state_tag;
     auto start() noexcept {}
 };
 
@@ -63,7 +63,7 @@ struct test_sched_env {
 };
 
 struct test_sched_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     static consteval auto get_completion_signatures() {
         return test_std::completion_signatures<test_std::set_value_t()>();
     }

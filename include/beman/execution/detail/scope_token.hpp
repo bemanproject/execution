@@ -30,7 +30,7 @@ namespace beman::execution::detail {
 struct token_test_env {};
 
 struct token_test_sender {
-    using sender_concept = ::beman::execution::sender_t;
+    using sender_concept = ::beman::execution::sender_tag;
     template <typename, typename...>
     static consteval auto get_completion_signatures() noexcept {
         return ::beman::execution::completion_signatures<>{};

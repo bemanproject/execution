@@ -63,11 +63,11 @@ TEST(execution_modules) {
     test::use_type<test_std::default_domain>();
 
     // [exec.sched], schedulers
-    test::use_type<test_std::scheduler_t>();
+    test::use_type<test_std::scheduler_tag>();
     static_assert(not test_std::scheduler<int>);
 
     // [exec.recv], receivers
-    test::use_type<test_std::receiver_t>();
+    test::use_type<test_std::receiver_tag>();
     static_assert(not test_std::receiver<int>);
     static_assert(not test_std::receiver_of<int, test_std::completion_signatures<>>);
 
@@ -80,13 +80,13 @@ TEST(execution_modules) {
     test::use(test_std::set_stopped);
 
     // [exec.opstate], operation states
-    test::use_type<test_std::operation_state_t>();
+    test::use_type<test_std::operation_state_tag>();
     static_assert(not test_std::operation_state<int>);
     test::use_type<test_std::start_t>();
     test::use(test_std::start);
 
     // [exec.snd], senders
-    test::use_type<test_std::sender_t>();
+    test::use_type<test_std::sender_tag>();
     static_assert(not test_std::sender<int>);
     static_assert(not test_std::sender_in<int>);
     //-dk:TODO static_assert(not test_std::sender_to<int, int>);

@@ -33,7 +33,7 @@ struct token_env {
 };
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     signal_type*                 result;
     test_std::inplace_stop_token token;
@@ -47,7 +47,7 @@ struct receiver {
 
 struct finish_receiver {
     test_std::run_loop* loop;
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     auto set_value() && noexcept { this->loop->finish(); }
     auto set_error(const std::exception_ptr&) && noexcept { this->loop->finish(); }

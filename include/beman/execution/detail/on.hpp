@@ -58,7 +58,7 @@ namespace beman::execution::detail {
 struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     template <typename>
     struct env_needs_get_scheduler {
-        using sender_concept = ::beman::execution::sender_t;
+        using sender_concept = ::beman::execution::sender_tag;
         template <typename, typename Env>
         static constexpr auto get_completion_signatures() {
             return env_needs_get_scheduler<Env>{};

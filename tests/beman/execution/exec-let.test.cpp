@@ -25,14 +25,14 @@ import beman.execution;
 
 namespace {
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_error(auto&&) && noexcept -> void {}
     auto set_stopped() && noexcept -> void {}
     auto set_value(auto&&...) && noexcept -> void {}
 };
 template <typename... Sigs>
 struct test_sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<Sigs...>;
     template <typename, typename...>
     static consteval auto get_completion_signatures() {
@@ -40,7 +40,7 @@ struct test_sender {
     }
 
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         auto start() & noexcept -> void {}
     };
     auto connect(auto&&) -> state { return {}; }
@@ -124,7 +124,7 @@ auto test_let_value_env() -> void {
 }
 
 struct all_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_value(auto&&...) && noexcept {}
     auto set_error(auto&&) && noexcept {}
     auto set_stopped() && noexcept {}

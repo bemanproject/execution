@@ -13,7 +13,7 @@ import beman.execution.detail;
 
 namespace {
 struct base {};
-struct derived : test_std::receiver_t {};
+struct derived : test_std::receiver_tag {};
 
 struct no_receiver_concept {};
 struct receiver_concept_not_deriving_from_receiver_t {
@@ -34,7 +34,7 @@ struct non_env {
     ~non_env() {}
 };
 struct no_get_env {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto get_env() const noexcept -> const non_env& {
         static non_env rc;
         return rc;
@@ -42,7 +42,7 @@ struct no_get_env {
 };
 
 struct not_move_constructible {
-    using receiver_concept                                                   = test_std::receiver_t;
+    using receiver_concept                                                   = test_std::receiver_tag;
     not_move_constructible()                                                 = default;
     not_move_constructible(const not_move_constructible&)                    = default;
     not_move_constructible(not_move_constructible&&)                         = delete;
@@ -51,7 +51,7 @@ struct not_move_constructible {
     auto operator=(not_move_constructible&&) -> not_move_constructible&      = delete;
 };
 struct not_copy_constructible {
-    using receiver_concept                                                   = test_std::receiver_t;
+    using receiver_concept                                                   = test_std::receiver_tag;
     not_copy_constructible()                                                 = default;
     not_copy_constructible(const not_copy_constructible&)                    = delete;
     not_copy_constructible(not_copy_constructible&&)                         = default;
@@ -61,10 +61,10 @@ struct not_copy_constructible {
 };
 
 struct receiver_final final {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 };
 struct receiver_base {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 };
 struct receiver_derived {
     using receiver_concept = derived;

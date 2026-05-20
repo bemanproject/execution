@@ -37,7 +37,7 @@ struct tag {
 };
 
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     int value{};
 };
 

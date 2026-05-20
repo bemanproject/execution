@@ -22,7 +22,7 @@ import beman.execution;
 namespace {
 template <typename... C>
 struct multi_sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<C...>;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> completion_signatures {
@@ -38,7 +38,7 @@ struct domain_sender {
     struct env {
         auto query(test_std::get_domain_t) const noexcept -> D { return {}; }
     };
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> completion_signatures {
@@ -63,7 +63,7 @@ auto test_when_all_breathing() -> void {
 }
 
 struct await_cancel {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> completion_signatures {
@@ -72,7 +72,7 @@ struct await_cancel {
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         struct callback {
             Receiver* receiver;
             explicit callback(Receiver* rcvr) : receiver(rcvr) {}
@@ -98,7 +98,7 @@ struct await_cancel {
 
 template <typename Sender, typename Tag, typename... T>
 struct test_sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(bool)>;
     template <typename, typename...>
     static consteval auto get_completion_signatures() -> completion_signatures {
@@ -107,7 +107,7 @@ struct test_sender {
 
     template <typename Result, typename Receiver>
     struct upstream {
-        using receiver_concept = test_std::receiver_t;
+        using receiver_concept = test_std::receiver_tag;
         const Result& expect;
         Receiver&     receiver;
         auto          set_error(auto&& error) && noexcept -> void {
@@ -132,7 +132,7 @@ struct test_sender {
     };
     template <typename Result, typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         Result                                                                                          expect;
         std::remove_cvref_t<Receiver>                                                                   receiver;
         decltype(test_std::connect(std::declval<Sender>(), std::declval<upstream<Result, Receiver>>())) inner_state;
@@ -170,7 +170,7 @@ struct add_value_sig<test_std::completion_signatures<S...>> {
 
 template <typename Sender>
 struct add_value {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename, typename... E>
     static consteval auto get_completion_signatures() noexcept {
         using signatures = decltype(test_std::get_completion_signatures<Sender, E...>());

@@ -51,7 +51,7 @@ template <typename Sender, typename Receiver> //-dk:TODO detail export
 struct basic_operation : ::beman::execution::detail::basic_state<Sender, Receiver> {
     // static_assert(std::same_as<Sender, std::remove_cvref_t<Sender>>);
     friend struct ::beman::execution::start_t;
-    using operation_state_concept = ::beman::execution::operation_state_t;
+    using operation_state_concept = ::beman::execution::operation_state_tag;
     using tag_t                   = ::beman::execution::tag_of_t<Sender>;
 
     using inner_ops_t = ::beman::execution::detail::connect_all_result<Sender, Receiver>;

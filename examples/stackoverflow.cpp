@@ -15,7 +15,7 @@ import beman.execution;
 namespace ex = beman::execution;
 
 struct task {
-    using sender_concept        = ex::sender_t;
+    using sender_concept        = ex::sender_tag;
     using completion_signatures = ex::completion_signatures<ex::set_value_t()>;
     template <typename...>
     static consteval auto get_completion_signatures() noexcept -> completion_signatures {
@@ -54,7 +54,7 @@ struct task {
     template <ex::receiver R>
     struct state : base {
 
-        using operation_state_concept = ex::operation_state_t;
+        using operation_state_concept = ex::operation_state_tag;
         std::remove_cvref_t<R>              r;
         std::coroutine_handle<promise_type> handle;
 

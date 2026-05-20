@@ -59,4 +59,10 @@ repos:
     hooks:
       - id: black
 
+  # Beman Standard checking via beman-tidy
+  - repo : https://github.com/bemanproject/beman-tidy
+    rev: v0.3.1
+    hooks:
+    - id: beman-tidy
+
 exclude: 'infra/'

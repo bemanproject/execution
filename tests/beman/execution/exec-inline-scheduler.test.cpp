@@ -16,18 +16,18 @@ import beman.execution.detail;
 namespace {
 
 struct test_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     bool& called;
     auto  set_value() && noexcept -> void { called = true; }
     auto  get_env() const noexcept { return test_std::env{}; }
 };
 
 struct custom_scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     int id{};
 
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         auto start() noexcept -> void {}
     };
     struct env {
@@ -37,7 +37,7 @@ struct custom_scheduler {
         }
     };
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         int                   id{};
         static consteval auto get_completion_signatures() {
             return test_std::completion_signatures<test_std::set_value_t()>();
@@ -57,14 +57,14 @@ struct custom_domain {
 };
 
 struct sched_with_domain {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
 
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         auto start() noexcept -> void {}
     };
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         static consteval auto get_completion_signatures() {
             return test_std::completion_signatures<test_std::set_value_t()>();
         }
@@ -80,7 +80,7 @@ struct sched_with_domain {
 
 // Receiver whose env provides a scheduler
 struct sched_env_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     bool& called;
 
     struct env {
@@ -91,7 +91,7 @@ struct sched_env_receiver {
 };
 
 struct domain_env_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     bool& called;
 
     struct env {

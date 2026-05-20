@@ -46,7 +46,7 @@ namespace beman::execution::detail {
 struct store_receiver_t {
     template <::beman::execution::receiver Rcvr>
     struct receiver {
-        using receiver_concept = ::beman::execution::receiver_t;
+        using receiver_concept = ::beman::execution::receiver_tag;
         Rcvr* rcvr;
         template <typename... Args>
         auto set_value(Args&&... args) && noexcept -> void {
@@ -61,7 +61,7 @@ struct store_receiver_t {
     };
     template <::beman::execution::sender Sndr, typename Trans, ::beman::execution::receiver Rcvr>
     struct state {
-        using operation_state_concept = ::beman::execution::operation_state_t;
+        using operation_state_concept = ::beman::execution::operation_state_tag;
         using env_t                   = ::beman::execution::env_of_t<Rcvr>;
         using state_t = ::beman::execution::connect_result_t<decltype(::std::declval<Trans>()(
                                                                  ::std::declval<Sndr>(), ::std::declval<env_t>())),
@@ -78,7 +78,7 @@ struct store_receiver_t {
     };
     template <::beman::execution::sender Sndr, typename Trans>
     struct sender {
-        using sender_concept = ::beman::execution::sender_t;
+        using sender_concept = ::beman::execution::sender_tag;
         using trans_t        = ::std::remove_cvref_t<Trans>;
         template <typename, typename... Env>
         static consteval auto get_completion_signatures() noexcept {

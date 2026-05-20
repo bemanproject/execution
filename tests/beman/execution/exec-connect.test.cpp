@@ -23,7 +23,7 @@ namespace {
 enum class kind : unsigned char { plain, domain };
 template <kind, test_std::receiver Receiver>
 struct state {
-    using operation_state_concept = test_std::operation_state_t;
+    using operation_state_concept = test_std::operation_state_tag;
     int                           value{};
     std::remove_cvref_t<Receiver> receiver;
 
@@ -38,7 +38,7 @@ struct state {
 };
 
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     int value{};
 
     template <typename Receiver>
@@ -48,7 +48,7 @@ struct sender {
 };
 
 struct rvalue_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     int value{};
 
     explicit rvalue_sender(int val) : value(val) {}
@@ -69,7 +69,7 @@ struct env {
 };
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     int   value{};
     bool* set_stopped_called{};
 
@@ -86,7 +86,7 @@ struct receiver {
 };
 
 struct domain_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     int value{};
 
     template <typename Receiver>
@@ -106,7 +106,7 @@ struct domain_env {
 };
 
 struct domain_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     int value{};
 
     explicit domain_receiver(int val) : value(val) {}
@@ -168,7 +168,7 @@ auto test_connect_awaitable_promise() -> void {
 
 auto test_operation_state_task() -> void {
     using state_t = test_detail::operation_state_task<receiver>;
-    static_assert(std::same_as<::beman::execution::operation_state_t, state_t::operation_state_concept>);
+    static_assert(std::same_as<::beman::execution::operation_state_tag, state_t::operation_state_concept>);
     static_assert(std::same_as<test_detail::connect_awaitable_promise<receiver>, state_t::promise_type>);
     static_assert(noexcept(state_t(std::coroutine_handle<>{})));
     state_t state(::std::coroutine_handle<>{});
@@ -229,7 +229,7 @@ auto test_connect_awaitable() -> void {
     };
 
     struct local_receiver {
-        using receiver_concept = test_std::receiver_t;
+        using receiver_concept = test_std::receiver_tag;
 
         int&  iv;
         bool& bv;
@@ -306,7 +306,7 @@ auto test_connect_with_awaiter() -> void {
         auto                       await_resume() -> int { return 17; }
     };
     struct local_receiver {
-        using receiver_concept = test_std::receiver_t;
+        using receiver_concept = test_std::receiver_tag;
         bool& result;
         auto  set_value(int i) && noexcept -> void { this->result = i == 17; }
         auto  set_error(const std::exception_ptr&) && noexcept -> void {}
