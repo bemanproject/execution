@@ -12,6 +12,7 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULESSo 
 import beman.execution;
+import beman.execution.detail.schedule_result_t;
 #else
 #include <beman/execution/execution.hpp>
 #endif
