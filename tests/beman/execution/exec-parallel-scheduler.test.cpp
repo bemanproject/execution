@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <utility>
 #include <test/execution.hpp>
-#ifdef BEMAN_HAS_MODULESSo 
+#ifdef BEMAN_HAS_MODULES 
 import beman.execution;
 import beman.execution.detail.schedule_result_t;
 #else
