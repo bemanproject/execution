@@ -11,12 +11,14 @@
 #include <beman/execution/detail/task/error_types_of.hpp>
 #include <beman/execution/detail/task/find_allocator.hpp>
 #include <beman/execution/detail/task/handle.hpp>
+#include <beman/execution/detail/task/infallible_scheduler.hpp>
 #include <beman/execution/detail/task/logger.hpp>
 #include <beman/execution/detail/task/poly.hpp>
 #include <beman/execution/detail/task/promise_env.hpp>
 #include <beman/execution/detail/task/state_rep.hpp>
 #include <beman/execution/detail/task/stop_source.hpp>
 #include <beman/execution/detail/task/sub_visit.hpp>
+#include <beman/execution/detail/task/task_scheduler.hpp>
 
 // ----------------------------------------------------------------------------
 

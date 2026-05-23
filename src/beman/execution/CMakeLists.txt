@@ -195,12 +195,14 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/error_types_of.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/find_allocator.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/handle.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/infallible_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/logger.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/poly.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/promise_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/state_rep.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/stop_source.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/sub_visit.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/task_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/then.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/transform_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/type_list.hpp

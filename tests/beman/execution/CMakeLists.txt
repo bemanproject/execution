@@ -11,6 +11,8 @@ list(
     APPEND execution_tests
     allocator-requirements-general.test
     task-allocator_support.test
+    task-infallible_scheduler.test
+    task_scheduler.test
     exec-affine-on.test
     exec-associate.test
     exec-awaitable.test
