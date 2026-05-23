@@ -1,21 +1,39 @@
 // tests/beman/execution/task_scheduler.test.cpp                         -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <atomic>
+#include <chrono>
+#include <exception>
+#include <latch>
+#include <memory>
+#include <mutex>
+#include <condition_variable>
+#include <optional>
+#include <thread>
+#include <type_traits>
+#include <utility>
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/inplace_stop_source.hpp>
+#include <beman/execution/detail/never_stop_token.hpp>
+#include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/schedule.hpp>
+#include <beman/execution/detail/scheduler.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/set_stopped.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/start.hpp>
+#include <beman/execution/detail/stop_callback_for_t.hpp>
+#include <beman/execution/detail/sync_wait.hpp>
+#include <beman/execution/detail/then.hpp>
 #endif
 #include <beman/execution/detail/task/task_scheduler.hpp>
-#include <atomic>
-#include <condition_variable>
-#include <exception>
-#include <latch>
-#include <mutex>
-#include <optional>
-#include <thread>
-#include <utility>
 
 // ----------------------------------------------------------------------------
 
