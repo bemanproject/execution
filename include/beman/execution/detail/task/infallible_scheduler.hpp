@@ -4,9 +4,34 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_INFALLIBLE_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_INFALLIBLE_SCHEDULER
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.env;
+import beman.execution.detail.schedule;
+import beman.execution.detail.scheduler;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.stop_token_of_t;
+import beman.execution.detail.unstoppable_token;
+#else
+#include <beman/execution/detail/completion_signatures.hpp>
+#include <beman/execution/detail/completion_signatures_of_t.hpp>
+#include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/schedule.hpp>
+#include <beman/execution/detail/scheduler.hpp>
+#include <beman/execution/detail/set_stopped.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/stop_token_of_t.hpp>
+#include <beman/execution/detail/unstoppable_token.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
