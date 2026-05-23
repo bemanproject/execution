@@ -110,13 +110,13 @@ struct thread_context {
                 }
             };
             using operation_state_concept = test_std::operation_state_tag;
-            using token_t                 = decltype(test_std::get_stop_token(test_std::get_env(::std::declval<Receiver>())));
-            using callback_t              = test_std::stop_callback_for_t<token_t, stopper>;
+            using token_t    = decltype(test_std::get_stop_token(test_std::get_env(::std::declval<Receiver>())));
+            using callback_t = test_std::stop_callback_for_t<token_t, stopper>;
 
-            thread_context*                ctxt;
+            thread_context*                 ctxt;
             ::std::remove_cvref_t<Receiver> receiver;
-            thread_context::complete       cmpl;
-            ::std::optional<callback_t>    callback;
+            thread_context::complete        cmpl;
+            ::std::optional<callback_t>     callback;
 
             template <typename R>
             state(auto c, R&& r, thread_context::complete cm) : ctxt(c), receiver(::std::forward<R>(r)), cmpl(cm) {}
@@ -134,7 +134,8 @@ struct thread_context {
 
         struct env {
             thread_context* ctxt;
-            auto query(const test_std::get_completion_scheduler_t<test_std::set_value_t>&) const noexcept -> scheduler {
+            auto            query(const test_std::get_completion_scheduler_t<test_std::set_value_t>&) const noexcept
+                -> scheduler {
                 return scheduler{ctxt};
             }
         };
@@ -189,8 +190,8 @@ stop_env(Token&&) -> stop_env<::std::remove_cvref_t<Token>>;
 template <typename Token>
 struct stop_receiver {
     using receiver_concept = test_std::receiver_tag;
-    Token        token;
-    stop_result& result;
+    Token         token;
+    stop_result&  result;
     ::std::latch* completed{};
 
     auto get_env() const noexcept { return stop_env{this->token}; }
@@ -255,8 +256,10 @@ TEST(task_scheduler) {
 
         ::std::atomic<::std::thread::id> id1{};
         ::std::atomic<::std::thread::id> id2{};
-        test_std::sync_wait(test_std::schedule(sched1) | test_std::then([&id1] { id1 = ::std::this_thread::get_id(); }));
-        test_std::sync_wait(test_std::schedule(sched2) | test_std::then([&id2] { id2 = ::std::this_thread::get_id(); }));
+        test_std::sync_wait(test_std::schedule(sched1) |
+                            test_std::then([&id1] { id1 = ::std::this_thread::get_id(); }));
+        test_std::sync_wait(test_std::schedule(sched2) |
+                            test_std::then([&id2] { id2 = ::std::this_thread::get_id(); }));
         ASSERT(id1 != id2);
         test_std::sync_wait(test_std::schedule(test_detail::task_scheduler(sched1)) |
                             test_std::then([&id1] { ASSERT(id1 == ::std::this_thread::get_id()); }));
@@ -277,9 +280,9 @@ TEST(task_scheduler) {
         {
             ::std::latch completed{1};
             stop_result  result{stop_result::none};
-            auto         state{test_std::connect(
-                test_std::schedule(test_detail::task_scheduler(ctxt1.get_scheduler(thread_context::complete::success))),
-                stop_receiver{test_std::never_stop_token(), result, &completed})};
+            auto         state{test_std::connect(test_std::schedule(test_detail::task_scheduler(
+                                             ctxt1.get_scheduler(thread_context::complete::success))),
+                                         stop_receiver{test_std::never_stop_token(), result, &completed})};
             ASSERT(result == stop_result::none);
             test_std::start(state);
             completed.wait();
