@@ -78,14 +78,11 @@ concept supports_misplaced_allocator = requires(test_resource& resource) {
 };
 
 template <typename T>
-concept supports_resource_pointer_allocator = requires(test_resource& resource) {
-    T::operator new(sizeof(T), std::allocator_arg, &resource);
-};
+concept supports_resource_pointer_allocator =
+    requires(test_resource& resource) { T::operator new(sizeof(T), std::allocator_arg, &resource); };
 
 template <typename Alloc>
-concept constructs_pmr_byte_allocator = requires(Alloc& alloc) {
-    std::pmr::polymorphic_allocator<std::byte>{alloc};
-};
+concept constructs_pmr_byte_allocator = requires(Alloc& alloc) { std::pmr::polymorphic_allocator<std::byte>{alloc}; };
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -109,7 +106,7 @@ TEST(allocator_support) {
 
     [[maybe_unused]] std::unique_ptr<type> unused(new type{});
 
-    test_resource resource{};
+    test_resource                              resource{};
     std::pmr::polymorphic_allocator<std::byte> allocator{&resource};
     ASSERT(resource.outstanding == 0u);
     type* ptr{new (std::allocator_arg, allocator) type{}};

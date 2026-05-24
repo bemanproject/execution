@@ -286,8 +286,8 @@ TEST(task_scheduler) {
             ::std::latch completed{1};
             stop_result  result{stop_result::none};
             auto         state{test_std::connect(test_std::schedule(test_detail::task_scheduler(
-                                             ctxt1.get_scheduler(thread_context::complete::success))),
-                                         stop_receiver{test_std::never_stop_token(), result, &completed})};
+                                                     ctxt1.get_scheduler(thread_context::complete::success))),
+                                                 stop_receiver{test_std::never_stop_token(), result, &completed})};
             ASSERT(result == stop_result::none);
             test_std::start(state);
             completed.wait();
