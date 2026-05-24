@@ -31,9 +31,8 @@ template <typename Alloc>
 using allocator_support_alloc_t = std::remove_cvref_t<Alloc>;
 
 template <typename Alloc>
-using allocator_support_palloc_t =
-    typename std::allocator_traits<allocator_support_alloc_t<Alloc>>::template rebind_alloc<
-        allocator_support_allocation_unit>;
+using allocator_support_palloc_t = typename std::allocator_traits<
+    allocator_support_alloc_t<Alloc>>::template rebind_alloc<allocator_support_allocation_unit>;
 
 template <typename Alloc>
 concept allocator_support_allocator_like = requires { typename allocator_support_alloc_t<Alloc>::value_type; };
@@ -88,7 +87,7 @@ struct allocator_support {
         using palloc_traits = std::allocator_traits<PAlloc>;
 
         allocator_support_header* header{allocator_support::get_header(ptr, size)};
-        auto* palloc_ptr{
+        auto*                     palloc_ptr{
             ::std::launder(reinterpret_cast<PAlloc*>(static_cast<std::byte*>(ptr) + header->palloc_offset))};
         PAlloc      palloc{*palloc_ptr};
         std::size_t count{header->count};
@@ -104,8 +103,8 @@ struct allocator_support {
 
         palloc_t    palloc{alloc};
         std::size_t header_offset{allocator_support::header_offset(size)};
-        std::size_t palloc_offset{allocator_support::align_up(header_offset + sizeof(allocator_support_header),
-                                                              alignof(palloc_t))};
+        std::size_t palloc_offset{
+            allocator_support::align_up(header_offset + sizeof(allocator_support_header), alignof(palloc_t))};
         std::size_t count{(palloc_offset + sizeof(palloc_t) + sizeof(allocator_support_allocation_unit) - 1u) /
                           sizeof(allocator_support_allocation_unit)};
 
@@ -121,9 +120,7 @@ struct allocator_support {
         return ptr;
     }
 
-    static void* operator new(std::size_t size) {
-        return allocator_support::allocate(size, Allocator{});
-    }
+    static void* operator new(std::size_t size) { return allocator_support::allocate(size, Allocator{}); }
 
     template <typename Alloc, typename... A>
         requires allocator_support_allocator_arg<Allocator, Alloc>

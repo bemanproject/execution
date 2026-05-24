@@ -1,18 +1,23 @@
 // tests/beman/execution/task_scheduler.test.cpp                         -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <exception>
 #include <latch>
 #include <memory>
 #include <mutex>
-#include <condition_variable>
 #include <optional>
 #include <thread>
 #include <type_traits>
 #include <utility>
-#include <test/execution.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

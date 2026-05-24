@@ -4,11 +4,16 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_POLY
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_POLY
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <array>
 #include <concepts>
 #include <cstddef>
 #include <new>
 #include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 

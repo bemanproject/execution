@@ -74,7 +74,8 @@ class task_scheduler {
         };
         template <::beman::execution::sender Sender>
         struct concrete : base {
-            using state_t = decltype(::beman::execution::connect(::std::declval<Sender>(), ::std::declval<receiver>()));
+            using state_t =
+                decltype(::beman::execution::connect(::std::declval<Sender>(), ::std::declval<receiver>()));
             state_t state;
 
             template <::beman::execution::sender S>
@@ -85,8 +86,7 @@ class task_scheduler {
         ::beman::execution::detail::poly<base, 16u * sizeof(void*)> state;
 
         template <::beman::execution::sender S>
-        inner_state(S&& s, state_base* b)
-            : state(static_cast<concrete<S>*>(nullptr), ::std::forward<S>(s), b) {}
+        inner_state(S&& s, state_base* b) : state(static_cast<concrete<S>*>(nullptr), ::std::forward<S>(s), b) {}
 
         void start() { this->state->start(); }
     };
@@ -207,7 +207,7 @@ class task_scheduler {
     template <typename Allocator>
     task_scheduler(const task_scheduler& other, Allocator) : scheduler(other.scheduler) {}
     auto operator=(const task_scheduler&) -> task_scheduler& = default;
-    ~task_scheduler()                                       = default;
+    ~task_scheduler()                                        = default;
 
     auto schedule() -> sender { return this->scheduler->schedule(); }
     auto operator==(const task_scheduler&) const -> bool = default;
