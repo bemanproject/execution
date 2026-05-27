@@ -5,6 +5,7 @@
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
+#include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #endif
 
@@ -72,10 +73,10 @@ struct scheduler {
     auto operator==(const scheduler&) const -> bool = default;
 };
 
-struct bad_completion_scheduler {
+struct indirect_completion_scheduler {
     using scheduler_concept = test_std::scheduler_tag;
     auto schedule() -> sender<env<scheduler>> { return {}; }
-    auto operator==(const bad_completion_scheduler&) const -> bool = default;
+    auto operator==(const indirect_completion_scheduler&) const -> bool = default;
 };
 
 template <bool Expect, typename Signal, typename Result, typename Env>
@@ -106,6 +107,6 @@ TEST(exec_sched) {
     test_scheduler<false, no_schedule>();
     test_scheduler<false, not_equality_comparable>();
     test_scheduler<false, not_copy_constructible>();
-    test_scheduler<false, bad_completion_scheduler>();
+    test_scheduler<true, indirect_completion_scheduler>();
     test_scheduler<true, scheduler>();
 }

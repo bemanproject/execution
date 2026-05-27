@@ -16,29 +16,31 @@ import std;
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.apply_sender;
 import beman.execution.detail.as_except_ptr;
+import beman.execution.detail.compl_domain;
 import beman.execution.detail.connect;
 import beman.execution.detail.decayed_tuple;
+import beman.execution.detail.default_domain;
 import beman.execution.detail.get_delegation_scheduler;
-import beman.execution.detail.get_domain_early;
 import beman.execution.detail.get_scheduler;
 import beman.execution.detail.receiver;
 import beman.execution.detail.run_loop;
 import beman.execution.detail.sender_in;
-import beman.execution.detail.sender_in;
+import beman.execution.detail.set_value;
 import beman.execution.detail.start;
 import beman.execution.detail.value_types_of_t;
 #else
 #include <beman/execution/detail/apply_sender.hpp>
 #include <beman/execution/detail/as_except_ptr.hpp>
+#include <beman/execution/detail/compl_domain.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
+#include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/get_delegation_scheduler.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/run_loop.hpp>
 #include <beman/execution/detail/sender_in.hpp>
-#include <beman/execution/detail/sender_in.hpp>
+#include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
 #endif
@@ -115,14 +117,16 @@ struct sync_wait_t {
             typename ::beman::execution::detail::sync_wait_result_type<Sender>;
             {
                 ::beman::execution::apply_sender(
-                    ::beman::execution::detail::get_domain_early(std::forward<Sender>(sender)),
+                    ::beman::execution::detail::compl_domain<::beman::execution::set_value_t>(
+                        sender, ::beman::execution::detail::sync_wait_env{}),
                     self,
                     ::std::forward<Sender>(sender))
             } -> ::std::same_as<::beman::execution::detail::sync_wait_result_type<Sender>>;
         }
     auto operator()(Sender&& sender) const {
-        auto domain{::beman::execution::detail::get_domain_early(sender)};
-        return ::beman::execution::apply_sender(domain, *this, ::std::forward<Sender>(sender));
+        auto dom = ::beman::execution::detail::compl_domain<::beman::execution::set_value_t>(
+            sender, ::beman::execution::detail::sync_wait_env{});
+        return ::beman::execution::apply_sender(dom, *this, ::std::forward<Sender>(sender));
     }
 };
 } // namespace beman::execution::detail

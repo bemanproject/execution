@@ -162,8 +162,7 @@ TEST(affine_on) {
     static_assert(test_std::receiver<decltype(r)>);
     auto s{test_std::get_scheduler(test_std::get_env(r))};
     assert(s == loop.get_scheduler());
-    auto st{test_std::transform_sender(
-        test_std::default_domain(), test_std::affine_on(test_std::just(42)), test_std::get_env(r))};
+    auto st{test_std::transform_sender(test_std::affine_on(test_std::just(42)), test_std::get_env(r))};
     test_std::connect(std::move(st), std::move(r));
     auto s0{test_std::connect(test_std::affine_on(test_std::just(42)), receiver(loop.get_scheduler()))};
 

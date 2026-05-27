@@ -22,12 +22,9 @@ import beman.execution.detail;
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/make_env.hpp>
 #include <beman/execution/detail/join_env.hpp>
-#include <beman/execution/detail/sched_attrs.hpp>
 #include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/query_with_default.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
-#include <beman/execution/detail/get_domain_late.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/state_type.hpp>
@@ -260,30 +257,6 @@ auto test_join_env() -> void {
     ASSERT(cenv.query(custom_query<2>, 13) == 30);
 }
 
-auto test_sched_attrs() -> void {
-    scheduler sched{17};
-    ASSERT(sched.query(test_std::get_domain) == domain{17});
-
-    auto attrs{test_detail::sched_attrs(sched)};
-    static_assert(test_detail::queryable<decltype(attrs)>);
-
-    auto sched_error{attrs.query(test_std::get_completion_scheduler<test_std::set_error_t>)};
-    static_assert(::std::same_as<scheduler, decltype(sched_error)>);
-    ASSERT(sched_error == sched);
-
-    auto sched_stopped{attrs.query(test_std::get_completion_scheduler<test_std::set_stopped_t>)};
-    static_assert(::std::same_as<scheduler, decltype(sched_stopped)>);
-    ASSERT(sched_stopped == sched);
-
-    auto sched_value{attrs.query(test_std::get_completion_scheduler<test_std::set_value_t>)};
-    static_assert(::std::same_as<scheduler, decltype(sched_value)>);
-    ASSERT(sched_value == sched);
-
-    auto dom{attrs.query(test_std::get_domain)};
-    static_assert(::std::same_as<domain, decltype(dom)>);
-    ASSERT(dom == domain{17});
-}
-
 auto test_sched_env() -> void {
     scheduler sched{17};
     ASSERT(sched.query(test_std::get_domain) == domain{17});
@@ -389,11 +362,6 @@ auto test_completion_domain() -> void {
     static_assert(std::same_as<cd::domain,
                                decltype(test_std::get_domain(test_std::get_completion_scheduler<test_std::set_value_t>(
                                    cd::env<cd::common>{})))>);
-    static_assert(std::same_as<cd::domain, decltype(test_detail::completion_domain((cd::sender<cd::common>{})))>);
-    static_assert(std::same_as<cd::domain, decltype(test_detail::completion_domain((cd::sender<cd::one_missing>{})))>);
-    static_assert(std::same_as<cd::domain, decltype(test_detail::completion_domain((cd::sender<cd::two_missing>{})))>);
-    static_assert(
-        std::same_as<test_std::default_domain, decltype(test_detail::completion_domain((cd::sender<cd::none>{})))>);
 }
 
 auto test_query_with_default() -> void {
@@ -401,7 +369,8 @@ auto test_query_with_default() -> void {
     static_assert(std::same_as<domain, decltype(result1)>);
     ASSERT(result1.value == 43);
 
-    auto result2{test_detail::query_with_default(test_std::get_domain, test_std::env<>(), default_domain{74})};
+    auto result2{
+        test_detail::query_with_default(test_std::get_completion_domain<>, test_std::env<>(), default_domain{74})};
     static_assert(std::same_as<default_domain, decltype(result2)>);
     ASSERT(result2.default_value == 74);
 }
@@ -411,11 +380,9 @@ auto test_get_domain_early() -> void {
         using sender_concept = test_std::sender_tag;
     };
     static_assert(test_std::sender<plain_sender>);
-    static_assert(std::same_as<test_std::default_domain, decltype(test_detail::get_domain_early(plain_sender{}))>);
 
     namespace cd = completion_domain;
     static_assert(test_std::sender<cd::sender<cd::domain>>);
-    static_assert(std::same_as<cd::domain, decltype(test_detail::get_domain_early(cd::sender<cd::domain>{}))>);
 
     struct sender_with_domain {
         using sender_concept = test_std::sender_tag;
@@ -428,15 +395,12 @@ auto test_get_domain_early() -> void {
     static_assert(test_std::sender<sender_with_domain>);
     static_assert(std::same_as<sender_with_domain::env, decltype(test_std::get_env(sender_with_domain{}))>);
     static_assert(std::same_as<sender_with_domain::domain, decltype(test_std::get_domain(sender_with_domain::env{}))>);
-    static_assert(
-        std::same_as<sender_with_domain::domain, decltype(test_detail::get_domain_early(sender_with_domain{}))>);
 }
 
 template <typename Expect>
 auto test_get_domain_late(auto sender, auto env) -> void {
     static_assert(test_std::sender<decltype(sender)>);
     static_assert(test_detail::queryable<decltype(env)>);
-    static_assert(std::same_as<Expect, decltype(test_detail::get_domain_late(sender, env))>);
 }
 
 struct get_domain_late_scheduler {
@@ -444,6 +408,11 @@ struct get_domain_late_scheduler {
     struct env {
         template <typename Tag>
         auto query(const test_std::get_completion_scheduler_t<Tag>&) const noexcept -> get_domain_late_scheduler {
+            return {};
+        }
+
+        template <typename Tag>
+        auto query(const test_std::get_completion_domain_t<Tag>&) const noexcept -> dom {
             return {};
         }
     };
@@ -496,8 +465,8 @@ auto test_get_domain_late() -> void {
     };
     static_assert(test_std::sender<scheduler_sender>);
     static_assert(std::same_as<get_domain_late_scheduler::env, decltype(test_std::get_env(scheduler_sender{}))>);
-    static_assert(
-        std::same_as<get_domain_late_scheduler::dom, decltype(test_detail::completion_domain(scheduler_sender{}))>);
+    static_assert(std::same_as<get_domain_late_scheduler::dom,
+                               decltype(test_detail::compl_domain(scheduler_sender{}, test_std::env<>{}))>);
     test_get_domain_late<get_domain_late_scheduler::dom>(scheduler_sender{}, test_std::env<>{});
 
     struct env_sender {
@@ -1145,8 +1114,7 @@ auto test_basic_sender() -> void {
     static_assert(test_std::sender<tagged_sender>);
     static_assert(std::same_as<basic_sender_tag, test_std::tag_of_t<tagged_sender>>);
     static_assert(
-        std::same_as<basic_sender_tag::sender,
-                     decltype(test_std::transform_sender(test_std::default_domain{}, tagged_sender{}, local_env{}))>);
+        std::same_as<basic_sender_tag::sender, decltype(test_std::transform_sender(tagged_sender{}, local_env{}))>);
 
     using basic_sender = test_detail::basic_sender<basic_sender_tag, data, sender0>;
     static_assert(test_std::sender<basic_sender>);
@@ -1161,8 +1129,7 @@ auto test_basic_sender() -> void {
 
     static_assert(std::same_as<basic_sender_tag, test_std::tag_of_t<basic_sender>>);
     static_assert(
-        std::same_as<basic_sender_tag::sender,
-                     decltype(test_std::transform_sender(test_std::default_domain{}, basic_sender{}, local_env{}))>);
+        std::same_as<basic_sender_tag::sender, decltype(test_std::transform_sender(basic_sender{}, local_env{}))>);
     static_assert(test_std::dependent_sender<sender0>);
     // According to https://eel.is/c++draft/exec#adapt.general-3.5, basic_sender shall be a dependent-sender
     static_assert(test_std::dependent_sender<basic_sender>);
@@ -1340,7 +1307,6 @@ TEST(exec_snd_expos) {
     test_fwd_env();
     test_make_env();
     test_join_env();
-    test_sched_attrs();
     test_sched_env();
     test_completion_domain();
     test_query_with_default();

@@ -134,6 +134,23 @@ doc:
 	./bin/mk-doc.py docs/*.mds
 	doxygen docs/Doxyfile
 
+LLVM_VERSION=22.1.0
+DEV_DIR=build/dev-$(shell uname -s)
+TESTCASE = *
+DEV_TEST_OPTION=-DBEMAN_EXECUTION_TEST_CASE=$(TESTCASE)
+
+dev-config:
+	PATH=/opt/llvm-$(LLVM_VERSION)/bin:$$PATH CXX=clang++ cmake -B $(DEV_DIR) -G Ninja -DBEMAN_EXECUTION_BUILD_EXAMPLES=OFF -DBEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE=OFF $(DEV_TEST_OPTION)
+
+dev-build: dev-config
+	PATH=/opt/llvm-$(LLVM_VERSION)/bin:$$PATH CXX=clang++ cmake --build $(DEV_DIR)
+
+dev-test: dev-build
+	PATH=/opt/llvm-$(LLVM_VERSION)/bin:$$PATH CXX=clang++ ctest --test-dir $(DEV_DIR) -R beman.execution.$(TESTCASE).test
+
+dev: dev-test
+
+
 # $(SANITIZERS):
 # 	$(MAKE) SANITIZER=$@
 

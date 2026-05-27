@@ -24,6 +24,7 @@ import beman.execution.detail.execution_policy;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
+import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_delegation_scheduler;
@@ -32,6 +33,7 @@ import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
 import beman.execution.detail.get_stop_token;
+import beman.execution.detail.indeterminate_domain;
 import beman.execution.detail.inline_scheduler;
 import beman.execution.detail.into_variant;
 import beman.execution.detail.just;
@@ -86,6 +88,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_await_completion_adaptor.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_delegation_scheduler.hpp>
@@ -94,6 +97,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/indeterminate_domain.hpp>
 #include <beman/execution/detail/inline_scheduler.hpp>
 #include <beman/execution/detail/into_variant.hpp>
 #include <beman/execution/detail/just.hpp>

@@ -35,7 +35,6 @@ import beman.execution.detail.get_env;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_domain;
-import beman.execution.detail.get_domain_early;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_env;
@@ -55,7 +54,6 @@ import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
 import beman.execution.detail.start;
-import beman.execution.detail.transform_sender;
 import beman.execution.detail.type_list;
 #else
 #include <beman/execution/detail/allocator_aware_move.hpp>
@@ -69,7 +67,6 @@ import beman.execution.detail.type_list;
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_env.hpp>
@@ -87,7 +84,6 @@ import beman.execution.detail.type_list;
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/type_list.hpp>
 #endif
 
@@ -122,10 +118,7 @@ struct let_t {
     }
     template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
     auto operator()(Sender&& sender, Fun&& fun) const {
-        auto domain(::beman::execution::detail::get_domain_early(sender));
-        return ::beman::execution::transform_sender(
-            domain,
-            ::beman::execution::detail::make_sender(*this, ::std::forward<Fun>(fun), std::forward<Sender>(sender)));
+        return ::beman::execution::detail::make_sender(*this, ::std::forward<Fun>(fun), std::forward<Sender>(sender));
     }
 
     template <typename Sender>

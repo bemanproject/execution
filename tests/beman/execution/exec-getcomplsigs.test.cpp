@@ -5,7 +5,6 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
-import beman.execution.detail.get_domain_late; //-dk:TODO remove when get_domain_late is removed
 #else
 #include <beman/execution/execution.hpp>
 #endif
@@ -80,15 +79,8 @@ auto test_get_completion_signatures() {
     });
 
     static_assert(std::same_as<domain, decltype(test_std::get_domain(env_with_domain{}))>);
-    static_assert(
-        std::same_as<sender_from_domain,
-                     decltype(test_std::transform_sender(domain{}, no_signatures_sender<int>{}, env_with_domain{}))>);
     static_assert(std::same_as<sender_from_domain,
-                               decltype(::beman::execution::transform_sender(
-                                   ::beman::execution::detail::get_domain_late(
-                                       ::std::declval<no_signatures_sender<int>>(), env_with_domain{}),
-                                   no_signatures_sender<int>{},
-                                   env_with_domain{}))>);
+                               decltype(test_std::transform_sender(no_signatures_sender<int>{}, env_with_domain{}))>);
     static_assert(std::same_as<signatures,
                                decltype(test_std::get_completion_signatures<sender_from_domain, env_with_domain>())>);
     static_assert(requires {

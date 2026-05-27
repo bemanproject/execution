@@ -5,10 +5,8 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
-import beman.execution.detail.get_domain_late;
 #else
 #include <beman/execution/detail/continues_on.hpp>
-#include <beman/execution/detail/get_domain_late.hpp>
 #include <beman/execution/execution.hpp>
 #endif
 
@@ -78,8 +76,6 @@ auto test_constraints(Scheduler&& scheduler, Sender&& sender) {
         test::check_type<custom_domain&>(domain);
 
         auto s{test_std::continues_on(::std::forward<Sender>(sender), ::std::forward<Scheduler>(scheduler))};
-        auto late{test_detail::get_domain_late(s, test_std::env<>{})};
-        //-dk:TODO test::check_type<custom_domain&>(late);
     }
 }
 

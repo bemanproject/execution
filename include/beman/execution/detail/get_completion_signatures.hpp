@@ -18,7 +18,6 @@ import beman.execution.detail.await_result_type;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env_promise;
-import beman.execution.detail.get_domain_late;
 import beman.execution.detail.is_awaitable;
 import beman.execution.detail.is_constant;
 import beman.execution.detail.set_error;
@@ -31,7 +30,6 @@ import beman.execution.detail.valid_completion_signatures;
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/dependent_sender_error.hpp>
 #include <beman/execution/detail/env_promise.hpp>
-#include <beman/execution/detail/get_domain_late.hpp>
 #include <beman/execution/detail/is_awaitable.hpp>
 #include <beman/execution/detail/is_constant.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
@@ -51,10 +49,7 @@ struct get_completion_signatures_new_sender<Sender> {
 
 template <typename Sender, typename Env>
 struct get_completion_signatures_new_sender<Sender, Env> {
-    using type = decltype(::beman::execution::transform_sender(
-        ::beman::execution::detail::get_domain_late(::std::declval<Sender>(), ::std::declval<Env>()),
-        ::std::declval<Sender>(),
-        ::std::declval<Env>()));
+    using type = decltype(::beman::execution::transform_sender(::std::declval<Sender>(), ::std::declval<Env>()));
 };
 
 template <typename Sender, typename... Env>

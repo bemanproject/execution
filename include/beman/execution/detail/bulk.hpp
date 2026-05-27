@@ -21,7 +21,6 @@ import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.execution_policy;
 import beman.execution.detail.forward_like;
-import beman.execution.detail.get_domain_early;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.unique;
@@ -31,7 +30,6 @@ import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_value;
-import beman.execution.detail.transform_sender;
 #else
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
@@ -39,7 +37,6 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/execution_policy.hpp>
 #include <beman/execution/detail/forward_like.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
@@ -49,7 +46,6 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_value.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -120,13 +116,11 @@ struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsCh
                  ::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)
     auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const {
-        return ::beman::execution::transform_sender(
-            ::beman::execution::detail::get_domain_early(sndr),
-            ::beman::execution::detail::make_sender(
-                *this,
-                ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
-                    ::std::forward<Policy>(policy), shape, ::std::forward<F>(f)},
-                ::std::forward<Sender>(sndr)));
+        return ::beman::execution::detail::make_sender(
+            *this,
+            ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
+                ::std::forward<Policy>(policy), shape, ::std::forward<F>(f)},
+            ::std::forward<Sender>(sndr));
     }
 
   private:
@@ -210,17 +204,15 @@ struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
                  ::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)
     auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const {
-        return ::beman::execution::transform_sender(
-            ::beman::execution::detail::get_domain_early(sndr),
-            ::beman::execution::detail::make_sender(
-                *this,
-                ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
-                    ::std::forward<Policy>(policy), shape, ::std::forward<F>(f)},
-                ::std::forward<Sender>(sndr)));
+        return ::beman::execution::detail::make_sender(
+            *this,
+            ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
+                ::std::forward<Policy>(policy), shape, ::std::forward<F>(f)},
+            ::std::forward<Sender>(sndr));
     }
 
-    template <::beman::execution::detail::sender_for<bulk_t> Sender, typename... Env>
-    auto transform_sender(Sender&& sndr, Env&&...) const {
+    template <::beman::execution::detail::sender_for<bulk_t> Sender, typename Env>
+    auto transform_sender(::beman::execution::set_value_t, Sender&& sndr, const Env&) const {
         auto data  = ::beman::execution::detail::forward_like<Sender>(sndr.template get<1>());
         auto child = ::beman::execution::detail::forward_like<Sender>(sndr.template get<2>());
 
