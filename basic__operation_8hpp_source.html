@@ -167,27 +167,31 @@ $(document).ready(function(){initNavTree('basic__operation_8hpp_source.html','')
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>              <span class="keyword">this</span>, ::std::forward&lt;Sender&gt;(sender), ::beman::execution::detail::indices_for&lt;Sender&gt;())) {}</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// NOLINTEND(bugprone-use-after-move,hicpp-invalid-access-moved)</span></div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">auto</span> start() &amp; <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        ::std::invoke(</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            [<span class="keyword">this</span>]&lt;::std::size_t... I&gt;(::std::index_sequence&lt;I...&gt;) {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                ::beman::execution::detail::get_impls_for&lt;tag_t&gt;::start()(</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                    this-&gt;state, this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>, this-&gt;inner_ops.template get&lt;I&gt;()...);</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            },</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            ::std::make_index_sequence&lt;inner_ops_t::size()&gt;{});</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>};</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>basic_operation(Sender&amp;&amp;, Receiver&amp;&amp;) -&gt; basic_operation&lt;Sender&amp;&amp;, Receiver&gt;;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_OPERATION</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    basic_operation(<span class="keyword">const</span> basic_operation&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">auto</span> operator=(<span class="keyword">const</span> basic_operation&amp;) -&gt; basic_operation&amp; = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keyword">auto</span> start() &amp; <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        ::std::invoke(</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            [<span class="keyword">this</span>]&lt;::std::size_t... I&gt;(::std::index_sequence&lt;I...&gt;) {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                ::beman::execution::detail::get_impls_for&lt;tag_t&gt;::start()(</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                    this-&gt;state, this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>, this-&gt;inner_ops.template get&lt;I&gt;()...);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            },</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            ::std::make_index_sequence&lt;inner_ops_t::size()&gt;{});</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    }</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>};</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Receiver&gt;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>basic_operation(Sender&amp;&amp;, Receiver&amp;&amp;) -&gt; basic_operation&lt;Sender&amp;&amp;, Receiver&gt;;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_BASIC_OPERATION</span></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1detail_1_1valid__specialization_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1detail_1_1valid__specialization.html">beman::execution::detail::valid_specialization</a></div><div class="ttdef"><b>Definition:</b> valid_specialization.hpp:13</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_1_1detail_html"><div class="ttname"><a href="namespacebeman_1_1execution_1_1detail.html">beman::execution::detail</a></div><div class="ttdef"><b>Definition:</b> affine_on.hpp:70</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:70</div></div>
-<div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:70</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_1_1detail_html"><div class="ttname"><a href="namespacebeman_1_1execution_1_1detail.html">beman::execution::detail</a></div><div class="ttdef"><b>Definition:</b> affine_on.hpp:68</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:68</div></div>
+<div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine_on.hpp:68</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1basic__state_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1basic__state.html">beman::execution::detail::basic_state</a></div><div class="ttdef"><b>Definition:</b> basic_state.hpp:35</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1impls__for_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1impls__for.html">beman::execution::detail::impls_for</a></div><div class="ttdef"><b>Definition:</b> impls_for.hpp:18</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1operation__state__tag_html"><div class="ttname"><a href="structbeman_1_1execution_1_1operation__state__tag.html">beman::execution::operation_state_tag</a></div><div class="ttdef"><b>Definition:</b> operation_state.hpp:23</div></div>

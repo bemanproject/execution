@@ -103,12 +103,9 @@ $(document).ready(function(){initNavTree('conceptbeman_1_1execution_1_1scheduler
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Scheduler&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="conceptbeman_1_1execution_1_1scheduler.html">beman::execution::scheduler</a> =  ::beman::execution::detail::almost_scheduler&lt;Scheduler&gt; &amp;&amp; <span class="keyword">requires</span>(Scheduler&amp;&amp; sched) {</div>
-<div class="line">    {</div>
-<div class="line">        ::beman::execution::get_completion_scheduler&lt;::beman::execution::set_value_t&gt;(</div>
-<div class="line">            ::beman::execution::get_env(::beman::execution::schedule(::std::forward&lt;Scheduler&gt;(sched))))</div>
-<div class="line">    } -&gt; ::beman::execution::detail::decayed_same_as&lt;Scheduler&gt;;</div>
-<div class="line">}</div>
-<div class="ttc" id="aconceptbeman_1_1execution_1_1scheduler_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1scheduler.html">beman::execution::scheduler</a></div><div class="ttdef"><b>Definition:</b> scheduler.hpp:35</div></div>
+<div class="line">    { ::beman::execution::schedule(::std::forward&lt;Scheduler&gt;(sched)) } -&gt; ::beman::execution::sender;</div>
+<div class="line">} &amp;&amp; ::std::equality_comparable&lt;::std::remove_cvref_t&lt;Scheduler&gt;&gt; &amp;&amp; ::std::copyable&lt;::std::remove_cvref_t&lt;Scheduler&gt;&gt;</div>
+<div class="ttc" id="aconceptbeman_1_1execution_1_1scheduler_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1scheduler.html">beman::execution::scheduler</a></div><div class="ttdef"><b>Definition:</b> scheduler.hpp:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -10,13 +10,11 @@ var annotated_dup =
         [ "env", "structbeman_1_1execution_1_1env.html", null ],
         [ "get_allocator_t", "structbeman_1_1execution_1_1get__allocator__t.html", null ],
         [ "get_await_completion_adaptor_t", "structbeman_1_1execution_1_1get__await__completion__adaptor__t.html", null ],
-        [ "get_completion_scheduler_t", "structbeman_1_1execution_1_1get__completion__scheduler__t.html", null ],
         [ "get_delegation_scheduler_t", "structbeman_1_1execution_1_1get__delegation__scheduler__t.html", null ],
-        [ "get_domain_t", "structbeman_1_1execution_1_1get__domain__t.html", null ],
         [ "get_env_t", "structbeman_1_1execution_1_1get__env__t.html", null ],
         [ "get_forward_progress_guarantee_t", "structbeman_1_1execution_1_1get__forward__progress__guarantee__t.html", null ],
-        [ "get_scheduler_t", "structbeman_1_1execution_1_1get__scheduler__t.html", null ],
         [ "get_stop_token_t", "structbeman_1_1execution_1_1get__stop__token__t.html", null ],
+        [ "indeterminate_domain", "structbeman_1_1execution_1_1indeterminate__domain.html", null ],
         [ "inline_scheduler", "structbeman_1_1execution_1_1inline__scheduler.html", "structbeman_1_1execution_1_1inline__scheduler" ],
         [ "inplace_stop_callback", "classbeman_1_1execution_1_1inplace__stop__callback.html", null ],
         [ "inplace_stop_source", "classbeman_1_1execution_1_1inplace__stop__source.html", null ],
@@ -51,6 +49,11 @@ var annotated_dup =
         [ "unsequenced_policy", "structbeman_1_1execution_1_1unsequenced__policy.html", null ],
         [ "with_awaitable_senders", "structbeman_1_1execution_1_1with__awaitable__senders.html", null ]
       ] ]
+    ] ],
+    [ "std", null, [
+      [ "common_type< D, ::beman::execution::indeterminate_domain< Domains... > >", "structstd_1_1common__type_3_01D_00_01_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains_8_8_8_01_4_01_4.html", null ],
+      [ "common_type<::beman::execution::indeterminate_domain< Domains... >, D >", "structstd_1_1common__type_3_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains_8_8_8_01_4_00_01D_01_4.html", null ],
+      [ "common_type<::beman::execution::indeterminate_domain< Domains1... >, ::beman::execution::indeterminate_domain< Domains2... > >", "structstd_1_1common__type_3_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains1_8_8_8_0165f01b763af7a8575fe9cb0bab769a35.html", null ]
     ] ],
     [ "tst", null, [
       [ "add_set_value", "structtst_1_1add__set__value.html", "structtst_1_1add__set__value" ],

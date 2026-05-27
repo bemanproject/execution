@@ -126,11 +126,11 @@ Collaboration diagram for beman::execution::env&lt; Envs &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7ea76d112e634d6177e5ad77114e1805"><td class="memTemplParams" colspan="2"><a id="a7ea76d112e634d6177e5ad77114e1805" name="a7ea76d112e634d6177e5ad77114e1805"></a>
-template&lt;typename Q &gt; <br />
-requires (::beman::execution::detail::has_query&lt;Envs, Q&gt; || ...)</td></tr>
-<tr class="memitem:a7ea76d112e634d6177e5ad77114e1805"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>query</b> (Q q) const noexcept -&gt; decltype(auto)</td></tr>
-<tr class="separator:a7ea76d112e634d6177e5ad77114e1805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2db8f83d7a03d1b69ade0f3bb7047cc"><td class="memTemplParams" colspan="2"><a id="ad2db8f83d7a03d1b69ade0f3bb7047cc" name="ad2db8f83d7a03d1b69ade0f3bb7047cc"></a>
+template&lt;typename Q , typename... Args&gt; <br />
+requires (::beman::execution::detail::has_query&lt;Envs, Q, Args...&gt; || ...)</td></tr>
+<tr class="memitem:ad2db8f83d7a03d1b69ade0f3bb7047cc"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>query</b> (Q q, Args &amp;&amp;... args) const noexcept -&gt; decltype(auto)</td></tr>
+<tr class="separator:ad2db8f83d7a03d1b69ade0f3bb7047cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
