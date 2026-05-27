@@ -74,7 +74,7 @@
         "_debug-base"
       ],
       "cacheVariables": {
-        "BEMAN_USE_STD_MODULE": true,
+        "BEMAN_USE_STD_MODULE": false,
         "CMAKE_TOOLCHAIN_FILE": "infra/cmake/llvm-libc++-toolchain.cmake"
       },
       "environment": {
@@ -100,6 +100,7 @@
     },
     {
       "name": "appleclang-debug",
+      "hidden": true,
       "displayName": "Appleclang Debug Build",
       "inherits": [
         "_root-config",
@@ -113,6 +114,7 @@
     },
     {
       "name": "appleclang-release",
+      "hidden": true,
       "displayName": "Appleclang Release Build",
       "inherits": [
         "_root-config",
@@ -161,7 +163,11 @@
     {
       "name": "_root-build",
       "hidden": true,
-      "jobs": 0
+      "jobs": 0,
+      "targets": [
+        "all_verify_interface_header_sets",
+        "all"
+      ]
     },
     {
       "name": "gcc-debug",
