@@ -49,7 +49,6 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/common.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/common_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/compl_domain.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signature.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures_for.hpp
