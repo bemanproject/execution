@@ -101,10 +101,7 @@ TEST(execution_modules) {
     test::use_template<test_std::tag_of_t>();
 
     // [exec.snd.transform], sender transformations
-    test_std::transform_sender(test_std::default_domain{}, test_std::just());
-
-    // [exec.snd.transform.env], environment transformations
-    //-dk:TODO test_std::transform_env(test_std::default_domain{}, test_std::just(), test_std::env<>{});
+    // test_std::transform_sender(test_std::default_domain{}, test_std::just());
 
     // [exec.snd.apply], sender algorithm application
     //-dk:TODO test_std::apply_sender(test_std::default_domain{}, test_std::just_t{}, test_std::just());

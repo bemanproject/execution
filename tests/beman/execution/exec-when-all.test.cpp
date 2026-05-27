@@ -206,7 +206,7 @@ auto test_when_all() -> void {
     test_when_all_available<false>(multi_sender<test_std::set_value_t(), test_std::set_value_t(int)>());
     test_when_all_available<false>(multi_sender<test_std::set_error_t(int)>());
     test_when_all_available<true>(domain_sender<domain<0>>(), domain_sender<domain<0>>());
-    test_when_all_available<false>(domain_sender<domain<0>>(), domain_sender<domain<1>>());
+    test_when_all_available<true>(domain_sender<domain<0>>(), domain_sender<domain<1>>());
 
     test_when_all_breathing();
 

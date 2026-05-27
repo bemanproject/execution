@@ -26,6 +26,19 @@ query_with_default(Tag, const Env&, Value&& value) noexcept(noexcept(static_cast
     -> decltype(auto) {
     return static_cast<Value>(std::forward<Value>(value));
 }
+
+template <typename Tag, typename DefaultValue, typename Env, typename... Args>
+    requires requires(const Tag& tag, const Env& env, Args&&... args) { tag(env, ::std::forward<Args>(args)...); }
+constexpr auto call_with_default(Tag, DefaultValue&&, const Env& env, Args&&... args) noexcept(
+    noexcept(Tag()(env, ::std::forward<Args>(args)...))) -> decltype(auto) {
+    return Tag()(env, ::std::forward<Args>(args)...);
+}
+
+template <typename Tag, typename DefaultValue, typename Env, typename... Args>
+constexpr auto call_with_default(Tag, DefaultValue&& value, const Env&, const Args&...) noexcept(
+    noexcept(static_cast<DefaultValue>(std::forward<DefaultValue>(value)))) -> decltype(auto) {
+    return static_cast<DefaultValue>(std::forward<DefaultValue>(value));
+}
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------

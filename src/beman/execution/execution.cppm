@@ -20,6 +20,7 @@ export import beman.execution.detail.connect_result_t; // [exec.connect], the co
 import beman.execution.detail.continues_on;
 import beman.execution.detail.counting_scope;
 import beman.execution.detail.default_domain;
+export import beman.execution.detail.indeterminate_domain;
 export import beman.execution.detail.env;
 export import beman.execution.detail.env_of_t;
 export import beman.execution.detail.error_types_of_t; // [exec.getcomplsigs], completion signatures
@@ -27,6 +28,7 @@ export import beman.execution.detail.execution_policy;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
+export import beman.execution.detail.get_completion_domain;
 export import beman.execution.detail.get_completion_scheduler;
 export import beman.execution.detail.get_completion_signatures; // [exec.getcomplsigs], completion signatures
 import beman.execution.detail.get_delegation_scheduler;

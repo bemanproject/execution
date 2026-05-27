@@ -22,7 +22,6 @@ import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.env;
 import beman.execution.detail.forward_like;
-import beman.execution.detail.get_domain_early;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.nothrow_callable;
@@ -32,19 +31,16 @@ import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
 import beman.execution.detail.start;
-import beman.execution.detail.transform_sender;
 import beman.execution.detail.valid_completion_signatures;
 #else
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/nothrow_callable.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -108,12 +104,8 @@ associate_data(Token, Sender&&) -> associate_data<Token, Sender>;
 struct associate_t {
     template <::beman::execution::sender Sender, ::beman::execution::scope_token Token>
     auto operator()(Sender&& sender, Token token) const {
-        auto domain(::beman::execution::detail::get_domain_early(sender));
-        return ::beman::execution::transform_sender(
-            domain,
-            ::beman::execution::detail::make_sender(
-                *this,
-                ::beman::execution::detail::associate_data(::std::move(token), ::std::forward<Sender>(sender))));
+        return ::beman::execution::detail::make_sender(
+            *this, ::beman::execution::detail::associate_data(::std::move(token), ::std::forward<Sender>(sender)));
     }
 
     template <::beman::execution::scope_token Token>
@@ -153,8 +145,8 @@ struct associate_t {
             explicit op_state(::std::pair<assoc_t, sender_ref_t> parts, Receiver& r)
                 : assoc(::std::move(parts.first)) {
                 if (assoc) {
-                    ::std::construct_at(::std::addressof(op),
-                                        ::beman::execution::connect(::std::move(*parts.second), ::std::move(r)));
+                    ::new (static_cast<void*>(::std::addressof(op)))
+                        op_t(::beman::execution::connect(::std::move(*parts.second), ::std::move(r)));
                 } else {
                     rcvr = ::std::addressof(r);
                 }

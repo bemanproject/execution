@@ -16,6 +16,28 @@ import beman.execution;
 
 // ----------------------------------------------------------------------------
 
+namespace {
+struct extra_arg {
+    int value{};
+};
+
+struct multi_arg_query_t {
+    constexpr auto operator()(const auto& e) const noexcept(noexcept(e.query(*this))) -> decltype(e.query(*this)) {
+        return e.query(*this);
+    }
+    constexpr auto operator()(const auto& e, extra_arg a) const noexcept(noexcept(e.query(*this, a)))
+        -> decltype(e.query(*this, a)) {
+        return e.query(*this, a);
+    }
+};
+constexpr multi_arg_query_t multi_arg_query{};
+
+struct multi_arg_env {
+    auto query(const multi_arg_query_t&) const noexcept { return 42; }
+    auto query(const multi_arg_query_t&, extra_arg a) const noexcept { return a.value; }
+};
+} // namespace
+
 TEST(env) {
     test_std::inplace_stop_source    source{};
     [[maybe_unused]] test_std::env<> e0{};
@@ -28,4 +50,15 @@ TEST(env) {
     assert(s2 == source.get_token());
 
     static_assert(not std::is_assignable_v<test_std::env<>, test_std::env<>>);
+
+    // P3826R5: env::query now accepts extra arguments (Args&&...)
+    // The extra args are forwarded to the first matching sub-environment
+    test_std::env e3{multi_arg_env{}};
+    ASSERT(e3.query(multi_arg_query) == 42);
+    ASSERT(e3.query(multi_arg_query, extra_arg{99}) == 99);
+
+    // Test env with prop that accepts extra args
+    test_std::env e4{test_std::prop(test_std::get_allocator, std::allocator<int>{}), multi_arg_env{}};
+    ASSERT(e4.query(multi_arg_query) == 42);
+    ASSERT(e4.query(multi_arg_query, extra_arg{7}) == 7);
 }

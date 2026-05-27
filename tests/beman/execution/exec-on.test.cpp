@@ -43,14 +43,8 @@ auto test_interface(Sch sch, Sndr sndr, Closure closure) -> void {
 }
 
 template <test_detail::sender_for<test_std::on_t> OutSndr>
-auto test_transform_env(OutSndr out_sndr) -> void {
-    auto e{test_std::on.transform_env(out_sndr, test_std::env<>{})};
-    test::use(e);
-}
-
-template <test_detail::sender_for<test_std::on_t> OutSndr>
 auto test_transform_sender(OutSndr out_sndr) -> void {
-    auto s{test_std::on.transform_sender(std::move(out_sndr), test_std::env<>{})};
+    auto s{test_std::on.transform_sender(test_std::set_value, std::move(out_sndr), test_std::env<>{})};
     static_assert(test_std::sender<decltype(s)>);
     auto ts{std::move(s) | test_std::then([](auto&&...) {})};
     static_assert(test_std::sender<decltype(ts)>);
@@ -74,10 +68,6 @@ TEST(exec_on) {
     static_assert(test_detail::is_sender_adaptor_closure<decltype(test_std::then([] {}))>);
     static_assert(not test_detail::is_sender_adaptor_closure<decltype(test_std::just([] {}))>);
     test_interface(pool.get_scheduler(), test_std::just(), test_std::then([] {}));
-
-    test_transform_env(test_detail::make_sender(test_std::on, pool.get_scheduler(), test_std::just()));
-    test_transform_env(test_detail::make_sender(
-        test_std::on, test_detail::product_type{pool.get_scheduler(), test_std::then([] {})}, test_std::just()));
 
     test_transform_sender(test_detail::make_sender(test_std::on, pool.get_scheduler(), test_std::just()));
     test_transform_sender(test_detail::make_sender(
