@@ -15,55 +15,40 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
-import beman.execution.detail.completion_signatures;
-import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.continues_on;
 import beman.execution.detail.env;
 import beman.execution.detail.forward_like;
-import beman.execution.detail.fwd_env;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_start_scheduler;
-import beman.execution.detail.get_stop_token;
 import beman.execution.detail.infallible_scheduler;
 import beman.execution.detail.make_sender;
-import beman.execution.detail.never_stop_token;
 import beman.execution.detail.nested_sender_has_affine;
-import beman.execution.detail.prop;
 import beman.execution.detail.schedule;
-import beman.execution.detail.schedule_from;
 import beman.execution.detail.scheduler;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
-import beman.execution.detail.sender_has_affine;
 import beman.execution.detail.set_value;
 import beman.execution.detail.store_receiver;
-import beman.execution.detail.tag_of_t;
 import beman.execution.detail.unstoppable;
-import beman.execution.detail.write_env;
 #else
-#include <beman/execution/detail/completion_signatures_of_t.hpp>
+#include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forward_like.hpp>
-#include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
-#include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/infallible_scheduler.hpp>
 #include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/never_stop_token.hpp>
 #include <beman/execution/detail/nested_sender_has_affine.hpp>
-#include <beman/execution/detail/prop.hpp>
+#include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
-#include <beman/execution/detail/sender_has_affine.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/store_receiver.hpp>
-#include <beman/execution/detail/tag_of_t.hpp>
 #include <beman/execution/detail/unstoppable.hpp>
-#include <beman/execution/detail/write_env.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -93,7 +78,7 @@ struct unstoppable_scheduler {
  *        to complete on the scheduler obtained from the receiver's environment.
  *
  * This adaptor implements scheduler affinity to adapt a sender to complete on the
- * scheduler obtained the receiver's environment. The get_scheduler query is used
+ * scheduler obtained the receiver's environment. The get_start_scheduler query is used
  * to obtain the scheduler on which the sender gets started.
  */
 struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
@@ -118,7 +103,7 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
     auto operator()() const { return ::beman::execution::detail::make_sender_adaptor(*this); }
 
     /**
-     * @brief affine is implemented by transforming it into a use of schedule_from.
+     * @brief affine is implemented by transforming it into a use of continues_on.
      *
      * The constraints ensure that the environment provides a scheduler which is
      * infallible and, thus, can be used to guarantee completion on the correct
@@ -126,7 +111,7 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
      *
      * The implementation first tries to see if the child sender's tag has a custom
      * affine implementation. If it does, that is used. Otherwise, the default
-     * implementation gets a scheduler from the environment and uses schedule_from
+     * implementation gets a scheduler from the environment and uses continues_on
      * to adapt the sender to complete on that scheduler.
      *
      * @tparam Sender The type of the sender to be transformed.
@@ -189,7 +174,7 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
 namespace beman::execution {
 /**
  * @brief affine is a CPO, used to adapt a sender to complete on the scheduler
- *      it got started on which is derived from get_scheduler on the receiver's environment.
+ *      it got started on which is derived from get_start_scheduler on the receiver's environment.
  */
 using affine_t = beman::execution::detail::affine_t;
 inline constexpr beman::execution::detail::affine_t affine{};
