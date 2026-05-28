@@ -22,8 +22,8 @@ namespace beman::execution {
 struct get_start_scheduler_t : ::beman::execution::forwarding_query_t {
     template <typename Env>
         requires requires(const get_start_scheduler_t& self, const Env& env) { env.query(self); }
-    auto operator()(Env&& env) const noexcept {
-        return ::std::as_const(env).query(*this);
+    auto operator()(const Env& env) const noexcept {
+        return env.query(*this);
     }
 };
 

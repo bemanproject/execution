@@ -121,8 +121,7 @@ struct composed_sender_adaptor_closure : sender_adaptor_closure<composed_sender_
         nothrow_callable<apply_cvref_t<Self, Inner>, Sender> and
         nothrow_callable<apply_cvref_t<Self, Outer>, call_result_t<apply_cvref_t<Self, Inner>, Sender>>)
         -> call_result_t<apply_cvref_t<Self, Outer>, call_result_t<apply_cvref_t<Self, Inner>, Sender>> {
-        return ::beman::execution::detail::forward_like<Self>(self.outer)(
-            ::beman::execution::detail::forward_like<Self>(self.inner)(std::forward<Sender>(sndr)));
+        return ::std::forward<Self>(self).outer(::std::forward<Self>(self).inner(std::forward<Sender>(sndr)));
     }
 };
 
@@ -147,9 +146,9 @@ struct bound_sender_adaptor_closure : detail::product_type<std::decay_t<BoundArg
     constexpr auto operator()(this Self&& self, Sender&& sndr) noexcept(
         nothrow_callable<apply_cvref_t<Self, Adaptor>, Sender, apply_cvref_t<Self, BoundArgs>...>)
         -> call_result_t<apply_cvref_t<Self, Adaptor>, Sender, apply_cvref_t<Self, BoundArgs>...> {
-        return self.apply([&](auto&&... bound_args) {
-            return ::beman::execution::detail::forward_like<Self>(self.adaptor)(
-                std::forward<Sender>(sndr), ::beman::execution::detail::forward_like<Self>(bound_args)...);
+        return self.apply([&]<typename... CvBoundArgs>(CvBoundArgs&&... bound_args) {
+            return ::std::forward<Self>(self).adaptor(::std::forward<Sender>(sndr),
+                                                      ::std::forward<CvBoundArgs>(bound_args)...);
         });
     }
 };
