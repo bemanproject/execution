@@ -1,8 +1,8 @@
-// include/beman/execution/detail/affine_on.hpp                       -*-C++-*-
+// include/beman/execution/detail/affine.hpp                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE_ON
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE_ON
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE
 
 #include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/suppress_push.hpp>
@@ -22,11 +22,12 @@ import beman.execution.detail.env;
 import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
 import beman.execution.detail.get_completion_signatures;
-import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
+import beman.execution.detail.infallible_scheduler;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.never_stop_token;
-import beman.execution.detail.nested_sender_has_affine_on;
+import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.prop;
 import beman.execution.detail.schedule;
 import beman.execution.detail.schedule_from;
@@ -34,7 +35,7 @@ import beman.execution.detail.scheduler;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
-import beman.execution.detail.sender_has_affine_on;
+import beman.execution.detail.sender_has_affine;
 import beman.execution.detail.set_value;
 import beman.execution.detail.store_receiver;
 import beman.execution.detail.tag_of_t;
@@ -46,16 +47,18 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/infallible_scheduler.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/never_stop_token.hpp>
+#include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
-#include <beman/execution/detail/sender_has_affine_on.hpp>
+#include <beman/execution/detail/sender_has_affine.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/store_receiver.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
@@ -66,31 +69,36 @@ import beman.execution.detail.write_env;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <typename Ev>
-struct affine_on_env {
-    Ev   ev_;
-    auto query(const ::beman::execution::get_stop_token_t&) const noexcept -> ::beman::execution::never_stop_token {
-        return ::beman::execution::never_stop_token();
+template <typename Sched>
+struct unstoppable_scheduler {
+    using scheduler_concept = typename Sched::scheduler_concept;
+
+    template <typename Q, typename... Args>
+        requires requires { ::std::declval<Sched>().query(::std::declval<const Q&>(), ::std::declval<Args>()...); }
+    auto query(const Q& q, Args&&... args) const noexcept -> decltype(auto) {
+        return sched.query(q, ::std::forward<Args>(args)...);
     }
-    template <typename Q>
-    auto query(const Q& q) const noexcept -> decltype(q(this->ev_)) {
-        return q(this->ev_);
+
+    auto schedule() const noexcept(std::is_nothrow_invocable_v<::beman::execution::schedule_t, Sched>) {
+        return ::beman::execution::unstoppable(::beman::execution::schedule(sched));
     }
+
+    friend auto operator==(const unstoppable_scheduler& lhs, const unstoppable_scheduler& rhs) -> bool = default;
+
+    Sched sched;
 };
-template <typename Ev>
-affine_on_env(const Ev&) -> affine_on_env<Ev>;
 
 /**
- * @brief The affine_on_t struct is a sender adaptor closure that transforms a sender
+ * @brief The affine_t struct is a sender adaptor closure that transforms a sender
  *        to complete on the scheduler obtained from the receiver's environment.
  *
  * This adaptor implements scheduler affinity to adapt a sender to complete on the
  * scheduler obtained the receiver's environment. The get_scheduler query is used
  * to obtain the scheduler on which the sender gets started.
  */
-struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
+struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
     /**
-     * @brief Adapt a sender with affine_on.
+     * @brief Adapt a sender with affine.
      *
      * @tparam Sender The deduced type of the sender to be transformed.
      * @param sender The sender to be transformed.
@@ -103,21 +111,21 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
     }
 
     /**
-     * @brief Overload for creating a sender adaptor from affine_on.
+     * @brief Overload for creating a sender adaptor from affine.
      *
-     * @return A sender adaptor for the affine_on_t.
+     * @return A sender adaptor for the affine_t.
      */
     auto operator()() const { return ::beman::execution::detail::make_sender_adaptor(*this); }
 
     /**
-     * @brief affine_on is implemented by transforming it into a use of schedule_from.
+     * @brief affine is implemented by transforming it into a use of schedule_from.
      *
      * The constraints ensure that the environment provides a scheduler which is
      * infallible and, thus, can be used to guarantee completion on the correct
      * scheduler.
      *
      * The implementation first tries to see if the child sender's tag has a custom
-     * affine_on implementation. If it does, that is used. Otherwise, the default
+     * affine implementation. If it does, that is used. Otherwise, the default
      * implementation gets a scheduler from the environment and uses schedule_from
      * to adapt the sender to complete on that scheduler.
      *
@@ -127,52 +135,52 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
      * @param env The environment providing the scheduler.
      * @return A transformed sender that is affined to the scheduler.
      */
-    template <::beman::execution::sender Sender, typename Env>
-        requires ::beman::execution::detail::sender_for<Sender, affine_on_t> && requires(const Env& env) {
-            { ::beman::execution::get_scheduler(env) } -> ::beman::execution::scheduler;
-            { ::beman::execution::schedule(::beman::execution::get_scheduler(env)) } -> ::beman::execution::sender;
-        }
-    static auto transform_sender(::beman::execution::set_value_t, Sender&& sender, const Env& ev) {
-        static_assert(requires {
-            {
-                ::beman::execution::get_completion_signatures<decltype(::beman::execution::unstoppable(
-                                                                           ::beman::execution::schedule(
-                                                                               ::beman::execution::get_scheduler(ev))),
-                                                                       ev)>()
-            } //-dk:TODO ->
-              //::std::same_as<::beman::execution::completion_signatures<::beman::execution::set_value_t()>>
-            ;
-        });
-        //[[maybe_unused]] auto& [tag, data, child] = sender;
-        auto& child       = sender.template get<2>();
-        using child_tag_t = ::beman::execution::tag_of_t<::std::remove_cvref_t<decltype(child)>>;
-
-        if constexpr (::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>) {
-            constexpr child_tag_t t{};
-            return t.affine_on(::beman::execution::detail::forward_like<Sender>(child), ev);
+    template <::beman::execution::detail::sender_for<affine_t> Sender, typename Env>
+    static auto transform_sender(::beman::execution::set_value_t, Sender&& sender, const Env& env) {
+        auto& child = sender.template get<2>();
+        if constexpr (::beman::execution::detail::nested_sender_has_affine<Sender>) {
+            return ::beman::execution::detail::forward_like<Sender>(child).affine();
         } else {
-            return ::beman::execution::detail::store_receiver(
+            static_assert(
+                requires {
+                    {
+                        ::beman::execution::get_start_scheduler(::std::declval<Env>())
+                    } -> ::beman::execution::detail::infallible_scheduler<Env>;
+                },
+                "the result type of querying `get_start_scheduler` on an `Env` shall be a scheduler type whose "
+                "schedule asynchronous operation can only complete with set_value unless stop can be requested");
+            return ::beman::execution::continues_on(
                 ::beman::execution::detail::forward_like<Sender>(child),
-                []<typename Child>(Child&& child, const auto& ev) {
-                    return ::beman::execution::unstoppable(::beman::execution::continues_on(
-                        ::beman::execution::write_env(::std::forward<Child>(child), ev),
-                        ::beman::execution::get_scheduler(ev)));
-                });
+                ::beman::execution::detail::unstoppable_scheduler{::beman::execution::get_start_scheduler(env)});
         }
     }
     template <typename, typename...>
     struct get_signatures;
 
-    template <typename Data, typename Child, typename... Env>
+    template <typename Data, typename Child, typename Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::affine_t, Data, Child>,
+                          Env> {
+        static consteval auto get() {
+            if constexpr (!requires {
+                              {
+                                  ::beman::execution::get_start_scheduler(::std::declval<Env>())
+                              } -> ::beman::execution::detail::infallible_scheduler<Env>;
+                          }) {
+                throw ::beman::execution::detail::infallible_scheduler_error<Env>{};
+            }
+            return ::beman::execution::get_completion_signatures<Child, Env>();
+        }
+    };
+
+    template <typename Data, typename Child>
     struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::affine_on_t, Data, Child>,
-        Env...> {
-        using type = ::beman::execution::completion_signatures_of_t<Child, Env...>;
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::affine_t, Data, Child>> {
+        static consteval auto get() { return ::beman::execution::get_completion_signatures<Child>(); }
     };
 
     template <typename Sender, typename... Env>
     static consteval auto get_completion_signatures() {
-        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
+        return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }
 };
 
@@ -180,15 +188,15 @@ struct affine_on_t : ::beman::execution::sender_adaptor_closure<affine_on_t> {
 
 namespace beman::execution {
 /**
- * @brief affine_on is a CPO, used to adapt a sender to complete on the scheduler
+ * @brief affine is a CPO, used to adapt a sender to complete on the scheduler
  *      it got started on which is derived from get_scheduler on the receiver's environment.
  */
-using affine_on_t = beman::execution::detail::affine_on_t;
-inline constexpr affine_on_t affine_on{};
+using affine_t = beman::execution::detail::affine_t;
+inline constexpr beman::execution::detail::affine_t affine{};
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE_ON
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AFFINE

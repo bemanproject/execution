@@ -264,7 +264,7 @@ auto test_sched_env() -> void {
     auto env{test_detail::sched_env(sched)};
     static_assert(test_detail::queryable<decltype(env)>);
 
-    auto qsched{env.query(test_std::get_scheduler)};
+    auto qsched{env.query(test_std::get_start_scheduler)};
     static_assert(::std::same_as<scheduler, decltype(qsched)>);
     ASSERT(qsched == sched);
 

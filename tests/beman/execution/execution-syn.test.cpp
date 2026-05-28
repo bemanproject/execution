@@ -411,8 +411,62 @@ auto test_sender_adaptor() -> void {
     static_assert(std::same_as<adapted_sender<sender>, decltype(via_op)>);
 }
 
+struct as_awaitable_awaiter {
+    auto await_ready() -> bool { return true; }
+    auto await_suspend(auto) -> void {}
+    auto await_resume() -> int { return 42; }
+};
+
+struct await_completion_adapted_sender {
+    auto as_awaitable(auto&) -> as_awaitable_awaiter { return {}; }
+};
+
+struct await_completion_adaptor {
+    auto operator()(auto&&) const -> await_completion_adapted_sender { return {}; }
+};
+
+struct await_completion_transformed_sender {
+    struct env {
+        auto query(const test_std::get_await_completion_adaptor_t&) const noexcept -> await_completion_adaptor {
+            return {};
+        }
+    };
+
+    using sender_concept = test_std::sender_tag;
+
+    auto get_env() const noexcept -> env { return {}; }
+
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return test_std::completion_signatures<test_std::set_value_t(int)>{};
+    }
+};
+
+struct await_completion_domain {
+    template <typename Tag, typename Sender, typename Env>
+    auto transform_sender(Tag, Sender&&, const Env&) const noexcept -> await_completion_transformed_sender {
+        return {};
+    }
+};
+
+struct await_completion_env {
+    auto query(const test_std::get_domain_t&) const noexcept -> await_completion_domain { return {}; }
+};
+
+struct await_completion_source_sender {
+    using sender_concept = test_std::sender_tag;
+};
+
+struct await_completion_promise {
+    auto get_env() const noexcept -> await_completion_env { return {}; }
+};
+
 auto test_as_awaitable() -> void {
     static_assert(std::same_as<const test_std::as_awaitable_t, decltype(test_std::as_awaitable)>);
+
+    await_completion_promise promise{};
+    auto                     awaitable{test_std::as_awaitable(await_completion_source_sender{}, promise)};
+    static_assert(std::same_as<as_awaitable_awaiter, decltype(awaitable)>);
 }
 
 auto test_exec_env() -> void {

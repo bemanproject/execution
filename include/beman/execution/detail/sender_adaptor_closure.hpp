@@ -17,6 +17,7 @@ import beman.execution.detail.sender;
 import beman.execution.detail.call_result_t;
 import beman.execution.detail.callable;
 import beman.execution.detail.class_type;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.nothrow_callable;
 import beman.execution.detail.movable_value;
 import beman.execution.detail.product_type;
@@ -26,6 +27,7 @@ import beman.execution.detail.product_type;
 #include <beman/execution/detail/class_type.hpp>
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/callable.hpp>
+#include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/nothrow_callable.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/product_type.hpp>
@@ -100,7 +102,7 @@ concept sender_adaptor_closure_for =
  * \internal
  */
 template <class As, class Reqs>
-using apply_cvref_t = decltype(std::forward_like<As>(std::declval<Reqs&>()));
+using apply_cvref_t = decltype(::beman::execution::detail::forward_like<As>(std::declval<Reqs&>()));
 
 /*!
  * \brief Perfect forwarding call wrapper produced by closure-closure composition via operator|.
@@ -119,7 +121,8 @@ struct composed_sender_adaptor_closure : sender_adaptor_closure<composed_sender_
         nothrow_callable<apply_cvref_t<Self, Inner>, Sender> and
         nothrow_callable<apply_cvref_t<Self, Outer>, call_result_t<apply_cvref_t<Self, Inner>, Sender>>)
         -> call_result_t<apply_cvref_t<Self, Outer>, call_result_t<apply_cvref_t<Self, Inner>, Sender>> {
-        return std::forward_like<Self>(self.outer)(std::forward_like<Self>(self.inner)(std::forward<Sender>(sndr)));
+        return ::beman::execution::detail::forward_like<Self>(self.outer)(
+            ::beman::execution::detail::forward_like<Self>(self.inner)(std::forward<Sender>(sndr)));
     }
 };
 
@@ -145,8 +148,8 @@ struct bound_sender_adaptor_closure : detail::product_type<std::decay_t<BoundArg
         nothrow_callable<apply_cvref_t<Self, Adaptor>, Sender, apply_cvref_t<Self, BoundArgs>...>)
         -> call_result_t<apply_cvref_t<Self, Adaptor>, Sender, apply_cvref_t<Self, BoundArgs>...> {
         return self.apply([&](auto&&... bound_args) {
-            return std::forward_like<Self>(self.adaptor)(std::forward<Sender>(sndr),
-                                                         std::forward_like<Self>(bound_args)...);
+            return ::beman::execution::detail::forward_like<Self>(self.adaptor)(
+                std::forward<Sender>(sndr), ::beman::execution::detail::forward_like<Self>(bound_args)...);
         });
     }
 };
