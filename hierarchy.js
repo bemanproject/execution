@@ -14,7 +14,7 @@ var hierarchy =
       [ "beman::execution::stop_callback< CallbackFun >", "classbeman_1_1execution_1_1stop__callback.html", null ]
     ] ],
     [ "beman::execution::detail::pipeable::closure_t", null, [
-      [ "beman::execution::sender_adaptor_closure< affine_on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
+      [ "beman::execution::sender_adaptor_closure< affine_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< bound_sender_adaptor_closure< Adaptor, BoundArgs... > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< bulk_algo_t< IsChunked > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< bulk_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
@@ -45,6 +45,9 @@ var hierarchy =
     [ "std::false_type", null, [
       [ "beman::execution::is_execution_policy< typename >", "structbeman_1_1execution_1_1is__execution__policy.html", null ],
       [ "tst::add_set_value< Sender >::is_set_value< S >", "structtst_1_1add__set__value_1_1is__set__value.html", null ]
+    ] ],
+    [ "beman::execution::detail::forwarding_query_t", null, [
+      [ "beman::execution::get_start_scheduler_t", "structbeman_1_1execution_1_1get__start__scheduler__t.html", null ]
     ] ],
     [ "beman::execution::get_allocator_t", "structbeman_1_1execution_1_1get__allocator__t.html", null ],
     [ "beman::execution::get_await_completion_adaptor_t", "structbeman_1_1execution_1_1get__await__completion__adaptor__t.html", null ],

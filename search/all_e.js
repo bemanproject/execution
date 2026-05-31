@@ -4,7 +4,7 @@ var searchData=
   ['scheduler_5ftag_1',['scheduler_tag',['../structbeman_1_1execution_1_1scheduler__tag.html',1,'beman::execution']]],
   ['sender_2',['sender',['../structbeman_1_1execution_1_1inline__scheduler_1_1sender.html',1,'beman::execution::inline_scheduler::sender'],['../structtst_1_1repeat__effect__unilt__t_1_1sender.html',1,'tst::repeat_effect_unilt_t::sender&lt; Child, Fun &gt;']]],
   ['sender_5fadaptor_5fclosure_3',['sender_adaptor_closure',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
-  ['sender_5fadaptor_5fclosure_3c_20affine_5fon_5ft_20_3e_4',['sender_adaptor_closure&lt; affine_on_t &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
+  ['sender_5fadaptor_5fclosure_3c_20affine_5ft_20_3e_4',['sender_adaptor_closure&lt; affine_t &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5fadaptor_5fclosure_3c_20bound_5fsender_5fadaptor_5fclosure_3c_20adaptor_2c_20boundargs_2e_2e_2e_20_3e_20_3e_5',['sender_adaptor_closure&lt; bound_sender_adaptor_closure&lt; Adaptor, BoundArgs... &gt; &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5fadaptor_5fclosure_3c_20bulk_5falgo_5ft_3c_20ischunked_20_3e_20_3e_6',['sender_adaptor_closure&lt; bulk_algo_t&lt; IsChunked &gt; &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
   ['sender_5fadaptor_5fclosure_3c_20bulk_5ft_20_3e_7',['sender_adaptor_closure&lt; bulk_t &gt;',['../structbeman_1_1execution_1_1sender__adaptor__closure.html',1,'beman::execution']]],
