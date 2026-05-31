@@ -21,7 +21,7 @@ import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
-import beman.execution.detail.nested_sender_has_affine_on;
+import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.queryable;
 import beman.execution.detail.sender;
 #else
@@ -30,7 +30,7 @@ import beman.execution.detail.sender;
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/nested_sender_has_affine_on.hpp>
+#include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
 #endif
@@ -53,9 +53,9 @@ struct write_env_t {
         return ::beman::execution::detail::make_sender(
             *this, ::std::forward<Env>(env), ::std::forward<Sender>(sender));
     }
-    template <::beman::execution::sender Sender, typename Env>
-        requires ::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>
-    static auto affine_on(Sender&& sndr, const Env&) noexcept {
+    template <::beman::execution::sender Sender>
+        requires ::beman::execution::detail::nested_sender_has_affine<Sender>
+    static auto affine(Sender&& sndr) noexcept {
         return ::std::forward<Sender>(sndr);
     }
 

@@ -120,6 +120,12 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
         else
             return ::beman::execution::detail::completion_signatures_for<Self, Env...>{};
     }
+
+    template <::beman::execution::detail::decays_to<basic_sender> Self>
+        requires requires { Tag().affine(::std::declval<Self>()); }
+    auto affine(this Self&& self) noexcept(noexcept(Tag().affine(::std::declval<Self>()))) -> decltype(auto) {
+        return Tag().affine(::std::forward<Self>(self));
+    }
 };
 } // namespace beman::execution::detail
 

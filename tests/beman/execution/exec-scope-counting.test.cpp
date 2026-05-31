@@ -10,6 +10,7 @@ import beman.execution;
 #else
 #include <beman/execution/detail/counting_scope.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/spawn.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
@@ -47,7 +48,7 @@ struct join_receiver {
     using receiver_concept = test_std::receiver_tag;
 
     struct env {
-        auto query(const test_std::get_scheduler_t&) const noexcept -> test_std::inline_scheduler { return {}; }
+        auto query(const test_std::get_start_scheduler_t&) const noexcept -> test_std::inline_scheduler { return {}; }
     };
 
     bool& called;

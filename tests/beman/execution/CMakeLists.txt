@@ -13,7 +13,7 @@ list(
     task-allocator_support.test
     task-infallible_scheduler.test
     task_scheduler.test
-    exec-affine-on.test
+    exec-affine.test
     exec-associate.test
     exec-awaitable.test
     exec-bulk.test

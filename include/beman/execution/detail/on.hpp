@@ -20,7 +20,7 @@ import beman.execution.detail.fwd_env;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
-import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.product_type;
@@ -39,6 +39,7 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/product_type.hpp>
@@ -57,11 +58,11 @@ import beman.execution.detail.transform_sender;
 namespace beman::execution::detail {
 struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     template <typename>
-    struct env_needs_get_scheduler {
+    struct env_needs_get_start_scheduler {
         using sender_concept = ::beman::execution::sender_tag;
         template <typename, typename Env>
         static constexpr auto get_completion_signatures() {
-            return env_needs_get_scheduler<Env>{};
+            return env_needs_get_start_scheduler<Env>{};
         }
     };
 
@@ -74,9 +75,9 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
 
         if constexpr (::beman::execution::scheduler<decltype(data)>) {
             auto sch{::beman::execution::detail::query_with_default(
-                ::beman::execution::get_scheduler, env, not_a_scheduler_t{})};
+                ::beman::execution::get_start_scheduler, env, not_a_scheduler_t{})};
             if constexpr (::std::same_as<not_a_scheduler_t, decltype(sch)>) {
-                return env_needs_get_scheduler<Env>{};
+                return env_needs_get_start_scheduler<Env>{};
             } else {
                 return ::beman::execution::continues_on(
                     ::beman::execution::starts_on(::beman::execution::detail::forward_like<OutSndr>(data),
@@ -92,7 +93,7 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
                 env)};
 
             if constexpr (::std::same_as<not_a_scheduler_t, decltype(orig_sch)>) {
-                return env_needs_get_scheduler<Env>{};
+                return env_needs_get_start_scheduler<Env>{};
             } else {
                 return ::beman::execution::continues_on(
                     ::beman::execution::detail::forward_like<OutSndr>(closure)(::beman::execution::continues_on(
