@@ -1,4 +1,4 @@
-// tests/beman/execution/exec-affine-on.test.cpp                      -*-C++-*-
+// tests/beman/execution/exec-affine.test.cpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
@@ -9,11 +9,12 @@
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/detail/affine_on.hpp>
+#include <beman/execution/detail/affine.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/prop.hpp>
@@ -56,7 +57,9 @@ struct receiver {
     auto     set_error(auto&&) && noexcept -> void { this->awaiter_&& this->awaiter_->complete(); }
     auto     set_stopped() && noexcept -> void { this->awaiter_&& this->awaiter_->complete(); }
 
-    auto get_env() const noexcept { return test_std::env{test_std::prop(test_std::get_scheduler, this->scheduler_)}; }
+    auto get_env() const noexcept {
+        return test_std::env{test_std::prop(test_std::get_start_scheduler, this->scheduler_)};
+    }
 };
 template <test_std::scheduler Sched>
 receiver(Sched, awaiter* = nullptr) -> receiver<Sched>;
@@ -113,7 +116,7 @@ auto test_order_of_connect() -> void {
 
     test_scheduler::data data{};
     test_scheduler       sched{&data};
-    auto                 sndr{test_std::affine_on(test_std::starts_on(inner_sched, test_std::just(42)))};
+    auto                 sndr{test_std::affine(test_std::starts_on(inner_sched, test_std::just(42)))};
 
     assert(data.connected_ == 0);
     assert(data.started_ == 0);
@@ -132,10 +135,10 @@ auto test_order_of_connect() -> void {
 }
 
 template <test_std::sender Sender>
-auto test_affine_on_specializations(Sender&& sender, std::size_t count = 0u) -> void {
+auto test_affine_specializations(Sender&& sender, std::size_t count = 0u) -> void {
     test_scheduler::data data{};
     test_scheduler       sched{&data};
-    auto                 sndr{test_std::affine_on(std::forward<Sender>(sender))};
+    auto                 sndr{test_std::affine(std::forward<Sender>(sender))};
     awaiter              aw{};
 
     assert(data.connected_ == 0);
@@ -151,53 +154,53 @@ auto test_affine_on_specializations(Sender&& sender, std::size_t count = 0u) -> 
 }
 } // namespace
 
-TEST(affine_on) {
-    static_assert(test_std::sender<decltype(test_std::affine_on(test_std::just(42)))>);
-    static_assert(test_std::sender<decltype(test_std::just(42) | test_std::affine_on())>);
+TEST(affine) {
+    static_assert(test_std::sender<decltype(test_std::affine(test_std::just(42)))>);
+    static_assert(test_std::sender<decltype(test_std::just(42) | test_std::affine())>);
 
-    static_assert(test_std::sender_in<decltype(test_std::affine_on(test_std::just(42))), test_std::env<>>);
+    static_assert(test_std::sender_in<decltype(test_std::affine(test_std::just(42))), test_std::env<>>);
 
     test_std::run_loop loop;
     auto               r{receiver(loop.get_scheduler())};
     static_assert(test_std::receiver<decltype(r)>);
-    auto s{test_std::get_scheduler(test_std::get_env(r))};
+    auto s{test_std::get_start_scheduler(test_std::get_env(r))};
     assert(s == loop.get_scheduler());
-    auto st{test_std::transform_sender(test_std::affine_on(test_std::just(42)), test_std::get_env(r))};
+    auto st{test_std::transform_sender(test_std::affine(test_std::just(42)), test_std::get_env(r))};
     test_std::connect(std::move(st), std::move(r));
-    auto s0{test_std::connect(test_std::affine_on(test_std::just(42)), receiver(loop.get_scheduler()))};
+    auto s0{test_std::connect(test_std::affine(test_std::just(42)), receiver(loop.get_scheduler()))};
 
     std::thread t{[&]() noexcept { loop.run(); }};
-    auto        r0 = test_std::sync_wait(test_std::affine_on(test_std::just(42)));
+    auto        r0 = test_std::sync_wait(test_std::affine(test_std::just(42)));
     assert(r0);
     auto [v0] = *r0;
     assert(v0 == 42);
-    auto r1 = test_std::sync_wait(test_std::starts_on(loop.get_scheduler(), test_std::affine_on(test_std::just(42))));
+    auto r1 = test_std::sync_wait(test_std::starts_on(loop.get_scheduler(), test_std::affine(test_std::just(42))));
     assert(r1);
     auto [v1] = *r1;
     assert(v1 == 42);
 
     test_order_of_connect();
-    test_affine_on_specializations(test_std::just(42));
-    test_affine_on_specializations(test_std::just(42, true, 3.14));
-    test_affine_on_specializations(test_std::just_error(42));
-    test_affine_on_specializations(test_std::just_stopped());
-    test_affine_on_specializations(test_std::just_stopped());
-    test_affine_on_specializations(test_std::read_env(test_std::get_stop_token));
-    test_affine_on_specializations(test_std::write_env(
+    test_affine_specializations(test_std::just(42));
+    test_affine_specializations(test_std::just(42, true, 3.14));
+    test_affine_specializations(test_std::just_error(42));
+    test_affine_specializations(test_std::just_stopped());
+    test_affine_specializations(test_std::just_stopped());
+    test_affine_specializations(test_std::read_env(test_std::get_stop_token));
+    test_affine_specializations(test_std::write_env(
         test_std::just(42), test_std::env{test_std::prop{test_std::get_stop_token, test_std::never_stop_token{}}}));
-    test_affine_on_specializations(
+    test_affine_specializations(
         test_std::write_env(test_std::starts_on(loop.get_scheduler(), test_std::just(42)),
                             test_std::env{test_std::prop{test_std::get_stop_token, test_std::never_stop_token{}}}),
         1u);
-    test_affine_on_specializations(test_std::then(test_std::just(42), [](int) {}));
-    test_affine_on_specializations(
+    test_affine_specializations(test_std::then(test_std::just(42), [](int) {}));
+    test_affine_specializations(
         test_std::then(test_std::starts_on(loop.get_scheduler(), test_std::just(42)), [](auto&&...) {}), 1u);
-    test_affine_on_specializations(test_std::upon_error(test_std::just_error(42), [](int) {}));
-    test_affine_on_specializations(
+    test_affine_specializations(test_std::upon_error(test_std::just_error(42), [](int) {}));
+    test_affine_specializations(
         test_std::upon_error(test_std::starts_on(loop.get_scheduler(), test_std::just_error(42)), [](auto&&...) {}),
         1u);
-    test_affine_on_specializations(test_std::upon_stopped(test_std::just_stopped(), [] {}));
-    test_affine_on_specializations(
+    test_affine_specializations(test_std::upon_stopped(test_std::just_stopped(), [] {}));
+    test_affine_specializations(
         test_std::upon_stopped(test_std::starts_on(loop.get_scheduler(), test_std::just_stopped()), [] {}), 1u);
 
     loop.finish();

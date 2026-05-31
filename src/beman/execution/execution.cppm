@@ -7,7 +7,7 @@ module;
 
 export module beman.execution;
 
-import beman.execution.detail.affine_on;
+import beman.execution.detail.affine;
 import beman.execution.detail.apply_sender;
 import beman.execution.detail.as_awaitable;
 export import beman.execution.detail.associate; // [exec.associate]
@@ -36,6 +36,7 @@ import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 export import beman.execution.detail.inplace_stop_source; // [stopsource.inplace], class inplace_stop_source
 import beman.execution.detail.into_variant;
@@ -137,12 +138,14 @@ export using ::beman::execution::stop_token_of_t;
 
 export using ::beman::execution::get_domain_t;
 export using ::beman::execution::get_scheduler_t;
+export using ::beman::execution::get_start_scheduler_t;
 export using ::beman::execution::get_delegation_scheduler_t;
 export using ::beman::execution::get_await_completion_adaptor_t;
 export using ::beman::execution::get_forward_progress_guarantee_t;
 
 export using ::beman::execution::get_domain;
 export using ::beman::execution::get_scheduler;
+export using ::beman::execution::get_start_scheduler;
 export using ::beman::execution::get_delegation_scheduler;
 export using ::beman::execution::get_await_completion_adaptor;
 export using ::beman::execution::forward_progress_guarantee;
@@ -254,8 +257,8 @@ export using ::beman::execution::as_awaitable;
 export using ::beman::execution::prop;
 export using ::beman::execution::write_env_t;
 export using ::beman::execution::write_env;
-export using ::beman::execution::affine_on_t;
-export using ::beman::execution::affine_on;
+export using ::beman::execution::affine_t;
+export using ::beman::execution::affine;
 export using ::beman::execution::read_env_t;
 export using ::beman::execution::read_env;
 export using ::beman::execution::simple_counting_scope;

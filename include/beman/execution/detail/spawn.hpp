@@ -87,10 +87,10 @@ struct spawn_t {
         auto new_sender{tok.wrap(::std::forward<Sender>(sender))};
         auto [all, senv] = ::beman::execution::detail::spawn_get_allocator(new_sender, env);
 
-        using sender_tag = decltype(::beman::execution::write_env(::std::move(new_sender), senv));
-        using state_t    = state<decltype(all), Token, sender_tag>;
-        using alloc_t    = typename ::std::allocator_traits<decltype(all)>::template rebind_alloc<state_t>;
-        using traits_t   = ::std::allocator_traits<alloc_t>;
+        using sender_t = decltype(::beman::execution::write_env(::std::move(new_sender), senv));
+        using state_t  = state<decltype(all), Token, sender_t>;
+        using alloc_t  = typename ::std::allocator_traits<decltype(all)>::template rebind_alloc<state_t>;
+        using traits_t = ::std::allocator_traits<alloc_t>;
         alloc_t  alloc(all);
         state_t* op{traits_t::allocate(alloc, 1u)};
         traits_t::construct(alloc, op, all, ::beman::execution::write_env(::std::move(new_sender), senv), tok);
