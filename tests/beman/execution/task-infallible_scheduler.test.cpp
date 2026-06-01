@@ -10,10 +10,11 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail.infallible_scheduler;
 #else
+#include <beman/execution/detail/infallible_scheduler.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #endif
-#include <beman/execution/detail/infallible_scheduler.hpp>
 
 // ----------------------------------------------------------------------------
 

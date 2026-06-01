@@ -5,7 +5,11 @@
 #define INCLUDED_BEMAN_EXECUTION_TASK
 
 #include <beman/execution/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.infallible_scheduler;
+#else
 #include <beman/execution/detail/infallible_scheduler.hpp>
+#endif
 #include <beman/execution/detail/task/allocator_of.hpp>
 #include <beman/execution/detail/task/allocator_support.hpp>
 #include <beman/execution/detail/task/completion.hpp>

@@ -5,7 +5,6 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_SCHEDULER
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/infallible_scheduler.hpp>
 #include <beman/execution/detail/task/poly.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -21,6 +20,7 @@ import beman.execution.detail.connect;
 import beman.execution.detail.env;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_env;
+import beman.execution.detail.infallible_scheduler;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.receiver;
 import beman.execution.detail.schedule;
@@ -35,6 +35,7 @@ import beman.execution.detail.start;
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/infallible_scheduler.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/schedule.hpp>

@@ -24,4 +24,4 @@ using stop_source_of_t = typename stop_source_of<Context>::type;
 
 // ----------------------------------------------------------------------------
 
-#endif 
+#endif
