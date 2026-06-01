@@ -9,7 +9,6 @@
 #include <beman/execution/detail/task/allocator_support.hpp>
 #include <beman/execution/detail/task/completion.hpp>
 #include <beman/execution/detail/task/error_types_of.hpp>
-#include <beman/execution/detail/task/find_allocator.hpp>
 #include <beman/execution/detail/task/handle.hpp>
 #include <beman/execution/detail/task/infallible_scheduler.hpp>
 #include <beman/execution/detail/task/logger.hpp>

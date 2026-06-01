@@ -197,7 +197,6 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/allocator_support.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/completion.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/error_types_of.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/find_allocator.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/handle.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/infallible_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task/logger.hpp
