@@ -1,8 +1,8 @@
-// include/beman/execution/detail/stop_source_of.hpp                          -*-C++-*-
+// include/beman/execution/detail/task/stop_source.hpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE_OF
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE_OF
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_STOP_SOURCE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_STOP_SOURCE
 
 #include <beman/execution/stop_token.hpp>
 
@@ -24,4 +24,4 @@ using stop_source_of_t = typename stop_source_of<Context>::type;
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE_OF
+#endif

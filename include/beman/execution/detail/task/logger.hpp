@@ -1,8 +1,8 @@
-// include/beman/execution/detail/logger.hpp                               -*-C++-*-
+// include/beman/execution/detail/task/logger.hpp                          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_LOGGER
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_LOGGER
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_LOGGER
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_LOGGER
 
 #include <algorithm>
 #include <iterator>

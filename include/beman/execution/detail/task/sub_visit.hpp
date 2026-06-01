@@ -1,10 +1,10 @@
-// include/beman/execution/detail/sub_visit.hpp                            -*-C++-*-
+// include/beman/execution/detail/task/sub_visit.hpp                       -*-C++-*-
 // ----------------------------------------------------------------------------
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SUB_VISIT
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_SUB_VISIT
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_SUB_VISIT
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_SUB_VISIT
 
 #include <utility>
 #include <variant>
