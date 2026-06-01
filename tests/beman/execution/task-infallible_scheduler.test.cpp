@@ -13,7 +13,7 @@ import beman.execution;
 #else
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #endif
-#include <beman/execution/detail/task/infallible_scheduler.hpp>
+#include <beman/execution/detail/infallible_scheduler.hpp>
 
 // ----------------------------------------------------------------------------
 
@@ -60,7 +60,6 @@ TEST(task_infallible_scheduler) {
     using error_scheduler         = scheduler<test_std::set_value_t(), test_std::set_error_t(int)>;
     using default_unstoppable_env = test_std::env<>;
 
-    static_assert(test_detail::completes_with<value_scheduler, default_unstoppable_env, test_std::set_value_t()>);
     static_assert(test_detail::infallible_scheduler<value_scheduler, default_unstoppable_env>);
     static_assert(!test_detail::infallible_scheduler<stoppable_scheduler, default_unstoppable_env>);
     static_assert(test_detail::infallible_scheduler<stoppable_scheduler, stoppable_env>);

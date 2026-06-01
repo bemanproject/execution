@@ -5,7 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_SCHEDULER
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/task/infallible_scheduler.hpp>
+#include <beman/execution/detail/infallible_scheduler.hpp>
 #include <beman/execution/detail/task/poly.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;

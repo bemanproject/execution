@@ -5,12 +5,12 @@
 #define INCLUDED_BEMAN_EXECUTION_TASK
 
 #include <beman/execution/execution.hpp>
+#include <beman/execution/detail/infallible_scheduler.hpp>
 #include <beman/execution/detail/task/allocator_of.hpp>
 #include <beman/execution/detail/task/allocator_support.hpp>
 #include <beman/execution/detail/task/completion.hpp>
 #include <beman/execution/detail/task/error_types_of.hpp>
 #include <beman/execution/detail/task/handle.hpp>
-#include <beman/execution/detail/task/infallible_scheduler.hpp>
 #include <beman/execution/detail/task/logger.hpp>
 #include <beman/execution/detail/task/poly.hpp>
 #include <beman/execution/detail/task/promise_env.hpp>
