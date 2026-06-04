@@ -25,9 +25,12 @@ import beman.execution.detail.connect;
 import beman.execution.detail.connect_result_t;
 import beman.execution.detail.decayed_tuple;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
 import beman.execution.detail.error_types_of_t;
 import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_completion_domain;
+import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_env;
 import beman.execution.detail.impls_for;
@@ -49,6 +52,7 @@ import beman.execution.detail.sender_for;
 import beman.execution.detail.sender_in;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
 import beman.execution.detail.start;
 #else
 #include <beman/execution/detail/as_tuple.hpp>
@@ -57,9 +61,12 @@ import beman.execution.detail.start;
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
+#include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/join_env.hpp>
@@ -79,6 +86,7 @@ import beman.execution.detail.start;
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
+#include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/start.hpp>
 #endif
 
@@ -103,19 +111,53 @@ struct continues_on_t {
     }
 
   private:
-    template <typename, typename>
+    template <typename, typename...>
     struct get_signatures;
+    template <typename Sender>
+    struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
     template <typename Scheduler, typename Sender, typename Env>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, Scheduler, Sender>,
         Env> {
-        using scheduler_sender = decltype(::beman::execution::schedule(::std::declval<Scheduler>()));
+        using scheduler_sender = ::beman::execution::schedule_result_t<Scheduler>;
         template <typename... E>
         using as_set_error = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
         using type         = ::beman::execution::detail::meta::combine<
-            decltype(::beman::execution::get_completion_signatures<Sender, Env>()),
-            ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
-            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
+                    decltype(::beman::execution::get_completion_signatures<Sender, Env>()),
+                    ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
+                    ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
+    };
+
+    template <typename Scheduler, typename ChildAttrs>
+    struct attrs {
+        template <typename Env>
+        auto query(::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>,
+                   const Env&) const noexcept {
+            return this->sch;
+        }
+
+        auto query(::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>) const noexcept {
+            return this->sch;
+        }
+
+        template <typename Tag, typename Env>
+            requires requires(const Scheduler& scheduler, const Env& env) {
+                ::beman::execution::get_completion_domain<Tag>(scheduler, ::beman::execution::detail::fwd_env(env));
+            }
+        auto query(::beman::execution::get_completion_domain_t<Tag>, const Env& env) const noexcept {
+            return ::beman::execution::get_completion_domain<Tag>(this->sch, ::beman::execution::detail::fwd_env(env));
+        }
+
+        template <typename Q, typename... Args>
+            requires requires(const ChildAttrs& child_attrs, Q q, Args&&... args) {
+                child_attrs.query(q, ::std::forward<Args>(args)...);
+            }
+        auto query(Q q, Args&&... args) const noexcept {
+            return this->child_attrs.query(q, ::std::forward<Args>(args)...);
+        }
+
+        Scheduler  sch;
+        ChildAttrs child_attrs;
     };
 
   public:
@@ -125,6 +167,15 @@ struct continues_on_t {
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
+        struct get_attrs_impl {
+            auto operator()(const auto& sch, const auto& child) const noexcept {
+                using Sch        = ::std::remove_cvref_t<decltype(sch)>;
+                using ChildAttrs = ::std::remove_cvref_t<decltype(::beman::execution::get_env(child))>;
+                return attrs<Sch, ChildAttrs>{sch, ::beman::execution::get_env(child)};
+            }
+        };
+        static constexpr auto get_attrs{get_attrs_impl{}};
+
         template <typename State>
         struct upstream_receiver {
             using receiver_concept = ::beman::execution::receiver_tag;

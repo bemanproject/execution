@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER
 
+#include "try_query.hpp"
+
 #include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/suppress_push.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -18,11 +20,13 @@ import beman.execution.detail.completion_tag;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.scheduler;
 import beman.execution.detail.set_value;
+import beman.execution.detail.try_query;
 #else
 #include <beman/execution/detail/completion_tag.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/try_query.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -38,7 +42,8 @@ template <typename Tag, typename Q, typename... E>
 concept compl_sched_recurse_queryable = requires {
     {
         ::beman::execution::detail::recurse_query(
-            ::std::declval<const Q&>().query(
+            ::beman::execution::detail::try_query(
+                ::std::declval<const Q&>(),
                 ::std::declval<::beman::execution::detail::get_completion_scheduler_t<Tag>>(),
                 ::std::declval<const E&>()...),
             ::std::declval<const E&>()...)
@@ -56,11 +61,11 @@ struct get_completion_scheduler_t : ::beman::execution::forwarding_query_t {
 template <typename Scheduler, typename... Envs>
 auto recurse_query(Scheduler sch, const Envs&... envs) noexcept {
     ::beman::execution::detail::get_completion_scheduler_t<::beman::execution::set_value_t> get_compl_sch{};
-    if constexpr (requires { ::std::as_const(sch).query(get_compl_sch, envs...); }) {
-        auto sch2 = ::std::as_const(sch).query(get_compl_sch, envs...);
+    if constexpr (requires { ::beman::execution::detail::try_query(sch, get_compl_sch, envs...); }) {
+        auto sch2 = ::beman::execution::detail::try_query(sch, get_compl_sch, envs...);
         if constexpr (::std::same_as<Scheduler, decltype(sch2)>) {
             while (sch != sch2) {
-                sch = ::std::exchange(sch2, ::std::as_const(sch2).query(get_compl_sch, envs...));
+                sch = ::std::exchange(sch2, ::beman::execution::detail::try_query(sch2, get_compl_sch, envs...));
             }
             return sch;
         } else {
@@ -77,7 +82,7 @@ template <typename Q, typename... E>
              (::beman::execution::scheduler<Q> && sizeof...(E) > 0)
 auto get_completion_scheduler_t<Tag>::operator()(const Q& q, const E&... e) const noexcept {
     if constexpr (::beman::execution::detail::compl_sched_recurse_queryable<Tag, Q, E...>) {
-        return ::beman::execution::detail::recurse_query(q.query(*this, e...), e...);
+        return ::beman::execution::detail::recurse_query(::beman::execution::detail::try_query(q, *this, e...), e...);
     } else {
         static_assert(::beman::execution::scheduler<Q> && sizeof...(E) > 0);
         return q;

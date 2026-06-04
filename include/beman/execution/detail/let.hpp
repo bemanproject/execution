@@ -21,17 +21,19 @@ import beman.execution.detail.allocator_aware_move;
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.call_result_t;
 import beman.execution.detail.completion_signatures;
-import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.connect;
 import beman.execution.detail.decayed_tuple;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.dependent_sender;
 import beman.execution.detail.emplace_from;
 import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
 import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
+import beman.execution.detail.gather_signatures;
 import beman.execution.detail.get_env;
+import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_domain;
@@ -57,16 +59,18 @@ import beman.execution.detail.start;
 import beman.execution.detail.type_list;
 #else
 #include <beman/execution/detail/allocator_aware_move.hpp>
-#include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/emplace_from.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/gather_signatures.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_env.hpp>
@@ -101,14 +105,31 @@ struct let_matching_completion : ::std::false_type {};
 template <typename Tag, typename... A>
 struct let_matching_completion<Tag, Tag(A...)> : ::std::true_type {};
 
-template <typename Child, bool, typename... Env>
-struct let_upstream_env_helper {
-    using type = decltype(::beman::execution::detail::join_env(::std::declval<Child>(), ::std::declval<Env>()...));
+template <typename, typename>
+struct get_successor_senders;
+
+template <typename Fun, typename... Args>
+struct get_successor_senders<Fun, ::beman::execution::detail::type_list<Args...>> {
+    using type = std::invoke_result_t<Fun, Args...>;
 };
-template <typename Child>
-struct let_upstream_env_helper<Child, false> {
-    using type = Child;
-};
+
+template <typename, typename>
+struct non_dependent_successor_helper;
+
+template <typename Fun, typename... TypeLists>
+struct non_dependent_successor_helper<Fun, ::beman::execution::detail::type_list<TypeLists...>>
+    : std::bool_constant<(... &&
+                          !::beman::execution::dependent_sender<
+                              typename ::beman::execution::detail::get_successor_senders<Fun, TypeLists>::type>)> {};
+
+template <typename Completion, typename Child, typename Fun>
+struct non_dependent_successor
+    : ::beman::execution::detail::non_dependent_successor_helper<
+          Fun,
+          ::beman::execution::detail::gather_signatures<Completion,
+                                                        ::beman::execution::completion_signatures_of_t<Child>,
+                                                        ::beman::execution::detail::type_list,
+                                                        ::beman::execution::detail::type_list>> {};
 
 template <typename Completion>
 struct let_t {
@@ -121,37 +142,49 @@ struct let_t {
         return ::beman::execution::detail::make_sender(*this, ::std::forward<Fun>(fun), std::forward<Sender>(sender));
     }
 
-    template <typename Sender>
-    static auto env(Sender&& sender) {
+    template <typename Sender, typename Env>
+    static auto let_env(const Sender& sender, const Env& e) {
         if constexpr (requires {
                           ::beman::execution::detail::sched_env(
                               ::beman::execution::get_completion_scheduler<Completion>(
-                                  ::beman::execution::get_env(sender)));
-                      })
-            return ::beman::execution::detail::sched_env(
-                ::beman::execution::get_completion_scheduler<Completion>(::beman::execution::get_env(sender)));
+                                  ::beman::execution::get_env(sender), ::beman::execution::detail::fwd_env(e)));
+                      }) {
+            return ::beman::execution::detail::sched_env(::beman::execution::get_completion_scheduler<Completion>(
+               ::beman::execution::get_env(sender), ::beman::execution::detail::fwd_env(e)));
+        }
         else if constexpr (requires {
                                ::beman::execution::detail::make_env(
                                    ::beman::execution::get_domain,
-                                   ::beman::execution::get_domain(::beman::execution::get_env(sender)));
+                                   ::beman::execution::get_completion_domain<Completion>(
+                                       ::beman::execution::get_env(sender), ::beman::execution::detail::fwd_env(e)));
                            })
             return ::beman::execution::detail::make_env(
-                ::beman::execution::get_domain, ::beman::execution::get_domain(::beman::execution::get_env(sender)));
-        else
+                ::beman::execution::get_domain,
+                ::beman::execution::get_completion_domain<Completion>(::beman::execution::get_env(sender),
+                                                                      ::beman::execution::detail::fwd_env(e)));
+        else {
             return ::beman::execution::env<>{};
+        }
     }
-    template <typename Sender, typename Env>
-    static auto join_env(Sender&& sender, Env&& e) -> decltype(auto) {
-        return ::beman::execution::detail::join_env(env(sender), ::beman::execution::detail::fwd_env(e));
-    }
+
+    template <typename Sndr, typename Env>
+    using let_env_t = decltype(let_env(::std::declval<Sndr>(), ::std::declval<Env>()));
 
   private:
     template <typename, typename...>
     struct get_signatures;
-    template <typename Comp, typename Fun, typename Child, typename... Env>
+
+    template <typename Comp, typename Fun, typename Child>
+        requires ::beman::execution::detail::non_dependent_successor<Completion, Child, Fun>::value
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Comp>, Fun, Child>>
+        : get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Comp>, Fun, Child>,
+                         ::beman::execution::env<>> {};
+
+    template <typename Comp, typename Fun, typename Child, typename Env>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Comp>, Fun, Child>,
-        Env...> {
+        Env> {
         template <typename T>
         using other_completion = let_other_completion<Comp, T>;
         template <typename T>
@@ -163,38 +196,44 @@ struct let_t {
         struct apply_decayed<C(A...)> {
             using sender_type = ::beman::execution::detail::call_result_t<Fun, ::std::decay_t<A>...>;
             using completions = ::std::conditional_t<
-                noexcept(::std::declval<Fun>()(std::declval<::std::decay_t<A>>()...)),
+                noexcept(::std::declval<Fun>()(::std::declval<::std::decay_t<A>>()...)),
                 ::beman::execution::completion_signatures<>,
                 ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
         };
+
+        using successor_env =
+            ::beman::execution::detail::join_env<let_env_t<Child, Env>, ::beman::execution::detail::fwd_env<Env>>;
+
         template <typename>
         struct get_completions;
         template <template <typename...> class L, typename... C>
         struct get_completions<L<C...>> {
             using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
                 ::beman::execution::completion_signatures<>,
-                ::beman::execution::completion_signatures_of_t<typename apply_decayed<C>::sender_type, Env...>...,
+                ::beman::execution::completion_signatures_of_t<typename apply_decayed<C>::sender_type,
+                                                               successor_env>...,
                 typename apply_decayed<C>::completions...>>;
         };
 
-        using upstream_env         = typename let_upstream_env_helper<Child, 0 < sizeof...(Env), Env...>::type;
-        using upstream_completions = decltype(::beman::execution::get_completion_signatures<Child, upstream_env>());
+        using upstream_completions = ::beman::execution::completion_signatures_of_t<Child, Env>;
         using other_completions    = ::beman::execution::detail::meta::filter<other_completion, upstream_completions>;
         using matching_completions =
             ::beman::execution::detail::meta::filter<matching_completion, upstream_completions>;
         using type = ::beman::execution::detail::meta::unique<
             ::beman::execution::detail::meta::combine<typename get_completions<matching_completions>::type,
                                                       other_completions>>;
+
+        static consteval auto get() noexcept { return type{}; }
     };
 
   public:
     template <typename Sender, typename... Env>
+        requires requires { get_signatures<std::remove_cvref_t<Sender>, Env...>::get(); }
     static consteval auto get_completion_signatures() {
-        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+        return get_signatures<std::remove_cvref_t<Sender>, Env...>::get();
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
-
         template <typename Receiver, typename Env>
         struct let_receiver {
             using receiver_concept = ::beman::execution::receiver_tag;
@@ -243,7 +282,7 @@ struct let_t {
 
             using fun_t   = ::std::remove_cvref_t<decltype(fun)>;
             using child_t = ::std::remove_cvref_t<decltype(child)>;
-            using env_t   = decltype(::beman::execution::detail::let_t<Completion>::env(child));
+            using env_t   = let_env_t<child_t, ::beman::execution::env_of_t<Receiver>>;
             using sigs_t =
                 ::beman::execution::completion_signatures_of_t<child_t, ::beman::execution::env_of_t<Receiver>>;
             using comp_sigs_t = ::beman::execution::detail::meta::filter<filter_pred, sigs_t>;
@@ -252,10 +291,10 @@ struct let_t {
             using unique_t    = ::beman::execution::detail::meta::unique<tuples_t>;
             using args_t      = ::beman::execution::detail::meta::prepend<std::monostate, unique_t>;
             using ops_t       = ::beman::execution::detail::meta::prepend<
-                ::std::monostate,
-                ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::transform<
-                    to_state<fun_t, ::std::remove_cvref_t<Receiver>, env_t>::template trans,
-                    tuples_t>>>;
+                      ::std::monostate,
+                      ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::transform<
+                          to_state<fun_t, ::std::remove_cvref_t<Receiver>, env_t>::template trans,
+                          tuples_t>>>;
 
             struct state_t {
                 fun_t  fun;
@@ -263,11 +302,12 @@ struct let_t {
                 args_t args;
                 ops_t  ops2;
             };
-            return state_t{beman::execution::detail::allocator_aware_move(
-                               ::beman::execution::detail::forward_like<Sender>(fun), receiver),
-                           ::beman::execution::detail::let_t<Completion>::env(child),
-                           {},
-                           {}};
+            return state_t{
+                beman::execution::detail::allocator_aware_move(::beman::execution::detail::forward_like<Sender>(fun),
+                                                               receiver),
+                ::beman::execution::detail::let_t<Completion>::let_env(child, ::beman::execution::get_env(receiver)),
+                {},
+                {}};
         }};
         template <typename Receiver, typename... Args>
         static auto let_bind(auto& state, Receiver& receiver, Args&&... args) noexcept(

@@ -47,6 +47,20 @@ struct domain_sender {
     auto get_env() const noexcept -> env { return {}; }
 };
 
+template <typename D>
+struct completion_domain_sender {
+    struct env {
+        auto query(test_std::get_completion_domain_t<test_std::set_value_t>) const noexcept -> D { return {}; }
+    };
+    using sender_concept        = test_std::sender_tag;
+    using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
+    auto get_env() const noexcept -> env { return {}; }
+};
+
 template <bool Expect, typename... S>
 auto test_when_all_available(S&&... s) {
     static_assert(Expect == requires { test_std::when_all(std::forward<S>(s)...); });
@@ -113,7 +127,7 @@ struct test_sender {
         auto          set_error(auto&& error) && noexcept -> void {
             if constexpr (std::same_as<Tag, test_std::set_error_t> && 1u == std::tuple_size_v<Result>)
                 if constexpr (std::same_as<std::decay_t<std::tuple_element_t<0, Result>>,
-                                           std::decay_t<decltype(error)>>)
+                                                    std::decay_t<decltype(error)>>)
                     test_std::set_value(std::move(receiver), this->expect == std::tie(error));
                 else
                     test_std::set_value(std::move(receiver), false);
@@ -240,6 +254,12 @@ auto test_when_all() -> void {
         test_std::when_all(test_std::read_env(test_std::get_stop_token) | test_std::then([](auto&&) {})));
 }
 
+auto test_when_all_attrs() -> void {
+    auto s = test_std::when_all(completion_domain_sender<domain<0>>{}, completion_domain_sender<domain<0>>{});
+    static_assert(std::same_as<decltype(test_std::get_completion_domain<test_std::set_value_t>(test_std::get_env(s))),
+                               domain<0>>);
+}
+
 auto test_when_all_with_variant() -> void {
     auto s{test_std::when_all_with_variant(test_std::just(17), test_std::just('a', true))};
     auto res{test_std::sync_wait(s)};
@@ -270,6 +290,7 @@ TEST(exec_when_all) {
 
     try {
         test_when_all();
+        test_when_all_attrs();
         test_when_all_with_variant();
     } catch (...) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)

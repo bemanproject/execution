@@ -74,7 +74,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
     auto get_env() const noexcept -> decltype(auto) {
         auto&& d{this->template get<1>()};
         return sub_apply.at<2>(
-            [&d](auto&&... c) { return ::beman::execution::detail::impls_for<Tag>::get_attrs(d, c...); }, *this);
+            [&d](auto&&... c) { return ::beman::execution::detail::get_impls_for<Tag>::get_attrs()(d, c...); }, *this);
     }
 
     template <typename Receiver>
@@ -114,7 +114,7 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
 #endif
     template <::beman::execution::detail::decays_to<basic_sender> Self, typename... Env>
         requires(sizeof...(Env) == 1) || (... && !::beman::execution::dependent_sender<Child>)
-    static consteval auto get_completion_signatures() noexcept {
+    static consteval auto get_completion_signatures() {
         if constexpr (requires { Tag::template get_completion_signatures<Self, Env...>(); })
             return Tag::template get_completion_signatures<Self, Env...>();
         else

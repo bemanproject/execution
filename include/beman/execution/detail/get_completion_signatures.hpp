@@ -73,6 +73,15 @@ consteval auto get_completion_signatures() -> ::beman::execution::detail::valid_
                               ::std::remove_cvref_t<Sndr>::template get_completion_signatures<Sndr, E...>()>) {
                 return ::std::remove_cvref_t<Sndr>::template get_completion_signatures<Sndr, E...>();
             }
+        } else if constexpr (requires {
+                                 {
+                                     ::std::remove_cvref_t<Sndr>::get_completion_signatures()
+                                 } -> ::beman::execution::detail::valid_completion_signatures;
+                             }) {
+            if constexpr (::beman::execution::detail::is_constant<
+                              ::std::remove_cvref_t<Sndr>::get_completion_signatures()>) {
+                return ::std::remove_cvref_t<Sndr>::get_completion_signatures();
+            }
         }
     }};
     if constexpr (requires {
