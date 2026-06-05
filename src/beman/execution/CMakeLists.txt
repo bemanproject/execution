@@ -209,6 +209,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/type_list.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unspecified_promise.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unreachable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_for.hpp
@@ -408,6 +409,7 @@ if(BEMAN_USE_MODULES)
                     type_list.cppm
                     unspecified_promise.cppm
                     unstoppable.cppm
+                    unstoppable_scheduler.cppm
                     unstoppable_token.cppm
                     unreachable.cppm
                     valid_completion_for.cppm

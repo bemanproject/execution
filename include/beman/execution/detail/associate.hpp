@@ -18,10 +18,10 @@ import beman.execution.detail.basic_sender;
 import beman.execution.detail.connect;
 import beman.execution.detail.connect_result_t;
 import beman.execution.detail.completion_signatures;
-import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.env;
 import beman.execution.detail.forward_like;
+import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.nothrow_callable;
@@ -35,6 +35,7 @@ import beman.execution.detail.valid_completion_signatures;
 #else
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/nothrow_callable.hpp>
@@ -118,7 +119,7 @@ struct associate_t {
     static consteval auto get_completion_signatures() {
         using Data         = decltype(std::declval<::std::remove_cvref_t<Sender>>().template get<1>());
         using child_type_t = ::std::remove_cvref_t<typename ::std::remove_cvref_t<Data>::wrap_sender>;
-        return ::beman::execution::detail::completion_signatures_for<child_type_t, Env...>{};
+        return ::beman::execution::get_completion_signatures<child_type_t, Env...>();
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
