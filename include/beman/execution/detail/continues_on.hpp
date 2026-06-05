@@ -130,22 +130,22 @@ struct continues_on_t {
 
     template <typename Scheduler, typename ChildAttrs>
     struct attrs {
-        template <typename Env>
-        auto query(::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>,
-                   const Env&) const noexcept {
-            return this->sch;
-        }
-
-        auto query(::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>) const noexcept {
-            return this->sch;
-        }
-
-        template <typename Tag, typename Env>
-            requires requires(const Scheduler& scheduler, const Env& env) {
-                ::beman::execution::get_completion_domain<Tag>(scheduler, ::beman::execution::detail::fwd_env(env));
+        template <typename Tag, typename... Env>
+            requires requires(const Scheduler& scheduler, const Env&... env) {
+                ::beman::execution::get_completion_scheduler<Tag>(scheduler,
+                                                                  ::beman::execution::detail::fwd_env(env)...);
             }
-        auto query(::beman::execution::get_completion_domain_t<Tag>, const Env& env) const noexcept {
-            return ::beman::execution::get_completion_domain<Tag>(this->sch, ::beman::execution::detail::fwd_env(env));
+        auto query(::beman::execution::get_completion_scheduler_t<Tag>, const Env&... env) const noexcept {
+            return ::beman::execution::get_completion_scheduler<Tag>(this->sch, env...);
+        }
+
+        template <typename Tag, typename... Env>
+            requires requires(const Scheduler& scheduler, const Env&... env) {
+                ::beman::execution::get_completion_domain<Tag>(scheduler, ::beman::execution::detail::fwd_env(env)...);
+            }
+        auto query(::beman::execution::get_completion_domain_t<Tag>, const Env&... env) const noexcept {
+            return ::beman::execution::get_completion_domain<Tag>(this->sch,
+                                                                  ::beman::execution::detail::fwd_env(env)...);
         }
 
         template <typename Q, typename... Args>
@@ -162,7 +162,7 @@ struct continues_on_t {
 
   public:
     template <typename Sender, typename... Env>
-    static consteval auto get_completion_signatures() {
+    static consteval auto get_completion_signatures() noexcept {
         return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
     }
 
