@@ -144,11 +144,10 @@ struct starts_on_t {
     };
 
   public:
-    // template <typename Sender, typename... Env>
-    // static consteval auto get_completion_signatures() {
-    //     static_assert(false);
-    //     return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
-    // }
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() noexcept {
+        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
+    }
 
     struct impls_for : ::beman::execution::detail::default_impls {
         struct get_attrs_impl {
