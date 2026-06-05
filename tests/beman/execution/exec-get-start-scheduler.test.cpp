@@ -73,7 +73,7 @@ auto test_scheduler::schedule() const -> test_sched_sender { return {scheduler_i
 TEST(exec_get_start_scheduler) {
     {
         test_scheduler sched{42};
-        auto           sndr = test_std::schedule(sched) |
+        auto sndr = test_std::schedule(sched) |
                     test_std::let_value([]() noexcept { return test_std::read_env(test_std::get_start_scheduler); }) |
                     test_std::then([](test_scheduler sched) noexcept { ASSERT(sched == test_scheduler{42}); });
         test_std::sync_wait(std::move(sndr));
