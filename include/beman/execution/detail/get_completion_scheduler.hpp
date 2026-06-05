@@ -4,8 +4,6 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER
 
-#include "try_query.hpp"
-
 #include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/suppress_push.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
