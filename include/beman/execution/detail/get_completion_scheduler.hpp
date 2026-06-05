@@ -52,7 +52,7 @@ template <::beman::execution::detail::completion_tag Tag>
 struct get_completion_scheduler_t : ::beman::execution::forwarding_query_t {
     template <typename Q, typename... E>
         requires ::beman::execution::detail::compl_sched_recurse_queryable<Tag, Q, E...> ||
-                 (::beman::execution::scheduler<Q> && sizeof...(E) > 0)
+                 ::beman::execution::scheduler<Q>
     auto operator()(const Q& q, const E&... e) const noexcept;
 };
 
@@ -77,12 +77,12 @@ auto recurse_query(Scheduler sch, const Envs&... envs) noexcept {
 template <::beman::execution::detail::completion_tag Tag>
 template <typename Q, typename... E>
     requires ::beman::execution::detail::compl_sched_recurse_queryable<Tag, Q, E...> ||
-             (::beman::execution::scheduler<Q> && sizeof...(E) > 0)
+             ::beman::execution::scheduler<Q>
 auto get_completion_scheduler_t<Tag>::operator()(const Q& q, const E&... e) const noexcept {
     if constexpr (::beman::execution::detail::compl_sched_recurse_queryable<Tag, Q, E...>) {
         return ::beman::execution::detail::recurse_query(::beman::execution::detail::try_query(q, *this, e...), e...);
     } else {
-        static_assert(::beman::execution::scheduler<Q> && sizeof...(E) > 0);
+        static_assert(::beman::execution::scheduler<Q>);
         return q;
     }
 }
