@@ -42,6 +42,7 @@ import beman.execution.detail.let;
 import beman.execution.detail.matching_sig;
 import beman.execution.detail.on;
 import beman.execution.detail.operation_state;
+import beman.execution.detail.parallel_scheduler;
 import beman.execution.detail.prop;
 import beman.execution.detail.read_env;
 import beman.execution.detail.receiver;
@@ -107,6 +108,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/matching_sig.hpp>
 #include <beman/execution/detail/on.hpp>
 #include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/parallel_scheduler.hpp>
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/receiver.hpp>

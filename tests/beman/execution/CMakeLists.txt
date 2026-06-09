@@ -34,6 +34,7 @@ list(
     exec-just.test
     exec-let.test
     exec-on.test
+    exec-parallel-scheduler.test
     exec-opstate-start.test
     exec-opstate.test
     exec-prop.test
