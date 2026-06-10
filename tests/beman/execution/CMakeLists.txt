@@ -16,6 +16,7 @@ list(
     exec-bulk.test
     exec-connect.test
     exec-continues-on.test
+    exec-dependent-sender.test
     exec-domain-default.test
     exec-env.test
     exec-fwd-env.test
@@ -28,6 +29,7 @@ list(
     exec-get-domain.test
     exec-get-env.test
     exec-inline-scheduler.test
+    exec-get-start-scheduler.test
     exec-get-scheduler.test
     exec-get-stop-token.test
     exec-into-variant.test

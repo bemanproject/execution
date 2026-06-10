@@ -30,7 +30,7 @@ import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.set_value;
 import beman.execution.detail.store_receiver;
-import beman.execution.detail.unstoppable;
+import beman.execution.detail.unstoppable_scheduler;
 #else
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/continues_on.hpp>
@@ -48,31 +48,12 @@ import beman.execution.detail.unstoppable;
 #include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/store_receiver.hpp>
-#include <beman/execution/detail/unstoppable.hpp>
+#include <beman/execution/detail/unstoppable_scheduler.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <typename Sched>
-struct unstoppable_scheduler {
-    using scheduler_concept = typename Sched::scheduler_concept;
-
-    template <typename Q, typename... Args>
-        requires requires { ::std::declval<Sched>().query(::std::declval<const Q&>(), ::std::declval<Args>()...); }
-    auto query(const Q& q, Args&&... args) const noexcept -> decltype(auto) {
-        return sched.query(q, ::std::forward<Args>(args)...);
-    }
-
-    auto schedule() const noexcept(std::is_nothrow_invocable_v<::beman::execution::schedule_t, Sched>) {
-        return ::beman::execution::unstoppable(::beman::execution::schedule(sched));
-    }
-
-    friend auto operator==(const unstoppable_scheduler& lhs, const unstoppable_scheduler& rhs) -> bool = default;
-
-    Sched sched;
-};
-
 /**
  * @brief The affine_t struct is a sender adaptor closure that transforms a sender
  *        to complete on the scheduler obtained from the receiver's environment.

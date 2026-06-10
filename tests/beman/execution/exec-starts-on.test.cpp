@@ -81,6 +81,9 @@ auto test_use(Scheduler&& scheduler, Sender&& sender) -> void {
     test_std::sync_wait(std::move(s));
 }
 
+template <typename Env>
+concept has_start_scheduler_query = requires(const Env& env) { env.query(test_std::get_start_scheduler); };
+
 auto test_starts_on_completions() {
     test_std::sync_wait(test::completion_test(test_std::starts_on(test_std::inline_scheduler(), test_std::just())));
     test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() noexcept {})));
@@ -94,6 +97,23 @@ auto test_starts_on_completions() {
         })));
     test_std::sync_wait(test::completion_test(
         test_std::starts_on(test_std::inline_scheduler(), test_std::just() | test_std::then([]() noexcept {}))));
+}
+
+auto test_starts_on_start_scheduler() {
+    auto [sched] =
+        test_std::sync_wait(test_std::starts_on(scheduler{}, test_std::read_env(test_std::get_start_scheduler)))
+            .value();
+    static_assert(std::same_as<decltype(sched), scheduler>);
+}
+
+auto test_starts_on_attrs() {
+    using starts_on_sender = decltype(test_std::starts_on(scheduler{}, sender{}));
+    using attrs            = decltype(test_std::get_env(std::declval<const starts_on_sender&>()));
+
+    static_assert(not has_start_scheduler_query<attrs>);
+    static_assert(
+        std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(std::declval<const attrs&>())),
+                     scheduler>);
 }
 } // namespace
 
@@ -111,4 +131,6 @@ TEST(exec_starts_on) {
 
     test_use(scheduler{}, sender{});
     test_starts_on_completions();
+    test_starts_on_attrs();
+    test_starts_on_start_scheduler();
 }

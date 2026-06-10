@@ -22,6 +22,8 @@ import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.common_domain;
+import beman.execution.detail.compl_domain;
 import beman.execution.detail.decayed_tuple;
 import beman.execution.detail.decayed_type_list;
 import beman.execution.detail.default_domain;
@@ -32,6 +34,7 @@ import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
 import beman.execution.detail.error_types_of_t;
 import beman.execution.detail.get_env;
+import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_domain;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.impls_for;
@@ -61,6 +64,8 @@ import beman.execution.detail.transform_sender;
 import beman.execution.detail.type_list;
 import beman.execution.detail.value_types_of_t;
 #else
+#include <beman/execution/detail/compl_domain.hpp>
+#include <beman/execution/detail/common_domain.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/decayed_type_list.hpp>
@@ -71,6 +76,7 @@ import beman.execution.detail.value_types_of_t;
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/impls_for.hpp>
@@ -170,6 +176,48 @@ struct when_all_t {
         using type = ::beman::execution::detail::meta::combine<value_types, error_types, stopped_types>;
     };
 
+    template <typename... Sender>
+    struct attrs {
+        template <typename Tag, typename... Env>
+        using child_domain_t = ::beman::execution::detail::common_domain_t<
+            ::beman::execution::detail::compl_domain_of_t<Tag, Sender, Env...>...>;
+
+        template <typename... Env>
+            requires requires { typename child_domain_t<::beman::execution::set_value_t, Env...>; }
+        static auto query(::beman::execution::get_completion_domain_t<::beman::execution::set_value_t>,
+                          const Env&...) noexcept -> child_domain_t<::beman::execution::set_value_t, Env...> {
+            return {};
+        }
+
+        template <typename... Env>
+            requires requires {
+                typename ::beman::execution::detail::common_domain_t<
+                    child_domain_t<::beman::execution::set_value_t, Env...>,
+                    child_domain_t<::beman::execution::set_error_t, Env...>,
+                    child_domain_t<::beman::execution::set_stopped_t, Env...>>;
+            }
+        static auto query(::beman::execution::get_completion_domain_t<::beman::execution::set_error_t>,
+                          const Env&...) noexcept
+            -> ::beman::execution::detail::common_domain_t<child_domain_t<::beman::execution::set_value_t, Env...>,
+                                                           child_domain_t<::beman::execution::set_error_t, Env...>,
+                                                           child_domain_t<::beman::execution::set_stopped_t, Env...>> {
+            return {};
+        }
+
+        template <typename... Env>
+            requires requires {
+                typename ::beman::execution::detail::common_domain_t<
+                    child_domain_t<::beman::execution::set_value_t, Env...>,
+                    child_domain_t<::beman::execution::set_stopped_t, Env...>>;
+            }
+        static auto query(::beman::execution::get_completion_domain_t<::beman::execution::set_stopped_t>,
+                          const Env&...) noexcept
+            -> ::beman::execution::detail::common_domain_t<child_domain_t<::beman::execution::set_value_t, Env...>,
+                                                           child_domain_t<::beman::execution::set_stopped_t, Env...>> {
+            return {};
+        }
+    };
+
   public:
     template <typename Sender, typename... Env>
     static consteval auto get_completion_signatures() {
@@ -178,9 +226,13 @@ struct when_all_t {
 
     struct impls_for : ::beman::execution::detail::default_impls {
         struct get_attrs_impl {
-            auto operator()(auto&&, auto&&...) const { return ::beman::execution::env<>{}; }
+            template <typename... Children>
+            auto operator()(const auto&, const Children&...) const noexcept {
+                return attrs<Children...>{};
+            }
         };
         static constexpr auto get_attrs{get_attrs_impl{}};
+
         struct get_env_impl {
             template <typename State, typename Receiver>
             auto operator()(auto&&, State& state, const Receiver& receiver) const noexcept {

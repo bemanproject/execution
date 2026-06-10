@@ -84,6 +84,9 @@ auto test_use(Scheduler&& scheduler, Sender&& sender) {
     auto s{test_std::continues_on(::std::forward<Sender>(sender), ::std::forward<Scheduler>(scheduler))};
 
     static_assert(test_std::sender<decltype(s)>);
+    static_assert(
+        std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(s))),
+                     std::remove_cvref_t<Scheduler>>);
     //-dk:TODO test_std::sync_wait(std::move(s));
 }
 } // namespace
