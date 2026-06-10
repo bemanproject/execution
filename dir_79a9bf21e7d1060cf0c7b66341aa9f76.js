@@ -188,6 +188,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "unreachable.hpp", "unreachable_8hpp_source.html", null ],
     [ "unspecified_promise.hpp", "unspecified__promise_8hpp_source.html", null ],
     [ "unstoppable.hpp", "unstoppable_8hpp_source.html", null ],
+    [ "unstoppable_scheduler.hpp", "unstoppable__scheduler_8hpp_source.html", null ],
     [ "unstoppable_token.hpp", "unstoppable__token_8hpp_source.html", null ],
     [ "valid_completion_for.hpp", "valid__completion__for_8hpp_source.html", null ],
     [ "valid_completion_signatures.hpp", "valid__completion__signatures_8hpp_source.html", null ],

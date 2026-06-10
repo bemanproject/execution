@@ -171,7 +171,7 @@ $(document).ready(function(){initNavTree('basic__sender_8hpp_source.html',''); i
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">auto</span> get_env() const noexcept -&gt; decltype(auto) {</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keyword">auto</span>&amp;&amp; d{this-&gt;<span class="keyword">template</span> get&lt;1&gt;()};</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">return</span> sub_apply.at&lt;2&gt;(</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            [&amp;d](<span class="keyword">auto</span>&amp;&amp;... c) { return ::beman::execution::detail::impls_for&lt;Tag&gt;::get_attrs(d, c...); }, *<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            [&amp;d](<span class="keyword">auto</span>&amp;&amp;... c) { return ::beman::execution::detail::get_impls_for&lt;Tag&gt;::get_attrs()(d, c...); }, *<span class="keyword">this</span>);</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    }</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Receiver&gt;</div>
@@ -211,7 +211,7 @@ $(document).ready(function(){initNavTree('basic__sender_8hpp_source.html',''); i
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">template</span> &lt;::beman::execution::detail::decays_to&lt;basic_sender&gt; Self, <span class="keyword">typename</span>... Env&gt;</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keyword">requires</span>(<span class="keyword">sizeof</span>...(Env) == 1) || (... &amp;&amp; !::beman::execution::dependent_sender&lt;Child&gt;)</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keyword">static</span> <span class="keyword">consteval</span> <span class="keyword">auto</span> get_completion_signatures() <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keyword">static</span> <span class="keyword">consteval</span> <span class="keyword">auto</span> get_completion_signatures() {</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { Tag::template get_completion_signatures&lt;Self, Env...&gt;(); })</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            <span class="keywordflow">return</span> Tag::template get_completion_signatures&lt;Self, Env...&gt;();</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keywordflow">else</span></div>
