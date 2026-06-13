@@ -23,7 +23,7 @@ import beman.execution.detail.unstoppable;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <typename Sched>
+template <::beman::execution::scheduler Sched>
 struct unstoppable_scheduler {
     using scheduler_concept = typename Sched::scheduler_concept;
 
@@ -33,8 +33,10 @@ struct unstoppable_scheduler {
         return sched.query(q, ::std::forward<Args>(args)...);
     }
 
-    auto schedule() const noexcept(std::is_nothrow_invocable_v<::beman::execution::schedule_t, Sched>) {
-        return ::beman::execution::unstoppable(::beman::execution::schedule(sched));
+    template <typename Self>
+        requires requires { ::beman::execution::schedule(::std::declval<Self>().sched); }
+    auto schedule(this Self&& self) noexcept(noexcept(::beman::execution::schedule(::std::declval<Self>().sched))) {
+        return ::beman::execution::unstoppable(::beman::execution::schedule(::std::forward<Self>(self).sched));
     }
 
     friend auto operator==(const unstoppable_scheduler& lhs, const unstoppable_scheduler& rhs) -> bool = default;
@@ -42,5 +44,7 @@ struct unstoppable_scheduler {
     Sched sched;
 };
 } // namespace beman::execution::detail
+
+// ----------------------------------------------------------------------------
 
 #endif // INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_SCHEDULER

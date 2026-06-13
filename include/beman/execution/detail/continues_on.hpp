@@ -182,6 +182,7 @@ struct continues_on_t {
             State* state;
 
             auto set_value() && noexcept -> void {
+                constexpr bool nothrow = std::is_nothrow_move_constructible_v<decltype(state->async_result)>;
                 try {
                     ::std::visit(
                         [this]<typename Tuple>(Tuple& result) noexcept -> void {
@@ -195,7 +196,9 @@ struct continues_on_t {
                         },
                         state->async_result);
                 } catch (...) {
-                    ::beman::execution::set_error(::std::move(state->receiver), ::std::current_exception());
+                    if constexpr (!nothrow) {
+                        ::beman::execution::set_error(::std::move(state->receiver), ::std::current_exception());
+                    }
                 }
             }
 
@@ -266,8 +269,9 @@ struct continues_on_t {
                         state.async_result.template emplace<result_t>(Tag(), std::forward<Args>(args)...);
                     }();
                 } catch (...) {
-                    if constexpr (not nothrow)
+                    if constexpr (!nothrow) {
                         ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
+                    }
                 }
 
                 if (state.async_result.index() == 0)
