@@ -12,7 +12,7 @@ namespace beman::execution::detail {
 export using beman::execution::detail::basic_sender;
 } // namespace beman::execution::detail
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && _MSVC_VER <= 1944L
 namespace std {
 export template <typename Tag, typename Data, typename... Child>
 struct tuple_size<::beman::execution::detail::basic_sender<Tag, Data, Child...>>
