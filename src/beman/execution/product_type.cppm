@@ -14,7 +14,7 @@ export using beman::execution::detail::product_type;
 
 } // namespace beman::execution::detail
 
-#if defined(_MSC_VER) && _MSVC_VER <= 1944L
+#if defined(_MSC_VER) && _MSC_VER <= 1944L
 namespace std {
 export template <typename... T>
 struct tuple_size<::beman::execution::detail::product_type<T...>>;
