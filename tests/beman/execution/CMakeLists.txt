@@ -155,6 +155,7 @@ if(BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE AND NOT CMAKE_SKIP_INSTALL_RULES)
             --build-generator ${CMAKE_GENERATOR} #
             --build-makeprogram ${CMAKE_MAKE_PROGRAM} #
             --build-options #
+            "-D BEMAN_BUILDSYS_SANITIZER=${BEMAN_BUILDSYS_SANITIZER}"
             "-D BEMAN_USE_MODULES=${BEMAN_USE_MODULES}"
             "-D BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}"
             "-D CMAKE_BUILD_TYPE=$<CONFIG>"
