@@ -4,8 +4,14 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_ALLOCATOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_ALLOCATOR
 
-#include <cstddef>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#include <cstddef>
+#include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -21,4 +27,4 @@ concept simple_allocator =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SIMPLE_ALLOCATOR

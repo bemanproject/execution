@@ -5,11 +5,18 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_FWD_ENV
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/forwarding_query.hpp>
+#include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
 #include <utility>
-
-#include <beman/execution/detail/suppress_push.hpp>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.forwarding_query;
+#else
+#include <beman/execution/detail/forwarding_query.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -19,7 +26,7 @@ namespace beman::execution::detail {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename Env>
+template <typename Env> //-dk:TODO detail export
 class fwd_env {
   private:
     Env env;
@@ -48,4 +55,4 @@ fwd_env(Env&&) -> fwd_env<Env>;
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_FWD_ENV

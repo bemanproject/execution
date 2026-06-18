@@ -1,14 +1,26 @@
 // include/beman/execution/detail/counting_scope_base.hpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE
 
-#include <beman/execution/detail/immovable.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <cstddef>
 #include <exception>
+#include <limits>
 #include <mutex>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.immovable;
+import beman.execution.detail.unreachable;
+#else
+#include <beman/execution/detail/immovable.hpp>
+#include <beman/execution/detail/unreachable.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -24,7 +36,7 @@ class beman::execution::detail::counting_scope_base : ::beman::execution::detail
     counting_scope_base(counting_scope_base&&) = delete;
     ~counting_scope_base();
 
-    static constexpr ::std::size_t max_associations{8194u};
+    static constexpr ::std::size_t max_associations = ::std::numeric_limits<::std::size_t>::max();
 
     auto close() noexcept -> void;
 
@@ -36,14 +48,47 @@ class beman::execution::detail::counting_scope_base : ::beman::execution::detail
     auto start_node(node*) -> void;
 
   protected:
-    class token {
+    class assoc_t {
       public:
-        auto try_associate() const noexcept -> bool { return this->scope->try_associate(); }
-        auto disassociate() const noexcept -> void { this->scope->disassociate(); }
+        assoc_t() = default;
+
+        explicit assoc_t(counting_scope_base& scope) noexcept : scope(&scope) {}
+
+        assoc_t(const assoc_t&) = delete;
+
+        assoc_t(assoc_t&& other) noexcept : scope(::std::exchange(other.scope, nullptr)) {}
+
+        ~assoc_t() {
+            if (this->scope) {
+                this->scope->disassociate();
+            }
+        }
+
+        auto operator=(assoc_t other) noexcept -> assoc_t& {
+            ::std::swap(scope, other.scope);
+            return *this;
+        }
+
+        explicit operator bool() const noexcept { return this->scope != nullptr; }
+
+        auto try_associate() const noexcept -> assoc_t {
+            if (this->scope) {
+                return this->scope->try_associate();
+            }
+            return assoc_t{};
+        }
+
+      private:
+        counting_scope_base* scope = nullptr;
+    };
+
+    class token_base {
+      public:
+        auto try_associate() const noexcept -> assoc_t { return this->scope->try_associate(); }
 
       protected:
-        explicit token(::beman::execution::detail::counting_scope_base* s) : scope(s) {}
-        ::beman::execution::detail::counting_scope_base* scope;
+        explicit token_base(counting_scope_base* s) : scope(s) {}
+        counting_scope_base* scope;
     };
 
   private:
@@ -57,10 +102,11 @@ class beman::execution::detail::counting_scope_base : ::beman::execution::detail
         joined
     };
 
-    auto try_associate() noexcept -> bool;
+    auto try_associate() noexcept -> assoc_t;
+
     auto disassociate() noexcept -> void;
-    auto complete() noexcept -> void;
-    auto add_node(node* n, ::std::lock_guard<::std::mutex>&) noexcept -> void;
+
+    auto add_node(node* n) noexcept -> void;
 
     ::std::mutex mutex;
     //-dk:TODO fuse state and count and use atomic accesses
@@ -99,69 +145,69 @@ inline auto beman::execution::detail::counting_scope_base::close() noexcept -> v
     }
 }
 
-inline auto beman::execution::detail::counting_scope_base::add_node(node* n, ::std::lock_guard<::std::mutex>&) noexcept
-    -> void {
-    n->next = std::exchange(this->head, n);
+inline auto beman::execution::detail::counting_scope_base::add_node(node* n) noexcept -> void {
+    n->next = ::std::exchange(this->head, n);
 }
 
-inline auto beman::execution::detail::counting_scope_base::try_associate() noexcept -> bool {
+inline auto beman::execution::detail::counting_scope_base::try_associate() noexcept -> assoc_t {
     ::std::lock_guard lock(this->mutex);
+    if (this->count == max_associations) {
+        return assoc_t{};
+    }
+
     switch (this->state) {
     default:
-        return false;
+        return assoc_t{};
     case state_t::unused:
         this->state = state_t::open; // fall-through!
         [[fallthrough]];
     case state_t::open:
     case state_t::open_and_joining:
         ++this->count;
-        return true;
+        return assoc_t{*this};
     }
 }
 
 inline auto beman::execution::detail::counting_scope_base::disassociate() noexcept -> void {
-    {
-        ::std::lock_guard lock(this->mutex);
-        if (0u < --this->count)
-            return;
-        this->state = state_t::joined;
-    }
-    this->complete();
-}
+    ::std::unique_lock guard(this->mutex);
+    if (--this->count > 0u || (this->state != state_t::open_and_joining && this->state != state_t::closed_and_joining))
+        return;
 
-inline auto beman::execution::detail::counting_scope_base::complete() noexcept -> void {
-    node* current{[this] {
-        ::std::lock_guard lock(this->mutex);
-        return ::std::exchange(this->head, nullptr);
-    }()};
+    this->state   = state_t::joined;
+    node* current = ::std::exchange(this->head, nullptr);
+    guard.unlock();
+
     while (current) {
         ::std::exchange(current, current->next)->complete();
     }
 }
 
 inline auto beman::execution::detail::counting_scope_base::start_node(node* n) -> void {
-    ::std::lock_guard kerberos(this->mutex);
-    switch (this->state) {
-    case ::beman::execution::detail::counting_scope_base::state_t::unused:
-    case ::beman::execution::detail::counting_scope_base::state_t::unused_and_closed:
-    case ::beman::execution::detail::counting_scope_base::state_t::joined:
-        this->state = ::beman::execution::detail::counting_scope_base::state_t::joined;
+    ::std::unique_lock guard(this->mutex);
+    if (this->count == 0u) {
+        this->state = state_t::joined;
+        guard.unlock();
         n->complete_inline();
         return;
-    case ::beman::execution::detail::counting_scope_base::state_t::open:
-        this->state = ::beman::execution::detail::counting_scope_base::state_t::open_and_joining;
-        break;
-    case ::beman::execution::detail::counting_scope_base::state_t::open_and_joining:
-        break;
-    case ::beman::execution::detail::counting_scope_base::state_t::closed:
-        this->state = ::beman::execution::detail::counting_scope_base::state_t::closed_and_joining;
-        break;
-    case ::beman::execution::detail::counting_scope_base::state_t::closed_and_joining:
-        break;
     }
-    this->add_node(n, kerberos);
+
+    switch (this->state) {
+    case state_t::open:
+        this->state = state_t::open_and_joining;
+        break;
+    case state_t::open_and_joining:
+        break;
+    case state_t::closed:
+        this->state = state_t::closed_and_joining;
+        break;
+    case state_t::closed_and_joining:
+        break;
+    default:
+        ::beman::execution::detail::unreachable();
+    }
+    this->add_node(n);
 }
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_BASE

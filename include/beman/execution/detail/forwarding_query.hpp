@@ -5,9 +5,13 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARDING_QUERY
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
 #include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -55,4 +59,4 @@ inline constexpr forwarding_query_t forwarding_query{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_FORWARDING_QUERY

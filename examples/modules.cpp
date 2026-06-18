@@ -8,14 +8,13 @@ import std;
 #include <version>
 #include <iostream>
 #include <string>
+#include <variant>
+#include <optional>
+#include <tuple>
 
 #endif
 
-#if __cpp_modules < 201907L
-#include <beman/execution/execution.hpp>
-#else
-import beman_execution;
-#endif
+import beman.execution;
 
 namespace ex = beman::execution;
 

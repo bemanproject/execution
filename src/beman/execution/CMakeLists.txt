@@ -3,16 +3,13 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-if(NOT TARGET ${TARGET_NAME})
-    add_library(${TARGET_NAME} STATIC)
-endif()
-add_library(${TARGET_ALIAS} ALIAS ${TARGET_NAME})
+add_library(${BEMAN_EXECUTION_TARGET_NAME} INTERFACE)
+add_library(beman::execution_headers ALIAS ${BEMAN_EXECUTION_TARGET_NAME})
 
 target_sources(
-    ${TARGET_NAME}
-    PRIVATE execution.cpp
+    ${BEMAN_EXECUTION_TARGET_NAME}
     PUBLIC
-        FILE_SET ${TARGET_NAME}_public_headers
+        FILE_SET public_headers
             TYPE HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}/include
             FILES
@@ -22,12 +19,13 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution26/execution.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution26/stop_token.hpp
     PUBLIC
-        FILE_SET ${TARGET_NAME}_detail_headers
+        FILE_SET detail_headers
             TYPE HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}/include
             FILES
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/affine_on.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/affine.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/allocator_aware_move.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/allocator_of.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/almost_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/apply_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/as_awaitable.hpp
@@ -49,7 +47,9 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/child_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/class_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/common.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_domain.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/common_domain.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/compl_domain.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signature.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures_for.hpp
@@ -71,41 +71,56 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decays_to.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_impls.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender_error.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/execution_policy.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/emplace_from.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env_of_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env_promise.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env_type.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/error_types_of.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/error_types_of_t.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/find_allocator.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/forward_like.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/forwarding_query.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/fwd_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/gather_signatures.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_allocator.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_await_completion_adaptor.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_awaiter.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_completion_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_completion_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_completion_signatures.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_delegation_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_domain.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_domain_early.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_domain_late.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_env.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_forward_progress_guarantee.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_scheduler.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_start_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_stop_token.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/handle.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/has_as_awaitable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/has_completions.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/hide_sched.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/immovable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/impls_for.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/indeterminate_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/indices_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/indirect_meta_apply.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/infallible_scheduler.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/inline_attrs.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/inline_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/inplace_stop_source.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/into_variant.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/intrusive_stack.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_awaitable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_awaiter.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_constant.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/join_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/just.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/let.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/logger.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/matching_sig.hpp
@@ -119,7 +134,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_transform.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_unique.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/movable_value.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nested_sender_has_affine_on.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nested_sender_has_affine.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/never_stop_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/non_assignable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nostopstate.hpp
@@ -130,6 +145,8 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state_task.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/product_type.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/poly.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/promise_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/prop.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/query_with_default.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/queryable.hpp
@@ -137,13 +154,13 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/receiver.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/receiver_of.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/run_loop.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sched_attrs.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sched_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule_from.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule_result_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler_t.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scheduler_tag.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_association.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/scope_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_adaptor.hpp
@@ -151,8 +168,9 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_awaitable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_decompose.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_for.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_has_affine_on.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_has_affine.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_in.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_to.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sends_stopped.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/set_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/set_stopped.hpp
@@ -164,26 +182,37 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_future.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/spawn_get_allocator.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/split.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/start.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/starts_on.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/state_rep.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/state_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_callback_for_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_source.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_source_of.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_token_of_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_when.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stoppable_source.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stoppable_token.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stoppable_token_traits.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stopped_as_error.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stopped_as_optional.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/store_receiver.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sub_visit.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suppress_pop.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suppress_push.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/suspend_complete.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sync_wait.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sync_wait_with_variant.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/tag_of_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/then.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/transform_sender.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/try_query.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/type_list.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unspecified_promise.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable_token.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unreachable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_signatures.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_specialization.hpp
@@ -193,49 +222,227 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/when_all_with_variant.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/with_await_transform.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/with_awaitable_senders.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/with_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/write_env.hpp
 )
 
 if(BEMAN_USE_MODULES)
     target_sources(
-        ${TARGET_NAME}
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PRIVATE execution.cpp # TODO(CK): check if really needed!
         PUBLIC
             FILE_SET CXX_MODULES
-                BASE_DIRS ${PROJECT_SOURCE_DIR}/src/beman/execution
-                FILES ${PROJECT_SOURCE_DIR}/src/beman/execution/execution.cppm
+                FILES
+                    execution.cppm
+                    execution-detail.cppm
+                    affine.cppm
+                    allocator_aware_move.cppm
+                    almost_scheduler.cppm
+                    apply_sender.cppm
+                    as_awaitable.cppm
+                    as_except_ptr.cppm
+                    as_tuple.cppm
+                    associate.cppm
+                    atomic_intrusive_stack.cppm
+                    await_result_type.cppm
+                    await_suspend_result.cppm
+                    awaitable_sender.cppm
+                    basic_operation.cppm
+                    basic_receiver.cppm
+                    basic_sender.cppm
+                    basic_state.cppm
+                    bulk.cppm
+                    call_result_t.cppm
+                    callable.cppm
+                    check_type_alias_exist.cppm
+                    child_type.cppm
+                    class_type.cppm
+                    common_domain.cppm
+                    compl_domain.cppm
+                    completion_signature.cppm
+                    completion_signatures_for.cppm
+                    completion_signatures_of_t.cppm
+                    completion_signatures.cppm
+                    completion_tag.cppm
+                    connect_all_result.cppm
+                    connect_all.cppm
+                    connect_awaitable.cppm
+                    connect_result_t.cppm
+                    connect.cppm
+                    continues_on.cppm
+                    counting_scope_base.cppm
+                    counting_scope_join.cppm
+                    counting_scope.cppm
+                    decayed_same_as.cppm
+                    decayed_tuple.cppm
+                    decayed_type_list.cppm
+                    decayed_typeof.cppm
+                    decays_to.cppm
+                    default_domain.cppm
+                    default_impls.cppm
+                    dependent_sender.cppm
+                    dependent_sender_error.cppm
+                    execution_policy.cppm
+                    emplace_from.cppm
+                    enable_sender.cppm
+                    env_of_t.cppm
+                    env_promise.cppm
+                    env_type.cppm
+                    env.cppm
+                    error_types_of_t.cppm
+                    forward_like.cppm
+                    forwarding_query.cppm
+                    fwd_env.cppm
+                    gather_signatures.cppm
+                    get_allocator.cppm
+                    get_await_completion_adaptor.cppm
+                    get_awaiter.cppm
+                    get_completion_domain.cppm
+                    get_completion_scheduler.cppm
+                    get_completion_signatures.cppm
+                    get_delegation_scheduler.cppm
+                    get_domain.cppm
+                    get_env.cppm
+                    get_forward_progress_guarantee.cppm
+                    get_scheduler.cppm
+                    get_start_scheduler.cppm
+                    get_stop_token.cppm
+                    has_as_awaitable.cppm
+                    has_completions.cppm
+                    hide_sched.cppm
+                    immovable.cppm
+                    impls_for.cppm
+                    indeterminate_domain.cppm
+                    indices_for.cppm
+                    indirect_meta_apply.cppm
+                    infallible_scheduler.cppm
+                    inline_attrs.cppm
+                    inline_scheduler.cppm
+                    inplace_stop_source.cppm
+                    into_variant.cppm
+                    intrusive_stack.cppm
+                    is_awaitable.cppm
+                    is_awaiter.cppm
+                    is_constant.cppm
+                    is_sender.cppm
+                    join_env.cppm
+                    just.cppm
+                    let.cppm
+                    make_env.cppm
+                    make_sender.cppm
+                    matching_sig.cppm
+                    meta_combine.cppm
+                    meta_contains.cppm
+                    meta_contain_same.cppm
+                    meta_filter.cppm
+                    meta_prepend.cppm
+                    meta_size.cppm
+                    meta_to.cppm
+                    meta_transform.cppm
+                    meta_unique.cppm
+                    movable_value.cppm
+                    nested_sender_has_affine.cppm
+                    never_stop_token.cppm
+                    notify.cppm
+                    non_assignable.cppm
+                    nostopstate.cppm
+                    nothrow_callable.cppm
+                    on_stop_request.cppm
+                    on.cppm
+                    operation_state_task.cppm
+                    operation_state.cppm
+                    product_type.cppm
+                    prop.cppm
+                    query_with_default.cppm
+                    queryable.cppm
+                    read_env.cppm
+                    receiver_of.cppm
+                    receiver.cppm
+                    run_loop.cppm
+                    sched_env.cppm
+                    schedule_from.cppm
+                    schedule_result_t.cppm
+                    schedule.cppm
+                    scheduler_tag.cppm
+                    scheduler.cppm
+                    scope_association.cppm
+                    scope_token.cppm
+                    sender_adaptor_closure.cppm
+                    sender_adaptor.cppm
+                    sender_awaitable.cppm
+                    sender_decompose.cppm
+                    sender_for.cppm
+                    sender_has_affine.cppm
+                    sender_in.cppm
+                    sender.cppm
+                    sender_to.cppm
+                    sends_stopped.cppm
+                    set_error.cppm
+                    set_stopped.cppm
+                    set_value.cppm
+                    simple_allocator.cppm
+                    simple_counting_scope.cppm
+                    single_sender_value_type.cppm
+                    single_sender.cppm
+                    spawn_future.cppm
+                    spawn_get_allocator.cppm
+                    spawn.cppm
+                    start.cppm
+                    starts_on.cppm
+                    state_type.cppm
+                    stoppable_callback_for.cppm
+                    stop_callback_for_t.cppm
+                    stop_source.cppm
+                    stop_token_of_t.cppm
+                    stop_when.cppm
+                    stoppable_source.cppm
+                    stoppable_token.cppm
+                    stoppable_token_traits.cppm
+                    stopped_as_error.cppm
+                    stopped_as_optional.cppm
+                    store_receiver.cppm
+                    suspend_complete.cppm
+                    sync_wait.cppm
+                    sync_wait_with_variant.cppm
+                    tag_of_t.cppm
+                    then.cppm
+                    transform_sender.cppm
+                    try_query.cppm
+                    type_list.cppm
+                    unspecified_promise.cppm
+                    unstoppable.cppm
+                    unstoppable_scheduler.cppm
+                    unstoppable_token.cppm
+                    unreachable.cppm
+                    valid_completion_for.cppm
+                    valid_completion_signatures.cppm
+                    valid_specialization.cppm
+                    value_types_of_t.cppm
+                    variant_or_empty.cppm
+                    when_all.cppm
+                    when_all_with_variant.cppm
+                    with_await_transform.cppm
+                    with_awaitable_senders.cppm
+                    write_env.cppm
+    )
+    target_compile_definitions(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PUBLIC BEMAN_HAS_MODULES
+    )
+    target_link_libraries(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PUBLIC ${BEMAN_EXECUTION_TARGET_NAME}
     )
 endif()
 
 get_property(
     DETAIL_HEADER_FILES
-    TARGET ${TARGET_NAME}
-    PROPERTY HEADER_SET_${TARGET_NAME}_detail_headers
+    TARGET ${BEMAN_EXECUTION_TARGET_NAME}
+    PROPERTY HEADER_SET_detail_headers
 )
 source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
-set_target_properties(${TARGET_NAME} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
-
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
-    return()
-endif()
-
-install(
-    TARGETS ${TARGET_NAME}
-    EXPORT ${TARGETS_EXPORT_NAME}1
-    ARCHIVE DESTINATION lib/$<CONFIG>
-    FILE_SET ${TARGET_NAME}_public_headers
-    FILE_SET ${TARGET_NAME}_detail_headers
-    FILE_SET CXX_MODULES DESTINATION ${INSTALL_CONFIGDIR}/module
-    # There's currently no convention for this location
-    CXX_MODULES_BMI
-        DESTINATION ${INSTALL_CONFIGDIR}/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
-)
-
-install(
-    EXPORT ${TARGETS_EXPORT_NAME}1
-    FILE ${TARGETS_EXPORT_NAME}.cmake
-    DESTINATION "${INSTALL_CONFIGDIR}"
-    NAMESPACE ${TARGET_NAMESPACE}::
-    CXX_MODULES_DIRECTORY
-    .
+set_target_properties(
+    ${BEMAN_EXECUTION_TARGET_NAME}
+    PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON
 )

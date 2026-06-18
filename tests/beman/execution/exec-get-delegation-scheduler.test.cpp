@@ -1,15 +1,17 @@
 // src/beman/execution/tests/exec-get-delegation-scheduler.test.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/get_delegation_scheduler.hpp>
-
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
-
-#include <test/execution.hpp>
-#include <concepts>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -27,10 +29,10 @@ struct env {
 };
 
 struct scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
 
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         int  value{};
         auto get_env() const noexcept -> env<true, scheduler> { return {this->value}; }
     };

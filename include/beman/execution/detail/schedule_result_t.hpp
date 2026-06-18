@@ -4,9 +4,19 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT
 
-#include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution/detail/schedule.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.schedule;
+import beman.execution.detail.scheduler;
+#else
+#include <beman/execution/detail/schedule.hpp>
+#include <beman/execution/detail/scheduler.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -17,4 +27,4 @@ using schedule_result_t = decltype(::beman::execution::schedule(::std::declval<S
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT

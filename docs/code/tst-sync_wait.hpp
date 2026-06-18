@@ -32,7 +32,7 @@ struct add_set_value {
     struct add_signature<tst::ex::completion_signatures<S...>, false> {
         using type = tst::ex::completion_signatures<tst::ex::set_value_t(), S...>;
     };
-    using sender_concept = tst::ex::sender_t;
+    using sender_concept = tst::ex::sender_tag;
     template <typename Env>
     constexpr auto get_completion_signatures(const Env& e) noexcept {
         using orig = decltype(tst::ex::get_completion_signatures(std::declval<Sender>(), e));

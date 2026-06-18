@@ -6,12 +6,16 @@
 // which gets started in a thread. To stop this thread
 // the corresponding stop source is requested to stop.
 
-#include <beman/execution/execution.hpp>
-#include <beman/execution/stop_token.hpp>
 #include <chrono>
 #include <iostream>
 #include <thread>
 #include <cassert>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#include <beman/execution/stop_token.hpp>
+#endif
 
 using namespace std::chrono;
 namespace ex = beman::execution;
@@ -29,11 +33,11 @@ struct env {
 
 template <typename Sender>
 struct inject_cancel_sender {
-    using sender_concept = ex::sender_t;
+    using sender_concept = ex::sender_tag;
 
     template <typename Receiver>
     struct receiver {
-        using receiver_concept = ex::receiver_t;
+        using receiver_concept = ex::receiver_tag;
 
         std::remove_cvref_t<Receiver> inner_receiver;
         ex::inplace_stop_token        token{};
@@ -51,9 +55,9 @@ struct inject_cancel_sender {
         auto set_stopped() noexcept -> void { ex::set_stopped(std::move(inner_receiver)); }
     };
 
-    template <typename E>
-    auto get_completion_signatures(const E&) {
-        return ex::get_completion_signatures(this->sender, env{ex::inplace_stop_token{}});
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() {
+        return ex::get_completion_signatures<Sender, decltype(env{ex::inplace_stop_token{}})>();
     }
 
     ex::inplace_stop_token token{};
@@ -69,7 +73,7 @@ template <typename S>
 inject_cancel_sender(ex::inplace_stop_token, S&&) -> inject_cancel_sender<std::decay_t<S>>;
 
 struct receiver {
-    using receiver_concept = ex::receiver_t;
+    using receiver_concept = ex::receiver_tag;
     auto set_value(auto&&...) noexcept -> void {}
     auto set_error(auto&&) noexcept -> void {}
     auto set_stopped() noexcept -> void {}
@@ -84,12 +88,13 @@ int main() {
             inject_cancel_sender{token, ex::read_env(ex::get_stop_token) | ex::then([](ex::inplace_stop_token tok) {
                                             while (not tok.stop_requested()) {
                                                 std::cout << "sleeping\n";
-                                                std::this_thread::sleep_for(1s);
+                                                std::this_thread::sleep_for(10ms);
                                             }
                                         })});
     });
 
-    std::cin.get();
+    // std::cin.get();
+    std::this_thread::sleep_for(100ms);
     std::cout << "requesting stop\n";
     source.request_stop();
 

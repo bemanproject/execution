@@ -4,9 +4,36 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_RUN_LOOP
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_RUN_LOOP
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <condition_variable>
+#include <exception>
+#include <mutex>
+#include <type_traits>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signatures;
+import beman.execution.detail.env;
+import beman.execution.detail.get_completion_scheduler;
+import beman.execution.detail.get_env;
+import beman.execution.detail.get_forward_progress_guarantee;
+import beman.execution.detail.get_stop_token;
+import beman.execution.detail.immovable;
+import beman.execution.detail.operation_state;
+import beman.execution.detail.scheduler;
+import beman.execution.detail.scheduler_tag;
+import beman.execution.detail.sender;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.unstoppable_token;
+#else
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/get_forward_progress_guarantee.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/immovable.hpp>
 #include <beman/execution/detail/operation_state.hpp>
@@ -15,12 +42,7 @@
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/unstoppable_token.hpp>
-
-#include <exception>
-#include <condition_variable>
-#include <mutex>
-#include <type_traits>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -45,7 +67,7 @@ class run_loop {
 
     template <typename Receiver>
     struct opstate : opstate_base {
-        using operation_state_concept = ::beman::execution::operation_state_t;
+        using operation_state_concept = ::beman::execution::operation_state_tag;
 
         run_loop* loop;
         Receiver  receiver;
@@ -67,10 +89,11 @@ class run_loop {
         }
     };
     struct sender {
-        using sender_concept = ::beman::execution::sender_t;
-        template <typename Env = ::beman::execution::env<>>
-        auto get_completion_signatures(Env&& env) const noexcept {
-            if constexpr (::beman::execution::unstoppable_token<decltype(::beman::execution::get_stop_token(env))>)
+        using sender_concept = ::beman::execution::sender_tag;
+        template <typename, typename... Env>
+        static consteval auto get_completion_signatures() noexcept {
+            if constexpr (::beman::execution::unstoppable_token<decltype(::beman::execution::get_stop_token(
+                              std::declval<Env>()...))>)
                 return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>{};
             else
                 return ::beman::execution::completion_signatures<::beman::execution::set_value_t(),
@@ -86,12 +109,17 @@ class run_loop {
         }
     };
     struct scheduler {
-        using scheduler_concept = ::beman::execution::scheduler_t;
+        using scheduler_concept = ::beman::execution::scheduler_tag;
 
         run_loop* loop;
 
         auto schedule() noexcept -> sender { return {this->loop}; }
         auto operator==(const scheduler&) const -> bool = default;
+
+        static constexpr auto query(::beman::execution::get_forward_progress_guarantee_t) noexcept
+            -> ::beman::execution::forward_progress_guarantee {
+            return ::beman::execution::forward_progress_guarantee::parallel;
+        }
     };
 
     enum class state : unsigned char { starting, running, finishing };
@@ -133,7 +161,7 @@ class run_loop {
     auto operator=(const run_loop&) -> run_loop& = delete;
     auto operator=(run_loop&&) -> run_loop&      = delete;
 
-    auto get_scheduler() -> scheduler { return {this}; }
+    auto get_scheduler() noexcept -> scheduler { return {this}; }
 
     auto run() -> void {
         if (::std::lock_guard guard(this->mutex);
@@ -147,10 +175,8 @@ class run_loop {
         }
     }
     auto finish() -> void {
-        {
-            ::std::lock_guard guard(this->mutex);
-            this->current_state = state::finishing;
-        }
+        ::std::lock_guard guard(this->mutex);
+        this->current_state = state::finishing;
         this->condition.notify_one();
     }
 };
@@ -158,4 +184,4 @@ class run_loop {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_RUN_LOOP

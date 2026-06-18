@@ -19,14 +19,3 @@ repos:
     - id: gersemi
       name: CMake linting
       exclude: ^.*/tests/.*/data/ # Exclude test data directories
-
-  # Python linting and formatting
-  # config file: ruff.toml (not currently present but add if needed)
-  # https://docs.astral.sh/ruff/configuration/
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.2
-    hooks:
-      - id: ruff-check
-        files: ^tools/beman-tidy/
-      - id: ruff-format
-        files: ^tools/beman-tidy/

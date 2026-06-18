@@ -4,7 +4,12 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_UNSPECIFIED_PROMISE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_UNSPECIFIED_PROMISE
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
+#endif
 
 namespace beman::execution::detail {
 struct unspecified_promise {
@@ -17,4 +22,4 @@ struct unspecified_promise {
 };
 } // namespace beman::execution::detail
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_UNSPECIFIED_PROMISE

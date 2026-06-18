@@ -4,8 +4,17 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF
 
-#include <beman/execution/detail/sender_decompose.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.sender_decompose;
+#else
+#include <beman/execution/detail/sender_decompose.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -16,4 +25,4 @@ using tag_of_t = typename decltype(::beman::execution::detail::get_sender_meta(:
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF

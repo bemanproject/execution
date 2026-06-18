@@ -4,9 +4,14 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_SUSPEND_RESULT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_SUSPEND_RESULT
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <coroutine>
 #include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -38,4 +43,4 @@ concept await_suspend_result =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AWAIT_SUSPEND_RESULT

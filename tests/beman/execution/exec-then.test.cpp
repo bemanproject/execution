@@ -1,8 +1,17 @@
 // src/beman/execution/tests/exec-then.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <memory_resource>
+#include <optional>
+#include <tuple>
+#include <utility>
+#include <test/execution.hpp>
+#include <test/completion_test.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/then.hpp>
-
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
@@ -12,9 +21,7 @@
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
-#include <concepts>
-#include <memory_resource>
-#include <test/execution.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -29,7 +36,7 @@ struct get_value_t : test_std::forwarding_query_t {
 };
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     auto set_error(auto&&) && noexcept -> void {}
     auto set_stopped() && noexcept -> void {}
@@ -43,8 +50,12 @@ struct receiver {
 
 template <typename... T>
 struct sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<T...>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 };
 
 template <bool Expect>
@@ -174,7 +185,7 @@ struct memory_env {
     auto                              query(const test_std::get_allocator_t&) const noexcept { return allocator; }
 };
 struct memory_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     std::pmr::polymorphic_allocator<> allocator;
     auto                              get_env() const noexcept { return memory_env{this->allocator}; }
 
@@ -247,6 +258,12 @@ auto test_then_env() -> void {
     }
 }
 
+auto test_then_completions() {
+    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() {})));
+    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([]() noexcept {})));
+    test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([](auto&&...) noexcept {})));
+}
+
 } // namespace
 
 TEST(exec_then) {
@@ -265,4 +282,5 @@ TEST(exec_then) {
     test_then_allocator();
 
     test_then_env();
+    test_then_completions();
 }

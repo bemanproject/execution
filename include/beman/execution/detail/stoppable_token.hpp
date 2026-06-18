@@ -4,9 +4,19 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_TOKEN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_TOKEN
 
-#include <beman/execution/detail/check_type_alias_exist.hpp>
-#include <beman/execution/detail/stop_token_traits.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.check_type_alias_exist;
+import beman.execution.detail.stoppable_token_traits;
+#else
+#include <beman/execution/detail/check_type_alias_exist.hpp>
+#include <beman/execution/detail/stoppable_token_traits.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -23,4 +33,4 @@ concept stoppable_token = requires(const Token& token) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPABLE_TOKEN

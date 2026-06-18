@@ -4,8 +4,17 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_COMBINE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_COMBINE
 
-#include <beman/execution/detail/type_list.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.type_list;
+#else
+#include <beman/execution/detail/type_list.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -34,4 +43,4 @@ using combine = typename ::beman::execution::detail::meta::detail::combine<L...>
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_COMBINE

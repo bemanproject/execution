@@ -4,8 +4,18 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_TOKEN
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_TOKEN
 
-#include <beman/execution/detail/stoppable_source.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.stoppable_source;
+import beman.execution.detail.stoppable_token;
+#else
+#include <beman/execution/detail/stoppable_source.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -17,4 +27,4 @@ concept unstoppable_token = ::beman::execution::stoppable_token<Token> &&
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_TOKEN

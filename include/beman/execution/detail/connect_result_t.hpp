@@ -4,8 +4,17 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT
 
-#include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.connect;
+#else
+#include <beman/execution/detail/connect.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -20,4 +29,4 @@ using connect_result_t = decltype(::beman::execution::connect(::std::declval<Sen
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT

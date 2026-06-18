@@ -1,6 +1,11 @@
 // src/beman/execution/tests/exec-get-compl-sched.test.cpp          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/schedule.hpp>
@@ -9,8 +14,7 @@
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
-#include <concepts>
-#include <test/execution.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -22,13 +26,13 @@ struct env;
 
 template <typename Tag>
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     auto get_env() const noexcept -> env<Tag> { return {}; }
 };
 
 template <typename Tag>
 struct scheduler {
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
     int  value{};
     auto operator==(const scheduler&) const -> bool = default;
     auto schedule() noexcept -> sender<Tag> { return {}; }
@@ -56,6 +60,20 @@ template <bool Expect, typename Tag, typename Env>
 auto test_tag(Env&& env) -> void {
     static_assert(Expect == requires { test_std::get_completion_scheduler<Tag>(env); });
 }
+
+struct extra_env {
+    int extra_value{};
+};
+
+struct env_with_extra_args {
+    int  value{};
+    auto query(const test_std::get_completion_scheduler_t<test_std::set_value_t>&) const noexcept {
+        return scheduler<test_std::set_value_t>{this->value};
+    }
+    auto query(const test_std::get_completion_scheduler_t<test_std::set_value_t>&, extra_env e) const noexcept {
+        return scheduler<test_std::set_value_t>{this->value + e.extra_value};
+    }
+};
 } // namespace
 
 TEST(exec_get_compl_sched) {
@@ -91,4 +109,9 @@ TEST(exec_get_compl_sched) {
     ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(e) == scheduler<test_std::set_error_t>{19});
     ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(e) == scheduler<test_std::set_stopped_t>{20});
     ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(e) == scheduler<test_std::set_value_t>{18});
+
+    env_with_extra_args ewa{10};
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(ewa) == scheduler<test_std::set_value_t>{10});
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(ewa, extra_env{5}) ==
+           scheduler<test_std::set_value_t>{15});
 }

@@ -1,68 +1,83 @@
 // include/beman/execution/detail/on.hpp                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ON
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_ON
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ON
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_ON
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.continues_on;
+import beman.execution.detail.default_domain;
+import beman.execution.detail.forward_like;
+import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_completion_scheduler;
+import beman.execution.detail.get_domain;
+import beman.execution.detail.get_env;
+import beman.execution.detail.get_start_scheduler;
+import beman.execution.detail.join_env;
+import beman.execution.detail.make_sender;
+import beman.execution.detail.product_type;
+import beman.execution.detail.query_with_default;
+import beman.execution.detail.sched_env;
+import beman.execution.detail.scheduler;
+import beman.execution.detail.sender;
+import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.sender_for;
+import beman.execution.detail.set_value;
+import beman.execution.detail.starts_on;
+import beman.execution.detail.transform_sender;
+#else
+#include <beman/execution/detail/continues_on.hpp>
+#include <beman/execution/detail/default_domain.hpp>
+#include <beman/execution/detail/forward_like.hpp>
+#include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
+#include <beman/execution/detail/join_env.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/query_with_default.hpp>
+#include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
-#include <beman/execution/detail/query_with_default.hpp>
-#include <beman/execution/detail/get_domain.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
-#include <beman/execution/detail/default_domain.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/sender_for.hpp>
-#include <beman/execution/detail/join_env.hpp>
-#include <beman/execution/detail/forward_like.hpp>
-#include <beman/execution/detail/fwd_env.hpp>
-#include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/starts_on.hpp>
-#include <beman/execution/detail/continues_on.hpp>
-#include <beman/execution/detail/write_env.hpp>
-#include <utility>
-
-#include <beman/execution/detail/suppress_push.hpp>
+#include <beman/execution/detail/transform_sender.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
 struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
-    template <::beman::execution::detail::sender_for<on_t> OutSndr, typename Env>
-    auto transform_env(OutSndr&& out_sndr, Env&& env) const -> decltype(auto) {
-        auto&& data{out_sndr.template get<1>()};
-
-        if constexpr (::beman::execution::scheduler<decltype(data)>)
-            return ::beman::execution::detail::join_env(
-                ::beman::execution::detail::sched_env(::beman::execution::detail::forward_like<OutSndr>(data)
-
-                                                          ),
-                ::beman::execution::detail::fwd_env(::std::forward<Env>(env)));
-        else
-            return std::forward<Env>(env);
-    }
-
     template <typename>
-    struct env_needs_get_scheduler {
-        using sender_concept = ::beman::execution::sender_t;
-        template <typename Env>
-        auto get_completion_signatures(Env&&) const {
-            return env_needs_get_scheduler<Env>{};
+    struct env_needs_get_start_scheduler {
+        using sender_concept = ::beman::execution::sender_tag;
+        template <typename, typename Env>
+        static constexpr auto get_completion_signatures() {
+            return env_needs_get_start_scheduler<Env>{};
         }
     };
 
     template <::beman::execution::detail::sender_for<on_t> OutSndr, typename Env>
-    auto transform_sender(OutSndr&& out_sndr, Env&& env) const -> decltype(auto) {
-        struct not_a_scheduler {};
-        auto&& [_, data, child] = out_sndr;
+    auto transform_sender(::beman::execution::set_value_t, OutSndr&& out_sndr, const Env& env) const
+        -> decltype(auto) {
+        struct not_a_scheduler_t {};
+        auto&& data  = out_sndr.template get<1>();
+        auto&& child = out_sndr.template get<2>();
 
         if constexpr (::beman::execution::scheduler<decltype(data)>) {
             auto sch{::beman::execution::detail::query_with_default(
-                ::beman::execution::get_scheduler, env, not_a_scheduler{})};
-            if constexpr (::std::same_as<not_a_scheduler, decltype(sch)>) {
-                return env_needs_get_scheduler<Env>{};
+                ::beman::execution::get_start_scheduler, env, not_a_scheduler_t{})};
+            if constexpr (::std::same_as<not_a_scheduler_t, decltype(sch)>) {
+                return env_needs_get_start_scheduler<Env>{};
             } else {
                 return ::beman::execution::continues_on(
                     ::beman::execution::starts_on(::beman::execution::detail::forward_like<OutSndr>(data),
@@ -71,24 +86,19 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
             }
         } else {
             auto& [sch, closure] = data;
-            auto orig_sch{::beman::execution::detail::query_with_default(
+            auto orig_sch{::beman::execution::detail::call_with_default(
                 ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>,
+                not_a_scheduler_t{},
                 ::beman::execution::get_env(child),
-                ::beman::execution::detail::query_with_default(
-                    ::beman::execution::get_scheduler, env, not_a_scheduler{}))};
+                env)};
 
-            if constexpr (::std::same_as<not_a_scheduler, decltype(orig_sch)>) {
-                return env_needs_get_scheduler<Env>{};
+            if constexpr (::std::same_as<not_a_scheduler_t, decltype(orig_sch)>) {
+                return env_needs_get_start_scheduler<Env>{};
             } else {
-                return ::beman::execution::detail::write_env(
-                    ::beman::execution::continues_on(
-                        ::beman::execution::detail::forward_like<OutSndr>(closure)(::beman::execution::continues_on(
-                            ::beman::execution::detail::write_env(
-                                ::beman::execution::detail::forward_like<OutSndr>(child),
-                                ::beman::execution::detail::sched_env(orig_sch)),
-                            sch)),
-                        orig_sch),
-                    ::beman::execution::detail::sched_env(env));
+                return ::beman::execution::continues_on(
+                    ::beman::execution::detail::forward_like<OutSndr>(closure)(::beman::execution::continues_on(
+                        ::beman::execution::detail::forward_like<OutSndr>(child), sch)),
+                    orig_sch);
             }
         }
     }
@@ -107,52 +117,35 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
 
     template <::beman::execution::scheduler Sch, ::beman::execution::sender Sndr>
     auto operator()(Sch&& sch, Sndr&& sndr) const {
-        auto domain{::beman::execution::detail::query_with_default(
-            ::beman::execution::get_domain, sch, ::beman::execution::default_domain{})};
-        return ::beman::execution::transform_sender(
-            domain,
-            ::beman::execution::detail::make_sender(*this, ::std::forward<Sch>(sch), ::std::forward<Sndr>(sndr)));
+        return ::beman::execution::detail::make_sender(*this, ::std::forward<Sch>(sch), ::std::forward<Sndr>(sndr));
     }
     template <::beman::execution::scheduler                         Sch,
               ::beman::execution::sender                            Sndr,
               ::beman::execution::detail::is_sender_adaptor_closure Closure>
     auto operator()(Sndr&& sndr, Sch&& sch, Closure&& closure) const {
-        auto domain{::beman::execution::detail::get_domain_early(sndr)};
-        return ::beman::execution::transform_sender(
-            domain,
-            ::beman::execution::detail::make_sender(
-                *this,
-                ::beman::execution::detail::product_type{::std::forward<Sch>(sch), ::std::forward<Closure>(closure)},
-                ::std::forward<Sndr>(sndr)));
+        return ::beman::execution::detail::make_sender(
+            *this,
+            ::beman::execution::detail::product_type{::std::forward<Sch>(sch), ::std::forward<Closure>(closure)},
+            ::std::forward<Sndr>(sndr));
     }
     template <::beman::execution::scheduler Sch, ::beman::execution::detail::is_sender_adaptor_closure Closure>
     auto operator()(Sch&& sch, Closure&& closure) const {
-        return ::beman::execution::detail::sender_adaptor{
-            *this, ::std::forward<Sch>(sch), ::std::forward<Closure>(closure)};
+        return ::beman::execution::detail::make_sender_adaptor(
+            *this, ::std::forward<Sch>(sch), ::std::forward<Closure>(closure));
+    }
+    template <typename, typename...>
+    struct get_signatures;
+    template <typename Data, ::beman::execution::sender Sndr, typename... Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Data, Sndr>,
+                          Env...> {
+        using type = ::beman::execution::completion_signatures_of_t<Sndr, Env...>;
+    };
+
+    template <typename Sender, typename... Env>
+    static consteval auto get_completion_signatures() {
+        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }
 };
-
-#if 0
-template <typename Data, typename Sender, typename Env>
-struct completion_signatures_for_impl<
-    ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Data, Sender>,
-    Env> {
-        //-dk:TODO pick up scheduler errors and merge them in?
-    using type =
-#if 0
-    ::beman::execution::detail::meta::combine<
-        ::beman::execution::completion_signatures_of_t<Sender, Env>,
-        ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>
-        >
-#else
-        ::beman::execution::completion_signatures<
-            ::beman::execution::set_value_t(),
-            ::beman::execution::set_error_t(::std::exception_ptr)
-            >
-#endif
-        ;
-};
-#endif
 
 } // namespace beman::execution::detail
 
@@ -165,4 +158,4 @@ inline constexpr ::beman::execution::on_t on{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ON

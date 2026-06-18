@@ -1,13 +1,13 @@
 // src/beman/execution/tests/exec-with-awaitable-senders.test.cpp   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/with_awaitable_senders.hpp>
-
-#include <beman/execution/execution.hpp>
-
-#include <test/execution.hpp>
-
 #include <coroutine>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#endif
 
 // This examples shows how to await on senders
 // but also how to use awaitables with sender algorithms

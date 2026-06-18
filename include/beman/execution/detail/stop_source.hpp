@@ -4,13 +4,22 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE
 
-#include <beman/execution/detail/nostopstate.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <atomic>
 #include <memory>
 #include <mutex>
 #include <thread>
 #include <type_traits>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.nostopstate;
+#else
+#include <beman/execution/detail/nostopstate.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -255,4 +264,4 @@ inline auto beman::execution::stop_source::request_stop() noexcept -> bool {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE

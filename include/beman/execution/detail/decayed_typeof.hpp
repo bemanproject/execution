@@ -4,7 +4,12 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TYPEOF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TYPEOF
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -20,4 +25,4 @@ using decayed_typeof = ::std::decay_t<decltype(Tag)>;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_DECAYED_TYPEOF

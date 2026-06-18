@@ -4,11 +4,18 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE
 
-#include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/common.hpp>
-#include <utility>
-
 #include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.sender;
+#else
+#include <beman/execution/detail/sender.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -37,4 +44,4 @@ inline constexpr ::beman::execution::schedule_t schedule{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE

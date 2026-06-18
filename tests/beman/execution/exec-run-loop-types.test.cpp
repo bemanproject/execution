@@ -1,8 +1,13 @@
 // src/beman/execution/tests/exec-run-loop-types.test.cpp           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <exception>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/run_loop.hpp>
-
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/connect.hpp>
@@ -13,10 +18,7 @@
 #include <beman/execution/detail/receiver_of.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
-
-#include <test/execution.hpp>
-#include <concepts>
-#include <exception>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -31,7 +33,7 @@ struct token_env {
 };
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     signal_type*                 result;
     test_std::inplace_stop_token token;
@@ -45,7 +47,7 @@ struct receiver {
 
 struct finish_receiver {
     test_std::run_loop* loop;
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     auto set_value() && noexcept { this->loop->finish(); }
     auto set_error(const std::exception_ptr&) && noexcept { this->loop->finish(); }
@@ -86,12 +88,14 @@ TEST(exec_run_loop_types) {
         auto                         query(const test_std::get_stop_token_t&) const noexcept { return this->token; }
     };
     static_assert(::std::same_as<test_std::completion_signatures<test_std::set_value_t()>,
-                                 decltype(test_std::get_completion_signatures(sender, env{}))>);
+                                 decltype(test_std::get_completion_signatures<decltype(sender), env>())>);
     static_assert(
         ::std::same_as<test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>,
-                       decltype(test_std::get_completion_signatures(sender, token_env{source.get_token()}))>);
+                       decltype(test_std::get_completion_signatures<decltype(sender),
+                                                                    decltype(token_env{source.get_token()})>())>);
     // p7:
-    static_assert(test_std::receiver_of<receiver, decltype(test_std::get_completion_signatures(sender, env{}))>);
+    static_assert(
+        test_std::receiver_of<receiver, decltype(test_std::get_completion_signatures<decltype(sender), env>())>);
     // p7.1:
     static_assert(requires {
         { test_std::connect(sender, receiver{}) } noexcept -> test_std::operation_state;

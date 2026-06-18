@@ -5,12 +5,20 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ALLOCATOR
 
 #include <beman/execution/detail/common.hpp>
-#include <beman/execution/detail/forwarding_query.hpp>
-#include <beman/execution/detail/simple_allocator.hpp>
+#include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <utility>
-
-#include <beman/execution/detail/suppress_push.hpp>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.forwarding_query;
+import beman.execution.detail.simple_allocator;
+#else
+#include <beman/execution/detail/forwarding_query.hpp>
+#include <beman/execution/detail/simple_allocator.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -57,4 +65,4 @@ inline constexpr get_allocator_t get_allocator{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_ALLOCATOR

@@ -4,12 +4,22 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER_VALUE_TYPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER_VALUE_TYPE
 
-#include <beman/execution/detail/value_types_of_t.hpp>
-#include <beman/execution/detail/decayed_tuple.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <tuple>
 #include <type_traits>
 #include <variant>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.decayed_tuple;
+import beman.execution.detail.value_types_of_t;
+#else
+#include <beman/execution/detail/decayed_tuple.hpp>
+#include <beman/execution/detail/value_types_of_t.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -55,4 +65,4 @@ using single_sender_value_type = typename single_sender_value_type_helper<Sender
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SINGLE_SENDER_VALUE_TYPE

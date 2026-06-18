@@ -4,12 +4,21 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE
 
-#include <beman/execution/detail/immovable.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <atomic>
 #include <memory>
 #include <mutex>
 #include <thread>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.immovable;
+#else
+#include <beman/execution/detail/immovable.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -188,4 +197,4 @@ inline auto beman::execution::inplace_stop_callback<CallbackFun>::call() -> void
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_INPLACE_STOP_SOURCE

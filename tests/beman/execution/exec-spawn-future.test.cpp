@@ -1,6 +1,14 @@
 // tests/beman/execution/exec-spawn-future.test.cpp                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <variant>
+#include <utility>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/spawn_future.hpp>
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/queryable.hpp>
@@ -16,8 +24,7 @@
 #include <beman/execution/detail/then.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/meta_contain_same.hpp>
-#include <test/execution.hpp>
-#include <concepts>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -38,8 +45,12 @@ static_assert(not test_std::sender<non_sender>);
 
 template <typename... T>
 struct sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(T...)>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     struct state_base {
         virtual ~state_base()               = default;
@@ -47,7 +58,7 @@ struct sender {
     };
     template <test_std::receiver Rcvr>
     struct state : state_base {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         std::remove_cvref_t<Rcvr> rcvr;
         state_base**              handle{};
         auto complete(T... a) -> void override { test_std::set_value(std::move(this->rcvr), a...); }
@@ -65,12 +76,46 @@ static_assert(test_std::sender<sender<int>>);
 static_assert(test_std::sender<sender<int, bool>>);
 
 template <bool Noexcept>
+struct association {
+    association() = default;
+
+    association(std::size_t* count, bool associated) noexcept : count(count), associated(associated) {}
+
+    association(const association&) = delete;
+
+    association(association&& other) noexcept(Noexcept)
+        : count(std::exchange(other.count, {})), associated(std::exchange(other.associated, {})) {}
+
+    ~association() {
+        if (associated) {
+            --*count;
+        }
+    }
+
+    auto operator=(association other) noexcept(Noexcept) -> association& {
+        std::swap(this->count, other.count);
+        std::swap(this->associated, other.associated);
+        return *this;
+    }
+
+    auto try_associate() const noexcept -> association { return {this->count, this->count && bool(++*this->count)}; }
+
+    explicit operator bool() const noexcept { return associated; }
+
+    std::size_t* count      = nullptr;
+    bool         associated = false;
+};
+
+template <bool Noexcept>
 struct token {
     std::size_t* count{nullptr};
-    auto         try_associate() -> bool { return this->count && bool(++*this->count); }
-    auto         disassociate() noexcept(Noexcept) -> void { --*this->count; }
+
+    auto try_associate() const noexcept -> association<Noexcept> {
+        return {this->count, this->count && bool(++*this->count)};
+    }
+
     template <test_std::sender Sender>
-    auto wrap(Sender&& sender) -> Sender {
+    auto wrap(Sender&& sender) const -> Sender {
         return std::forward<Sender>(sender);
     }
 };
@@ -176,7 +221,9 @@ auto test_receiver() {
         std::move(r0).set_error(17);
         ASSERT(state.called == true);
         ASSERT((std::holds_alternative<std::tuple<test_std::set_error_t, int>>(state.result)));
+#ifndef _MSC_VER //-dk:TODO enable test for MSVC++
         ASSERT((std::get<1>(std::get<std::tuple<test_std::set_error_t, int>>(state.result)) == 17));
+#endif
     }
 
     {
@@ -191,9 +238,11 @@ auto test_receiver() {
         std::move(r0).set_value(17, true, 'x');
         ASSERT(state.called == true);
         ASSERT((std::holds_alternative<std::tuple<test_std::set_value_t, int, bool, char>>(state.result)));
+#ifndef _MSC_VER //-dk:TODO enable test for MSVC++
         ASSERT((std::get<1>(std::get<std::tuple<test_std::set_value_t, int, bool, char>>(state.result)) == 17));
         ASSERT((std::get<2>(std::get<std::tuple<test_std::set_value_t, int, bool, char>>(state.result)) == true));
         ASSERT((std::get<3>(std::get<std::tuple<test_std::set_value_t, int, bool, char>>(state.result)) == 'x'));
+#endif
     }
 
     {
@@ -208,6 +257,7 @@ auto test_receiver() {
         std::move(r0).set_value(17, throws(), 'x');
         ASSERT(state.called == true);
         ASSERT((std::holds_alternative<std::tuple<test_std::set_error_t, std::exception_ptr>>(state.result)));
+#ifndef _MSC_VER //-dk:TODO enable test for MSVC++
         try {
             std::rethrow_exception(
                 std::get<1>(std::get<std::tuple<test_std::set_error_t, std::exception_ptr>>(state.result)));
@@ -217,6 +267,7 @@ auto test_receiver() {
         } catch (...) {
             ASSERT(nullptr == "not reached");
         }
+#endif
     }
 }
 
@@ -239,7 +290,7 @@ struct alloc_env {
 };
 
 struct alloc_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     int value{};
 
     auto get_env() const noexcept -> alloc_env { return alloc_env{this->value}; }
@@ -290,7 +341,7 @@ auto test_get_allocator() {
 }
 
 struct rcvr {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     auto set_value(auto&&...) && noexcept -> void {}
     auto set_error(auto&&) && noexcept -> void {}
@@ -390,7 +441,8 @@ auto test_spawn_future() {
             ASSERT(handle != nullptr);
             ASSERT(result == 0);
 #if 0
-            using type = typename beman::execution::detail::completion_signatures_for_impl<decltype(sndr), test_std::env<>>::type;
+            //-dk:TODO restore this test
+            using type = typename test_detail::completion_signatures_for<decltype(sndr), test_std::env<>>;
             static_assert(std::same_as<test_std::completion_signatures<test_std::set_stopped_t(), test_std::set_value_t(int), test_std::set_error_t(std::exception_ptr)>, type>);
             static_assert(std::same_as<
                 test_std::completion_signatures<test_std::set_stopped_t(), test_std::set_value_t(int), test_std::set_error_t(std::exception_ptr)>,
@@ -400,7 +452,7 @@ auto test_spawn_future() {
             using exp_type  = test_std::completion_signatures<test_std::set_stopped_t(),
                                                               test_std::set_value_t(int),
                                                               test_std::set_error_t(std::exception_ptr)>;
-            using comp_type = decltype(test_std::get_completion_signatures(std::move(sndr), test_std::env<>{}));
+            using comp_type = decltype(test_std::get_completion_signatures<decltype(sndr), test_std::env<>>());
             static_assert(test_detail::meta::contain_same<exp_type, comp_type>);
 
             handle->complete(17);

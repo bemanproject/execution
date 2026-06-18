@@ -1,6 +1,15 @@
 // tests/beman/execution/exec-stop-when.test.cpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <optional>
+#include <type_traits>
+#include <utility>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/stop_when.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
@@ -17,22 +26,18 @@
 #include <beman/execution/detail/never_stop_token.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
-#include <test/execution.hpp>
-#include <concepts>
-#include <optional>
-#include <type_traits>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
 namespace {
 struct sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>;
 
     template <test_std::receiver Rcvr>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         using rcvr_t                  = std::remove_cvref_t<Rcvr>;
         using token_t = decltype(test_std::get_stop_token(test_std::get_env(std::declval<const rcvr_t>())));
 
@@ -67,7 +72,7 @@ struct env {
 enum class completion : char { none, value, stopped };
 
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     test_std::inplace_stop_token token;
     completion&                  comp;
@@ -121,7 +126,7 @@ TEST(exec_stop_when) {
         test_std::inplace_stop_source source2;
         completion                    comp{completion::none};
         auto                          state{test_std::connect(test_detail::stop_when(sender{}, source1.get_token()),
-                                     receiver{source2.get_token(), comp})};
+                                                              receiver{source2.get_token(), comp})};
         ASSERT(comp == completion::none);
         test_std::start(state);
         ASSERT(comp == completion::none);
@@ -134,7 +139,7 @@ TEST(exec_stop_when) {
         test_std::inplace_stop_source source2;
         completion                    comp{completion::none};
         auto                          state{test_std::connect(test_detail::stop_when(sender{}, source1.get_token()),
-                                     receiver{source2.get_token(), comp})};
+                                                              receiver{source2.get_token(), comp})};
         ASSERT(comp == completion::none);
         test_std::start(state);
         ASSERT(comp == completion::none);

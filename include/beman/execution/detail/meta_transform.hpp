@@ -4,7 +4,12 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_TRANSFORM
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_TRANSFORM
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.meta.contains;
+#else
 #include <beman/execution/detail/meta_contains.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -25,4 +30,4 @@ using transform = typename ::beman::execution::detail::meta::detail::transform<T
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_TRANSFORM

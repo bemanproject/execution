@@ -5,9 +5,12 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SET_VALUE
 
 #include <beman/execution/detail/common.hpp>
-#include <utility>
-
 #include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -51,4 +54,4 @@ inline constexpr set_value_t set_value{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SET_VALUE

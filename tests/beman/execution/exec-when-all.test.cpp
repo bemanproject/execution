@@ -1,24 +1,33 @@
 // src/beman/execution/tests/exec-when-all.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <optional>
+#include <utility>
+#include <tuple>
+#include <variant>
+#include <test/execution.hpp>
+// #include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/when_all.hpp>
 #include <beman/execution/detail/stop_callback_for_t.hpp>
 #include <beman/execution/detail/when_all_with_variant.hpp>
 #include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
-#include <concepts>
-#include <optional>
-#include <utility>
-
-#include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
 namespace {
 template <typename... C>
 struct multi_sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<C...>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 };
 
 template <int>
@@ -29,8 +38,26 @@ struct domain_sender {
     struct env {
         auto query(test_std::get_domain_t) const noexcept -> D { return {}; }
     };
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
+    auto get_env() const noexcept -> env { return {}; }
+};
+
+template <typename D>
+struct completion_domain_sender {
+    struct env {
+        auto query(test_std::get_completion_domain_t<test_std::set_value_t>) const noexcept -> D { return {}; }
+    };
+    using sender_concept        = test_std::sender_tag;
+    using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
     auto get_env() const noexcept -> env { return {}; }
 };
 
@@ -43,19 +70,23 @@ auto test_when_all_breathing() -> void {
     auto s{test_std::when_all(test_std::just(), test_std::just(3, true), test_std::just(1.5))};
     static_assert(test_std::sender<decltype(s)>);
     test::check_type<test_std::completion_signatures<test_std::set_value_t(int, bool, double)>>(
-        test_std::get_completion_signatures(s, test_std::env<>{}));
+        test_std::get_completion_signatures<decltype(s), test_std::env<>>());
     auto res{test_std::sync_wait(s)};
     ASSERT(res.has_value());
     ASSERT((*res == std::tuple{3, true, 1.5}));
 }
 
 struct await_cancel {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         struct callback {
             Receiver* receiver;
             explicit callback(Receiver* rcvr) : receiver(rcvr) {}
@@ -67,7 +98,7 @@ struct await_cancel {
         using stop_callback = test_std::stop_callback_for_t<token, callback>;
 
         Receiver                     receiver;
-        std::optional<stop_callback> cb;
+        std::optional<stop_callback> cb{};
         auto                         start() & noexcept {
             cb.emplace(test_std::get_stop_token(test_std::get_env(this->receiver)), &this->receiver);
         }
@@ -81,18 +112,22 @@ struct await_cancel {
 
 template <typename Sender, typename Tag, typename... T>
 struct test_sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(bool)>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Result, typename Receiver>
     struct upstream {
-        using receiver_concept = test_std::receiver_t;
+        using receiver_concept = test_std::receiver_tag;
         const Result& expect;
         Receiver&     receiver;
         auto          set_error(auto&& error) && noexcept -> void {
             if constexpr (std::same_as<Tag, test_std::set_error_t> && 1u == std::tuple_size_v<Result>)
                 if constexpr (std::same_as<std::decay_t<std::tuple_element_t<0, Result>>,
-                                                    std::decay_t<decltype(error)>>)
+                                           std::decay_t<decltype(error)>>)
                     test_std::set_value(std::move(receiver), this->expect == std::tie(error));
                 else
                     test_std::set_value(std::move(receiver), false);
@@ -111,7 +146,7 @@ struct test_sender {
     };
     template <typename Result, typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         Result                                                                                          expect;
         std::remove_cvref_t<Receiver>                                                                   receiver;
         decltype(test_std::connect(std::declval<Sender>(), std::declval<upstream<Result, Receiver>>())) inner_state;
@@ -149,9 +184,10 @@ struct add_value_sig<test_std::completion_signatures<S...>> {
 
 template <typename Sender>
 struct add_value {
-    using sender_concept = test_std::sender_t;
-    auto get_completion_signatures(const auto& env) const noexcept {
-        using signatures = decltype(test_std::get_completion_signatures(sender, env));
+    using sender_concept = test_std::sender_tag;
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() noexcept {
+        using signatures = decltype(test_std::get_completion_signatures<Sender, E...>());
         return typename add_value_sig<signatures>::type{};
     }
     Sender sender;
@@ -184,7 +220,7 @@ auto test_when_all() -> void {
     test_when_all_available<false>(multi_sender<test_std::set_value_t(), test_std::set_value_t(int)>());
     test_when_all_available<false>(multi_sender<test_std::set_error_t(int)>());
     test_when_all_available<true>(domain_sender<domain<0>>(), domain_sender<domain<0>>());
-    test_when_all_available<false>(domain_sender<domain<0>>(), domain_sender<domain<1>>());
+    test_when_all_available<true>(domain_sender<domain<0>>(), domain_sender<domain<1>>());
 
     test_when_all_breathing();
 
@@ -212,6 +248,16 @@ auto test_when_all() -> void {
                           await_cancel(),
                           add_value{test_std::just_stopped()},
                           test_std::just(true, 3.5));
+
+    test_std::sync_wait(test_std::read_env(test_std::get_stop_token));
+    test_std::sync_wait(
+        test_std::when_all(test_std::read_env(test_std::get_stop_token) | test_std::then([](auto&&) {})));
+}
+
+auto test_when_all_attrs() -> void {
+    auto s = test_std::when_all(completion_domain_sender<domain<0>>{}, completion_domain_sender<domain<0>>{});
+    static_assert(std::same_as<decltype(test_std::get_completion_domain<test_std::set_value_t>(test_std::get_env(s))),
+                               domain<0>>);
 }
 
 auto test_when_all_with_variant() -> void {
@@ -243,8 +289,8 @@ TEST(exec_when_all) {
     static_assert(std::same_as<const test_std::when_all_with_variant_t, decltype(test_std::when_all_with_variant)>);
 
     try {
-
         test_when_all();
+        test_when_all_attrs();
         test_when_all_with_variant();
     } catch (...) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)

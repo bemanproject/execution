@@ -1,11 +1,16 @@
 // src/beman/execution/tests/exec-recv-concepts.test.cpp            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
 #include <beman/execution/detail/receiver_of.hpp>
 #include <beman/execution/detail/has_completions.hpp>
 #include <beman/execution/detail/valid_completion_for.hpp>
 #include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -15,22 +20,22 @@ struct error {};
 
 template <typename... T>
 struct value_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_value(T...) && noexcept -> void {}
 };
 
 template <typename T>
 struct error_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_error(T) && noexcept -> void {}
 };
 
 struct stopped_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_stopped() && noexcept -> void {}
 };
 
-template <typename Concept = test_std::receiver_t>
+template <typename Concept = test_std::receiver_tag>
 struct multi_receiver {
     using receiver_concept = Concept;
 

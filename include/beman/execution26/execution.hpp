@@ -1,8 +1,8 @@
 // include/beman/execution26/execution.hpp                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION26_EXECUTION
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION26_EXECUTION
+#ifndef INCLUDED_BEMAN_EXECUTION26_EXECUTION
+#define INCLUDED_BEMAN_EXECUTION26_EXECUTION
 
 #include <beman/execution/execution.hpp>
 
@@ -11,8 +11,6 @@
 namespace beman::execution26::detail {
 using ::beman::execution::detail::make_env;
 using ::beman::execution::detail::sender_adaptor;
-using ::beman::execution::detail::write_env;
-using ::beman::execution::detail::write_env_t;
 } // namespace beman::execution26::detail
 
 namespace beman::execution26 {
@@ -38,7 +36,6 @@ using ::beman::execution::get_allocator_t;
 using ::beman::execution::get_completion_scheduler;
 using ::beman::execution::get_completion_scheduler_t;
 using ::beman::execution::get_completion_signatures;
-using ::beman::execution::get_completion_signatures_t;
 using ::beman::execution::get_delegation_scheduler;
 using ::beman::execution::get_delegation_scheduler_t;
 using ::beman::execution::get_domain;
@@ -64,11 +61,11 @@ using ::beman::execution::let_stopped_t;
 using ::beman::execution::let_value;
 using ::beman::execution::let_value_t;
 using ::beman::execution::operation_state;
-using ::beman::execution::operation_state_t;
+using ::beman::execution::operation_state_tag;
 using ::beman::execution::read_env;
 using ::beman::execution::receiver;
 using ::beman::execution::receiver_of;
-using ::beman::execution::receiver_t;
+using ::beman::execution::receiver_tag;
 using ::beman::execution::run_loop;
 using ::beman::execution::schedule;
 using ::beman::execution::schedule_from;
@@ -76,11 +73,11 @@ using ::beman::execution::schedule_from_t;
 using ::beman::execution::schedule_result_t;
 using ::beman::execution::schedule_t;
 using ::beman::execution::scheduler;
-using ::beman::execution::scheduler_t;
+using ::beman::execution::scheduler_tag;
 using ::beman::execution::sender;
 using ::beman::execution::sender_adaptor_closure;
 using ::beman::execution::sender_in;
-using ::beman::execution::sender_t;
+using ::beman::execution::sender_tag;
 using ::beman::execution::sends_stopped;
 using ::beman::execution::set_error;
 using ::beman::execution::set_error_t;
@@ -114,4 +111,4 @@ using ::beman::execution::with_awaitable_senders;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION26_EXECUTION

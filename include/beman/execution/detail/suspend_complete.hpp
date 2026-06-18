@@ -4,9 +4,14 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE
 
-#include <exception>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
+#include <exception>
 #include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -31,4 +36,4 @@ auto suspend_complete(Fun fun, Args&&... args) noexcept {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SUSPEND_COMPLETE

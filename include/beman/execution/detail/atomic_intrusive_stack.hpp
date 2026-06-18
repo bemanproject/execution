@@ -4,11 +4,19 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ATOMIC_INTRUSIVE_STACK
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ATOMIC_INTRUSIVE_STACK
 
-#include <beman/execution/detail/intrusive_stack.hpp>
-
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <atomic>
 #include <cassert>
 #include <optional>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.intrusive_stack;
+#else
+#include <beman/execution/detail/intrusive_stack.hpp>
+#endif
 
 namespace beman::execution::detail {
 
@@ -69,14 +77,11 @@ class atomic_intrusive_stack<Next> {
     //!
     //! @return  If the stack is empty, returns an empty stack.
     auto pop_all_and_shutdown() noexcept -> ::beman::execution::detail::intrusive_stack<Next> {
-        auto  stack = ::beman::execution::detail::intrusive_stack<Next>{};
-        void* ptr   = head_.exchange(this);
+        void* ptr = head_.exchange(this);
         if (ptr == this) {
-            return stack;
+            return {};
         }
-        auto item   = static_cast<Item*>(ptr);
-        stack.head_ = item;
-        return stack;
+        return ::beman::execution::detail::intrusive_stack<Next>{static_cast<Item*>(ptr)};
     }
 
   private:
@@ -85,4 +90,4 @@ class atomic_intrusive_stack<Next> {
 
 } // namespace beman::execution::detail
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ATOMIC_INTRUSIVE_STACK

@@ -4,8 +4,17 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CLASS_TYPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CLASS_TYPE
 
-#include <beman/execution/detail/decays_to.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.decays_to;
+#else
+#include <beman/execution/detail/decays_to.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -21,4 +30,4 @@ concept class_type = ::beman::execution::detail::decays_to<Tp, Tp> && ::std::is_
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CLASS_TYPE

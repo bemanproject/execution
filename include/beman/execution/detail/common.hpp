@@ -11,6 +11,22 @@
 #else
 #define BEMAN_EXECUTION_DELETE(msg) delete
 #endif
+#if defined(__GNUC__) && !defined(__clang__)
+#define BEMAN_SPECIALIZE_EXPORT
+#else
+#define BEMAN_SPECIALIZE_EXPORT template <>
+#endif
+
+#define BEMAN_EXECUTION_TRY_EVAL(rcvr, expr)                                                    \
+    do {                                                                                        \
+        try {                                                                                   \
+            (expr);                                                                             \
+        } catch (...) {                                                                         \
+            if constexpr (!noexcept((expr))) {                                                  \
+                ::beman::execution::set_error(::std::move((rcvr)), ::std::current_exception()); \
+            }                                                                                   \
+        }                                                                                       \
+    } while (false)
 
 // ----------------------------------------------------------------------------
 /*!
@@ -54,10 +70,23 @@ namespace execution {
  * \brief Namespace for implementation details related to beman::execution
  * \internal
  */
-namespace detail {}
+namespace detail {
+
+/*!
+ * \namespace beman::execution::detail::pipeable
+ * \brief Namespace for ADL isolation of sender adaptor closure pipe operators.
+ *
+ * \details
+ * The operator| overloads for sender adaptor closures are placed in this
+ * namespace so they are only found via argument-dependent lookup when one
+ * of the arguments derives from sender_adaptor_closure.
+ * \internal
+ */
+namespace pipeable {}
+} // namespace detail
 } // namespace execution
 } // namespace beman
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMMON

@@ -4,8 +4,17 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR
 
-#include <beman/execution/detail/stop_token_traits.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.stoppable_token_traits;
+#else
+#include <beman/execution/detail/stoppable_token_traits.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -27,4 +36,4 @@ concept stoppable_callback_for =
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR

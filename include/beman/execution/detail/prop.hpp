@@ -1,12 +1,22 @@
 // include/beman/execution/detail/prop.hpp                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_PROP
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_PROP
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_PROP
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.callable;
+import beman.execution.detail.non_assignable;
+#else
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/non_assignable.hpp>
-#include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -42,9 +52,9 @@ struct beman::execution::prop {
     // auto operator=(prop&&) -> prop&      = delete;
     // auto operator=(const prop&) -> prop& = delete;
 
-    constexpr auto query(Query) const noexcept -> const Value& { return this->value_; }
+    constexpr auto query(Query, auto&&...) const noexcept -> const Value& { return this->value_; }
 };
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_PROP

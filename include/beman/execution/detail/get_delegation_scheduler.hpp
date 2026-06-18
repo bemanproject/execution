@@ -4,9 +4,19 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DELEGATION_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DELEGATION_SCHEDULER
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.forwarding_query;
+import beman.execution.detail.scheduler;
+#else
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/scheduler.hpp>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -27,4 +37,4 @@ inline constexpr get_delegation_scheduler_t get_delegation_scheduler{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_DELEGATION_SCHEDULER

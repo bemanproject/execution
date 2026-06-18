@@ -4,8 +4,17 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_PROMISE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_PROMISE
 
-#include <beman/execution/detail/with_await_transform.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.with_await_transform;
+#else
+#include <beman/execution/detail/with_await_transform.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -15,7 +24,7 @@ namespace beman::execution::detail {
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
  * \internal
  */
-template <typename Env>
+template <typename Env> //-dk:TODO detail export
 struct env_promise : ::beman::execution::detail::with_await_transform<Env> {
     auto get_return_object() noexcept -> void;
     auto initial_suspend() noexcept -> ::std::suspend_always;
@@ -29,4 +38,4 @@ struct env_promise : ::beman::execution::detail::with_await_transform<Env> {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ENV_PROMISE

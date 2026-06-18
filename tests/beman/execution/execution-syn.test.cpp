@@ -1,6 +1,24 @@
 // src/beman/execution/tests/execution-syn.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <variant>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/forwarding_query.hpp>
+#include <beman/execution/detail/get_allocator.hpp>
+#include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_delegation_scheduler.hpp>
+//-dk:TODO #include <beman/execution/detail/get_forward_progress_guarantee.hpp>
+#include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
+#include <beman/execution/detail/get_await_completion_adaptor.hpp>
+#include <beman/execution/detail/indeterminate_domain.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/decays_to.hpp>
@@ -16,15 +34,36 @@
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/as_awaitable.hpp>
 #include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
-#include <concepts>
 
 #include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
 namespace {
 auto use(auto&&) -> void {}
+
+auto test_queries() -> void {
+    // std
+    static_assert(
+        std::same_as<test_std::forwarding_query_t, std::remove_cvref_t<decltype(test_std::forwarding_query)>>);
+    static_assert(std::same_as<test_std::get_allocator_t, std::remove_cvref_t<decltype(test_std::get_allocator)>>);
+    static_assert(std::same_as<test_std::get_stop_token_t, std::remove_cvref_t<decltype(test_std::get_stop_token)>>);
+
+    // std::execution
+    static_assert(std::same_as<test_std::get_domain_t, std::remove_cvref_t<decltype(test_std::get_domain)>>);
+    static_assert(std::same_as<test_std::get_scheduler_t, std::remove_cvref_t<decltype(test_std::get_scheduler)>>);
+    static_assert(std::same_as<test_std::get_delegation_scheduler_t,
+                               std::remove_cvref_t<decltype(test_std::get_delegation_scheduler)>>);
+    static_assert(
+        std::same_as<test_std::get_completion_scheduler_t<test_std::set_value_t>,
+                     std::remove_cvref_t<decltype(test_std::get_completion_scheduler<test_std::set_value_t>)>>);
+    static_assert(std::same_as<test_std::get_completion_domain_t<>,
+                               std::remove_cvref_t<decltype(test_std::get_completion_domain<>)>>);
+    static_assert(std::same_as<test_std::get_await_completion_adaptor_t,
+                               std::remove_cvref_t<decltype(test_std::get_await_completion_adaptor)>>);
+}
+
 struct scheduler {
     struct env {
         template <test_detail::completion_tag Tag>
@@ -33,10 +72,10 @@ struct scheduler {
         }
     };
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
         auto get_env() const noexcept -> env { return {}; }
     };
-    using scheduler_concept = test_std::scheduler_t;
+    using scheduler_concept = test_std::scheduler_tag;
 
     auto schedule() const noexcept -> sender { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
@@ -47,57 +86,79 @@ struct no_value_env {};
 struct single_type_sender {
     struct arg {};
     struct error {};
-    using sender_concept  = test_std::sender_t;
-    using test_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                            test_std::set_error_t(int),
-                                                            test_std::set_value_t(arg&),
-                                                            test_std::set_stopped_t()>;
-    auto get_completion_signatures(const test_env&) const noexcept { return test_signatures(); }
-    using empty_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                             test_std::set_error_t(int),
-                                                             test_std::set_value_t(bool&),
-                                                             test_std::set_stopped_t()>;
-    auto get_completion_signatures(const test_std::env<>&) const noexcept { return empty_signatures(); }
+    using sender_concept      = test_std::sender_tag;
+    using test_signatures     = test_std::completion_signatures<test_std::set_error_t(error),
+                                                                test_std::set_error_t(int),
+                                                                test_std::set_value_t(arg&),
+                                                                test_std::set_stopped_t()>;
+    using empty_signatures    = test_std::completion_signatures<test_std::set_error_t(error),
+                                                                test_std::set_error_t(int),
+                                                                test_std::set_value_t(bool&),
+                                                                test_std::set_stopped_t()>;
     using no_value_signatures = test_std::
         completion_signatures<test_std::set_error_t(error), test_std::set_error_t(int), test_std::set_stopped_t()>;
-    auto get_completion_signatures(const no_value_env&) const noexcept { return no_value_signatures(); }
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() {
+        if constexpr (sizeof...(E) == 0)
+            return test_signatures();
+        else if constexpr ((std::same_as<test_std::env<>, E> && ... && true))
+            return empty_signatures();
+        else if constexpr ((std::same_as<test_env, E> && ... && true))
+            return test_signatures();
+        else if constexpr ((std::same_as<no_value_env, E> && ... && true))
+            return no_value_signatures();
+    }
 };
 
 struct void_sender {
     struct error {};
-    using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                                  test_std::set_error_t(int),
-                                                                  test_std::set_value_t(),
-                                                                  test_std::set_stopped_t()>;
+    using sender_concept = test_std::sender_tag;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return test_std::completion_signatures<test_std::set_error_t(error),
+                                               test_std::set_error_t(int),
+                                               test_std::set_value_t(),
+                                               test_std::set_stopped_t()>{};
+    }
 };
 
 struct no_value_sender {
     struct error {};
-    using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::
-        completion_signatures<test_std::set_error_t(error), test_std::set_error_t(int), test_std::set_stopped_t()>;
+    using sender_concept = test_std::sender_tag;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+
+        return test_std::completion_signatures<test_std::set_error_t(error),
+                                               test_std::set_error_t(int),
+                                               test_std::set_stopped_t()>{};
+    }
 };
 
 struct multi_single_sender {
     struct arg {};
     struct error {};
-    using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                                  test_std::set_error_t(int),
-                                                                  test_std::set_value_t(arg&),
-                                                                  test_std::set_value_t(int),
-                                                                  test_std::set_stopped_t()>;
+    using sender_concept = test_std::sender_tag;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return test_std::completion_signatures<test_std::set_error_t(error),
+                                               test_std::set_error_t(int),
+                                               test_std::set_value_t(arg&),
+                                               test_std::set_value_t(int),
+                                               test_std::set_stopped_t()>{};
+    }
 };
 
 struct multi_type_sender {
     struct arg {};
     struct error {};
-    using sender_concept        = test_std::sender_t;
-    using completion_signatures = test_std::completion_signatures<test_std::set_error_t(error),
-                                                                  test_std::set_error_t(int),
-                                                                  test_std::set_value_t(arg&, const bool&, int),
-                                                                  test_std::set_stopped_t()>;
+    using sender_concept = test_std::sender_tag;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return test_std::completion_signatures<test_std::set_error_t(error),
+                                               test_std::set_error_t(int),
+                                               test_std::set_value_t(arg&, const bool&, int),
+                                               test_std::set_stopped_t()>{};
+    }
 };
 
 auto test_schedule_result_t() -> void {
@@ -139,22 +200,33 @@ auto test_variant_or_empty() -> void {
 struct sender_in {
     struct arg {};
 
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     using completion_signatures =
         test_std::completion_signatures<test_std::set_value_t(arg), test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return completion_signatures();
+    }
 };
 
 struct env {};
 struct sender_with_get {
     struct arg {};
 
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 
     using empty_sigs = test_std::completion_signatures<test_std::set_value_t(arg), test_std::set_stopped_t()>;
-    auto get_completion_signatures(test_std::env<>) const noexcept { return empty_sigs{}; }
+    using env_sigs   = test_std::completion_signatures<test_std::set_value_t(arg, arg), test_std::set_stopped_t()>;
 
-    using env_sigs = test_std::completion_signatures<test_std::set_value_t(arg, arg), test_std::set_stopped_t()>;
-    auto get_completion_signatures(env) const noexcept { return env_sigs{}; }
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() {
+        if constexpr (sizeof...(E) == 0)
+            return empty_sigs();
+        else if constexpr ((std::same_as<test_std::env<>, E> && ... && true))
+            return empty_sigs();
+        else if constexpr ((std::same_as<env, E> && ... && true))
+            return env_sigs();
+    }
 };
 
 template <typename T>
@@ -238,10 +310,10 @@ auto test_single_sender() -> void {
 }
 
 struct connect_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         auto start() noexcept -> void {}
     };
     struct tag {};
@@ -257,7 +329,7 @@ struct connect_sender {
 
 auto test_conect_result_t() -> void {
     struct receiver {
-        using receiver_concept = test_std::receiver_t;
+        using receiver_concept = test_std::receiver_tag;
     };
 
     static_assert(test_std::sender<connect_sender>);
@@ -285,7 +357,7 @@ auto test_decays_to() -> void {
 
 template <test_std::sender>
 struct adapted_sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 
 struct closure_t : test_std::sender_adaptor_closure<closure_t> {
@@ -297,9 +369,9 @@ struct closure_t : test_std::sender_adaptor_closure<closure_t> {
 constexpr closure_t closure{};
 
 auto test_sender_adaptor_closure() -> void {
-    use(test_std::sender_adaptor_closure<int>{});
+    use(test_std::sender_adaptor_closure<closure_t>{});
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
     };
     static_assert(test_std::sender<sender>);
 
@@ -319,18 +391,18 @@ struct arg_closure_t {
     auto operator()(Sender&&, int) const -> adapted_sender<Sender> {
         return {};
     }
-    auto operator()(int value) const { return test_detail::sender_adaptor<arg_closure_t, int>{*this, value, {}}; }
+    auto operator()(int value) const { return test_detail::make_sender_adaptor(*this, value); }
 };
 constexpr arg_closure_t arg_closure{};
 
 auto test_sender_adaptor() -> void {
     struct sender {
-        using sender_concept = test_std::sender_t;
+        using sender_concept = test_std::sender_tag;
     };
     static_assert(test_std::sender<sender>);
 
     auto closure_{arg_closure(17)};
-    static_assert(std::same_as<test_detail::sender_adaptor<arg_closure_t, int>, decltype(closure_)>);
+    static_assert(std::same_as<test_detail::bound_sender_adaptor_closure<arg_closure_t, int>, decltype(closure_)>);
     auto direct{closure_(sender{})};
     test::use(direct);
     static_assert(std::same_as<adapted_sender<sender>, decltype(direct)>);
@@ -339,12 +411,72 @@ auto test_sender_adaptor() -> void {
     static_assert(std::same_as<adapted_sender<sender>, decltype(via_op)>);
 }
 
+struct as_awaitable_awaiter {
+    auto await_ready() -> bool { return true; }
+    auto await_suspend(auto) -> void {}
+    auto await_resume() -> int { return 42; }
+};
+
+struct await_completion_adapted_sender {
+    auto as_awaitable(auto&) -> as_awaitable_awaiter { return {}; }
+};
+
+struct await_completion_adaptor {
+    auto operator()(auto&&) const -> await_completion_adapted_sender { return {}; }
+};
+
+struct await_completion_transformed_sender {
+    struct env {
+        auto query(const test_std::get_await_completion_adaptor_t&) const noexcept -> await_completion_adaptor {
+            return {};
+        }
+    };
+
+    using sender_concept = test_std::sender_tag;
+
+    auto get_env() const noexcept -> env { return {}; }
+
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return test_std::completion_signatures<test_std::set_value_t(int)>{};
+    }
+};
+
+struct await_completion_domain {
+    template <typename Tag, typename Sender, typename Env>
+    auto transform_sender(Tag, Sender&&, const Env&) const noexcept -> await_completion_transformed_sender {
+        return {};
+    }
+};
+
+struct await_completion_env {
+    auto query(const test_std::get_domain_t&) const noexcept -> await_completion_domain { return {}; }
+};
+
+struct await_completion_source_sender {
+    using sender_concept = test_std::sender_tag;
+};
+
+struct await_completion_promise {
+    auto get_env() const noexcept -> await_completion_env { return {}; }
+};
+
 auto test_as_awaitable() -> void {
     static_assert(std::same_as<const test_std::as_awaitable_t, decltype(test_std::as_awaitable)>);
+
+    await_completion_promise promise{};
+    auto                     awaitable{test_std::as_awaitable(await_completion_source_sender{}, promise)};
+    static_assert(std::same_as<as_awaitable_awaiter, decltype(awaitable)>);
+}
+
+auto test_exec_env() -> void {
+    test::type_exists<test_std::env<>>();
+    test::type_exists<test_std::indeterminate_domain<>>();
 }
 } // namespace
 
 TEST(execution_syn) {
+    test_queries();
     test_schedule_result_t();
     test_env_of_t();
     test_decayed_tuple();
@@ -358,4 +490,5 @@ TEST(execution_syn) {
     test_sender_adaptor_closure();
     test_sender_adaptor();
     test_as_awaitable();
+    test_exec_env();
 }

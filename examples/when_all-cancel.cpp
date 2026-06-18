@@ -1,13 +1,21 @@
 // examples/when_all-cancel.cpp                                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/execution.hpp>
-#include <beman/execution/stop_token.hpp>
+#include <exception>
 #include <iostream>
 #include <optional>
+#include <string>
+#include <tuple>
 #include <type_traits>
 #include <utility>
+#include <variant>
 #include <cassert>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#include <beman/execution/stop_token.hpp>
+#endif
 
 namespace ex = beman::execution;
 
@@ -23,7 +31,7 @@ struct env {
 };
 
 struct receiver {
-    using receiver_concept = ex::receiver_t;
+    using receiver_concept = ex::receiver_tag;
     ex::inplace_stop_source* source;
 
     auto set_value() && noexcept -> void { std::cout << "set_value\n"; }
@@ -35,8 +43,12 @@ struct receiver {
 static_assert(ex::receiver<receiver>);
 
 struct await_stop {
-    using sender_concept        = ex::sender_t;
+    using sender_concept        = ex::sender_tag;
     using completion_signatures = ex::completion_signatures<ex::set_value_t(), ex::set_stopped_t()>;
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+        return {};
+    }
 
     template <ex::receiver Receiver>
     struct state {
@@ -50,7 +62,7 @@ struct await_stop {
                 std::cout << "await_stop stopping done\n";
             }
         };
-        using operation_state_concept = ex::operation_state_t;
+        using operation_state_concept = ex::operation_state_tag;
         using token_t                 = decltype(ex::get_stop_token(ex::get_env(std::declval<Receiver>())));
         using callback_t              = ex::stop_callback_for_t<token_t, stop_t>;
 
@@ -72,16 +84,20 @@ static_assert(ex::operation_state<await_stop::state<receiver>>);
 
 template <ex::sender Sender>
 struct eager {
-    using sender_concept        = ex::sender_t;
+    using sender_concept        = ex::sender_tag;
     using completion_signatures = ex::completion_signatures<ex::set_value_t(), ex::set_stopped_t()>;
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+        return {};
+    }
 
     Sender sender;
 
     template <ex::receiver Receiver>
     struct state {
-        using operation_state_concept = ex::operation_state_t;
+        using operation_state_concept = ex::operation_state_tag;
         struct receiver {
-            using receiver_concept = ex::receiver_t;
+            using receiver_concept = ex::receiver_tag;
             state* st;
             auto   set_value() && noexcept -> void { ex::set_value(std::move(st->outer_receiver)); }
             template <typename E>
@@ -89,8 +105,9 @@ struct eager {
                 ex::set_error(std::move(st->outer_receiver), std::forward<E>(e));
             }
             auto set_stopped() && noexcept -> void {
+                auto st_ = st;
                 st->inner_state.reset();
-                ex::set_stopped(std::move(st->outer_receiver));
+                ex::set_stopped(std::move(st_->outer_receiver));
             }
 
             auto get_env() const noexcept -> env { return ex::get_env(st->outer_receiver); }

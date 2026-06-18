@@ -5,9 +5,12 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_SET_ERROR
 
 #include <beman/execution/detail/common.hpp>
-#include <utility>
-
 #include <beman/execution/detail/suppress_push.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -53,4 +56,4 @@ inline constexpr set_error_t set_error{};
 
 #include <beman/execution/detail/suppress_pop.hpp>
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SET_ERROR

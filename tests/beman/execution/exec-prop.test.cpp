@@ -1,11 +1,15 @@
 // tests/beman/execution/exec-prop.test.cpp                           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <type_traits>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
-#include <type_traits>
-#include <concepts>
-#include <test/execution.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -41,4 +45,12 @@ TEST(exec_prop) {
     [[maybe_unused]] decltype(p0) p2(p0);
     static_assert(not std::is_assignable_v<decltype(p0), decltype(p0)>);
     static_assert(not std::is_assignable_v<decltype(p1), std::add_rvalue_reference_t<decltype(p0)>>);
+
+    // P3826R5: prop::query now accepts extra arguments (auto&&...)
+    // The extra arguments are ignored but allowed
+    auto p3{test_std::prop(test_query, 99)};
+    ASSERT(p3.query(test_query) == 99);
+    ASSERT(p3.query(test_query, 1) == 99);
+    ASSERT(p3.query(test_query, 1, 2) == 99);
+    ASSERT(p3.query(test_query, 1, 2, 3) == 99);
 }

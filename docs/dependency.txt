@@ -3,7 +3,7 @@ as_awaitable is_awaitable
 await_result_type get_awaiter
 awaitable_receiver forwarding_query
 awaitable_receiver get_env
-awaitable_receiver receiver_t
+awaitable_receiver receiver_tag
 awaitable_receiver set_error
 awaitable_receiver set_stopped
 awaitable_receiver set_value
@@ -15,7 +15,7 @@ basic_operation connect_all_result
 basic_operation impls_for
 basic_operation indices_for
 basic_operation inner_ops
-basic_operation operation_state_t
+basic_operation operation_state_tag
 basic_operation state_type
 basic_operation tag_of_t
 basic_operation valid_specialization
@@ -23,7 +23,7 @@ basic_receiver basic_state
 basic_receiver callable
 basic_receiver env_type
 basic_receiver impls_for
-basic_receiver receiver_t
+basic_receiver receiver_tag
 basic_receiver set_error
 basic_receiver set_stopped
 basic_receiver set_value
@@ -35,7 +35,7 @@ basic_sender completion_signatures_for
 basic_sender decays_to
 basic_sender impls_for
 basic_sender product_type
-basic_sender sender_t
+basic_sender sender_tag
 basic_state impls_for
 basic_state state_type
 basic_state tag_of_t
@@ -182,7 +182,7 @@ into_variant value_types_of_t
 is_awaitable get_awaiter
 is_awaitable is_awaiter
 is_awaiter await_suspend_result
-is_sender sender_t
+is_sender sender_tag
 join_env queryable
 just decayed_typeof
 just default_impls
@@ -212,7 +212,7 @@ let_error join_env
 let_error make_env
 let_error make_sender
 let_error movable_value
-let_error receiver_t
+let_error receiver_tag
 let_error sched_env
 let_error sender_adaptor_closure
 let_error sender_for
@@ -237,7 +237,7 @@ let_stopped join_env
 let_stopped make_env
 let_stopped make_sender
 let_stopped movable_value
-let_stopped receiver_t
+let_stopped receiver_tag
 let_stopped sched_env
 let_stopped sender_adaptor_closure
 let_stopped sender_for
@@ -262,7 +262,7 @@ let_value join_env
 let_value make_env
 let_value make_sender
 let_value movable_value
-let_value receiver_t
+let_value receiver_tag
 let_value sched_env
 let_value sender_adaptor_closure
 let_value sender_for
@@ -287,15 +287,15 @@ on sender
 on sender_adaptor_closure
 on sender_for
 on sender_in
-on sender_t
+on sender_tag
 on set_value
 on transform_sender
 on write_env
 on_stop_request inplace_stop_source
-operation_state operation_state_t
+operation_state operation_state_tag
 operation_state start
 operation_state_task connect_awaitable_promise
-operation_state_task operation_state_t
+operation_state_task operation_state_tag
 read_env decayed_typeof
 read_env default_impls
 read_env get_env
@@ -305,7 +305,7 @@ read_env query
 read_env try_set_value
 receiver get_env
 receiver queryable
-receiver receiver_t
+receiver receiver_tag
 receiver_of has_completions
 run_loop connect
 run_loop get_completion_scheduler
@@ -338,7 +338,7 @@ schedule_from impls_for
 schedule_from join_env
 schedule_from make_sender
 schedule_from query_with_default
-schedule_from receiver_t
+schedule_from receiver_tag
 schedule_from sched_attrs
 schedule_from schedule
 schedule_from schedule_result_t
@@ -352,7 +352,7 @@ scheduler get_env
 scheduler queryable
 scheduler schedule
 scheduler schedule_result_t
-scheduler scheduler_t
+scheduler scheduler_tag
 scheduler sender_in
 scheduler set_value_t
 sender enable_sender
@@ -394,7 +394,7 @@ split get_domain_early
 split get_stop_token
 split inplace_stop_token
 split make_sender
-split receiver_t
+split receiver_tag
 split sender_in
 split set_error
 split set_stopped
@@ -441,7 +441,7 @@ sync_wait get_delegation_scheduler
 sync_wait get_domain_early
 sync_wait get_scheduler
 sync_wait into_variant
-sync_wait receiver_t
+sync_wait receiver_tag
 sync_wait run_loop
 sync_wait sender_in
 sync_wait sender_to

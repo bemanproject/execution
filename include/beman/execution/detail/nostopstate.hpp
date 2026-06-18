@@ -4,6 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NOSTOPSTATE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NOSTOPSTATE
 
+#include <beman/execution/detail/common.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
@@ -16,4 +18,4 @@ inline constexpr nostopstate_t nostopstate{};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_NOSTOPSTATE

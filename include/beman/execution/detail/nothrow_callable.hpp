@@ -4,7 +4,17 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NOTHROW_CALLABLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NOTHROW_CALLABLE
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.callable;
+#else
 #include <beman/execution/detail/callable.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -17,4 +27,4 @@ concept nothrow_callable = ::beman::execution::detail::callable<Fun, Args...> &&
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_NOTHROW_CALLABLE

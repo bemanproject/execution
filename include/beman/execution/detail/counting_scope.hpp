@@ -1,17 +1,31 @@
 // include/beman/execution/detail/counting_scope.hpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <cstdlib>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.counting_scope_base;
+import beman.execution.detail.counting_scope_join;
+import beman.execution.detail.inplace_stop_source;
+import beman.execution.detail.scope_token;
+import beman.execution.detail.sender;
+import beman.execution.detail.stop_when;
+#else
 #include <beman/execution/detail/counting_scope_base.hpp>
 #include <beman/execution/detail/counting_scope_join.hpp>
+#include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/stop_when.hpp>
-#include <utility>
-#include <cstdlib>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -37,7 +51,7 @@ class beman::execution::counting_scope : public ::beman::execution::detail::coun
 
 // ----------------------------------------------------------------------------
 
-class beman::execution::counting_scope::token : public ::beman::execution::detail::counting_scope_base::token {
+class beman::execution::counting_scope::token : public beman::execution::counting_scope::token_base {
   public:
     template <::beman::execution::sender Sender>
     auto wrap(Sender&& sender) const noexcept -> ::beman::execution::sender auto {
@@ -48,8 +62,7 @@ class beman::execution::counting_scope::token : public ::beman::execution::detai
 
   private:
     friend class beman::execution::counting_scope;
-    explicit token(::beman::execution::counting_scope* s)
-        : ::beman::execution::detail::counting_scope_base::token(s) {}
+    explicit token(::beman::execution::counting_scope* s) : token_base(s) {}
 };
 static_assert(::beman::execution::scope_token<::beman::execution::counting_scope::token>);
 
@@ -59,4 +72,4 @@ inline auto beman::execution::counting_scope::get_token() noexcept -> beman::exe
     return beman::execution::counting_scope::token(this);
 }
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE

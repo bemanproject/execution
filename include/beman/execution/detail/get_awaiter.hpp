@@ -4,16 +4,23 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_GET_AWAITER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_AWAITER
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-template <typename Expr, typename Promise>
-auto get_awaiter(Expr&& expr, Promise& promise) -> decltype(auto) {
+template <typename Expr, typename... Promise>
+    requires(sizeof...(Promise) <= 1)
+auto get_awaiter(Expr&& expr, Promise&... promise) -> decltype(auto) {
     auto transform{[&]() -> decltype(auto) {
-        if constexpr (requires { promise.await_transform(::std::forward<Expr>(expr)); })
-            return promise.await_transform(::std::forward<Expr>(expr));
+        if constexpr (sizeof...(Promise) == 1 &&
+                      requires { (..., promise.await_transform(::std::forward<Expr>(expr))); })
+            return (..., promise.await_transform(::std::forward<Expr>(expr)));
         else
             return ::std::forward<Expr>(expr);
     }};
@@ -30,4 +37,4 @@ auto get_awaiter(Expr&& expr, Promise& promise) -> decltype(auto) {
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_GET_AWAITER

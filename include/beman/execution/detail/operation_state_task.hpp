@@ -4,14 +4,27 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE_TASK
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE_TASK
 
-#include <beman/execution/detail/with_await_transform.hpp>
-#include <beman/execution/detail/operation_state.hpp>
-#include <beman/execution/detail/set_stopped.hpp>
-#include <beman/execution/detail/env_of_t.hpp>
-#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
 #include <exception>
 #include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.env_of_t;
+import beman.execution.detail.get_env;
+import beman.execution.detail.operation_state;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.with_await_transform;
+#else
+#include <beman/execution/detail/env_of_t.hpp>
+#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/set_stopped.hpp>
+#include <beman/execution/detail/with_await_transform.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -53,7 +66,7 @@ struct beman::execution::detail::connect_awaitable_promise
 
 template <typename Receiver>
 struct beman::execution::detail::operation_state_task {
-    using operation_state_concept = ::beman::execution::operation_state_t;
+    using operation_state_concept = ::beman::execution::operation_state_tag;
     using promise_type            = ::beman::execution::detail::connect_awaitable_promise<Receiver>;
 
     explicit operation_state_task(::std::coroutine_handle<> hndl) noexcept : handle(hndl) {}
@@ -82,4 +95,4 @@ auto beman::execution::detail::connect_awaitable_promise<Receiver>::get_return_o
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_OPERATION_STATE_TASK

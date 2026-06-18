@@ -4,8 +4,17 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_FILTER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_FILTER
 
-#include <beman/execution/detail/meta_prepend.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.meta.prepend;
+#else
+#include <beman/execution/detail/meta_prepend.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -54,4 +63,4 @@ using filter_tag = typename ::beman::execution::detail::meta::detail::filter_tag
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_FILTER

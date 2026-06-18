@@ -1,26 +1,17 @@
 // src/beman/execution/tests/exec-sync-wait.test.cpp                -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/sync_wait.hpp>
-
-#include <beman/execution/detail/run_loop.hpp>
-#include <beman/execution/detail/completion_signatures.hpp>
-#include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
-#include <beman/execution/detail/set_error.hpp>
-#include <beman/execution/detail/set_stopped.hpp>
-#include <beman/execution/detail/set_value.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/sender_in.hpp>
-#include <beman/execution/detail/just.hpp>
-#include <beman/execution/detail/read_env.hpp>
-#include <beman/execution/detail/get_delegation_scheduler.hpp>
-#include <beman/execution/detail/then.hpp>
-#include <test/execution.hpp>
-
 #include <exception>
 #include <concepts>
 #include <utility>
+#include <tuple>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/execution.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -37,18 +28,22 @@ struct error : std::exception {
     explicit error(int v) : value(v) {}
 };
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
 };
 
 struct sender_in {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(bool, int),
                                                                   test_std::set_error_t(error),
                                                                   test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
 
         std::remove_cvref_t<Receiver> receiver;
 
@@ -62,13 +57,17 @@ struct sender_in {
 };
 
 struct send_error {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::
         completion_signatures<test_std::set_value_t(), test_std::set_error_t(error), test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
 
         std::remove_cvref_t<Receiver> receiver;
         int                           value;
@@ -85,13 +84,17 @@ struct send_error {
 };
 
 struct send_stopped {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::
         completion_signatures<test_std::set_value_t(), test_std::set_error_t(error), test_std::set_stopped_t()>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() -> completion_signatures {
+        return {};
+    }
 
     template <typename Receiver>
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
 
         std::remove_cvref_t<Receiver> receiver;
 

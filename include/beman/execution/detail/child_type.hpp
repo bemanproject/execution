@@ -4,8 +4,13 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CHILD_TYPE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CHILD_TYPE
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <cstddef>
 #include <type_traits>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -21,4 +26,4 @@ using child_type = decltype(::std::declval<Sender>().template get<I + 2>());
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CHILD_TYPE

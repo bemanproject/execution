@@ -4,9 +4,18 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES
 
-#include <beman/execution/detail/completion_signature.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signature;
+#else
+#include <beman/execution/detail/completion_signature.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -26,4 +35,4 @@ struct completion_signatures {};
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES

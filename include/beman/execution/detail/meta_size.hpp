@@ -4,7 +4,12 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_META_SIZE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_META_SIZE
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <cstddef>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -21,4 +26,4 @@ inline constexpr ::std::size_t size_v{::beman::execution::detail::meta::size<T>:
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_META_SIZE

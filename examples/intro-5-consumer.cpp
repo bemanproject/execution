@@ -1,16 +1,61 @@
-// examples/intro-1-hello-world.cpp                                   -*-C++-*-
+// examples/intro-5-consumer.cpp                                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/execution.hpp>
 #include <beman/execution/detail/suppress_push.hpp>
-#include <expected>
+#include <chrono>
+//-dk:TODO restore if that actually works #include <expected>
 #include <iostream>
 #include <string>
 #include <tuple>
+#include <variant>
 #include <cinttypes>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/execution.hpp>
+#endif
 
 namespace ex = ::beman::execution;
 using namespace std::string_literals;
+
+namespace tst {
+template <typename T, typename E>
+struct expected {
+    std::variant<std::monostate, T, E> value_or_error{};
+    expected(T&& value) noexcept : value_or_error(std::in_place_index<1>, std::forward<T>(value)) {}
+    expected(E&& error) noexcept : value_or_error(std::in_place_index<2>, std::forward<E>(error)) {}
+    explicit operator bool() const noexcept { return this->value_or_error.index() == 1; }
+    auto     value_or(T&& default_value) && noexcept -> T {
+        if (this->value_or_error.index() == 1) {
+            return std::move(std::get<1>(this->value_or_error));
+        } else {
+            return std::forward<T>(default_value);
+        }
+    }
+    auto value_or(T&& default_value) & noexcept -> T {
+        if (this->value_or_error.index() == 1) {
+            return std::get<1>(this->value_or_error);
+        } else {
+            return std::forward<T>(default_value);
+        }
+    }
+    auto error_or(E&& default_error) && noexcept -> E {
+        if (this->value_or_error.index() == 2) {
+            return std::move(std::get<2>(this->value_or_error));
+        } else {
+            return std::forward<E>(default_error);
+        }
+    }
+    auto error_or(E&& default_error) & noexcept -> E {
+        if (this->value_or_error.index() == 2) {
+            return std::get<2>(this->value_or_error);
+        } else {
+            return std::forward<E>(default_error);
+        }
+    }
+};
+} // namespace tst
 
 enum class success : std::uint8_t { one };
 enum class failure : std::uint8_t { fail_one };
@@ -18,10 +63,10 @@ enum class failure : std::uint8_t { fail_one };
 struct expected_to_channel_t {
     template <typename Receiver>
     struct own_receiver {
-        using receiver_concept = ex::receiver_t;
+        using receiver_concept = ex::receiver_tag;
         Receiver* receiver;
         template <typename Value, typename Error>
-        auto set_value(std::expected<Value, Error>&& exp) noexcept -> void {
+        auto set_value(tst::expected<Value, Error>&& exp) noexcept -> void {
             if (exp) {
                 std::cout << "received an expected with value from child/upstream\n" << std::flush;
                 ex::set_value(std::move(*receiver), exp.value_or(Value{}));
@@ -43,7 +88,7 @@ struct expected_to_channel_t {
     };
     template <ex::sender CSender, ex::receiver Receiver>
     struct state {
-        using operation_state_concept = ex::operation_state_t;
+        using operation_state_concept = ex::operation_state_tag;
         using child_state_t = decltype(ex::connect(std::declval<CSender>(), std::declval<own_receiver<Receiver>>()));
         Receiver      parent_receiver;
         child_state_t child_state;
@@ -60,13 +105,17 @@ struct expected_to_channel_t {
 
     template <ex::sender CSender>
     struct sender {
-        using sender_concept = ex::sender_t;
+        using sender_concept = ex::sender_tag;
         // value_types_of<CSender....> -> set_value_t(std::expected<T, E>)
         // -> completion_signatures<set_value_t(T), set_error_t(E)>
         // -> + error_type_of<CSender...>
         // -> + sends_stopped<CSender...> -> set_stopped_t()
         // -> unique
         using completion_signatures = ex::completion_signatures<ex::set_value_t(success), ex::set_error_t(failure)>;
+        template <typename...>
+        static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+            return {};
+        }
         CSender child_sender;
 
         template <ex::receiver Receiver>
@@ -83,12 +132,12 @@ struct expected_to_channel_t {
     sender<std::remove_cvref_t<CSender>> operator()(CSender&& child_sender) const {
         return {std::forward<CSender>(child_sender)};
     }
-    auto operator()() const { return ex::detail::sender_adaptor{*this}; }
+    auto operator()() const { return ex::detail::make_sender_adaptor(*this); }
 };
 inline constexpr expected_to_channel_t expected_to_channel{};
 
 int main() {
-    ex::sync_wait(ex::just(std::expected<success, failure>(success::one)) | expected_to_channel() |
+    ex::sync_wait(ex::just(tst::expected<success, failure>(success::one)) | expected_to_channel() |
                   ex::then([](success) noexcept { std::cout << "success\n"; }) |
                   ex::upon_error([](failure) noexcept { std::cout << "fail\n"; }));
 }

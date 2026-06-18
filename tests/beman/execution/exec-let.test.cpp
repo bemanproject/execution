@@ -1,36 +1,46 @@
 // src/beman/execution/tests/exec-let.test.cpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <array>
+#include <cstdlib>
+#include <concepts>
+#include <exception>
+#include <memory_resource>
+#include <span>
+#include <vector>
+#include <test/execution.hpp>
+#include <test/completion_test.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
 #include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/then.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
-#include <test/execution.hpp>
-#include <array>
-#include <cstdlib>
-#include <concepts>
-#include <memory_resource>
-#include <span>
-#include <vector>
+#endif
 
 // ----------------------------------------------------------------------------
 
 namespace {
 struct receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     auto set_error(auto&&) && noexcept -> void {}
     auto set_stopped() && noexcept -> void {}
     auto set_value(auto&&...) && noexcept -> void {}
 };
 template <typename... Sigs>
 struct test_sender {
-    using sender_concept        = test_std::sender_t;
+    using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<Sigs...>;
+    template <typename, typename...>
+    static consteval auto get_completion_signatures() {
+        return completion_signatures{};
+    }
 
     struct state {
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         auto start() & noexcept -> void {}
     };
     auto connect(auto&&) -> state { return {}; }
@@ -55,7 +65,7 @@ auto test_let_value() {
                                    test_std::set_error_t(char)>();
             })};
     static_assert(test_std::sender<decltype(s2)>);
-    using type = decltype(test_std::get_completion_signatures(s2, test_std::env<>{}));
+    using type = decltype(test_std::get_completion_signatures<decltype(s2), test_std::env<>>());
     static_assert(std::same_as<type, type>);
     // static_assert(std::same_as<void, type>);
 
@@ -104,13 +114,45 @@ auto test_let_value_allocator() -> void {
     auto             s{ex::just(std::span(values)) | ex::let_value(fun()) | ex::then([](auto&&) noexcept {})};
     static_assert(test_std::sender<decltype(s)>);
     static_assert(test_std::sender_in<decltype(s)>);
-    // static_assert(std::same_as<void, decltype(test_std::get_completion_signatures(s, test_std::env<>{}))>);
+    //-dk:TODO static_assert(std::same_as<void, decltype(test_std::get_completion_signatures(s, test_std::env<>{}))>);
     ex::sync_wait(s);
 }
 
 auto test_let_value_env() -> void {
     ex::sync_wait(ex::just() | ex::let_value([] { return ex::read_env(ex::get_scheduler); }) |
                   ex::then([](auto s) { static_assert(ex::scheduler<decltype(s)>); }));
+}
+
+struct all_receiver {
+    using receiver_concept = test_std::receiver_tag;
+    auto set_value(auto&&...) && noexcept {}
+    auto set_error(auto&&) && noexcept {}
+    auto set_stopped() && noexcept {}
+};
+
+auto test_completion_signatures() -> void {
+    test_std::sync_wait(
+        test::completion_test(test_std::just() | test_std::let_value([]() { return test_std::just(); })));
+    test_std::sync_wait(
+        test::completion_test(test_std::just() | test_std::let_value([]() noexcept { return test_std::just(); })));
+    test_std::sync_wait(test::completion_test(
+        test_std::just() | test_std::let_value([]() noexcept { return test_std::just_error(std::exception_ptr{}); })));
+
+    test_std::sync_wait(
+        test::completion_test(test_std::let_value(test_std::just(), []() noexcept { return test_std::just(); })));
+    static_assert(std::is_nothrow_move_constructible_v<decltype(test_std::just() | test_std::then([]() noexcept {}))>);
+    static_assert(
+        requires { test_std::connect(test_std::just() | test_std::then([]() noexcept {}), all_receiver{}); });
+    static_assert(noexcept(all_receiver{}));
+    static_assert(noexcept(test_std::just()));
+    static_assert(noexcept(test_std::just().connect(all_receiver{})));
+    static_assert(noexcept(test_std::connect(test_std::just(), all_receiver{})));
+    static_assert(noexcept(ex::then(test_std::just(), []() noexcept {})));
+    static_assert(noexcept(test_std::just() | ex::then([]() noexcept {})));
+    static_assert(noexcept((test_std::just() | test_std::then([]() noexcept {})).connect(all_receiver{})));
+    static_assert(noexcept(test_std::connect(test_std::just() | test_std::then([]() noexcept {}), all_receiver{})));
+    test_std::sync_wait(test::completion_test(test_std::let_value(
+        test_std::just(), []() noexcept { return test_std::just() | test_std::then([]() noexcept {}); })));
 }
 } // namespace
 
@@ -125,6 +167,7 @@ TEST(exec_let) {
         test_let_value();
         test_let_value_allocator();
         test_let_value_env();
+        test_completion_signatures();
     } catch (...) {
         // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "let tests are not expected to throw");

@@ -29,14 +29,14 @@ class tst::timer {
   public:
     class when_done_sender {
       public:
-        using sender_concept        = tst::ex::sender_t;
+        using sender_concept        = tst::ex::sender_tag;
         using completion_signatures = tst::ex::completion_signatures<tst::ex::set_value_t(),
                                                                      tst::ex::set_error_t(std::exception_ptr),
                                                                      tst::ex::set_stopped_t()>;
         template <tst::ex::receiver Receiver>
         struct state {
-            using operation_state_concept = tst::ex::operation_state_t;
-            using scheduler_t             = decltype(ex::get_scheduler(ex::get_env(std::declval<Receiver>())));
+            using operation_state_concept = tst::ex::operation_state_tag;
+            using scheduler_tag           = decltype(ex::get_scheduler(ex::get_env(std::declval<Receiver>())));
             struct execute {
                 state* s{};
                 auto   operator()() noexcept -> void { this->s->await_one(); }
@@ -46,7 +46,7 @@ class tst::timer {
                 auto   operator()() noexcept -> bool { return this->s->object->queue.empty(); }
             };
             using inner_sender = decltype(tst::repeat_effect_until(
-                ex::schedule(std::declval<scheduler_t>()) | ex::then(execute()), pred()));
+                ex::schedule(std::declval<scheduler_tag>()) | ex::then(execute()), pred()));
             tst::timer*                            object;
             tst::connector<inner_sender, Receiver> inner_op;
 
@@ -78,11 +78,11 @@ class tst::timer {
         virtual auto complete() noexcept -> void = 0;
     };
     struct resume_after_sender {
-        using sender_concept        = tst::ex::sender_t;
+        using sender_concept        = tst::ex::sender_tag;
         using completion_signatures = tst::ex::completion_signatures<tst::ex::set_value_t()>;
         template <tst::ex::receiver Receiver>
         struct state : base {
-            using operation_state_concept = ex::operation_state_t;
+            using operation_state_concept = ex::operation_state_tag;
             tst::timer*                   object;
             std::chrono::milliseconds     duration;
             std::remove_cvref_t<Receiver> receiver;

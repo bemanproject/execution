@@ -1,10 +1,15 @@
 // include/beman/execution/detail/as_tuple.hpp                        -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_AS_TUPLE
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_AS_TUPLE
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_AS_TUPLE
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_AS_TUPLE
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.decayed_tuple;
+#else
 #include <beman/execution/detail/decayed_tuple.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -30,4 +35,4 @@ using as_tuple_t = typename ::beman::execution::detail::as_tuple<T>::type;
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_AS_TUPLE

@@ -1,27 +1,50 @@
 // include/beman/execution/detail/stop_when.hpp                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_STOP_WHEN
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_STOP_WHEN
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_WHEN
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_WHEN
 
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/receiver.hpp>
-#include <beman/execution/detail/stoppable_token.hpp>
-#include <beman/execution/detail/unstoppable_token.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <optional>
+#include <type_traits>
+#include <utility>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.connect;
+import beman.execution.detail.get_completion_signatures;
+import beman.execution.detail.get_env;
+import beman.execution.detail.get_stop_token;
+import beman.execution.detail.inplace_stop_source;
+import beman.execution.detail.operation_state;
+import beman.execution.detail.receiver;
+import beman.execution.detail.sender;
+import beman.execution.detail.set_error;
+import beman.execution.detail.set_stopped;
+import beman.execution.detail.set_value;
+import beman.execution.detail.start;
+import beman.execution.detail.stop_callback_for_t;
+import beman.execution.detail.stoppable_token;
+import beman.execution.detail.unstoppable_token;
+#else
+#include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/operation_state.hpp>
-#include <beman/execution/detail/get_stop_token.hpp>
-#include <beman/execution/detail/get_env.hpp>
-#include <beman/execution/detail/start.hpp>
-#include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
-#include <beman/execution/detail/get_completion_signatures.hpp>
-#include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/stop_callback_for_t.hpp>
-#include <type_traits>
-#include <optional>
-#include <utility>
+#include <beman/execution/detail/stoppable_token.hpp>
+#include <beman/execution/detail/unstoppable_token.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -37,7 +60,7 @@ inline constexpr struct stop_when_t {
 
 template <::beman::execution::sender Sndr, ::beman::execution::stoppable_token Tok>
 struct beman::execution::detail::stop_when_t::sender {
-    using sender_concept = ::beman::execution::sender_t;
+    using sender_concept = ::beman::execution::sender_tag;
 
     stop_when_t               stop_when{};
     std::remove_cvref_t<Tok>  tok;
@@ -45,7 +68,7 @@ struct beman::execution::detail::stop_when_t::sender {
 
     template <::beman::execution::receiver Rcvr>
     struct state {
-        using operation_state_concept = ::beman::execution::operation_state_t;
+        using operation_state_concept = ::beman::execution::operation_state_tag;
         using rcvr_t                  = ::std::remove_cvref_t<Rcvr>;
         using token1_t                = ::std::remove_cvref_t<Tok>;
         using token2_t =
@@ -74,7 +97,7 @@ struct beman::execution::detail::stop_when_t::sender {
         };
 
         struct receiver {
-            using receiver_concept = ::beman::execution::receiver_t;
+            using receiver_concept = ::beman::execution::receiver_tag;
             base_state* st;
 
             auto get_env() const noexcept -> env { return env{this->st}; }
@@ -111,9 +134,9 @@ struct beman::execution::detail::stop_when_t::sender {
         }
     };
 
-    template <typename E>
-    auto get_completion_signatures(const E& e) const noexcept {
-        return ::beman::execution::get_completion_signatures(this->sndr, e);
+    template <typename, typename... E>
+    static consteval auto get_completion_signatures() noexcept {
+        return ::beman::execution::get_completion_signatures<std::remove_cvref_t<Sndr>, E...>();
     }
     template <::beman::execution::receiver Rcvr>
     auto connect(Rcvr&& rcvr) && -> state<Rcvr> {
@@ -132,4 +155,4 @@ inline auto beman::execution::detail::stop_when_t::operator()(Sndr&& sndr, Tok&&
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_WHEN

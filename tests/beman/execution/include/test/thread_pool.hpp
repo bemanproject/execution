@@ -5,13 +5,19 @@
 #ifndef INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_THREAD_POOL
 #define INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_THREAD_POOL
 
-#include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
-
-#include <mutex>
 #include <condition_variable>
-#include <thread>
 #include <memory>
+#include <mutex>
+#include <optional>
+#include <thread>
+#include <utility>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#endif
+
 // ----------------------------------------------------------------------------
 
 namespace test {
@@ -42,7 +48,7 @@ struct test::thread_pool {
             std::unique_lock cerberus(mutex);
             condition.wait(cerberus, [this] { return stopped || stack; });
             return this->stack ? std::optional<node*>(std::exchange(this->stack, this->stack->next))
-                                           : std::optional<node*>();
+                               : std::optional<node*>();
         }()) {
             (*n)->run();
         }
@@ -66,7 +72,7 @@ struct test::thread_pool {
     }
 
     struct scheduler {
-        using scheduler_concept = test_std::scheduler_t;
+        using scheduler_concept = test_std::scheduler_tag;
         struct env {
             test::thread_pool* pool;
 
@@ -77,7 +83,7 @@ struct test::thread_pool {
         };
         template <typename Receiver>
         struct state final : test::thread_pool::node {
-            using operation_state_concept = test_std::operation_state_t;
+            using operation_state_concept = test_std::operation_state_tag;
             std::remove_cvref_t<Receiver> receiver;
             test::thread_pool*            pool;
 
@@ -93,9 +99,13 @@ struct test::thread_pool {
             void run() override { test_std::set_value(std::move(this->receiver)); }
         };
         struct sender {
-            using sender_concept        = test_std::sender_t;
-            using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
+            using sender_concept = test_std::sender_tag;
             test::thread_pool* pool;
+            template <typename, typename...>
+            static consteval auto get_completion_signatures()
+                -> test_std::completion_signatures<test_std::set_value_t()> {
+                return {};
+            }
             template <typename Receiver>
             state<Receiver> connect(Receiver&& receiver) {
                 return state<Receiver>(std::forward<Receiver>(receiver), pool);

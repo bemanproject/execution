@@ -1,10 +1,14 @@
 // src/beman/execution/tests/exec-schedule.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/schedule.hpp>
-#include <test/execution.hpp>
 #include <concepts>
 #include <utility>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/detail/schedule.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -12,7 +16,7 @@ namespace {
 struct non_scheduler {};
 
 struct sender {
-    using sender_concept = test_std::sender_t;
+    using sender_concept = test_std::sender_tag;
     int  value{};
     auto operator==(const sender&) const -> bool = default;
 };

@@ -1,16 +1,25 @@
 // src/beman/execution/tests/exec-just.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/just.hpp>
+#include <concepts>
+#include <memory>
+#include <memory_resource>
+#include <string>
+#include <test/execution.hpp>
+#include <test/completion_test.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
-#include <test/execution.hpp>
-#include <string>
-#include <memory_resource>
-
 #include <beman/execution/detail/suppress_push.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -28,14 +37,12 @@ auto test_just_constraints(CPO const& cpo, T&&... args) -> void {
     static_assert(Expect == requires { cpo(::std::forward<T>(args)...); });
     if constexpr (requires { cpo(::std::forward<T>(args)...); }) {
         auto sender{cpo(::std::forward<T>(args)...)};
-        using sender_t = decltype(sender);
 
         static_assert(test_std::sender<decltype(cpo(::std::forward<T>(args)...))>);
         static_assert(test_std::sender_in<decltype(cpo(::std::forward<T>(args)...))>);
-        static_assert(std::same_as<test_std::completion_signatures<Completion(std::remove_cvref_t<T>...)>,
-                                   beman::execution::detail::completion_signatures_for<sender_t, test_std::env<>>>);
-        static_assert(std::same_as<test_std::completion_signatures<Completion(std::remove_cvref_t<T>...)>,
-                                   decltype(beman::execution::get_completion_signatures(sender, test_std::env<>{}))>);
+        static_assert(
+            std::same_as<test_std::completion_signatures<Completion(std::remove_cvref_t<T>...)>,
+                         decltype(beman::execution::get_completion_signatures<decltype(sender), test_std::env<>>())>);
     }
 }
 
@@ -61,7 +68,7 @@ auto test_just_constraints() -> void {
 
 template <typename... T>
 struct value_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     bool*                                         called{};
     test_detail::product_type<std::decay_t<T>...> expect{};
 
@@ -78,7 +85,7 @@ value_receiver(bool*, T&&...) -> value_receiver<T...>;
 
 template <typename T>
 struct error_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     bool*           called;
     std::decay_t<T> error;
@@ -93,7 +100,7 @@ template <typename E>
 error_receiver(bool*, E&&) -> error_receiver<E>;
 
 struct stopped_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
 
     bool* called;
 
@@ -157,7 +164,7 @@ struct memory_env {
     auto                              query(const test_std::get_allocator_t&) const noexcept { return allocator; }
 };
 struct memory_receiver {
-    using receiver_concept = test_std::receiver_t;
+    using receiver_concept = test_std::receiver_tag;
     std::pmr::polymorphic_allocator<> allocator;
     auto                              get_env() const noexcept { return memory_env{this->allocator}; }
 
@@ -195,17 +202,24 @@ auto test_just_allocator() -> void {
     test::use(state);
     ASSERT(resource.count == 2u);
 }
+
+auto test_completion_signatures() -> void {
+    test_std::sync_wait(test::completion_test(test_std::just()));
+    test_std::sync_wait(test::completion_test(test_std::just(1, 2, 3)));
+    test_std::sync_wait(test::completion_test(test_std::just_error(1)));
+    test_std::sync_wait(test::completion_test(test_std::just_stopped()));
+}
 } // namespace
 
 TEST(exec_just) {
 
-    using type =
-        test_detail::call_result_t<test_std::get_completion_signatures_t, decltype(test_std::just()), test_std::env<>>;
+    using type = decltype(test_std::get_completion_signatures<decltype(test_std::just()), test_std::env<>>());
 
     static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>, type>);
     try {
         test_just_constraints();
         test_just();
+        test_completion_signatures();
 #ifndef _MSC_VER
         //-dk:TODO re-enable allocator test for MSVC++
         test_just_allocator();

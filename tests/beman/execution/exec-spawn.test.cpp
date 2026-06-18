@@ -1,17 +1,24 @@
 // tests/beman/execution/exec-spawn.test.cpp                          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <concepts>
+#include <type_traits>
+#include <utility>
+#include <memory>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/spawn.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
-#include <test/execution.hpp>
-#include <concepts>
-#include <type_traits>
-#include <utility>
-#include <memory>
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -20,7 +27,7 @@ struct env {};
 
 template <bool B>
 struct sender {
-    using sender_concept        = std::conditional_t<B, test_std::sender_t, void>;
+    using sender_concept        = std::conditional_t<B, test_std::sender_tag, void>;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
 
     struct base {
@@ -33,7 +40,7 @@ struct sender {
         std::remove_cvref_t<Rcvr> rcvr;
         base*&                    handle;
 
-        using operation_state_concept = test_std::operation_state_t;
+        using operation_state_concept = test_std::operation_state_tag;
         state(auto&& r, base*& h) : rcvr(std::forward<decltype(r)>(r)), handle(h) {}
         auto start() & noexcept { this->handle = this; }
         auto complete() -> void override { test_std::set_value(std::move(this->rcvr)); }
@@ -48,15 +55,48 @@ struct sender {
 static_assert(test_std::sender<sender<true>>);
 static_assert(!test_std::sender<sender<false>>);
 
+template <bool Noexcept>
+struct association {
+    association() = default;
+
+    explicit association(bool* disassociated) noexcept : disassociated(disassociated) {}
+
+    association(const association&) = delete;
+
+    association(association&& other) noexcept(Noexcept) : disassociated(std::exchange(other.disassociated, {})) {}
+
+    ~association() {
+        if (disassociated)
+            *disassociated = true;
+    }
+
+    auto operator=(association other) noexcept(Noexcept) -> association& {
+        std::swap(this->disassociated, other.disassociated);
+        return *this;
+    }
+
+    auto try_associate() const noexcept -> association { return {disassociated}; }
+
+    explicit operator bool() const noexcept { return disassociated != nullptr; }
+
+    bool* disassociated = nullptr;
+};
+
 template <bool B>
 struct token {
     bool* associated{};
     bool* disassociated{};
     bool  can_associate{true};
-    auto  try_associate() noexcept(B) -> bool { return this->can_associate && (*this->associated = true); }
-    auto  disassociate() noexcept(B) { *this->disassociated = true; }
+    auto  try_associate() const noexcept {
+        if (!can_associate) {
+            return association<B>{};
+        }
+        *this->associated = true;
+        return association<B>{this->disassociated};
+    }
+
     template <test_std::sender Sndr>
-    auto wrap(Sndr&& sndr) {
+    auto wrap(Sndr&& sndr) const {
         return std::forward<Sndr>(sndr);
     }
 };
@@ -150,11 +190,15 @@ auto test_spawn() {
         ASSERT(associated == false);
         ASSERT(disassociated == false);
     }
+    static_assert(requires {
+        test_std::spawn(test_std::just_error(0) | test_std::let_error([](int) noexcept { return test_std::just(); }),
+                        std::declval<token<true>>());
+    });
 }
 
 } // namespace
 
-TEST(exec_spawn_future) {
+TEST(exec_spawn) {
     static_assert(std::same_as<decltype(test_std::spawn), const test_std::spawn_t>);
     test_overload<true>(sender<true>{}, token<true>{}, env{});
     test_overload<false>(sender<false>{}, token<true>{}, env{});

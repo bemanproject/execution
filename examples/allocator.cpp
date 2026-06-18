@@ -1,10 +1,17 @@
-#include <beman/execution/execution.hpp>
+// examples/allocator.cpp                                             -*-C++-*-
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
 #include <iostream>
 #include <string>
 #include <memory>
 #include <memory_resource>
 #include <span>
 #include <vector>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#endif
 
 namespace ex = beman::execution;
 
@@ -75,5 +82,5 @@ auto main() -> int {
            })};
 
     inline_resource<1024> state_resource("state");
-    ex::sync_wait(ex::detail::write_env(std::move(s), allocator_env{&state_resource}));
+    ex::sync_wait(ex::write_env(std::move(s), allocator_env{&state_resource}));
 }

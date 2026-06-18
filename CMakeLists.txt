@@ -3,74 +3,92 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-cmake_minimum_required(VERSION 3.25...4.2)
+cmake_minimum_required(VERSION 3.30...4.3)
 
-#========================== pre project settings ===============================
-# gersemi: off
-if(CMAKE_VERSION VERSION_EQUAL 4.2)
-    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
+include(./cmake/prelude.cmake)
 
-    if(CMAKE_CXX_STDLIB_MODULES_JSON)
-        message(
-            STATUS
-            "CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
+#===================================================
+project(beman.execution VERSION 0.3.0 LANGUAGES CXX)
+#===================================================
+
+# Modules opt in only on compilers that support it: msvc, g++-15 and clang-20+
+include(./cmake/cxx-modules-rules.cmake)
+
+set(BEMAN_EXECUTION_TARGET_NAME beman.execution_headers) # used in src, and docs
+set(BEMAN_EXECUTION_TARGET_PREFIX ${PROJECT_NAME}) # NOTE: used in src, and docs?
+
+#===============================================================================
+if(BEMAN_USE_MODULES)
+    option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
+
+    set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+
+    # CMake requires the language standard to be specified as compile feature
+    # when a target provides C++23 modules and the target will be installed
+    add_library(${BEMAN_EXECUTION_TARGET_PREFIX} STATIC) # FIXME: only static yet! CK
+    add_library(beman::execution ALIAS ${BEMAN_EXECUTION_TARGET_PREFIX})
+    target_compile_features(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
+    )
+
+    # TODO(CK): the export header should be used!
+    include(GenerateExportHeader)
+    generate_export_header(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        BASE_NAME ${BEMAN_EXECUTION_TARGET_PREFIX}
+        EXPORT_FILE_NAME beman/execution/modules_export.hpp
+    )
+    target_sources(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PUBLIC
+            FILE_SET HEADERS
+                BASE_DIRS include ${CMAKE_CURRENT_BINARY_DIR}
+                FILES
+                    ${CMAKE_CURRENT_BINARY_DIR}/beman/execution/modules_export.hpp
+    )
+    target_compile_definitions(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PUBLIC BEMAN_HAS_MODULES
+    )
+    set_target_properties(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PROPERTIES
+            VERSION ${PROJECT_VERSION}
+            SOVERSION ${PROJECT_VERSION_MAJOR}
+            DLL_NAME_WITH_SOVERSION TRUE
+    )
+
+    # FIXME: Quickfix only to prevent linker problems on windows dll? CK
+    if(WIN32 AND BUILD_SHARED_LIBS)
+        set_target_properties(
+            ${BEMAN_EXECUTION_TARGET_PREFIX}
+            PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON
         )
     endif()
-endif()
-# gersemi: on
-#===============================================================================
 
-#===================================================
-project(beman_execution VERSION 0.0.1 LANGUAGES CXX)
-#===================================================
-
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-    message(FATAL_ERROR "In-source builds are not allowed!")
-endif()
-
-set(TARGET_NAME execution)
-set(TARGET_NAMESPACE beman)
-set(TARGET_PREFIX ${TARGET_NAMESPACE}.${TARGET_NAME})
-set(TARGET_LIBRARY ${PROJECT_NAME})
-set(TARGET_ALIAS ${TARGET_NAMESPACE}::${TARGET_NAME})
-set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
-set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-config-targets)
-
-#========================== post project settings ==============================
-# Tell CMake that we explicitly want `import std`.
-# This will initialize the property on all targets declared after this to 1
-message(STATUS "CMAKE_CXX_COMPILER_IMPORT_STD=${CMAKE_CXX_COMPILER_IMPORT_STD}")
-if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
-    set(CMAKE_CXX_MODULE_STD ON)
-    message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
-endif()
-
-if(CMAKE_CXX_SCAN_FOR_MODULES AND ${CMAKE_GENERATOR} STREQUAL Ninja)
-    set(BEMAN_USE_MODULES ON)
-    message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
-else()
-    message(WARNING "Missing support for CMAKE_CXX_SCAN_FOR_MODULES!")
-endif()
-
-# gersemi: off
-if(CMAKE_EXPORT_COMPILE_COMMANDS)
-    set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
-    message(
-        STATUS
-        "CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}"
+    find_package(Threads REQUIRED)
+    target_link_libraries(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PUBLIC Threads::Threads
     )
-endif()
-# gersemi: on
-
-# CMake requires the language standard to be specified as compile feature
-# when a target provides C++23 modules and the target will be installed
-add_library(${TARGET_NAME} STATIC)
-target_compile_features(${TARGET_NAME} PUBLIC cxx_std_23)
-
-if(BEMAN_USE_MODULES AND CMAKE_CXX_MODULE_STD)
-    target_compile_definitions(${TARGET_NAME} PUBLIC BEMAN_HAS_IMPORT_STD)
 else()
-    message(WARNING "Missing support for CMAKE_CXX_MODULE_STD!")
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+endif()
+
+if(BEMAN_USE_MODULES AND BEMAN_HAS_IMPORT_STD)
+    target_compile_definitions(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PUBLIC BEMAN_HAS_IMPORT_STD
+    )
+    set_target_properties(
+        ${BEMAN_EXECUTION_TARGET_PREFIX}
+        PROPERTIES CXX_MODULE_STD ON
+    )
+elseif(BEMAN_USE_MODULES)
+    message(WARNING "Missing or disabled support for CMAKE_CXX_MODULE_STD!")
 endif()
 #===============================================================================
 
@@ -86,20 +104,19 @@ option(
     ${PROJECT_IS_TOP_LEVEL}
 )
 
-option(
-    BEMAN_EXECUTION_ENABLE_INSTALL
-    "Install the project components. Values: { ON, OFF }."
-    ${PROJECT_IS_TOP_LEVEL}
-)
-
-include(GNUInstallDirs)
-set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
-
 add_subdirectory(src/beman/execution)
 
-if(BEMAN_EXECUTION_ENABLE_TESTING)
-    enable_testing()
+#===============================================================================
+# NOTE: this must be done before tests! CK
+include(infra/cmake/beman-install-library.cmake)
+beman_install_library(${BEMAN_EXECUTION_TARGET_PREFIX} TARGETS ${BEMAN_EXECUTION_TARGET_NAME} ${BEMAN_EXECUTION_TARGET_PREFIX}
+    DEPENDENCIES Threads
+)
+#===============================================================================
 
+enable_testing()
+
+if(BEMAN_EXECUTION_ENABLE_TESTING)
     add_subdirectory(tests/beman/execution)
 endif()
 
@@ -107,31 +124,3 @@ if(BEMAN_EXECUTION_BUILD_EXAMPLES)
     add_subdirectory(examples)
     add_subdirectory(docs/code)
 endif()
-
-if(NOT BEMAN_EXECUTION_ENABLE_INSTALL OR CMAKE_SKIP_INSTALL_RULES)
-    return()
-endif()
-
-include(CMakePackageConfigHelpers)
-
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}-version.cmake
-    VERSION ${CMAKE_PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
-
-configure_package_config_file(
-    "cmake/Config.cmake.in"
-    ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}.cmake
-    INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
-)
-
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}-version.cmake
-    DESTINATION ${INSTALL_CONFIGDIR}
-)
-
-set(CPACK_GENERATOR TGZ)
-include(CPack)

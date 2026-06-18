@@ -1,19 +1,28 @@
 // src/beman/execution/tests/split.test.cpp                         -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/split.hpp>
-#include <beman/execution/execution.hpp>
-#include <test/execution.hpp>
 #include <concepts>
 #include <chrono>
 #include <future>
 #include <list>
+#include <thread>
+#include <variant>
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/split.hpp>
+#include <beman/execution/detail/type_list.hpp>
+#include <beman/execution/execution.hpp>
+#endif
 
 // ----------------------------------------------------------------------------
 
 namespace {
 
-struct timed_scheduler_t : beman::execution::scheduler_t {};
+struct timed_scheduler_t : beman::execution::scheduler_tag {};
 
 class some_thread_pool {
   public:
@@ -46,7 +55,7 @@ struct some_thread_pool_scheduler {
 
     template <class Receiver>
     struct timed_operation {
-        using operation_state_concept = beman::execution::operation_state_t;
+        using operation_state_concept = beman::execution::operation_state_tag;
 
         Receiver                              receiver_;
         some_thread_pool&                     pool_;
@@ -63,7 +72,7 @@ struct some_thread_pool_scheduler {
     };
 
     struct timed_sender {
-        using sender_concept = beman::execution::sender_t;
+        using sender_concept = beman::execution::sender_tag;
 
         using completion_signatures =
             beman::execution::completion_signatures<beman::execution::set_value_t(),
@@ -133,8 +142,8 @@ void test_destroy_two_unused_split() {
     static_assert(beman::execution::sender_in<split_sender_type, test_std::env<>>);
 }
 
-using beman::execution::detail::type_list;
-using beman::execution::detail::meta::combine;
+using test_detail::type_list;
+using test_detail::meta::combine;
 
 template <class... Args>
 using to_set_value_t = type_list<beman::execution::set_value_t(Args...)>;
