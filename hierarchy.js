@@ -16,8 +16,6 @@ var hierarchy =
     [ "beman::execution::detail::pipeable::closure_t", null, [
       [ "beman::execution::sender_adaptor_closure< affine_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< bound_sender_adaptor_closure< Adaptor, BoundArgs... > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< bulk_algo_t< IsChunked > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< bulk_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< composed_sender_adaptor_closure< Inner, Outer > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< into_variant_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
