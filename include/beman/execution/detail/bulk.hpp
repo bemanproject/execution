@@ -102,7 +102,7 @@ struct bulk_transform_signatures<IsChunked, F, Shape, ::beman::execution::comple
 };
 
 template <bool IsChunked>
-struct bulk_algo_t : ::beman::execution::sender_adaptor_closure<bulk_algo_t<IsChunked>> {
+struct bulk_algo_t {
     template <typename Policy, typename Shape, typename F>
         requires(::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)
@@ -190,7 +190,7 @@ using bulk_chunked_t = ::beman::execution::detail::bulk_algo_t<true>;
 
 using bulk_unchunked_t = ::beman::execution::detail::bulk_algo_t<false>;
 
-struct bulk_t : ::beman::execution::sender_adaptor_closure<bulk_t> {
+struct bulk_t {
     template <typename Policy, typename Shape, typename F>
         requires(::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)

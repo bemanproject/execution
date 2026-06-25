@@ -12,7 +12,6 @@ namespace beman::execution::detail {
 export using beman::execution::detail::basic_sender;
 } // namespace beman::execution::detail
 
-#if defined(_MSC_VER) && _MSC_VER <= 1944L
 namespace std {
 template <typename Tag, typename Data, typename... Child>
 struct tuple_size<::beman::execution::detail::basic_sender<Tag, Data, Child...>>
@@ -24,4 +23,3 @@ struct tuple_element<I, ::beman::execution::detail::basic_sender<T...>> {
         ::std::decay_t<decltype(::std::declval<::beman::execution::detail::basic_sender<T...>>().template get<I>())>;
 };
 } // namespace std
-#endif

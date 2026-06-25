@@ -24,6 +24,7 @@ import beman.execution.detail.make_sender;
 import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.queryable;
 import beman.execution.detail.sender;
+import beman.execution.detail.sender_adaptor_closure;
 #else
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -33,6 +34,7 @@ import beman.execution.detail.sender;
 #include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_adaptor_closure.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -53,6 +55,12 @@ struct write_env_t {
         return ::beman::execution::detail::make_sender(
             *this, ::std::forward<Env>(env), ::std::forward<Sender>(sender));
     }
+
+    template <::beman::execution::detail::queryable Env>
+    constexpr auto operator()(Env&& env) const {
+        return ::beman::execution::detail::make_sender_adaptor(*this, ::std::forward<Env>(env));
+    }
+
     template <::beman::execution::sender Sender>
         requires ::beman::execution::detail::nested_sender_has_affine<Sender>
     static auto affine(Sender&& sndr) noexcept {

@@ -1,13 +1,23 @@
 // src/beman/execution/tests/exec-bulk.test.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <version>
+#include <algorithm>
 #include <cstdlib>
+#include <functional>
+#include <numeric>
+#include <ranges>
 #include <stdexcept>
 #include <tuple>
 #include <vector>
+#ifdef __cpp_lib_parallel_algorithm
+#include <execution>
+#endif
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail.meta.combine;
+import beman.execution.detail.meta.unique;
 #else
 #include <beman/execution/execution.hpp>
 #endif
@@ -369,6 +379,154 @@ auto test_bulk_multiple_values() {
     ASSERT(sum_a == 30);
     ASSERT(sum_b == 60 + 0 + 1 + 2);
 }
+#ifdef __cpp_lib_parallel_algorithm
+template <bool IsChunked, typename Policy, typename Shape, typename Fn, typename Child>
+struct pstl_for_each_sender {
+    using sender_concept = test_std::sender_tag;
+
+    template <typename Rcvr>
+    struct receiver {
+        using receiver_concept = test_std::receiver_tag;
+
+        template <typename... Args>
+        auto set_value(Args&&... args) noexcept -> void {
+            try {
+                auto iota = std::views::iota(Shape(0), shape);
+                std::for_each(policy, std::ranges::begin(iota), std::ranges::end(iota), [&](Shape i) {
+                    if constexpr (IsChunked) {
+                        std::invoke(fn, i, i + 1, args...);
+                    } else {
+                        std::invoke(fn, i, args...);
+                    };
+                });
+                test_std::set_value(std::move(rcvr), std::forward<Args>(args)...);
+            } catch (...) {
+                test_std::set_error(std::move(rcvr), std::current_exception());
+            }
+        }
+
+        template <typename E>
+        auto set_error(E e) noexcept -> void {
+            test_std::set_error(std::move(rcvr), std::move(e));
+        }
+
+        auto set_stopped() noexcept -> void { test_std::set_stopped(std::move(rcvr)); }
+
+        auto get_env() const noexcept { return test_std::get_env(rcvr); }
+
+        Rcvr   rcvr;
+        Policy policy;
+        Shape  shape;
+        Fn     fn;
+    };
+
+    template <typename, typename... Env>
+    static consteval auto get_completion_signatures() {
+        constexpr auto compl_sigs = test_std::get_completion_signatures<Child, Env...>();
+        return test_std::detail::meta::unique<test_std::detail::meta::combine<
+            std::remove_cvref_t<decltype(compl_sigs)>,
+            test_std::completion_signatures<test_std::set_error_t(std::exception_ptr)>>>{};
+    }
+
+    template <typename Rcvr>
+    auto connect(Rcvr rcvr) && noexcept {
+        return test_std::connect(child, receiver{std::move(rcvr), std::move(policy), std::move(shape), std::move(fn)});
+    }
+
+    auto get_env() const noexcept { return test_std::get_env(child); }
+
+    Policy policy;
+    Shape  shape;
+    Fn     fn;
+    Child  child;
+};
+
+template <typename Tag>
+struct pstl_domain {
+    template <typename Sndr, typename Env>
+        requires std::same_as<test_std::tag_of_t<Sndr>, test_std::bulk_chunked_t> ||
+                 std::same_as<test_std::tag_of_t<Sndr>, test_std::bulk_unchunked_t>
+    static auto transform_sender(Tag, Sndr sndr, const Env&) {
+        auto [_, data, child]    = std::move(sndr);
+        auto [policy, shape, fn] = std::move(data);
+        return pstl_for_each_sender<std::same_as<test_std::tag_of_t<Sndr>, test_std::bulk_chunked_t>,
+                                    decltype(policy),
+                                    decltype(shape),
+                                    decltype(fn),
+                                    decltype(child)>{
+            std::move(policy), std::move(shape), std::move(fn), std::move(child)};
+    }
+};
+
+struct pstl_env1 {
+    static auto query(test_std::get_domain_t) noexcept { return pstl_domain<test_std::start_t>{}; }
+};
+
+struct pstl_env2 {
+    template <typename Env>
+    static auto query(test_std::get_completion_domain_t<>, const Env&) noexcept {
+        return pstl_domain<test_std::set_value_t>{};
+    }
+};
+
+struct pstl_just_sender {
+    using sender_concept = test_std::sender_tag;
+
+    template <typename Rcvr>
+    struct state {
+        using operation_state_concept = test_std::operation_state_tag;
+
+        auto start() & noexcept -> void { test_std::set_value(std::move(rcvr)); }
+
+        Rcvr rcvr;
+    };
+
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept {
+        return test_std::completion_signatures<test_std::set_value_t()>{};
+    }
+
+    template <typename Rcvr>
+    auto connect(Rcvr rcvr) && noexcept {
+        return state<Rcvr>{std::move(rcvr)};
+    }
+
+    static auto get_env() noexcept { return pstl_env2{}; }
+};
+
+static_assert(test_std::sender<pstl_just_sender>);
+
+auto test_bulk_customization() {
+    {
+        // starting-domain customization
+        std::vector<int> vec(32);
+        std::ranges::iota(vec, 1);
+        std::vector<int> result(vec.size());
+        test_std::sync_wait(
+            test_std::just() |
+            test_std::bulk(test_std::par, vec.size(), [&](std::size_t i) noexcept { result[i] = vec[i] * vec[i]; }) |
+            test_std::write_env(pstl_env1{}));
+
+        for (std::size_t i = 0; i < vec.size(); ++i) {
+            ASSERT(result[i] == vec[i] * vec[i]);
+        }
+    }
+    {
+        // completing-domain customization
+        test::use_type<pstl_just_sender::sender_concept>();
+        std::vector<int> vec(32);
+        std::ranges::iota(vec, 1);
+        std::vector<int> result(vec.size());
+        test_std::sync_wait(
+            pstl_just_sender{} |
+            test_std::bulk(test_std::par, vec.size(), [&](std::size_t i) noexcept { result[i] = vec[i] * 2; }));
+
+        for (std::size_t i = 0; i < vec.size(); ++i) {
+            ASSERT(result[i] == vec[i] * 2);
+        }
+    }
+}
+#endif
 
 } // namespace
 
@@ -395,7 +553,9 @@ TEST(exec_bulk) {
         test_bulk_shape_one();
         test_bulk_chunked_covers_full_range();
         test_bulk_multiple_values();
-
+#ifdef __cpp_lib_parallel_algorithm
+        test_bulk_customization();
+#endif
     } catch (...) {
 
         ASSERT(nullptr == +"the bulk tests shouldn't throw");
