@@ -171,6 +171,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "stop_when.hpp", "stop__when_8hpp_source.html", null ],
     [ "stoppable_source.hpp", "stoppable__source_8hpp_source.html", null ],
     [ "stoppable_token.hpp", "stoppable__token_8hpp_source.html", null ],
+    [ "stoppable_token_traits.hpp", "stoppable__token__traits_8hpp_source.html", null ],
     [ "stopped_as_error.hpp", "stopped__as__error_8hpp_source.html", null ],
     [ "stopped_as_optional.hpp", "stopped__as__optional_8hpp_source.html", null ],
     [ "store_receiver.hpp", "store__receiver_8hpp_source.html", null ],

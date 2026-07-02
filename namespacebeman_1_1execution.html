@@ -363,10 +363,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>split_t</b> = ::bema
 <tr class="memitem:aa9cdb3f6523297bbe5fe7039d9038353"><td class="memItemLeft" align="right" valign="top"><a id="aa9cdb3f6523297bbe5fe7039d9038353" name="aa9cdb3f6523297bbe5fe7039d9038353"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>starts_on_t</b> = ::beman::execution::detail::starts_on_t</td></tr>
 <tr class="separator:aa9cdb3f6523297bbe5fe7039d9038353"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8918e74a15e075db6bdc489061b115c"><td class="memTemplParams" colspan="2"><a id="af8918e74a15e075db6bdc489061b115c" name="af8918e74a15e075db6bdc489061b115c"></a>
+<tr class="memitem:a9377a5b4ab2439fc557dd29bad026a55"><td class="memTemplParams" colspan="2"><a id="a9377a5b4ab2439fc557dd29bad026a55" name="a9377a5b4ab2439fc557dd29bad026a55"></a>
 template&lt;class Token , class CallbackFun &gt; </td></tr>
-<tr class="memitem:af8918e74a15e075db6bdc489061b115c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>stop_callback_for_t</b> = typename Token::template callback_type&lt; CallbackFun &gt;</td></tr>
-<tr class="separator:af8918e74a15e075db6bdc489061b115c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9377a5b4ab2439fc557dd29bad026a55"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>stop_callback_for_t</b> = typename ::beman::execution::detail::stoppable_token_traits&lt; Token &gt;::template callback_type&lt; CallbackFun &gt;</td></tr>
+<tr class="separator:a9377a5b4ab2439fc557dd29bad026a55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0723e69a00079eaf4cef95dbc668890c"><td class="memTemplParams" colspan="2"><a id="a0723e69a00079eaf4cef95dbc668890c" name="a0723e69a00079eaf4cef95dbc668890c"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a0723e69a00079eaf4cef95dbc668890c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>stop_token_of_t</b> = ::std::remove_cvref_t&lt; decltype(::beman::execution::get_stop_token(::std::declval&lt; T &gt;()))&gt;</td></tr>
