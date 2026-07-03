@@ -45,7 +45,7 @@ import beman.execution.detail.set_value;
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution::system_context_replaceability {
+namespace beman::execution::parallel_scheduler_replacement {
 
 struct receiver_proxy {
     virtual ~receiver_proxy() = default;
@@ -80,12 +80,12 @@ struct parallel_scheduler_backend {
 // TODO(P2079R10): provide the project-supported link-time replaceability hook.
 auto query_parallel_scheduler_backend() -> ::std::shared_ptr<parallel_scheduler_backend>;
 
-} // namespace beman::execution::system_context_replaceability
+} // namespace beman::execution::parallel_scheduler_replacement
 
 namespace beman::execution {
 
 class parallel_scheduler {
-    using backend_type = ::beman::execution::system_context_replaceability::parallel_scheduler_backend;
+    using backend_type = ::beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend;
 
   public:
     using scheduler_concept = ::beman::execution::scheduler_tag;
@@ -121,7 +121,7 @@ class parallel_scheduler {
 };
 
 class parallel_scheduler::sender {
-    using backend_type = ::beman::execution::system_context_replaceability::parallel_scheduler_backend;
+    using backend_type = ::beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend;
 
   public:
     using sender_concept = ::beman::execution::sender_tag;
@@ -145,7 +145,7 @@ class parallel_scheduler::sender {
     };
 
     template <::beman::execution::receiver Rcvr>
-    class operation : public ::beman::execution::system_context_replaceability::receiver_proxy {
+    class operation : public ::beman::execution::parallel_scheduler_replacement::receiver_proxy {
       public:
         using operation_state_concept = ::beman::execution::operation_state_tag;
 

@@ -18,7 +18,7 @@ import beman.execution.detail.schedule_result_t;
 #endif
 
 namespace {
-namespace replaceability = test_std::system_context_replaceability;
+namespace replaceability = test_std::parallel_scheduler_replacement;
 
 struct proxy : replaceability::receiver_proxy {
     auto set_value() noexcept -> void override {}

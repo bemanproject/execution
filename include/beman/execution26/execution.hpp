@@ -109,12 +109,12 @@ using ::beman::execution::when_all_with_variant;
 using ::beman::execution::when_all_with_variant_t;
 using ::beman::execution::with_awaitable_senders;
 
-namespace system_context_replaceability {
-using ::beman::execution::system_context_replaceability::bulk_item_receiver_proxy;
-using ::beman::execution::system_context_replaceability::parallel_scheduler_backend;
-using ::beman::execution::system_context_replaceability::query_parallel_scheduler_backend;
-using ::beman::execution::system_context_replaceability::receiver_proxy;
-} // namespace system_context_replaceability
+namespace parallel_scheduler_replacement {
+using ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy;
+using ::beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend;
+using ::beman::execution::parallel_scheduler_replacement::query_parallel_scheduler_backend;
+using ::beman::execution::parallel_scheduler_replacement::receiver_proxy;
+} // namespace parallel_scheduler_replacement
 
 } // namespace beman::execution26
 

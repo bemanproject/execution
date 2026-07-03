@@ -247,11 +247,11 @@ export using ::beman::execution::run_loop;
 export using ::beman::execution::parallel_scheduler;
 export using ::beman::execution::get_parallel_scheduler;
 
-namespace system_context_replaceability {
-export using ::beman::execution::system_context_replaceability::receiver_proxy;
-export using ::beman::execution::system_context_replaceability::bulk_item_receiver_proxy;
-export using ::beman::execution::system_context_replaceability::parallel_scheduler_backend;
-export using ::beman::execution::system_context_replaceability::query_parallel_scheduler_backend;
+namespace parallel_scheduler_replacement {
+export using ::beman::execution::parallel_scheduler_replacement::receiver_proxy;
+export using ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy;
+export using ::beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend;
+export using ::beman::execution::parallel_scheduler_replacement::query_parallel_scheduler_backend;
 } // namespace system_context_replaceability
 
 // [exec.consumers], consumers
