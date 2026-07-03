@@ -96,7 +96,7 @@ struct domain_sender {
 };
 
 struct domain {
-    auto transform_sender(auto&& sender, auto&&...) const noexcept -> domain_sender {
+    auto transform_sender(auto&&, auto&& sender, auto&&...) const noexcept -> domain_sender {
         return domain_sender{sender.value};
     }
 };
@@ -353,9 +353,9 @@ TEST(exec_connect) {
         static_assert(std::same_as<domain, decltype(test_std::get_domain(domain_env()))>);
         static_assert(std::same_as<domain_env, decltype(test_std::get_env(domain_receiver(17)))>);
         static_assert(
-            std::same_as<domain_sender, decltype(domain().transform_sender(sender{42}, domain_receiver(17)))>);
-        static_assert(
-            std::same_as<domain_sender, decltype(test_std::transform_sender(domain(), sender{42}, domain_env()))>);
+            std::same_as<domain_sender,
+                         decltype(domain().transform_sender(test_std::set_value, sender{42}, domain_env()))>);
+        static_assert(std::same_as<domain_sender, decltype(test_std::transform_sender(sender{42}, domain_env()))>);
 
         static_assert(std::same_as<state<kind::domain, domain_receiver>,
                                    decltype(test_std::connect(sender{42}, domain_receiver(17)))>);

@@ -14,8 +14,13 @@ import beman.execution;
 
 namespace {
 struct scheduler {
-    int  value{};
-    auto operator==(const scheduler&) const -> bool = default;
+    using scheduler_concept = test_std::scheduler_tag;
+    struct sender {
+        using sender_concept = test_std::sender_tag;
+    };
+    int         value{};
+    auto        operator==(const scheduler&) const -> bool = default;
+    static auto schedule() noexcept -> sender { return {}; }
 };
 
 struct env {
@@ -25,6 +30,7 @@ struct env {
 } // namespace
 
 TEST(exec_get_scheduler) {
+    static_assert(test_std::scheduler<scheduler>);
     static_assert(std::same_as<const test_std::get_scheduler_t, decltype(test_std::get_scheduler)>);
     static_assert(test_std::forwarding_query(test_std::get_scheduler));
     env  e{17};

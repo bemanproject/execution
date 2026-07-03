@@ -24,7 +24,6 @@ import beman.execution.detail.connect_result_t;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.emplace_from;
 import beman.execution.detail.error_types_of_t;
-import beman.execution.detail.get_domain_early;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.inplace_stop_source;
@@ -50,7 +49,6 @@ import beman.execution.detail.value_types_of_t;
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/emplace_from.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
@@ -366,8 +364,8 @@ struct shared_wrapper {
 };
 
 struct split_t {
-    template <class Sndr>
-    auto transform_sender(Sndr&& sndr) const {
+    template <class Sndr, typename... Env>
+    auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, const Env&...) const {
         auto&& child       = ::std::forward<Sndr>(sndr).template get<2>();
         using child_type   = decltype(child);
         using shared_state = ::beman::execution::detail::impls_for<split_impl_t>::shared_state<child_type>;
@@ -378,9 +376,7 @@ struct split_t {
     template <class Sender>
         requires beman::execution::sender_in<Sender, impls_for<split_impl_t>::split_env>
     auto operator()(Sender&& sender) const {
-        auto domain{::beman::execution::detail::get_domain_early(sender)};
-        return ::beman::execution::transform_sender(
-            domain, ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)));
+        return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender));
     }
 
   private:

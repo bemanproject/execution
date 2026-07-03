@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-cmake_minimum_required(VERSION 3.30...4.3)
+cmake_minimum_required(VERSION 3.30...4.4)
 
 include(./cmake/prelude.cmake)
 

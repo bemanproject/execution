@@ -39,6 +39,10 @@ struct basic_state {
           state(::beman::execution::detail::get_impls_for<tag_t>::get_state()(::std::forward<Sender>(sender),
                                                                               this->receiver)) {}
 
+    basic_state(const basic_state&) = delete;
+
+    auto operator=(const basic_state&) -> basic_state& = delete;
+
     Receiver                                                 receiver;
     ::beman::execution::detail::state_type<Sender, Receiver> state;
 };

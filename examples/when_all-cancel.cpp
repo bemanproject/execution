@@ -105,8 +105,9 @@ struct eager {
                 ex::set_error(std::move(st->outer_receiver), std::forward<E>(e));
             }
             auto set_stopped() && noexcept -> void {
+                auto st_ = st;
                 st->inner_state.reset();
-                ex::set_stopped(std::move(st->outer_receiver));
+                ex::set_stopped(std::move(st_->outer_receiver));
             }
 
             auto get_env() const noexcept -> env { return ex::get_env(st->outer_receiver); }

@@ -39,25 +39,19 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2 AND CMAKE_VERSION VERSION_LESS 4.4)
         )
     endif()
 endif()
-
-# ---------------------------------------------------------------------------
-# check if import std; is supported by CMAKE_CXX_COMPILER
-# ---------------------------------------------------------------------------
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.3 AND CMAKE_VERSION VERSION_LESS 4.4)
-    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
-elseif(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2 AND CMAKE_VERSION VERSION_LESS 4.3)
-    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
-endif()
 # gersemi: on
 
-# ---------------------------------------------------------------------------
-# TODO(CK): Do we need this HACK still for linux too?
-# ---------------------------------------------------------------------------
+include(
+    ${CMAKE_CURRENT_LIST_DIR}/../infra/cmake/enable-experimental-import-std.cmake
+)
+
 if(NOT APPLE)
     return()
 endif()
 
+# ---------------------------------------------------------------------------
 # FIXME: clang++ we still needs to export CXX=clang++
+# ---------------------------------------------------------------------------
 if("$ENV{CXX}" STREQUAL "" AND CMAKE_CXX_COMPILER)
     message(WARNING "\$CXX is not set")
     set(ENV{CXX} ${CMAKE_CXX_COMPILER})

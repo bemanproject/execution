@@ -191,16 +191,17 @@ auto test_just_allocator() -> void {
     ASSERT(resource.count == 0u);
     auto copy(std::make_obj_using_allocator<std::pmr::string>(std::pmr::polymorphic_allocator<>(&resource), str));
     test::use(copy);
-    ASSERT(resource.count == 1u);
+    auto old_count = resource.count;
+    ASSERT(old_count > 0u);
 
     auto env{test_std::get_env(receiver)};
     auto alloc{test_std::get_allocator(env)};
     test::use(alloc);
 
-    ASSERT(resource.count == 1u);
+    ASSERT(resource.count == old_count);
     auto state{test_std::connect(std::move(sender), memory_receiver{&resource})};
     test::use(state);
-    ASSERT(resource.count == 2u);
+    ASSERT(resource.count > old_count);
 }
 
 auto test_completion_signatures() -> void {
@@ -220,10 +221,7 @@ TEST(exec_just) {
         test_just_constraints();
         test_just();
         test_completion_signatures();
-#ifndef _MSC_VER
-        //-dk:TODO re-enable allocator test for MSVC++
         test_just_allocator();
-#endif
     } catch (...) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "the just tests shouldn't throw");

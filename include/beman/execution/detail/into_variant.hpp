@@ -25,7 +25,6 @@ import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
 import beman.execution.detail.error_types_of_t;
-import beman.execution.detail.get_domain_early;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
@@ -35,7 +34,6 @@ import beman.execution.detail.sends_stopped;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
-import beman.execution.detail.transform_sender;
 import beman.execution.detail.value_types_of_t;
 import beman.execution.detail.variant_or_empty;
 #else
@@ -48,7 +46,6 @@ import beman.execution.detail.variant_or_empty;
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
@@ -57,7 +54,6 @@ import beman.execution.detail.variant_or_empty;
 #include <beman/execution/detail/sends_stopped.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_value.hpp>
-#include <beman/execution/detail/transform_sender.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
 #endif
 
@@ -67,9 +63,7 @@ namespace beman::execution::detail {
 struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_t> {
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
-        return ::beman::execution::transform_sender(
-            ::beman::execution::detail::get_domain_early(sender),
-            ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)));
+        return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender));
     }
 
     auto operator()() const noexcept { return ::beman::execution::detail::make_sender_adaptor(*this); }

@@ -16,18 +16,22 @@ import std;
 import beman.execution.detail.apply_sender;
 import beman.execution.detail.callable;
 import beman.execution.detail.call_result_t;
-import beman.execution.detail.get_domain_early;
+import beman.execution.detail.compl_domain;
+import beman.execution.detail.default_domain;
 import beman.execution.detail.into_variant;
 import beman.execution.detail.sender_in;
+import beman.execution.detail.set_value;
 import beman.execution.detail.sync_wait;
 import beman.execution.detail.value_types_of_t;
 #else
 #include <beman/execution/detail/apply_sender.hpp>
 #include <beman/execution/detail/callable.hpp>
 #include <beman/execution/detail/call_result_t.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
+#include <beman/execution/detail/compl_domain.hpp>
+#include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/into_variant.hpp>
 #include <beman/execution/detail/sender_in.hpp>
+#include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
 #endif
@@ -59,8 +63,9 @@ struct sync_wait_with_variant_t {
     template <typename Sndr>
         requires requires { typename ::beman::execution::detail::sync_wait_with_variant_result_type<Sndr>; }
     auto operator()(Sndr&& sndr) const {
-        return ::beman::execution::apply_sender(
-            ::beman::execution::detail::get_domain_early(sndr), *this, ::std::forward<Sndr>(sndr));
+        auto dom = ::beman::execution::detail::compl_domain<::beman::execution::set_value_t>(
+            sndr, ::beman::execution::detail::sync_wait_env{});
+        return ::beman::execution::apply_sender(dom, *this, ::std::forward<Sndr>(sndr));
     }
 };
 

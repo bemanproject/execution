@@ -7,7 +7,7 @@ module;
 
 export module beman.execution;
 
-import beman.execution.detail.affine_on;
+import beman.execution.detail.affine;
 import beman.execution.detail.apply_sender;
 import beman.execution.detail.as_awaitable;
 export import beman.execution.detail.associate; // [exec.associate]
@@ -20,6 +20,7 @@ export import beman.execution.detail.connect_result_t; // [exec.connect], the co
 import beman.execution.detail.continues_on;
 import beman.execution.detail.counting_scope;
 import beman.execution.detail.default_domain;
+export import beman.execution.detail.indeterminate_domain;
 export import beman.execution.detail.env;
 export import beman.execution.detail.env_of_t;
 export import beman.execution.detail.error_types_of_t; // [exec.getcomplsigs], completion signatures
@@ -27,6 +28,7 @@ export import beman.execution.detail.execution_policy;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
+export import beman.execution.detail.get_completion_domain;
 export import beman.execution.detail.get_completion_scheduler;
 export import beman.execution.detail.get_completion_signatures; // [exec.getcomplsigs], completion signatures
 import beman.execution.detail.get_delegation_scheduler;
@@ -34,6 +36,7 @@ import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 export import beman.execution.detail.inplace_stop_source; // [stopsource.inplace], class inplace_stop_source
 import beman.execution.detail.into_variant;
@@ -136,12 +139,14 @@ export using ::beman::execution::stop_token_of_t;
 
 export using ::beman::execution::get_domain_t;
 export using ::beman::execution::get_scheduler_t;
+export using ::beman::execution::get_start_scheduler_t;
 export using ::beman::execution::get_delegation_scheduler_t;
 export using ::beman::execution::get_await_completion_adaptor_t;
 export using ::beman::execution::get_forward_progress_guarantee_t;
 
 export using ::beman::execution::get_domain;
 export using ::beman::execution::get_scheduler;
+export using ::beman::execution::get_start_scheduler;
 export using ::beman::execution::get_delegation_scheduler;
 export using ::beman::execution::get_await_completion_adaptor;
 export using ::beman::execution::forward_progress_guarantee;
@@ -264,8 +269,8 @@ export using ::beman::execution::as_awaitable;
 export using ::beman::execution::prop;
 export using ::beman::execution::write_env_t;
 export using ::beman::execution::write_env;
-export using ::beman::execution::affine_on_t;
-export using ::beman::execution::affine_on;
+export using ::beman::execution::affine_t;
+export using ::beman::execution::affine;
 export using ::beman::execution::read_env_t;
 export using ::beman::execution::read_env;
 export using ::beman::execution::simple_counting_scope;

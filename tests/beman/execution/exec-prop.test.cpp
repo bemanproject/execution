@@ -45,4 +45,12 @@ TEST(exec_prop) {
     [[maybe_unused]] decltype(p0) p2(p0);
     static_assert(not std::is_assignable_v<decltype(p0), decltype(p0)>);
     static_assert(not std::is_assignable_v<decltype(p1), std::add_rvalue_reference_t<decltype(p0)>>);
+
+    // P3826R5: prop::query now accepts extra arguments (auto&&...)
+    // The extra arguments are ignored but allowed
+    auto p3{test_std::prop(test_query, 99)};
+    ASSERT(p3.query(test_query) == 99);
+    ASSERT(p3.query(test_query, 1) == 99);
+    ASSERT(p3.query(test_query, 1, 2) == 99);
+    ASSERT(p3.query(test_query, 1, 2, 3) == 99);
 }

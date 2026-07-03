@@ -8,4 +8,5 @@ export module beman.execution.detail.query_with_default;
 
 namespace beman::execution::detail {
 export using beman::execution::detail::query_with_default;
+export using beman::execution::detail::call_with_default;
 } // namespace beman::execution::detail

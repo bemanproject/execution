@@ -10,22 +10,26 @@ list(APPEND unsupported_execution_tests exec-split.test)
 list(
     APPEND execution_tests
     allocator-requirements-general.test
-    exec-affine-on.test
+    exec-affine.test
     exec-associate.test
     exec-awaitable.test
     exec-bulk.test
     exec-connect.test
     exec-continues-on.test
+    exec-dependent-sender.test
     exec-domain-default.test
     exec-env.test
     exec-fwd-env.test
     exec-general.test
     exec-getcomplsigs.test
     exec-get-allocator.test
+    exec-get-compl-domain.test
     exec-get-compl-sched.test
     exec-get-delegation-scheduler.test
     exec-get-domain.test
     exec-get-env.test
+    exec-inline-scheduler.test
+    exec-get-start-scheduler.test
     exec-get-scheduler.test
     exec-get-stop-token.test
     exec-into-variant.test
@@ -36,13 +40,13 @@ list(
     exec-opstate-start.test
     exec-opstate.test
     exec-prop.test
+    exec-queries-expos.test
     exec-read-env.test
     exec-recv-concepts.test
     exec-recv.test
     exec-run-loop-general.test
     exec-run-loop-types.test
     exec-sched.test
-    exec-schedule-from.test
     exec-schedule.test
     exec-scope-concepts.test
     exec-scope-counting.test
@@ -152,6 +156,7 @@ if(BEMAN_EXECUTION_INSTALL_CONFIG_FILE_PACKAGE AND NOT CMAKE_SKIP_INSTALL_RULES)
             --build-generator ${CMAKE_GENERATOR} #
             --build-makeprogram ${CMAKE_MAKE_PROGRAM} #
             --build-options #
+            "-D BEMAN_BUILDSYS_SANITIZER=${BEMAN_BUILDSYS_SANITIZER}"
             "-D BEMAN_USE_MODULES=${BEMAN_USE_MODULES}"
             "-D BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}"
             "-D CMAKE_BUILD_TYPE=$<CONFIG>"

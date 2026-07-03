@@ -24,14 +24,13 @@ import beman.execution.detail.default_impls;
 import beman.execution.detail.dependent_sender;
 import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env;
-import beman.execution.detail.get_domain_early;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.transform;
 import beman.execution.detail.meta.unique;
 import beman.execution.detail.movable_value;
-import beman.execution.detail.nested_sender_has_affine_on;
+import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.set_error;
@@ -47,14 +46,13 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/dependent_sender_error.hpp>
 #include <beman/execution/detail/env.hpp>
-#include <beman/execution/detail/get_domain_early.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_transform.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/movable_value.hpp>
-#include <beman/execution/detail/nested_sender_has_affine_on.hpp>
+#include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
@@ -119,14 +117,12 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
     auto operator()(Sender&& sender, Fun&& fun) const
         noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
                  ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Fun>, Fun>) {
-        auto domain{::beman::execution::detail::get_domain_early(sender)};
-        return ::beman::execution::transform_sender(
-            domain,
-            ::beman::execution::detail::make_sender(*this, ::std::forward<Fun>(fun), ::std::forward<Sender>(sender)));
+        return ::beman::execution::detail::make_sender(
+            *this, ::std::forward<Fun>(fun), ::std::forward<Sender>(sender));
     }
-    template <::beman::execution::sender Sender, typename Env>
-        requires ::beman::execution::detail::nested_sender_has_affine_on<Sender, Env>
-    static auto affine_on(Sender&& sndr, const Env&) noexcept {
+    template <::beman::execution::sender Sender>
+        requires ::beman::execution::detail::nested_sender_has_affine<Sender>
+    static auto affine(Sender&& sndr) noexcept {
         return ::std::forward<Sender>(sndr);
     }
 

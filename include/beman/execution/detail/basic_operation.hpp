@@ -70,6 +70,10 @@ struct basic_operation : ::beman::execution::detail::basic_state<Sender, Receive
               this, ::std::forward<Sender>(sender), ::beman::execution::detail::indices_for<Sender>())) {}
     // NOLINTEND(bugprone-use-after-move,hicpp-invalid-access-moved)
 
+    basic_operation(const basic_operation&) = delete;
+
+    auto operator=(const basic_operation&) -> basic_operation& = delete;
+
   private:
     auto start() & noexcept -> void {
         ::std::invoke(

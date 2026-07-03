@@ -73,8 +73,6 @@ The following instructions build the library and the examples:
       "gcc-release"
       "llvm-debug"
       "llvm-release"
-      "appleclang-debug"
-      "appleclang-release"
       "msvc-debug"
       "msvc-release"
 

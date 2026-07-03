@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -8,13 +9,13 @@ repos:
     -   id: check-added-large-files
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.2
     hooks:
       - id: codespell
 
     # CMake linting and formatting
-  - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.22.3
+  - repo: https://github.com/BlankSpruce/gersemi-pre-commit
+    rev: 0.27.2
     hooks:
     - id: gersemi
       name: CMake linting

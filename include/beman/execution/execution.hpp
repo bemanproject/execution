@@ -8,7 +8,7 @@
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.affine_on;
+import beman.execution.detail.affine;
 import beman.execution.detail.as_except_ptr;
 import beman.execution.detail.associate;
 import beman.execution.detail.bulk;
@@ -24,6 +24,7 @@ import beman.execution.detail.execution_policy;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
+import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_delegation_scheduler;
@@ -31,7 +32,9 @@ import beman.execution.detail.get_domain;
 import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
+import beman.execution.detail.indeterminate_domain;
 import beman.execution.detail.inline_scheduler;
 import beman.execution.detail.into_variant;
 import beman.execution.detail.just;
@@ -72,7 +75,7 @@ import beman.execution.detail.when_all;
 import beman.execution.detail.with_awaitable_senders;
 import beman.execution.detail.write_env;
 #else
-#include <beman/execution/detail/affine_on.hpp>
+#include <beman/execution/detail/affine.hpp>
 #include <beman/execution/detail/as_except_ptr.hpp>
 #include <beman/execution/detail/associate.hpp>
 #include <beman/execution/detail/bulk.hpp>
@@ -87,6 +90,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_await_completion_adaptor.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_delegation_scheduler.hpp>
@@ -94,7 +98,9 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/get_forward_progress_guarantee.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/indeterminate_domain.hpp>
 #include <beman/execution/detail/inline_scheduler.hpp>
 #include <beman/execution/detail/into_variant.hpp>
 #include <beman/execution/detail/just.hpp>

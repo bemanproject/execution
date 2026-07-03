@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: BSL-1.0
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 # This toolchain file is not meant to be used directly,
 # but to be invoked by CMake preset and GitHub CI.

@@ -19,7 +19,7 @@ import beman.execution.detail.connect;
 import beman.execution.detail.counting_scope_base;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.get_env;
-import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.receiver;
@@ -35,7 +35,7 @@ import beman.execution.detail.start;
 #include <beman/execution/detail/counting_scope_base.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/get_env.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
@@ -103,15 +103,16 @@ struct beman::execution::detail::counting_scope_join_t::state : ::beman::executi
         Receiver& rcvr;
     };
 
-    using op_t = decltype(::beman::execution::connect(::beman::execution::schedule(::beman::execution::get_scheduler(
-                                                          ::beman::execution::get_env(::std::declval<Receiver&>()))),
-                                                      ::std::declval<receiver_ref>()));
+    using op_t =
+        decltype(::beman::execution::connect(::beman::execution::schedule(::beman::execution::get_start_scheduler(
+                                                 ::beman::execution::get_env(::std::declval<Receiver&>()))),
+                                             ::std::declval<receiver_ref>()));
 
     ::beman::execution::detail::counting_scope_base* scope;
     explicit state(::beman::execution::detail::counting_scope_base* s, Receiver& r)
         : scope(s),
           receiver(r),
-          op(::beman::execution::connect(::beman::execution::schedule(::beman::execution::get_scheduler(
+          op(::beman::execution::connect(::beman::execution::schedule(::beman::execution::get_start_scheduler(
                                              ::beman::execution::get_env(this->receiver))),
                                          receiver_ref(this->receiver))) {}
     virtual ~state() = default;

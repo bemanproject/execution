@@ -14,11 +14,11 @@ export using beman::execution::detail::product_type;
 
 } // namespace beman::execution::detail
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && _MSC_VER <= 1944L
 namespace std {
-export template <typename... T>
+template <typename... T>
 struct tuple_size<::beman::execution::detail::product_type<T...>>;
-export template <::std::size_t I, typename... T>
+template <::std::size_t I, typename... T>
 struct tuple_element<I, ::beman::execution::detail::product_type<T...>>;
 } // namespace std
 #endif

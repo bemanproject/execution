@@ -5,10 +5,8 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
-import beman.execution.detail.get_domain_late;
 #else
 #include <beman/execution/detail/continues_on.hpp>
-#include <beman/execution/detail/get_domain_late.hpp>
 #include <beman/execution/execution.hpp>
 #endif
 
@@ -78,8 +76,6 @@ auto test_constraints(Scheduler&& scheduler, Sender&& sender) {
         test::check_type<custom_domain&>(domain);
 
         auto s{test_std::continues_on(::std::forward<Sender>(sender), ::std::forward<Scheduler>(scheduler))};
-        auto late{test_detail::get_domain_late(s, test_std::env<>{})};
-        //-dk:TODO test::check_type<custom_domain&>(late);
     }
 }
 
@@ -88,6 +84,9 @@ auto test_use(Scheduler&& scheduler, Sender&& sender) {
     auto s{test_std::continues_on(::std::forward<Sender>(sender), ::std::forward<Scheduler>(scheduler))};
 
     static_assert(test_std::sender<decltype(s)>);
+    static_assert(
+        std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(s))),
+                     std::remove_cvref_t<Scheduler>>);
     //-dk:TODO test_std::sync_wait(std::move(s));
 }
 } // namespace

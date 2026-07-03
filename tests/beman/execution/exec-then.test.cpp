@@ -58,6 +58,8 @@ struct sender {
     }
 };
 
+constexpr auto consume_all = [](auto&&...) {};
+
 template <bool Expect>
 auto test_has(auto cpo, auto in_sender, auto fun) -> void {
     static_assert(test_std::receiver<receiver>);
@@ -70,14 +72,9 @@ auto test_has(auto cpo, auto in_sender, auto fun) -> void {
         static_assert(requires {
             { in_sender | cpo(fun) } -> test_std::sender;
         });
-#ifndef _MSC_VER
-        //-dk:TODO re-enable this test
         static_assert(requires {
-            {
-                in_sender | cpo(fun) | cpo([](auto&&...) {})
-            } -> test_std::sender;
+            { in_sender | cpo(fun) | cpo(consume_all) } -> test_std::sender;
         });
-#endif
         auto sender{cpo(in_sender, fun)};
         auto op{test_std::connect(::std::move(sender), receiver{})};
         test_std::start(op);

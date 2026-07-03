@@ -52,7 +52,7 @@ struct beman::execution::prop {
     // auto operator=(prop&&) -> prop&      = delete;
     // auto operator=(const prop&) -> prop& = delete;
 
-    constexpr auto query(Query) const noexcept -> const Value& { return this->value_; }
+    constexpr auto query(Query, auto&&...) const noexcept -> const Value& { return this->value_; }
 };
 
 // ----------------------------------------------------------------------------

@@ -60,6 +60,20 @@ template <bool Expect, typename Tag, typename Env>
 auto test_tag(Env&& env) -> void {
     static_assert(Expect == requires { test_std::get_completion_scheduler<Tag>(env); });
 }
+
+struct extra_env {
+    int extra_value{};
+};
+
+struct env_with_extra_args {
+    int  value{};
+    auto query(const test_std::get_completion_scheduler_t<test_std::set_value_t>&) const noexcept {
+        return scheduler<test_std::set_value_t>{this->value};
+    }
+    auto query(const test_std::get_completion_scheduler_t<test_std::set_value_t>&, extra_env e) const noexcept {
+        return scheduler<test_std::set_value_t>{this->value + e.extra_value};
+    }
+};
 } // namespace
 
 TEST(exec_get_compl_sched) {
@@ -95,4 +109,9 @@ TEST(exec_get_compl_sched) {
     ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(e) == scheduler<test_std::set_error_t>{19});
     ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(e) == scheduler<test_std::set_stopped_t>{20});
     ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(e) == scheduler<test_std::set_value_t>{18});
+
+    env_with_extra_args ewa{10};
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(ewa) == scheduler<test_std::set_value_t>{10});
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(ewa, extra_env{5}) ==
+           scheduler<test_std::set_value_t>{15});
 }
