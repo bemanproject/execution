@@ -252,7 +252,7 @@ export using ::beman::execution::parallel_scheduler_replacement::receiver_proxy;
 export using ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy;
 export using ::beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend;
 export using ::beman::execution::parallel_scheduler_replacement::query_parallel_scheduler_backend;
-} // namespace system_context_replaceability
+} // namespace parallel_scheduler_replacement
 
 // [exec.consumers], consumers
 export using ::beman::execution::sync_wait_t;
