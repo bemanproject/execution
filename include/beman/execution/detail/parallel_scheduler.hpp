@@ -16,23 +16,52 @@ import std;
 #include <span>
 #include <type_traits>
 #include <utility>
+#include <variant>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.bulk;
+import beman.execution.detail.connect;
+import beman.execution.detail.connect_result_t;
 import beman.execution.detail.completion_signatures;
+import beman.execution.detail.env_of_t;
+import beman.execution.detail.execution_policy;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.get_completion_scheduler;
+import beman.execution.detail.get_completion_signatures;
+import beman.execution.detail.get_domain;
+import beman.execution.detail.get_env;
 import beman.execution.detail.get_forward_progress_guarantee;
+import beman.execution.detail.meta.combine;
+import beman.execution.detail.meta.prepend;
+import beman.execution.detail.meta.unique;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.receiver;
 import beman.execution.detail.scheduler;
 import beman.execution.detail.scheduler_tag;
 import beman.execution.detail.sender;
+import beman.execution.detail.start;
+import beman.execution.detail.tag_of_t;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
+import beman.execution.detail.unreachable;
+import beman.execution.detail.value_types_of_t;
 #else
+#include <beman/execution/detail/bulk.hpp>
+#include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
+#include <beman/execution/detail/env_of_t.hpp>
+#include <beman/execution/detail/execution_policy.hpp>
+#include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
+#include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_forward_progress_guarantee.hpp>
+#include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/meta_prepend.hpp>
+#include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scheduler.hpp>
@@ -41,6 +70,10 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/start.hpp>
+#include <beman/execution/detail/tag_of_t.hpp>
+#include <beman/execution/detail/unreachable.hpp>
+#include <beman/execution/detail/value_types_of_t.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -82,6 +115,167 @@ auto query_parallel_scheduler_backend() -> ::std::shared_ptr<parallel_scheduler_
 
 } // namespace beman::execution::parallel_scheduler_replacement
 
+namespace beman::execution::detail {
+template <bool IsChunked, typename Policy, typename Shape, typename Fn, typename Child>
+struct psched_bulk_sender {
+    using sender_concept = ::beman::execution::sender_tag;
+
+    static constexpr bool is_parallel_policy = ::std::same_as<Policy, ::beman::execution::parallel_policy> ||
+                                               ::std::same_as<Policy, ::beman::execution::parallel_unsequenced_policy>;
+    template <typename Rcvr>
+    struct rcvr_proxy : ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy {
+        using receiver_concept = ::beman::execution::receiver_tag;
+        using result_type      = ::beman::execution::detail::meta::
+            prepend<::std::monostate, ::beman::execution::value_types_of_t<Child, ::beman::execution::env_of_t<Rcvr>>>;
+
+        rcvr_proxy(Rcvr rcvr, Policy policy, Shape shape, Fn fn) noexcept
+            : rcvr(::std::move(rcvr)), policy(::std::move(policy)), shape(::std::move(shape)), fn(::std::move(fn)) {}
+
+        auto get_env() const noexcept { return ::beman::execution::get_env(rcvr); }
+
+        auto execute(::std::size_t begin, ::std::size_t end) noexcept -> void final {
+            const Shape first   = is_parallel_policy ? static_cast<Shape>(begin) : Shape(0);
+            const Shape last    = is_parallel_policy ? static_cast<Shape>(end) : shape;
+            const auto  call_fn = [=, this]<typename... Args>(const Args&... args) {
+                if constexpr (IsChunked) {
+                    fn(first, last, args...);
+                } else {
+                    for (Shape i = first; i < last; ++i) {
+                        fn(i, args...);
+                    }
+                }
+            };
+            std::visit(
+                [&]<typename T>(T& tpl) {
+                    if constexpr (::std::same_as<T, ::std::monostate>) {
+                        ::beman::execution::detail::unreachable();
+                    } else {
+                        ::std::apply(call_fn, ::std::move(tpl));
+                    }
+                },
+                result);
+        }
+
+        auto set_value() noexcept -> void final {
+            const auto call_set_value = [this]<typename... Args>(Args&&... args) {
+                ::beman::execution::set_value(::std::move(rcvr), ::std::forward<Args>(args)...);
+            };
+            try {
+                std::visit(
+                    [&]<typename T>(T tpl) {
+                        if constexpr (::std::same_as<T, std::monostate>) {
+                            ::beman::execution::detail::unreachable();
+                        } else {
+                            ::std::apply(call_set_value, ::std::move(tpl));
+                        }
+                    },
+                    ::std::move(result));
+            } catch (...) {
+                this->set_error(::std::current_exception());
+            }
+        }
+
+        template <typename E>
+        auto set_error(E e) noexcept -> void {
+            ::beman::execution::set_error(::std::move(rcvr), ::std::move(e));
+        }
+
+        auto set_error(std::exception_ptr e) noexcept -> void final { this->set_error<>(::std::move(e)); }
+
+        auto set_stopped() noexcept -> void final { ::beman::execution::set_stopped(::std::move(rcvr)); }
+
+        result_type result;
+        Rcvr        rcvr;
+        Policy      policy;
+        Shape       shape;
+        Fn          fn;
+    };
+
+    template <typename Rcvr>
+    struct state {
+        using operation_concept = ::beman::execution::operation_state_tag;
+        using result_type       = ::beman::execution::detail::meta::
+            prepend<::std::monostate, ::beman::execution::value_types_of_t<Child, ::beman::execution::env_of_t<Rcvr>>>;
+
+        struct receiver_ref {
+            using receiver_concept = ::beman::execution::receiver_tag;
+
+            template <typename... Args>
+            auto set_value(Args&&... args) noexcept -> void {
+                proxy->result.emplace(::std::forward<Args>(args)...);
+                auto backend = ::beman::execution::parallel_scheduler_replacement::query_parallel_scheduler_backend();
+                const ::std::size_t       s = is_parallel_policy ? proxy->shape : 1uz;
+                alignas(void*)::std::byte storage[sizeof(void*) * 4uz];
+                if constexpr (IsChunked) {
+                    backend->schedule_bulk_chunked(s, *proxy, storage);
+                } else {
+                    backend->schedule_bulk_unchunked(s, *proxy, storage);
+                }
+            }
+
+            template <typename E>
+            auto set_error(E e) noexcept -> void {
+                proxy->set_error(std::move(e));
+            }
+
+            auto set_stopped() noexcept -> void { proxy->set_stopped(); }
+
+            auto get_env() const noexcept { return proxy->get_env(); }
+
+            rcvr_proxy<Rcvr>* proxy;
+        };
+        using sub_state_t = ::beman::execution::connect_result_t<Child, receiver_ref>;
+
+        state(Child child, Rcvr rcvr, Policy policy, Shape shape, Fn fn)
+            : proxy(::std::move(rcvr), ::std::move(policy), ::std::move(shape), ::std::move(fn)),
+              sub_state(::beman::execution::connect(::std::move(child), proxy)) {}
+
+        auto start() & noexcept -> void { ::beman::execution::start(sub_state); }
+
+        rcvr_proxy<Rcvr> proxy;
+        sub_state_t      sub_state;
+    };
+
+    template <typename, typename... Env>
+    static consteval auto get_completion_signatures() {
+        constexpr auto compl_sigs = ::beman::execution::get_completion_signatures<Child, Env...>();
+        return ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
+            ::std::remove_cvref_t<decltype(compl_sigs)>,
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>>{};
+    }
+
+    template <typename Rcvr>
+    auto connect(Rcvr rcvr) && noexcept {
+        return state<Rcvr>{std::move(child), std::move(rcvr), std::move(policy), std::move(shape), std::move(fn)};
+    }
+
+    auto get_env() const noexcept { return ::beman::execution::get_env(child); }
+
+    [[no_unique_address]] std::bool_constant<IsChunked> _;
+    Policy                                              policy;
+    Shape                                               shape;
+    Fn                                                  fn;
+    Child                                               child;
+};
+
+struct parallel_scheduler_domain {
+    template <typename Sndr>
+        requires ::std::same_as<::beman::execution::tag_of_t<Sndr>, ::beman::execution::bulk_chunked_t> ||
+                 ::std::same_as<::beman::execution::tag_of_t<Sndr>, ::beman::execution::bulk_unchunked_t>
+    static auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, const auto&) noexcept {
+        auto&& [_, data, child]  = ::std::forward<Sndr>(sndr);
+        auto [policy, shape, fn] = ::beman::execution::detail::forward_like<Sndr>(data);
+        return ::beman::execution::detail::psched_bulk_sender{
+            ::std::bool_constant<
+                ::std::same_as<::beman::execution::tag_of_t<Sndr>, ::beman::execution::bulk_chunked_t>>{},
+            ::std::move(policy),
+            ::std::move(shape),
+            ::std::move(fn),
+            ::beman::execution::detail::forward_like<Sndr>(child)};
+    }
+};
+} // namespace beman::execution::detail
+
 namespace beman::execution {
 
 class parallel_scheduler {
@@ -107,6 +301,10 @@ class parallel_scheduler {
     static constexpr auto query(::beman::execution::get_forward_progress_guarantee_t) noexcept
         -> ::beman::execution::forward_progress_guarantee {
         return ::beman::execution::forward_progress_guarantee::parallel;
+    }
+
+    static constexpr auto query(::beman::execution::get_domain_t) noexcept {
+        return ::beman::execution::detail::parallel_scheduler_domain{};
     }
 
     auto schedule() const noexcept -> sender;
@@ -199,7 +397,7 @@ class parallel_scheduler::sender {
 
 inline auto parallel_scheduler::schedule() const noexcept -> sender { return sender{this->backend_}; }
 
-// TODO(P2079R10): implement using system_context_replaceability::query_parallel_scheduler_backend().
+// TODO(P2079R10): implement using parallel_scheduler_replacement::query_parallel_scheduler_backend().
 auto get_parallel_scheduler() -> parallel_scheduler;
 
 } // namespace beman::execution
