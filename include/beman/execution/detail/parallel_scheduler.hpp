@@ -202,10 +202,13 @@ struct psched_bulk_sender {
             using receiver_concept = ::beman::execution::receiver_tag;
 
             template <typename... Args>
-            auto set_value(Args&&... args) noexcept -> void {
+            auto set_value(Args&&... args) noexcept -> void try {
                 using arg_t = ::beman::execution::detail::decayed_tuple<Args...>;
                 proxy->result.template emplace<arg_t>(::std::forward<Args>(args)...);
                 auto backend = ::beman::execution::parallel_scheduler_replacement::query_parallel_scheduler_backend();
+                if (backend == nullptr) [[unlikely]] {
+                    ::std::terminate();
+                }
                 const ::std::size_t       s = is_parallel_policy ? proxy->shape : 1uz;
                 alignas(void*)::std::byte storage[sizeof(void*) * 4uz];
                 if constexpr (IsChunked) {
@@ -213,11 +216,13 @@ struct psched_bulk_sender {
                 } else {
                     backend->schedule_bulk_unchunked(s, *proxy, storage);
                 }
+            } catch (...) {
+                proxy->set_error(::std::current_exception());
             }
 
             template <typename E>
             auto set_error(E e) noexcept -> void {
-                proxy->set_error(std::move(e));
+                proxy->set_error(::std::move(e));
             }
 
             auto set_stopped() noexcept -> void { proxy->set_stopped(); }
@@ -312,7 +317,6 @@ class parallel_scheduler {
     }
 
     auto schedule() const noexcept -> sender;
-    // TODO(P2079R10): customize bulk_chunked and bulk_unchunked for this scheduler.
 
   private:
     explicit parallel_scheduler(::std::shared_ptr<backend_type> backend) noexcept : backend_(::std::move(backend)) {}
@@ -401,8 +405,13 @@ class parallel_scheduler::sender {
 
 inline auto parallel_scheduler::schedule() const noexcept -> sender { return sender{this->backend_}; }
 
-// TODO(P2079R10): implement using parallel_scheduler_replacement::query_parallel_scheduler_backend().
-auto get_parallel_scheduler() -> parallel_scheduler;
+[[nodiscard]] inline auto get_parallel_scheduler() -> parallel_scheduler {
+    auto backend = ::beman::execution::parallel_scheduler_replacement::query_parallel_scheduler_backend();
+    if (backend == nullptr) [[unlikely]] {
+        ::std::terminate();
+    }
+    return parallel_scheduler{::std::move(backend)};
+}
 
 } // namespace beman::execution
 
