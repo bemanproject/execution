@@ -152,12 +152,14 @@ inline auto beman::execution::inplace_stop_source::request_stop() -> bool {
 }
 
 inline auto beman::execution::inplace_stop_source::add(callback_base* cb) -> void {
-    if (this->stopped) {
-        cb->call();
-    } else {
+    {
         ::std::lock_guard guard(this->lock);
-        cb->next = ::std::exchange(this->callbacks, cb);
+        if (!this->stopped) {
+            cb->next = ::std::exchange(this->callbacks, cb);
+            return;
+        }
     }
+    cb->call();
 }
 
 inline auto beman::execution::inplace_stop_source::deregister(callback_base* cb) -> void {

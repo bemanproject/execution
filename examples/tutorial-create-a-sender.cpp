@@ -16,18 +16,18 @@ namespace {
 template <typename T>
 class asynchronous_stack {
     struct node {
-        node* next{};
+        node*        next{};
         virtual void complete(T) = 0;
     };
     std::stack<T> stack;
     node*         awaiting{};
 
     template <ex::receiver Rcvr>
-    struct state: node {
+    struct state : node {
         using operation_state_concept = ex::operation_state_tag;
         struct stop_fun {
             state& st;
-            void operator()() noexcept {
+            void   operator()() noexcept {
                 std::cout << "request was stopped\n";
                 state& s = this->st;
                 this->st.callback.reset();
@@ -43,18 +43,17 @@ class asynchronous_stack {
             }
         };
         using stop_token_t = ex::stop_token_of_t<decltype(ex::get_env(std::declval<Rcvr&>()))>;
-        using callback_t = ex::stop_callback_for_t<stop_token_t, stop_fun>;
+        using callback_t   = ex::stop_callback_for_t<stop_token_t, stop_fun>;
         std::remove_cvref_t<Rcvr> rcvr;
         asynchronous_stack&       self;
-        std::optional<callback_t> callback; 
-        state(Rcvr&& r, asynchronous_stack& s): rcvr(std::forward<Rcvr>(r)), self(s) {}
+        std::optional<callback_t> callback;
+        state(Rcvr&& r, asynchronous_stack& s) : rcvr(std::forward<Rcvr>(r)), self(s) {}
         void start() & noexcept {
             if (not this->self.stack.empty()) {
                 T value(std::move(this->self.stack.top()));
                 this->self.stack.pop();
                 ex::set_value(std::move(rcvr), std::move(value));
-            }
-            else {
+            } else {
                 this->next = std::exchange(this->self.awaiting, this);
                 this->callback.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), stop_fun{*this});
             }
@@ -64,7 +63,8 @@ class asynchronous_stack {
             ex::set_value(std::move(rcvr), std::move(value));
         }
     };
-public:
+
+  public:
     struct pop_sender {
         using sender_concept = ex::sender_tag;
         template <typename...>
@@ -80,11 +80,10 @@ public:
         }
     };
 
-    void       push(T value) {
+    void push(T value) {
         if (this->awaiting) {
             std::exchange(this->awaiting, this->awaiting->next)->complete(std::move(value));
-        }
-        else {
+        } else {
             this->stack.push(std::move(value));
         }
     }
@@ -93,35 +92,30 @@ public:
 
 static_assert(ex::sender<asynchronous_stack<int>::pop_sender>);
 static_assert(ex::sender_in<asynchronous_stack<int>::pop_sender>);
-}
+} // namespace
 // ----------------------------------------------------------------------------
 
 int main() {
     ex::counting_scope      scope;
     asynchronous_stack<int> st;
-    [[maybe_unused]] auto sender = st.pop() | ex::then([](int v){ std::cout << "got value=" << v << "\n"; });
+    [[maybe_unused]] auto   sender = st.pop() | ex::then([](int v) { std::cout << "got value=" << v << "\n"; });
 
-    for (int value{1}; value < 4; ++ value) {
+    for (int value{1}; value < 4; ++value) {
         st.push(value);
     }
     std::cout << "pushed 1,2,3\n";
 
     int count{7};
-    for (int value{1}; value < count; ++ value) {
-        ex::spawn(
-            st.pop()
-            | ex::then([value](int v) noexcept {
-                std::cout << "got value=" << v << " for request " << value << "\n";
-              })
-            | ex::upon_stopped([value] noexcept {
-                std::cout << "request " << value << " was stopped\n";
-              })
-            , scope.get_token());
+    for (int value{1}; value < count; ++value) {
+        ex::spawn(st.pop() | ex::then([value](int v) noexcept {
+                      std::cout << "got value=" << v << " for request " << value << "\n";
+                  }) | ex::upon_stopped([value] noexcept { std::cout << "request " << value << " was stopped\n"; }),
+                  scope.get_token());
     }
 
     std::cout << "requested " << (count - 1) << " values\n";
 
-    for (int value{4}; value < 7; ++ value) {
+    for (int value{4}; value < 7; ++value) {
         st.push(value);
     }
     std::cout << "pushed 4,5,6\n";
