@@ -211,6 +211,7 @@ struct psched_bulk_sender {
             return sp.get_token();
         }
 
+      public:
         result_type                                                                     result;
         [[no_unique_address]] ::beman::execution::detail::stop_propagator<stop_token_t> sp;
         Rcvr                                                                            rcvr;
