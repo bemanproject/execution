@@ -32,6 +32,8 @@ import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_forward_progress_guarantee;
+import beman.execution.detail.get_stop_token;
+import beman.execution.detail.inplace_stop_source;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.prepend;
 import beman.execution.detail.meta.unique;
@@ -45,6 +47,8 @@ import beman.execution.detail.tag_of_t;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
+import beman.execution.detail.stop_propagator;
+import beman.execution.detail.stop_token_of_t;
 import beman.execution.detail.unreachable;
 import beman.execution.detail.value_types_of_t;
 #else
@@ -61,6 +65,8 @@ import beman.execution.detail.value_types_of_t;
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_forward_progress_guarantee.hpp>
+#include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_prepend.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
@@ -73,6 +79,8 @@ import beman.execution.detail.value_types_of_t;
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/start.hpp>
+#include <beman/execution/detail/stop_propagator.hpp>
+#include <beman/execution/detail/stop_token_of_t.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
 #include <beman/execution/detail/unreachable.hpp>
 #include <beman/execution/detail/value_types_of_t.hpp>
@@ -91,10 +99,18 @@ struct receiver_proxy {
 
     template <class P, class Query>
         requires(::std::same_as<P, ::std::remove_cv_t<P>> && ::std::is_object_v<P> && !::std::is_array_v<P>)
-    auto try_query(Query) noexcept -> ::std::optional<P> {
-        // TODO(P2079R10): forward supported receiver environment queries
-        // through this proxy, especially get_stop_token_t -> inplace_stop_token
+    auto try_query(Query) const noexcept -> ::std::optional<P> {
+        if constexpr (::std::same_as<Query, ::beman::execution::get_stop_token_t> &&
+                      ::std::same_as<P, ::beman::execution::inplace_stop_token>) {
+            return query_stop_token();
+        }
+        // TODO: support more queries
         return ::std::nullopt;
+    }
+
+  private:
+    virtual auto query_stop_token() const noexcept -> ::std::optional<::beman::execution::inplace_stop_token> {
+        return std::nullopt;
     }
 };
 
@@ -128,9 +144,14 @@ struct psched_bulk_sender {
     struct rcvr_proxy : ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy {
         using result_type = ::beman::execution::detail::meta::
             prepend<::std::monostate, ::beman::execution::value_types_of_t<Child, ::beman::execution::env_of_t<Rcvr>>>;
+        using stop_token_t = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Rcvr>>;
 
         rcvr_proxy(Rcvr rcvr, Policy policy, Shape shape, Fn fn) noexcept
-            : rcvr(::std::move(rcvr)), policy(::std::move(policy)), shape(::std::move(shape)), fn(::std::move(fn)) {}
+            : sp(::beman::execution::get_stop_token(::beman::execution::get_env(rcvr))),
+              rcvr(::std::move(rcvr)),
+              policy(::std::move(policy)),
+              shape(::std::move(shape)),
+              fn(::std::move(fn)) {}
 
         auto get_env() const noexcept { return ::beman::execution::get_env(rcvr); }
 
@@ -181,15 +202,21 @@ struct psched_bulk_sender {
             ::beman::execution::set_error(::std::move(rcvr), ::std::move(e));
         }
 
-        auto set_error(std::exception_ptr e) noexcept -> void final { this->set_error<>(::std::move(e)); }
+        auto set_error(::std::exception_ptr e) noexcept -> void final { this->set_error<>(::std::move(e)); }
 
         auto set_stopped() noexcept -> void final { ::beman::execution::set_stopped(::std::move(rcvr)); }
 
-        result_type result;
-        Rcvr        rcvr;
-        Policy      policy;
-        Shape       shape;
-        Fn          fn;
+      private:
+        auto query_stop_token() const noexcept -> ::std::optional<::beman::execution::inplace_stop_token> final {
+            return sp.get_token();
+        }
+
+        result_type                                                                     result;
+        [[no_unique_address]] ::beman::execution::detail::stop_propagator<stop_token_t> sp;
+        Rcvr                                                                            rcvr;
+        Policy                                                                          policy;
+        Shape                                                                           shape;
+        Fn                                                                              fn;
     };
 
     template <typename Rcvr>
@@ -350,31 +377,53 @@ class parallel_scheduler::sender {
         ::std::shared_ptr<backend_type> backend_;
     };
 
-    template <::beman::execution::receiver Rcvr>
-    class operation : public ::beman::execution::parallel_scheduler_replacement::receiver_proxy {
-      public:
-        using operation_state_concept = ::beman::execution::operation_state_tag;
+    template <typename Rcvr>
+    struct rcvr_proxy : ::beman::execution::parallel_scheduler_replacement::receiver_proxy {
+        using stop_token_t = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Rcvr>>;
 
-        operation(::std::shared_ptr<backend_type> backend,
-                  Rcvr&& rcvr) noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Rcvr>, Rcvr>)
-            : backend_(::std::move(backend)), rcvr_(::std::forward<Rcvr>(rcvr)) {}
+        explicit rcvr_proxy(Rcvr rcvr) noexcept
+            : sp_(::beman::execution::get_stop_token(::beman::execution::get_env(rcvr))), rcvr_(::std::move(rcvr)) {}
 
-        auto start() & noexcept -> void {
-            // TODO(P2079R10): define backend storage sizing and stopped-before-start handling.
-            this->backend_->schedule(*this, ::std::span<::std::byte>{this->storage_});
-        }
+        auto set_value() noexcept -> void final { ::beman::execution::set_value(::std::move(this->rcvr_)); }
 
-      private:
-        auto set_value() noexcept -> void override { ::beman::execution::set_value(::std::move(this->rcvr_)); }
-
-        auto set_error(::std::exception_ptr error) noexcept -> void override {
+        auto set_error(::std::exception_ptr error) noexcept -> void final {
             ::beman::execution::set_error(::std::move(this->rcvr_), ::std::move(error));
         }
 
-        auto set_stopped() noexcept -> void override { ::beman::execution::set_stopped(::std::move(this->rcvr_)); }
+        auto set_stopped() noexcept -> void final { ::beman::execution::set_stopped(::std::move(this->rcvr_)); }
 
-        ::std::shared_ptr<backend_type> backend_;
-        ::std::remove_cvref_t<Rcvr>     rcvr_;
+      private:
+        auto query_stop_token() const noexcept -> ::std::optional<::beman::execution::inplace_stop_token> final {
+            return sp_.get_token();
+        }
+
+        [[no_unique_address]] ::beman::execution::detail::stop_propagator<stop_token_t> sp_;
+        Rcvr                                                                            rcvr_;
+    };
+
+    template <::beman::execution::receiver Rcvr>
+    class operation {
+      public:
+        using operation_state_concept = ::beman::execution::operation_state_tag;
+        using stop_token_t            = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Rcvr>>;
+
+        operation(::std::shared_ptr<backend_type> backend,
+                  Rcvr&& rcvr) noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Rcvr>, Rcvr>)
+            : backend_(::std::move(backend)), proxy_(::std::forward<Rcvr>(rcvr)) {}
+
+        auto start() & noexcept -> void {
+            auto stop_token =
+                proxy_.template try_query<::beman::execution::inplace_stop_token>(::beman::execution::get_stop_token);
+            if (stop_token.has_value() && stop_token->stop_requested()) {
+                proxy_.set_stopped();
+                return;
+            }
+            this->backend_->schedule(proxy_, ::std::span<::std::byte>{this->storage_});
+        }
+
+      private:
+        ::std::shared_ptr<backend_type>         backend_;
+        rcvr_proxy<::std::remove_cvref_t<Rcvr>> proxy_;
         alignas(void*)::std::byte storage_[sizeof(void*) * 4]{};
     };
 
