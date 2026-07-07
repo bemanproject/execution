@@ -28,10 +28,8 @@ class asynchronous_stack {
         struct stop_fun {
             state& st;
             void   operator()() noexcept {
-                std::cout << "request was stopped\n";
                 state& s = this->st;
                 this->st.callback.reset();
-                std::cout << "reset the stop callback\n";
                 for (auto it{&this->st.self.awaiting}; it; it = &(*it)->next) {
                     if (*it == &this->st) {
                         *it = this->st.next;
@@ -39,7 +37,6 @@ class asynchronous_stack {
                     }
                 }
                 ex::set_stopped(std::move(s.rcvr));
-                std::cout << "set_stopped was called\n";
             }
         };
         using stop_token_t = ex::stop_token_of_t<decltype(ex::get_env(std::declval<Rcvr&>()))>;
@@ -105,7 +102,7 @@ int main() {
     }
     std::cout << "pushed 1,2,3\n";
 
-    int count{7};
+    int count{8};
     for (int value{1}; value < count; ++value) {
         ex::spawn(st.pop() | ex::then([value](int v) noexcept {
                       std::cout << "got value=" << v << " for request " << value << "\n";
