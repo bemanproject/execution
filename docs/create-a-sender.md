@@ -391,7 +391,7 @@ class asynchronous_stack {
         };
         using stop_token_t = ex::stop_token_of_t<decltype(ex::get_env(std::declval<Rcvr&>()))>;
         using callback_t = ex::stop_callback_for_t<stop_token_t, stop_fun>;
-        std::optional<callback_t> callback; 
+        std::optional<callback_t> callback;
         state(Rcvr&& r, asynchronous_stack& s): rcvr(std::forward<Rcvr>(r)), self(s) {}
         void start() & noexcept {
             if (not this->self.stack.empty()) {
