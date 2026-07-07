@@ -258,7 +258,7 @@ auto test_parallel_scheduler_schedule() -> void {
     {
         for (auto size : {1uz, 4uz, 8uz, 16uz, 32uz}) {
             std::vector<int> vec(size);
-            std::ranges::iota(vec, 0);
+            std::iota(vec.begin(), vec.end(), 0);
 
             test_std::sync_wait(
                 test_std::schedule(sch) |
