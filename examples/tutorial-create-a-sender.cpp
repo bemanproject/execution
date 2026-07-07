@@ -1,10 +1,14 @@
 // examples/tutorial/create-a-sender.cpp                              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/execution.hpp>
 #include <iostream>
 #include <optional>
 #include <stack>
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution/execution.hpp>
+#endif
 
 namespace ex = beman::execution;
 
@@ -22,9 +26,20 @@ class asynchronous_stack {
     struct state: node {
         using operation_state_concept = ex::operation_state_tag;
         struct stop_fun {
-            state& self;
+            state& st;
             void operator()() noexcept {
-                ex::set_stopped(std::move(this->self.rcvr));
+                std::cout << "request was stopped\n";
+                state& s = this->st;
+                this->st.callback.reset();
+                std::cout << "reset the stop callback\n";
+                for (auto it{&this->st.self.awaiting}; it; it = &(*it)->next) {
+                    if (*it == &this->st) {
+                        *it = this->st.next;
+                        break;
+                    }
+                }
+                ex::set_stopped(std::move(s.rcvr));
+                std::cout << "set_stopped was called\n";
             }
         };
         using stop_token_t = ex::stop_token_of_t<decltype(ex::get_env(std::declval<Rcvr&>()))>;
@@ -40,8 +55,8 @@ class asynchronous_stack {
                 ex::set_value(std::move(rcvr), std::move(value));
             }
             else {
-                this->callback.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), *this);
                 this->next = std::exchange(this->self.awaiting, this);
+                this->callback.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), stop_fun{*this});
             }
         }
         void complete(T value) override {
@@ -84,7 +99,7 @@ static_assert(ex::sender_in<asynchronous_stack<int>::pop_sender>);
 int main() {
     ex::counting_scope      scope;
     asynchronous_stack<int> st;
-    auto sender = st.pop() | ex::then([](int v){ std::cout << "got value=" << v << "\n"; });
+    [[maybe_unused]] auto sender = st.pop() | ex::then([](int v){ std::cout << "got value=" << v << "\n"; });
 
     for (int value{1}; value < 4; ++ value) {
         st.push(value);

@@ -11,7 +11,7 @@ is an asynchronous operation which either completes immediately if
 there is work or completes when new work becomes available. Pushing
 to the asynchronous stack succeeds immediately. It could be an
 extension to impose a limit on the stack size and make pushing also
-a asynchronous operation making the two operation somewhat symmetric.
+an asynchronous operation, making the two operations somewhat symmetric.
 
 The interface to the asynchronous stack could look like this:
 
@@ -136,7 +136,7 @@ a sender: by declaring `operation_state_concept` as an alias for
 identified as an `ex::operation_state`. To implement the `concept`
 `ex::operation_state` the `state` class also needs a `start()`
 function which never throws (any errors would be reported via
-suitable completion signature on the erceiver).
+suitable completion signature on the receiver).
 
 The actual work happens when `state`s `start()` function is
 invoked: at that point it is checked whether there is any value
@@ -377,11 +377,16 @@ class asynchronous_stack {
     struct state: node {
         // ...
         struct stop_fun {
-            state& self;
+            state& st;
             void operator()() noexcept {
-                state& self = this->self;
-                self.callback.reset();
-                ex::set_stopped(std::move(self.rcvr));
+                this->st.callback.reset();
+                for (auto it{&this->st.stack.awaiting}; it; it = &(*it)->next) {
+                    if (*it == &this->st) {
+                        *it = this->st.next;
+                        break;
+                    }
+                }
+                ex::set_stopped(std::move(st.rcvr));
             }
         };
         using stop_token_t = ex::stop_token_of_t<decltype(ex::get_env(std::declval<Rcvr&>()))>;
@@ -395,8 +400,8 @@ class asynchronous_stack {
                 ex::set_value(std::move(rcvr), std::move(value));
             }
             else {
-                this->callback.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), *this);
                 this->next = std::exchange(this->self.awaiting, this);
+                this->callback.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), stop_fun{*this});
             }
         }
         void complete(T value) override {
