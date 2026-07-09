@@ -77,14 +77,14 @@ struct beman::execution::detail::stop_when_t::sender {
         struct base_state {
             rcvr_t                                  rcvr;
             ::beman::execution::inplace_stop_source source{};
-            bool                                    run_stop{true};
+            std::atomic<bool>                                    run_stop{true};
         };
         struct cb_t {
             base_state* st;
             auto        operator()() const noexcept {
                 this->st->run_stop = false;
                 this->st->source.request_stop();
-                if (std::exchange(this->st->run_stop, true)) {
+                if (this->st->run_stop.exchange(true)) {
                     ::beman::execution::set_stopped(::std::move(this->st->rcvr));
                 }
             }
@@ -110,25 +110,19 @@ struct beman::execution::detail::stop_when_t::sender {
             auto get_env() const noexcept -> env { return env{this->st}; }
             template <typename... A>
             auto set_value(A&&... a) const noexcept -> void {
-                if (this->st->run_stop) {
+                if (this->st->run_stop.exchange(true)) {
                     ::beman::execution::set_value(::std::move(this->st->rcvr), ::std::forward<A>(a)...);
-                } else {
-                    this->st->run_stop = true;
                 }
             }
             template <typename E>
             auto set_error(E&& e) const noexcept -> void {
-                if (this->st->run_stop) {
+                if (this->st->run_stop.exchange(true)) {
                     ::beman::execution::set_error(::std::move(this->st->rcvr), ::std::forward<E>(e));
-                } else {
-                    this->st->run_stop = true;
                 }
             }
             auto set_stopped() const noexcept -> void {
-                if (this->st->run_stop) {
+                if (this->st->run_stop.exchange(true)) {
                     ::beman::execution::set_stopped(::std::move(this->st->rcvr));
-                } else {
-                    this->st->run_stop = true;
                 }
             }
         };
