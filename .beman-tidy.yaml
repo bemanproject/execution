@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+# This is the config file for beman-tidy, which checks compliance with the Beman Standard (https://github.com/bemanproject/beman/blob/main/docs/beman_standard.md)
+# Check documentation for beman-tidy here:
+# https://github.com/bemanproject/beman-tidy/blob/main/README.md
+
+disabled_rules: []
+ignored_paths:
+    - infra/

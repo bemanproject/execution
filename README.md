@@ -3,9 +3,10 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 # beman.execution: Building Block For Asynchronous Programs
 
-<img src="https://github.com/bemanproject/beman/blob/main/images/logos/beman_logo-beman_library_under_development.png" style="width:5%; height:auto;">
-
-![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)
+<!-- markdownlint-disable line-length -->
+[![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg)](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#the-beman-library-maturity-model)
+![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)
+<!-- markdownlint-restore -->
 
 `beman.execution` provides the basic vocabulary for asynchronous
 programming as well as important algorithms implemented in terms
