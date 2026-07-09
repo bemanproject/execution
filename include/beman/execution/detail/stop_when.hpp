@@ -77,7 +77,7 @@ struct beman::execution::detail::stop_when_t::sender {
         struct base_state {
             rcvr_t                                  rcvr;
             ::beman::execution::inplace_stop_source source{};
-            std::atomic<bool>                                    run_stop{true};
+            std::atomic<bool>                       run_stop{true};
         };
         struct cb_t {
             base_state* st;
