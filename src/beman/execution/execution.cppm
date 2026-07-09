@@ -260,7 +260,6 @@ export using ::beman::execution::write_env;
 export using ::beman::execution::affine_t;
 export using ::beman::execution::affine;
 export using ::beman::execution::read_env_t;
-export using ::beman::execution::read_env;
 export using ::beman::execution::simple_counting_scope;
 export using ::beman::execution::counting_scope;
 

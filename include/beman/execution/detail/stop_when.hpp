@@ -8,6 +8,7 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
+#include <atomic>
 #include <optional>
 #include <type_traits>
 #include <utility>
