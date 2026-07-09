@@ -50,6 +50,7 @@ list(
     exec-scope-concepts.test
     exec-scope-counting.test
     exec-scope-simple-counting.test
+    exec-scope-snd-concepts.test
     exec-sender-adaptor-closure.test
     exec-set-error.test
     exec-set-stopped.test
@@ -70,6 +71,7 @@ list(
     exec-utils-cmplsigs.test
     exec-when-all.test
     exec-with-awaitable-senders.test
+    exec-within.test
     execution-queryable-concept.test
     execution-syn.test
     forward-like.test

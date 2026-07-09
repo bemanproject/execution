@@ -19,8 +19,13 @@ import beman.execution.detail.connect;
 import beman.execution.detail.continues_on;
 import beman.execution.detail.counting_scope;
 import beman.execution.detail.dependent_sender;
+import beman.execution.detail.enter_scope_sender_in;
+import beman.execution.detail.enter_scope_sender;
 import beman.execution.detail.env;
 import beman.execution.detail.execution_policy;
+import beman.execution.detail.exit_scope_sender_in;
+import beman.execution.detail.exit_scope_sender_of_t;
+import beman.execution.detail.exit_scope_sender;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
@@ -72,6 +77,7 @@ import beman.execution.detail.valid_completion_signatures;
 import beman.execution.detail.when_all_with_variant;
 import beman.execution.detail.when_all;
 import beman.execution.detail.with_awaitable_senders;
+import beman.execution.detail.within;
 import beman.execution.detail.write_env;
 #else
 #include <beman/execution/detail/affine.hpp>
@@ -84,8 +90,13 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/counting_scope.hpp>
 #include <beman/execution/detail/dependent_sender.hpp>
+#include <beman/execution/detail/enter_scope_sender_in.hpp>
+#include <beman/execution/detail/enter_scope_sender.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/execution_policy.hpp>
+#include <beman/execution/detail/exit_scope_sender_in.hpp>
+#include <beman/execution/detail/exit_scope_sender_of_t.hpp>
+#include <beman/execution/detail/exit_scope_sender.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_await_completion_adaptor.hpp>
@@ -137,6 +148,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/when_all_with_variant.hpp>
 #include <beman/execution/detail/when_all.hpp>
 #include <beman/execution/detail/with_awaitable_senders.hpp>
+#include <beman/execution/detail/within.hpp>
 #include <beman/execution/detail/write_env.hpp>
 #endif
 
