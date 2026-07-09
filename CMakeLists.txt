@@ -108,7 +108,10 @@ add_subdirectory(src/beman/execution)
 
 if(NOT BEMAN_USE_MODULES)
     add_library(beman.execution INTERFACE)
-    target_link_libraries(beman.execution INTERFACE ${BEMAN_EXECUTION_TARGET_NAME})
+    target_link_libraries(
+        beman.execution
+        INTERFACE ${BEMAN_EXECUTION_TARGET_NAME}
+    )
     add_library(beman::execution ALIAS beman.execution)
 endif()
 
