@@ -62,7 +62,7 @@ repos:
 
   # Beman Standard checking via beman-tidy
   - repo: https://github.com/bemanproject/beman-tidy
-    rev: v0.5.1
+    rev: v0.5.2
     hooks:
       - id: beman-tidy
         args: [".", "--verbose"]
