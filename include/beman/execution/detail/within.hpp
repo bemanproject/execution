@@ -13,10 +13,10 @@ import std;
 #include <exception>
 #include <functional>
 #include <optional>
-#include <variant>
 #include <utility>
-#include <cassert>
+#include <variant>
 #endif
+#include <cassert>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures_of_t;
