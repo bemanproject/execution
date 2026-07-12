@@ -6,6 +6,7 @@
 
 #include <beman/execution/detail/common.hpp>
 #include <beman/execution/detail/suppress_push.hpp>
+#include <cassert>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -16,7 +17,6 @@ import std;
 #include <utility>
 #include <variant>
 #endif
-#include <cassert>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures_of_t;
