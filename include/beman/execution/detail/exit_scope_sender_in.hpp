@@ -19,6 +19,7 @@ import beman.execution.detail.env;
 import beman.execution.detail.exit_scope_sender;
 import beman.execution.detail.nothrow_callable;
 import beman.execution.detail.receiver;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.set_value;
 import beman.execution.detail.unreachable;
 #else
@@ -29,6 +30,7 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/exit_scope_sender.hpp>
 #include <beman/execution/detail/nothrow_callable.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/unreachable.hpp>
 #endif
