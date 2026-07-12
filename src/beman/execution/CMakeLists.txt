@@ -55,6 +55,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures_of_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_tag.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_storage.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect_all.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/connect_all_result.hpp
@@ -74,13 +75,19 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/execution_policy.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/elide.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/emplace_from.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/enter_scope_sender.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/enter_scope_sender_in.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env_of_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env_promise.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/env_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/error_types_of.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/error_types_of_t.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/exit_scope_sender.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/exit_scope_sender_in.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/exit_scope_sender_of_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/find_allocator.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/forward_like.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/forwarding_query.hpp
@@ -223,6 +230,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/with_await_transform.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/with_awaitable_senders.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/with_error.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/within.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/write_env.hpp
 )
 
@@ -264,6 +272,7 @@ if(BEMAN_USE_MODULES)
                     completion_signatures_of_t.cppm
                     completion_signatures.cppm
                     completion_tag.cppm
+                    completion_storage.cppm
                     connect_all_result.cppm
                     connect_all.cppm
                     connect_awaitable.cppm
@@ -283,13 +292,19 @@ if(BEMAN_USE_MODULES)
                     dependent_sender.cppm
                     dependent_sender_error.cppm
                     execution_policy.cppm
+                    elide.cppm
                     emplace_from.cppm
+                    enter_scope_sender.cppm
+                    enter_scope_sender_in.cppm
                     enable_sender.cppm
                     env_of_t.cppm
                     env_promise.cppm
                     env_type.cppm
                     env.cppm
                     error_types_of_t.cppm
+                    exit_scope_sender.cppm
+                    exit_scope_sender_in.cppm
+                    exit_scope_sender_of_t.cppm
                     forward_like.cppm
                     forwarding_query.cppm
                     fwd_env.cppm
@@ -423,6 +438,7 @@ if(BEMAN_USE_MODULES)
                     when_all_with_variant.cppm
                     with_await_transform.cppm
                     with_awaitable_senders.cppm
+                    within.cppm
                     write_env.cppm
     )
     target_compile_definitions(

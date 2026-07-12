@@ -280,7 +280,7 @@ struct within_t::state {
     /// Called when the enter scope sender completes successfully with `exit_sender`.
     void on_enter_set_value(exit_scope_sender_t&& exit_sender) noexcept {
         constexpr auto nothrow =
-            ::beman::execution::detail::nothrow_callable<::beman::execution::connect_t, work_t, Receiver>;
+            ::beman::execution::detail::nothrow_callable<::beman::execution::connect_t, work_t, work_receiver_t>;
 
         const auto p = std::get_if<enter_state>(&state_);
         assert(p);

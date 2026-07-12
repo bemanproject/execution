@@ -20,11 +20,16 @@ export import beman.execution.detail.connect_result_t; // [exec.connect], the co
 import beman.execution.detail.continues_on;
 import beman.execution.detail.counting_scope;
 import beman.execution.detail.default_domain;
+export import beman.execution.detail.enter_scope_sender;
+export import beman.execution.detail.enter_scope_sender_in;
 export import beman.execution.detail.indeterminate_domain;
 export import beman.execution.detail.env;
 export import beman.execution.detail.env_of_t;
 export import beman.execution.detail.error_types_of_t; // [exec.getcomplsigs], completion signatures
 export import beman.execution.detail.execution_policy;
+export import beman.execution.detail.exit_scope_sender;
+export import beman.execution.detail.exit_scope_sender_in;
+export import beman.execution.detail.exit_scope_sender_of_t;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
@@ -82,6 +87,7 @@ export import beman.execution.detail.value_types_of_t; // [exec.getcomplsigs], c
 import beman.execution.detail.when_all;
 import beman.execution.detail.when_all_with_variant;
 export import beman.execution.detail.with_awaitable_senders; // [exec.with.awaitable.senders]
+export import beman.execution.detail.within;
 import beman.execution.detail.write_env;
 import beman.execution.detail.inline_scheduler;
 
