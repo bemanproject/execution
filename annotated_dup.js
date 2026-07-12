@@ -2,6 +2,11 @@ var annotated_dup =
 [
     [ "beman", "namespacebeman.html", [
       [ "execution", "namespacebeman_1_1execution.html", [
+        [ "parallel_scheduler_replacement", null, [
+          [ "bulk_item_receiver_proxy", "structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1bulk__item__receiver__proxy.html", null ],
+          [ "parallel_scheduler_backend", "structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1parallel__scheduler__backend.html", null ],
+          [ "receiver_proxy", "structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html", null ]
+        ] ],
         [ "as_awaitable_t", "structbeman_1_1execution_1_1as__awaitable__t.html", null ],
         [ "completion_signatures", "structbeman_1_1execution_1_1completion__signatures.html", null ],
         [ "counting_scope", "classbeman_1_1execution_1_1counting__scope.html", "classbeman_1_1execution_1_1counting__scope" ],
@@ -29,6 +34,7 @@ var annotated_dup =
         [ "nostopstate_t", "structbeman_1_1execution_1_1nostopstate__t.html", null ],
         [ "operation_state_tag", "structbeman_1_1execution_1_1operation__state__tag.html", null ],
         [ "parallel_policy", "structbeman_1_1execution_1_1parallel__policy.html", null ],
+        [ "parallel_scheduler", "classbeman_1_1execution_1_1parallel__scheduler.html", "classbeman_1_1execution_1_1parallel__scheduler" ],
         [ "parallel_unsequenced_policy", "structbeman_1_1execution_1_1parallel__unsequenced__policy.html", null ],
         [ "prop", "structbeman_1_1execution_1_1prop.html", null ],
         [ "receiver_tag", "structbeman_1_1execution_1_1receiver__tag.html", null ],

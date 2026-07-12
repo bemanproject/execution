@@ -157,45 +157,43 @@ $(document).ready(function(){initNavTree('get__completion__domain_8hpp_source.ht
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                                 ::beman::execution::detail::try_query(</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                                     ::beman::execution::get_completion_scheduler&lt;Tag&gt;(q, e...),</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                                     get_completion_domain_t&lt;::beman::execution::set_value_t&gt;{},</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                                     ::std::forward&lt;Q&gt;(q),</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                                     ::std::forward&lt;E&gt;(e)...);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                             }) {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            return ::beman::execution::detail::try_query(::beman::execution::get_completion_scheduler&lt;Tag&gt;(q, e...),</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                                                         get_completion_domain_t&lt;::beman::execution::set_value_t&gt;{},</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                                                         ::std::forward&lt;Q&gt;(q),</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                                                         ::std::forward&lt;E&gt;(e)...);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::beman::execution::scheduler&lt;Q&gt; &amp;&amp; 0u != <span class="keyword">sizeof</span>...(E)) {</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            return ::beman::execution::default_domain{};</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            return ::beman::execution::detail::no_completion_domain{};</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        }</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    };</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Q, <span class="keyword">typename</span>... E&gt;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">using </span>domain_of = <span class="keyword">decltype</span>((impl)(::std::declval&lt;Q&gt;(), ::std::declval&lt;E&gt;()...));</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">template</span> &lt;::beman::execution::detail::queryable Q, <span class="keyword">typename</span>... E&gt;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">requires</span>(!::std::same_as&lt;domain_of&lt;Q, E...&gt;, ::beman::execution::detail::no_completion_domain&gt;)</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">auto</span> <span class="keyword">operator</span>()(Q&amp;&amp;, E&amp;&amp;...) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keyword">using </span>domain = domain_of&lt;Q, E...&gt;;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">static_assert</span>(<span class="keyword">noexcept</span>(domain{}), <span class="stringliteral">&quot;the domain&#39;s default constructor has to be noexcept&quot;</span>);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">return</span> domain{};</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>};</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag = <span class="keywordtype">void</span>&gt;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    requires ::std::same_as&lt;Tag, void&gt; || ::beman::execution::detail::completion_tag&lt;Tag&gt;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">using </span>get_completion_domain_t = ::beman::execution::detail::get_completion_domain_t&lt;Tag&gt;;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag = <span class="keywordtype">void</span>&gt;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    requires ::std::same_as&lt;Tag, void&gt; || ::beman::execution::detail::completion_tag&lt;Tag&gt;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> get_completion_domain_t&lt;Tag&gt; get_completion_domain{};</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>} <span class="comment">// namespace beman::execution</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                                     ::std::forward&lt;E&gt;(e)...);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                             }) {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            return ::beman::execution::detail::try_query(::beman::execution::get_completion_scheduler&lt;Tag&gt;(q, e...),</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                                                         get_completion_domain_t&lt;::beman::execution::set_value_t&gt;{},</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                                                         ::std::forward&lt;E&gt;(e)...);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::beman::execution::scheduler&lt;Q&gt; &amp;&amp; 0u != <span class="keyword">sizeof</span>...(E)) {</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            return ::beman::execution::default_domain{};</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            return ::beman::execution::detail::no_completion_domain{};</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        }</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    };</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Q, <span class="keyword">typename</span>... E&gt;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">using </span>domain_of = <span class="keyword">decltype</span>((impl)(::std::declval&lt;Q&gt;(), ::std::declval&lt;E&gt;()...));</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">template</span> &lt;::beman::execution::detail::queryable Q, <span class="keyword">typename</span>... E&gt;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keyword">requires</span>(!::std::same_as&lt;domain_of&lt;Q, E...&gt;, ::beman::execution::detail::no_completion_domain&gt;)</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">auto</span> <span class="keyword">operator</span>()(Q&amp;&amp;, E&amp;&amp;...) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">using </span>domain = domain_of&lt;Q, E...&gt;;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">static_assert</span>(<span class="keyword">noexcept</span>(domain{}), <span class="stringliteral">&quot;the domain&#39;s default constructor has to be noexcept&quot;</span>);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keywordflow">return</span> domain{};</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    }</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>};</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag = <span class="keywordtype">void</span>&gt;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    requires ::std::same_as&lt;Tag, void&gt; || ::beman::execution::detail::completion_tag&lt;Tag&gt;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keyword">using </span>get_completion_domain_t = ::beman::execution::detail::get_completion_domain_t&lt;Tag&gt;;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag = <span class="keywordtype">void</span>&gt;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    requires ::std::same_as&lt;Tag, void&gt; || ::beman::execution::detail::completion_tag&lt;Tag&gt;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> get_completion_domain_t&lt;Tag&gt; get_completion_domain{};</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>} <span class="comment">// namespace beman::execution</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1detail_1_1completion__tag_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1detail_1_1completion__tag.html">beman::execution::detail::completion_tag</a></div><div class="ttdef"><b>Definition:</b> completion_tag.hpp:32</div></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1detail_1_1queryable_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1detail_1_1queryable.html">beman::execution::detail::queryable</a></div><div class="ttdef"><b>Definition:</b> queryable.hpp:18</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_1_1detail_html"><div class="ttname"><a href="namespacebeman_1_1execution_1_1detail.html">beman::execution::detail</a></div><div class="ttdef"><b>Definition:</b> affine.hpp:56</div></div>

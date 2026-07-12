@@ -33,6 +33,7 @@ var hierarchy =
     [ "tst::connector< inner_sender, Receiver >", "structtst_1_1connector.html", null ],
     [ "tst::add_set_value< Sender >::contains_set_value< typename >", "structtst_1_1add__set__value_1_1contains__set__value.html", null ],
     [ "beman::execution::default_domain", "structbeman_1_1execution_1_1default__domain.html", null ],
+    [ "beman::execution::parallel_scheduler::sender::env", "classbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1env.html", null ],
     [ "beman::execution::detail::env_base< Envs >", null, [
       [ "beman::execution::env< Envs >", "structbeman_1_1execution_1_1env.html", null ]
     ] ],
@@ -67,13 +68,21 @@ var hierarchy =
     [ "tst::just_error_t", "structtst_1_1just__error__t.html", null ],
     [ "beman::execution::never_stop_token", "classbeman_1_1execution_1_1never__stop__token.html", null ],
     [ "beman::execution::nostopstate_t", "structbeman_1_1execution_1_1nostopstate__t.html", null ],
+    [ "beman::execution::parallel_scheduler::sender::operation< Rcvr >", "classbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1operation.html", null ],
     [ "beman::execution::operation_state_tag", "structbeman_1_1execution_1_1operation__state__tag.html", null ],
     [ "tst::repeat_effect_unilt_t::sender< Child, Fun >::state< Receiver >::own_receiver", "structtst_1_1repeat__effect__unilt__t_1_1sender_1_1state_1_1own__receiver.html", null ],
     [ "beman::execution::parallel_policy", "structbeman_1_1execution_1_1parallel__policy.html", null ],
+    [ "beman::execution::parallel_scheduler", "classbeman_1_1execution_1_1parallel__scheduler.html", null ],
+    [ "beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend", "structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1parallel__scheduler__backend.html", null ],
     [ "beman::execution::parallel_unsequenced_policy", "structbeman_1_1execution_1_1parallel__unsequenced__policy.html", null ],
     [ "tst::timer::when_done_sender::state< Receiver >::pred", "structtst_1_1timer_1_1when__done__sender_1_1state_1_1pred.html", null ],
     [ "beman::execution::prop< Query, Value >", "structbeman_1_1execution_1_1prop.html", null ],
     [ "receiver", "structreceiver.html", null ],
+    [ "beman::execution::parallel_scheduler_replacement::receiver_proxy", "structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html", [
+      [ "beman::execution::parallel_scheduler::sender::rcvr_proxy<::std::remove_cvref_t< Rcvr > >", "structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html", null ],
+      [ "beman::execution::parallel_scheduler::sender::rcvr_proxy< Rcvr >", "structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html", null ],
+      [ "beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy", "structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1bulk__item__receiver__proxy.html", null ]
+    ] ],
     [ "beman::execution::receiver_tag", "structbeman_1_1execution_1_1receiver__tag.html", null ],
     [ "tst::repeat_effect_unilt_t", "structtst_1_1repeat__effect__unilt__t.html", null ],
     [ "tst::timer::resume_after_sender", "structtst_1_1timer_1_1resume__after__sender.html", null ],
@@ -82,6 +91,7 @@ var hierarchy =
     [ "beman::execution::schedule_t", "structbeman_1_1execution_1_1schedule__t.html", null ],
     [ "beman::execution::scheduler_tag", "structbeman_1_1execution_1_1scheduler__tag.html", null ],
     [ "beman::execution::inline_scheduler::sender", "structbeman_1_1execution_1_1inline__scheduler_1_1sender.html", null ],
+    [ "beman::execution::parallel_scheduler::sender", "classbeman_1_1execution_1_1parallel__scheduler_1_1sender.html", null ],
     [ "tst::repeat_effect_unilt_t::sender< Child, Fun >", "structtst_1_1repeat__effect__unilt__t_1_1sender.html", null ],
     [ "beman::execution::sender_tag", "structbeman_1_1execution_1_1sender__tag.html", null ],
     [ "beman::execution::sequenced_policy", "structbeman_1_1execution_1_1sequenced__policy.html", null ],

@@ -27,6 +27,7 @@ var namespacebeman_1_1execution =
     [ "nostopstate_t", "structbeman_1_1execution_1_1nostopstate__t.html", null ],
     [ "operation_state_tag", "structbeman_1_1execution_1_1operation__state__tag.html", null ],
     [ "parallel_policy", "structbeman_1_1execution_1_1parallel__policy.html", null ],
+    [ "parallel_scheduler", "classbeman_1_1execution_1_1parallel__scheduler.html", "classbeman_1_1execution_1_1parallel__scheduler" ],
     [ "parallel_unsequenced_policy", "structbeman_1_1execution_1_1parallel__unsequenced__policy.html", null ],
     [ "prop", "structbeman_1_1execution_1_1prop.html", null ],
     [ "receiver_tag", "structbeman_1_1execution_1_1receiver__tag.html", null ],

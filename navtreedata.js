@@ -88,7 +88,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "affine_8hpp_source.html",
-"operation__state_8hpp_source.html"
+"nested__sender__has__affine_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
