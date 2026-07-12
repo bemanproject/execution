@@ -15,6 +15,7 @@ import std;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.connect;
+import beman.execution.detail.env;
 import beman.execution.detail.exit_scope_sender;
 import beman.execution.detail.nothrow_callable;
 import beman.execution.detail.receiver;
@@ -24,6 +25,7 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/exit_scope_sender.hpp>
 #include <beman/execution/detail/nothrow_callable.hpp>
 #include <beman/execution/detail/receiver.hpp>
