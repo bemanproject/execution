@@ -18,14 +18,17 @@ import std;
 #include <cassert>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_storage;
 import beman.execution.detail.connect;
+import beman.execution.detail.connect_result_t;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.elide;
 import beman.execution.detail.enter_scope_sender;
 import beman.execution.detail.env;
+import beman.execution.detail.env_of_t;
 import beman.execution.detail.error_types_of_t;
 import beman.execution.detail.exit_scope_sender_of_t;
 import beman.execution.detail.get_env;
@@ -33,7 +36,10 @@ import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.unique;
+import beman.execution.detail.nothrow_callable;
 import beman.execution.detail.product_type;
+import beman.execution.detail.operation_state;
+import beman.execution.detail.receiver;
 import beman.execution.detail.sender;
 import beman.execution.detail.sends_stopped;
 import beman.execution.detail.set_error;
@@ -42,14 +48,17 @@ import beman.execution.detail.set_value;
 import beman.execution.detail.start;
 import beman.execution.detail.unreachable;
 #else
+#include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_storage.hpp>
 #include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/elide.hpp>
 #include <beman/execution/detail/enter_scope_sender.hpp>
 #include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/exit_scope_sender_of_t.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -57,7 +66,10 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
+#include <beman/execution/detail/nothrow_callable.hpp>
 #include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sends_stopped.hpp>
 #include <beman/execution/detail/set_error.hpp>

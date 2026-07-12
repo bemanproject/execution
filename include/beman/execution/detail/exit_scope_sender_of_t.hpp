@@ -12,11 +12,17 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.completion_signatures;
 import beman.execution.detail.enter_scope_sender;
 import beman.execution.detail.exit_scope_sender_in;
+import beman.execution.detail.set_value;
 #else
+#include <beman/execution/detail/completion_signatures_of_t.hpp>
+#include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/enter_scope_sender.hpp>
 #include <beman/execution/detail/exit_scope_sender_in.hpp>
+#include <beman/execution/detail/set_value.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
