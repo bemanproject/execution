@@ -14,7 +14,6 @@ import std;
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.completion_signatures;
-import beman.execution.detail.exit_scope_sender_in;
 import beman.execution.detail.exit_scope_sender;
 import beman.execution.detail.nothrow_callable;
 import beman.execution.detail.set_value;
@@ -22,7 +21,6 @@ import beman.execution.detail.unreachable;
 #else
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
-#include <beman/execution/detail/exit_scope_sender_in.hpp>
 #include <beman/execution/detail/exit_scope_sender.hpp>
 #include <beman/execution/detail/nothrow_callable.hpp>
 #include <beman/execution/detail/set_value.hpp>

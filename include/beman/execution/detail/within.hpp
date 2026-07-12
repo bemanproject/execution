@@ -208,13 +208,11 @@ struct within_work_receiver : ::beman::execution::detail::within_receiver_base<S
     void set_stopped() && noexcept { state_.on_work_completion(::beman::execution::set_stopped_t{}); }
 };
 
-} // namespace beman::execution::detail
-
 /// The operation state of the `within` sender constructed from `Scope` and `Work`, and connected to `Receiver`.
 template <::beman::execution::enter_scope_sender Scope,
           ::beman::execution::sender             Work,
           ::beman::execution::receiver           Receiver>
-struct ::beman::execution::detail::within_t::state {
+struct within_t::state {
     using operation_state_concept = ::beman::execution::operation_state_tag;
     using self_t                  = state<Scope, Work, Receiver>;
     using scope_t                 = ::std::remove_cvref_t<Scope>;
@@ -337,6 +335,8 @@ struct ::beman::execution::detail::within_t::state {
         std::move(p->work_completion).complete(::std::move(this->receiver));
     }
 };
+
+}; // namespace beman::execution::detail
 
 #include <beman/execution/detail/suppress_pop.hpp>
 

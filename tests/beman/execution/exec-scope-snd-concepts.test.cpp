@@ -62,7 +62,7 @@ TEST(exec_scope_snd_concepts) {
 
     // different completion signatures for enter senders
     using just_sender_t = decltype(test_std::just());
-    using t1 = sender<>;
+    using t1            = sender<>;
     static_assert(!test_std::enter_scope_sender_in<t1, test_std::env<>>);
 
     using t2 = sender<test_std::set_value_t(just_sender_t)>;
@@ -73,7 +73,10 @@ TEST(exec_scope_snd_concepts) {
     static_assert(test_std::enter_scope_sender_in<t3, test_std::env<>>);
     static_assert(std::is_same_v<test_std::exit_scope_sender_of_t<t3, test_std::env<>>, just_sender_t>);
 
-    using t4 = sender<test_std::set_value_t(just_sender_t), test_std::set_value_t(int), test_std::set_error_t(int), test_std::set_stopped_t()>;
+    using t4 = sender<test_std::set_value_t(just_sender_t),
+                      test_std::set_value_t(int),
+                      test_std::set_error_t(int),
+                      test_std::set_stopped_t()>;
     static_assert(!test_std::enter_scope_sender_in<t4, test_std::env<>>);
 
     using t5 = sender<test_std::set_value_t(int), test_std::set_error_t(int), test_std::set_stopped_t()>;
