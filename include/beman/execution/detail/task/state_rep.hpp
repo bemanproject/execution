@@ -1,8 +1,8 @@
-// include/beman/execution/detail/state_rep.hpp                            -*-C++-*-
+// include/beman/execution/detail/task/state_rep.hpp                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STATE_REP
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_STATE_REP
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_STATE_REP
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_STATE_REP
 
 #include <beman/execution/execution.hpp>
 #include <type_traits>

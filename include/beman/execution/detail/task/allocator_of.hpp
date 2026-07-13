@@ -1,8 +1,8 @@
-// include/beman/execution/detail/allocator_of.hpp                         -*-C++-*-
+// include/beman/execution/detail/task/allocator_of.hpp                    -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ALLOCATOR_OF
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_ALLOCATOR_OF
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_ALLOCATOR_OF
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK_ALLOCATOR_OF
 
 #include <concepts>
 #include <cstddef>

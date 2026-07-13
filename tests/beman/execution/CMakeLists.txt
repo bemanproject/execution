@@ -10,6 +10,9 @@ list(APPEND unsupported_execution_tests exec-split.test)
 list(
     APPEND execution_tests
     allocator-requirements-general.test
+    task-allocator_support.test
+    task-infallible_scheduler.test
+    task_scheduler.test
     exec-affine.test
     exec-associate.test
     exec-awaitable.test
