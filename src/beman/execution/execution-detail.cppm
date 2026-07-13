@@ -59,6 +59,7 @@ export import beman.execution.detail.non_assignable;
 export import beman.execution.detail.nothrow_callable;
 export import beman.execution.detail.notify;
 export import beman.execution.detail.operation_state_task;
+export import beman.execution.detail.parallel_scheduler;
 export import beman.execution.detail.product_type;
 export import beman.execution.detail.query_with_default;
 export import beman.execution.detail.queryable;

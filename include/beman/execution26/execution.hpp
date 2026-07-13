@@ -42,6 +42,7 @@ using ::beman::execution::get_domain;
 using ::beman::execution::get_domain_t;
 using ::beman::execution::get_env;
 using ::beman::execution::get_env_t;
+using ::beman::execution::get_parallel_scheduler;
 using ::beman::execution::get_scheduler;
 using ::beman::execution::get_scheduler_t;
 using ::beman::execution::get_stop_token;
@@ -62,6 +63,7 @@ using ::beman::execution::let_value;
 using ::beman::execution::let_value_t;
 using ::beman::execution::operation_state;
 using ::beman::execution::operation_state_tag;
+using ::beman::execution::parallel_scheduler;
 using ::beman::execution::read_env;
 using ::beman::execution::receiver;
 using ::beman::execution::receiver_of;
@@ -106,6 +108,13 @@ using ::beman::execution::when_all_t;
 using ::beman::execution::when_all_with_variant;
 using ::beman::execution::when_all_with_variant_t;
 using ::beman::execution::with_awaitable_senders;
+
+namespace parallel_scheduler_replacement {
+using ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy;
+using ::beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend;
+using ::beman::execution::parallel_scheduler_replacement::query_parallel_scheduler_backend;
+using ::beman::execution::parallel_scheduler_replacement::receiver_proxy;
+} // namespace parallel_scheduler_replacement
 
 } // namespace beman::execution26
 

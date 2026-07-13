@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else

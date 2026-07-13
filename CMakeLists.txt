@@ -27,8 +27,8 @@ if(BEMAN_USE_MODULES)
 
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
-    add_library(${BEMAN_EXECUTION_TARGET_PREFIX} STATIC) # FIXME: only static yet! CK
-    add_library(beman::execution ALIAS ${BEMAN_EXECUTION_TARGET_PREFIX})
+    add_library(beman.execution STATIC) # FIXME: only static yet! CK
+    add_library(beman::execution ALIAS beman.execution)
     target_compile_features(
         ${BEMAN_EXECUTION_TARGET_PREFIX}
         PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
@@ -105,6 +105,15 @@ option(
 )
 
 add_subdirectory(src/beman/execution)
+
+if(NOT BEMAN_USE_MODULES)
+    add_library(beman.execution INTERFACE)
+    target_link_libraries(
+        beman.execution
+        INTERFACE ${BEMAN_EXECUTION_TARGET_NAME}
+    )
+    add_library(beman::execution ALIAS beman.execution)
+endif()
 
 #===============================================================================
 # NOTE: this must be done before tests! CK

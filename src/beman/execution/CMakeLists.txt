@@ -151,6 +151,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/on_stop_request.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/operation_state_task.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/parallel_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/product_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/poly.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/promise_env.hpp
@@ -194,6 +195,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/state_rep.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/state_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_callback_for_t.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_propagator.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_source.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_source_of.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/stop_token_of_t.hpp
@@ -366,6 +368,7 @@ if(BEMAN_USE_MODULES)
                     on.cppm
                     operation_state_task.cppm
                     operation_state.cppm
+                    parallel_scheduler.cppm
                     product_type.cppm
                     prop.cppm
                     query_with_default.cppm
@@ -407,6 +410,7 @@ if(BEMAN_USE_MODULES)
                     state_type.cppm
                     stoppable_callback_for.cppm
                     stop_callback_for_t.cppm
+                    stop_propagator.cppm
                     stop_source.cppm
                     stop_token_of_t.cppm
                     stop_when.cppm

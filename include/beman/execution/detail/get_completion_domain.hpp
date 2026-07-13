@@ -55,12 +55,10 @@ struct get_completion_domain_t : ::beman::execution::forwarding_query_t {
                                  ::beman::execution::detail::try_query(
                                      ::beman::execution::get_completion_scheduler<Tag>(q, e...),
                                      get_completion_domain_t<::beman::execution::set_value_t>{},
-                                     ::std::forward<Q>(q),
                                      ::std::forward<E>(e)...);
                              }) {
             return ::beman::execution::detail::try_query(::beman::execution::get_completion_scheduler<Tag>(q, e...),
                                                          get_completion_domain_t<::beman::execution::set_value_t>{},
-                                                         ::std::forward<Q>(q),
                                                          ::std::forward<E>(e)...);
         } else if constexpr (::beman::execution::scheduler<Q> && 0u != sizeof...(E)) {
             return ::beman::execution::default_domain{};

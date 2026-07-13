@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # MD033/no-inline-html : Inline HTML : https://github.com/DavidAnson/markdownlint/blob/v0.35.0/doc/md033.md
 # Disable inline html linter is needed for <details> <summary>
 MD033: false
