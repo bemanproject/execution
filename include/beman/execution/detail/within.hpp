@@ -142,14 +142,14 @@ struct within_t {
         struct get_state_impl {
 
             template <typename Receiver>
-            auto operator()(auto&& sender, Receiver& receiver) const noexcept(false) {
+            auto operator()(auto&& sender, Receiver&& receiver) const noexcept(false) {
                 auto&& data = ::std::forward<decltype(sender)>(sender).template get<1>();
                 return ::beman::execution::detail::within_t::state<
                     decltype(::std::forward<decltype(data)>(data).template get<0>()),
                     decltype(::std::forward<decltype(data)>(data).template get<1>()),
                     Receiver>(::std::forward<decltype(data)>(data).template get<0>(),
                               ::std::forward<decltype(data)>(data).template get<1>(),
-                              receiver);
+                              std::forward<Receiver>(receiver));
             }
         };
         static constexpr auto get_state{get_state_impl{}};
@@ -263,20 +263,20 @@ struct within_t::state {
         ::beman::execution::detail::completion_storage<work_completions_t> work_completion;
     };
 
+    /// The final receiver of this operation.
+    ::std::remove_cvref_t<Receiver> receiver;
     /// The state needed in various stages of our operation.
     std::variant<enter_state, work_state, exit_state> state_;
-    /// The final receiver of this operation.
-    Receiver& receiver;
 
     /// Constructs `*this` from given arguments.
     template <::beman::execution::sender S, ::beman::execution::sender W>
-    state(S&& scope, W&& work, Receiver& r)
-        : state_(std::in_place_type<enter_state>, ::beman::execution::detail::elide([&]() noexcept {
+    state(S&& scope, W&& work, Receiver&& r)
+        : receiver(std::forward<Receiver>(r)),
+          state_(std::in_place_type<enter_state>, ::beman::execution::detail::elide([&]() noexcept {
                      return enter_state{
                          ::beman::execution::connect(::std::forward<S>(scope), enter_receiver_t{{*this}}),
                          ::std::forward<W>(work)};
-                 })),
-          receiver(r) {}
+                 })) {}
 
     /// Starts the `within` async operation represented by `*this`.
     auto start() noexcept -> void {

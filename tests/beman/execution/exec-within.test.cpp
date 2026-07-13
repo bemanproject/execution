@@ -1,6 +1,9 @@
 // src/beman/execution/tests/exec-within.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <stdexcept>
+#include <string>
+#include <tuple>
 #include <test/execution.hpp>
 #include <test/completion_test.hpp>
 #ifdef BEMAN_HAS_MODULES
@@ -39,7 +42,6 @@ auto tracing_scope(bool& enter_executed, bool& exit_executed) -> test_std::sende
 auto test_trivial_invocation() -> void {
     // Arrange
     bool                  executed{false};
-    constexpr int         expected{13};
     test_std::sender auto scope = empty_scope();
     test_std::sender auto work  = test_std::just() | test_std::then([&executed]() noexcept { executed = true; });
 
@@ -191,7 +193,6 @@ auto test_scope_enter_completes_with_error() -> void {
     bool                  enter_executed{false};
     bool                  exit_executed{false};
     bool                  work_executed{false};
-    int                   resulting_error{0};
     test_std::sender auto exit_sender =
         test_std::just() | test_std::then([&exit_executed]() noexcept { exit_executed = true; });
     test_std::sender auto scope =
