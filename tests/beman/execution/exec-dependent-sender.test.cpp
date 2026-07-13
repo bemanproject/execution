@@ -11,6 +11,8 @@ import beman.execution;
 #include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/then.hpp>
+#include <beman/execution/detail/when_all.hpp>
+#include <beman/execution/detail/when_all_with_variant.hpp>
 #endif
 
 TEST(exec_dependent_sender) {
@@ -26,4 +28,12 @@ TEST(exec_dependent_sender) {
                                                           test_std::read_env(test_std::get_scheduler),
                                                           [](auto sched) noexcept { return test_std::just(sched); }) |
                                                       test_std::then([](auto sched) noexcept {}))>);
+    static_assert(
+        test_std::dependent_sender<decltype(test_std::when_all(test_std::read_env(test_std::get_scheduler)))>);
+    static_assert(test_std::dependent_sender<decltype(test_std::when_all_with_variant(
+                      test_std::read_env(test_std::get_scheduler)))>);
+    static_assert(!test_std::dependent_sender<decltype(test_std::when_all(test_std::just()))>);
+    static_assert(!test_std::dependent_sender<decltype(test_std::when_all_with_variant(test_std::just()))>);
+    static_assert(test_std::dependent_sender<decltype(test_std::when_all(
+                      test_std::just(), test_std::read_env(test_std::get_scheduler)))>);
 }
