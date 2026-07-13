@@ -14,6 +14,7 @@ list(
     exec-associate.test
     exec-awaitable.test
     exec-bulk.test
+    exec-completion-storage.test
     exec-connect.test
     exec-continues-on.test
     exec-dependent-sender.test
