@@ -160,9 +160,9 @@ struct thread_pool_backend : replaceability::parallel_scheduler_backend {
                 const std::size_t n = chunk_count - i; // the count of `bulk_task` which are not enqueued successfully
 
                 guard.unlock();
-                if (n == 1uz) {
+                if (i == 1uz) {
                     cv.notify_one();
-                } else if (n > 1uz) {
+                } else if (i > 1uz) {
                     cv.notify_all();
                 }
 
