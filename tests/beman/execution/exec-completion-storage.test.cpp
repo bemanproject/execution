@@ -7,6 +7,7 @@
 #include <test/completion_test.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail.completion_storage;
 #else
 #include <beman/execution/detail/completion_storage.hpp>
 #endif
