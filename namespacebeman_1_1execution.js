@@ -70,7 +70,7 @@ var namespacebeman_1_1execution =
     [ "connect_t", "namespacebeman_1_1execution.html#a806dab6de1ac6ae4ec22419cd4ea1e11", null ],
     [ "env_of_t", "namespacebeman_1_1execution.html#adbf95c8f3480ba2c1d78b8c612a9f2f7", null ],
     [ "error_types_of_t", "namespacebeman_1_1execution.html#af6f1fa81c64e7dc8ba45c7744cddae76", null ],
-    [ "exit_scope_sender_of_t", "namespacebeman_1_1execution.html#a8b45f66dcc2ae9e406ec09a323c6d4b9", null ],
+    [ "exit_scope_sender_of_t", "namespacebeman_1_1execution.html#aa65379c197caf507f0a53d984db83244", null ],
     [ "forwarding_query_t", "namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6", null ],
     [ "then_t", "namespacebeman_1_1execution.html#a4d128b0eb18329ca6d9dff7068eaf865", null ],
     [ "upon_error_t", "namespacebeman_1_1execution.html#a5edc31fa03580fefdec5ff9de774cd7b", null ],
