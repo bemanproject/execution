@@ -81,6 +81,4 @@ TEST(exec_scope_snd_concepts) {
 
     using t5 = sender<test_std::set_value_t(int), test_std::set_error_t(int), test_std::set_stopped_t()>;
     static_assert(!test_std::enter_scope_sender_in<t5, test_std::env<>>);
-
-    // TODO: use sender<...>
 }

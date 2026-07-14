@@ -7,10 +7,12 @@
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.enter_scope_sender;
+import beman.execution.detail.env;
 import beman.execution.detail.exit_scope_sender_of_t;
 import beman.execution.detail.sender_in;
 #else
 #include <beman/execution/detail/enter_scope_sender.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/exit_scope_sender_of_t.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #endif
@@ -18,7 +20,6 @@ import beman.execution.detail.sender_in;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-template <typename Sender, typename... Env>
 /*!
  * \brief An enter scope sender that can operate in the environment `Env...`.
  * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
@@ -31,9 +32,10 @@ template <typename Sender, typename... Env>
  *     signature is unary, and the type of the value models `exit_sender_in<Env...>`.
  *   - Semantic: The above exit sender undoes the action of the enter scope sender which sent it.
  */
+template <typename Sender, typename Env = ::beman::execution::env<>>
 concept enter_scope_sender_in =
-    ::beman::execution::enter_scope_sender<Sender> && ::beman::execution::sender_in<Sender, Env...> &&
-    requires { typename ::beman::execution::exit_scope_sender_of_t<Sender, Env...>; };
+    ::beman::execution::enter_scope_sender<Sender> && ::beman::execution::sender_in<Sender, Env> &&
+    requires { typename ::beman::execution::exit_scope_sender_of_t<Sender, Env>; };
 } // namespace beman::execution
 
 // ----------------------------------------------------------------------------
