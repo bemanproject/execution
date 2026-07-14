@@ -14,51 +14,20 @@ import std;
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.completion_signatures;
-import beman.execution.detail.connect;
-import beman.execution.detail.env;
 import beman.execution.detail.exit_scope_sender;
-import beman.execution.detail.nothrow_callable;
-import beman.execution.detail.receiver;
+import beman.execution.detail.nothrow_connectable;
 import beman.execution.detail.sender_in;
 import beman.execution.detail.set_value;
-import beman.execution.detail.unreachable;
 #else
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
-#include <beman/execution/detail/connect.hpp>
-#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/exit_scope_sender.hpp>
-#include <beman/execution/detail/nothrow_callable.hpp>
-#include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/nothrow_connectable.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_value.hpp>
-#include <beman/execution/detail/unreachable.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
-
-namespace beman::execution::detail {
-
-/// A receiver with environment `Env` that accepts every possible completion.
-template <typename Env = ::beman::execution::env<>>
-struct generic_receiver {
-    using receiver_concept = ::beman::execution::receiver_tag;
-
-    template <typename... T>
-    void set_value(T&&...) && noexcept {}
-    template <typename E>
-    void set_error(E&&) && noexcept {}
-    void set_stopped() && noexcept {}
-
-    auto get_env() const noexcept -> Env { ::beman::execution::detail::unreachable(); }
-};
-
-/// A sender that doesn't throw when connected to a receiver.
-template <typename Sender, typename... Env>
-concept nothrow_connectable =
-    ::beman::execution::detail::nothrow_callable<::beman::execution::connect_t, Sender, generic_receiver<Env...>>;
-
-} // namespace beman::execution::detail
 
 namespace beman::execution {
 /*!

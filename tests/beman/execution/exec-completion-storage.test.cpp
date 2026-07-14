@@ -138,14 +138,23 @@ auto test_store_with_complex_signatures() -> void {
                                                              // signature, plus some overhead for the variant.
 }
 
+/// Type that throws on move after a certain number of moves.
 struct throw_on_move {
     int x;
-    throw_on_move(int xx) : x(xx) {}
-    throw_on_move(throw_on_move&& other) : x(other.x) { throw std::runtime_error("throw_on_move"); }
+    int iteration{1};
+
+    throw_on_move(int xx, int i = 1) : x(xx), iteration(i) {}
+    throw_on_move(throw_on_move&& other) : x(other.x), iteration(other.iteration) {
+        if (--iteration <= 0) {
+            throw std::runtime_error("throw_on_move");
+        }
+    }
     throw_on_move(const throw_on_move&) = delete;
 };
 
-auto test_throw_on_move_after_complete() -> void {
+/// Checks that when we throw when storing the completion, we store a `set_error` completion with the current
+/// exception.
+auto test_throw_on_move_when_storing() -> void {
     // Arrange
     using sigs_t    = test_std::completion_signatures<test_std::set_value_t(throw_on_move),
                                                       test_std::set_error_t(std::exception_ptr)>;
@@ -175,10 +184,42 @@ auto test_throw_on_move_after_complete() -> void {
     ASSERT(executed);
 }
 
+/// Checks that when we throw when completing, we send a `set_error` completion with the current exception.
+auto test_throw_on_move_when_completing() -> void {
+    // Arrange
+    using sigs_t    = test_std::completion_signatures<test_std::set_value_t(throw_on_move),
+                                                      test_std::set_error_t(std::exception_ptr)>;
+    using storage_t = test_detail::completion_storage<sigs_t>;
+    storage_t sut;
+    bool      executed{false};
+    auto      recv = func_receiver{[&](auto tag, auto data) noexcept {
+        ASSERT((std::same_as<decltype(tag), test_std::set_error_t>));
+        if constexpr (std::is_same_v<std::remove_cvref_t<decltype(data)>, std::exception_ptr>) {
+            try {
+                std::rethrow_exception(data);
+                ASSERT(false);
+            } catch (const std::runtime_error& e) {
+                ASSERT(std::string(e.what()) == "throw_on_move");
+            }
+        } else {
+            ASSERT(false);
+        }
+        executed = true;
+    }};
+
+    // Act
+    sut.store(test_std::set_value_t{}, throw_on_move{42, 2}); // will throw on the second move
+    std::move(sut).complete(std::move(recv));
+
+    // Assert
+    ASSERT(executed);
+}
+
 TEST(exec_completion_storage) {
     test_store_trivial_set_value();
     test_store_trivial_set_error();
     test_store_trivial_set_stopped();
     test_store_with_complex_signatures();
-    test_throw_on_move_after_complete();
+    test_throw_on_move_when_storing();
+    test_throw_on_move_when_completing();
 }

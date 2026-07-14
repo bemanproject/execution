@@ -93,6 +93,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/forwarding_query.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/fwd_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/gather_signatures.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/generic_receiver.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_allocator.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_await_completion_adaptor.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_awaiter.hpp
@@ -146,6 +147,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/non_assignable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nostopstate.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nothrow_callable.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/nothrow_connectable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/notify.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/on.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/on_stop_request.hpp
@@ -311,6 +313,7 @@ if(BEMAN_USE_MODULES)
                     forwarding_query.cppm
                     fwd_env.cppm
                     gather_signatures.cppm
+                    generic_receiver.cppm
                     get_allocator.cppm
                     get_await_completion_adaptor.cppm
                     get_awaiter.cppm
@@ -364,6 +367,7 @@ if(BEMAN_USE_MODULES)
                     non_assignable.cppm
                     nostopstate.cppm
                     nothrow_callable.cppm
+                    nothrow_connectable.cppm
                     on_stop_request.cppm
                     on.cppm
                     operation_state_task.cppm

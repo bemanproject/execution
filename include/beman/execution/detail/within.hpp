@@ -97,7 +97,7 @@ struct within_t {
     }
 
   private:
-    /// Helper that yield the signatures of the `within` sender `Sender` when used with the environment `Env`.
+    /// Helper that yields the signatures of the `within` sender `Sender` when used with the environment `Env`.
     template <typename Sender, typename... Env>
     struct get_signatures;
     template <typename Sender>
