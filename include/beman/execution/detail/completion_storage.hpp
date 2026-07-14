@@ -93,8 +93,7 @@ struct variant_for_signatures<::beman::execution::completion_signatures<Sigs...>
                             // Make a copy, in case the tuple is destroyed by the completion call.
                             tuple_type{::std::move(tuple_data)});
                     }
-                }
-                catch (...) {
+                } catch (...) {
                     if constexpr (!std::is_nothrow_constructible_v<tuple_type, tuple_type&&>) {
                         ::beman::execution::set_error(::std::forward<Receiver>(receiver), ::std::current_exception());
                     } else {

@@ -27,7 +27,7 @@ struct elide {
     using result_t = std::invoke_result_t<F>;
 
     /// Constructs the elision wrapper from callable `f`.
-    elide(F&& f) noexcept : f_(::std::forward<F>(f)) {}
+    elide(F&& f) noexcept(noexcept(F(::std::forward<F>(f)))) : f_(::std::forward<F>(f)) {}
 
     /// Evaluates the callable given at construction and returns the result, eliding the move construction of the
     /// result.
