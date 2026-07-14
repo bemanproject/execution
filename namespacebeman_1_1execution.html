@@ -221,6 +221,18 @@ Classes</h2></td></tr>
 Concepts</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1dependent__sender.html">dependent_sender</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1enter__scope__sender.html">enter_scope_sender</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sender corresponding to the action of entering a scope. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1enter__scope__sender__in.html">enter_scope_sender_in</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An enter scope sender that can operate in the environment <code>Env...</code>. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1exit__scope__sender.html">exit_scope_sender</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A sender that does not throw when decay-copied or moved. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1exit__scope__sender__in.html">exit_scope_sender_in</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An exit scope sender that can operate in the environment <code>Env...</code>. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1operation__state.html">operation_state</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptbeman_1_1execution_1_1receiver.html">receiver</a></td></tr>
@@ -289,6 +301,10 @@ template&lt;typename Sender , typename Env  = ::beman::execution::env&lt;&gt;, t
 <tr class="memitem:af6f1fa81c64e7dc8ba45c7744cddae76"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>error_types_of_t</b> = ::beman::execution::detail::gather_signatures&lt;<a class="el" href="structbeman_1_1execution_1_1set__error__t.html">::beman::execution::set_error_t</a>, <a class="el" href="namespacebeman_1_1execution.html#a9ae9faece7cd1ecdd77f800df873d081">::beman::execution::completion_signatures_of_t</a>&lt; Sender, Env &gt;, ::std::type_identity_t, Variant &gt;</td></tr>
 <tr class="memdesc:af6f1fa81c64e7dc8ba45c7744cddae76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias to get error types for a sender. <br /></td></tr>
 <tr class="separator:af6f1fa81c64e7dc8ba45c7744cddae76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b45f66dcc2ae9e406ec09a323c6d4b9"><td class="memTemplParams" colspan="2">template&lt;::beman::execution::enter_scope_sender Sender, typename... Env&gt; </td></tr>
+<tr class="memitem:a8b45f66dcc2ae9e406ec09a323c6d4b9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#a8b45f66dcc2ae9e406ec09a323c6d4b9">exit_scope_sender_of_t</a> = typename ::beman::execution::detail::extract_exit_scope_sender&lt;<a class="el" href="namespacebeman_1_1execution.html#a9ae9faece7cd1ecdd77f800df873d081">::beman::execution::completion_signatures_of_t</a>&lt; Sender, Env... &gt;, Env... &gt;::type</td></tr>
+<tr class="memdesc:a8b45f66dcc2ae9e406ec09a323c6d4b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the type of exit scope sender which an asynchronous operation formed from <code>Sender</code> in <code>Env...</code> yield on completion.  <br /></td></tr>
+<tr class="separator:a8b45f66dcc2ae9e406ec09a323c6d4b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26102229c0893bcb416cb2acb6b9fed6"><td class="memItemLeft" align="right" valign="top"><a id="a26102229c0893bcb416cb2acb6b9fed6" name="a26102229c0893bcb416cb2acb6b9fed6"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>forwarding_query_t</b> = beman::execution::detail::forwarding_query_t</td></tr>
 <tr class="memdesc:a26102229c0893bcb416cb2acb6b9fed6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of the forwarding_query customization point object. <br /></td></tr>
@@ -411,6 +427,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>when_all_t</b> = ::b
 <tr class="memitem:a207ac724cb97c8dead21df1bc4be1ee2"><td class="memItemLeft" align="right" valign="top"><a id="a207ac724cb97c8dead21df1bc4be1ee2" name="a207ac724cb97c8dead21df1bc4be1ee2"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>when_all_with_variant_t</b> = ::beman::execution::detail::when_all_with_variant_t</td></tr>
 <tr class="separator:a207ac724cb97c8dead21df1bc4be1ee2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af17556a95ac8b1c8af886e579e046139"><td class="memItemLeft" align="right" valign="top"><a id="af17556a95ac8b1c8af886e579e046139" name="af17556a95ac8b1c8af886e579e046139"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>within_t</b> = ::beman::execution::detail::within_t</td></tr>
+<tr class="memdesc:af17556a95ac8b1c8af886e579e046139"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>within_t</code> is the type of <code>within</code>. <br /></td></tr>
+<tr class="separator:af17556a95ac8b1c8af886e579e046139"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae08b2d0f0e8241817d5e513308337252"><td class="memItemLeft" align="right" valign="top"><a id="ae08b2d0f0e8241817d5e513308337252" name="ae08b2d0f0e8241817d5e513308337252"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>write_env_t</b> = ::beman::execution::detail::write_env_t</td></tr>
 <tr class="separator:ae08b2d0f0e8241817d5e513308337252"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -645,6 +665,9 @@ constexpr ::beman::execution::when_all_t&#160;</td><td class="memItemRight" vali
 <tr class="memitem:a279072c2c153dc5cda04612e142ae1e6"><td class="memItemLeft" align="right" valign="top"><a id="a279072c2c153dc5cda04612e142ae1e6" name="a279072c2c153dc5cda04612e142ae1e6"></a>
 constexpr ::beman::execution::when_all_with_variant_t&#160;</td><td class="memItemRight" valign="bottom"><b>when_all_with_variant</b> {}</td></tr>
 <tr class="separator:a279072c2c153dc5cda04612e142ae1e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5c9cd091150876239546a8151d108b4"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution.html#af17556a95ac8b1c8af886e579e046139">::beman::execution::within_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution.html#ad5c9cd091150876239546a8151d108b4">within</a> {}</td></tr>
+<tr class="memdesc:ad5c9cd091150876239546a8151d108b4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>within</code> is a sender adaptor that runs a work sender within the scope of a scope sender.  <br /></td></tr>
+<tr class="separator:ad5c9cd091150876239546a8151d108b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2defa838a747e82bc632f5b0fdb4d6cf"><td class="memItemLeft" align="right" valign="top"><a id="a2defa838a747e82bc632f5b0fdb4d6cf" name="a2defa838a747e82bc632f5b0fdb4d6cf"></a>
 constexpr write_env_t&#160;</td><td class="memItemRight" valign="bottom"><b>write_env</b> {}</td></tr>
 <tr class="separator:a2defa838a747e82bc632f5b0fdb4d6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -655,7 +678,27 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Namespace for asynchronous operations and their vocabulary. </p>
 <p>The <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a> namespace contains various components for accessing asynchronous operations. </p>
-</div><h2 class="groupheader">Variable Documentation</h2>
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="a8b45f66dcc2ae9e406ec09a323c6d4b9" name="a8b45f66dcc2ae9e406ec09a323c6d4b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b45f66dcc2ae9e406ec09a323c6d4b9">&#9670;&#160;</a></span>exit_scope_sender_of_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;::beman::execution::enter_scope_sender Sender, typename... Env&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacebeman_1_1execution.html#a8b45f66dcc2ae9e406ec09a323c6d4b9">beman::execution::exit_scope_sender_of_t</a> = typedef typename ::beman::execution::detail:: extract_exit_scope_sender&lt;<a class="el" href="namespacebeman_1_1execution.html#a9ae9faece7cd1ecdd77f800df873d081">::beman::execution::completion_signatures_of_t</a>&lt;Sender, Env...&gt;, Env...&gt;::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Represents the type of exit scope sender which an asynchronous operation formed from <code>Sender</code> in <code>Env...</code> yield on completion. </p>
+<p>This looks at the completion signatures of <code>Sender</code> in <code>Env...</code> and finds the unique value completion signature. If there is no value completion signature, or if there are two or more value completion signatures, this type is not defined. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
 <a id="a4fbf35f4823d5db0af863feee680e072" name="a4fbf35f4823d5db0af863feee680e072"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4fbf35f4823d5db0af863feee680e072">&#9670;&#160;</a></span>connect</h2>
 
@@ -1106,6 +1149,32 @@ int main() {
     assert(*result == std::tuple(true));
 }
 </pre> 
+</div>
+</div>
+<a id="ad5c9cd091150876239546a8151d108b4" name="ad5c9cd091150876239546a8151d108b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5c9cd091150876239546a8151d108b4">&#9670;&#160;</a></span>within</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution.html#af17556a95ac8b1c8af886e579e046139">::beman::execution::within_t</a> beman::execution::within {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>within</code> is a sender adaptor that runs a work sender within the scope of a scope sender. </p>
+<p>The <code>within</code> sender adaptor takes two senders: a scope sender and a work sender. It runs the work sender within the context of the scope.</p>
+<p>Usually forwards the completion of the work sender, but may also complete with an error or stopped signal if the scope sender completes with an error or is stopped. </p>
+
 </div>
 </div>
 </div><!-- contents -->

@@ -3,6 +3,10 @@ var concepts =
     [ "beman", "namespacebeman.html", [
       [ "execution", "namespacebeman_1_1execution.html", [
         [ "dependent_sender", "conceptbeman_1_1execution_1_1dependent__sender.html", null ],
+        [ "enter_scope_sender", "conceptbeman_1_1execution_1_1enter__scope__sender.html", null ],
+        [ "enter_scope_sender_in", "conceptbeman_1_1execution_1_1enter__scope__sender__in.html", null ],
+        [ "exit_scope_sender", "conceptbeman_1_1execution_1_1exit__scope__sender.html", null ],
+        [ "exit_scope_sender_in", "conceptbeman_1_1execution_1_1exit__scope__sender__in.html", null ],
         [ "operation_state", "conceptbeman_1_1execution_1_1operation__state.html", null ],
         [ "receiver", "conceptbeman_1_1execution_1_1receiver.html", null ],
         [ "receiver_of", "conceptbeman_1_1execution_1_1receiver__of.html", null ],
