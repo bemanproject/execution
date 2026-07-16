@@ -21,7 +21,7 @@ import beman.execution.detail.with_await_transform;
 namespace beman::execution::detail {
 /*!
  * \brief A helper promise type with an associated environment
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Env> //-dk:TODO detail export

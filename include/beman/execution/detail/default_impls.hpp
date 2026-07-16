@@ -39,7 +39,7 @@ import beman.execution.detail.start;
 namespace beman::execution::detail {
 /*!
  * \brief Helper type providing default implementations for basic_sender
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 struct default_impls {

@@ -40,7 +40,7 @@ import beman.execution.detail.suspend_complete;
 namespace beman::execution::detail {
 /*!
  * \brief A helper template used determine the completion signature for type T which may be void
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename T>
@@ -49,7 +49,7 @@ struct awaiter_set_value {
 };
 /*!
  * \brief Specialization for awaiter_set_value when the type is void
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <>
@@ -59,7 +59,7 @@ struct awaiter_set_value<void> {
 
 /*!
  * \brief A helper template used to determine the completion signature matching an awaiter
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Awaiter, typename Receiver>
@@ -72,7 +72,7 @@ using awaiter_completion_signatures = ::beman::execution::completion_signatures<
 
 /*!
  * \brief A helper function used to connect an awaiter to a receiver
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Awaiter, ::beman::execution::receiver Receiver>

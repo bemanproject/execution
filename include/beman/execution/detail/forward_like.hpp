@@ -65,7 +65,7 @@ auto own_forward_like(U&& u) noexcept -> decltype(auto) {
 
 /*!
  * \brief Helper function to forward a subobject (in case the standard library version is unavailable)
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename T, typename U>

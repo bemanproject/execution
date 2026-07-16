@@ -60,7 +60,7 @@ inline constexpr sub_apply_t sub_apply{};
 
 /*!
  * \brief Class template used to factor out common sender implementation for library senders.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Tag, typename Data, typename... Child>

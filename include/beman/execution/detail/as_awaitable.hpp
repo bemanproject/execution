@@ -79,7 +79,7 @@ concept directly_awaitable = requires {
 namespace beman::execution {
 /*!
  * \brief Turn an entity, e.g., a sender, into an awaitable.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 struct as_awaitable_t {
     template <typename Expr, typename Promise>

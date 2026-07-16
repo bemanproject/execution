@@ -13,6 +13,8 @@ target_sources(
             TYPE HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}/include
             FILES
+                ${PROJECT_SOURCE_DIR}/include/beman/execution.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/stop_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/execution.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/functional.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/stop_token.hpp

@@ -21,7 +21,7 @@ import std;
 namespace beman::execution::detail {
 /*!
  * \brief Turn an error into a suitable exception_ptr.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Error>

@@ -6,7 +6,7 @@
 
 // ----------------------------------------------------------------------------
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 namespace tst {
 namespace ex = beman::execution;
 }

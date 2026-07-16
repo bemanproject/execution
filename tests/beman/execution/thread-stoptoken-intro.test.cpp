@@ -7,7 +7,7 @@
 import beman.execution;
 #else
 #include <beman/execution/detail/immovable.hpp>
-#include <beman/execution/stop_token.hpp>
+#include <beman/stop_token.hpp>
 #endif
 
 namespace {

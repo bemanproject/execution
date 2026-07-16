@@ -13,7 +13,7 @@
 import beman.execution;
 import beman.execution.detail;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 namespace ex = ::beman::execution;

@@ -11,7 +11,7 @@
 namespace beman::execution {
 /*!
  * \brief Tag type to indicate a class is a scheduler.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 struct scheduler_tag {};
 

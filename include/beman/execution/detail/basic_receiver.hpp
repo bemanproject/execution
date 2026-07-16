@@ -45,7 +45,7 @@ import beman.execution.detail.valid_specialization;
 namespace beman::execution::detail {
 /*!
  * \brief Class template used as receiver for child completions for library senders.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Sender, typename Receiver, typename Index>

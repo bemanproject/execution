@@ -100,7 +100,7 @@ using just_stopped_t = ::beman::execution::detail::just_t<::beman::execution::se
 
 /*!
  * \brief <code>just(_arg_...)</code> yields a sender completing with <code>set_value_t(_Arg_...)</code>
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * `just` is a callable object of type `just_t`. Invoking <code>just(_arg_...)</code> yields a sender which stores its
@@ -135,7 +135,7 @@ using just_stopped_t = ::beman::execution::detail::just_t<::beman::execution::se
  * (an `optional` is returned to indicate cancellation).
  *
  * <pre example="doc_just.cpp">
- * #include <beman/execution/execution.hpp>
+ * #include <beman/execution.hpp>
  * #include <cassert>
  * #include <string>
  * using namespace std::string_literals;
@@ -151,7 +151,7 @@ inline constexpr ::beman::execution::just_t just{};
 
 /*!
  * \brief <code>just_error(_error_)</code> yields a sender completing with <code>set_error_t(_Error_)</code>
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * `just_error` is a callable object of type `just_error_t`. Invoking <code>just_error(_error_)</code> yields a sender
@@ -189,7 +189,7 @@ inline constexpr ::beman::execution::just_t just{};
  * checked after waiting for the result in `sync_wait`.
  *
  * <pre example="doc_just_error.cpp">
- * #include <beman/execution/execution.hpp>
+ * #include <beman/execution.hpp>
  * #include <system_error>
  * #include <cassert>
  * namespace ex = beman::execution;
@@ -209,7 +209,7 @@ inline constexpr ::beman::execution::just_error_t just_error{};
 
 /*!
  * \brief <code>just_stopped()</code> yields a sender completing with <code>set_stopped_t()</code>
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * `just_stopped` is a callable object of type `just_stopped_t`. Invoking <code>just_stopped()</code> yields a sender
@@ -243,7 +243,7 @@ inline constexpr ::beman::execution::just_error_t just_error{};
  * in `sync_wait`.
  *
  * <pre example="doc_just_error.cpp">
- * #include <beman/execution/execution.hpp>
+ * #include <beman/execution.hpp>
  * #include <system_error>
  * #include <cassert>
  * namespace ex = beman::execution;

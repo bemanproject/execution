@@ -25,7 +25,7 @@ import beman.execution.detail.set_value;
 namespace beman::execution::detail {
 /*!
  * \brief A helper concept used to determine if a type is one of the completion tags.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Tag>

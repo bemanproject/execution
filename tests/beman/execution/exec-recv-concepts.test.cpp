@@ -9,7 +9,7 @@ import beman.execution.detail;
 #include <beman/execution/detail/receiver_of.hpp>
 #include <beman/execution/detail/has_completions.hpp>
 #include <beman/execution/detail/valid_completion_for.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

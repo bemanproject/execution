@@ -1,4 +1,4 @@
-// include/beman/execution/execution.hpp -*-C++-*-
+// include/beman/execution.hpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION_EXECUTION

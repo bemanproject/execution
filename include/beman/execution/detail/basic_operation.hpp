@@ -40,7 +40,7 @@ import beman.execution.detail.valid_specialization;
 namespace beman::execution::detail {
 /*!
  * \brief Class template use to factor out common operation state needs.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 //-dk:TODO the export below shouldn't be needed, but MSVC++ seems to require it (2026-02-01)

@@ -17,7 +17,7 @@ import std;
 namespace beman::execution {
 /*!
  * \brief Type of the customization point object for error completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 struct set_error_t {
     template <typename Receiver, typename Error>
@@ -47,7 +47,7 @@ struct set_error_t {
 
 /*!
  * \brief Customization point object for error completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 inline constexpr set_error_t set_error{};
 } // namespace beman::execution

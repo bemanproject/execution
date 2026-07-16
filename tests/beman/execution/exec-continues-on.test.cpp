@@ -7,7 +7,7 @@
 import beman.execution;
 #else
 #include <beman/execution/detail/continues_on.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

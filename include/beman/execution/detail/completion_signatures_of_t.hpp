@@ -22,7 +22,7 @@ import beman.execution.detail.sender_in;
 namespace beman::execution {
 /*!
  * \brief Alias to access the completion signatures of a sender
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 template <typename Sender, typename... Env>
     requires ::beman::execution::sender_in<Sender, Env...>

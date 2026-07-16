@@ -23,7 +23,7 @@ import beman.execution.detail.sender;
 namespace beman::execution {
 /*!
  * \brief Function used to transform a sender and its arguments for a domain.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
     requires requires(Domain domain, Tag tag, Sender&& sender, Args&&... args) {
@@ -36,7 +36,7 @@ constexpr auto apply_sender(Domain domain, Tag, Sender&& sender, Args&&... args)
 
 /*!
  * \brief Default function used to transform a second and its arguments.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 template <typename Domain, typename Tag, ::beman::execution::sender Sender, typename... Args>
     requires(not requires(Domain domain, Tag tag, Sender&& sender, Args&&... args) {

@@ -32,7 +32,7 @@ import beman.execution.detail.set_value;
 namespace beman::execution {
 /*!
  * \brief An exit scope sender that can operate in the environment `Env...`.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * Requirements:

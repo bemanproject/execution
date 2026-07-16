@@ -20,10 +20,10 @@ work.
 The components for `std::execution` are declared in the header
 `<execution>`.  This particular implementation implements the
 cmponents in namespace `beman::execution` declared in the header
-`<beman/execution/execution.hpp>`:
+`<beman/execution.hpp>`:
 
 ```cpp
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #include <iostream>
 #include <string>
 #include <tuple>

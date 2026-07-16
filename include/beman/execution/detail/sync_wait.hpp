@@ -138,7 +138,7 @@ namespace beman::execution {
 using sync_wait_t = ::beman::execution::detail::sync_wait_t;
 /*!
  * \brief <code>sync_wait(_sender_)</code> starts <code>_sender_</code> and waits for its completion.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * `sync_wait` is a callable object of type `sync_wait_t`. Invoking
@@ -173,7 +173,7 @@ using sync_wait_t = ::beman::execution::detail::sync_wait_t;
  * of the program represented by <code>_sender_</code>.
  *
  * <pre example="doc-sync_wait.cpp">
- * #include <beman/execution/execution.hpp>
+ * #include <beman/execution.hpp>
  * #include <cassert>
  *
  * int main() {

@@ -28,7 +28,7 @@ import beman.execution.detail.sender;
 namespace beman::execution::detail {
 /*!
  * \brief Auxiliary concept used to break cycle for scheduler concept.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  * \concept almost_scheduler
  */

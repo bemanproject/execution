@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // ----------------------------------------------------------------------------
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #include <iostream>
 #include "tst.hpp"
 namespace ex = beman::execution;

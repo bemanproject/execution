@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 
 // ----------------------------------------------------------------------------
 

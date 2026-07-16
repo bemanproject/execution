@@ -17,7 +17,7 @@ import std;
 namespace beman::execution {
 /*!
  * \brief Type of the customization point object for successful completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 struct set_value_t {
     template <typename Receiver, typename... Args>
@@ -45,7 +45,7 @@ struct set_value_t {
 /*!
  * \var set_value
  * \brief Customization point object for successful completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 inline constexpr set_value_t set_value{};
 } // namespace beman::execution

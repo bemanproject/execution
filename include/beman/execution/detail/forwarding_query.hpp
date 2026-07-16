@@ -18,7 +18,7 @@ import std;
 namespace beman::execution::detail {
 /*!
  * \brief Actual implementation of the forwarding_query customization point object
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 struct forwarding_query_t {
@@ -39,12 +39,12 @@ struct forwarding_query_t {
 namespace beman::execution {
 /*!
  * \brief Type of the forwarding_query customization point object
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 using forwarding_query_t = beman::execution::detail::forwarding_query_t;
 /*!
  * \brief The customization point object to determine whether queries should be forwarded
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * The `constexpr` call `forwarding_query(q)` determines whether the query `q` passed

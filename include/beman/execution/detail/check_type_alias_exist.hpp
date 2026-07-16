@@ -11,7 +11,7 @@
 namespace beman::execution::detail {
 /*!
  * \brief Auxiliary class template used to detect whether a type alias exist within a class.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <template <typename> class>

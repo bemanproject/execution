@@ -17,7 +17,7 @@ import std;
 namespace beman::execution::detail {
 /*!
  * \brief Helper concept to determine if the first argument decays to the second argument
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename From, typename To>

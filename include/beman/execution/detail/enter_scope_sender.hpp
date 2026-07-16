@@ -23,7 +23,7 @@ namespace beman::execution {
 template <typename Sender>
 /*!
  * \brief Sender corresponding to the action of entering a scope.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 concept enter_scope_sender = ::beman::execution::sender<Sender>;
 } // namespace beman::execution

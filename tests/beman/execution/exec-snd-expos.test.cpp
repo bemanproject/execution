@@ -35,7 +35,7 @@ import beman.execution.detail;
 #include <beman/execution/detail/basic_receiver.hpp>
 #include <beman/execution/detail/completion_tag.hpp>
 #include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
 
 #include <beman/execution/detail/suppress_push.hpp>

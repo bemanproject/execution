@@ -17,7 +17,7 @@ namespace beman::execution::detail {
 //-dk:TODO thoroughly test the concept
 /*!
  * \brief Helper concept to determine if the result of decaying two types results in the same type
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename T0, typename T1>

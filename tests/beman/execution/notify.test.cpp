@@ -8,7 +8,7 @@ import beman.execution;
 import beman.execution.detail.notify;
 #else
 #include <beman/execution/detail/notify.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

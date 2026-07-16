@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_HANDLE
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_HANDLE
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #include <cassert>
 #include <coroutine>
 #include <memory>

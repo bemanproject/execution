@@ -29,7 +29,7 @@ import beman.execution.detail.transform_sender;
 namespace beman::execution::detail {
 /*!
  * \brief The actual implementation of the connect customization point type
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 //-dk:TODO this seems to needed for MSVC++ (2026-01-30)
@@ -89,12 +89,12 @@ struct connect_t {
 namespace beman::execution {
 /*!
  * \brief Type of the connect customization point object.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 using connect_t = beman::execution::detail::connect_t;
 /*!
  * \brief Customization point object used to connect a sender and a receiver.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * `connect(sender, receiver)` returns the result of calling `sender.connect(receiver)`.

@@ -22,7 +22,7 @@ import beman.execution.detail.completion_signature;
 namespace beman::execution {
 /*!
  * \brief Class template used to a specify a list of completion signatures
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * This class template is primarily used for type computations and objects of
