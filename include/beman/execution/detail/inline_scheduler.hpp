@@ -59,6 +59,8 @@ struct inline_scheduler {
             -> state<Rcvr> {
             return {::std::forward<Rcvr>(receiver)};
         }
+
+        inline_scheduler query(const ::beman::execution::get_scheduler_t&) const noexcept { return {}; }
     };
 
     static constexpr auto schedule() noexcept -> sender { return {}; }

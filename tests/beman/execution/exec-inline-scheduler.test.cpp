@@ -148,6 +148,9 @@ auto test_sender_env_is_inline_attrs() {
     auto sndr  = test_std::schedule(test_std::inline_scheduler{});
     auto attrs = test_std::get_env(sndr);
     static_assert(std::same_as<decltype(attrs), test_detail::inline_attrs<test_std::set_value_t>>);
+
+    auto sched = test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), sndr);
+    static_assert(std::same_as<decltype(sched), test_std::inline_scheduler>);
 }
 
 auto test_inline_attrs_completion_scheduler() {
