@@ -8,8 +8,8 @@ This page provides a series of examples showing how to use the
 <details>
 <summary>`"Hello, world"` - synchronous using asynchronous components</summary>
 
-Code: [`examples/intro-1-hello-world.cpp`]()
-@include examples/intro-1-hello-world.cpp
+Code: [`examples/intro_1_hello_world.cpp`]()
+@include examples/intro_1_hello_world.cpp
 
 The first example is a very complicated way to a version of `"Hello,
 world"`: it uses components for dealing with asynchronous work to
@@ -126,7 +126,7 @@ The components used in this example do all of that synchronously:
 <details>
 <summary>`"Hello, async"` - a simple asynchronous example</summary>
 
-Code: [`examples/intro-2-hello-async.cpp`]()
-@include examples/intro-2-hello-async.cpp
+Code: [`examples/intro_2_hello_async.cpp`]()
+@include examples/intro_2_hello_async.cpp
 
 </details>

@@ -1,4 +1,4 @@
-// examples/intro-5-consumer.cpp                                      -*-C++-*-
+// examples/intro_5_consumer.cpp                                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution/detail/suppress_push.hpp>

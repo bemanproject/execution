@@ -1,4 +1,4 @@
-// examples/sender-demo.cpp                                           -*-C++-*-
+// examples/sender_demo.cpp                                           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <iostream>

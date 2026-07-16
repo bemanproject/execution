@@ -1,4 +1,4 @@
-// examples/doc-just.cpp                                              -*-C++-*-
+// examples/doc_just.cpp                                              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <cassert>

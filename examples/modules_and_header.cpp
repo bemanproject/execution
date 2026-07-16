@@ -1,4 +1,4 @@
-// examples/modules-and-header.cpp                                    -*-C++-*-
+// examples/modules_and_header.cpp                                    -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <tuple>

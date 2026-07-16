@@ -134,7 +134,7 @@ using just_stopped_t = ::beman::execution::detail::just_t<::beman::execution::se
  * `tuple` containing the value copied/moved from the original arguments
  * (an `optional` is returned to indicate cancellation).
  *
- * <pre example="doc-just.cpp">
+ * <pre example="doc_just.cpp">
  * #include <beman/execution/execution.hpp>
  * #include <cassert>
  * #include <string>
@@ -188,7 +188,7 @@ inline constexpr ::beman::execution::just_t just{};
  * the expected code was produced and also sets the flag `had_error` indicating it was called at all. This flag is
  * checked after waiting for the result in `sync_wait`.
  *
- * <pre example="doc-just_error.cpp">
+ * <pre example="doc_just_error.cpp">
  * #include <beman/execution/execution.hpp>
  * #include <system_error>
  * #include <cassert>
@@ -242,7 +242,7 @@ inline constexpr ::beman::execution::just_error_t just_error{};
  * was called at all. This flag is checked after waiting for the result
  * in `sync_wait`.
  *
- * <pre example="doc-just_error.cpp">
+ * <pre example="doc_just_error.cpp">
  * #include <beman/execution/execution.hpp>
  * #include <system_error>
  * #include <cassert>

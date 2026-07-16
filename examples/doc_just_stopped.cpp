@@ -1,4 +1,4 @@
-// examples/doc-just_stopped.cpp                                      -*-C++-*-
+// examples/doc_just_stopped.cpp                                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <system_error>

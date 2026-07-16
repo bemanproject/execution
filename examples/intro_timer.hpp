@@ -1,4 +1,4 @@
-// examples/intro-timer.hpp                                           -*-C++-*-
+// examples/intro_timer.hpp                                           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_EXAMPLES_INTRO_TIMER

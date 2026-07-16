@@ -1,4 +1,4 @@
-// examples/when_all-cancel.cpp                                       -*-C++-*-
+// examples/when_all_cancel.cpp                                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <exception>
