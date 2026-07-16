@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beman::execution: intro-examples</title>
+<title>beman::execution: intro_examples</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('md_docs_intro_examples.html',''); init
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">intro-examples </div></div>
+  <div class="headertitle"><div class="title">intro_examples </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="autotoc_md1"></a>
@@ -107,7 +107,7 @@ Introduction by Example</h1>
 <summary >
 <code>"Hello, world"</code> - synchronous using asynchronous components</summary>
 <p></p>
-<p>Code: [<code>examples/intro-1-hello-world.cpp</code>]() </p><div class="fragment"><div class="line"><span class="comment">// examples/intro-1-hello-world.cpp                                   -*-C++-*-</span></div>
+<p>Code: [<code>examples/intro_1_hello_world.cpp</code>]() </p><div class="fragment"><div class="line"><span class="comment">// examples/intro_1_hello_world.cpp                                   -*-C++-*-</span></div>
 <div class="line"><span class="comment">// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception</span></div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -118,14 +118,14 @@ Introduction by Example</h1>
 <div class="line"><span class="preprocessor">#ifdef BEMAN_HAS_MODULES</span></div>
 <div class="line"><span class="keyword">import</span> <a class="code hl_namespace" href="namespacebeman.html">beman</a>.<a class="code hl_namespace" href="namespacebeman_1_1execution.html">execution</a>;</div>
 <div class="line"><span class="preprocessor">#else</span></div>
-<div class="line"><span class="preprocessor">#include &lt;beman/execution/execution.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;beman/execution.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">ex</a> = ::beman::execution;</div>
 <div class="line"><span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><span class="comment">// Please see the explanation in docs/intro-examples.md for an explanation.</span></div>
+<div class="line"><span class="comment">// Please see the explanation in docs/intro_examples.md for an explanation.</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    <span class="comment">// clang-format off</span></div>
@@ -148,8 +148,8 @@ Introduction by Example</h1>
 <div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine.hpp:56</div></div>
 </div><!-- fragment --><p>The first example is a very complicated way to a version of <code>"Hello,
 world"</code>: it uses components for dealing with asynchronous work to synchronously produce the result. The intention is to show a basic use of some involved components to build up a feeling of how things work.</p>
-<p>The components for <code>std::execution</code> are declared in the header <code>&lt;execution&gt;</code>. This particular implementation implements the cmponents in namespace <code><a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a></code> declared in the header <code>&lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;</code>:</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;beman/execution/execution.hpp&gt;</span></div>
+<p>The components for <code>std::execution</code> are declared in the header <code>&lt;execution&gt;</code>. This particular implementation implements the cmponents in namespace <code><a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a></code> declared in the header <code>&lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;</code>:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;beman/execution.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tuple&gt;</span></div>
@@ -185,7 +185,7 @@ world"</code>: it uses components for dealing with asynchronous work to synchron
 <summary >
 <code>"Hello, async"</code> - a simple asynchronous example</summary>
 <p></p>
-<p>Code: [<code>examples/intro-2-hello-async.cpp</code>]() </p><div class="fragment"><div class="line"><span class="comment">// examples/intro-2-hello-async.cpp                                   -*-C++-*-</span></div>
+<p>Code: [<code>examples/intro_2_hello_async.cpp</code>]() </p><div class="fragment"><div class="line"><span class="comment">// examples/intro_2_hello_async.cpp                                   -*-C++-*-</span></div>
 <div class="line"><span class="comment">// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception</span></div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;chrono&gt;</span></div>
@@ -197,16 +197,16 @@ world"</code>: it uses components for dealing with asynchronous work to synchron
 <div class="line"><span class="preprocessor">#ifdef BEMAN_HAS_MODULES</span></div>
 <div class="line"><span class="keyword">import</span> <a class="code hl_namespace" href="namespacebeman.html">beman</a>.<a class="code hl_namespace" href="namespacebeman_1_1execution.html">execution</a>;</div>
 <div class="line"><span class="preprocessor">#else</span></div>
-<div class="line"><span class="preprocessor">#include &lt;beman/execution/execution.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;beman/execution.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="preprocessor">#include &quot;intro-timer.hpp&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;intro_timer.hpp&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">ex</a> = ::beman::execution;</div>
 <div class="line"><span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line"><span class="keyword">using namespace </span>std::chrono_literals;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><span class="comment">// Please see the explanation in docs/intro-examples.md for an explanation.</span></div>
+<div class="line"><span class="comment">// Please see the explanation in docs/intro_examples.md for an explanation.</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    std::cout &lt;&lt; std::unitbuf;</div>

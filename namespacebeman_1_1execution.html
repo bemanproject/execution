@@ -787,8 +787,8 @@ just(<em>arg</em>...)
 &gt;;
 </pre><h4>Example</h4>
 <p>The normal use of <code>just(<em>args</em>...)</code> is as the starting point of a work graph. Various other examples will use <code>just</code> as their starting. The example below create a sender yielding three values and awaits the completion using <code>sync_wait(<em>sender</em>)</code>: for a value completion of <code><em>sender</em></code> it will yield an <code>std::optional&lt;std::tuple&lt;<em>Args</em>...&gt;&gt;</code> with the <code>tuple</code> containing the value copied/moved from the original arguments (an <code>optional</code> is returned to indicate cancellation).</p>
-<pre example="doc-just.cpp">
-#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+<pre example="doc_just.cpp">
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;
 #include &lt;cassert&gt;
 #include &lt;string&gt;
 using namespace std::string_literals;
@@ -834,8 +834,8 @@ just_error(<em>error</em>)
 &gt;;
 </pre><h4>Example</h4>
 <p>The normal use of <code>just_error(<em>error</em>)</code> is to report an error as the result of some work in a work graph. It would, e.g., be used as the completion produced by <code>let_value</code>. The example below creates a sender yielding an <code>std::error_code</code> on the error channel and uses that as the input for <code>upon_error</code> consuming the error and producing a value completion: using <code>sync_wait(just_error(<em>error</em>))</code> directly doesn't work because <code>sync_wait</code> requires exactly one value completion from its argument and <code>set_error</code> only has an error completion. The function used with <code>upon_error</code> verifies that the expected code was produced and also sets the flag <code>had_error</code> indicating it was called at all. This flag is checked after waiting for the result in <code>sync_wait</code>.</p>
-<pre example="doc-just_error.cpp">
-#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+<pre example="doc_just_error.cpp">
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;
 #include &lt;system_error&gt;
 #include &lt;cassert&gt;
 namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
@@ -884,8 +884,8 @@ int main() {
 &gt;;
 </pre><h4>Example</h4>
 <p>The normal use of <code><a class="el" href="namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f" title="just_stopped() yields a sender completing with set_stopped_t()">just_stopped()</a></code> is to report a cancellation as the result of some work in a work graph. It would, e.g., be used as the completion produced by <code>let_value</code>. The example below creates a sender yielding a completion on the cancellation channel and uses that as the input for <code>upon_stopped</code> consuming the cancellation and producing a value completion: using <code><a class="el" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519" title="sync_wait(sender) starts sender and waits for its completion.">sync_wait(just_stopped())</a></code> directly doesn't work because <code>sync_wait</code> requires exactly one value completion from its argument and <code>set_stopped</code> only has a cancellation completion. The function used with <code>upon_stopped</code> sets the flag <code>had_stopped</code> indicating it was called at all. This flag is checked after waiting for the result in <code>sync_wait</code>.</p>
-<pre example="doc-just_error.cpp">
-#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+<pre example="doc_just_error.cpp">
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;
 #include &lt;system_error&gt;
 #include &lt;cassert&gt;
 namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
@@ -972,7 +972,7 @@ sync_wait(<em>sender</em>...)
 </pre><h4>Example</h4>
 <p>The use of <code>sync_wait(<em>sender</em>)</code> is in <code>main</code> to synchronously wait for the completion of the asynchronous work of the program represented by <code><em>sender</em></code>.</p>
 <pre example="doc-sync_wait.cpp">
-#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;
 #include &lt;cassert&gt;
 
 int main() {
@@ -1027,7 +1027,7 @@ then(<em>sender</em>, <em>fun</em>)
 </ul>
 <h4>Example</h4>
 <pre example="doc-then.cpp">
-#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;
 #include &lt;cassert&gt;
 namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
 
@@ -1083,7 +1083,7 @@ upon_error(<em>sender</em>, <em>fun</em>)
 </ul>
 <h4>Example</h4>
 <pre example="doc-upon_error.cpp">
-#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;
 #include &lt;cassert&gt;
 namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
 
@@ -1139,7 +1139,7 @@ upon_stopped(<em>sender</em>, <em>fun</em>)
 </ul>
 <h4>Example</h4>
 <pre example="doc-upon_stopped.cpp">
-#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;
 #include &lt;cassert&gt;
 namespace ex = <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution</a>;
 

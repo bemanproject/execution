@@ -29,7 +29,7 @@ var NAVTREE =
     [ "contributing", "md_docs_contributing.html", [
       [ "Contributing to <tt>beman::execution</tt>", "md_docs_contributing.html#autotoc_md0", null ]
     ] ],
-    [ "intro-examples", "md_docs_intro_examples.html", [
+    [ "intro_examples", "md_docs_intro_examples.html", [
       [ "Introduction by Example", "md_docs_intro_examples.html#autotoc_md1", null ]
     ] ],
     [ "Supporting Modules", "md_docs_modules.html", [
@@ -88,7 +88,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "affine_8hpp_source.html",
-"namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3"
+"namespacebeman_1_1execution.html#a6406f8f62cb941fe811fedeebf0b985f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

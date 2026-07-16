@@ -112,7 +112,7 @@ Use &lt;tt&gt;export using&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">module;</div>
 <div class="line"> </div>
-<div class="line">#include &lt;beman/execution/execution.hpp&gt;</div>
+<div class="line">#include &lt;beman/execution.hpp&gt;</div>
 <div class="line"> </div>
 <div class="line">export module beman.execution;</div>
 <div class="line"> </div>
@@ -165,7 +165,7 @@ Profit! </li>
 <p>Creating the script to write the file was reasonably straight forward although I spend way too much time making it fancy and include suitable <code>#line</code> directives to find the actual source. Compiling the resulting still didn't quite work, of course. There was a bunch of silly errors in the component headers which could be quickly resolved, though. That wasn't quite as true for the test files, though (more rumination on tests below):</p>
 <ul>
 <li>Many tests didn't include all standard library headers they dependent on. Since the corresponding header were actually included by a component header things still worked. So, the corresponding headers needed to be added.</li>
-<li>Instead of <code>#include &lt;<a class="el" href="execution_2execution_8hpp_source.html">beman/execution/execution.hpp</a>&gt;</code> the tests now use <code>import <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman.execution</a>;</code> (well, the test really use conditional compilation to either use a header or an <code>import</code> statement). Including any standard library header <em>after</em> the <code>import</code> statement again confuses the compiler, i.e., some reordering in the files was needed: the test files deliberately included the component's header first (to make sure all needed headers are included by the component header) but this include statement is now replaced by the <code>import</code> statement.</li>
+<li>Instead of <code>#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;</code> the tests now use <code>import <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman.execution</a>;</code> (well, the test really use conditional compilation to either use a header or an <code>import</code> statement). Including any standard library header <em>after</em> the <code>import</code> statement again confuses the compiler, i.e., some reordering in the files was needed: the test files deliberately included the component's header first (to make sure all needed headers are included by the component header) but this include statement is now replaced by the <code>import</code> statement.</li>
 <li>The tests actually use some of the implementation-defined entities which were not meant to be <code>export</code>ed. To still have these tests I ended up <code>export</code>ing the necessary implementation-defined names. That needs to be corrected eventually (assuming that is actually possible which isn't quite as clear).</li>
 <li>Of course, the tests actually used the various names and it turned out that quite a few names, e.g., the <code>operator|</code>, were missing.</li>
 </ul>
