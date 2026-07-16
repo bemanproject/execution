@@ -7,7 +7,7 @@ import std;
 #include <new>
 #include <memory>
 #endif
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 
 namespace ex = beman::execution;
 

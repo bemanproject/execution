@@ -31,7 +31,7 @@ import beman.execution.detail.variant_or_empty;
 namespace beman::execution {
 /*!
  * \brief Type alias to get error types for a sender
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 template <typename Sender,
           typename Env                         = ::beman::execution::env<>,

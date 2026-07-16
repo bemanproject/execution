@@ -29,7 +29,7 @@ namespace beman::execution {
 /*!
  * \brief Represents the type of exit scope sender which an asynchronous operation formed from
  *        `Sender` in `Env...` yield on completion.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * This looks at the completion signatures of `Sender` in `Env...` and finds the unique value completion signature.

@@ -1,4 +1,4 @@
-// docs/code/tst-timer.hpp                                            -*-C++-*-
+// docs/code/tst_timer.hpp                                            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_DOCS_CODE_TST_TIMER
@@ -9,7 +9,7 @@
 #include <chrono>
 #include <queue>
 #include <thread>
-#include "tst-config.hpp"
+#include "tst_config.hpp"
 
 // ----------------------------------------------------------------------------
 

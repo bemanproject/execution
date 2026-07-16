@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE_OF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_SOURCE_OF
 
-#include <beman/execution/stop_token.hpp>
+#include <beman/stop_token.hpp>
 
 // ----------------------------------------------------------------------------
 

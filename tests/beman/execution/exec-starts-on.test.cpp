@@ -8,7 +8,7 @@
 import beman.execution;
 #else
 #include <beman/execution/detail/starts_on.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

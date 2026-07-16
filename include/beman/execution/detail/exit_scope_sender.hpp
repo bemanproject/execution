@@ -22,7 +22,7 @@ import beman.execution.detail.sender;
 namespace beman::execution {
 /*!
  * \brief A sender that does not throw when decay-copied or moved.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 template <typename Sender>
 concept exit_scope_sender =

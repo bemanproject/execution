@@ -1,4 +1,4 @@
-// examples/intro-1-hello-world.cpp                                   -*-C++-*-
+// examples/intro_1_hello_world.cpp                                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <iostream>
@@ -9,14 +9,14 @@
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 namespace ex = ::beman::execution;
 using namespace std::string_literals;
 
 // ----------------------------------------------------------------------------
-// Please see the explanation in docs/intro-examples.md for an explanation.
+// Please see the explanation in docs/intro_examples.md for an explanation.
 
 int main() {
     // clang-format off

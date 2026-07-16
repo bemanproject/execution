@@ -1,4 +1,4 @@
-// examples/tst-repeat_effect_until.hpp                               -*-C++-*-
+// examples/tst_repeat_effect_until.hpp                               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // ----------------------------------------------------------------------------
 
@@ -8,7 +8,7 @@
 #include <optional>
 #include <type_traits>
 #include <utility>
-#include "tst-config.hpp"
+#include "tst_config.hpp"
 
 // ----------------------------------------------------------------------------
 

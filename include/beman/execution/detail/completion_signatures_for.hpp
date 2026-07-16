@@ -26,7 +26,7 @@ import beman.execution.detail.tag_of_t;
 namespace beman::execution::detail {
 /*!
  * \brief Tag type used to determine if completion signatures were defined.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 struct no_completion_signatures_defined_in_sender {};
@@ -36,7 +36,7 @@ struct no_completion_signatures_defined_in_sender {};
  * \note  Extracted into a concept to work around an MSVC bug that occurs only header builds where
  *        'requires' expressions containing dependent types incorrectly evaluate to false when placed
  *        directly inside a function template body.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Tag, typename Sender, typename... Env>
@@ -44,7 +44,7 @@ concept has_valid_complsig_specialization = requires { Tag::template get_complet
 
 /*!
  * \brief Primary template declaration for the customization of sender completion signatures.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Sender, typename... Env>
@@ -58,7 +58,7 @@ consteval auto get_completion_signatures_for_helper() {
 
 /*!
  * \brief Type alias used to access a senders completion signatures.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Sender, typename... Env>

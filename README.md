@@ -1,16 +1,18 @@
+# beman.execution: Building Block For Asynchronous Programs
 <!--
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
-# beman.execution: Building Block For Asynchronous Programs
 
 <!-- markdownlint-disable line-length -->
-[![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg)](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#the-beman-library-maturity-model)
-![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)
+[![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg)](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#the-beman-library-maturity-model)![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg)[![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)[![Compiler Explorer Example](https://img.shields.io/badge/Try%20it%20on%20Compiler%20Explorer-grey?logo=compilerexplorer&logoColor=67c52a)](https://godbolt.org/z/9nfa3rTTK)
 <!-- markdownlint-restore -->
 
-`beman.execution` provides the basic vocabulary for asynchronous
-programming as well as important algorithms implemented in terms
-of this vocabulary. The key entities of the vocabulary are:
+
+`beman.execution` provides the basic vocabulary for asynchronous programming as well as important algorithms implemented in terms of this vocabulary.
+
+**Implements**: [`std::execution` (P2300R10)](http://wg21.link/P2300R10).
+
+The key entities of the vocabulary are:
 
 - `scheduler` used to control where operations are executed.
     - The key operation is `schedule(scheduler) -> sender`.
@@ -37,8 +39,6 @@ e.g.:
 - `when_all(sender ...)` to complete when all `sender`s have
     completed.
 - `bulk(...)` to executed execute work, potentially concurrently.
-
-**Implements:** [`std::execution` (P2300R10)](http://wg21.link/P2300R10).
 
 **Status**: [Under development and not yet ready for production use.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#under-development-and-not-yet-ready-for-production-use)
 

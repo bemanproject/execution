@@ -44,7 +44,7 @@ inline constexpr ::std::size_t get_tuple_size() {
 }
 /*!
  * \brief A helper types whose call operator connects all children of a basic_sender
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 struct connect_all_t {
@@ -141,7 +141,7 @@ struct connect_all_t {
 
 /*!
  * \brief A helper object of type connect_all_t
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 //-dk:TODO the export below shouldn't be needed, but MSVC++ seems to require it (2026-02-01)

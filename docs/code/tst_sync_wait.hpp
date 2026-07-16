@@ -1,4 +1,4 @@
-// docs/code/tst-sync_wait.hpp                                        -*-C++-*-
+// docs/code/tst_sync_wait.hpp                                        -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // ----------------------------------------------------------------------------
 
@@ -7,7 +7,7 @@
 
 #include <utility>
 #include <type_traits>
-#include "tst-config.hpp"
+#include "tst_config.hpp"
 
 // ----------------------------------------------------------------------------
 

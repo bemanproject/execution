@@ -6,7 +6,7 @@
 import beman.execution;
 import beman.execution.detail;
 #else
-#include <beman/execution/stop_token.hpp>
+#include <beman/stop_token.hpp>
 #endif
 
 TEST(stopsource_inplace_general) {

@@ -15,7 +15,7 @@ import beman.execution.detail;
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/split.hpp>
 #include <beman/execution/detail/type_list.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

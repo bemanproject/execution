@@ -8,7 +8,7 @@ import beman.execution.detail.stoppable_source;
 import beman.execution.detail.stoppable_callback_for;
 import beman.execution.detail.stop_callback_for_t;
 #else
-#include <beman/execution/stop_token.hpp>
+#include <beman/stop_token.hpp>
 #endif
 
 namespace {

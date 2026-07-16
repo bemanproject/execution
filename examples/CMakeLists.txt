@@ -22,23 +22,23 @@ set(TODO suspend_never) #-dk:TODO including that causes ASAN errors
 
 set(EXAMPLES
     allocator
-    doc-just
-    doc-just_error
-    doc-just_stopped
+    doc_just
+    doc_just_error
+    doc_just_stopped
     inspect
-    intro-1-hello-world
-    intro-2-hello-async
-    intro-5-consumer
+    intro_1_hello_world
+    intro_2_hello_async
+    intro_5_consumer
     playground
-    sender-demo
+    sender_demo
     stackoverflow
     stopping
-    when_all-cancel
+    when_all_cancel
 )
 
 if(BEMAN_USE_MODULES)
-    #-dk:TODO gcc doesn't like the modules: list(APPEND EXAMPLES modules modules-and-header)
-    list(APPEND EXAMPLES modules-and-header)
+    #-dk:TODO gcc doesn't like the modules: list(APPEND EXAMPLES modules modules_and_header)
+    list(APPEND EXAMPLES modules_and_header)
 endif()
 
 foreach(EXAMPLE ${EXAMPLES})

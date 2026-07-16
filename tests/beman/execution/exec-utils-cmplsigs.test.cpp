@@ -15,7 +15,7 @@ import beman.execution.detail;
 #include <beman/execution/detail/gather_signatures.hpp>
 #include <beman/execution/detail/indirect_meta_apply.hpp>
 #include <beman/execution/detail/sender_in.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

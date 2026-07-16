@@ -14,7 +14,7 @@ import beman.execution;
 #include <beman/execution/detail/when_all.hpp>
 #include <beman/execution/detail/stop_callback_for_t.hpp>
 #include <beman/execution/detail/when_all_with_variant.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

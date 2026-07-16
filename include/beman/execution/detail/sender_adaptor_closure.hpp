@@ -39,7 +39,7 @@ import beman.execution.detail.product_type;
 namespace beman::execution::detail::pipeable {
 /*!
  * \brief ADL anchor tag type inherited by sender_adaptor_closure.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 struct closure_t {};
@@ -48,7 +48,7 @@ struct closure_t {};
 namespace beman::execution {
 /*!
  * \brief CRTP base class for pipeable sender adaptor closure objects.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 template <detail::class_type D>
 struct sender_adaptor_closure : detail::pipeable::closure_t {};
@@ -59,7 +59,7 @@ namespace beman::execution::detail {
 
 /*!
  * \brief Helper to detect a unique sender_adaptor_closure base class.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <class T>
@@ -67,7 +67,7 @@ auto get_sender_adaptor_closure_base(const sender_adaptor_closure<T>&) -> T;
 
 /*!
  * \brief Checks that T has exactly one sender_adaptor_closure base where U == decay_t<T>.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <class T>
@@ -77,7 +77,7 @@ concept has_unique_sender_adaptor_closure_base = requires(const T& s) {
 
 /*!
  * \brief Determine if a type is a pipeable sender adaptor closure.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <class T>
@@ -87,7 +87,7 @@ concept is_sender_adaptor_closure =
 
 /*!
  * \brief Checks that Closure is a pipeable sender adaptor closure invocable with Sender.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <class Closure, class Sender>
@@ -98,7 +98,7 @@ concept sender_adaptor_closure_for =
 
 /*!
  * \brief Utility alias to copy cv-ref qualifiers from one type onto another.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <class As, class Reqs>
@@ -106,7 +106,7 @@ using apply_cvref_t = decltype(::beman::execution::detail::forward_like<As>(std:
 
 /*!
  * \brief Perfect forwarding call wrapper produced by closure-closure composition via operator|.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <class Inner, class Outer>
@@ -132,7 +132,7 @@ composed_sender_adaptor_closure(Inner&&, Outer&&)
 
 /*!
  * \brief Perfect forwarding call wrapper produced by adaptor(args...) for multi-argument adaptors.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <class Adaptor, movable_value... BoundArgs>
@@ -159,7 +159,7 @@ bound_sender_adaptor_closure(Tag&&, Args&&...)
 
 /*!
  * \brief Factory function producing a bound_sender_adaptor_closure from an adaptor and arguments.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <class Tag, class... Args>
@@ -177,7 +177,7 @@ namespace beman::execution::detail::pipeable {
 
 /*!
  * \brief Pipe operator connecting a sender to a pipeable sender adaptor closure.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 template <sender Sender, detail::sender_adaptor_closure_for<Sender> Closure>
 constexpr auto operator|(Sender&& sndr, Closure&& cl) noexcept(detail::nothrow_callable<Closure, Sender>)
@@ -187,7 +187,7 @@ constexpr auto operator|(Sender&& sndr, Closure&& cl) noexcept(detail::nothrow_c
 
 /*!
  * \brief Pipe operator composing two pipeable sender adaptor closure objects.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 template <detail::is_sender_adaptor_closure Inner, detail::is_sender_adaptor_closure Outer>
     requires std::constructible_from<std::decay_t<Inner>, Inner> && std::constructible_from<std::decay_t<Outer>, Outer>

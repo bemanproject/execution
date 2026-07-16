@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STATE_REP
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_STATE_REP
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #include <type_traits>
 #include <utility>
 

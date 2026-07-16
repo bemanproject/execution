@@ -1,4 +1,4 @@
-// include/beman/execution/stop_token.hpp -*-C++-*-
+// include/beman/stop_token.hpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION_STOP_TOKEN

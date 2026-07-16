@@ -28,7 +28,7 @@ import beman.execution.detail.tag_of_t;
 namespace beman::execution::detail {
 /*!
  * \brief Class template used to present the receiver and operation state for library senders.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Sender, typename Receiver>

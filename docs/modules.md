@@ -42,7 +42,7 @@ like this:
 ```c++
 module;
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 
 export module beman.execution;
 
@@ -181,7 +181,7 @@ though (more [rumination on tests](#modules-vs-testing) below):
   dependent on. Since the corresponding header were actually included
   by a component header things still worked. So, the corresponding
   headers needed to be added.
-- Instead of `#include <beman/execution/execution.hpp>` the tests
+- Instead of `#include <beman/execution.hpp>` the tests
   now use `import beman.execution;` (well, the test really use
   conditional compilation to either use a header or an `import`
   statement). Including any standard library header _after_ the

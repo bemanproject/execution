@@ -24,7 +24,7 @@ import beman.execution.detail.tag_of_t;
 namespace beman::execution::detail {
 /*!
  * \brief Helper alias to determine the environment type associated with sender in a basic_sender
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Index, typename Sender, typename Receiver>

@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONTEXT_ERROR_TYPES_OF
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_CONTEXT_ERROR_TYPES_OF
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #include <exception>
 
 // ----------------------------------------------------------------------------

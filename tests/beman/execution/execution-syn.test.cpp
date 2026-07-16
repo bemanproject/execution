@@ -33,7 +33,7 @@ import beman.execution.detail;
 #include <beman/execution/detail/variant_or_empty.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/as_awaitable.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 
 #include <beman/execution/detail/suppress_push.hpp>
 #endif

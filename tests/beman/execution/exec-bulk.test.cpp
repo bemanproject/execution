@@ -19,7 +19,7 @@ import beman.execution;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.unique;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 namespace {

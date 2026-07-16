@@ -355,13 +355,13 @@ struct within_t::state {
 namespace beman::execution {
 /*!
  * \brief `within_t` is the type of `within`.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 using within_t = ::beman::execution::detail::within_t;
 
 /*!
  * \brief `within` is a sender adaptor that runs a work sender within the scope of a scope sender.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * The `within` sender adaptor takes two senders: a scope sender and a work sender. It runs the work sender within the
  * context of the scope.

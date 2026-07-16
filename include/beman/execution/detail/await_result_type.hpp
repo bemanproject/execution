@@ -21,7 +21,7 @@ import beman.execution.detail.get_awaiter;
 namespace beman::execution::detail {
 /*!
  * \brief Auxiliary type alias to get the result type of an awaiter.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename T, typename Promise> //-dk:TODO detail export

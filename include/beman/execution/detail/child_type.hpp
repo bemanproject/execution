@@ -17,7 +17,7 @@ import std;
 namespace beman::execution::detail {
 /*!
  * \brief Auxiliary type alias used to determine the type of a child sender.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Sender, ::std::size_t I = 0u>

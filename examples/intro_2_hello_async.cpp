@@ -1,4 +1,4 @@
-// examples/intro-2-hello-async.cpp                                   -*-C++-*-
+// examples/intro_2_hello_async.cpp                                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <chrono>
@@ -10,16 +10,16 @@
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
-#include "intro-timer.hpp"
+#include "intro_timer.hpp"
 
 namespace ex = ::beman::execution;
 using namespace std::string_literals;
 using namespace std::chrono_literals;
 
 // ----------------------------------------------------------------------------
-// Please see the explanation in docs/intro-examples.md for an explanation.
+// Please see the explanation in docs/intro_examples.md for an explanation.
 
 int main() {
     std::cout << std::unitbuf;

@@ -23,7 +23,7 @@ import beman.execution.detail.forwarding_query;
 namespace beman::execution::detail {
 /*!
  * \brief A helper class to create environments and taking forwarding_query into account
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Env> //-dk:TODO detail export

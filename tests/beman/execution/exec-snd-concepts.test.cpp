@@ -14,7 +14,7 @@ import beman.execution.detail;
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

@@ -50,7 +50,7 @@
 /*!
  * \namespace beman
  * \brief Namespace for Beman projects http://github.com/bemanproject/beman
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 namespace beman {
 /*!
@@ -61,7 +61,7 @@ namespace beman {
  * The beman::execution namespace contains various components for
  * accessing asynchronous operations.
  *
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 namespace execution {
 
