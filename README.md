@@ -49,13 +49,21 @@ There are plenty of things which need to be done. See the
 for some ideas how to contribute. The [resources page](https://github.com/bemanproject/execution/blob/main/docs/resources.md)
 contains some links for general information about the sender/receivers and `std::execution`.
 
-## Build
+## Dependencies
 
-## Preconditions
+### Build Environment
 
-- cmake v3.30 or newer
-- ninja v1.13.0 or newer
-- A compiler that supports at least C++23
+This project requires at least the following to build:
+
+* A C++ compiler that conforms to the C++23 standard or greater
+* CMake 3.30 or later
+* (Test Only) GoogleTest
+
+You can disable building tests by setting CMake option `BEMAN_EXECUTION_BUILD_TESTS` to
+`OFF` when configuring the project.
+
+You can disable building examples by setting CMake option `BEMAN_EXECUTION_BUILD_EXAMPLES` to
+`OFF` when configuring the project.
 
 
 | Library | Linux | MacOS | Windows |

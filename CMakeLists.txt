@@ -93,8 +93,8 @@ endif()
 #===============================================================================
 
 option(
-    BEMAN_EXECUTION_ENABLE_TESTING
-    "Enable building tests and test infrastructure. Values: { ON, OFF }."
+    BEMAN_EXECUTION_BUILD_TESTS
+    "Enable building tests and test infrastructure. Default: ${PROJECT_IS_TOP_LEVEL}. Values: { ON, OFF }."
     ${PROJECT_IS_TOP_LEVEL}
 )
 
@@ -123,9 +123,8 @@ beman_install_library(${BEMAN_EXECUTION_TARGET_PREFIX} TARGETS ${BEMAN_EXECUTION
 )
 #===============================================================================
 
-enable_testing()
-
-if(BEMAN_EXECUTION_ENABLE_TESTING)
+if(BEMAN_EXECUTION_BUILD_TESTS)
+    enable_testing()
     add_subdirectory(tests/beman/execution)
 endif()
 
