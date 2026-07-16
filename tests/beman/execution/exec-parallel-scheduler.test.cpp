@@ -52,7 +52,7 @@ struct backend : replaceability::parallel_scheduler_backend {
                                  ::std::span<::std::byte>) noexcept -> void override {}
 };
 
-struct thread_pool_backend : replaceability::parallel_scheduler_backend {
+struct thread_pool_base : replaceability::parallel_scheduler_backend {
     struct task {
         task() = default;
 
@@ -106,25 +106,20 @@ struct thread_pool_backend : replaceability::parallel_scheduler_backend {
         std::size_t                               j;
     };
 
-    thread_pool_backend() {
-        for (auto& worker : workers) {
-            worker = std::thread{&thread_pool_backend::run, this};
-        }
-    }
+    thread_pool_base() = default;
 
-    thread_pool_backend(const thread_pool_backend&) = delete;
+    thread_pool_base(const thread_pool_base&) = delete;
 
-    ~thread_pool_backend() override {
+    ~thread_pool_base() override = 0;
+
+    auto operator=(const thread_pool_base&) = delete;
+
+    auto shutdown() -> void {
         std::unique_lock guard{mtx};
-        stopped = true;
+        shutdown_requested = true;
         guard.unlock();
         cv.notify_all();
-        for (auto& worker : workers) {
-            worker.join();
-        }
     }
-
-    auto operator=(const thread_pool_backend&) = delete;
 
     auto schedule(replaceability::receiver_proxy& proxy, ::std::span<::std::byte>) noexcept -> void override {
         try {
@@ -192,12 +187,36 @@ struct thread_pool_backend : replaceability::parallel_scheduler_backend {
         schedule_bulk(shape, 1uz, proxy, storage);
     }
 
+  protected:
+    static constexpr std::size_t      num_threads        = 4uz;
+    bool                              shutdown_requested = false;
+    std::mutex                        mtx;
+    std::condition_variable           cv;
+    std::queue<std::unique_ptr<task>> tasks;
+};
+
+thread_pool_base::~thread_pool_base() = default;
+
+struct thread_pool_backend : thread_pool_base {
+    thread_pool_backend() {
+        for (std::size_t i = 0; i < num_threads; ++i) {
+            workers[i] = std::thread([this]() noexcept { this->run(); });
+        }
+    }
+
+    ~thread_pool_backend() override {
+        shutdown();
+        for (auto& worker : workers) {
+            worker.join();
+        }
+    }
+
   private:
     auto run() noexcept -> void {
         while (true) {
             std::unique_lock guard{mtx};
-            cv.wait(guard, [this]() noexcept { return !tasks.empty() || stopped; });
-            if (stopped) {
+            cv.wait(guard, [this]() noexcept { return !tasks.empty() || shutdown_requested; });
+            if (shutdown_requested && tasks.empty()) {
                 return;
             }
             auto task = std::move(tasks.front());
@@ -207,13 +226,47 @@ struct thread_pool_backend : replaceability::parallel_scheduler_backend {
         }
     }
 
-    static constexpr std::size_t      num_threads = 4uz;
-    bool                              stopped     = false;
-    std::mutex                        mtx;
-    std::condition_variable           cv;
-    std::queue<std::unique_ptr<task>> tasks;
-    std::thread                       workers[num_threads];
+    std::thread workers[num_threads];
 };
+
+// for GCC and Clang, enable -fopenmp for both compiling and linking; for MSVC, use the /openmp:llvm compiler option.
+#ifdef _OPENMP
+struct openmp_backend : thread_pool_base {
+    openmp_backend() {
+        designee = std::thread{[this]() noexcept {
+#pragma omp parallel num_threads(num_threads)
+            {
+#pragma omp single
+                {
+                    while (true) {
+                        std::unique_lock guard{mtx};
+                        cv.wait(guard, [this]() noexcept { return !tasks.empty() || shutdown_requested; });
+                        if (shutdown_requested && tasks.empty()) {
+                            break;
+                        }
+                        auto front = std::move(tasks.front());
+                        tasks.pop();
+                        guard.unlock();
+                        auto front_ptr = front.release();
+#pragma omp task firstprivate(front_ptr)
+                        {
+                            std::unique_ptr<task>{front_ptr}->exec();
+                        }
+                    }
+                }
+            }
+        }};
+    }
+
+    ~openmp_backend() override {
+        shutdown();
+        designee.join();
+    }
+
+  private:
+    std::thread designee;
+};
+#endif
 
 auto test_parallel_scheduler_synopsis() -> void {
     static_assert(!::std::default_initializable<test_std::parallel_scheduler>);
@@ -280,7 +333,11 @@ auto test_parallel_scheduler_schedule() -> void {
 
 namespace beman::execution::parallel_scheduler_replacement {
 auto query_parallel_scheduler_backend() -> std::shared_ptr<parallel_scheduler_backend> {
+#ifdef _OPENMP
+    static auto backend = std::make_shared<::openmp_backend>();
+#else
     static auto backend = std::make_shared<::thread_pool_backend>();
+#endif
     return backend;
 }
 } // namespace beman::execution::parallel_scheduler_replacement
