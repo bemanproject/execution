@@ -64,7 +64,7 @@ collections of components mode available by a header:
    [`std::execution`](https://wg21.link/exec). By default the names from
    [`beman::execution`](https://github.com/bemanproject/execution) are
    used. The used names are set up via
-   [`docs/code/tst-config.hpp`](https://github.com/bemanproject/execution/files/docs/code/tst-config.hpp).
+   [`docs/code/tst_config.hpp`](https://github.com/bemanproject/execution/files/docs/code/tst_config.hpp).
    When trying to use the examples with a different implementation it should be sufficient to adjust
    this header accordingly.
 </details>
