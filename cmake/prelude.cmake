@@ -21,7 +21,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 # ---------------------------------------------------------------------------
 # The CMAKE_EXPERIMENTAL_CXX_IMPORT_STD is not longer needed except for OSX
 # ---------------------------------------------------------------------------
-if(NOT BEMAN_USE_STD_MODULE OR CMAKE_VERSION VERSION_GREATER_EQUAL 4.4)
+if(NOT BEMAN_USE_STD_MODULE OR CMAKE_VERSION VERSION_GREATER_EQUAL 4.5)
     if(NOT APPLE)
         return()
     endif()
@@ -46,7 +46,7 @@ include(
 )
 
 if(NOT APPLE)
-    return()
+    # return()
 endif()
 
 # ---------------------------------------------------------------------------
