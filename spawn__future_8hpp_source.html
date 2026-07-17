@@ -254,7 +254,7 @@ $(document).ready(function(){initNavTree('spawn__future_8hpp_source.html',''); i
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="keyword">struct </span>spawn_future_state</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    : ::beman::execution::detail::spawn_future_state_base&lt;::beman::execution::detail::spawn_future_sigs&lt;Sndr, Env&gt;&gt; {</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keyword">using </span>alloc_t          = typename ::std::allocator_traits&lt;Allocator&gt;::template rebind_alloc&lt;spawn_future_state&gt;;</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">using </span>assoc_t          = ::std::remove_cvref_t&lt;decltype(::std::declval&lt;Token&amp;&gt;().try_associate())&gt;;</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">using </span>assoc_t          = ::std::remove_cvref_t&lt;decltype(::std::declval&lt;const Token&amp;&gt;().try_associate())&gt;;</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keyword">using </span>traits_t         = ::std::allocator_traits&lt;alloc_t&gt;;</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keyword">using </span>spawned_sender_t = ::beman::execution::detail::future_spawned_sender&lt;Sndr, Env&gt;;</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keyword">using </span>sigs_t           = ::beman::execution::detail::spawn_future_sigs&lt;Sndr, Env&gt;;</div>
@@ -264,7 +264,7 @@ $(document).ready(function(){initNavTree('spawn__future_8hpp_source.html',''); i
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keyword">using </span>op_t = <a class="code hl_typedef" href="namespacebeman_1_1execution.html#a04076b97aa86da382501e357c0b88cf1">::beman::execution::connect_result_t&lt;spawned_sender_t, receiver_tag&gt;</a>;</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keyword">template</span> &lt;::beman::execution::sender S&gt;</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    spawn_future_state(<span class="keyword">auto</span> a, S&amp;&amp; s, Token tok, Env env)</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    spawn_future_state(<span class="keyword">auto</span> a, S&amp;&amp; s, <span class="keyword">const</span> Token&amp; tok, Env env)</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        : alloc(::std::move(a)),</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>          op(::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::write_env(</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                 ::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::detail::stop_when(::std::forward&lt;S&gt;(s), source.get_token()), env),</div>
@@ -350,7 +350,7 @@ $(document).ready(function(){initNavTree('spawn__future_8hpp_source.html',''); i
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keyword">template</span> &lt;::beman::execution::sender Sndr, ::beman::execution::scope_token Tok, <span class="keyword">typename</span> Ev&gt;</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        requires ::beman::execution::detail::queryable&lt;::std::remove_cvref_t&lt;Ev&gt;&gt;</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keyword">auto</span> operator()(Sndr&amp;&amp; sndr, Tok&amp;&amp; tok, Ev&amp;&amp; ev)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keyword">auto</span> operator()(Sndr&amp;&amp; sndr, <span class="keyword">const</span> Tok&amp; tok, Ev&amp;&amp; ev)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <span class="comment">//-dk:TODO why decltype(auto) instead of auto?</span></div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <span class="keyword">auto</span> make{[&amp;]() -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) { <span class="keywordflow">return</span> tok.wrap(::std::forward&lt;Sndr&gt;(sndr)); }};</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="keyword">using </span>sndr_t = <span class="keyword">decltype</span>(make());</div>
@@ -373,8 +373,8 @@ $(document).ready(function(){initNavTree('spawn__future_8hpp_source.html',''); i
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        return ::beman::execution::detail::make_sender(*<span class="keyword">this</span>, ::std::unique_ptr&lt;state_t, deleter&gt;{op});</div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    }</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">template</span> &lt;::beman::execution::sender Sndr, ::beman::execution::scope_token Tok&gt;</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keyword">auto</span> operator()(Sndr&amp;&amp; sndr, Tok&amp;&amp; tok)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(::std::forward&lt;Sndr&gt;(sndr), ::std::forward&lt;Tok&gt;(tok), <a class="code hl_struct" href="structbeman_1_1execution_1_1env.html">::beman::execution::env&lt;&gt;</a>{});</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keyword">auto</span> operator()(Sndr&amp;&amp; sndr, <span class="keyword">const</span> Tok&amp; tok)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(::std::forward&lt;Sndr&gt;(sndr), tok, <a class="code hl_struct" href="structbeman_1_1execution_1_1env.html">::beman::execution::env&lt;&gt;</a>{});</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    }</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>  <span class="keyword">private</span>:</div>
