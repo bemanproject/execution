@@ -9,14 +9,18 @@ on:
   pull_request:
   workflow_dispatch:
   schedule:
-    - cron: '30 15 * * *'
+    - cron: '30 15 * * 6'
+
+concurrency:
+  group: ${{format('{0}:{1}', github.repository, github.ref)}}
+  cancel-in-progress: true
 
 jobs:
   beman-submodule-check:
-    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-submodule-check.yml@1.3.0
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-submodule-check.yml@1.7.3
 
   preset-test:
-    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-preset-test.yml@1.3.0
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-preset-test.yml@1.7.3
     with:
       matrix_config: >
         [
@@ -29,12 +33,12 @@ jobs:
         ]
 
   build-and-test:
-    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-build-and-test.yml@1.3.0
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-build-and-test.yml@1.7.3
     with:
       matrix_config: >
         {
           "gcc": [
-            { "versions": ["15"],
+            { "versions": ["16"],
               "tests": [
                 { "cxxversions": ["c++26"],
                   "tests": [
@@ -52,7 +56,7 @@ jobs:
                 }
               ]
             },
-            { "versions": ["14"],
+            { "versions": ["15"],
               "tests": [
                 { "cxxversions": ["c++26", "c++23"],
                   "tests": [{ "stdlibs": ["libstdc++"], "tests": ["Release.Default"]}]
@@ -110,4 +114,4 @@ jobs:
   create-issue-when-fault:
     needs: [preset-test, build-and-test]
     if: failure() && github.event_name == 'schedule'
-    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-create-issue-when-fault.yml@1.3.0
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-create-issue-when-fault.yml@1.7.3
