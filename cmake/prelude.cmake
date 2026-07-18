@@ -83,8 +83,6 @@ if(
         add_link_options(-L${LLVM_DIR}/lib/c++)
         include_directories(SYSTEM ${LLVM_DIR}/include)
 
-        # /usr/local/Cellar/llvm/21.1.8_1/lib/c++/libc++.modules.json
-        # "/usr/local/Cellar/llvm/21.1.8_1/share/libc++/v1/std.cppm",
         set(CMAKE_CXX_STDLIB_MODULES_JSON
             ${LLVM_DIR}/lib/c++/libc++.modules.json
         )
@@ -105,18 +103,19 @@ if(
     endif()
 
     if(EXISTS ${CMAKE_CXX_STDLIB_MODULES_JSON})
-        message(
-            STATUS
-            "CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
-        )
+        file(REAL_PATH "${CMAKE_CXX_STDLIB_MODULES_JSON}" LLVM_MODULES)
+        message(STATUS "CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_MODULES}")
         # gersemi: off
         set(CACHE{CMAKE_CXX_STDLIB_MODULES_JSON}
             TYPE FILEPATH
-            HELP "Result of: clang++ -print-file-name=c++/libc++.modules.json"
-            VALUE ${CMAKE_CXX_STDLIB_MODULES_JSON}
+            HELP "Result of: clang++ -print-file-name=libc++.modules.json"
+            VALUE ${LLVM_MODULES}
         )
         # gersemi: on
     else()
-        message(STATUS "File does NOT EXISTS! ${CMAKE_CXX_STDLIB_MODULES_JSON}")
+        message(
+            WARNING
+            "File does NOT EXISTS! ${CMAKE_CXX_STDLIB_MODULES_JSON}"
+        )
     endif()
 endif()
