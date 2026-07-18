@@ -135,7 +135,7 @@ foreach(test ${execution_tests})
 endforeach()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    return()
+    # TODO(CK): return()
 endif()
 
 #======================================================================

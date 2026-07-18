@@ -6,18 +6,21 @@ MAKEFLAGS+= --warn-undefined-variables  # Warn when an undefined variable is ref
 .SUFFIXES:                              # Disable all suffix rules.
 ##################################################
 
+PRESET ?= release
+IMAGE ?= linux-clang:23
+
 .PHONY: all check distclean dockerbuild
 
 # default target rule
 all: .init compile_commands.json
-	cmake --workflow --preset release
+	cmake --workflow --preset $(PRESET)
 
 .init: CMakeUserPresets.json CMakePresets.json CMakeLists.txt #NO! $(MAKEFILE)
-	cmake --preset release --fresh --log-level=VERBOSE
+	cmake --preset $(PRESET) --fresh --log-level=VERBOSE
 	touch $@
 
 check: .init compile_commands.json
-compile_commands.json: build/release/compile_commands.json
+compile_commands.json: build/$(PRESET)/compile_commands.json
 	ln -fs $< $@
 
 CMakeUserPresets.json:: cmake/CMakeUserPresets.json
@@ -31,7 +34,7 @@ distclean:
 	find . -name '*~' -delete
 
 dockerbuild:
-	docker run -it -v $(CURDIR):/home/builder/workdir linux-clang:23
+	docker run -it -v $(CURDIR):/home/builder/workdir $(IMAGE)
 
 # NOTE: double-colon targets which has no prerequisites must always remade by gmake?
 #  Prerequisite 'GNUmakefile' is newer than target '.init'.
@@ -40,4 +43,4 @@ dockerbuild:
 
 # Anything we don't know how to build will use this rule.
 % ::
-	ninja -C build/release $(@)
+	ninja -C build/$(PRESET) $(@)
