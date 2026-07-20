@@ -8,6 +8,7 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
+#include <atomic>
 #include <optional>
 #include <type_traits>
 #include <utility>
@@ -74,13 +75,20 @@ struct beman::execution::detail::stop_when_t::sender {
         using token2_t =
             decltype(::beman::execution::get_stop_token(::beman::execution::get_env(::std::declval<rcvr_t>())));
 
-        struct cb_t {
-            ::beman::execution::inplace_stop_source& source;
-            auto                                     operator()() const noexcept { this->source.request_stop(); }
-        };
         struct base_state {
             rcvr_t                                  rcvr;
             ::beman::execution::inplace_stop_source source{};
+            std::atomic<bool>                       run_stop{true};
+        };
+        struct cb_t {
+            base_state* st;
+            auto        operator()() const noexcept {
+                this->st->run_stop = false;
+                this->st->source.request_stop();
+                if (this->st->run_stop.exchange(true)) {
+                    ::beman::execution::set_stopped(::std::move(this->st->rcvr));
+                }
+            }
         };
         struct env {
             base_state* st;
@@ -103,13 +111,21 @@ struct beman::execution::detail::stop_when_t::sender {
             auto get_env() const noexcept -> env { return env{this->st}; }
             template <typename... A>
             auto set_value(A&&... a) const noexcept -> void {
-                ::beman::execution::set_value(::std::move(this->st->rcvr), ::std::forward<A>(a)...);
+                if (this->st->run_stop.exchange(true)) {
+                    ::beman::execution::set_value(::std::move(this->st->rcvr), ::std::forward<A>(a)...);
+                }
             }
             template <typename E>
             auto set_error(E&& e) const noexcept -> void {
-                ::beman::execution::set_error(::std::move(this->st->rcvr), ::std::forward<E>(e));
+                if (this->st->run_stop.exchange(true)) {
+                    ::beman::execution::set_error(::std::move(this->st->rcvr), ::std::forward<E>(e));
+                }
             }
-            auto set_stopped() const noexcept -> void { ::beman::execution::set_stopped(::std::move(this->st->rcvr)); }
+            auto set_stopped() const noexcept -> void {
+                if (this->st->run_stop.exchange(true)) {
+                    ::beman::execution::set_stopped(::std::move(this->st->rcvr));
+                }
+            }
         };
         using inner_state_t =
             decltype(::beman::execution::connect(::std::declval<Sndr>(), ::std::declval<receiver>()));
@@ -127,9 +143,9 @@ struct beman::execution::detail::stop_when_t::sender {
               inner_state(::beman::execution::connect(::std::forward<S>(s), receiver{&this->base})) {}
 
         auto start() & noexcept {
-            this->cb1.emplace(this->tok, cb_t{this->base.source});
+            this->cb1.emplace(this->tok, cb_t{&this->base});
             this->cb2.emplace(::beman::execution::get_stop_token(::beman::execution::get_env(this->base.rcvr)),
-                              cb_t{this->base.source});
+                              cb_t{&this->base});
             ::beman::execution::start(this->inner_state);
         }
     };
