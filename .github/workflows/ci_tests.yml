@@ -26,8 +26,8 @@ jobs:
         [
           {"preset": "gcc-debug", "image": "ghcr.io/bemanproject/infra-containers-gcc:latest"},
           {"preset": "gcc-release", "image": "ghcr.io/bemanproject/infra-containers-gcc:latest"},
-          {"preset": "llvm-debug", "image": "ghcr.io/bemanproject/infra-containers-clang:latest"},
-          {"preset": "llvm-release", "image": "ghcr.io/bemanproject/infra-containers-clang:latest"},
+          {"preset": "llvm-debug", "image": "ghcr.io/bemanproject/infra-containers-clang:trunk"},
+          {"preset": "llvm-release", "image": "ghcr.io/bemanproject/infra-containers-clang:trunk"},
           {"preset": "msvc-debug", "runner": "windows-latest"},
           {"preset": "msvc-release", "runner": "windows-latest"}
         ]
