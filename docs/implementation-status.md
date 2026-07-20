@@ -34,7 +34,11 @@
 - &#x2705;&#x2705;&#x2705; [<code><i>queryable</i>&lt;Q&gt;</code>](https://wg21.link/exec.queryable.concept#1): [`queryable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/queryable.hpp)
 
 ## &#x1F534;&#x1F534;&#x1F534; [exec.queries](https://wg21.link/exec.queries) Queries
-### &#x1F534;&#x1F534;&#x1F534; [exec.queries.expos](https://wg21.link/exec.queries.expos) Query utilities
+### &#x2705;&#x2705;&#x2705; [exec.queries.expos](https://wg21.link/exec.queries.expos) Query utilities
+
+- &#x2705;&#x2705;&#x2705; [<code><i>TRY-QUERY</i>(q, tag, a...)</code>](https://wg21.link/exec.queries.expos#2): [`try_query.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/try_query.hpp)
+- &#x2705;&#x2705;&#x2705; [<code><i>HIDE-SCHED</i>(q, tag, a...)</code>](https://wg21.link/exec.queries.expos#3): [`hide_sched.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/hide_sched.hpp)
+
 ### &#x1F534;&#x1F534;&#x1F534; [exec.fwd.env](https://wg21.link/exec.fwd.env) `forwarding_query`
 ### &#x1F534;&#x1F534;&#x1F534; [exec.get.allocator](https://wg21.link/exec.get.allocator) `get_allocator`
 ### &#x1F534;&#x1F534;&#x1F534; [exec.get.stop.token](https://wg21.link/exec.get.stop.token) `get_stop_token`

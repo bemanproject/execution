@@ -759,15 +759,24 @@ Turns <code>err</code> smartly into an <code>exception_ptr</code>:
 </details>
 
 <details>
-<summary><code><i>class-type</i>&lt;T&gt;</code></summary>
+<summary><code>concept <i>class-type</i>&lt;T&gt;</code></summary>
 Determines if the type <code>T</code> is a decayed class type:
 <code><i>decays-to</i>&lt;T, T&gt; &amp;&amp; is_class_v&lt;T&gt;</code>
 </details>
 
 <details>
-<summary><code><i>decays-to</i>&lt;From, To&gt;</code></summary>
+<summary><code>concept <i>decays-to</i>&lt;From, To&gt;</code></summary>
 Determines if <code>To</code> is the result of decaying the type <code>From</code>:
 <code>same_as&lt;decay_t&lt;From&gt;, To&gt;</code>
+</details>
+
+<details>
+<summary><code><i>HIDE-SCHED</i>(q)</code></summary>
+For a query object <code>tag</code> and arguments <code>a...</code> the
+expressions <code><i>HIDE-SCHED</i>(q).query(tag, a...)</code> is
+<ul>
+  <li>undefined if <code>decay_t&lt;decltype(tag)&gt;</code> is <code>get_scheduler_t</code> or <code>get_domain_t</code></li>
+  <li>equivalent to <code>q.query(tag, a...)</code> otherwise</li>
 </details>
 
 <details>
@@ -789,4 +798,12 @@ If <code>same_as&lt;F1, R1(A1...)&gt;</code> and <code>same_as&lt;F2, R2(A2...)&
 Determines if objects of type <code>T</code> are queryable:
 <code>destructible&lt;T&gt;</code>. The semantic implication is
 that using the queryable object with query objects behave as required.
+</details>
+
+<details>
+<summary><code><i>TRY-QUERY</i>(q, tag, a...)</code></summary>
+Tries to apply the query <code>tag</code> to the queryable object <code>q</code>:
+if passing the arguments <code>a...</code> is valid passes these arguments (<code><i>AS-CONST</i>(q).query(tag, a...)</code>), otherwise
+queries <code>q</code> for <code>tag</code> without the arguments (<code><i>AS-CONST</i>(q).query(tag)</code>), although the
+arguments are evaluated.
 </details>
