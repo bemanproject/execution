@@ -22,7 +22,6 @@ import beman.execution.detail.dependent_sender;
 import beman.execution.detail.enter_scope_sender_in;
 import beman.execution.detail.enter_scope_sender;
 import beman.execution.detail.env;
-import beman.execution.detail.execution_policy;
 import beman.execution.detail.exit_scope_sender_in;
 import beman.execution.detail.exit_scope_sender_of_t;
 import beman.execution.detail.exit_scope_sender;

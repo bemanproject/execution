@@ -745,3 +745,48 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 - `never_stop_token`
 - `stop_token`
 - `inplace_stop_token`
+
+## Exposition Only
+
+<details>
+<summary><code><i>as-except-ptr</i>(err)</code></summary>
+Turns <code>err</code> smartly into an <code>exception_ptr</code>:
+<ol>
+<li>if <code>same_as&lt;decay_t&lt;decltype(err)&gt;, exception_ptr&gt;</code> &#x21d2; <code>err</code></li>
+<li>else if <code>same_as&lt;decay_t&lt;decltype(err)&gt;, error_code&gt;</code> &#x21d2; <code>make_exception_ptr(system_error(err))</code></li>
+<li>else <code>make_exception_ptr(err)</code></li>
+</ol>
+</details>
+
+<details>
+<summary><code><i>class-type</i>&lt;T&gt;</code></summary>
+Determines if the type <code>T</code> is a decayed class type:
+<code><i>decays-to</i>&lt;T, T&gt; &amp;&amp; is_class_v&lt;T&gt;</code>
+</details>
+
+<details>
+<summary><code><i>decays-to</i>&lt;From, To&gt;</code></summary>
+Determines if <code>To</code> is the result of decaying the type <code>From</code>:
+<code>same_as&lt;decay_t&lt;From&gt;, To&gt;</code>
+</details>
+
+<details>
+<summary><code>concept <i>movable-value</i>&lt;T&gt;</code></summary>
+Determines if objects of type <code>T</code> are movable, non-array values:
+<code>move_constructible&lt;decay_t&lt;T&gt;&gt; &amp;&amp; constructible_from&lt;decay_t&lt;T&gt;&gt; && (!is_array_v&lt;remove_reference_t&lt;T&gt;&gt;)</code>
+</details>
+
+<details>
+<summary><code>constexpr bool <i>MATCHING-SIG</i>&lt;F1, F2&gt;</code></summary>
+Determines if the two function signatures <code>F1</code> and <code>F2</code> match:
+
+If <code>same_as&lt;F1, R1(A1...)&gt;</code> and <code>same_as&lt;F2, R2(A2...)&gt;</code> then
+<code><i>MATCHING-SIG</i>&lt;F1, F2&gt; == same_as&lt;R1(A1&amp;&amp;...), R2(A2&amp;&amp;...)&gt;</code>.
+</details>
+
+<details>
+<summary><code>concept <i>queryable</i>&lt;T&gt;</code></summary>
+Determines if objects of type <code>T</code> are queryable:
+<code>destructible&lt;T&gt;</code>. The semantic implication is
+that using the queryable object with query objects behave as required.
+</details>

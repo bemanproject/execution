@@ -25,8 +25,10 @@ namespace beman::execution::detail {
  * \internal
  */
 template <typename Error>
+//-dk:TODO add a proper precondtion
 decltype(auto) as_except_ptr(Error&& error) {
     if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>) {
+        assert(!error == false);
         return ::std::forward<Error>(error);
     } else if constexpr (::std::same_as<::std::error_code, ::std::decay_t<Error>>) {
         return ::std::make_exception_ptr(::std::system_error(error));

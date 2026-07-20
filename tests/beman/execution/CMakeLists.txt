@@ -42,6 +42,7 @@ list(
     exec-opstate.test
     exec-prop.test
     exec-queries-expos.test
+    exec-queryable-concept.test
     exec-read-env.test
     exec-recv-concepts.test
     exec-recv.test
@@ -74,7 +75,6 @@ list(
     exec-when-all.test
     exec-with-awaitable-senders.test
     exec-within.test
-    execution-queryable-concept.test
     execution-syn.test
     forward-like.test
     function-objects.test
