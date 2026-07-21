@@ -7,6 +7,7 @@ import beman.execution;
 #else
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/scheduler.hpp>
+#include <beman/execution/detail/infallible_scheduler.hpp>
 #endif
 
 // ----------------------------------------------------------------------------

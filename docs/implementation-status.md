@@ -55,7 +55,11 @@
 ### &#x2705;&#x2705;&#x2705; [exec.get.compl.sched](https://wg21.link/exec.get.compl.sched) `execution::get_completion_scheduler`
 ### &#x2705;&#x2705;&#x1F534; [exec.get.compl.domain](https://wg21.link/exec.get.compl.domain) `execution::get_completion_domain`
 ### &#x2705;&#x1F534;&#x1F534; [exec.get.await.adapt](https://wg21.link/exec.get.await.adapt) `execution::get_await_completion_adaptor`
-## &#x1F534;&#x1F534;&#x1F534; [exec.sched](https://wg21.link/exec.sched) Schedulers
+## &#x2705;&#x1F534;&#x2705; [exec.sched](https://wg21.link/exec.sched) Schedulers
+
+- &#x2705;&#x2705;&#x2705; [`scheduler`](https://wg21.link/exec.sched#1)
+- &#x2705;&#x1F534;&#x2705; [<code><i>infallible-scheduler</i></code>](https://wg21.link/exec.sched#8)
+
 ## &#x1F534;&#x1F534;&#x1F534; [exec.recv](https://wg21.link/exec.recv) Receivers
 ### &#x1F534;&#x1F534;&#x1F534; [exec.recv.concepts](https://wg21.link/exec.recv.concepts) Receiver concepts
 ### &#x1F534;&#x1F534;&#x1F534; [exec.set.value](https://wg21.link/exec.set.value) `execution::set_value`

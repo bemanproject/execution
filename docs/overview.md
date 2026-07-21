@@ -803,6 +803,16 @@ Determines if <code>To</code> is the result of decaying the type <code>From</cod
 </details>
 
 <details>
+<summary><code><i>infallible-scheduler</i>&lt;Sched&gt;</code></summary>
+
+Determines if <code>Sched</code> is a scheduler (i.e., <code>scheduler&lt;Sched&gt;</code> is <code>true</code>)
+and if <code>Sched</code>'s sender has only a <code>set_value_t()</code> completion signature when used with
+an environment with an <code>unstoppable_token&lt;Tok&gt;</code> stop token <code>Tok</code>. If the
+stop token <code>Tok</code> is not <code>unstoppable_token&lt;Tok&gt;</code> the completion signatures
+can include a <code>set_stopped_t()</code> completion signature in addition to the <code>set_value_t()</code> completion signature.
+</details>
+
+<details>
 <summary><code><i>HIDE-SCHED</i>(q)</code></summary>
 For a query object <code>tag</code> and arguments <code>a...</code> the
 expressions <code><i>HIDE-SCHED</i>(q).query(tag, a...)</code> is
