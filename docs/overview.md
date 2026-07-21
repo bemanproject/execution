@@ -370,7 +370,7 @@ struct alloc_env {
 </details>
 <details>
 <summary><code>forwarding_query(<i>query</i>) -> bool</code></summary>
-**Default**: `false`
+<b>Default</b>: `false`
 <br/>
 The expression <code>forwarding_query(<i>query</i>)</code> is a `constexpr` query used to determine if the query <code><i>query</i></code> should be forwarded when wrapping an environment. The expression is required to be a core constant expression if <code><i>query</i></code> is a core constant expression.
 
@@ -407,7 +407,7 @@ struct custom_t: forwarding_query_t {
 </details>
 <details>
 <summary><code>get_env(<i>queryable</i>) -> <i>env</i></code></summary>
-**Default**: <a href='#env'>`env&lt;&gt;`</a>
+<b>Default</b>: <a href='#env'>`env&lt;&gt;`</a>
 <br/>
 The expression <code>get_env(<i>queryable</i>)</code> is used to get the environment <code><i>env</i></code> associated with <code><i>queryable</i></code>. To provide a non-default environment for a <code><i>queryable</i></code> a `get_env` member needs to be defined. If <code><i>queryable</i></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href=‘#env’>env&lt;&gt;</a></code> is returned.
 The value of the expression is <ol>
@@ -437,7 +437,7 @@ Note that the `get_env` member is both `const` and `noexcept`.
 </details>
 <details>
 <summary><code>get_allocator(<i>env</i>) -> <i>allocator</i></code></summary>
-**Default**: <i>none</i>
+<b>Default</b>: <i>none</i>
 <br/>
 The expression <code>get_allocator(<i>env</i>)</code> returns an <code><i>allocator</i></code> for any memory allocations in the respective context. If <code><i>env</i></code> doesn’t support this query any attempt to access it will result in a compilation error.  The value of the expression <code>get_allocator(<i>env</i>)</code> is the result of <code>as_const(<i>env</i>).query(get_allocator)</code> if
 <ul>
@@ -464,10 +464,27 @@ struct alloc_env {
 </div>
 </details>
 <details>
-<summary><code>get_completion_scheduler&lt;<i>Tag</i>&gt;(<i>env</i>) -> <i>scheduler</i></code></summary>
-**Default**: <i>none</i>
+<summary><code>get_completion_domain&lt;<i>Tag</i>&gt;(<i>attrs</i>) -> <i>domain</i></code></summary>
+<b>Default</b>: <i>none</i>
 <br/>
-The expression <code>get_complet_scheduler&lt;Tag&gt;(<i>env</i>)</code> yields the completion scheduler for the completion signal <code>Tag</code> associated with <code><i>env</i></code>. This query can be used to determine the scheduler a sender <code><i>sender</i></code> completes on for a given completion signal <code>Tag</code> by using <code>get_completion_scheduler&lt;Tag&gt;(get_env(<i>sender</i>))</code>. The value of the expression is equivalent to <code>as_const(<i>env</i>).query(get_completion_scheduler&lt;Tag&gt;)</code> if
+The expression <code>get_completion_domain&lt;Tag&gt;(<i>attrs</i>)</code> yields the completion domain for the completion signal <code>Tag</code> associated with the sender <code><i>attrs</i></code>. This query can be used to determine the domain a sender <code><i>sender</i></code> completes on for a given completion signal <code>Tag</code> by using <code>get_completion_domain&lt;Tag&gt;(get_env(<i>sender</i>), ev...)</code>. The value of the expression is
+<ol>
+   <li>equivalent to <code>as_const(<i>env</i>).query(get_completion_domain&lt;Tag&gt;, ev...)</code> if
+   <code>Tag</code> is one of the types <code>set_value_t</code>, <code>set_error_t</code>, or <code>set_stopped_t</code> and the expression is valid;</li>
+   <li>equivalent to <code>as_const(<i>env</i>).query(get_completion_domain&lt;Tag&gt;)</code> if
+   <code>Tag</code> is one of the types <code>set_value_t</code>, <code>set_error_t</code>, or <code>set_stopped_t</code> and the expression is valid;</li>
+   <li>equivalent to <code>get_completion_domain&lt;set_value_t&gt;(get_env(<i>sender</i>), ev...)</code> if <code>Tag</code> is <code>void</code> and the expression is valid;</li>
+   <li>equivalent to <code><i>TRY-QUERY</i>(get_completion_scheduler&lt;Tag&gt;(attrs, env...), get_completion_domain&lt;set_value_t&gt;, ev...)</i></code> if this expression is well-formed;</li>
+   <li>equivalent to <code>default_domain</code> if <code>scheduler&lt;decltype(attrs)&gt;</code> is <code>true</code> and <code>0u &lt; sizeof...(ev)</code>;</li>
+   <li>ill-formed otherwise.</li>
+</ol>
+Otherwise the expression is invalid.
+</details>
+<details>
+<summary><code>get_completion_scheduler&lt;<i>Tag</i>&gt;(<i>env</i>) -> <i>scheduler</i></code></summary>
+<b>Default</b>: <i>none</i>
+<br/>
+The expression <code>get_completion_scheduler&lt;Tag&gt;(<i>env</i>)</code> yields the completion scheduler for the completion signal <code>Tag</code> associated with <code><i>env</i></code>. This query can be used to determine the scheduler a sender <code><i>sender</i></code> completes on for a given completion signal <code>Tag</code> by using <code>get_completion_scheduler&lt;Tag&gt;(get_env(<i>sender</i>))</code>. The value of the expression is equivalent to <code>as_const(<i>env</i>).query(get_completion_scheduler&lt;Tag&gt;)</code> if
 <ol>
    <li><code>Tag</code> is one of the types <code>set_value_t</code>, <code>set_error_t</code>, or <code>set_stopped_t</code>;
    <li>this expression is valid;</li>
@@ -517,10 +534,11 @@ Otherwise the expression is invalid.
 </details>
 <details>
 <summary><code>get_domain(<i>env</i>) -> <i>domain</i></code></summary>
-The expression <code>get_domain(<i>env</i>)</code> yields the domain associated with <code><i>env</i></code>. The value of the expression is equivalent to <code>as_const(<i>env</i>).query(get_domain)</code> if
+The expression <code>get_domain(<i>env</i>)</code> yields the domain associated with <code><i>env</i></code>. The value of the expression is equivalent to
 <ol>
-   <li>this expression is valid;</li>
-   <li>this expression is <code>noexcept</code>.</li>
+   <li><code>auto(as_const(<i>env</i>).query(get_domain))</code> if this expression is valid;</li>
+   <li>otherwise, <code>get_completion_domain&lt;set_value_t&gt;(get_scheduler(env), <i>HIDE-SCHED</i>(env))</code> if this expression is valid;</li>
+   <li><code>default_domain()</code> (except <code><i>env</i></code> is evaluted).</li>
 </ol>
 Otherwise the expression is invalid.
 </details>
@@ -543,6 +561,20 @@ The expression <code>get_scheduler(<i>env</i>)</code> yields the scheduler assoc
    <li>the expression’s type satisfies <code>scheduler</code>.
 </ol>
 Otherwise the expression is invalid.
+</details>
+<details>
+<summary><code>get_start_scheduler(<i>env</i>) -> <i>scheduler</i></code></summary>
+The expression <code>get_start_scheduler(<i>env</i>)</code> yields the scheduler associated with <code><i>env</i></code>. The value of the expression is equivalent to <code>as_const(<i>env</i>).query(get_scheduler)</code> if
+<ol>
+   <li>this expression is valid;</li>
+   <li>this expression is <code>noexcept</code>;</li>
+   <li>the expression’s type satisfies <code>scheduler</code>.
+</ol>
+Otherwise the expression is invalid.
+
+If the expression <code>get_start_scheduler(get_env(<i>rcvr</i>))</code>
+is well-formed it should yield the scheduler the operation state resulting
+from <code>connect(<i>sndr></i>, <i>rcvr</i>)</code> gets <code>start</code>ed on.
 </details>
 <details>
 <summary><code>get_stop_token(<i>env</i>) -> <i>stoppable_token</i></code></summary>

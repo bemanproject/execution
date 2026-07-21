@@ -100,11 +100,18 @@ TEST(exec_get_compl_sched) {
     test_tag<true, test_std::set_value_t>(e);
     test_tag<false, tag>(e);
 
+    test_std::env<> ev{};
     static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_error_t>(e)),
+                                 scheduler<test_std::set_error_t>>);
+    static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_error_t>(e, ev)),
                                  scheduler<test_std::set_error_t>>);
     static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_stopped_t>(e)),
                                  scheduler<test_std::set_stopped_t>>);
+    static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_stopped_t>(e, ev)),
+                                 scheduler<test_std::set_stopped_t>>);
     static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(e)),
+                                 scheduler<test_std::set_value_t>>);
+    static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(e, ev)),
                                  scheduler<test_std::set_value_t>>);
     ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(e) == scheduler<test_std::set_error_t>{19});
     ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(e) == scheduler<test_std::set_stopped_t>{20});

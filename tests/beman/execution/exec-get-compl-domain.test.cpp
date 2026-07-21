@@ -6,6 +6,7 @@
 #include <cstddef>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.get_completion_domain;
+import beman.execution.detail.get_forwarding_query;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
@@ -20,6 +21,7 @@ import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.completion_signatures;
 #else
 #include <beman/execution/detail/get_completion_domain.hpp>
+#include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
@@ -51,7 +53,9 @@ struct test_env {};
 
 template <bool Value, typename CPO>
 void test_get_completion_domain_template() {
-    static_assert(Value == requires { beman::execution::get_completion_domain<CPO>; });
+    static_assert(std::same_as<decltype(test_std::get_completion_domain<CPO>), const test_std::get_completion_domain_t<CPO>>);
+    static_assert(test_std::forwarding_query(test_std::get_completion_domain<CPO>));
+    static_assert(Value == requires { test_std::get_completion_domain<CPO>; });
 }
 
 template <typename Tag, typename Q = Tag>

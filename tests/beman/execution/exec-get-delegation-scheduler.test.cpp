@@ -52,9 +52,11 @@ auto env<Noexcept, Scheduler>::query(const test_std::get_completion_scheduler_t<
 template <bool Expect, typename Scheduler = void>
 auto test_get_delegation_scheduler(auto&& env) -> void {
     static_assert(Expect == requires { test_std::get_delegation_scheduler(env); });
-    if constexpr (Expect) {
+    if constexpr (requires { test_std::get_delegation_scheduler(env); }) {
         ASSERT(17 == test_std::get_delegation_scheduler(env).value);
-        // ASSERT(Scheduler{env.value} == test_std::get_delegation_scheduler(env));
+        static_assert(noexcept(test_std::get_delegation_scheduler(env)));
+        auto sched{test_std::get_delegation_scheduler(env)};
+        ASSERT(decltype(sched){env.value} == test_std::get_delegation_scheduler(env));
     }
 }
 } // namespace

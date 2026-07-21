@@ -54,12 +54,17 @@ TEST(exec_get_env) {
     auto e0 = test_std::get_env(0);
     test::use(e0);
     static_assert(std::same_as<test_std::env<>, decltype(e0)>);
+    static_assert(noexcept(test_std::get_env(0)));
+
     auto e1 = test_std::get_env(non_const{});
     test::use(e1);
     static_assert(std::same_as<test_std::env<>, decltype(e1)>);
+    static_assert(noexcept(test_std::get_env(non_const{})));
+
     auto e2 = test_std::get_env(normal<test_env>{});
     test::use(e2);
     static_assert(std::same_as<test_env, decltype(e2)>);
+    static_assert(noexcept(test_std::get_env(normal<test_env>{})));
     //-dk:TODO add negative compilation test: auto e3 = test_std::get_env(normal<test_env, false>{});
     //-dk:TODO add negative compilation test: auto e4 = test_std::get_env(with_non_env{});
 }

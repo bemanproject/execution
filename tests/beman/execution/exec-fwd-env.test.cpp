@@ -40,10 +40,15 @@ TEST(exec_fwd_env) {
 
     static_assert(not test_std::forwarding_query(0));
     static_assert(test_std::forwarding_query(derived()));
+    static_assert(noexcept(test_std::forwarding_query(derived())));
     static_assert(test_std::forwarding_query(static_query<>()));
+    static_assert(noexcept(test_std::forwarding_query(static_query<>())));
     static_assert(not test_std::forwarding_query(static_query<false>()));
+    static_assert(noexcept(test_std::forwarding_query(static_query<false>())));
     static_assert(not test_std::forwarding_query(static_query<true, int>()));
+    static_assert(noexcept(test_std::forwarding_query(static_query<true, int>())));
     static_assert(not test_std::forwarding_query(static_query<true, bool, false>()));
+    static_assert(noexcept(test_std::forwarding_query(static_query<true, bool, false>())));
 
     static_assert(test_std::forwarding_query(rvalue_query()));
     rvalue_query rq{};

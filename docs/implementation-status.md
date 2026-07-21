@@ -39,18 +39,22 @@
 - &#x2705;&#x2705;&#x2705; [<code><i>TRY-QUERY</i>(q, tag, a...)</code>](https://wg21.link/exec.queries.expos#2): [`try_query.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/try_query.hpp)
 - &#x2705;&#x2705;&#x2705; [<code><i>HIDE-SCHED</i>(q, tag, a...)</code>](https://wg21.link/exec.queries.expos#3): [`hide_sched.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/hide_sched.hpp)
 
-### &#x1F534;&#x1F534;&#x1F534; [exec.fwd.env](https://wg21.link/exec.fwd.env) `forwarding_query`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.allocator](https://wg21.link/exec.get.allocator) `get_allocator`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.stop.token](https://wg21.link/exec.get.stop.token) `get_stop_token`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.env](https://wg21.link/exec.get.env) `execution::get_env`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.domain](https://wg21.link/exec.get.domain) `execution::get_domain`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.scheduler](https://wg21.link/exec.get.scheduler) `execution::get_scheduler`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.start.scheduler](https://wg21.link/exec.get.start.scheduler) `execution::get_start_scheduler`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.delegation.scheduler](https://wg21.link/exec.get.delegation.scheduler) `execution::get_delegation_scheduler`
+### &#x2705;&#x2705;&#x2705; [exec.fwd.env](https://wg21.link/exec.fwd.env) `forwarding_query`
+### &#x2705;&#x2705;&#x2705; [exec.get.allocator](https://wg21.link/exec.get.allocator) `get_allocator`
+### &#x2705;&#x2705;&#x2705; [exec.get.stop.token](https://wg21.link/exec.get.stop.token) `get_stop_token`
+### &#x2705;&#x2705;&#x2705; [exec.get.env](https://wg21.link/exec.get.env) `execution::get_env`
+### &#x2705;&#x2705;&#x2705; [exec.get.domain](https://wg21.link/exec.get.domain) `execution::get_domain`
+### &#x2705;&#x2705;&#x2705; [exec.get.scheduler](https://wg21.link/exec.get.scheduler) `execution::get_scheduler`
+### &#x2705;&#x2705;&#x2705; [exec.get.start.scheduler](https://wg21.link/exec.get.start.scheduler) `execution::get_start_scheduler`
+### &#x2705;&#x2705;&#x2705; [exec.get.delegation.scheduler](https://wg21.link/exec.get.delegation.scheduler) `execution::get_delegation_scheduler`
 ### &#x1F534;&#x1F534;&#x1F534; [exec.get.fwd.progress](https://wg21.link/exec.get.fwd.progress) `execution::get_forward_progress_guarantee`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.compl.sched](https://wg21.link/exec.get.compl.sched) `execution::get_completion_scheduler`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.compl.domain](https://wg21.link/exec.get.compl.domain) `execution::get_completion_domain`
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.await.adapt](https://wg21.link/exec.get.await.adapt) `execution::get_await_completion_adaptor`
+
+- &#x1F534;&#x1F534;&#x1F534; [`forward_progress_guarantee`](https://wg21.link/exec.get.fwd.progress)
+- &#x1F534;&#x1F534;&#x1F534; [`get_forward_progress_guarantee`](https://wg21.link/exec.get.fwd.progress#2)
+
+### &#x2705;&#x2705;&#x2705; [exec.get.compl.sched](https://wg21.link/exec.get.compl.sched) `execution::get_completion_scheduler`
+### &#x2705;&#x2705;&#x1F534; [exec.get.compl.domain](https://wg21.link/exec.get.compl.domain) `execution::get_completion_domain`
+### &#x2705;&#x1F534;&#x1F534; [exec.get.await.adapt](https://wg21.link/exec.get.await.adapt) `execution::get_await_completion_adaptor`
 ## &#x1F534;&#x1F534;&#x1F534; [exec.sched](https://wg21.link/exec.sched) Schedulers
 ## &#x1F534;&#x1F534;&#x1F534; [exec.recv](https://wg21.link/exec.recv) Receivers
 ### &#x1F534;&#x1F534;&#x1F534; [exec.recv.concepts](https://wg21.link/exec.recv.concepts) Receiver concepts

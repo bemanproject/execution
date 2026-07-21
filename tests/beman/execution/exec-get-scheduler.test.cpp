@@ -35,6 +35,7 @@ TEST(exec_get_scheduler) {
     static_assert(test_std::forwarding_query(test_std::get_scheduler));
     env  e{17};
     auto sched{test_std::get_scheduler(e)};
+    static_assert(noexcept(test_std::get_scheduler(e)));
     static_assert(::std::same_as<scheduler, decltype(sched)>);
     ASSERT(sched == scheduler{17});
 }

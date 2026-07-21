@@ -44,6 +44,9 @@ struct non_const_get_allocator {
 template <bool Expect, typename Object>
 auto test_get_allocator(Object&& object) -> void {
     static_assert(Expect == requires { test_std::get_allocator(::std::forward<Object>(object)); });
+    if constexpr (Expect) {
+        static_assert(noexcept(test_std::get_allocator(::std::forward<Object>(object))));
+    }
 }
 } // namespace
 

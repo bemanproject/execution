@@ -40,6 +40,7 @@ struct inconsistent_get_stop_token {
 template <typename Result, typename Object>
 auto test_get_stop_token(Object&& object) {
     static_assert(requires { test_std::get_stop_token(object); });
+    static_assert(noexcept(test_std::get_stop_token(object)));
     static_assert(std::same_as<Result, decltype(test_std::get_stop_token(object))>);
 }
 } // namespace

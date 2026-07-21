@@ -48,6 +48,9 @@ struct test_sched_env {
     auto query(test_std::get_completion_scheduler_t<test_std::set_value_t>) const noexcept {
         return test_scheduler{scheduler_id};
     }
+    auto query(test_std::get_start_scheduler_t) const noexcept {
+        return test_scheduler{scheduler_id + 1};
+    }
     int scheduler_id = 0;
 };
 
@@ -71,6 +74,13 @@ auto test_scheduler::schedule() const -> test_sched_sender { return {scheduler_i
 } // namespace
 
 TEST(exec_get_start_scheduler) {
+    static_assert(std::same_as<const test_std::get_start_scheduler_t, decltype(test_std::get_start_scheduler)>);
+    static_assert(test_std::forwarding_query(test_std::get_start_scheduler));
+    auto sched = test_std::get_start_scheduler(test_sched_env{42});
+    static_assert(noexcept(test_std::get_start_scheduler(test_sched_env{42})));
+    static_assert(::std::same_as<test_scheduler, decltype(sched)>);
+    ASSERT(sched == test_scheduler{43});
+
     {
         test_scheduler sched{42};
         auto sndr = test_std::schedule(sched) |
