@@ -16,7 +16,7 @@ pyaml
 bump2version>=1.0.1
 check-jsonschema>=0.36.1
 cmake>=4.3
-codespell>=2.4.1
+codespell>=2.4.3
 # conan>=2.26.2
 gersemi>=0.27.2
 gcovr>=8.6

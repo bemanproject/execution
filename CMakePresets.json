@@ -34,7 +34,7 @@
       },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "BEMAN_BUILDSYS_SANITIZER": "MaxSan"
+        "BEMAN_BUILDSYS_SANITIZER": ""
       }
     },
     {

@@ -26,8 +26,8 @@ jobs:
         [
           {"preset": "gcc-debug", "image": "ghcr.io/bemanproject/infra-containers-gcc:latest"},
           {"preset": "gcc-release", "image": "ghcr.io/bemanproject/infra-containers-gcc:latest"},
-          {"preset": "llvm-debug", "image": "ghcr.io/bemanproject/infra-containers-clang:trunk"},
-          {"preset": "llvm-release", "image": "ghcr.io/bemanproject/infra-containers-clang:trunk"},
+          {"preset": "llvm-debug", "image": "ghcr.io/bemanproject/infra-containers-clang:latest"},
+          {"preset": "llvm-release", "image": "ghcr.io/bemanproject/infra-containers-clang:latest"},
           {"preset": "msvc-debug", "runner": "windows-latest"},
           {"preset": "msvc-release", "runner": "windows-latest"}
         ]
@@ -44,22 +44,34 @@ jobs:
                   "tests": [
                     { "stdlibs": ["libstdc++"],
                       "tests": [
-                        "Debug.Default", "Release.Default", "Release.MaxSan",
-                        "Debug.Coverage", "Debug.Werror",
-                        "Debug.Dynamic", "Release.Dynamic"
+                        "Debug.Default", "Release.Default", "Release.TSan",
+                        "Release.MaxSan", "Debug.Werror",
+                        "Debug.Coverage", "Debug.-DBEMAN_USE_MODULES=On"
                       ]
                     }
                   ]
                 },
                 { "cxxversions": ["c++23"],
-                  "tests": [{ "stdlibs": ["libstdc++"], "tests": ["Release.Default"]}]
+                  "tests": [
+                    { "stdlibs": ["libstdc++"],
+                      "tests": [
+                        "Release.Default", "Debug.-DBEMAN_USE_MODULES=On"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
             { "versions": ["15"],
               "tests": [
                 { "cxxversions": ["c++26", "c++23"],
-                  "tests": [{ "stdlibs": ["libstdc++"], "tests": ["Release.Default"]}]
+                  "tests": [
+                    { "stdlibs": ["libstdc++"],
+                      "tests": [
+                        "Release.Default", "Debug.-DBEMAN_USE_MODULES=On"
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -69,17 +81,22 @@ jobs:
               "tests": [
                 {"cxxversions": ["c++26"],
                   "tests": [
-                    { "stdlibs": ["libc++"],
+                    { "stdlibs": ["libstdc++", "libc++"],
                       "tests": [
-                        "Debug.Default", "Release.Default", "Release.MaxSan",
-                        "Debug.Dynamic", "Release.Dynamic"
+                        "Debug.Default", "Release.Default", "Release.TSan",
+                        "Release.MaxSan", "Debug.Werror",
+                        "Debug.-DBEMAN_USE_MODULES=On"
                       ]
                     }
                   ]
                 },
                 { "cxxversions": ["c++23"],
                   "tests": [
-                    {"stdlibs": ["libc++"], "tests": ["Release.Default"]}
+                    { "stdlibs": ["libstdc++", "libc++"],
+                      "tests": [
+                        "Release.Default", "Debug.-DBEMAN_USE_MODULES=On"
+                      ]
+                    }
                   ]
                 }
               ]
@@ -100,8 +117,9 @@ jobs:
                 { "cxxversions": ["c++23"],
                   "tests": [
                     { "stdlibs": ["stl"],
-                      "tests": ["Debug.Default", "Release.Default", "Release.MaxSan",
-                        "Debug.Dynamic", "Release.Dynamic"
+                      "tests": [
+                        "Debug.Default", "Release.Default", "Release.MaxSan",
+                        "Debug.-DBEMAN_USE_MODULES=On"
                       ]
                     }
                   ]

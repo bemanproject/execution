@@ -95,12 +95,14 @@ if(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
 endif()
 message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
 
-option(
-    BEMAN_USE_STD_MODULE
-    "Check if 'import std;' is possible with the toolchain?"
-    OFF
-)
-message(STATUS "BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}")
+if(CMAKE_CXX_STANDARD GREATER_EQUAL 23)
+    option(
+        BEMAN_USE_STD_MODULE
+        "Check if 'import std;' is possible with the toolchain?"
+        ON
+    )
+    message(STATUS "BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}")
+endif()
 
 if(BEMAN_USE_MODULES AND BEMAN_USE_STD_MODULE)
     # -------------------------------------------------------------------------
