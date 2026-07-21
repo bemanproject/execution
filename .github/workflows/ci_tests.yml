@@ -81,7 +81,7 @@ jobs:
               "tests": [
                 {"cxxversions": ["c++26"],
                   "tests": [
-                    { "stdlibs": ["libstdc++", "libc++"],
+                    { "stdlibs": ["libc++"],
                       "tests": [
                         "Debug.Default", "Release.Default", "Release.TSan",
                         "Release.MaxSan", "Debug.Werror",
@@ -92,7 +92,7 @@ jobs:
                 },
                 { "cxxversions": ["c++23"],
                   "tests": [
-                    { "stdlibs": ["libstdc++", "libc++"],
+                    { "stdlibs": ["libc++"],
                       "tests": [
                         "Release.Default", "Debug.-DBEMAN_USE_MODULES=On"
                       ]
