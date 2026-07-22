@@ -132,7 +132,7 @@ struct task_scheduler_backend : ::beman::execution::parallel_scheduler_replaceme
             return ::beman::execution::prop{
                 ::beman::execution::get_stop_token,
                 proxy.try_query<::beman::execution::inplace_stop_token>(::beman::execution::get_stop_token)
-                    .value_or({})};
+                    .value_or(::beman::execution::inplace_stop_token{})};
         }
 
         ::beman::execution::parallel_scheduler_replacement::receiver_proxy& proxy;
