@@ -180,7 +180,7 @@ struct psched_bulk_sender {
             auto set_value(Args&&... args) noexcept -> void try {
                 using arg_t = ::beman::execution::detail::decayed_tuple<Args...>;
                 proxy->result.template emplace<arg_t>(::std::forward<Args>(args)...);
-                if (proxy->backend == nullptr) [[unlikely]] {
+                if (!proxy->backend) [[unlikely]] {
                     ::std::terminate();
                 }
                 const ::std::size_t s = is_parallel_policy ? proxy->shape : 1uz;
