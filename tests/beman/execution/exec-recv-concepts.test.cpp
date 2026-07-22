@@ -29,7 +29,6 @@ struct final_receiver final {
     using receiver_concept = test_std::receiver_tag;
 };
 
-
 template <typename... T>
 struct value_receiver {
     using receiver_concept = test_std::receiver_tag;

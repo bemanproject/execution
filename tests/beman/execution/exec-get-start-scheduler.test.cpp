@@ -48,9 +48,7 @@ struct test_sched_env {
     auto query(test_std::get_completion_scheduler_t<test_std::set_value_t>) const noexcept {
         return test_scheduler{scheduler_id};
     }
-    auto query(test_std::get_start_scheduler_t) const noexcept {
-        return test_scheduler{scheduler_id + 1};
-    }
+    auto query(test_std::get_start_scheduler_t) const noexcept { return test_scheduler{scheduler_id + 1}; }
     int scheduler_id = 0;
 };
 

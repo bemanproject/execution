@@ -53,7 +53,8 @@ struct test_env {};
 
 template <bool Value, typename CPO>
 void test_get_completion_domain_template() {
-    static_assert(std::same_as<decltype(test_std::get_completion_domain<CPO>), const test_std::get_completion_domain_t<CPO>>);
+    static_assert(
+        std::same_as<decltype(test_std::get_completion_domain<CPO>), const test_std::get_completion_domain_t<CPO>>);
     static_assert(test_std::forwarding_query(test_std::get_completion_domain<CPO>));
     static_assert(Value == requires { test_std::get_completion_domain<CPO>; });
 }
