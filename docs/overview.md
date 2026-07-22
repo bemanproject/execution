@@ -813,6 +813,11 @@ can include a <code>set_stopped_t()</code> completion signature in addition to t
 </details>
 
 <details>
+<summary><code>concept <i>has-completions</i>&lt;Rcvr, Completions&gt;</code></summary>
+This concept determines if an object of type <code>Rcvr</code> supports ech of the completion signatures in <code>Completions</code>.
+</details>
+<details>
+
 <summary><code><i>HIDE-SCHED</i>(q)</code></summary>
 For a query object <code>tag</code> and arguments <code>a...</code> the
 expressions <code><i>HIDE-SCHED</i>(q).query(tag, a...)</code> is
@@ -842,10 +847,21 @@ Determines if objects of type <code>T</code> are queryable:
 that using the queryable object with query objects behave as required.
 </details>
 
+
+<details>
+<summary><code>concept <i>receiver-of</i>&lt;Rcvr, Signatures&gt;</code></summary>
+This concept determines if an object of type <code>Rcvr</code> is a receiver (i.e., <code>receiver&lt;Rcvr&gt;</code> is <code>true</code>) and supports each of the completion signatures in <code>Signatures</code>.
+</details>
+
 <details>
 <summary><code><i>TRY-QUERY</i>(q, tag, a...)</code></summary>
 Tries to apply the query <code>tag</code> to the queryable object <code>q</code>:
 if passing the arguments <code>a...</code> is valid passes these arguments (<code><i>AS-CONST</i>(q).query(tag, a...)</code>), otherwise
 queries <code>q</code> for <code>tag</code> without the arguments (<code><i>AS-CONST</i>(q).query(tag)</code>), although the
 arguments are evaluated.
+</details>
+
+<details>
+<summary><code>concept <i>valid-completion-for</i>&lt;Signature, Rcvr&gt;</code></summary>
+This concept determines if an object of type <code>Rcvr</code> supports the completion signature <code>Signature</code>.
 </details>
