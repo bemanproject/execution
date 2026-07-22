@@ -4,17 +4,16 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_ERROR
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_WITH_ERROR
 
-#include <coroutine>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <type_traits>
-#include <utility>
+#endif
 
 // ----------------------------------------------------------------------------
-/*
- * \brief Tag type used to indicate an error is produced.
- * \headerfile beman/execution/task.hpp <beman/execution/task.hpp>
- * \internal
- */
-namespace beman::execution::detail {
+
+namespace beman::execution {
 template <typename E>
 struct with_error {
     using type = ::std::remove_cvref_t<E>;
@@ -23,7 +22,7 @@ struct with_error {
 template <typename E>
 with_error(E&&) -> with_error<E>;
 
-} // namespace beman::execution::detail
+} // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 
