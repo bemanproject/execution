@@ -69,6 +69,8 @@ list(
     exec-stopped-as-optional.test
     exec-sync-wait.test
     exec-sync-wait-with-variant.test
+    exec-task.test
+    exec-task-scheduler.test
     exec-then.test
     exec-utils-cmplsigs.test
     exec-when-all.test
