@@ -65,7 +65,11 @@ if(CMAKE_GENERATOR MATCHES "Ninja")
             string(APPEND CMAKE_CXX_MODULE_MAP_FLAG " -fmodules-reduced-bmi")
         endif()
 
-        add_compile_options($ENV{CXXFLAGS})
+        add_compile_options(
+            $ENV{CXXFLAGS}
+            -Wno-missing-braces
+            -Wno-unneeded-internal-declaration
+        )
         add_link_options($ENV{CXXFLAGS})
     elseif(
         CMAKE_CXX_COMPILER_ID STREQUAL "GNU"

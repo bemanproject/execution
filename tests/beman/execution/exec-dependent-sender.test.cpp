@@ -23,11 +23,11 @@ TEST(exec_dependent_sender) {
         test_std::dependent_sender<decltype(test_std::let_value(
             test_std::read_env(test_std::get_scheduler), [](auto sched) noexcept { return test_std::just(sched); }))>);
     static_assert(test_std::dependent_sender<decltype(test_std::read_env(test_std::get_scheduler) |
-                                                      test_std::then([](auto sched) noexcept {}))>);
+                                                      test_std::then([](auto /* sched */) noexcept {}))>);
     static_assert(test_std::dependent_sender<decltype(test_std::let_value(
                                                           test_std::read_env(test_std::get_scheduler),
                                                           [](auto sched) noexcept { return test_std::just(sched); }) |
-                                                      test_std::then([](auto sched) noexcept {}))>);
+                                                      test_std::then([](auto /* sched */) noexcept {}))>);
     static_assert(
         test_std::dependent_sender<decltype(test_std::when_all(test_std::read_env(test_std::get_scheduler)))>);
     static_assert(test_std::dependent_sender<decltype(test_std::when_all_with_variant(

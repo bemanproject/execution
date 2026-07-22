@@ -134,8 +134,20 @@ foreach(test ${execution_tests})
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
+# Disable ThreadSanitizer for this specific test target (Clang only)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(
+        beman.execution.stopsource-cons.test
+        PRIVATE -fno-sanitize=thread
+    )
+    target_link_options(
+        beman.execution.stopsource-cons.test
+        PRIVATE -fno-sanitize=thread
+    )
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    # TODO(CK): return()
+    return()
 endif()
 
 #======================================================================

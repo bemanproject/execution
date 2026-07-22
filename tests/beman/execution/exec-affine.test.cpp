@@ -104,7 +104,8 @@ struct test_scheduler {
         }
     };
 
-    auto        schedule() const noexcept { return sender{this->data_}; }
+    auto schedule() const noexcept { return sender{this->data_}; }
+    // TODO(CK): prevent -Wunneeded-internal-declaration error!
     friend auto operator==(const test_scheduler&, const test_scheduler&) noexcept -> bool = default;
 };
 
@@ -167,7 +168,7 @@ TEST(affine) {
     assert(s == loop.get_scheduler());
     auto st{test_std::transform_sender(test_std::affine(test_std::just(42)), test_std::get_env(r))};
     test_std::connect(std::move(st), std::move(r));
-    auto s0{test_std::connect(test_std::affine(test_std::just(42)), receiver(loop.get_scheduler()))};
+    [[maybe_unused]] auto s0{test_std::connect(test_std::affine(test_std::just(42)), receiver(loop.get_scheduler()))};
 
     std::thread t{[&]() noexcept { loop.run(); }};
     auto        r0 = test_std::sync_wait(test_std::affine(test_std::just(42)));
