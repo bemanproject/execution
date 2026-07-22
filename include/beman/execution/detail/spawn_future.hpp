@@ -93,11 +93,11 @@ template <typename... Sigs>
 struct spawn_future_state_base<::beman::execution::completion_signatures<Sigs...>> {
     static constexpr bool has_non_throwing_args_copy = (true && ... && non_throwing_args_copy_v<Sigs>);
     using result_t                                   = ::beman::execution::detail::meta::unique<
-                                          ::std::conditional_t<has_non_throwing_args_copy,
-                                                               ::std::variant<::std::monostate, ::beman::execution::detail::as_tuple_t<Sigs>...>,
-                                                               ::std::variant<::std::monostate,
-                                                                              ::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>,
-                                                                              ::beman::execution::detail::as_tuple_t<Sigs>...>>>;
+        ::std::conditional_t<has_non_throwing_args_copy,
+                             ::std::variant<::std::monostate, ::beman::execution::detail::as_tuple_t<Sigs>...>,
+                             ::std::variant<::std::monostate,
+                                            ::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>,
+                                            ::beman::execution::detail::as_tuple_t<Sigs>...>>>;
 
     result_t result{};
     virtual ~spawn_future_state_base()       = default;
