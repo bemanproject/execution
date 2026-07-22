@@ -46,7 +46,7 @@ include(
 )
 
 if(NOT APPLE)
-    # TODO(CK): return()
+    return()
 endif()
 
 # ---------------------------------------------------------------------------
@@ -66,10 +66,11 @@ if(
 )
     # NOTE: Always use libc++
     # see https://releases.llvm.org/19.1.0/projects/libcxx/docs/index.html
-    set(ENV{CXXFLAGS} -stdlib=libc++)
-    message(STATUS "CXXFLAGS=-stdlib=libc++")
 
     if(APPLE)
+        set(ENV{CXXFLAGS} "-stdlib=libc++")
+        message(STATUS "CXXFLAGS=$ENV{CXXFLAGS}")
+
         execute_process(
             OUTPUT_VARIABLE LLVM_PREFIX
             COMMAND brew --prefix llvm
@@ -87,6 +88,11 @@ if(
             ${LLVM_DIR}/lib/c++/libc++.modules.json
         )
     elseif(LINUX)
+        set(ENV{CXXFLAGS}
+            "-stdlib=libc++ -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
+        )
+        message(STATUS "CXXFLAGS=$ENV{CXXFLAGS}")
+
         execute_process(
             OUTPUT_VARIABLE LLVM_MODULES
             COMMAND clang++ -print-file-name=libc++.modules.json
