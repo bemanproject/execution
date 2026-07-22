@@ -13,6 +13,8 @@ import std;
 #include <concepts>
 #include <exception>
 #include <memory>
+#include <optional>
+#include <span>
 #include <type_traits>
 #include <utility>
 #endif
