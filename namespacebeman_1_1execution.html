@@ -212,9 +212,15 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1sync__wait__with__variant__t.html">sync_wait_with_variant_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1execution_1_1task.html">task</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1execution_1_1task__scheduler.html">task_scheduler</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1unsequenced__policy.html">unsequenced_policy</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1with__awaitable__senders.html">with_awaitable_senders</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1with__error.html">with_error</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
@@ -484,6 +490,10 @@ template&lt;typename CallbackFun &gt; </td></tr>
 template&lt;::beman::execution::sender Sndr, typename Env &gt; </td></tr>
 <tr class="memitem:a96ea01821f41b942670d4c557ce31bd2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_sender</b> (Sndr &amp;&amp;sndr, const Env &amp;<a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) -&gt; ::beman::execution::sender auto</td></tr>
 <tr class="separator:a96ea01821f41b942670d4c557ce31bd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06fcad593660972b449cb3941e0a45fe"><td class="memTemplParams" colspan="2"><a id="a06fcad593660972b449cb3941e0a45fe" name="a06fcad593660972b449cb3941e0a45fe"></a>
+template&lt;typename E &gt; </td></tr>
+<tr class="memitem:a06fcad593660972b449cb3941e0a45fe"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>with_error</b> (E &amp;&amp;) -&gt; <a class="el" href="structbeman_1_1execution_1_1with__error.html">with_error</a>&lt; E &gt;</td></tr>
+<tr class="separator:a06fcad593660972b449cb3941e0a45fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

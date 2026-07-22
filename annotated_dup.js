@@ -53,14 +53,18 @@ var annotated_dup =
         [ "stop_source", "classbeman_1_1execution_1_1stop__source.html", null ],
         [ "stop_token", "classbeman_1_1execution_1_1stop__token.html", null ],
         [ "sync_wait_with_variant_t", "structbeman_1_1execution_1_1sync__wait__with__variant__t.html", null ],
+        [ "task", "classbeman_1_1execution_1_1task.html", null ],
+        [ "task_scheduler", "classbeman_1_1execution_1_1task__scheduler.html", "classbeman_1_1execution_1_1task__scheduler" ],
         [ "unsequenced_policy", "structbeman_1_1execution_1_1unsequenced__policy.html", null ],
-        [ "with_awaitable_senders", "structbeman_1_1execution_1_1with__awaitable__senders.html", null ]
+        [ "with_awaitable_senders", "structbeman_1_1execution_1_1with__awaitable__senders.html", null ],
+        [ "with_error", "structbeman_1_1execution_1_1with__error.html", null ]
       ] ]
     ] ],
     [ "std", null, [
       [ "common_type< D, ::beman::execution::indeterminate_domain< Domains... > >", "structstd_1_1common__type_3_01D_00_01_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains_8_8_8_01_4_01_4.html", null ],
       [ "common_type<::beman::execution::indeterminate_domain< Domains... >, D >", "structstd_1_1common__type_3_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains_8_8_8_01_4_00_01D_01_4.html", null ],
-      [ "common_type<::beman::execution::indeterminate_domain< Domains1... >, ::beman::execution::indeterminate_domain< Domains2... > >", "structstd_1_1common__type_3_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains1_8_8_8_0165f01b763af7a8575fe9cb0bab769a35.html", null ]
+      [ "common_type<::beman::execution::indeterminate_domain< Domains1... >, ::beman::execution::indeterminate_domain< Domains2... > >", "structstd_1_1common__type_3_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains1_8_8_8_0165f01b763af7a8575fe9cb0bab769a35.html", null ],
+      [ "uses_allocator<::beman::execution::task_scheduler, Alloc >", "structstd_1_1uses__allocator_3_1_1beman_1_1execution_1_1task__scheduler_00_01Alloc_01_4.html", null ]
     ] ],
     [ "tst", null, [
       [ "add_set_value", "structtst_1_1add__set__value.html", "structtst_1_1add__set__value" ],

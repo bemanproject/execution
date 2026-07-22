@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['rcvr_5fproxy_0',['rcvr_proxy',['../structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html',1,'beman::execution::parallel_scheduler::sender']]],
+  ['rcvr_5fproxy_0',['rcvr_proxy',['../structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html',1,'beman::execution::parallel_scheduler::sender::rcvr_proxy&lt; Rcvr &gt;'],['../structbeman_1_1execution_1_1task__scheduler_1_1sender_1_1rcvr__proxy.html',1,'beman::execution::task_scheduler::sender::rcvr_proxy&lt; Rcvr &gt;']]],
   ['rcvr_5fproxy_3c_3a_3astd_3a_3aremove_5fcvref_5ft_3c_20rcvr_20_3e_20_3e_1',['rcvr_proxy&lt;::std::remove_cvref_t&lt; Rcvr &gt; &gt;',['../structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html',1,'beman::execution::parallel_scheduler::sender']]],
   ['receiver_2',['receiver',['../structreceiver.html',1,'']]],
   ['receiver_5fproxy_3',['receiver_proxy',['../structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html',1,'beman::execution::parallel_scheduler_replacement']]],

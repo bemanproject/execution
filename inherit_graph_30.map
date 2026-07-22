@@ -1,6 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html" title=" " alt="" coords="5,99,200,154"/>
+<area shape="rect" id="node1" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html" title=" " alt="" coords="5,139,200,194"/>
 <area shape="rect" id="node2" href="$structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="248,5,451,75"/>
 <area shape="rect" id="node3" href="$structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="252,99,447,154"/>
 <area shape="rect" id="node4" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1bulk__item__receiver__proxy.html" title=" " alt="" coords="252,178,447,233"/>
+<area shape="rect" id="node5" href="$structbeman_1_1execution_1_1task__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="261,257,438,311"/>
 </map>
