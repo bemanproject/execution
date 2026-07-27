@@ -203,6 +203,9 @@ TEST(exec_spawn) {
     test_overload<true>(sender<true>{}, token<true>{}, env{});
     test_overload<false>(sender<false>{}, token<true>{}, env{});
     test_overload<false>(sender<true>{}, token<false>{}, env{});
+    token<true> lvalue{};
+    test_overload<true>(sender<true>{}, lvalue, env{});
+    test_overload<true>(sender<true>{}, std::as_const(lvalue), env{});
 
     test_spawn_state_base();
     test_spawn_receiver<true, test_std::spawn_t::receiver>();

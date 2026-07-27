@@ -52,6 +52,7 @@ import beman.execution.detail.nostopstate;
 import beman.execution.detail.on;
 export import beman.execution.detail.operation_state; // [exec.opstate], operation states
 import beman.execution.detail.parallel_scheduler;
+import beman.execution.detail.parallel_scheduler_replacement;
 import beman.execution.detail.prop;
 import beman.execution.detail.read_env;
 import beman.execution.detail.run_loop;
@@ -107,6 +108,11 @@ export import beman.execution.detail.sender_in;
 export import beman.execution.detail.sender_to;
 export import beman.execution.detail.dependent_sender;
 export import beman.execution.detail.sends_stopped;
+
+// [exec.task]
+export import beman.execution.detail.task;
+export import beman.execution.detail.task_scheduler;
+export import beman.execution.detail.with_error;
 
 namespace beman::execution {
 
