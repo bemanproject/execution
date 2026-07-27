@@ -8,6 +8,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <mutex>
 #include <thread>
 #include <cassert>
 #ifdef BEMAN_HAS_MODULES
@@ -82,12 +83,13 @@ struct receiver {
 
 int main() {
     ex::inplace_stop_source source;
+    std::mutex              mtx;
 
-    std::thread t([token = source.get_token()] {
+    std::thread t([token = source.get_token(), &mtx] {
         ex::sync_wait(
-            inject_cancel_sender{token, ex::read_env(ex::get_stop_token) | ex::then([](ex::inplace_stop_token tok) {
+            inject_cancel_sender{token, ex::read_env(ex::get_stop_token) | ex::then([&mtx](ex::inplace_stop_token tok) {
                                             while (not tok.stop_requested()) {
-                                                std::cout << "sleeping\n";
+                                                (void)std::lock_guard(mtx), std::cout << "sleeping\n";
                                                 std::this_thread::sleep_for(10ms);
                                             }
                                         })});
@@ -95,7 +97,7 @@ int main() {
 
     // std::cin.get();
     std::this_thread::sleep_for(100ms);
-    std::cout << "requesting stop\n";
+    (void)std::lock_guard(mtx), std::cout << "requesting stop\n";
     source.request_stop();
 
     t.join();
