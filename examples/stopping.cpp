@@ -86,13 +86,13 @@ int main() {
     std::mutex              mtx;
 
     std::thread t([token = source.get_token(), &mtx] {
-        ex::sync_wait(
-            inject_cancel_sender{token, ex::read_env(ex::get_stop_token) | ex::then([&mtx](ex::inplace_stop_token tok) {
-                                            while (not tok.stop_requested()) {
-                                                (void)std::lock_guard(mtx), std::cout << "sleeping\n";
-                                                std::this_thread::sleep_for(10ms);
-                                            }
-                                        })});
+        ex::sync_wait(inject_cancel_sender{
+            token, ex::read_env(ex::get_stop_token) | ex::then([&mtx](ex::inplace_stop_token tok) {
+                       while (not tok.stop_requested()) {
+                           (void)std::lock_guard(mtx), std::cout << "sleeping\n";
+                           std::this_thread::sleep_for(10ms);
+                       }
+                   })});
     });
 
     // std::cin.get();
