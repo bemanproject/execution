@@ -192,6 +192,7 @@ template <bool Expect, typename Query>
 auto test_fwd_env_helper() -> void {
     env e{42};
     static_assert(Expect == requires() { test_detail::fwd_env(e).query(Query()); });
+    static_assert(Expect == false || std::same_as<test_detail::fwd_env_t<env>, decltype(test_detail::fwd_env(std::declval<env>()))>);
 }
 auto test_fwd_env() -> void {
     env e{42};

@@ -90,8 +90,15 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x2705; [exec.opstate.general](https://wg21.link/exec.opstate.general) General: [`operation_state.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/operation_state.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.opstate.start](https://wg21.link/exec.opstate.start) `execution::start`: [`start.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/start.hpp)
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.snd](https://wg21.link/exec.snd) Senders
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.snd.general](https://wg21.link/exec.snd.general) General
+### &#x274E;&#x274E;&#x274E; [exec.snd.general](https://wg21.link/exec.snd.general) General
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.snd.expos](https://wg21.link/exec.snd.expos) Exposition-only entities
+
+- &#x2705;&#x2705;&#x2705; [exec.snd.expos#4](https://wg21.link/exec.snd.expos) <code><i>FWD-ENV</i>(env)</code>: [`fwd_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/fwd_env.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.snd.expos#4](https://wg21.link/exec.snd.expos) <code><i>FWD-ENV-T</i>(Env)</code>: [`fwd_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/fwd_env.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.snd.expos#5](https://wg21.link/exec.snd.expos) <code><i>MAKE-ENV</i>(q, v)</code>: [`make_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/make_env.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.snd.expos#6](https://wg21.link/exec.snd.expos) <code><i>JOIN-ENV</i>(ev1, ev2)</code>: [`join_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/join_env.hpp)
+- &#x2705;&#x1F534;&#x2705; [exec.snd.expos#8](https://wg21.link/exec.snd.expos) <code><i>COMMON-DOMAIN</i>(domains...)</code>: [`common_domain.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/common_domain.hpp)
+
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.snd.concepts](https://wg21.link/exec.snd.concepts) Sender concepts
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.awaitable](https://wg21.link/exec.awaitable) Awaitable helpers
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.domain.indeterminate](https://wg21.link/exec.domain.indeterminate) `execution::indeterminate_domain`

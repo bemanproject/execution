@@ -797,9 +797,33 @@ Determines if the type <code>T</code> is a decayed class type:
 </details>
 
 <details>
+<summary><code><i>COMMON-DOMAIN</i>(domains...)</code></summary>
+The expression <code><i>COMMON-DOMAIN</i>(domains...)</code> is
+
+<ul>
+  <li><code>common_type_t&lt;decltype(auto(domains))...&gt;()</code> if this expression is valid</li>
+  <li><code>indeterminate_domain&lt;decltype(auto(domains))...&gt;()</code> with duplicates removed from the template arguments</li>
+</ul>
+</details>
+
+<details>
 <summary><code>concept <i>decays-to</i>&lt;From, To&gt;</code></summary>
 Determines if <code>To</code> is the result of decaying the type <code>From</code>:
 <code>same_as&lt;decay_t&lt;From&gt;, To&gt;</code>
+</details>
+
+<details>
+<summary><code><i>FWD-ENV</i>(env)</code></summary>
+The expression <code><i>FWD-ENV</i>(env)</code> yields a queryable object <code>q</code> supporting only forwardable queries. Let <code>qry</code> be a query object and <code>a...</code> be a possibly emnpty pack of arguments. Then <code>q.query(qry, a...)</code> is
+<ul>
+   <li>equivalent to <code>env.query(qry, a...)</code> if <code>forwarding_query(qry)</code> is <code>true</code></li>
+   <li>ill-formed if <code>forwarding_query(qry)</code> is <code>false</code>
+</ul>
+</details>
+
+<details>
+<summary><code><i>FWD-ENV-T</i>(Env)</code></summary>
+The type <code><i>FWD-ENV-T</i>(Env)</code> is <code>decltype(FWD-ENV(decl_val&lt;Env&gt;()))</code>.
 </details>
 
 <details>
@@ -827,9 +851,21 @@ expressions <code><i>HIDE-SCHED</i>(q).query(tag, a...)</code> is
 </details>
 
 <details>
-<summary><code>concept <i>movable-value</i>&lt;T&gt;</code></summary>
-Determines if objects of type <code>T</code> are movable, non-array values:
-<code>move_constructible&lt;decay_t&lt;T&gt;&gt; &amp;&amp; constructible_from&lt;decay_t&lt;T&gt;&gt; && (!is_array_v&lt;remove_reference_t&lt;T&gt;&gt;)</code>
+<summary><code><i>JOIN-ENV</i>(ev1, ev2)</code></summary>
+The expression <code><i>JOIN-ENV</i>(ev1, ev2)</code> yields a queryable object <code>env</code> such that for a query <code>qry</code> and a pack of arguments <code>a...</code> the result of the expression <code>env.query(qry, a...)</code> is
+
+<ol>
+   <li><code>equivalent to ev1.query(qry, a...)</code></li> if this expression is well-format,otherwise</li>
+   <li><code>equivalent to ev2.query(qry, a...)</code></li> if this expression is well-format,otherwise</li>
+   <li>ill-formed</code>
+</ol>
+
+</details>
+
+<details>
+<summary><code><i>MAKE-ENV</i>(qry, value)</code></summary>
+The expression <code><i>MAKE-ENV</i>(qry, value)</code> creates a queryable object <code>env</code> such that for a pack of argments <code>a ...</code> the expression <code>env.query(qry, a...)</code> yields <code>value</code>.
+
 </details>
 
 <details>
@@ -838,6 +874,12 @@ Determines if the two function signatures <code>F1</code> and <code>F2</code> ma
 
 If <code>same_as&lt;F1, R1(A1...)&gt;</code> and <code>same_as&lt;F2, R2(A2...)&gt;</code> then
 <code><i>MATCHING-SIG</i>&lt;F1, F2&gt; == same_as&lt;R1(A1&amp;&amp;...), R2(A2&amp;&amp;...)&gt;</code>.
+</details>
+
+<details>
+<summary><code>concept <i>movable-value</i>&lt;T&gt;</code></summary>
+Determines if objects of type <code>T</code> are movable, non-array values:
+<code>move_constructible&lt;decay_t&lt;T&gt;&gt; &amp;&amp; constructible_from&lt;decay_t&lt;T&gt;&gt; && (!is_array_v&lt;remove_reference_t&lt;T&gt;&gt;)</code>
 </details>
 
 <details>

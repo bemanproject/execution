@@ -49,6 +49,9 @@ class fwd_env {
 };
 template <typename Env>
 fwd_env(Env&&) -> fwd_env<Env>;
+
+template <typename Env> //-dk:TODO detail export
+using fwd_env_t = decltype(::beman::execution::detail::fwd_env(::std::declval<Env>()));
 } // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
