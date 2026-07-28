@@ -1,7 +1,7 @@
 # =============================================================================
 # PYTHON PACKAGES (PIP)
 # =============================================================================
-# USE (python3): pip3 install -U -r requirements.txt
+# USE (python3): uv pip install -r requirements.txt
 # =============================================================================
 
 ### python tools
@@ -18,11 +18,11 @@ check-jsonschema>=0.36.1
 cmake>=4.3
 codespell>=2.4.3
 # conan>=2.26.2
-gersemi>=0.27.2
+gersemi>=0.28.0
 gcovr>=8.6
 ninja>=1.13
 yamllint>=1.38
 
-beman_submodule
-beman-local-ci
+beman-submodule
+#TODO: beman-local-ci>0.3.2
 beman-tidy
