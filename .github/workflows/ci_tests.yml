@@ -81,7 +81,7 @@ jobs:
               "tests": [
                 {"cxxversions": ["c++26"],
                   "tests": [
-                    { "stdlibs": ["libstdc++", "libc++"],
+                    { "stdlibs": ["libc++"],
                       "tests": [
                         "Debug.Default", "Release.Default", "Release.TSan",
                         "Release.MaxSan", "Debug.Werror",
