@@ -7,5 +7,6 @@ module;
 export module beman.execution.detail.fwd_env;
 
 namespace beman::execution::detail {
+export using beman::execution::detail::fwd_env_t;
 export using beman::execution::detail::fwd_env;
 } // namespace beman::execution::detail

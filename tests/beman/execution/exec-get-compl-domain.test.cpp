@@ -5,8 +5,8 @@
 #include <concepts>
 #include <cstddef>
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_completion_domain;
-import beman.execution.detail.get_forwarding_query;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
