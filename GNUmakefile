@@ -7,12 +7,17 @@ MAKEFLAGS+= --warn-undefined-variables  # Warn when an undefined variable is ref
 .SUFFIXES:                              # Disable all suffix rules.
 ##################################################
 
-PRESET ?= release
-IMAGE ?= linux-clang:23
+ifeq ($(origin CXX),default)
+  CXX:= clang++-23
+  CC:= clang-23
+endif
+
+PRESET?=release
+IMAGE?=ghcr.io/bemanproject/infra-containers-clang:latest
 
 _build_path:=build/$(PRESET)
 
-.PHONY: all check distclean dockerbuild
+.PHONY: all check distclean format dockerbuild
 
 # default target rule
 all: .init compile_commands.json ## Make all with cmake workflow preset
@@ -27,8 +32,8 @@ check: .init compile_commands.json ## Run clang-tidy on examples
 
 .PHONY: compile_commands.json
 compile_commands.json: $(_build_path)/compile_commands.json
-	if [ "$(shell readlink compile_commands.json)" != "$(_build_path)/compile_commands.json" ] ; then \
-		ln -fs $< $@
+	if [ "X$(shell readlink compile_commands.json)" != "X$(_build_path)/compile_commands.json" ] ; then \
+		ln -fs $< $@; \
 	fi
 
 CMakeUserPresets.json:: cmake/CMakeUserPresets.json
@@ -40,6 +45,10 @@ distclean: ## Remove all build artifacts
 	compile_commands.json \
 	.init
 	find . -name '*~' -delete
+
+format: distclean  ## Format all files with pre-commit
+	-pre-commit autoupdate
+	pre-commit run --all
 
 dockerbuild: ## Start docker image interactive
 	docker run -it -v $(CURDIR):/home/builder/workdir $(IMAGE)

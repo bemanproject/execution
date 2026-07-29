@@ -9,7 +9,7 @@ on:
 
 jobs:
   auto-update-pre-commit:
-    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-update-pre-commit.yml@1.7.3
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-update-pre-commit.yml@1.7.4
     secrets:
       APP_ID: ${{ secrets.AUTO_PR_BOT_APP_ID }}
       PRIVATE_KEY: ${{ secrets.AUTO_PR_BOT_PRIVATE_KEY }}
