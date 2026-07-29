@@ -473,6 +473,10 @@ TEST(exec_spawn_future) {
 
     test_spawn_future_interface<false, non_env>(sender{}, token<true>{});
 
+    token<true> lvalue{};
+    test_spawn_future_interface<true>(sender{}, lvalue);
+    test_spawn_future_interface<true>(sender{}, std::as_const(lvalue));
+
     test_state_base();
     test_receiver();
 

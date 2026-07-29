@@ -48,6 +48,7 @@ import beman.execution.detail.matching_sig;
 import beman.execution.detail.on;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.parallel_scheduler;
+import beman.execution.detail.parallel_scheduler_replacement;
 import beman.execution.detail.prop;
 import beman.execution.detail.read_env;
 import beman.execution.detail.receiver;
@@ -72,12 +73,15 @@ import beman.execution.detail.stopped_as_error;
 import beman.execution.detail.stopped_as_optional;
 import beman.execution.detail.sync_wait;
 import beman.execution.detail.sync_wait_with_variant;
+import beman.execution.detail.task;
+import beman.execution.detail.task_scheduler;
 import beman.execution.detail.then;
 import beman.execution.detail.valid_completion_for;
 import beman.execution.detail.valid_completion_signatures;
 import beman.execution.detail.when_all_with_variant;
 import beman.execution.detail.when_all;
 import beman.execution.detail.with_awaitable_senders;
+import beman.execution.detail.with_error;
 import beman.execution.detail.within;
 import beman.execution.detail.write_env;
 #else
@@ -120,6 +124,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/on.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/parallel_scheduler.hpp>
+#include <beman/execution/detail/parallel_scheduler_replacement.hpp>
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/receiver.hpp>
@@ -144,12 +149,15 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/stopped_as_optional.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #include <beman/execution/detail/sync_wait_with_variant.hpp>
+#include <beman/execution/detail/task.hpp>
+#include <beman/execution/detail/task_scheduler.hpp>
 #include <beman/execution/detail/then.hpp>
 #include <beman/execution/detail/valid_completion_for.hpp>
 #include <beman/execution/detail/valid_completion_signatures.hpp>
 #include <beman/execution/detail/when_all_with_variant.hpp>
 #include <beman/execution/detail/when_all.hpp>
 #include <beman/execution/detail/with_awaitable_senders.hpp>
+#include <beman/execution/detail/with_error.hpp>
 #include <beman/execution/detail/within.hpp>
 #include <beman/execution/detail/write_env.hpp>
 #endif
