@@ -6,4 +6,5 @@
 
 disabled_rules: []
 ignored_paths:
+    - .cache/
     - infra/

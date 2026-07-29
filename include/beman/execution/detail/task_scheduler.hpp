@@ -104,6 +104,7 @@ namespace beman::execution::detail {
 struct task_scheduler_backend : ::beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend {
     // ReSharper disable once CppPolymorphicClassWithNonVirtualPublicDestructor
     struct state_holder_base {
+        virtual ~state_holder_base()            = default;
         virtual auto destroy() noexcept -> void = 0;
     };
 

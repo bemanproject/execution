@@ -21,7 +21,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 # ---------------------------------------------------------------------------
 # The CMAKE_EXPERIMENTAL_CXX_IMPORT_STD is not longer needed except for OSX
 # ---------------------------------------------------------------------------
-if(NOT BEMAN_USE_STD_MODULE OR CMAKE_VERSION VERSION_GREATER_EQUAL 4.4)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.5)
     if(NOT APPLE)
         return()
     endif()
@@ -31,7 +31,7 @@ endif()
 # ---------------------------------------------------------------------------
 # check if import std; is supported by CMAKE_CXX_COMPILER
 # ---------------------------------------------------------------------------
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2 AND CMAKE_VERSION VERSION_LESS 4.4)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2 AND CMAKE_VERSION VERSION_LESS 4.5)
     if(PROJECT_NAME)
         message(
             WARNING
@@ -66,10 +66,11 @@ if(
 )
     # NOTE: Always use libc++
     # see https://releases.llvm.org/19.1.0/projects/libcxx/docs/index.html
-    set(ENV{CXXFLAGS} -stdlib=libc++)
-    message(STATUS "CXXFLAGS=-stdlib=libc++")
 
     if(APPLE)
+        set(ENV{CXXFLAGS} "-stdlib=libc++")
+        message(STATUS "CXXFLAGS=$ENV{CXXFLAGS}")
+
         execute_process(
             OUTPUT_VARIABLE LLVM_PREFIX
             COMMAND brew --prefix llvm
@@ -83,12 +84,15 @@ if(
         add_link_options(-L${LLVM_DIR}/lib/c++)
         include_directories(SYSTEM ${LLVM_DIR}/include)
 
-        # /usr/local/Cellar/llvm/21.1.8_1/lib/c++/libc++.modules.json
-        # "/usr/local/Cellar/llvm/21.1.8_1/share/libc++/v1/std.cppm",
         set(CMAKE_CXX_STDLIB_MODULES_JSON
             ${LLVM_DIR}/lib/c++/libc++.modules.json
         )
     elseif(LINUX)
+        set(ENV{CXXFLAGS}
+            "-stdlib=libc++ -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
+        )
+        message(STATUS "CXXFLAGS=$ENV{CXXFLAGS}")
+
         execute_process(
             OUTPUT_VARIABLE LLVM_MODULES
             COMMAND clang++ -print-file-name=libc++.modules.json
@@ -105,18 +109,19 @@ if(
     endif()
 
     if(EXISTS ${CMAKE_CXX_STDLIB_MODULES_JSON})
-        message(
-            STATUS
-            "CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
-        )
+        file(REAL_PATH "${CMAKE_CXX_STDLIB_MODULES_JSON}" LLVM_MODULES)
+        message(STATUS "CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_MODULES}")
         # gersemi: off
         set(CACHE{CMAKE_CXX_STDLIB_MODULES_JSON}
             TYPE FILEPATH
-            HELP "Result of: clang++ -print-file-name=c++/libc++.modules.json"
-            VALUE ${CMAKE_CXX_STDLIB_MODULES_JSON}
+            HELP "Result of: clang++ -print-file-name=libc++.modules.json"
+            VALUE ${LLVM_MODULES}
         )
         # gersemi: on
     else()
-        message(STATUS "File does NOT EXISTS! ${CMAKE_CXX_STDLIB_MODULES_JSON}")
+        message(
+            WARNING
+            "File does NOT EXISTS! ${CMAKE_CXX_STDLIB_MODULES_JSON}"
+        )
     endif()
 endif()

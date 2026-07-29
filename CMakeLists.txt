@@ -19,8 +19,6 @@ set(BEMAN_EXECUTION_TARGET_PREFIX ${PROJECT_NAME}) # NOTE: used in src, and docs
 
 #===============================================================================
 if(BEMAN_USE_MODULES)
-    option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
-
     set(CMAKE_CXX_SCAN_FOR_MODULES ON)
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
@@ -60,14 +58,6 @@ if(BEMAN_USE_MODULES)
             SOVERSION ${PROJECT_VERSION_MAJOR}
             DLL_NAME_WITH_SOVERSION TRUE
     )
-
-    # FIXME: Quickfix only to prevent linker problems on windows dll? CK
-    if(WIN32 AND BUILD_SHARED_LIBS)
-        set_target_properties(
-            ${BEMAN_EXECUTION_TARGET_PREFIX}
-            PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON
-        )
-    endif()
 
     find_package(Threads REQUIRED)
     target_link_libraries(

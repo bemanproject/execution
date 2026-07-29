@@ -75,7 +75,8 @@ auto test_constraints(Scheduler&& scheduler, Sender&& sender) {
         auto domain{test_std::get_domain(scheduler)};
         test::check_type<custom_domain&>(domain);
 
-        auto s{test_std::continues_on(::std::forward<Sender>(sender), ::std::forward<Scheduler>(scheduler))};
+        [[maybe_unused]] auto s{
+            test_std::continues_on(::std::forward<Sender>(sender), ::std::forward<Scheduler>(scheduler))};
     }
 }
 

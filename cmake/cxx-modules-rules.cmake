@@ -50,7 +50,7 @@ if(NOT DEFINED CMAKE_CXX_STANDARD)
 endif()
 
 # Neither of these two are technically needed, but they make the expectation clear
-set(CMAKE_CXX_EXTENSIONS ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # NOTE: only with Ninja generator install of bmi files works yet!
@@ -65,7 +65,11 @@ if(CMAKE_GENERATOR MATCHES "Ninja")
             string(APPEND CMAKE_CXX_MODULE_MAP_FLAG " -fmodules-reduced-bmi")
         endif()
 
-        add_compile_options($ENV{CXXFLAGS})
+        add_compile_options(
+            $ENV{CXXFLAGS}
+            -Wno-missing-braces
+            -Wno-unneeded-internal-declaration
+        )
         add_link_options($ENV{CXXFLAGS})
     elseif(
         CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
@@ -95,12 +99,14 @@ if(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
 endif()
 message(STATUS "BEMAN_USE_MODULES=${BEMAN_USE_MODULES}")
 
-option(
-    BEMAN_USE_STD_MODULE
-    "Check if 'import std;' is possible with the toolchain?"
-    OFF
-)
-message(STATUS "BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}")
+if(CMAKE_CXX_STANDARD GREATER_EQUAL 23)
+    option(
+        BEMAN_USE_STD_MODULE
+        "Check if 'import std;' is possible with the toolchain?"
+        ON
+    )
+    message(STATUS "BEMAN_USE_STD_MODULE=${BEMAN_USE_STD_MODULE}")
+endif()
 
 if(BEMAN_USE_MODULES AND BEMAN_USE_STD_MODULE)
     # -------------------------------------------------------------------------
