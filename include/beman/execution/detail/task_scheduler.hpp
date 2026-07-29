@@ -256,19 +256,12 @@ struct task_scheduler_backend_for : task_scheduler_backend_sched<Sched> {
     auto schedule_bulk_chunked(::std::size_t                                                                 shape,
                                ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& proxy,
                                ::std::span<::std::byte> storage) noexcept -> void override {
-        const ::std::size_t chunk_size = ::std::min(shape, 8uz);
-        const ::std::size_t num_chunks = (shape + chunk_size - 1uz) / chunk_size;
         this->fire_and_forget(storage,
-                              ::beman::execution::bulk(just_sndr_like{this->sched},
-                                                       ::beman::execution::par,
-                                                       num_chunks,
-                                                       [=, &proxy](::std::size_t i) noexcept {
-                                                           const auto begin = i * chunk_size;
-                                                           const auto end   = shape - begin <= chunk_size
-                                                                                  ? shape
-                                                                                  : begin + chunk_size;
-                                                           proxy.execute(begin, end);
-                                                       }),
+                              ::beman::execution::bulk_chunked(
+                                  just_sndr_like{this->sched},
+                                  ::beman::execution::par,
+                                  shape,
+                                  [&proxy](::std::size_t i, ::std::size_t j) noexcept { proxy.execute(i, j); }),
                               proxy);
     }
 
@@ -277,10 +270,10 @@ struct task_scheduler_backend_for : task_scheduler_backend_sched<Sched> {
                                  ::std::span<::std::byte> storage) noexcept -> void override {
         this->fire_and_forget(
             storage,
-            ::beman::execution::bulk(just_sndr_like{this->sched},
-                                     ::beman::execution::par,
-                                     shape,
-                                     [&proxy](::std::size_t i) noexcept { proxy.execute(i, i + 1uz); }),
+            ::beman::execution::bulk_unchunked(just_sndr_like{this->sched},
+                                               ::beman::execution::par,
+                                               shape,
+                                               [&proxy](::std::size_t i) noexcept { proxy.execute(i, i + 1uz); }),
             proxy);
     }
 
