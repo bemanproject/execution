@@ -136,7 +136,11 @@ struct thread_pool_base : replaceability::parallel_scheduler_backend {
     auto schedule_bulk(std::size_t                               shape,
                        std::size_t                               chunk_length,
                        replaceability::bulk_item_receiver_proxy& proxy,
-                       std::span<::std::byte>) noexcept -> void {
+                       std::span<::std::byte>                    storage) noexcept -> void {
+        if (shape == 0uz) {
+            schedule(proxy, storage);
+            return;
+        }
         const std::size_t                  chunk_count = (shape + chunk_length - 1uz) / chunk_length;
         std::shared_ptr<bulk_shared_state> shared_state;
         try {
@@ -307,6 +311,11 @@ auto test_parallel_scheduler_schedule() -> void {
         int i = 0;
         test_std::sync_wait(test_std::schedule(sch) | test_std::then([&i]() noexcept { i = 114514; }));
         ASSERT(i == 114514);
+    }
+    {
+        test_std::sync_wait(test_std::schedule(sch) | test_std::bulk(test_std::par, 0uz, [](std::size_t) noexcept {}));
+        test_std::sync_wait(test_std::schedule(sch) |
+                            test_std::bulk(test_std::unseq, 0uz, [](std::size_t) noexcept {}));
     }
     {
         for (auto size : {1uz, 4uz, 8uz, 16uz, 32uz}) {

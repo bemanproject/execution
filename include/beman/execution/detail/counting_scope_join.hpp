@@ -54,6 +54,7 @@ struct counting_scope_join_t {
     struct state;
 
     auto operator()(::beman::execution::detail::counting_scope_base* ptr) const {
+        // TODO(CK): prevent -Wmissing-braces clang++ error!
         return ::beman::execution::detail::make_sender(*this, ptr);
     }
 

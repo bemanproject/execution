@@ -53,7 +53,7 @@ ifeq (${hostSystemName},Darwin)
   # export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi -lc++ # -lc++experimental
   # export GCOV="llvm-cov gcov"
 
-  ### TODO: to test g++-15:
+  ### TODO: to test g++-16:
   # export GCC_PREFIX:=$(shell brew --prefix gcc)
   # export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
 
@@ -63,16 +63,16 @@ ifeq (${hostSystemName},Darwin)
         export CXX=clang++
         CXXLIB=libc++
     else
-        export CXX=g++-15
+        export CXX=g++-16
         CXXLIB=libstdc++
     endif
     export CXX_FLAGS=-stdlib=$(CXXLIB)
   endif
   export GCOV="gcov"
 else ifeq (${hostSystemName},Linux)
-  export LLVM_DIR=/usr/lib/llvm-20
+  export LLVM_DIR=/usr/lib/llvm-23
   export PATH:=${LLVM_DIR}/bin:${PATH}
-  # export CXX=clang++-20
+  # NO! export CXX=clang++-23
 else
   export CXX=$(COMPILER)
 endif
