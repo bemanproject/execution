@@ -13,6 +13,8 @@ ifeq ($(origin CXX),default)
   export CXXFLAGS:= -stdlib=libc++ -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0
 endif
 
+export CMAKE_PREFIX_PATH:=$(CURDIR)/stagedir:${CMAKE_PREFIX_PATH}
+
 PRESET?=release
 IMAGE?=ghcr.io/bemanproject/infra-containers-clang:23
 
