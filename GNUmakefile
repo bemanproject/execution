@@ -8,12 +8,13 @@ MAKEFLAGS+= --warn-undefined-variables  # Warn when an undefined variable is ref
 ##################################################
 
 ifeq ($(origin CXX),default)
-  CXX:= clang++-23
-  CC:= clang-23
+  export CXX:= clang++-22
+  export CC:= clang-22
+  export CXXFLAGS:= -stdlib=libc++ -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0
 endif
 
 PRESET?=release
-IMAGE?=ghcr.io/bemanproject/infra-containers-clang:latest
+IMAGE?=ghcr.io/bemanproject/infra-containers-clang:22
 
 _build_path:=build/$(PRESET)
 
@@ -24,6 +25,7 @@ all: .init compile_commands.json ## Make all with cmake workflow preset
 	cmake --workflow --preset $(PRESET)
 
 .init: CMakeUserPresets.json CMakePresets.json CMakeLists.txt ## Configure cmake preset in VERBOSE mode
+	cmake --version
 	cmake --preset $(PRESET) --fresh --log-level=VERBOSE
 	touch $@
 
@@ -37,7 +39,7 @@ compile_commands.json: $(_build_path)/compile_commands.json
 	fi
 
 CMakeUserPresets.json:: cmake/CMakeUserPresets.json
-	ln -fs $< $@
+	-ln -fs $< $@
 
 distclean: ## Remove all build artifacts
 	rm -rf build .cache
@@ -51,7 +53,7 @@ format: distclean  ## Format all files with pre-commit
 	pre-commit run --all
 
 dockerbuild: ## Start docker image interactive
-	docker run -it -v $(CURDIR):/home/builder/workdir $(IMAGE)
+	docker run -it -v $(CURDIR):/src $(IMAGE)
 
 # Helper targets
 .PHONY: env info
@@ -66,6 +68,7 @@ info: ## Show this help.
 #  Prerequisite 'GNUmakefile' is newer than target '.init'.
 #  -> Must remake target '.init'.
 # NOTE: impizit handled by gmake! GNUmakefile :: ;
+# NO if exists TODO(CK): cmake/CMakeUserPresets.json :: ;
 
 # Anything we don't know how to build will use this rule.
 % ::
