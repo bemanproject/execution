@@ -750,16 +750,13 @@ class task {
     friend ::beman::execution::detail::task::promise_type<task, Value, Environment>;
 
   public:
-    using sender_concept        = ::beman::execution::sender_tag;
-    using promise_type          = ::beman::execution::detail::task::promise_type<task, Value, Environment>;
-    using allocator_type        = ::beman::execution::detail::task::allocator_of_t<Environment>;
-    using start_scheduler_type  = ::beman::execution::detail::task::start_scheduler_of_t<Environment>;
-    using stop_source_type      = ::beman::execution::detail::task::stop_source_of_t<Environment>;
-    using stop_token_type       = decltype(::std::declval<stop_source_type>().get_token());
-    using completion_signatures = ::beman::execution::detail::meta::combine<
-        ::beman::execution::completion_signatures<::beman::execution::detail::task::value_signature_t<Value>,
-                                                  ::beman::execution::set_stopped_t()>,
-        ::beman::execution::detail::task::error_types_of_t<Environment>>;
+    using sender_concept       = ::beman::execution::sender_tag;
+    using promise_type         = ::beman::execution::detail::task::promise_type<task, Value, Environment>;
+    using allocator_type       = ::beman::execution::detail::task::allocator_of_t<Environment>;
+    using start_scheduler_type = ::beman::execution::detail::task::start_scheduler_of_t<Environment>;
+    using stop_source_type     = ::beman::execution::detail::task::stop_source_of_t<Environment>;
+    using stop_token_type      = decltype(::std::declval<stop_source_type>().get_token());
+    using error_types          = ::beman::execution::detail::task::error_types_of_t<Environment>;
 
   private:
     template <typename Receiver>
@@ -780,8 +777,12 @@ class task {
     ~task() = default;
 
     template <::beman::execution::detail::decayed_same_as<task>, typename...>
-    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
-        return {};
+    static consteval auto get_completion_signatures() noexcept {
+        using completion_signatures = ::beman::execution::detail::meta::combine<
+            ::beman::execution::completion_signatures<::beman::execution::detail::task::value_signature_t<Value>,
+                                                      ::beman::execution::set_stopped_t()>,
+            error_types>;
+        return completion_signatures{};
     }
 
     template <::beman::execution::receiver Receiver>
