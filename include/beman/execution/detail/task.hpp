@@ -33,6 +33,7 @@ import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
 import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
+import beman.execution.detail.inline_scheduler;
 import beman.execution.detail.inplace_stop_source;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.contains;
@@ -68,6 +69,7 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/inline_scheduler.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_contains.hpp>
@@ -451,6 +453,26 @@ class propagator<StopSource, StopToken> {
     StopToken stop_token_;
 };
 
+template <typename Sched, typename Env, typename Alloc>
+auto make_sched(const Env& env, const Alloc& alloc) noexcept -> Sched {
+    if constexpr (requires {
+                      ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
+                  }) {
+        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
+    } else if constexpr (requires {
+                             ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
+                         }) {
+        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
+    } else if constexpr (std::default_initializable<Sched>) {
+        return Sched();
+    } else {
+        static_assert(false,
+                      "`Env` should provide `get_start_scheduler` or `get_scheduler`; otherwise, `Sched` should be "
+                      "default-initializable.");
+        ::beman::execution::detail::unreachable();
+    }
+}
+
 template <typename Value, typename Environment>
 // ReSharper disable once CppPolymorphicClassWithNonVirtualPublicDestructor
 class state_base : public result_type<Value, error_types_of_t<Environment>> {
@@ -478,25 +500,6 @@ class state_base : public result_type<Value, error_types_of_t<Environment>> {
     auto get_environment() noexcept -> Environment& { return this->do_get_environment(); }
     auto get_start_scheduler() noexcept -> scheduler_type { return this->do_get_start_scheduler(); }
 
-  protected:
-    template <typename Env, typename Alloc>
-    static auto make_sched(const Env& env, const Alloc& alloc) noexcept -> scheduler_type {
-        if constexpr (requires {
-                          ::std::make_obj_using_allocator<scheduler_type>(
-                              alloc, ::beman::execution::get_start_scheduler(env));
-                      }) {
-            return ::std::make_obj_using_allocator<scheduler_type>(alloc,
-                                                                   ::beman::execution::get_start_scheduler(env));
-        } else if constexpr (requires {
-                                 ::std::make_obj_using_allocator<scheduler_type>(
-                                     alloc, ::beman::execution::get_scheduler(env));
-                             }) {
-            return ::std::make_obj_using_allocator<scheduler_type>(alloc, ::beman::execution::get_scheduler(env));
-        } else {
-            return scheduler_type();
-        }
-    }
-
   private:
     virtual auto do_complete() noexcept -> ::std::coroutine_handle<> = 0;
     virtual auto do_get_allocator() noexcept -> allocator_type       = 0;
@@ -520,7 +523,7 @@ struct state : state_base<Value, Environment> {
         : rcvr(::std::move(r)),
           handle(std::move(h)),
           holder(env),
-          scheduler(this->make_sched(env, do_get_allocator())),
+          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
           propagator(::beman::execution::get_stop_token(env)) {}
 
     auto start() & noexcept -> void { this->handle.start(this).resume(); }
@@ -569,7 +572,7 @@ class awaiter : public state_base<Value, Environment> {
         : parent(parent),
           handle(std::move(h)),
           holder(env),
-          scheduler(this->make_sched(env, do_get_allocator())),
+          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
           propagator(::beman::execution::get_stop_token(env)) {}
 
     static constexpr auto await_ready() noexcept -> bool { return false; }
@@ -714,7 +717,11 @@ class promise_type : public ::beman::execution::detail::task::promise_base<::std
 
     template <::beman::execution::sender Expr>
     auto await_transform(Expr&& expr) -> decltype(auto) {
-        return ::beman::execution::as_awaitable(::beman::execution::affine(::std::forward<Expr>(expr)), *this);
+        if constexpr (::std::same_as<scheduler_type, ::beman::execution::inline_scheduler>) {
+            return ::beman::execution::as_awaitable(::std::forward<Expr>(expr), *this);
+        } else {
+            return ::beman::execution::as_awaitable(::beman::execution::affine(::std::forward<Expr>(expr)), *this);
+        }
     }
 
     template <typename E>
@@ -765,6 +772,11 @@ class task {
     template <typename ParentPromise>
     using awaiter = ::beman::execution::detail::task::awaiter<Value, Environment, promise_type, ParentPromise>;
 
+    using signatures = ::beman::execution::detail::meta::combine<
+        ::beman::execution::completion_signatures<::beman::execution::detail::task::value_signature_t<Value>,
+                                                  ::beman::execution::set_stopped_t()>,
+        error_types>;
+
   public:
     task(const task&) = delete;
 
@@ -777,12 +789,8 @@ class task {
     ~task() = default;
 
     template <::beman::execution::detail::decayed_same_as<task>, typename...>
-    static consteval auto get_completion_signatures() noexcept {
-        using completion_signatures = ::beman::execution::detail::meta::combine<
-            ::beman::execution::completion_signatures<::beman::execution::detail::task::value_signature_t<Value>,
-                                                      ::beman::execution::set_stopped_t()>,
-            error_types>;
-        return completion_signatures{};
+    static consteval auto get_completion_signatures() noexcept -> signatures {
+        return {};
     }
 
     template <::beman::execution::receiver Receiver>
