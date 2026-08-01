@@ -131,11 +131,11 @@ auto test_task_interface() -> void {
     static_assert(!std::default_initializable<int_task>);
     static_assert(!std::copy_constructible<int_task>);
     static_assert(std::movable<int_task>);
-    static_assert(std::same_as<typename int_task::completion_signatures,
+    static_assert(std::same_as<test_std::completion_signatures_of_t<int_task>,
                                test_std::completion_signatures<test_std::set_value_t(int),
                                                                test_std::set_stopped_t(),
                                                                test_std::set_error_t(std::exception_ptr)>>);
-    static_assert(std::same_as<typename void_task::completion_signatures,
+    static_assert(std::same_as<test_std::completion_signatures_of_t<void_task>,
                                test_std::completion_signatures<test_std::set_value_t(),
                                                                test_std::set_stopped_t(),
                                                                test_std::set_error_t(std::exception_ptr)>>);
@@ -185,7 +185,10 @@ auto test_task_errors() -> void {
 
     caught = false;
     try {
-        test::use(test_std::sync_wait(integer_error_task()));
+        auto t = integer_error_task();
+        static_assert(
+            std::same_as<decltype(t)::error_types, test_std::completion_signatures<test_std::set_error_t(int)>>);
+        test::use(test_std::sync_wait(std::move(t)));
     } catch (int value) {
         ASSERT(value == 17);
         caught = true;
