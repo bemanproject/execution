@@ -126,9 +126,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>stop_source_type</b>
 <tr class="memitem:a544ec79ad0f62c4bf46be40837eb04ea"><td class="memItemLeft" align="right" valign="top"><a id="a544ec79ad0f62c4bf46be40837eb04ea" name="a544ec79ad0f62c4bf46be40837eb04ea"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>stop_token_type</b> = decltype(::std::declval&lt; stop_source_type &gt;().get_token())</td></tr>
 <tr class="separator:a544ec79ad0f62c4bf46be40837eb04ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68606cc4424348aba8a6bd2ef775ee0a"><td class="memItemLeft" align="right" valign="top"><a id="a68606cc4424348aba8a6bd2ef775ee0a" name="a68606cc4424348aba8a6bd2ef775ee0a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>completion_signatures</b> = ::beman::execution::detail::meta::combine&lt; <a class="el" href="structbeman_1_1execution_1_1completion__signatures.html">::beman::execution::completion_signatures</a>&lt;::beman::execution::detail::task::value_signature_t&lt; Value &gt;, <a class="el" href="structbeman_1_1execution_1_1set__stopped__t.html">::beman::execution::set_stopped_t</a>()&gt;, ::beman::execution::detail::task::error_types_of_t&lt; Environment &gt; &gt;</td></tr>
-<tr class="separator:a68606cc4424348aba8a6bd2ef775ee0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5db51a6c431174bffcdf1dcc7ded9727"><td class="memItemLeft" align="right" valign="top"><a id="a5db51a6c431174bffcdf1dcc7ded9727" name="a5db51a6c431174bffcdf1dcc7ded9727"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>error_types</b> = ::beman::execution::detail::task::error_types_of_t&lt; Environment &gt;</td></tr>
+<tr class="separator:a5db51a6c431174bffcdf1dcc7ded9727"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -155,10 +155,10 @@ template&lt;typename ParentPromise &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a454185cffd749baea74b968789b5a86f"><td class="memTemplParams" colspan="2"><a id="a454185cffd749baea74b968789b5a86f" name="a454185cffd749baea74b968789b5a86f"></a>
+<tr class="memitem:a1c6d52341cf50a173e7e4e1d98266b3c"><td class="memTemplParams" colspan="2"><a id="a1c6d52341cf50a173e7e4e1d98266b3c" name="a1c6d52341cf50a173e7e4e1d98266b3c"></a>
 template&lt;::beman::execution::detail::decayed_same_as&lt; <a class="el" href="classbeman_1_1execution_1_1task.html">task</a> &gt; , typename... &gt; </td></tr>
-<tr class="memitem:a454185cffd749baea74b968789b5a86f"><td class="memTemplItemLeft" align="right" valign="top">static consteval auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_completion_signatures</b> () noexcept -&gt; completion_signatures</td></tr>
-<tr class="separator:a454185cffd749baea74b968789b5a86f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c6d52341cf50a173e7e4e1d98266b3c"><td class="memTemplItemLeft" align="right" valign="top">static consteval auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_completion_signatures</b> () noexcept -&gt; signatures</td></tr>
+<tr class="separator:a1c6d52341cf50a173e7e4e1d98266b3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/beman/execution/detail/<a class="el" href="task_8hpp_source.html">task.hpp</a></li>
