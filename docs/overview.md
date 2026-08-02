@@ -807,6 +807,19 @@ The expression <code><i>COMMON-DOMAIN</i>(domains...)</code> is
 </details>
 
 <details>
+<summary><code><i>COMPL-DOMAIN</i>&lt;Tag&gt;(sndr, ev...)</code></summary>
+The expression <code><i>COMPL-DOMAIN</i>&lt;Tag&gt;(sndr, ev...)</code> gets <code>sndr</code>s completion
+domain given the optional environment <code>ev...</code>:
+
+<ul>
+  <li><code>get_completion_domain<Tag>(get_env(sndr), ev..)</code> if this expression is well-formed,
+  <li><code>indeterminate_domain()</code> otherwise.</li>
+</ul>
+
+<b>Note</b>: it seems this exposition-only name is actually unused!
+</details>
+
+<details>
 <summary><code>concept <i>decays-to</i>&lt;From, To&gt;</code></summary>
 Determines if <code>To</code> is the result of decaying the type <code>From</code>:
 <code>same_as&lt;decay_t&lt;From&gt;, To&gt;</code>
@@ -863,9 +876,14 @@ The expression <code><i>JOIN-ENV</i>(ev1, ev2)</code> yields a queryable object 
 </details>
 
 <details>
+<summary><code><i>make-sender</i>(tag, data = <i>empty</i>{}, child...)</code></summary>
+Creates and object of type <code><i>basic-sender</i>&lt;decltype(tag), decay_t&lt;decltype(data)&lt;, decay_t&lt;decltype(child)&gt;...&lt</code>
+that's direct initialized with the forwarded arguments.
+</details>
+
+<details>
 <summary><code><i>MAKE-ENV</i>(qry, value)</code></summary>
 The expression <code><i>MAKE-ENV</i>(qry, value)</code> creates a queryable object <code>env</code> such that for a pack of argments <code>a ...</code> the expression <code>env.query(qry, a...)</code> yields <code>value</code>.
-
 </details>
 
 <details>
@@ -883,16 +901,41 @@ Determines if objects of type <code>T</code> are movable, non-array values:
 </details>
 
 <details>
+<summary><code>struct <i>product-type</i>&lt;T...&gt;</code></summary>
+The type <code><i>product-type</i>&lt;T...&gt;</code> is a <code>tuple</code>-like type.
+Instead of constructors it supports only direct initialization, allowing it to hold
+inplace constructed elements. It supports <code>p.get&lt;I&gt;()</code> and <code>p.apply(fun)</code>
+member functions.
+</details>
+
+<details>
 <summary><code>concept <i>queryable</i>&lt;T&gt;</code></summary>
 Determines if objects of type <code>T</code> are queryable:
 <code>destructible&lt;T&gt;</code>. The semantic implication is
 that using the queryable object with query objects behave as required.
 </details>
 
+<details>
+<summary><code><i>query-with-default</i>(tag, env, value)</code></summary>
+Returns
+<ul>
+    <li><code>tag(env)</code> if this expression is well-formed</li>
+    <li><code>value</code> otherwise</li>
+</ul>
+</details>
 
 <details>
 <summary><code>concept <i>receiver-of</i>&lt;Rcvr, Signatures&gt;</code></summary>
 This concept determines if an object of type <code>Rcvr</code> is a receiver (i.e., <code>receiver&lt;Rcvr&gt;</code> is <code>true</code>) and supports each of the completion signatures in <code>Signatures</code>.
+</details>
+
+<details>
+<summary><code><i>SCHED-ENV</i>(sch)</code></summary>
+The expression <code><i>SCHED-ENV</i>(sch)</code> yields a queryable <code>o</code> such that
+<ul>
+  <li><code>get_start_scheduler(o)</i> is equivalent to <code>get_start_scheduler(get_env(o))</code></li>
+  <li><code>get_domain(o)</i> is equivalent to <code>get_start_scheduler(get_env(o))</code></li>
+</ul>
 </details>
 
 <details>
@@ -906,4 +949,9 @@ arguments are evaluated.
 <details>
 <summary><code>concept <i>valid-completion-for</i>&lt;Signature, Rcvr&gt;</code></summary>
 This concept determines if an object of type <code>Rcvr</code> supports the completion signature <code>Signature</code>.
+</details>
+
+<details>
+<summary><code>concept <i>valid-specialization</i>&lt;T, Args...&gt;</code></summary>
+This concept determines the class template <code>T</code> can be specialized with arguments <code>Args...</code>, i.e., if <code>T&lt;Args...&gt;</code> is valid.
 </details>

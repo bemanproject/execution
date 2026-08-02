@@ -9,34 +9,36 @@
 import beman.execution;
 import beman.execution.detail;
 #else
-#include <beman/execution/detail/child_type.hpp>
-#include <beman/execution/detail/write_env.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/basic_sender.hpp>
-#include <beman/execution/detail/completion_signatures_for.hpp>
-#include <beman/execution/detail/connect_all_result.hpp>
-#include <beman/execution/detail/product_type.hpp>
-#include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/basic_operation.hpp>
-#include <beman/execution/detail/connect_all.hpp>
-#include <beman/execution/detail/fwd_env.hpp>
-#include <beman/execution/detail/make_env.hpp>
-#include <beman/execution/detail/join_env.hpp>
-#include <beman/execution/detail/sched_env.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/query_with_default.hpp>
-#include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/impls_for.hpp>
-#include <beman/execution/detail/state_type.hpp>
-#include <beman/execution/detail/basic_state.hpp>
-#include <beman/execution/detail/indices_for.hpp>
-#include <beman/execution/detail/valid_specialization.hpp>
-#include <beman/execution/detail/env_type.hpp>
 #include <beman/execution/detail/basic_receiver.hpp>
+#include <beman/execution/detail/basic_sender.hpp>
+#include <beman/execution/detail/basic_state.hpp>
+#include <beman/execution/detail/child_type.hpp>
+#include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/completion_tag.hpp>
+#include <beman/execution/detail/connect_all.hpp>
+#include <beman/execution/detail/connect_all_result.hpp>
+#include <beman/execution/detail/data_type.hpp>
+#include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/env_type.hpp>
+#include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/impls_for.hpp>
+#include <beman/execution/detail/indices_for.hpp>
+#include <beman/execution/detail/join_env.hpp>
+#include <beman/execution/detail/make_env.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/query_with_default.hpp>
+#include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/state_type.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
+#include <beman/execution/detail/valid_specialization.hpp>
+#include <beman/execution/detail/write_env.hpp>
+#include <beman/execution.hpp>
 
 #include <beman/execution/detail/suppress_push.hpp>
 #endif
@@ -188,11 +190,38 @@ struct receiver {
 
 // ------------------------------------------------------------------------
 
+template <typename T>
+struct set_value_test_receiver {
+    using receiver_concept = test_std::receiver_tag;
+    T&    single_arg;
+    bool& no_arg;
+    auto  set_value(auto&& value) noexcept -> void {
+        no_arg     = false;
+        single_arg = value;
+    }
+};
+
+auto test_set_value_macro() -> void {
+#ifdef BEMAN_EXECUTION_SET_VALUE
+    int  value{42};
+    bool no_arg{false};
+    ASSERT(value == 42);
+    ASSERT(not no_arg);
+    BEMAN_EXECUTION_SET_VALUE(set_value_test_receiver<int>{value, no_arg}, []() noexcept { return 43; }());
+    ASSERT(value == 43);
+    ASSERT(not no_arg);
+    BEMAN_EXECUTION_SET_VALUE(set_value_test_receiver<int>{value, no_arg}, []() noexcept {}());
+    ASSERT(value == 43);
+    ASSERT(no_arg);
+#endif
+}
+
 template <bool Expect, typename Query>
 auto test_fwd_env_helper() -> void {
     env e{42};
     static_assert(Expect == requires() { test_detail::fwd_env(e).query(Query()); });
-    static_assert(Expect == false || std::same_as<test_detail::fwd_env_t<env>, decltype(test_detail::fwd_env(std::declval<env>()))>);
+    static_assert(Expect == false ||
+                  std::same_as<test_detail::fwd_env_t<env>, decltype(test_detail::fwd_env(std::declval<env>()))>);
 }
 auto test_fwd_env() -> void {
     env e{42};
@@ -348,7 +377,46 @@ struct env<two_missing> {
         return {};
     }
 };
+
+struct has_value_domain {};
+template <>
+struct env<has_value_domain> {
+    auto query(const test_std::get_completion_domain_t<test_std::set_value_t>&) const noexcept -> domain { return {}; }
+};
 } // namespace completion_domain
+auto test_compl_domain() -> void {
+    namespace cd = completion_domain;
+    static_assert(
+        std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(test_std::just(), test_std::env<>())),
+                     decltype(test_std::indeterminate_domain())>);
+
+    static_assert(requires {
+        test_std::get_completion_domain<test_std::set_value_t>(test_std::get_env(cd::sender<cd::has_value_domain>()));
+    });
+    static_assert(requires {
+        test_std::get_completion_domain<test_std::set_value_t>(test_std::get_env(cd::sender<cd::has_value_domain>()),
+                                                               cd::env<cd::has_value_domain>());
+    });
+    static_assert(
+        std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::has_value_domain>())),
+                     decltype(cd::domain())>);
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(
+                                   cd::sender<cd::has_value_domain>(), cd::env<cd::has_value_domain>())),
+                               decltype(cd::domain())>);
+
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::common>())),
+                               decltype(test_std::indeterminate_domain())>);
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::common>(),
+                                                                                         test_std::env<>())),
+                               decltype(test_std::indeterminate_domain())>);
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::common>(),
+                                                                                         cd::env<cd::common>())),
+                               decltype(test_std::indeterminate_domain())>);
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::none>(),
+                                                                                         test_std::env<>())),
+                               decltype(test_std::indeterminate_domain())>);
+}
+
 auto test_completion_domain() -> void {
     namespace cd = completion_domain;
     static_assert(test_std::sender<cd::sender<cd::common>>);
@@ -1294,6 +1362,14 @@ auto test_write_env() -> void {
 }
 
 template <typename... T>
+struct data_sender : test_detail::product_type<T...> {};
+auto test_data_type() -> void {
+    static_assert(std::same_as<int&&, test_detail::data_type<data_sender<bool, int, int, double>>>);
+    static_assert(std::same_as<int&, test_detail::data_type<data_sender<bool, int, int, double>&>>);
+    static_assert(std::same_as<const int&, test_detail::data_type<const data_sender<bool, int, int, double>&>>);
+}
+
+template <typename... T>
 struct child_sender : test_detail::product_type<T...> {};
 auto test_child_type() -> void {
     static_assert(std::same_as<int&&, test_detail::child_type<child_sender<bool, char, int, double>>>);
@@ -1305,11 +1381,13 @@ auto test_child_type() -> void {
 } // namespace
 
 TEST(exec_snd_expos) {
+    test_set_value_macro();
     test_fwd_env();
     test_make_env();
     test_join_env();
     test_sched_env();
     test_completion_domain();
+    test_compl_domain();
     test_query_with_default();
     test_get_domain_early();
     test_get_domain_late();
@@ -1330,5 +1408,6 @@ TEST(exec_snd_expos) {
     test_basic_sender();
     test_make_sender<int>();
     test_write_env();
+    test_data_type();
     test_child_type();
 }

@@ -66,6 +66,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope_base.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope_join.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/data_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_same_as.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_tuple.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_type_list.hpp
@@ -289,6 +290,7 @@ if(BEMAN_USE_MODULES)
                     counting_scope_base.cppm
                     counting_scope_join.cppm
                     counting_scope.cppm
+                    data_type.cppm
                     decayed_same_as.cppm
                     decayed_tuple.cppm
                     decayed_type_list.cppm

@@ -89,6 +89,9 @@ struct default_impls {
         }
     };
     static constexpr auto complete = complete_impl{};
+
+    template <typename Sender, typename... Env>
+    static consteval auto check_types() -> void {}
 };
 } // namespace beman::execution::detail
 
