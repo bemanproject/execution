@@ -229,9 +229,9 @@ static_assert(std::execution::sender<example_sender>);
 The concept <code>sender_in&lt;<i>Sender, Env</i>&gt;</code> tests whether <code>_Sender_</code> is a <code><a href=‘#sender’>sender</a></code>, <code>_Env_</code> is a destructible type, and <code><a href=‘#get_completion_signatures’>std::execution::get_completion_signatures</a>(_sender_, _env_)</code> yields a specialization of <code><a href=‘#completion_signatures’>std::execution::completion_signatures</a></code>.
 </details>
 <details>
-<summary><code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code></summary>
+<summary><code><i>sender-to</i>&lt;<i>Sender, Receiver</i>&gt;</code></summary>
 
-The concept <code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code> tests if <code><a href=‘#sender_in’>std::execution::sender_in</a>&lt;_Sender_, <a href='#env_of_t'>std::execution::env_of_t</a>&lt;_Receiver_&gt;&gt;</code> is true, and if <code>_Receiver_</code> can receive all <a href=‘#completion-signals’>completion signals</a> which can be sent by <code>_Sender_</code>, and if <code>_Sender_</code> can be <code><a href=‘#connect’>connect</a></code>ed to <code>_Receiver_</code>.
+The concept <code><i>sender-to</i>&lt;<i>Sender, Receiver</i>&gt;</code> tests if <code><a href=‘#sender_in’>std::execution::sender_in</a>&lt;_Sender_, <a href='#env_of_t'>std::execution::env_of_t</a>&lt;_Receiver_&gt;&gt;</code> is true, and if <code>_Receiver_</code> can receive all <a href=‘#completion-signals’>completion signals</a> which can be sent by <code>_Sender_</code>, and if <code>_Sender_</code> can be <code><a href=‘#connect’>connect</a></code>ed to <code>_Receiver_</code>.
 
 To determine if <code>_Receiver_</code> can receive all <a href=‘#completion-signals’>completion signals</a> from <code>_Sender_</code> it checks that for each <code>_Signature_</code> in <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, std::declval&lt;<a href='#env_of_t'>std::execution::env_of_t</a>&lt;_Receiver_&gt;&gt;())</code> the test <code><a href=‘#receiver_of’>std::execution::receiver_of</a>&lt;_Receiver_, _Signature_&gt;</code> yields true. To determine if <code>_Sender_</code> can be <code><a href=‘#connect’>connect</a></code>ed to <code>_Receiver_</code> the concept checks if <code><a href=‘#connect’>connect</a>(std::declval&lt;_Sender_&gt;(), std::declval&lt;_Receiver_&gt;)</code> is a valid expression.
 </details>
@@ -767,7 +767,15 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 - `sender_adaptor_closure`
 - `sender_tag`
 - `stop_token_of_t`
-- `tag_of_t`
+
+<details>
+<summary><code>tag_of_t&lt;Sndr&gt;</code></summary>
+<ul>
+   <li>if <code>auto&&[tag, data, children...] = sndr;</code> is well-formed the type <code>decltype(auto(tag))</code>;</li>
+   <li>otherwise ill-formed.</li>
+</ul>
+</details>
+
 - `transform_sender`
 - `transform_completion_signatures`
 - `transform_completion_signatures_of`
