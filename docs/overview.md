@@ -544,7 +544,7 @@ Otherwise the expression is invalid.
 </details>
 <details>
 <summary><code>get_forward_progress_guarantee(<i>scheduler</i>) -> forward_progress_guarantee</code></summary>
-The expression <code>get_forward_progress_guarantee(<i>scheduler</i>)</code> yields the forward progress guarantee of the <i>scheduler</i>’s execution agent. The value of the expression is equivalent to <code>as_const(<i>env</i>).query(get_scheduler)</code> if
+The expression <code>get_forward_progress_guarantee(<i>scheduler</i>)</code> yields the forward progress guarantee of the <i>scheduler</i>’s execution agent. The value of the expression is equivalent to <code>as_const(<i>env</i>).query(get_forward_progress_guarantee)</code> if
 <ol>
    <li>this expression is valid;</li>
    <li>this expression is <code>noexcept</code>;</li>

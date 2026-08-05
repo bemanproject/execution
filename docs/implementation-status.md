@@ -118,7 +118,7 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x1F534;&#x1F534;&#x1F534; [exec.snd.expos p52](https://wg21.link/exec.snd.expos#52) <code><i>not-a-scheduler</i></code>
 - &#x1F534;&#x1F534;&#x1F534; [exec.snd.expos p53](https://wg21.link/exec.snd.expos#53) <code><i>decay-copyable-result-datums</i></code>
 - &#x1F534;&#x1F534;&#x1F534; [exec.snd.expos p54](https://wg21.link/exec.snd.expos#54) <code><i>allocator-aware-forward(obj, env)</i></code>
-- &#x1F534;&#x1F534;&#x1F534; [exec.snd.expos p56](https://wg21.link/exec.snd.expos#56) <code><i>call-with-default(fn, value, args...)</i></code>
+- &#x2705;&#x1F534;&#x1F534; [exec.snd.expos p56](https://wg21.link/exec.snd.expos#56) <code><i>call-with-default(fn, value, args...)</i></code>: [`call_with_default.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/call_with_default.hpp)
 - &#x2705;&#x2705;&#x1F534; [exec.snd.expos p59](https://wg21.link/exec.snd.expos#59) <code><i>inline-attrs</i>&lt;T&gt;</code>: [`inline_attrs.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/inline_attrs.hpp)
 
 ### &#x1F534;&#x1F534;&#x1F534; [exec.snd.concepts](https://wg21.link/exec.snd.concepts) Sender concepts
