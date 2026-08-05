@@ -19,6 +19,9 @@ struct non_sender {};
 struct custom_domain : test_std::default_domain {};
 
 struct scheduler {
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     struct env {
         auto query(const test_std::get_completion_scheduler_t<test_std::set_value_t>&) const noexcept -> scheduler {
             return {};

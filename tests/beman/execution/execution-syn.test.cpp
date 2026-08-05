@@ -104,6 +104,9 @@ struct scheduler {
         auto get_env() const noexcept -> env { return {}; }
     };
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
 
     auto schedule() const noexcept -> sender { return {}; }
     auto operator==(const scheduler&) const -> bool = default;

@@ -323,6 +323,9 @@ struct sender {
 template <typename W>
 struct scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() noexcept -> sender<W> { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
     auto query(const test_std::get_domain_t&) const noexcept -> domain { return {}; }
@@ -331,6 +334,9 @@ struct scheduler {
 template <>
 struct scheduler<none> {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() noexcept -> sender<none> { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
 };
@@ -490,6 +496,9 @@ struct get_domain_late_scheduler {
         auto get_env() const noexcept -> env { return {}; }
     };
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() noexcept -> sender { return {}; }
     auto operator==(const get_domain_late_scheduler&) const -> bool = default;
     auto query(const test_std::get_domain_t&) const noexcept -> dom { return {}; }

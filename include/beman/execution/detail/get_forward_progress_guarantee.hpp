@@ -13,10 +13,10 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.forwarding_query;
-import beman.execution.detail.scheduler;
+import beman.execution.detail.almost_scheduler;
 #else
 #include <beman/execution/detail/forwarding_query.hpp>
-#include <beman/execution/detail/scheduler.hpp>
+#include <beman/execution/detail/almost_scheduler.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -26,7 +26,7 @@ namespace beman::execution {
 enum class forward_progress_guarantee { concurrent, parallel, weakly_parallel };
 
 struct get_forward_progress_guarantee_t {
-    template <beman::execution::scheduler Object>
+    template <beman::execution::detail::almost_scheduler Object>
         requires requires(const Object& object, const get_forward_progress_guarantee_t& tag) { object.query(tag); }
     auto operator()(const Object& object) const noexcept -> forward_progress_guarantee {
         static_assert(::std::same_as<decltype(object.query(*this)), forward_progress_guarantee>);

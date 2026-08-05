@@ -32,6 +32,9 @@ struct test_sched_env;
 
 struct test_scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() const -> test_sched_sender;
     auto operator==(const test_scheduler&) const -> bool = default;
     int  scheduler_id                                    = 0;

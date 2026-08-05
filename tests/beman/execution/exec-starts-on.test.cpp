@@ -42,6 +42,9 @@ struct scheduler {
         }
     };
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() -> sender { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
 };
