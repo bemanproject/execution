@@ -98,10 +98,40 @@ auto test_read_env_completions() -> void {
     test_std::sync_wait(test_std::when_all(test_std::read_env(test_std::get_stop_token)));
     test_std::sync_wait(test_std::when_all(test_std::read_env(test_std::get_scheduler)));
 }
+
+struct test_query_t {
+    auto operator()(auto&& env) const noexcept {
+        return env.query(*this);
+    }
+};
+inline constexpr test_query_t test_query{};
+
+template <bool Valid>
+struct test_env {
+    auto query(test_query_t) const noexcept {
+        if constexpr (Valid) {
+            return std::allocator<int>{};
+        }
+    }
+};
+
+auto test_read_env_check_types() -> void {
+    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_std::get_stop_token)),
+                                                 test_std::env<>>();
+    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)),
+                                                 test_env<true>>();
+#if 0
+    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)),
+                                                 test_env<false>>();
+    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_std::get_allocator)),
+                                                          test_std::env<>>();
+#endif
+}
 } // namespace
 
 TEST(exec_read_env) {
     static_assert(std::same_as<const test_std::read_env_t, decltype(test_std::read_env)>);
     test_read_env();
     test_read_env_completions();
+    test_read_env_check_types();
 }

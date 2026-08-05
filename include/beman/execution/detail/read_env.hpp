@@ -16,6 +16,7 @@ import std;
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.data_type;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.env_of_t;
 import beman.execution.detail.get_env;
@@ -27,6 +28,7 @@ import beman.execution.detail.set_value;
 #else
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
+#include <beman/execution/detail/data_type.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -79,7 +81,18 @@ struct read_env_t {
                 }
             }
         };
-        static constexpr auto start{start_impl{}};
+        static constexpr start_impl start{};
+
+        template <typename Sndr, typename Env>
+        static consteval void check_types() {
+            using query_type = ::std::decay_t<::beman::execution::detail::data_type<Sndr>>;
+            if constexpr (!requires(Env const& env){ query_type()(env); }) {
+                throw ::std::logic_error("query is not invocable with the environment of the receiver");
+            }
+            else if constexpr (::std::same_as<::std::invoke_result_t<query_type, Env const&>, void> ) {
+                throw ::std::logic_error("query returns void with the environment of the receiver");
+            }
+        }
     };
 };
 

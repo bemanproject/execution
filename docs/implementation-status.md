@@ -164,10 +164,10 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x1F534;&#x1F534;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>suspend-complete</i>(fun, as...)<code>
 - &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>connect-awaitable</i>(sndr, rcvr)<code>: [`connect_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect_awaitable.hpp)
 
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.factories](https://wg21.link/exec.factories) Sender factories
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.schedule](https://wg21.link/exec.schedule) `execution::schedule`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.just](https://wg21.link/exec.just) `execution::just`, `exuection::just_error`, `execution::just_stopped`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.read.env](https://wg21.link/exec.read.env) `execution::read_env`
+## &#x2705;&#x2705;&#x2705; [exec.factories](https://wg21.link/exec.factories) Sender factories
+### &#x2705;&#x2705;&#x2705; [exec.schedule](https://wg21.link/exec.schedule) `execution::schedule`: [`schedule.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/schedule.hpp) 
+### &#x2705;&#x2705;&#x2705; [exec.just](https://wg21.link/exec.just) `execution::just`, `exuection::just_error`, `execution::just_stopped`: [`just.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/just.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.read.env](https://wg21.link/exec.read.env) `execution::read_env`: [`read_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/read_env.hpp)
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt](https://wg21.link/exec.adapt) Sender adaptors
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt.general](https://wg21.link/exec.adapt.general) General
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt.obj](https://wg21.link/exec.adapt.obj) Closer objects
