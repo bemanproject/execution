@@ -42,7 +42,8 @@ struct inline_scheduler {
 
     using env = ::beman::execution::detail::inline_attrs<::beman::execution::set_value_t>;
 
-    auto query(::beman::execution::get_forward_progress_guarantee_t) const noexcept -> ::beman::execution::forward_progress_guarantee {
+    auto query(::beman::execution::get_forward_progress_guarantee_t) const noexcept
+        -> ::beman::execution::forward_progress_guarantee {
         return ::beman::execution::forward_progress_guarantee::weakly_parallel;
     }
     template <::beman::execution::receiver Rcvr>

@@ -31,7 +31,8 @@ namespace {
 struct async_scheduler {
     using scheduler_concept = test_std::scheduler_tag;
 
-    auto query(::beman::execution::get_forward_progress_guarantee_t) const noexcept -> ::beman::execution::forward_progress_guarantee {
+    auto query(::beman::execution::get_forward_progress_guarantee_t) const noexcept
+        -> ::beman::execution::forward_progress_guarantee {
         return ::beman::execution::forward_progress_guarantee::weakly_parallel;
     }
     int id{};
