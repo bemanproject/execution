@@ -157,7 +157,7 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x1F534;&#x1F534;&#x1F534; [exec.connect](https://wg21.link/exec.connect) `execution::connect`
 
 - &#x2705;&#x2705;&#x2705; [exec.connect p2](https://wg21.link/exec.connect#2) <code>connect(sndr, rcvr)<code>: [`connect.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect.hpp)
-- &#x2705;&#x2705;&#x2705; [exec.connect p3](https://wg21.link/exec.connect#3) <code><i>connect-awaitable-promise</i><code>: [`connect_awaitable_promise.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect_awaitable_promise.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.connect p3](https://wg21.link/exec.connect#3) <code><i>connect-awaitable-promise</i><code>: [`operation_state_task.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/operation_state_task.hpp)
 - &#x2705;&#x2705;&#x2705; [exec.connect p4](https://wg21.link/exec.connect#4) <code><i>operation-state-task</i><code>: [`operation_state_task.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/operation_state_task.hpp)
 - &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>await-result-type</i>&lt;DS, Promise&gt;<code>: [`await_result_type.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/await_result_type.hpp)
 - &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>suspend-complete</i>(fun, as...)<code>: [`suspend_complete.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/suspend_complete.hpp)
