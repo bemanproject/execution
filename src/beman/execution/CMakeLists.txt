@@ -44,6 +44,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/bulk.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/call_result_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/callable.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/call_with_default.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/check_type_alias_exist.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/child_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/class_type.hpp
@@ -270,6 +271,7 @@ if(BEMAN_USE_MODULES)
                     bulk.cppm
                     call_result_t.cppm
                     callable.cppm
+                    call_with_default.cppm
                     check_type_alias_exist.cppm
                     child_type.cppm
                     class_type.cppm

@@ -86,10 +86,9 @@ struct read_env_t {
         template <typename Sndr, typename Env>
         static consteval void check_types() {
             using query_type = ::std::decay_t<::beman::execution::detail::data_type<Sndr>>;
-            if constexpr (!requires(Env const& env){ query_type()(env); }) {
+            if constexpr (!requires(const Env& env) { query_type()(env); }) {
                 throw ::std::logic_error("query is not invocable with the environment of the receiver");
-            }
-            else if constexpr (::std::same_as<::std::invoke_result_t<query_type, Env const&>, void> ) {
+            } else if constexpr (::std::same_as<::std::invoke_result_t<query_type, const Env&>, void>) {
                 throw ::std::logic_error("query returns void with the environment of the receiver");
             }
         }

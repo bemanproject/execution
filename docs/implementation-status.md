@@ -61,10 +61,10 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x2705; [exec.get.scheduler](https://wg21.link/exec.get.scheduler) `execution::get_scheduler`: [`get_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_scheduler.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.get.start.scheduler](https://wg21.link/exec.get.start.scheduler) `execution::get_start_scheduler`: [`get_start_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_start_scheduler.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.get.delegation.scheduler](https://wg21.link/exec.get.delegation.scheduler) `execution::get_delegation_scheduler`: [`get_delegation_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_delegation_scheduler.hpp)
-### &#x1F534;&#x1F534;&#x1F534; [exec.get.fwd.progress](https://wg21.link/exec.get.fwd.progress) `execution::get_forward_progress_guarantee`
+### &#x2705;&#x2705;&#x2705; [exec.get.fwd.progress](https://wg21.link/exec.get.fwd.progress) `execution::get_forward_progress_guarantee`
 
-- &#x1F534;&#x1F534;&#x1F534; [`forward_progress_guarantee`](https://wg21.link/exec.get.fwd.progress)
-- &#x1F534;&#x1F534;&#x1F534; [`get_forward_progress_guarantee`](https://wg21.link/exec.get.fwd.progress#2)
+- &#x2705;&#x2705;&#x2705; [`forward_progress_guarantee`](https://wg21.link/exec.get.fwd.progress): [`get_forward_progress_guarantee.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_forward_progress_guarantee.hpp)
+- &#x2705;&#x2705;&#x2705; [`get_forward_progress_guarantee`](https://wg21.link/exec.get.fwd.progress#2): [`get_forward_progress_guarantee.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_forward_progress_guarantee.hpp)
 
 ### &#x2705;&#x2705;&#x2705; [exec.get.compl.sched](https://wg21.link/exec.get.compl.sched) `execution::get_completion_scheduler`: [`get_completion_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_scheduler.hpp)
 ### &#x2705;&#x2705;&#x1F534; [exec.get.compl.domain](https://wg21.link/exec.get.compl.domain) `execution::get_completion_domain`: [`get_completion_domain.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_domain.hpp)
@@ -125,8 +125,7 @@ Each section containing subelements reflects the state of the "worst" element.
 
 - &#x2705;&#x1F534;&#x1F534; [exec.snd.concepts p1](https://wg21.link/exec.snd.concepts#1) <code><i>is-constant</i>&lt;Value&gt;</code>: [`is_constant.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/is_constant.hpp)
 - &#x2705;&#x2705;&#x1F534; [exec.snd.concepts p1](https://wg21.link/exec.snd.concepts#1) <code><i>is-sender</i>&lt;Value&gt;</code>: [`is_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/is_sender.hpp)
-- &#x2705;&#x2705;&#x1F534; [exec.snd.concepts p1](https://wg21.link/exec.snd.concepts#1) <code><i>endable-sender</i>&lt;Value&gt;</code>: [`enable_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/enable_sender.hpp)
-- &#x2705;&#x2705;&#x2705; [exec.snd.concepts p1](https://wg21.link/exec.snd.concepts#1) <code><i>endable_sender</i>&lt;Value&gt;</code>: [`enable_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/enable_sender.hpp)
+- &#x2705;&#x2705;&#x1F534; [exec.snd.concepts p1](https://wg21.link/exec.snd.concepts#1) <code><i>enable-sender</i>&lt;Value&gt;</code>: [`enable_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/enable_sender.hpp)
 - &#x1F534;&#x1F534;&#x1F534; [exec.snd.concepts p1](https://wg21.link/exec.snd.concepts#1) <code><i>is-dependent-sender-helper</i>&lt;Sndr&gt;</code>
 - &#x2705;&#x2705;&#x2705; [exec.snd.concepts p1](https://wg21.link/exec.snd.concepts#1) <code>sender&lt;T&gt;</code>: [`sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sender.hpp)
 - &#x2705;&#x2705;&#x2705; [exec.snd.concepts p1](https://wg21.link/exec.snd.concepts#1) <code>sender_in&lt;T, Env...&gt;</code>: [`sender_in.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sender_in.hpp)
@@ -161,7 +160,7 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x2705;&#x2705;&#x2705; [exec.connect p3](https://wg21.link/exec.connect#3) <code><i>connect-awaitable-promise</i><code>: [`connect_awaitable_promise.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect_awaitable_promise.hpp)
 - &#x2705;&#x2705;&#x2705; [exec.connect p4](https://wg21.link/exec.connect#4) <code><i>operation-state-task</i><code>: [`operation_state_task.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/operation_state_task.hpp)
 - &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>await-result-type</i>&lt;DS, Promise&gt;<code>: [`await_result_type.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/await_result_type.hpp)
-- &#x1F534;&#x1F534;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>suspend-complete</i>(fun, as...)<code>
+- &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>suspend-complete</i>(fun, as...)<code>: [`suspend_complete.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/suspend_complete.hpp)
 - &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>connect-awaitable</i>(sndr, rcvr)<code>: [`connect_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect_awaitable.hpp)
 
 ## &#x2705;&#x2705;&#x2705; [exec.factories](https://wg21.link/exec.factories) Sender factories

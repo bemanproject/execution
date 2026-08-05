@@ -100,9 +100,7 @@ auto test_read_env_completions() -> void {
 }
 
 struct test_query_t {
-    auto operator()(auto&& env) const noexcept {
-        return env.query(*this);
-    }
+    auto operator()(auto&& env) const noexcept { return env.query(*this); }
 };
 inline constexpr test_query_t test_query{};
 
@@ -118,8 +116,7 @@ struct test_env {
 auto test_read_env_check_types() -> void {
     test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_std::get_stop_token)),
                                                  test_std::env<>>();
-    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)),
-                                                 test_env<true>>();
+    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)), test_env<true>>();
 #if 0
     test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)),
                                                  test_env<false>>();

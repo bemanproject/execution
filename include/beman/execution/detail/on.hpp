@@ -12,6 +12,7 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
+import beman.execution.detail.call_with_default;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.continues_on;
 import beman.execution.detail.default_domain;
@@ -34,6 +35,8 @@ import beman.execution.detail.set_value;
 import beman.execution.detail.starts_on;
 import beman.execution.detail.transform_sender;
 #else
+#include <beman/execution/detail/basic_sender.hpp>
+#include <beman/execution/detail/call_with_default.hpp>
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/forward_like.hpp>
