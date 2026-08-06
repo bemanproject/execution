@@ -73,10 +73,12 @@ list(
     exec-task.test
     exec-task-scheduler.test
     exec-then.test
+    exec-unstoppable.test
     exec-utils-cmplsigs.test
     exec-when-all.test
     exec-with-awaitable-senders.test
     exec-within.test
+    exec-write-env.test
     execution-syn.test
     forward-like.test
     function-objects.test

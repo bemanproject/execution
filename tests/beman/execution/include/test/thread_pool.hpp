@@ -5,12 +5,16 @@
 #ifndef INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_THREAD_POOL
 #define INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_THREAD_POOL
 
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <condition_variable>
 #include <memory>
 #include <mutex>
 #include <optional>
 #include <thread>
 #include <utility>
+#endif
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;

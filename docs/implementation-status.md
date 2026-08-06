@@ -168,11 +168,24 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x2705; [exec.just](https://wg21.link/exec.just) `execution::just`, `exuection::just_error`, `execution::just_stopped`: [`just.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/just.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.read.env](https://wg21.link/exec.read.env) `execution::read_env`: [`read_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/read_env.hpp)
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt](https://wg21.link/exec.adapt) Sender adaptors
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt.general](https://wg21.link/exec.adapt.general) General
+### &#x1F6A7;&#x274E;&#x274E; [exec.adapt.general](https://wg21.link/exec.adapt.general) General
+
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+- &#x1F6A7; [exec.adapt.general p3.3](https://wg21.link/exec.adapt.general#3.3) verify multi child env 
+- &#x1F6A7; [exec.adapt.general p3.4](https://wg21.link/exec.adapt.general#3.4) verify child's receiver's env
+- &#x1F6A7; [exec.adapt.general p3.5](https://wg21.link/exec.adapt.general#3.5) sender non-dependent
+
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt.obj](https://wg21.link/exec.adapt.obj) Closer objects
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.write.env](https://wg21.link/exec.write.env) `execution::write_env`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.unstoppable](https://wg21.link/exec.unstoppable) `execution::unstoppable`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.starts.on](https://wg21.link/exec.starts.on) `execution::starts_on`
+
+- &#x1F6A7; [exec.adapt.obj p1](https://wg21.link/exec.adapt.general#1) verify senders are pipeable
+- &#x1F6A7; [exec.adapt.obj p1](https://wg21.link/exec.adapt.general#1) verify pipeable sender adaptor closure objects compose
+
+### &#x2705;&#x2705;&#x2705; [exec.write.env](https://wg21.link/exec.write.env) `execution::write_env`: [`write_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/write_env.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.unstoppable](https://wg21.link/exec.unstoppable) `execution::unstoppable`: [`unstoppable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/unstoppable.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.starts.on](https://wg21.link/exec.starts.on) `execution::starts_on`: [`starts_on.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/starts_on.hpp)
+
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.continues.on](https://wg21.link/exec.continues.on) `execution::continues_on`
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.schedule.from](https://wg21.link/exec.schedule.from) `execution::schedule_from`
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.on](https://wg21.link/exec.on) `execution::on`

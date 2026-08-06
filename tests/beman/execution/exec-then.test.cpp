@@ -1,13 +1,18 @@
 // src/beman/execution/tests/exec-then.test.cpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <memory_resource>
 #include <optional>
 #include <tuple>
 #include <utility>
+#endif
 #include <test/execution.hpp>
 #include <test/completion_test.hpp>
+#include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -261,6 +266,13 @@ auto test_then_completions() {
     test_std::sync_wait(test::completion_test(test_std::just() | test_std::then([](auto&&...) noexcept {})));
 }
 
+auto test_then_attributes() {
+    test::sender_env s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s | test_std::then([]() {}));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, s | test_std::then([]() {}));
+}
 } // namespace
 
 TEST(exec_then) {
@@ -280,4 +292,5 @@ TEST(exec_then) {
 
     test_then_env();
     test_then_completions();
+    test_then_attributes();
 }

@@ -4,15 +4,22 @@
 #ifndef INCLUDED_TEST_EXECUTION
 #define INCLUDED_TEST_EXECUTION
 
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <cstddef>
+#ifndef _MSC_VER
+#include <iostream>
+#endif
+#include <source_location>
+#endif
+#include <version>
 #ifndef _MSC_VER
 #include <cstdlib>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <iostream>
 #endif
-#include <source_location>
 
 #undef NDEBUG
 #include <cassert>

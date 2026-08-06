@@ -715,6 +715,10 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 </details>
 <details>
 <summary><code>starts_on(<i>scheduler</i>, <i>sender</i>) -> <i>sender</i></code></summary>
+The expression <code>starts_on(<i>scheduler</i>, <i>sender</i>)</i></code> yields a sender
+which starts <code><i>sender</i></code> on the <code><i>scheduler</i></code>'s context, i.e.,
+it starts <code>schedule(<i>scheduler</i>)</code> and then starts <code><i>sender</i></code>
+where the scheduler's sender completes.
 </details>
 <details>
 <summary>`stopped_as_error`</summary>
@@ -724,6 +728,14 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 </details>
 <details>
 <summary><code>then(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
+</details>
+<details>
+<summary><code>unstoppable(<i>sender</i>) -> <i>sender</i></code></summary>
+The expression <code>unstoppable(<i>sender</i>)</code> yields a sender which
+passes its receiver's environment to <code><i>sender</i></code> except that
+the <code>get_stop_token</code> query return <code>never_stop_token</code>:
+the resulting sender behaves like <code><i>sender</i></code> except that it
+is unstoppable.
 </details>
 <details>
 <summary><code>upon_error(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
@@ -739,6 +751,10 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 </details>
 <details>
 <summary><code>write_env(<i>sender</i>, <i>env</i>) -> <i>sender</i></code></summary>
+The expression <code>write_env(<i>sender</i>, <i>env</i>)</code> creates a sender
+which passes a receiver to <code><i>sender</i></code> which combines the environment
+<code><i>env</i></code> with the environment from the receiver's environment. The
+queries from <code><i>env</i></code> take precedence over those from the receiver's environment.
 </details>
 
 
