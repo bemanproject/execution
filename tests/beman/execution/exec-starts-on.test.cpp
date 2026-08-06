@@ -129,8 +129,7 @@ auto test_starts_on_attributes() {
     test::sender_env   s{42};
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
     test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
-    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::starts_on(loop.get_scheduler(),
-    //s));
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::starts_on(loop.get_scheduler(), s));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::starts_on(loop.get_scheduler(), s));
 }
 } // namespace
