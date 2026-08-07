@@ -50,6 +50,7 @@ list(
     exec-run-loop-types.test
     exec-sched.test
     exec-schedule.test
+    exec-schedule-from.test
     exec-scope-concepts.test
     exec-scope-counting.test
     exec-scope-simple-counting.test
@@ -66,8 +67,8 @@ list(
     exec-spawn.test
     exec-starts-on.test
     exec-stop-when.test
-    exec-stopped-as-error.test
-    exec-stopped-as-optional.test
+    exec-stopped-err.test
+    exec-stopped-opt.test
     exec-sync-wait.test
     exec-sync-wait-with-variant.test
     exec-task.test

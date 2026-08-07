@@ -1,12 +1,18 @@
 // src/beman/execution/tests/exec-into-variant.test.cpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <exception>
 #include <tuple>
 #include <type_traits>
 #include <variant>
+#endif
 #include <test/execution.hpp>
+#include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -117,6 +123,14 @@ auto test_into_variant_stopped() -> void {
     test_std::start(op);
     ASSERT(called);
 }
+
+auto test_into_variant_attributes() {
+    test::sender_env s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::into_variant(s));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::into_variant(s));
+}
 } // namespace
 
 TEST(exec_into_variant) {
@@ -155,4 +169,6 @@ TEST(exec_into_variant) {
                                                   test_std::set_value_t(arg, arg),
                                                   test_std::set_error_t(error),
                                                   test_std::set_stopped_t()>>{});
+
+    test_into_variant_attributes();
 }

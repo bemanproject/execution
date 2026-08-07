@@ -167,15 +167,15 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x2705; [exec.schedule](https://wg21.link/exec.schedule) `execution::schedule`: [`schedule.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/schedule.hpp) 
 ### &#x2705;&#x2705;&#x2705; [exec.just](https://wg21.link/exec.just) `execution::just`, `exuection::just_error`, `execution::just_stopped`: [`just.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/just.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.read.env](https://wg21.link/exec.read.env) `execution::read_env`: [`read_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/read_env.hpp)
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt](https://wg21.link/exec.adapt) Sender adaptors
-### &#x1F6A7;&#x274E;&#x274E; [exec.adapt.general](https://wg21.link/exec.adapt.general) General
+## &#x2705;&#x274E;&#x274E; [exec.adapt](https://wg21.link/exec.adapt) Sender adaptors
+### &#x2705;&#x274E;&#x274E; [exec.adapt.general](https://wg21.link/exec.adapt.general) General
 
 - &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
 - &#x1F6A7; [exec.adapt.general p3.3](https://wg21.link/exec.adapt.general#3.3) verify multi child env 
 - &#x1F6A7; [exec.adapt.general p3.4](https://wg21.link/exec.adapt.general#3.4) verify child's receiver's env
 - &#x1F6A7; [exec.adapt.general p3.5](https://wg21.link/exec.adapt.general#3.5) sender non-dependent
 
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt.obj](https://wg21.link/exec.adapt.obj) Closer objects
+### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt.obj](https://wg21.link/exec.adapt.obj) Closure objects
 
 - &#x1F6A7; [exec.adapt.obj p1](https://wg21.link/exec.adapt.general#1) verify senders are pipeable
 - &#x1F6A7; [exec.adapt.obj p1](https://wg21.link/exec.adapt.general#1) verify pipeable sender adaptor closure objects compose
@@ -183,26 +183,38 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x2705; [exec.write.env](https://wg21.link/exec.write.env) `execution::write_env`: [`write_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/write_env.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.unstoppable](https://wg21.link/exec.unstoppable) `execution::unstoppable`: [`unstoppable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/unstoppable.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.starts.on](https://wg21.link/exec.starts.on) `execution::starts_on`: [`starts_on.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/starts_on.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.continues.on](https://wg21.link/exec.continues.on) `execution::continues_on`: [`continues_one.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/continues_one.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.schedule.from](https://wg21.link/exec.schedule.from) `execution::schedule_from`: [`schedule_from.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/schedule_from.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.on](https://wg21.link/exec.on) `execution::on`: [`on.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/on.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.then](https://wg21.link/exec.then) `execution::then`, `execution::upon_error`, `execution::upon_stopped`: [`then.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/then.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.let](https://wg21.link/exec.let) `execution::let_value`, `execution::let_error`, `execution::let_stopped`: [`let.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/let.hpp)
+### &#x2705;&#x2705;&#x274E; [exec.bulk](https://wg21.link/exec.bulk) `execution::bulk`, `execution::bulk_chunked`, and `execution::bulk_unchunked`: [`bulk.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/bulk.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.when.all](https://wg21.link/exec.when.all) `execution::when_all`: [`when_all.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/when_all.hpp)
 
 - &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
 
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.continues.on](https://wg21.link/exec.continues.on) `execution::continues_on`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.schedule.from](https://wg21.link/exec.schedule.from) `execution::schedule_from`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.on](https://wg21.link/exec.on) `execution::on`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.then](https://wg21.link/exec.then) `execution::then`, `execution::upon_error`, `execution::upon_stopped`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.let](https://wg21.link/exec.let) `execution::let_value`, `execution::let_error`, `execution::let_stopped`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.bulk](https://wg21.link/exec.bulk) `execution::bulk`, `execution::bulk_chunked`, and `execution::bulk_unchunked`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.when.all](https://wg21.link/exec.when.all) `execution::when_all`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.into.variant](https://wg21.link/exec.into.variant) `execution::into_variant`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.stopped.opt](https://wg21.link/exec.stopped.opt) `execution::stopped_as_optional`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.stopped.err](https://wg21.link/exec.stopped.err) `execution::stopped_as_error`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.associate](https://wg21.link/exec.associate) `execution::associated`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.stop.when](https://wg21.link/exec.stop.when) Exposition-only <code><i>execution::stop_when</i></code>
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.spawn.future](https://wg21.link/exec.spawn.future) `execution::spawn_future`
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.consumers](https://wg21.link/exec.consumers) Sender consumers
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.sync.wait](https://wg21.link/exec.sync.wait) `this_thread::sync_wait`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.sync.wait.var](https://wg21.link/exec.sync.wait.var) `this_thread::sync_with_variant`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.spawn](https://wg21.link/exec.spawn) `execution::spawn`
+### &#x2705;&#x2705;&#x2705; [exec.into.variant](https://wg21.link/exec.into.variant) `execution::into_variant`: [`into_variant.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/into_variant.hpp)
+### &#x2705;&#x2705;&#x274E; [exec.stopped.opt](https://wg21.link/exec.stopped.opt) `execution::stopped_as_optional`: [`stopped_as_optional.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/stopped_as_optional.hpp)
+### &#x2705;&#x2705;&#x274E; [exec.stopped.err](https://wg21.link/exec.stopped.err) `execution::stopped_as_error`: [`stopped_as_error.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/stopped_as_error.hpp)
+
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+
+### &#x2705;&#x2705;&#x274E; [exec.associate](https://wg21.link/exec.associate) `execution::associate`: [`associate.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/associate.hpp)
+
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+
+### &#x2705;&#x2705;&#x274E; [exec.stop.when](https://wg21.link/exec.stop.when) Exposition-only <code><i>execution::stop_when</i></code>: [`stop_when.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/stop_when.hpp)
+
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+
+### &#x2705;&#x2705;&#x2705; [exec.spawn.future](https://wg21.link/exec.spawn.future) `execution::spawn_future`: [`spawn_future.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/spawn_future.hpp)
+
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+
+## &#x2705;&#x2705;&#x274E; [exec.consumers](https://wg21.link/exec.consumers) Sender consumers
+### &#x2705;&#x2705;&#x274E; [exec.sync.wait](https://wg21.link/exec.sync.wait) `this_thread::sync_wait`: [`sync_wait.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sync_wait.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.sync.wait.var](https://wg21.link/exec.sync.wait.var) `this_thread::sync_with_variant`: [`sync_wait_with_variant.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sync_wait_with_variant.hpp)
+### &#x2705;&#x2705;&#x274E; [exec.spawn](https://wg21.link/exec.spawn) `execution::spawn`: [`spawn.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/spawn.hpp)
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.cmplsig](https://wg21.link/exec.cmplsig) Completion signatures
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.envs](https://wg21.link/exec.envs) Queryable utilities
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.prop](https://wg21.link/exec.prop) Class template `prop`

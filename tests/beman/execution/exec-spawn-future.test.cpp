@@ -1,10 +1,16 @@
 // tests/beman/execution/exec-spawn-future.test.cpp                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <variant>
 #include <utility>
+#endif
 #include <test/execution.hpp>
+#include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
@@ -463,6 +469,13 @@ auto test_spawn_future() {
     }
 }
 
+auto test_spawn_future_attributes() {
+    test::sender_env s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::spawn_future(s, token<true>{}));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::spawn_future(s, token<true>{}));
+}
 } // namespace
 
 TEST(exec_spawn_future) {
@@ -483,4 +496,5 @@ TEST(exec_spawn_future) {
     test_get_allocator();
 
     test_spawn_future();
+    test_spawn_future_attributes();
 }

@@ -1,6 +1,10 @@
 // src/beman/execution/tests/exec-bulk.test.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <version>
 #include <algorithm>
 #include <cstdlib>
@@ -13,7 +17,9 @@
 #ifdef __cpp_lib_parallel_algorithm
 #include <execution>
 #endif
+#endif
 #include <test/execution.hpp>
+#include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail.meta.combine;
@@ -529,6 +535,20 @@ auto test_bulk_customization() {
 }
 #endif
 
+
+auto test_bulk_attributes() {
+    // est_std::bulk(test_std::par, vec.size(), [&](std::size_t i) noexcept { result[i] = vec[i] * 2; }));
+    test::sender_env s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::bulk(s, test_std::seq, 1, [](int) {}));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::bulk(s, test_std::seq, 1, [](int) {}));
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::bulk_chunked(s, test_std::seq, 1, [](int) {}));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::bulk_chunked(s, test_std::seq, 1, [](int) {}));
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::bulk_unchunked(s, test_std::seq, 1, [](int) {}));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::bulk_unchunked(s, test_std::seq, 1, [](int) {}));
+}
+
 } // namespace
 
 TEST(exec_bulk) {
@@ -562,5 +582,6 @@ TEST(exec_bulk) {
         ASSERT(nullptr == +"the bulk tests shouldn't throw");
     }
 
+    test_bulk_attributes();
     return EXIT_SUCCESS;
 }

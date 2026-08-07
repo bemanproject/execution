@@ -173,7 +173,7 @@ Requirements for <code>_Scheduler_</code>:
 <details>
 <summary><code>sender&lt;<i>Sender</i>&gt;</code></summary>
 
-Senders represent asynchronous work. They may get composed from multiple senders to model a workflow. Senders can’t be run directly. Instead, they are passed to a <a href=‘#sender-consumer’</a> which <code><a href=‘#connect’>connect</a></code>s the sender to a <code><a href=‘#receiver’>receiver</a></code> to produce an <code><a href=‘#operation-state’>operation_state</a></code> which may get started. When using senders to represent work the inner workings shouldn’t matter. They do become relevant when creating sender algorithms.
+Senders represent asynchronous work. They may get composed from multiple senders to model a workflow. Senders can’t be run directly. Instead, they are passed to a <a href=‘#sender-consumer’>sender consumer</a> which <code><a href=‘#connect’>connect</a></code>s the sender to a <code><a href=‘#receiver’>receiver</a></code> to produce an <code><a href=‘#operation-state’>operation_state</a></code> which may get started. When using senders to represent work the inner workings shouldn’t matter. They do become relevant when creating sender algorithms.
 
 Requirements for <code>_Sender_</code>:
 - The type <code>_Sender_::sender_concept</code> is an alias for `sender_tag` or a type derived thereof or <code>_Sender_</code> is a suitable _awaitable_.
@@ -403,7 +403,7 @@ struct custom_t: forwarding_query_t {
 };
 ```
 </details>
-<blockquote>
+</blockquote>
 </details>
 <details>
 <summary><code>get_env(<i>queryable</i>) -> <i>env</i></code></summary>
@@ -647,7 +647,7 @@ The expression <code>just_stopped()</code> creates a sender which sends a comple
 <summary><code>read_env(<i>query</i>) -> <i>sender-of</i>&lt;set_value_t(<i>query-result</i>)&gt;</code></summary>
 The expression <code>read_env(<i>query</i>)</code> creates a sender which sends the result of querying <code><i>query</i></code> the environment of the <code><i>receiver</i></code> it gets connected to on the `set_value` channel when started. Put differently, it calls <code>set_value(move(<i>receiver</i>), <i>query</i>(get_env(<i>receiver</i>)))</code>. For example, in a coroutine it may be useful to extra the stop token associated with the coroutine which can be done using <code>read_env</code>:
 
-```c++\
+```c++
 auto token = co_await read_env(get_stop_token);
 ```
 
@@ -678,8 +678,19 @@ a sender which completes on the same scheduler it was started on, even if <code>
 
 The primary use of <code>affine</code> is implementing scheduler affinity for <code>task</code>.
 </details>
+
 <details>
-<summary>`bulk`</summary>
+<summary><code>associate(<i>sndr</i>, <i>token</i>) -> <i>sender</i></summary>
+</details>
+
+<details>
+<summary><code>bulk(<i>sndr</i>, <i>policy</i>, <i>shape</i>, <i>fun</i>) -> <i>sender</i></summary>
+</details>
+<details>
+<summary><code>bulk_chunked(<i>sndr</i>, <i>policy</i>, <i>shape</i>, <i>fun</i>) -> <i>sender</i></summary>
+</details>
+<details>
+<summary><code>bulk_unchunked(<i>sndr</i>, <i>policy</i>, <i>shape</i>, <i>fun</i>) -> <i>sender</i></summary>
 </details>
 <details>
 <summary><code>continues_on(<i>sender</i>, <i>scheduler</i>) -> <i>sender-of</i><<i>completions-of</i>(<i>sender</i>) + <i>completions-of</i>(schedule(<i>scheduler</i>))></code></summary>
@@ -697,37 +708,54 @@ The expression <code>into_variant(<i>sender</i>)</code> creates a sender which t
 </details>
 <details>
 <summary><code>let_error(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
+The expression <code>let_error(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which uses an error completion (<code>set_error</code>) of <code><i>upstream</i></code> as an argument to invoke <code><i>fun</i></code> which has to return another sender <code><i>inner-sndr</i></code> and the completion of <code><i>inner-sndr</i></code> becomes the completion of <code><i>sndr</i></code>. If this invocation results in an exception <code><i>sndr</i></code> completes with an error completion the result of <code>std::current_exception</code>. If <code><i>upstream</i></code> completes successfully (<code>set_value</code>) or with a cancellation (<code>set_stopped</code>) this completion becomes the completion of <code><i>sndr</i></code>.
 </details>
 <details>
 <summary><code>let_stopped(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
+The expression <code>let_stopped(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which uses a cancellation completion (<code>set_stopped</code>) of <code><i>upstream</i></code> to invoke <code><i>fun</i></code> which has to return another sender <code><i>inner-sndr</i></code> and the completion of <code><i>inner-sndr</i></code> becomes the completion of <code><i>sndr</i></code>. If this invocation results in an exception <code><i>sndr</i></code> completes with an error completion the result of <code>std::current_exception</code>. If <code><i>upstream</i></code> completes successfully (<code>set_value</code>) or with an error (<code>set_error</code>) this completion becomes the completion of <code><i>sndr</i></code>.
 </details>
 <details>
 <summary><code>let_value(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
+The expression <code>let_value(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which uses a succesful completion (<code>set_value</code>) of <code><i>upstream</i></code> as arguments to invoke <code><i>fun</i></code> which has to return another sender <code><i>inner-sndr</i></code> and the completion of <code><i>inner-sndr</i></code> becomes the completion of <code><i>sndr</i></code>. If this invocation results in an exception <code><i>sndr</i></code> completes with an error completion the result of <code>std::current_exception</code>. If <code><i>upstream</i></code> completes with a cancellation (<code>set_stopped</code>) or with an error (<code>set_error</code>) this completion becomes the completion of <code><i>sndr</i></code>.
 </details>
 <details>
-<summary><code>on(_sched_, _sndr_)</code></summary>
+<summary><code>on(_sched_, _sndr_)</code>, <code>on(_sndr, _sched_, _closure_)</code></summary>
+The <code>on</code> algorithm is a pipeable sender adaptor. Let <code><i>on-sender</i></code> be
+<ul>
+  <li><code>_sndr_</code> when the form <code>on(_sched_, _sndr_)</code> is used;</li>
+  <li><code>_closure_(_sndr_)</code> when the form <code>on(_sndr_, _sched_, _closure_)</code> is used.</li>
+</ul>
+The sender <code><i>on-sndr</i></code> is started on <code>_sched_</code>'s execution context.
+The <code>on</code> algorithm completes on the original scheduler (obtained using <code>get_start_scheduler</code>) with the result of the <code><i>on-sndr</i></code>.
 </details>
 <details>
-<summary><code>schedule_from(<i>scheduler</i>, <i>sender</i>) -> <i>sender</i></code></summary>
+<summary><code>schedule_from(<i>sender</i>) -> <i>sender</i></code></summary>
+The expression <code>schedule_from(<i>sender</i>)</code> yields a
+sender which behaves likes <code><i>sender</i></code>. The purpose of the <code>schedule_from</code>
+is to allow schedulers to customize the way how to transition off the execution context.
+</details>
+<details>
+<summary><code>spawn_future(<i>sndr</i>, <i>token</i>) -> <i>sender</i></summary>
 </details>
 <details>
 <summary>`split`</summary>
 </details>
 <details>
 <summary><code>starts_on(<i>scheduler</i>, <i>sender</i>) -> <i>sender</i></code></summary>
-The expression <code>starts_on(<i>scheduler</i>, <i>sender</i>)</i></code> yields a sender
+The expression <code>starts_on(<i>scheduler</i>, <i>sender</i>)</code> yields a sender
 which starts <code><i>sender</i></code> on the <code><i>scheduler</i></code>'s context, i.e.,
 it starts <code>schedule(<i>scheduler</i>)</code> and then starts <code><i>sender</i></code>
 where the scheduler's sender completes.
 </details>
 <details>
-<summary>`stopped_as_error`</summary>
+<summary><code>stopped_as_error(<i>sndr</i>)</code></summary>
 </details>
 <details>
-<summary>`stopped_as_optional`</summary>
+<summary><code>stopped_as_optional(<i>sndr</i>)</code></summary>
 </details>
 <details>
 <summary><code>then(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
+The expression <code>then(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which on successful competion of <code><i>upstream</i></code> (<code>set_value</code>) calls <code><i>fun</i></code> with the arguments passed to <code>set_value</code> and yields the function return as its own result. If the function throws or <code><i>upstream</i></code> completes with an error (<code>set_error</code>) the exception or the error becomes <code><i>sndr</i></code>'s result. If <code><i>upstream</i></code> completes with a cancellation (<code>set_stopped</code>).
 </details>
 <details>
 <summary><code>unstoppable(<i>sender</i>) -> <i>sender</i></code></summary>
@@ -739,12 +767,15 @@ is unstoppable.
 </details>
 <details>
 <summary><code>upon_error(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
+The expression <code>upon_error(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which passes an error completion (<code>set_error</code>) of <code><i>upstream</i></code> to <code><i>fun</i></code> and uses this result of this function invocation for its own successful (<code>set_value</code>) completion. If the function invocation throws <code>std::current_exception()</code> becomes <code><i>sndr</i></code>'s error (<code>set_error</code>) completiom. The success (<code>set_value</code>) and cancellation (<code>set_stopped</code>) completions of <code><i>upstream</i></code> are forwarded.
 </details>
 <details>
 <summary><code>upon_stopped(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
+The expression <code>upon_stopped(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which turns a cancellation completion (<code>set_stopped</code>) result of <code><i>upstream</i></code> to <code><i>fun</i></code> and uses this result of this function invocation for its own successful (<code>set_value</code>) completion. If the function invocation throws <code>std::current_exception()</code> becomes <code><i>sndr</i></code>'s error (<code>set_error</code>) completiom. The success (<code>set_value</code>) and error (<code>set_error</code>) completions of <code><i>upstream</i></code> are forwarded.
 </details>
 <details>
 <summary><code>when_all(<i>sender</i>...) -> <i>sender</i></code></summary>
+The expression <code>when_all(<i>sender</i>...)</code> yields a sender <code>sndr</code> which completes successfully (<code>set_value</code>) when all nested senders <code><i>sender<i>...</code> completed successfully using the results of the nested senders in order. If any of the senders completes with an error (<code>set_error</code>) or a cancellation (<code>set_stopped</code>) the first such completion becomes the completion of <code><i>sndr</i></code> once all nested senders completed. A stop is requested for the stop source(s) whose token was passed to the nested senders.
 </details>
 <details>
 <summary><code>when_all_with_variant(<i>sender</i>...) -> <i>sender</i></code></summary>
@@ -760,7 +791,15 @@ queries from <code><i>env</i></code> take precedence over those from the receive
 
 ### Sender Consumers
 
-- <code>sync_wait(<i>sender</i>) -> std::optional&lt;std::tuple&lt;T...&gt;&gt;</code>
+<details>
+<summary><code>sync_wait(<i>sender</i>) -> std::optional&lt;std::tuple&lt;T...&gt;&gt;</code></summary>
+</detail>
+<details>
+<summary><code>sync_wait_with_variant(<i>sender</i>) -> std::optional&lt;std::variant&lt;std::tuple&lt;T...&gt;...&gt;&gt;</code></summary>
+</detail>
+<details>
+<summary><code>spawn(<i>sndr</i>, <i>token</i>) -> void</code></summary>
+</details>
 
 ## Helpers
 
@@ -960,6 +999,10 @@ The expression <code><i>SCHED-ENV</i>(sch)</code> yields a queryable <code>o</co
   <li><code>get_start_scheduler(o)</i> is equivalent to <code>get_start_scheduler(get_env(o))</code></li>
   <li><code>get_domain(o)</i> is equivalent to <code>get_start_scheduler(get_env(o))</code></li>
 </ul>
+</details>
+
+<details>
+<summary><code><i>stop-when</i>(<i>sndr</i>, <i>token</i>)</code></summary>
 </details>
 
 <details>
