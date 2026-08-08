@@ -820,7 +820,12 @@ It has two exposition-only members template:
 - `completion_signatures_t`
 - `connect_result_t`
 - `default_domain`
-- `env&lt;T...&gt;`
+<details>
+<summary><code>env&lt;Ev...&gt;</code></summary>
+The expression <code>env(<i>ev</i>...)</code> creates an environment by combining the environments
+<code><i>ev</i>...</code>. If multiple of the environments support an identical query, the first
+one from the first environment is used.
+</details>
 - `env_of_t`
 <details>
 <summary><code>error_types_of_t&lt;<i>Sndr</i>, <i>Env</i> = env&lt;&gt;, <i>Variant</i> = <i>variant-or-empty</i>&gt;</code></summary>
@@ -828,6 +833,12 @@ The template specialization <code>error_types_of_t&lt;<<i>sndr</i>, <i>Env</i>, 
 </details>
 - `fwd_env`
 - `operation_state_tag`
+<details>
+<summary><code>prop&lt;Query, Value&gt;</code></summary>
+The expression <code>prop(<i>query</i>, <i>value</i>)</code> create an object which can
+be queried for query <code><i>query</i></code> which results in <code><i>value</i></code>.
+
+</details>
 - `receiver_tag`
 - `run_loop`
 - `scheduler_tag`

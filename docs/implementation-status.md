@@ -245,8 +245,8 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x2705;&#x2705;&#x2705; [exec.cmplsig p8](https://wg21.link/exec.cmplsig#8) <code>sends_stopped</code>: [`sends_stopped.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sends_stopped.hpp)
 
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.envs](https://wg21.link/exec.envs) Queryable utilities
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.prop](https://wg21.link/exec.prop) Class template `prop`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.env](https://wg21.link/exec.env) Class template `env`
+### &#x2705;&#x2705;&#x2705; [exec.prop](https://wg21.link/exec.prop) Class template `prop`: [`prop.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/prop.hpp)
+### &#x2705;&#x2705;&#x1F6A7; [exec.env](https://wg21.link/exec.env) Class template `env`: [`env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/env.hpp)
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.ctx](https://wg21.link/exec.ctx) Execution contexts
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.run.loop](https://wg21.link/exec.run.loop) `execution::run_loop`
 #### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.run.loop.general](https://wg21.link/exec.run.loop.general) General
