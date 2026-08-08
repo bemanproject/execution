@@ -244,15 +244,15 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x2705;&#x2705;&#x2705; [exec.cmplsig p8](https://wg21.link/exec.cmplsig#8) <code>error_types_of_t</code>: [`error_types_of_t.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/error_types_of_t.hpp)
 - &#x2705;&#x2705;&#x2705; [exec.cmplsig p8](https://wg21.link/exec.cmplsig#8) <code>sends_stopped</code>: [`sends_stopped.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sends_stopped.hpp)
 
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.envs](https://wg21.link/exec.envs) Queryable utilities
+## &#x2705;&#x2705;&#x2705; [exec.envs](https://wg21.link/exec.envs) Queryable utilities
 ### &#x2705;&#x2705;&#x2705; [exec.prop](https://wg21.link/exec.prop) Class template `prop`: [`prop.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/prop.hpp)
 ### &#x2705;&#x2705;&#x1F6A7; [exec.env](https://wg21.link/exec.env) Class template `env`: [`env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/env.hpp)
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.ctx](https://wg21.link/exec.ctx) Execution contexts
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.run.loop](https://wg21.link/exec.run.loop) `execution::run_loop`
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.run.loop.general](https://wg21.link/exec.run.loop.general) General
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.run.loop.types](https://wg21.link/exec.run.loop.types) Associated types
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.run.loop.ctor](https://wg21.link/exec.run.loop.ctor) Constructor and destructor
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.run.loop.members](https://wg21.link/exec.run.loop.members) Member functions
+## &#x2705;&#x2705;&#x2705; [exec.ctx](https://wg21.link/exec.ctx) Execution contexts
+### &#x2705;&#x2705;&#x2705; [exec.run.loop](https://wg21.link/exec.run.loop) `execution::run_loop`
+#### &#x2705;&#x2705;&#x2705; [exec.run.loop.general](https://wg21.link/exec.run.loop.general) General: [`run_loop.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/run_loop.hpp)
+#### &#x2705;&#x2705;&#x274E; [exec.run.loop.types](https://wg21.link/exec.run.loop.types) Associated types
+#### &#x2705;&#x2705;&#x274E; [exec.run.loop.ctor](https://wg21.link/exec.run.loop.ctor) Constructor and destructor
+#### &#x2705;&#x2705;&#x274E; [exec.run.loop.members](https://wg21.link/exec.run.loop.members) Member functions
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.coro.util](https://wg21.link/exec.coro.util) Coroutine utilities
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.as.awaitable](https://wg21.link/exec.as.awaitable) `execution::as_waitable`
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.with.awaitable.senders](https://wg21.link/exec.with.awaitable.senders) `execution::as_waitable`

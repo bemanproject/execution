@@ -840,7 +840,17 @@ be queried for query <code><i>query</i></code> which results in <code><i>value</
 
 </details>
 - `receiver_tag`
-- `run_loop`
+<details>
+<summary><code>run_loop</code></summary>
+The class <code>run_loop</code> provides a scheduler to execute work on. It is used
+to implement <code>sync_wait(<i>sndr</i>)</code>. The <code>public</code> methods on
+an object <code><i>loop</i></code> of type <code>run_loop</code> are:
+<ul>
+<li><code><i>loop</i>.get_scheduler()</code> to get a scheduler scheduling work on <code><i>loop</i></code>.</li>
+<li><code><i>loop</i>.finish()</code> to request <code><i>loop</i></code> to exit processing work items. Note that <code>run_loop</code> doesn't maintain a stop source, i.e., when this operation is invoked the work doesn't get cancelled.</li>
+<li><code><i>loop</i>.run()</code> to have the current thread executed work items scheduled on <code><i>loop</i></code>. The thread will continue processing work items as long as <code><i>loop</i>.finish()</code> wasn't called or there is work scheduled on <code><i>loop</i></code>.
+</ul>
+</details>
 - `scheduler_tag`
 - `schedule_result_t`
 - `sender_adaptor_closure`
