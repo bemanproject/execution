@@ -473,7 +473,8 @@ auto test_spawn_future_attributes() {
     test::sender_env s{42};
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
     test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
-    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::spawn_future(s, token<true>{}));
+    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::spawn_future(s,
+    // token<true>{}));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::spawn_future(s, token<true>{}));
 }
 } // namespace

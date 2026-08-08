@@ -101,7 +101,7 @@ auto test_use(Scheduler&& scheduler, Sender&& sender) {
 
 auto test_continues_on_attributes() {
     test_std::run_loop loop;
-    test::sender_env s{42};
+    test::sender_env   s{42};
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
     test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::continues_on(s, loop.get_scheduler()));

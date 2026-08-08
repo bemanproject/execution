@@ -165,12 +165,18 @@ auto test_let_attributes() {
     test::sender_env s{42};
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
     test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
-    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::let_value(s, []{ return test_std::just(); }));
-    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::let_value(s, []{ return test_std::just(); }));
-    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::let_error(s, [](auto){ return test_std::just(); }));
-    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::let_error(s, [](auto){ return test_std::just(); }));
-    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::let_stopped(s, []{ return test_std::just(); }));
-    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::let_stopped(s, []{ return test_std::just(); }));
+    test::test_sender_env<true>(
+        42, test::test_forwardable_attr{}, test_std::let_value(s, [] { return test_std::just(); }));
+    test::test_sender_env<false>(
+        84, test::test_non_forwardable_attr{}, test_std::let_value(s, [] { return test_std::just(); }));
+    test::test_sender_env<true>(
+        42, test::test_forwardable_attr{}, test_std::let_error(s, [](auto) { return test_std::just(); }));
+    test::test_sender_env<false>(
+        84, test::test_non_forwardable_attr{}, test_std::let_error(s, [](auto) { return test_std::just(); }));
+    test::test_sender_env<true>(
+        42, test::test_forwardable_attr{}, test_std::let_stopped(s, [] { return test_std::just(); }));
+    test::test_sender_env<false>(
+        84, test::test_non_forwardable_attr{}, test_std::let_stopped(s, [] { return test_std::just(); }));
 }
 } // namespace
 
@@ -191,6 +197,13 @@ TEST(exec_let) {
         ASSERT(nullptr == "let tests are not expected to throw");
         // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
+
+    test_std::sync_wait(test_std::just() |
+                        (test_std::let_value([] { return test_std::just(); }) | test_std::then([] {})));
+    test_std::sync_wait(test_std::just_error(0) |
+                        (test_std::let_error([](auto) { return test_std::just(); }) | test_std::then([] {})));
+    test_std::sync_wait(test_std::just_stopped() |
+                        (test_std::let_stopped([] { return test_std::just(); }) | test_std::then([] {})));
 
     test_let_attributes();
 

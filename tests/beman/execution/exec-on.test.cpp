@@ -68,13 +68,15 @@ static_assert(test_std::receiver<on_receiver>);
 
 auto test_on_attributes() {
     test_std::run_loop loop{};
-    test::sender_env s{42};
+    test::sender_env   s{42};
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
     test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::on(loop.get_scheduler(), s));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::on(loop.get_scheduler(), s));
-    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::on(s, loop.get_scheduler(), test_std::then([](){})));
-    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::on(s, loop.get_scheduler(), test_std::then([](){})));
+    test::test_sender_env<true>(
+        42, test::test_forwardable_attr{}, test_std::on(s, loop.get_scheduler(), test_std::then([]() {})));
+    test::test_sender_env<false>(
+        84, test::test_non_forwardable_attr{}, test_std::on(s, loop.get_scheduler(), test_std::then([]() {})));
 }
 } // namespace
 

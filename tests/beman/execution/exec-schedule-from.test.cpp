@@ -20,7 +20,7 @@ import beman.execution;
 namespace {
 
 auto test_schedule_from() {
-    auto[a, b] = *test_std::sync_wait(test_std::schedule_from(test_std::just(42, true)));
+    auto [a, b] = *test_std::sync_wait(test_std::schedule_from(test_std::just(42, true)));
     ASSERT(a == 42);
     ASSERT(b);
 }
@@ -32,7 +32,7 @@ auto test_schedule_from_attributes() {
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::schedule_from(s));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::write_env(s));
 }
-}
+} // namespace
 
 TEST(exec_schedule_from) {
     test_schedule_from();

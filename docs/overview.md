@@ -806,13 +806,26 @@ queries from <code><i>env</i></code> take precedence over those from the receive
 - `as_awaitable`
 - `with_awaitable_sender`
 - `apply_sender`
-- `completion_signatures`
+<details>
+<summary><code>completion_signatures&lt;<i>Sig</i>...&gt;</code></summary>
+The template specialization <code>completion_signatures&lt;<i>Sig</i>...&gt;</code> is a list
+of completion signatures used to declare and compute the result types of senders.
+</p>
+It has two exposition-only members template:
+<ol>
+<li><code><i>count-of</i>(<i>tag</i>)</code> providing a constant expression with the count of <code><i>tag</i></code> completions.</li>
+</li><code><i>for-each</i>(<i>fun</i>)</code> invoking <code><i>fun</i></code> with a pointer to each of the completion signatures <code><i>Sig</i>...</code>. The function is used to verify the completion signature types.
+</ol>
+</details>
 - `completion_signatures_t`
 - `connect_result_t`
 - `default_domain`
 - `env&lt;T...&gt;`
 - `env_of_t`
-- `error_types_of_t`
+<details>
+<summary><code>error_types_of_t&lt;<i>Sndr</i>, <i>Env</i> = env&lt;&gt;, <i>Variant</i> = <i>variant-or-empty</i>&gt;</code></summary>
+The template specialization <code>error_types_of_t&lt;<<i>sndr</i>, <i>Env</i>, <i>Variant</i>&gt;</code> gets <code><i>Sndr</i></code> error completion signatures when using the environment <code><i>Env</i></code>. The results is represented as a <code><i>Variant</i>&lt;<i>E</i>...</code> where <code><i>E</i>...</code> is the list of argument types to the completion signatures.
+</details>
 - `fwd_env`
 - `operation_state_tag`
 - `receiver_tag`
@@ -821,6 +834,10 @@ queries from <code><i>env</i></code> take precedence over those from the receive
 - `schedule_result_t`
 - `sender_adaptor_closure`
 - `sender_tag`
+<details>
+<summary><code>bool sends_stopped&lt;<i>Sndr</i>, <i>Env</i> = env&lt;&gt;</code></summary>
+The Boolean variable <code>sends_stopped&lt;<i>Sndr</i>, <i>Env</i>&gt; is <code>true</code> if the completion signatures of <code><i>Sndr</i></code> when using the environment <code><i>Env</i></code> contain a cancellation signature (<code>set_stopped_t()</code>).
+</details>
 - `stop_token_of_t`
 
 <details>
@@ -834,7 +851,10 @@ queries from <code><i>env</i></code> take precedence over those from the receive
 - `transform_sender`
 - `transform_completion_signatures`
 - `transform_completion_signatures_of`
-- `value_types_of_t`
+<details>
+<summary><code>value_types_of_t&lt;<i>Sndr</i>, <i>Env</i> = env&lt;&gt;, <i>Tuple</i> = <i>decayed-tuple</i>, <i>Variant</i> = <i>variant-or-empty</i>&gt;</code></summary>
+The template specialization <code>value_types_of_t&lt;<i>Sndr</i>, <i>Env</i>, <i>Tuple</i>, <i>Variant</i>&gt;</code> gets <code><i>Sndr</i></code> success completion signatures when using the environment <code><i>Env</i></code>. The resulting type is a <code><i>Variant</i></code> of <code><i>Tuple</i></code> elements where each <code><i>Tuple</i></code> represents the argument types of one of the value completion signatures.
+</details>
 
 ## Stop Token
 - `never_stop_token`
@@ -883,6 +903,17 @@ domain given the optional environment <code>ev...</code>:
 </details>
 
 <details>
+<summary><code>concept <i>completion-signature</i>&lt;Signature&gt;</code></summary>
+This concept determines if the type <code>Signature</code> is a completion signature, i.e.,
+if it has one of these three forms:
+<ol>
+<li><code>set_value_t(T...)</code></li>
+<li><code>set_error_t(T)</code></li>
+<li><code>set_stopped_t()</code></li>
+</ol>
+</details>
+
+<details>
 <summary><code>concept <i>decays-to</i>&lt;From, To&gt;</code></summary>
 Determines if <code>To</code> is the result of decaying the type <code>From</code>:
 <code>same_as&lt;decay_t&lt;From&gt;, To&gt;</code>
@@ -903,13 +934,8 @@ The type <code><i>FWD-ENV-T</i>(Env)</code> is <code>decltype(FWD-ENV(decl_val&l
 </details>
 
 <details>
-<summary><code><i>infallible-scheduler</i>&lt;Sched&gt;</code></summary>
-
-Determines if <code>Sched</code> is a scheduler (i.e., <code>scheduler&lt;Sched&gt;</code> is <code>true</code>)
-and if <code>Sched</code>'s sender has only a <code>set_value_t()</code> completion signature when used with
-an environment with an <code>unstoppable_token&lt;Tok&gt;</code> stop token <code>Tok</code>. If the
-stop token <code>Tok</code> is not <code>unstoppable_token&lt;Tok&gt;</code> the completion signatures
-can include a <code>set_stopped_t()</code> completion signature in addition to the <code>set_value_t()</code> completion signature.
+<summary><code><i>gather-signatures</i>&lt;<i>Tag</i>, <i>Signatures</i>, <i>Tuple</i>, <i>Variant</i>&gt;</code></summary>
+The template specializaton <code><i>gather-signatures</i>&lt;<i>Tag</i>, <i>Signatures</i>, <i>Tuple</i>, <i>Variant</i>&gt;</code> represents the completion signatures in the type list <i>Signatures</i> using <code><i>Tag</i></code> (one of <code>set_value_t</code>, <code>set_error_t</code>, or <code>set_stopped_t</code>) as a <code><i>Variant</i></code> of <code><i>Tuple</i></code>s. Each <code><i>Tuple</i></code> has the element types of of one of the matching completion signatures.
 </details>
 
 <details>
@@ -924,6 +950,16 @@ expressions <code><i>HIDE-SCHED</i>(q).query(tag, a...)</code> is
 <ul>
   <li>undefined if <code>decay_t&lt;decltype(tag)&gt;</code> is <code>get_scheduler_t</code> or <code>get_domain_t</code></li>
   <li>equivalent to <code>q.query(tag, a...)</code> otherwise</li>
+</details>
+
+<details>
+<summary><code><i>infallible-scheduler</i>&lt;Sched&gt;</code></summary>
+
+Determines if <code>Sched</code> is a scheduler (i.e., <code>scheduler&lt;Sched&gt;</code> is <code>true</code>)
+and if <code>Sched</code>'s sender has only a <code>set_value_t()</code> completion signature when used with
+an environment with an <code>unstoppable_token&lt;Tok&gt;</code> stop token <code>Tok</code>. If the
+stop token <code>Tok</code> is not <code>unstoppable_token&lt;Tok&gt;</code> the completion signatures
+can include a <code>set_stopped_t()</code> completion signature in addition to the <code>set_value_t()</code> completion signature.
 </details>
 
 <details>

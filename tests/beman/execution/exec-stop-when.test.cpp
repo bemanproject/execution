@@ -93,10 +93,11 @@ static_assert(test_std::receiver<receiver>);
 
 auto test_stop_when_attributes() {
     test_std::inplace_stop_source source;
-    test::sender_env s{42};
+    test::sender_env              s{42};
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
     test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
-    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_detail::stop_when(s, source.get_token()));
+    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_detail::stop_when(s,
+    // source.get_token()));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_detail::stop_when(s, source.get_token()));
 }
 } // namespace

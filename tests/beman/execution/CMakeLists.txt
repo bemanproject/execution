@@ -75,7 +75,7 @@ list(
     exec-task-scheduler.test
     exec-then.test
     exec-unstoppable.test
-    exec-utils-cmplsigs.test
+    exec-cmplsigs.test
     exec-when-all.test
     exec-with-awaitable-senders.test
     exec-within.test

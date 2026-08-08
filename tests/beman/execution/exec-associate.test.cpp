@@ -105,10 +105,11 @@ static_assert(test_std::scope_association<scope::assoc>);
 
 auto test_associate_attributes() {
     test_std::counting_scope scope{};
-    test::sender_env s{42};
+    test::sender_env         s{42};
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
     test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
-    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::associate(s, scope.get_token()));
+    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::associate(s,
+    // scope.get_token()));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::associate(s, scope.get_token()));
 
     scope.close();
