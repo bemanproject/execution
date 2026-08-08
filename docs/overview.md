@@ -803,7 +803,26 @@ queries from <code><i>env</i></code> take precedence over those from the receive
 
 ## Helpers
 
-- `as_awaitable`
+<details>
+<summary><code><i>adapt-for-await-completion(<i>s</i>)</code></summary>
+The expression is equivalent to <code>get_await_completion_adaptor(get_env(s))(s)</code> except
+that <code><i>s</i></code> is evaluated only once.
+</details>
+
+<details>
+<summary><code>as_awaitable(<i>expr</i>, <i>promise</i>)</code></summary>
+The expression <code>as_awaitable(<i>expr</i>, <i>promise</i>)</code> tries to
+create an awaitable from <code><i>expr</i></code> and <code><i>promise</i></code>. It
+tries the following transformations:
+<ol>
+<li><code><i>expr</i>.as_awaitable(<i>promise</i>)</code> if this expression is well-formed; otherwise<li>
+<li><code><i>adapt-for-await-completion</i>(transform_sender(<i>expr</i>, get_env(<i>promise</i>)))</code> if this expression is well-formed; otherwise</li>
+<li><code><i>expr</i></code> if <code><i>GET-AWAITER</i>(<i>expr</i>)</code> is an awaiter for <code><i>promise</i></code>; otherwise.</li>
+<li><code><i>sender-awaitable</i>{<i>adapt-for-await-completion<i>(transform_sender(<i>expr</i>, get_env(<i>promise</i>))), <i>promise</i>}</code> if this expression is well-formed; otherwise</li>
+<li><code><i>expr</i></code>
+</ol>
+
+</details>
 - `with_awaitable_sender`
 - `apply_sender`
 <details>
@@ -892,6 +911,13 @@ Turns <code>err</code> smartly into an <code>exception_ptr</code>:
 <li>else if <code>same_as&lt;decay_t&lt;decltype(err)&gt;, error_code&gt;</code> &#x21d2; <code>make_exception_ptr(system_error(err))</code></li>
 <li>else <code>make_exception_ptr(err)</code></li>
 </ol>
+</details>
+
+<details>
+<summary><code><i>awaitable-sender</i>&lt;Sndr, Promise&gt;</code></summary>
+The concept check <code><i>awaitable-sender</i>&lt;Sndr, Promise&gt;</code> determines
+if the <code>Sndr</code> could work with the environment provided by <code>Promise</code>
+and if <code>Promise</code> supports a suitable <code>unhandled_stopped()</code> method.
 </details>
 
 <details>
@@ -1055,6 +1081,26 @@ The expression <code><i>SCHED-ENV</i>(sch)</code> yields a queryable <code>o</co
 <ul>
   <li><code>get_start_scheduler(o)</i> is equivalent to <code>get_start_scheduler(get_env(o))</code></li>
   <li><code>get_domain(o)</i> is equivalent to <code>get_start_scheduler(get_env(o))</code></li>
+</ul>
+</details>
+
+<details>
+<summary><code><i>sender-awaitable</i>&lt;Sndr, Promise&gt;</code></summary>
+The specialization <code><i>sender-awaitable</i>&lt;Sndr, Promise&gt;</code> is an awaiter implemented by getting the result of the <code>Sndr</code> completion.
+</details>
+
+<details>
+<summary><code>concept <i>single-sender</i>&lt;Sndr, Env...&gt;</code></summary>
+The test <i>single-sender</i>&lt;Sndr, Env...&gt;</code> is <code>true</code> if <code>Sndr</code> has exactly one successful completion signature when using an environment of type <code>Env...</code>.
+</details>
+
+<details>
+<summary><code><i>single-sender-value-type</i>&lt;Sndr, Env...&gt;</code></summary>
+The type <code><i>single-sender-value-type</i>&lt;Sndr, Env...&gt;</code> is defined if <code>Sndr</code> has exactly one successful completion signature <code>set_value_t(T...)</code> when using an environment of type <code>Env...</code>. The type is
+<ul>
+<li><code>T...</code> if <code>1u == sizeof...(T)</code> (i.e., there is one element);</li>
+<li><code>void</code> if <code>0u == sizeof...(T)</code> (i.e., there is no element);</li>
+<li><code>std::tuple&lt;T...&gt;</code> otherwise.
 </ul>
 </details>
 

@@ -1,7 +1,6 @@
 // tests/beman/execution/exec-affine.test.cpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <test/execution.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -10,6 +9,8 @@ import std;
 #include <thread>
 #include <tuple>
 #endif
+#include <test/execution.hpp>
+#include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -160,6 +161,14 @@ auto test_affine_specializations(Sender&& sender, std::size_t count = 0u) -> voi
     assert(data.connected_ == count);
     assert(data.started_ == count);
 }
+
+auto test_affine_attributes() {
+    test::sender_env s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::affine(s));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::affine(s));
+}
 } // namespace
 
 TEST(affine) {
@@ -213,6 +222,8 @@ TEST(affine) {
 
     loop.finish();
     t.join();
+
+    test_affine_attributes();
 
     return 0;
 }

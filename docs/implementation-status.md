@@ -46,6 +46,8 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x2705;&#x2705;&#x2705; [<code><i>decays-to</i></code>](https://wg21.link/execution.syn): [`decays_to.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/decays_to.hpp)
 - &#x2705;&#x2705;&#x2705; [<code><i>class-type</i></code>](https://wg21.link/execution.syn): [`class_type.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/class_type.hpp)
 - &#x2705;&#x2705;&#x2705; [<code><i>queryable</i>&lt;Q&gt;</code>](https://wg21.link/exec.queryable.concept#1): [`queryable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/queryable.hpp)
+- &#x2705;&#x2705;&#x2705; [<code><i>single-sender-value_type</i>&lt;Sndr, Env...&gt;</code>](https://wg21.link/exec.queryable.concept#1): [`single_sender_value_type.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/single_sender_value_type.hpp)
+- &#x2705;&#x2705;&#x2705; [<code><i>single-sender</i>&lt;Sndr, Env...&gt;</code>](https://wg21.link/exec.queryable.concept#1): [`single_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/single_sender.hpp)
 
 ## &#x1F534;&#x1F534;&#x1F534; [exec.queries](https://wg21.link/exec.queries) Queries
 ### &#x2705;&#x2705;&#x2705; [exec.queries.expos](https://wg21.link/exec.queries.expos) Query utilities
@@ -254,11 +256,18 @@ Each section containing subelements reflects the state of the "worst" element.
 #### &#x2705;&#x2705;&#x274E; [exec.run.loop.ctor](https://wg21.link/exec.run.loop.ctor) Constructor and destructor
 #### &#x2705;&#x2705;&#x274E; [exec.run.loop.members](https://wg21.link/exec.run.loop.members) Member functions
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.coro.util](https://wg21.link/exec.coro.util) Coroutine utilities
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.as.awaitable](https://wg21.link/exec.as.awaitable) `execution::as_waitable`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.with.awaitable.senders](https://wg21.link/exec.with.awaitable.senders) `execution::as_waitable`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.affine](https://wg21.link/exec.affine) `execution::as_waitable`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.inline.scheduler](https://wg21.link/exec.inline.scheduler) `execution::as_waitable`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.task.scheduler](https://wg21.link/exec.task.scheduler) `execution::as_waitable`
+### &#x2705;&#x2705;&#x1F6A7; [exec.as.awaitable](https://wg21.link/exec.as.awaitable) `execution::as_awaitable`
+
+- &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p1](https://wg21.link/exec.as.awaitable#1) <code><i>awaitable-sender<i></code>: [`awaitable_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/awaitable_sender.hpp)
+- &#x1F534;&#x1F534;&#x1F534; [exec.as.awaitable p1](https://wg21.link/exec.as.awaitable#1) <code><i>has-queryable-await-completion-adaptor<i></code>: &#1F6A8; this name appears to be is unused
+- &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p2](https://wg21.link/exec.as.awaitable#2) <code><i>sender-awaitable<i></code>: : [`sender_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sender_awaitable.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.as.awaitable p7](https://wg21.link/exec.as.awaitable#7) <code>as_awaitable</code>: : [`as_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/as_awaitable.hpp)
+- &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p8](https://wg21.link/exec.as.awaitable#8) <code><i>adapt-for-await-completion</i></code>: : [`as_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/as_awaitable.hpp)
+
+### &#x2705;&#x2705;&#x1F534; [exec.with.awaitable.senders](https://wg21.link/exec.with.awaitable.senders) `execution::with_awaitable_senders`: [`with_awaitable_senders.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/with_awaitable_senders.hpp)
+### &#x2705;&#x2705;&#2705; [exec.affine](https://wg21.link/exec.affine) `execution::affine`: [`affine.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/affine.hpp)
+### &#x2705;&#x2705;&#x1F534; [exec.inline.scheduler](https://wg21.link/exec.inline.scheduler) `execution::inline_scheduler`: [`inline_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/inline_scheduler.hpp)
+### &#x534;&#x534;&#x1F6A7; [exec.task.scheduler](https://wg21.link/exec.task.scheduler) `execution::task_scheduler`: [`task_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/task_scheduler.hpp)
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.task](https://wg21.link/exec.task) `execution::as_waitable`
 #### &#x1F6A7;&#x1F6A7;&#x1F6A7; [task.overview](https://wg21.link/task.overview) `task` overview
 #### &#x1F6A7;&#x1F6A7;&#x1F6A7; [task.class](https://wg21.link/task.class) Class template `task`
