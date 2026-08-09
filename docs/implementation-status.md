@@ -14,7 +14,7 @@ The indicators come in groups of threes:
 
 Each section containing subelements reflects the state of the "worst" element.
 
-# &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec](https://wg21.link/exec) Execution control library
+# &#x1F534;&#x1F534;&#x1F534; [exec](https://wg21.link/exec) Execution control library
 ## &#x1F6A7;&#x2705;&#x2705; [exec.general](https://wg21.link/exec.general) General
 
 - &#x1F6A7;&#x274E;&#x274E; [<code><i>MANDATE-NOTHROW</i>(expr)</code>](https://wg21.link/exec.general#5) &#x21d2; <code>noexcept(<i>expr</i>)</code> is `true`
@@ -30,7 +30,7 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x1F6A7;&#x2705;&#x2705; [<code><i>queryable</i>&lt;Q&gt;</code>](https://wg21.link/exec.queryable.concept#1): [`queryable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/queryable.hpp)
 
 ## &#x274E;&#x274E;&#x274E; [exec.async.ops](https://wg21.link/exec.async.ops) Asynchronous operations
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [execution.syn](https://wg21.link/execution.syn) Header `<execution>` synopsis
+## &#x2705;&#x2705;&#x1F534; [execution.syn](https://wg21.link/execution.syn) Header `<execution>` synopsis
 
 - &#x2705;&#x2705;&#x1F534; [<code>is_execution_policy&lt;T&gt;</code>](https://wg21.link/execution.syn): [`execution_policy.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/execution_policy.hpp)
 - &#x2705;&#x2705;&#x1F534; [<code>is_execution_policy_v&lt;T&gt;</code>](https://wg21.link/execution.syn): [`execution_policy.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/execution_policy.hpp)
@@ -97,9 +97,9 @@ Each section containing subelements reflects the state of the "worst" element.
 ## &#x2705;&#x2705;&#x2705; [exec.opstate](https://wg21.link/exec.opstate) Operation states
 ### &#x2705;&#x2705;&#x2705; [exec.opstate.general](https://wg21.link/exec.opstate.general) General: [`operation_state.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/operation_state.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.opstate.start](https://wg21.link/exec.opstate.start) `execution::start`: [`start.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/start.hpp)
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.snd](https://wg21.link/exec.snd) Senders
+## &#x1F534;&#x1F534;&#x1F534; [exec.snd](https://wg21.link/exec.snd) Senders
 ### &#x274E;&#x274E;&#x274E; [exec.snd.general](https://wg21.link/exec.snd.general) General
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.snd.expos](https://wg21.link/exec.snd.expos) Exposition-only entities
+### &#x1F534;&#x1F534;&#x1F534; [exec.snd.expos](https://wg21.link/exec.snd.expos) Exposition-only entities
 
 - &#x2705;&#x2705;&#x2705; [exec.snd.expos p4](https://wg21.link/exec.snd.expos#4) <code><i>FWD-ENV</i>(env)</code>: [`fwd_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/fwd_env.hpp)
 - &#x2705;&#x2705;&#x2705; [exec.snd.expos p4](https://wg21.link/exec.snd.expos#4) <code><i>FWD-ENV-T</i>(Env)</code>: [`fwd_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/fwd_env.hpp)
@@ -164,12 +164,12 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x2705; [exec.getcomplsigs](https://wg21.link/exec.getcomplsigs) `execution::get_completion_signatures`: [`get_completion_signatures.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_signatures.hpp)
 ### &#x1F534;&#x1F534;&#x1F534; [exec.connect](https://wg21.link/exec.connect) `execution::connect`
 
-- &#x2705;&#x2705;&#x2705; [exec.connect p2](https://wg21.link/exec.connect#2) <code>connect(sndr, rcvr)<code>: [`connect.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect.hpp)
-- &#x2705;&#x2705;&#x2705; [exec.connect p3](https://wg21.link/exec.connect#3) <code><i>connect-awaitable-promise</i><code>: [`operation_state_task.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/operation_state_task.hpp)
-- &#x2705;&#x2705;&#x2705; [exec.connect p4](https://wg21.link/exec.connect#4) <code><i>operation-state-task</i><code>: [`operation_state_task.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/operation_state_task.hpp)
-- &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>await-result-type</i>&lt;DS, Promise&gt;<code>: [`await_result_type.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/await_result_type.hpp)
-- &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>suspend-complete</i>(fun, as...)<code>: [`suspend_complete.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/suspend_complete.hpp)
-- &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>connect-awaitable</i>(sndr, rcvr)<code>: [`connect_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect_awaitable.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.connect p2](https://wg21.link/exec.connect#2) <code>connect(sndr, rcvr)</code>: [`connect.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.connect p3](https://wg21.link/exec.connect#3) <code><i>connect-awaitable-promise</i></code>: [`operation_state_task.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/operation_state_task.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.connect p4](https://wg21.link/exec.connect#4) <code><i>operation-state-task</i></code>: [`operation_state_task.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/operation_state_task.hpp)
+- &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>await-result-type</i>&lt;DS, Promise&gt;</code>: [`await_result_type.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/await_result_type.hpp)
+- &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>suspend-complete</i>(fun, as...)</code>: [`suspend_complete.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/suspend_complete.hpp)
+- &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>connect-awaitable</i>(sndr, rcvr)</code>: [`connect_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect_awaitable.hpp)
 
 ## &#x2705;&#x2705;&#x2705; [exec.factories](https://wg21.link/exec.factories) Sender factories
 ### &#x2705;&#x2705;&#x2705; [exec.schedule](https://wg21.link/exec.schedule) `execution::schedule`: [`schedule.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/schedule.hpp) 
@@ -183,7 +183,7 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x1F6A7; [exec.adapt.general p3.4](https://wg21.link/exec.adapt.general#3.4) verify child's receiver's env
 - &#x1F6A7; [exec.adapt.general p3.5](https://wg21.link/exec.adapt.general#3.5) sender non-dependent
 
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.adapt.obj](https://wg21.link/exec.adapt.obj) Closure objects
+### &#x2705;&#x2705;&#x1F534; [exec.adapt.obj](https://wg21.link/exec.adapt.obj) Closure objects
 
 - &#x1F6A7; [exec.adapt.obj p1](https://wg21.link/exec.adapt.general#1) verify senders are pipeable
 - &#x1F6A7; [exec.adapt.obj p1](https://wg21.link/exec.adapt.general#1) verify pipeable sender adaptor closure objects compose
@@ -234,7 +234,7 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x1F534; [exec.sync.wait](https://wg21.link/exec.sync.wait) `this_thread::sync_wait`: [`sync_wait.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sync_wait.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.sync.wait.var](https://wg21.link/exec.sync.wait.var) `this_thread::sync_with_variant`: [`sync_wait_with_variant.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sync_wait_with_variant.hpp)
 ### &#x2705;&#x2705;&#x1F534; [exec.spawn](https://wg21.link/exec.spawn) `execution::spawn`: [`spawn.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/spawn.hpp)
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.cmplsig](https://wg21.link/exec.cmplsig) Completion signatures
+## &#x2705;&#x2705;&#x1F534; [exec.cmplsig](https://wg21.link/exec.cmplsig) Completion signatures
 
 - &#x2705;&#x2705;&#x2705; [exec.cmplsig p4](https://wg21.link/exec.cmplsig#4) <code><i>completion-signature</i></code>: [`completion_signature.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/completion_signature.hpp)
 - &#x2705;&#x2705;&#x1F534; [exec.cmplsig p5](https://wg21.link/exec.cmplsig#5) <code><i>indirect-meta-apply</i></code>: [`indirect_meta_apply.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/indirect_meta_apply.hpp)
@@ -248,18 +248,18 @@ Each section containing subelements reflects the state of the "worst" element.
 
 ## &#x2705;&#x2705;&#x2705; [exec.envs](https://wg21.link/exec.envs) Queryable utilities
 ### &#x2705;&#x2705;&#x2705; [exec.prop](https://wg21.link/exec.prop) Class template `prop`: [`prop.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/prop.hpp)
-### &#x2705;&#x2705;&#x1F6A7; [exec.env](https://wg21.link/exec.env) Class template `env`: [`env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/env.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.env](https://wg21.link/exec.env) Class template `env`: [`env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/env.hpp)
 ## &#x2705;&#x2705;&#x2705; [exec.ctx](https://wg21.link/exec.ctx) Execution contexts
 ### &#x2705;&#x2705;&#x2705; [exec.run.loop](https://wg21.link/exec.run.loop) `execution::run_loop`
 #### &#x2705;&#x2705;&#x2705; [exec.run.loop.general](https://wg21.link/exec.run.loop.general) General: [`run_loop.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/run_loop.hpp)
 #### &#x2705;&#x2705;&#x274E; [exec.run.loop.types](https://wg21.link/exec.run.loop.types) Associated types
 #### &#x2705;&#x2705;&#x274E; [exec.run.loop.ctor](https://wg21.link/exec.run.loop.ctor) Constructor and destructor
 #### &#x2705;&#x2705;&#x274E; [exec.run.loop.members](https://wg21.link/exec.run.loop.members) Member functions
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.coro.util](https://wg21.link/exec.coro.util) Coroutine utilities
-### &#x2705;&#x2705;&#x1F6A7; [exec.as.awaitable](https://wg21.link/exec.as.awaitable) `execution::as_awaitable`
+## &#x2705;&#x2705;&#x1F534; [exec.coro.util](https://wg21.link/exec.coro.util) Coroutine utilities
+### &#x2705;&#x2705;&#x1F534; [exec.as.awaitable](https://wg21.link/exec.as.awaitable) `execution::as_awaitable`
 
 - &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p1](https://wg21.link/exec.as.awaitable#1) <code><i>awaitable-sender<i></code>: [`awaitable_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/awaitable_sender.hpp)
-- &#x1F534;&#x1F534;&#x1F534; [exec.as.awaitable p1](https://wg21.link/exec.as.awaitable#1) <code><i>has-queryable-await-completion-adaptor<i></code>: &#1F6A8; this name appears to be is unused
+- &#x1F534;&#x1F534;&#x1F534; [exec.as.awaitable p1](https://wg21.link/exec.as.awaitable#1) <code><i>has-queryable-await-completion-adaptor<i></code>: &#x1F6A8; this name appears to be is unused
 - &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p2](https://wg21.link/exec.as.awaitable#2) <code><i>sender-awaitable<i></code>: : [`sender_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sender_awaitable.hpp)
 - &#x2705;&#x2705;&#x2705; [exec.as.awaitable p7](https://wg21.link/exec.as.awaitable#7) <code>as_awaitable</code>: : [`as_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/as_awaitable.hpp)
 - &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p8](https://wg21.link/exec.as.awaitable#8) <code><i>adapt-for-await-completion</i></code>: : [`as_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/as_awaitable.hpp)
@@ -269,18 +269,18 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x1F534; [exec.inline.scheduler](https://wg21.link/exec.inline.scheduler) `execution::inline_scheduler`: [`inline_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/inline_scheduler.hpp)
 ### &#x2705;&#x2705;&#x1F534; [exec.task.scheduler](https://wg21.link/exec.task.scheduler) `execution::task_scheduler`: [`task_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/task_scheduler.hpp)
 ### &#x2705;&#x2705;&#x1F534; [exec.task](https://wg21.link/exec.task) `execution::task`
-#### &#x2705;&#2705;&#x1F534; [task.overview](https://wg21.link/task.overview) `task` overview
+#### &#x2705;&#x2705;&#x1F534; [task.overview](https://wg21.link/task.overview) `task` overview
 #### &#x2705;&#x2705;&#x1F534; [task.class](https://wg21.link/task.class) Class template `task`
 #### &#x2705;&#x2705;&#x1F534; [task.members](https://wg21.link/task.members) `task` members
 #### &#x2705;&#x2705;&#x1F534; [task.state](https://wg21.link/task.state) Class template `task::state`
 #### &#x2705;&#x2705;&#x1F534; [task.promise](https://wg21.link/task.promise) Class template `task::promise_type`
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.scope](https://wg21.link/exec.scope) Execution scope utilities
+## &#x1F534;&#x1F534;&#x1F534; [exec.scope](https://wg21.link/exec.scope) Execution scope utilities
 ### &#x2705;&#x1F534;&#x1F534; [exec.scope.concepts](https://wg21.link/exec.scope.concepts) Execution scope concepts
 
 - &#x2705;&#x1F534;&#x1F534; [exec.scope.concepts p1](https://wg21.link/exec.scope.concepts#1) `scope_association`: [`scope_association.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/scope_association.hpp)
 - &#x2705;&#x2705;&#x1F534; [exec.scope.concepts p3](https://wg21.link/exec.scope.concepts#3) `scope_token`: [`scope_token.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/scope_token.hpp)
 
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.counting.scopes](https://wg21.link/exec.counting.scopes) Counting scopes
+### &#x1F534;&#x1F534;&#x1F534; [exec.counting.scopes](https://wg21.link/exec.counting.scopes) Counting scopes
 #### &#x1F534;&#x1F534;&#x1F534; [exec.counting.scopes.general](https://wg21.link/exec.counting.scopes.general) General
 
 - &#x2705;&#x2705;&#x1F534; [exec.counting.scopes.general p3](https://wg21.link/exec.counting.scopes.general#3) <code><i>scope-join-t</i></code>: [`counting_scope_join.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/counting_scope_join.hpp)
@@ -294,7 +294,7 @@ Each section containing subelements reflects the state of the "worst" element.
 ##### &#x2705;&#x2705;&#x1F534; [exec.simple.counting.token](https://wg21.link/exec.simple.counting.token) Token
 #### &#x2705;&#x2705;&#x1F534; [exec.scope.counting](https://wg21.link/exec.scope.counting) Counting Scope
 ## &#x2705;&#x2705;&#x1F534; [exec.par.scheduler](https://wg21.link/exec.par.scheduler) Parallel scheduler: [`parallel_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/parallel_scheduler.hpp)
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.parschedrepl](https://wg21.link/exec.parschedrepl) Namespace `parallel_scheduler_replacement`
+## &#x2705;&#x2705;&#x1F534; [exec.parschedrepl](https://wg21.link/exec.parschedrepl) Namespace `parallel_scheduler_replacement`
 ### &#x274E;&#x274E;&#x274E; [exec.parschedrepl.general](https://wg21.link/exec.parschedrepl.general) General
 ### &#x2705;&#x2705;&#x1F534; [exec.parschedrepl.recvproxy](https://wg21.link/exec.parschedrepl.recvproxy) Receiver proxies: [`parallel_scheduler_replacement.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/parallel_scheduler_replacement.hpp)
 ### &#x2705;&#x2705;&#x1F534; [exec.parschedrepl.query](https://wg21.link/exec.parschedrepl.query) `query_parallel_scheduler_backend`: [`parallel_scheduler_replacement.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/parallel_scheduler_replacement.hpp)
