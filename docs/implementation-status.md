@@ -267,26 +267,35 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x1F534; [exec.with.awaitable.senders](https://wg21.link/exec.with.awaitable.senders) `execution::with_awaitable_senders`: [`with_awaitable_senders.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/with_awaitable_senders.hpp)
 ### &#x2705;&#x2705;&#2705; [exec.affine](https://wg21.link/exec.affine) `execution::affine`: [`affine.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/affine.hpp)
 ### &#x2705;&#x2705;&#x1F534; [exec.inline.scheduler](https://wg21.link/exec.inline.scheduler) `execution::inline_scheduler`: [`inline_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/inline_scheduler.hpp)
-### &#x534;&#x534;&#x1F6A7; [exec.task.scheduler](https://wg21.link/exec.task.scheduler) `execution::task_scheduler`: [`task_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/task_scheduler.hpp)
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.task](https://wg21.link/exec.task) `execution::as_waitable`
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [task.overview](https://wg21.link/task.overview) `task` overview
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [task.class](https://wg21.link/task.class) Class template `task`
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [task.members](https://wg21.link/task.members) `task` members
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [task.state](https://wg21.link/task.state) Class template `task::state`
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [task.promise](https://wg21.link/task.promise) Class template `task::promise_type`
+### &#x2705;&#x2705;&#x1F534; [exec.task.scheduler](https://wg21.link/exec.task.scheduler) `execution::task_scheduler`: [`task_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/task_scheduler.hpp)
+### &#x2705;&#x2705;&#x1F534; [exec.task](https://wg21.link/exec.task) `execution::task`
+#### &#x2705;&#2705;&#x1F534; [task.overview](https://wg21.link/task.overview) `task` overview
+#### &#x2705;&#x2705;&#x1F534; [task.class](https://wg21.link/task.class) Class template `task`
+#### &#x2705;&#x2705;&#x1F534; [task.members](https://wg21.link/task.members) `task` members
+#### &#x2705;&#x2705;&#x1F534; [task.state](https://wg21.link/task.state) Class template `task::state`
+#### &#x2705;&#x2705;&#x1F534; [task.promise](https://wg21.link/task.promise) Class template `task::promise_type`
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.scope](https://wg21.link/exec.scope) Execution scope utilities
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.scope.concepts](https://wg21.link/exec.scope.concepts) Execution scope concepts
+### &#x2705;&#x1F534;&#x1F534; [exec.scope.concepts](https://wg21.link/exec.scope.concepts) Execution scope concepts
+
+- &#x2705;&#x1F534;&#x1F534; [exec.scope.concepts p1](https://wg21.link/exec.scope.concepts#1) `scope_association`: [`scope_association.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/scope_association.hpp)
+- &#x2705;&#x2705;&#x1F534; [exec.scope.concepts p3](https://wg21.link/exec.scope.concepts#3) `scope_token`: [`scope_token.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/scope_token.hpp)
+
 ### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.counting.scopes](https://wg21.link/exec.counting.scopes) Counting scopes
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.counting.scopes.general](https://wg21.link/exec.counting.scopes.general) General
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.scope.simple.counting](https://wg21.link/exec.scope.simple.counting) Simple Counting Scope
-##### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.scope.simple.counting.general](https://wg21.link/exec.scope.simple.counting.general) General
-##### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.simple.counting.ctor](https://wg21.link/exec.simple.counting.ctor) Constructor and Destructor
-##### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.simple.counting.mem](https://wg21.link/exec.simple.counting.mem) Members
-##### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.simple.counting.token](https://wg21.link/exec.simple.counting.token) Token
-#### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.scope.counting](https://wg21.link/exec.scope.counting) Counting Scope
-## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.par.scheduler](https://wg21.link/exec.par.scheduler) Parallel scheduler
+#### &#x1F534;&#x1F534;&#x1F534; [exec.counting.scopes.general](https://wg21.link/exec.counting.scopes.general) General
+
+- &#x2705;&#x2705;&#x1F534; [exec.counting.scopes.general p3](https://wg21.link/exec.counting.scopes.general#3) <code><i>scope-join-t</i></code>: [`counting_scope_join.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/counting_scope_join.hpp)
+- &#x2705;&#x1F534;&#x1F534; [exec.counting.scopes.general p3](https://wg21.link/exec.counting.scopes.general#3) <code><i>scope-state-type</i></code>: [`counting_scope_join.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/counting_scope_base.hpp)
+- &#x1F534;&#x1F534;&#x1F534; [exec.counting.scopes.general p5](https://wg21.link/exec.counting.scopes.general#5) <code><i>association-t</i></code>
+
+#### &#x2705;&#x2705;&#x1F534; [exec.scope.simple.counting](https://wg21.link/exec.scope.simple.counting) Simple Counting Scope
+##### &#x2705;&#x2705;&#x1F534; [exec.scope.simple.counting.general](https://wg21.link/exec.scope.simple.counting.general) `simple_counting_scope`: [`simple_counting_scope.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/simple_counting_scope.hpp)
+##### &#x2705;&#x2705;&#x1F534; [exec.simple.counting.ctor](https://wg21.link/exec.simple.counting.ctor) Constructor and Destructor
+##### &#x2705;&#x2705;&#x1F534; [exec.simple.counting.mem](https://wg21.link/exec.simple.counting.mem) Members
+##### &#x2705;&#x2705;&#x1F534; [exec.simple.counting.token](https://wg21.link/exec.simple.counting.token) Token
+#### &#x2705;&#x2705;&#x1F534; [exec.scope.counting](https://wg21.link/exec.scope.counting) Counting Scope
+## &#x2705;&#x2705;&#x1F534; [exec.par.scheduler](https://wg21.link/exec.par.scheduler) Parallel scheduler: [`parallel_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/parallel_scheduler.hpp)
 ## &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.parschedrepl](https://wg21.link/exec.parschedrepl) Namespace `parallel_scheduler_replacement`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.parschedrepl.general](https://wg21.link/exec.parschedrepl.general) General
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.parschedrepl.recvproxy](https://wg21.link/exec.parschedrepl.recvproxy) Receiver proxies
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.parschedrepl.query](https://wg21.link/exec.parschedrepl.query) `query_parallel_scheduler_backend`
-### &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.parschedrepl.psb](https://wg21.link/exec.parschedrepl.psb) Class `parallel_scheduler_backend`
+### &#x274E;&#x274E;&#x274E; [exec.parschedrepl.general](https://wg21.link/exec.parschedrepl.general) General
+### &#x2705;&#x2705;&#x1F534; [exec.parschedrepl.recvproxy](https://wg21.link/exec.parschedrepl.recvproxy) Receiver proxies: [`parallel_scheduler_replacement.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/parallel_scheduler_replacement.hpp)
+### &#x2705;&#x2705;&#x1F534; [exec.parschedrepl.query](https://wg21.link/exec.parschedrepl.query) `query_parallel_scheduler_backend`: [`parallel_scheduler_replacement.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/parallel_scheduler_replacement.hpp)
+### &#x2705;&#x2705;&#x1F534; [exec.parschedrepl.psb](https://wg21.link/exec.parschedrepl.psb) Class `parallel_scheduler_backend`: [`parallel_scheduler_replacement.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/parallel_scheduler_replacement.hpp)
