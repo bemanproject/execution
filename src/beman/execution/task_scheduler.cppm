@@ -2,9 +2,14 @@ module;
 // src/beman/execution/task_scheduler.cppm                          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/task_scheduler.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <memory>
 #include <type_traits>
-#include <beman/execution/detail/task_scheduler.hpp>
+#endif
 
 export module beman.execution.detail.task_scheduler;
 

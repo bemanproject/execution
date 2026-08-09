@@ -8,6 +8,7 @@
 #include <version>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
+#define _SIGNAL_H
 #else
 #include <concepts>
 #include <cstddef>
@@ -17,7 +18,6 @@ import std;
 #include <source_location>
 #endif
 #ifndef _MSC_VER
-#include <cstdlib>
 #include <unistd.h>
 #include <sys/wait.h>
 #endif
@@ -77,16 +77,16 @@ inline auto death([[maybe_unused]] auto                   fun,
     default: {
         int stat{};
         ASSERT(rc == ::wait(&stat));
-        if (stat == EXIT_SUCCESS) {
+        if (stat == 0) {
             ::std::cerr << "failed death test at " << "file=" << location.file_name() << ":" << location.line() << "\n"
                         << std::flush;
-            ASSERT(stat != EXIT_SUCCESS);
+            ASSERT(stat != 0);
         }
     } break;
     case 0: {
         ::close(2);
         fun();
-        ::std::exit(EXIT_SUCCESS);
+        ::std::exit(0);
     } break;
     }
 #endif

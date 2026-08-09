@@ -587,5 +587,5 @@ TEST(exec_bulk) {
     }
 
     test_bulk_attributes();
-    return EXIT_SUCCESS;
+    return 0;
 }

@@ -1,12 +1,17 @@
 // examples/stop_token.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <condition_variable>
 #include <iostream>
 #include <exception>
 #include <latch>
 #include <mutex>
 #include <thread>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

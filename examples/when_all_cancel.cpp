@@ -1,6 +1,10 @@
 // examples/when_all_cancel.cpp                                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <exception>
 #include <iostream>
 #include <optional>
@@ -10,6 +14,7 @@
 #include <utility>
 #include <variant>
 #include <cassert>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

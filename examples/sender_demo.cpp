@@ -1,12 +1,17 @@
 // examples/sender_demo.cpp                                           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <iostream>
 #include <memory_resource>
 #include <string>
 #include <type_traits>
 #include <utility>
 #include <variant>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;

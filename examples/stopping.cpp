@@ -6,11 +6,16 @@
 // which gets started in a thread. To stop this thread
 // the corresponding stop source is requested to stop.
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <chrono>
 #include <iostream>
 #include <mutex>
 #include <thread>
 #include <cassert>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -19,6 +24,7 @@ import beman.execution;
 #endif
 
 using namespace std::chrono;
+using namespace std::chrono_literals;
 namespace ex = beman::execution;
 
 // ----------------------------------------------------------------------------

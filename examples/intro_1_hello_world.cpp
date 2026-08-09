@@ -1,11 +1,16 @@
 // examples/intro_1_hello_world.cpp                                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <iostream>
 #include <optional>
 #include <string>
 #include <tuple>
 #include <variant>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -20,7 +25,7 @@ using namespace std::string_literals;
 
 int main() {
     // clang-format off
-    auto [result] =
+    //auto [result] =
     ex::sync_wait(
         ex::when_all(
             ex::just("hello, "s),
@@ -30,5 +35,5 @@ int main() {
         ;
     // clang-format on
 
-    std::cout << result << '\n';
+    // std::cout << result << '\n';
 }

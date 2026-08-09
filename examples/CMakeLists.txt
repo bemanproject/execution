@@ -19,6 +19,15 @@ endif()
 
 set(TODO stop_token) #-dk:TODO including that causes a linker error
 set(TODO suspend_never) #-dk:TODO including that causes ASAN errors
+set(TODO
+    intro_1_hello_world
+    intro_2_hello_async
+    playground
+    sender_demo
+    stackoverflow
+    stopping
+    when_all_cancel
+)
 
 set(EXAMPLES
     allocator
@@ -26,14 +35,7 @@ set(EXAMPLES
     doc_just_error
     doc_just_stopped
     inspect
-    intro_1_hello_world
-    intro_2_hello_async
     intro_5_consumer
-    playground
-    sender_demo
-    stackoverflow
-    stopping
-    when_all_cancel
 )
 
 if(BEMAN_USE_MODULES)

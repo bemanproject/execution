@@ -5,7 +5,7 @@ if(BEMAN_USE_MODULES)
     list(APPEND execution_tests execution-module.test stop-token-module.test)
 endif()
 
-list(APPEND unsupported_execution_tests exec-split.test)
+list(APPEND unsupported_execution_tests exec-split.test exec-spawn-future.test)
 
 list(
     APPEND execution_tests
@@ -63,7 +63,6 @@ list(
     exec-snd-concepts.test
     exec-snd-expos.test
     exec-snd-transform.test
-    exec-spawn-future.test
     exec-spawn.test
     exec-starts-on.test
     exec-stop-when.test

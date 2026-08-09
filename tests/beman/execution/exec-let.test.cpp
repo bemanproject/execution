@@ -207,5 +207,5 @@ TEST(exec_let) {
 
     test_let_attributes();
 
-    return EXIT_SUCCESS;
+    return 0;
 }

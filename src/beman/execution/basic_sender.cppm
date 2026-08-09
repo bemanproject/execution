@@ -2,9 +2,14 @@ module;
 // src/beman/execution/basic_sender.cppm                              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/basic_sender.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <tuple>
 #include <type_traits>
-#include <beman/execution/detail/basic_sender.hpp>
+#endif
 
 export module beman.execution.detail.basic_sender;
 

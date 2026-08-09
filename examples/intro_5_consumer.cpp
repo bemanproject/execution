@@ -1,6 +1,10 @@
 // examples/intro_5_consumer.cpp                                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <beman/execution/detail/suppress_push.hpp>
 #include <chrono>
 //-dk:TODO restore if that actually works #include <expected>
@@ -9,6 +13,7 @@
 #include <tuple>
 #include <variant>
 #include <cinttypes>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;

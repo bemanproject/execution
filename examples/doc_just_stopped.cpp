@@ -1,7 +1,12 @@
 // examples/doc_just_stopped.cpp                                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <system_error>
+#endif
 #include <cassert>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;

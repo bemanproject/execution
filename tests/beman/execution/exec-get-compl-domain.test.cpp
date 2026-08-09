@@ -1,9 +1,14 @@
 // tests/beman/execution/exec-get-compl-domain.test.cpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <cstddef>
+#endif
+#include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_completion_domain;
