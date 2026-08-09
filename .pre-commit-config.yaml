@@ -49,7 +49,7 @@ repos:
   # Config file: pyproject.toml
   # first Python sort imports
   - repo: https://github.com/pycqa/isort
-    rev: 9.0.0b1
+    rev: 9.0.0b2
     hooks:
       - id: isort
 
