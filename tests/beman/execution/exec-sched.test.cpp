@@ -36,7 +36,7 @@ struct no_scheduler_concept {
 };
 
 struct not_queryable {
-    using scheduler_concept                                = test_std::scheduler_tag;
+    using scheduler_concept = test_std::scheduler_tag;
     auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
         return test_std::forward_progress_guarantee::weakly_parallel;
     }
@@ -51,7 +51,7 @@ struct not_queryable {
 };
 
 struct no_schedule {
-    using scheduler_concept                           = test_std::scheduler_tag;
+    using scheduler_concept = test_std::scheduler_tag;
     auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
         return test_std::forward_progress_guarantee::weakly_parallel;
     }
@@ -67,7 +67,7 @@ struct not_equality_comparable {
 };
 
 struct not_copy_constructible {
-    using scheduler_concept                                                  = test_std::scheduler_tag;
+    using scheduler_concept = test_std::scheduler_tag;
     auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
         return test_std::forward_progress_guarantee::weakly_parallel;
     }

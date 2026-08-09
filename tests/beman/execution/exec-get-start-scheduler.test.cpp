@@ -52,7 +52,7 @@ struct test_sched_env {
         return test_scheduler{scheduler_id};
     }
     auto query(test_std::get_start_scheduler_t) const noexcept { return test_scheduler{scheduler_id + 1}; }
-    int scheduler_id = 0;
+    int  scheduler_id = 0;
 };
 
 struct test_sched_sender {

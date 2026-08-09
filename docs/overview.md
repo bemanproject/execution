@@ -878,7 +878,7 @@ an object <code><i>loop</i></code> of type <code>run_loop</code> are:
 
 <details>
 <summary><code>bool sends_stopped&lt;<i>Sndr</i>, <i>Env</i> = env&lt;&gt;&gt;</code></summary>
-The Boolean variable <code>sends_stopped&lt;<i>Sndr</i>, <i>Env</i>&gt; is <code>true</code> if the completion signatures of <code><i>Sndr</i></code> when using the environment <code><i>Env</i></code> contain a cancellation signature (<code>set_stopped_t()</code>).
+The Boolean variable <code>sends_stopped&lt;<i>Sndr</i>, <i>Env</i>&gt;</code> is <code>true</code> if the completion signatures of <code><i>Sndr</i></code> when using the environment <code><i>Env</i></code> contain a cancellation signature (<code>set_stopped_t()</code>).
 </details>
 
 - `stop_token_of_t`

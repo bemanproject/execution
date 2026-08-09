@@ -4,6 +4,8 @@
 #ifndef INCLUDED_TEST_EXECUTION
 #define INCLUDED_TEST_EXECUTION
 
+#include <beman/execution/detail/common.hpp>
+#include <version>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -14,7 +16,6 @@ import std;
 #endif
 #include <source_location>
 #endif
-#include <version>
 #ifndef _MSC_VER
 #include <cstdlib>
 #include <unistd.h>

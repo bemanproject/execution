@@ -2,7 +2,7 @@
 
 Meaning of the status indicators (in order best to worst):
 
-- &#x274E;: reviewed and not applicable (e.g. because a section doesn't provide someting which would be reflected in code)
+- &#x274E;: reviewed and not applicable (e.g. because a section doesn't provide something which would be reflected in code)
 - &#x2705;: reviewed and OK
 - &#x1F534;: reviewed and found incomplete
 - &#x1F6A7;: no or incomplete review
@@ -172,14 +172,14 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x2705;&#x2705;&#x1F534; [exec.connect p5](https://wg21.link/exec.connect#5) <code><i>connect-awaitable</i>(sndr, rcvr)</code>: [`connect_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/connect_awaitable.hpp)
 
 ## &#x2705;&#x2705;&#x2705; [exec.factories](https://wg21.link/exec.factories) Sender factories
-### &#x2705;&#x2705;&#x2705; [exec.schedule](https://wg21.link/exec.schedule) `execution::schedule`: [`schedule.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/schedule.hpp) 
+### &#x2705;&#x2705;&#x2705; [exec.schedule](https://wg21.link/exec.schedule) `execution::schedule`: [`schedule.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/schedule.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.just](https://wg21.link/exec.just) `execution::just`, `exuection::just_error`, `execution::just_stopped`: [`just.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/just.hpp)
 ### &#x2705;&#x2705;&#x2705; [exec.read.env](https://wg21.link/exec.read.env) `execution::read_env`: [`read_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/read_env.hpp)
 ## &#x2705;&#x1F534;&#x1F534; [exec.adapt](https://wg21.link/exec.adapt) Sender adaptors
 ### &#x2705;&#x1F534;&#x1F534; [exec.adapt.general](https://wg21.link/exec.adapt.general) General
 
-- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
-- &#x1F6A7; [exec.adapt.general p3.3](https://wg21.link/exec.adapt.general#3.3) verify multi child env 
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env
+- &#x1F6A7; [exec.adapt.general p3.3](https://wg21.link/exec.adapt.general#3.3) verify multi child env
 - &#x1F6A7; [exec.adapt.general p3.4](https://wg21.link/exec.adapt.general#3.4) verify child's receiver's env
 - &#x1F6A7; [exec.adapt.general p3.5](https://wg21.link/exec.adapt.general#3.5) sender non-dependent
 
@@ -209,26 +209,26 @@ Each section containing subelements reflects the state of the "worst" element.
 
 ### &#x2705;&#x2705;&#x2705; [exec.when.all](https://wg21.link/exec.when.all) `execution::when_all`: [`when_all.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/when_all.hpp)
 
-- &#x1F534; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+- &#x1F534; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env
 - &#x1F534; [exec.when.all p9](https://wg21.link/exec.when.all#9) check use of <code><i>count-of</i></code>
 
 ### &#x2705;&#x2705;&#x2705; [exec.into.variant](https://wg21.link/exec.into.variant) `execution::into_variant`: [`into_variant.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/into_variant.hpp)
 ### &#x2705;&#x2705;&#x1F534; [exec.stopped.opt](https://wg21.link/exec.stopped.opt) `execution::stopped_as_optional`: [`stopped_as_optional.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/stopped_as_optional.hpp)
 ### &#x2705;&#x2705;&#x1F534; [exec.stopped.err](https://wg21.link/exec.stopped.err) `execution::stopped_as_error`: [`stopped_as_error.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/stopped_as_error.hpp)
 
-- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env
 
 ### &#x2705;&#x2705;&#x1F534; [exec.associate](https://wg21.link/exec.associate) `execution::associate`: [`associate.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/associate.hpp)
 
-- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env
 
 ### &#x2705;&#x2705;&#x1F534; [exec.stop.when](https://wg21.link/exec.stop.when) Exposition-only <code><i>execution::stop_when</i></code>: [`stop_when.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/stop_when.hpp)
 
-- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env
 
 ### &#x2705;&#x2705;&#x2705; [exec.spawn.future](https://wg21.link/exec.spawn.future) `execution::spawn_future`: [`spawn_future.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/spawn_future.hpp)
 
-- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env 
+- &#x1F6A7; [exec.adapt.general p3.2](https://wg21.link/exec.adapt.general#3.2) verify single child env
 
 ## &#x2705;&#x2705;&#x1F534; [exec.consumers](https://wg21.link/exec.consumers) Sender consumers
 ### &#x2705;&#x2705;&#x1F534; [exec.sync.wait](https://wg21.link/exec.sync.wait) `this_thread::sync_wait`: [`sync_wait.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sync_wait.hpp)
