@@ -527,4 +527,5 @@ TEST(execution_syn) {
     test_sender_adaptor();
     test_as_awaitable();
     test_exec_env();
+    test_execution_policies();
 }

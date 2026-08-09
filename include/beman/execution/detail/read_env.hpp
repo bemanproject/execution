@@ -9,6 +9,7 @@
 import std;
 #else
 #include <exception>
+#include <stdexcept>
 #include <type_traits>
 #include <utility>
 #endif

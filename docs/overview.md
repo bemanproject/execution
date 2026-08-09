@@ -538,7 +538,7 @@ The expression <code>get_domain(<i>env</i>)</code> yields the domain associated 
 <ol>
    <li><code>auto(as_const(<i>env</i>).query(get_domain))</code> if this expression is valid;</li>
    <li>otherwise, <code>get_completion_domain&lt;set_value_t&gt;(get_scheduler(env), <i>HIDE-SCHED</i>(env))</code> if this expression is valid;</li>
-   <li><code>default_domain()</code> (except <code><i>env</i></code> is evaluted).</li>
+   <li><code>default_domain()</code> (except <code><i>env</i></code> is evaluated).</li>
 </ol>
 Otherwise the expression is invalid.
 </details>
@@ -716,7 +716,7 @@ The expression <code>let_stopped(<i>upstream</i>, <i>fun</i>)</code> yields a se
 </details>
 <details>
 <summary><code>let_value(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
-The expression <code>let_value(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which uses a succesful completion (<code>set_value</code>) of <code><i>upstream</i></code> as arguments to invoke <code><i>fun</i></code> which has to return another sender <code><i>inner-sndr</i></code> and the completion of <code><i>inner-sndr</i></code> becomes the completion of <code><i>sndr</i></code>. If this invocation results in an exception <code><i>sndr</i></code> completes with an error completion the result of <code>std::current_exception</code>. If <code><i>upstream</i></code> completes with a cancellation (<code>set_stopped</code>) or with an error (<code>set_error</code>) this completion becomes the completion of <code><i>sndr</i></code>.
+The expression <code>let_value(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which uses a successful completion (<code>set_value</code>) of <code><i>upstream</i></code> as arguments to invoke <code><i>fun</i></code> which has to return another sender <code><i>inner-sndr</i></code> and the completion of <code><i>inner-sndr</i></code> becomes the completion of <code><i>sndr</i></code>. If this invocation results in an exception <code><i>sndr</i></code> completes with an error completion the result of <code>std::current_exception</code>. If <code><i>upstream</i></code> completes with a cancellation (<code>set_stopped</code>) or with an error (<code>set_error</code>) this completion becomes the completion of <code><i>sndr</i></code>.
 </details>
 <details>
 <summary><code>on(_sched_, _sndr_)</code>, <code>on(_sndr, _sched_, _closure_)</code></summary>
@@ -767,11 +767,11 @@ is unstoppable.
 </details>
 <details>
 <summary><code>upon_error(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
-The expression <code>upon_error(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which passes an error completion (<code>set_error</code>) of <code><i>upstream</i></code> to <code><i>fun</i></code> and uses this result of this function invocation for its own successful (<code>set_value</code>) completion. If the function invocation throws <code>std::current_exception()</code> becomes <code><i>sndr</i></code>'s error (<code>set_error</code>) completiom. The success (<code>set_value</code>) and cancellation (<code>set_stopped</code>) completions of <code><i>upstream</i></code> are forwarded.
+The expression <code>upon_error(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which passes an error completion (<code>set_error</code>) of <code><i>upstream</i></code> to <code><i>fun</i></code> and uses this result of this function invocation for its own successful (<code>set_value</code>) completion. If the function invocation throws <code>std::current_exception()</code> becomes <code><i>sndr</i></code>'s error (<code>set_error</code>) completion. The success (<code>set_value</code>) and cancellation (<code>set_stopped</code>) completions of <code><i>upstream</i></code> are forwarded.
 </details>
 <details>
 <summary><code>upon_stopped(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
-The expression <code>upon_stopped(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which turns a cancellation completion (<code>set_stopped</code>) result of <code><i>upstream</i></code> to <code><i>fun</i></code> and uses this result of this function invocation for its own successful (<code>set_value</code>) completion. If the function invocation throws <code>std::current_exception()</code> becomes <code><i>sndr</i></code>'s error (<code>set_error</code>) completiom. The success (<code>set_value</code>) and error (<code>set_error</code>) completions of <code><i>upstream</i></code> are forwarded.
+The expression <code>upon_stopped(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which turns a cancellation completion (<code>set_stopped</code>) result of <code><i>upstream</i></code> to <code><i>fun</i></code> and uses this result of this function invocation for its own successful (<code>set_value</code>) completion. If the function invocation throws <code>std::current_exception()</code> becomes <code><i>sndr</i></code>'s error (<code>set_error</code>) completion. The success (<code>set_value</code>) and error (<code>set_error</code>) completions of <code><i>upstream</i></code> are forwarded.
 </details>
 <details>
 <summary><code>when_all(<i>sender</i>...) -> <i>sender</i></code></summary>
@@ -1032,7 +1032,7 @@ that's direct initialized with the forwarded arguments.
 
 <details>
 <summary><code><i>MAKE-ENV</i>(qry, value)</code></summary>
-The expression <code><i>MAKE-ENV</i>(qry, value)</code> creates a queryable object <code>env</code> such that for a pack of argments <code>a ...</code> the expression <code>env.query(qry, a...)</code> yields <code>value</code>.
+The expression <code><i>MAKE-ENV</i>(qry, value)</code> creates a queryable object <code>env</code> such that for a pack of arguments <code>a ...</code> the expression <code>env.query(qry, a...)</code> yields <code>value</code>.
 </details>
 
 <details>
