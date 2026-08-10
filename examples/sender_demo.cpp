@@ -68,16 +68,18 @@ int main() {
         auto j = just_sender<std::pmr::string>{std::pmr::string("value")};
         auto t = std::move(j) | ex::then([](const std::pmr::string& v) { return v + " then"; });
         auto w = ex::when_all(std::move(t));
-        auto e =
+        [[maybe_unused]] auto e =
             ex::write_env(std::move(w), ex::detail::make_env(ex::get_allocator, std::pmr::polymorphic_allocator<>()));
 
         std::cout << "before start\n";
+#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ > 15) || !defined(BEMAN_HAS_MODULES)
         auto r = ex::sync_wait(std::move(e));
         if (r) {
             auto [v] = *r;
             std::cout << "produced='" << v << "'\n";
         } else
             std::cout << "operation was cancelled\n";
+#endif
         std::cout << "after start\n";
     } catch (const std::exception& ex) {
         std::cout << "ERROR: " << ex.what() << "\n";
