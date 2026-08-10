@@ -25,7 +25,7 @@ using namespace std::string_literals;
 
 int main() {
     // clang-format off
-    //auto [result] =
+    auto [result] =
     ex::sync_wait(
         ex::when_all(
             ex::just("hello, "s),
@@ -35,5 +35,5 @@ int main() {
         ;
     // clang-format on
 
-    // std::cout << result << '\n';
+    std::cout << result << '\n';
 }

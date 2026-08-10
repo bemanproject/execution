@@ -1,13 +1,13 @@
 // tests/beman/execution/exec-unstoppable.test.cpp                    -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
 #include <concepts>
 #endif
-#include <test/execution.hpp>
-#include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

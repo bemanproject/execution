@@ -1,8 +1,8 @@
 // tests/beman/execution/stop-token-module.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-import beman.execution;
 #include <test/execution.hpp>
+import beman.execution;
 
 // ----------------------------------------------------------------------------
 

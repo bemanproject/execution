@@ -1,6 +1,7 @@
 // src/beman/execution/tests/stopsource-cons.test.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -11,7 +12,6 @@ import std;
 #include <cstddef>
 #include <cstring>
 #endif
-#include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

@@ -5,9 +5,16 @@
 #define INCLUDED_TEST_EXECUTION
 
 #include <beman/execution/detail/common.hpp>
+#undef NDEBUG
+#include <cassert>
+#include <csignal>
+#include <version>
+#ifndef _MSC_VER
+#include <unistd.h>
+#include <sys/wait.h>
+#endif
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
-#define _SIGNAL_H
 #else
 #include <concepts>
 #include <cstddef>
@@ -15,15 +22,7 @@ import std;
 #include <iostream>
 #endif
 #include <source_location>
-#include <version>
 #endif
-#ifndef _MSC_VER
-#include <unistd.h>
-#include <sys/wait.h>
-#endif
-
-#undef NDEBUG
-#include <cassert>
 
 #define ASSERT(condition) assert(condition)
 #define ASSERT_UNREACHABLE() assert(::test::unreachable_helper())
@@ -69,8 +68,8 @@ struct throws {
     auto operator=(const throws&) noexcept(false) -> throws& = default;
 };
 
-inline auto death([[maybe_unused]] auto                   fun/*,
-                  [[maybe_unused]] ::std::source_location location = test::source_location::current()*/) noexcept
+inline auto death([[maybe_unused]] auto                   fun,
+                  [[maybe_unused]] ::std::source_location location = test::source_location::current()) noexcept
     -> void {
 #ifndef _MSC_VER
     switch (::pid_t rc = ::fork()) {
@@ -78,9 +77,8 @@ inline auto death([[maybe_unused]] auto                   fun/*,
         int stat{};
         ASSERT(rc == ::wait(&stat));
         if (stat == 0) {
-            ::std::cerr
-                << "failed death test" /*" at " << "file=" << location.file_name() << ":" << location.line()*/ << "\n"
-                << std::flush;
+            ::std::cerr << "failed death test at " << "file=" << location.file_name() << ":" << location.line() << "\n"
+                        << std::flush;
             ASSERT(stat != 0);
         }
     } break;

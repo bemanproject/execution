@@ -1,6 +1,7 @@
 // src/beman/execution/tests/stopcallback-inplace-general.test.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -8,7 +9,6 @@ import std;
 #include <concepts>
 #include <type_traits>
 #endif
-#include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

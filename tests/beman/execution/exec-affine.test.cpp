@@ -1,6 +1,8 @@
 // tests/beman/execution/exec-affine.test.cpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -9,8 +11,6 @@ import std;
 #include <thread>
 #include <tuple>
 #endif
-#include <test/execution.hpp>
-#include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
