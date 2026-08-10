@@ -92,9 +92,12 @@ auto inactive(const Token& token) -> void {
 template <typename Token>
 auto inactive(Token token) -> void {
     ::std::condition_variable cond;
-    stop_callback_for_t       cb(token, [&cond] { cond.notify_one(); });
+    ::std::mutex              lock;
+    stop_callback_for_t       cb(token, [&cond, &lock] {
+        ::std::lock_guard guard(lock);
+        cond.notify_one();
+    });
 
-    ::std::mutex       lock;
     ::std::unique_lock guard(lock);
     cond.wait(guard, [token] { return token.stop_requested(); });
     print("inactive thread done (condition_variable)\n");
