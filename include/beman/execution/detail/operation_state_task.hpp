@@ -70,8 +70,8 @@ struct beman::execution::detail::operation_state_task {
     using promise_type            = ::beman::execution::detail::connect_awaitable_promise<Receiver>;
 
     explicit operation_state_task(::std::coroutine_handle<> hndl) noexcept : handle(hndl) {}
-    operation_state_task(const operation_state_task&) = delete;
-    operation_state_task(operation_state_task&& other) noexcept : handle(::std::exchange(other.handle, {})) {}
+    operation_state_task(const operation_state_task&)  = delete;
+    operation_state_task(operation_state_task&& other) = delete;
     ~operation_state_task() {
         if (this->handle)
             this->handle.destroy();

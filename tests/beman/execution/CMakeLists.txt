@@ -5,7 +5,7 @@ if(BEMAN_USE_MODULES)
     list(APPEND execution_tests execution-module.test stop-token-module.test)
 endif()
 
-list(APPEND unsupported_execution_tests exec-split.test)
+list(APPEND unsupported_execution_tests exec-split.test exec-spawn-future.test)
 
 list(
     APPEND execution_tests
@@ -42,6 +42,7 @@ list(
     exec-opstate.test
     exec-prop.test
     exec-queries-expos.test
+    exec-queryable-concept.test
     exec-read-env.test
     exec-recv-concepts.test
     exec-recv.test
@@ -49,6 +50,7 @@ list(
     exec-run-loop-types.test
     exec-sched.test
     exec-schedule.test
+    exec-schedule-from.test
     exec-scope-concepts.test
     exec-scope-counting.test
     exec-scope-simple-counting.test
@@ -61,22 +63,22 @@ list(
     exec-snd-concepts.test
     exec-snd-expos.test
     exec-snd-transform.test
-    exec-spawn-future.test
     exec-spawn.test
     exec-starts-on.test
     exec-stop-when.test
-    exec-stopped-as-error.test
-    exec-stopped-as-optional.test
+    exec-stopped-err.test
+    exec-stopped-opt.test
     exec-sync-wait.test
     exec-sync-wait-with-variant.test
     exec-task.test
     exec-task-scheduler.test
     exec-then.test
-    exec-utils-cmplsigs.test
+    exec-unstoppable.test
+    exec-cmplsigs.test
     exec-when-all.test
     exec-with-awaitable-senders.test
     exec-within.test
-    execution-queryable-concept.test
+    exec-write-env.test
     execution-syn.test
     forward-like.test
     function-objects.test

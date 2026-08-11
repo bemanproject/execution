@@ -2,7 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
@@ -44,6 +49,9 @@ struct non_const_get_allocator {
 template <bool Expect, typename Object>
 auto test_get_allocator(Object&& object) -> void {
     static_assert(Expect == requires { test_std::get_allocator(::std::forward<Object>(object)); });
+    if constexpr (Expect) {
+        static_assert(noexcept(test_std::get_allocator(::std::forward<Object>(object))));
+    }
 }
 } // namespace
 

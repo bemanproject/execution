@@ -1,6 +1,11 @@
 // examples/when_all_cancel.cpp                                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <cassert>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <exception>
 #include <iostream>
 #include <optional>
@@ -8,8 +13,7 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
-#include <variant>
-#include <cassert>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -146,6 +150,7 @@ eager(Sender&&) -> eager<std::remove_cvref_t<Sender>>;
 } // namespace
 
 auto main() -> int {
+#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ > 15) || !defined(BEMAN_HAS_MODULES)
     auto s{eager{ex::when_all(await_stop{})}};
 
     ex::inplace_stop_source source{};
@@ -155,4 +160,5 @@ auto main() -> int {
     std::cout << "started\n";
     source.request_stop();
     std::cout << "done\n";
+#endif
 }

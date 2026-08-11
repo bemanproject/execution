@@ -18,6 +18,17 @@ namespace {
 struct arg {};
 struct error {};
 
+struct not_a_receiver {
+    auto get_env() const noexcept -> test_std::env<> { return {}; }
+    auto set_value(auto&&...) && noexcept -> void {}
+    auto set_error(auto&&) && noexcept -> void {}
+    auto set_stopped() && noexcept -> void {}
+};
+
+struct final_receiver final {
+    using receiver_concept = test_std::receiver_tag;
+};
+
 template <typename... T>
 struct value_receiver {
     using receiver_concept = test_std::receiver_tag;
@@ -66,6 +77,8 @@ auto test_valid_completion_for() -> void {
 }
 
 auto test_has_completions() -> void {
+    static_assert(not test_std::receiver<not_a_receiver>);
+    static_assert(not test_std::receiver<final_receiver>);
     static_assert(test_std::receiver<value_receiver<int>>);
     static_assert(test_detail::has_completions<value_receiver<int>, test_std::completion_signatures<>>);
     static_assert(test_detail::has_completions<value_receiver<int>,

@@ -1,8 +1,13 @@
 // src/beman/execution/tests/exec-get-delegation-scheduler.test.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
 #include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -30,6 +35,9 @@ struct env {
 
 struct scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
 
     struct sender {
         using sender_concept = test_std::sender_tag;
@@ -52,9 +60,11 @@ auto env<Noexcept, Scheduler>::query(const test_std::get_completion_scheduler_t<
 template <bool Expect, typename Scheduler = void>
 auto test_get_delegation_scheduler(auto&& env) -> void {
     static_assert(Expect == requires { test_std::get_delegation_scheduler(env); });
-    if constexpr (Expect) {
+    if constexpr (requires { test_std::get_delegation_scheduler(env); }) {
         ASSERT(17 == test_std::get_delegation_scheduler(env).value);
-        // ASSERT(Scheduler{env.value} == test_std::get_delegation_scheduler(env));
+        static_assert(noexcept(test_std::get_delegation_scheduler(env)));
+        auto sched{test_std::get_delegation_scheduler(env)};
+        ASSERT(decltype(sched){env.value} == test_std::get_delegation_scheduler(env));
     }
 }
 } // namespace

@@ -7,6 +7,7 @@ import beman.execution;
 #else
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/scheduler.hpp>
+#include <beman/execution/detail/infallible_scheduler.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -35,7 +36,10 @@ struct no_scheduler_concept {
 };
 
 struct not_queryable {
-    using scheduler_concept                                = test_std::scheduler_tag;
+    using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     not_queryable()                                        = default;
     not_queryable(const not_queryable&)                    = default;
     not_queryable(not_queryable&&)                         = default;
@@ -47,17 +51,26 @@ struct not_queryable {
 };
 
 struct no_schedule {
-    using scheduler_concept                           = test_std::scheduler_tag;
+    using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto operator==(const no_schedule&) const -> bool = default;
 };
 
 struct not_equality_comparable {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() -> sender<env<not_equality_comparable>> { return {}; }
 };
 
 struct not_copy_constructible {
-    using scheduler_concept                                                  = test_std::scheduler_tag;
+    using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     not_copy_constructible(const not_copy_constructible&)                    = delete;
     not_copy_constructible(not_copy_constructible&&)                         = default;
     ~not_copy_constructible()                                                = default;
@@ -69,12 +82,18 @@ struct not_copy_constructible {
 
 struct scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() -> sender<env<scheduler>> { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
 };
 
 struct indirect_completion_scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() -> sender<env<scheduler>> { return {}; }
     auto operator==(const indirect_completion_scheduler&) const -> bool = default;
 };

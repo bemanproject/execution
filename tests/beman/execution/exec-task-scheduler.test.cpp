@@ -1,6 +1,11 @@
 // tests/beman/execution/exec-task-scheduler.test.cpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <algorithm>
 #include <concepts>
 #include <cstddef>
@@ -8,8 +13,7 @@
 #include <thread>
 #include <type_traits>
 #include <vector>
-#include <test/execution.hpp>
-
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -31,6 +35,10 @@ namespace {
 struct async_scheduler {
     using scheduler_concept = test_std::scheduler_tag;
 
+    auto query(::beman::execution::get_forward_progress_guarantee_t) const noexcept
+        -> ::beman::execution::forward_progress_guarantee {
+        return ::beman::execution::forward_progress_guarantee::weakly_parallel;
+    }
     int id{};
 
     template <typename Rcvr>

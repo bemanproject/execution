@@ -139,6 +139,14 @@ struct starts_on_t {
             return {};
         }
 
+        template <typename Tag, typename... Env>
+            requires requires(const Tag& tag, const ChildAttrs& child_attrs, Env&&... env) {
+                tag(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Env>(env)...);
+            }
+        auto query(Tag tag, Env&&... env) const noexcept {
+            return tag(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Env>(env)...);
+        }
+
         Scheduler  sch;
         ChildAttrs child_attrs;
     };

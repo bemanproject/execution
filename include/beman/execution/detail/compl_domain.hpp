@@ -11,11 +11,11 @@ import std;
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.default_domain;
+import beman.execution.detail.indeterminate_domain;
 import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_env;
 #else
-#include <beman/execution/detail/default_domain.hpp>
+#include <beman/execution/detail/indeterminate_domain.hpp>
 #include <beman/execution/detail/get_completion_domain.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #endif
@@ -30,7 +30,7 @@ constexpr auto compl_domain(const Sndr& sndr, const Envs&... envs) noexcept {
                   }) {
         return ::beman::execution::get_completion_domain<Tag>(::beman::execution::get_env(sndr), envs...);
     } else {
-        return ::beman::execution::default_domain();
+        return ::beman::execution::indeterminate_domain();
     }
 }
 

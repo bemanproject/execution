@@ -1,8 +1,13 @@
 // src/beman/execution/tests/exec-get-domain.test.cpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
 #include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -38,6 +43,7 @@ template <typename Result, typename Object>
 auto test_get_domain(Object&& object) {
     if constexpr (requires { test_std::get_domain(object); }) {
         static_assert(std::same_as<Result, decltype(test_std::get_domain(object))>);
+        static_assert(noexcept(test_std::get_domain(object)));
     }
 }
 
@@ -48,6 +54,9 @@ struct test_sched_env;
 
 struct test_scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() const -> test_sched_sender;
     auto operator==(const test_scheduler&) const -> bool = default;
     auto query(test_std::get_completion_domain_t<test_std::set_value_t>) const noexcept { return sched_domain{}; }
@@ -94,6 +103,8 @@ TEST(exec_get_domain) {
     test_get_domain<test_std::default_domain>(non_const_get_domain<false>{}); // falling back to `default_domain`
     test_get_domain<domain>(has_get_domain<true, domain>{42});
     test_get_domain<domain>(has_get_domain<false, domain>{42});
+    test_get_domain<int>(has_get_domain<true, int>{42});
+    test_get_domain<int>(has_get_domain<true, const int&>{42});
     test_get_domain<domain>(overloaded_get_domain{});
 
     static_assert(42 == test_std::get_domain(has_get_domain<true, domain>{42}).value);

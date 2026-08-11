@@ -1,11 +1,17 @@
 // src/beman/execution/tests/exec-stopped-as-error.test.cpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <test/sender_env.hpp>
+#include <test/optional_sender.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <optional>
 #include <system_error>
-#include <test/execution.hpp>
-#include <test/optional_sender.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
@@ -48,10 +54,19 @@ auto test_stopped_as_std_error_code() -> void {
         ASSERT(e.code() == std::errc::operation_canceled);
     }
 }
+
+auto test_stopped_as_error_attributes() {
+    test::sender_env s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::stopped_as_error(s));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::stopped_as_error(s));
+}
 } // namespace
 // ----------------------------------------------------------------------------
 
 TEST(exec_stopped_as_error) {
     test_stopped_as_error_signatures();
     test_stopped_as_std_error_code();
+    test_stopped_as_error_attributes();
 }

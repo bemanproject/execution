@@ -1,12 +1,17 @@
 // examples/stop_token.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <condition_variable>
 #include <iostream>
 #include <exception>
 #include <latch>
 #include <mutex>
 #include <thread>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -87,9 +92,12 @@ auto inactive(const Token& token) -> void {
 template <typename Token>
 auto inactive(Token token) -> void {
     ::std::condition_variable cond;
-    stop_callback_for_t       cb(token, [&cond] { cond.notify_one(); });
+    ::std::mutex              lock;
+    stop_callback_for_t       cb(token, [&cond, &lock] {
+        ::std::lock_guard guard(lock);
+        cond.notify_one();
+    });
 
-    ::std::mutex       lock;
     ::std::unique_lock guard(lock);
     cond.wait(guard, [token] { return token.stop_requested(); });
     print("inactive thread done (condition_variable)\n");

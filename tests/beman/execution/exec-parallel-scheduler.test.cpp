@@ -1,7 +1,11 @@
 // src/beman/execution/tests/exec-parallel-scheduler.test.cpp       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <numeric>
+#include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <atomic>
 #include <concepts>
 #include <condition_variable>
@@ -9,6 +13,7 @@
 #include <exception>
 #include <memory>
 #include <mutex>
+#include <numeric>
 #include <optional>
 #include <queue>
 #include <span>
@@ -18,7 +23,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include <test/execution.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail.schedule_result_t;

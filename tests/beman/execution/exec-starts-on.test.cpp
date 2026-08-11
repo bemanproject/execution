@@ -1,9 +1,14 @@
 // src/beman/execution/tests/exec-starts-on.test.cpp                -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
 #include <test/execution.hpp>
+#include <test/sender_env.hpp>
 #include <test/completion_test.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -42,6 +47,9 @@ struct scheduler {
         }
     };
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() -> sender { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
 };
@@ -115,6 +123,15 @@ auto test_starts_on_attrs() {
         std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(std::declval<const attrs&>())),
                      scheduler>);
 }
+
+auto test_starts_on_attributes() {
+    test_std::run_loop loop;
+    test::sender_env   s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::starts_on(loop.get_scheduler(), s));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::starts_on(loop.get_scheduler(), s));
+}
 } // namespace
 
 TEST(exec_starts_on) {
@@ -133,4 +150,5 @@ TEST(exec_starts_on) {
     test_starts_on_completions();
     test_starts_on_attrs();
     test_starts_on_start_scheduler();
+    test_starts_on_attributes();
 }

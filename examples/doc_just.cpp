@@ -2,7 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <cassert>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <string>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

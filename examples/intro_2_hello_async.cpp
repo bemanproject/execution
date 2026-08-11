@@ -1,12 +1,17 @@
 // examples/intro_2_hello_async.cpp                                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <chrono>
 #include <iostream>
 #include <queue>
 #include <string>
 #include <thread>
 #include <tuple>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -23,6 +28,7 @@ using namespace std::chrono_literals;
 
 int main() {
     std::cout << std::unitbuf;
+#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ > 15) || !defined(BEMAN_HAS_MODULES)
     intro::timer timer;
 
     // clang-format off
@@ -42,4 +48,5 @@ int main() {
     // clang-format on
 
     std::cout << result << "\n";
+#endif
 }

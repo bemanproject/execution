@@ -20,6 +20,7 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.bulk;
+import beman.execution.detail.call_with_default;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.connect;
 import beman.execution.detail.connect_result_t;
@@ -59,6 +60,7 @@ import beman.execution.detail.unreachable;
 import beman.execution.detail.unstoppable_token;
 #else
 #include <beman/execution/detail/bulk.hpp>
+#include <beman/execution/detail/call_with_default.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>

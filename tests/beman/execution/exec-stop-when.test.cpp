@@ -1,16 +1,23 @@
 // tests/beman/execution/exec-stop-when.test.cpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <test/sender_env.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <optional>
 #include <type_traits>
 #include <utility>
-#include <test/execution.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
 #else
 #include <beman/execution/detail/stop_when.hpp>
+#include <beman/execution/detail/inplace_stop_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/set_value.hpp>
@@ -83,6 +90,16 @@ struct receiver {
     auto get_env() const noexcept { return env{this->token}; }
 };
 static_assert(test_std::receiver<receiver>);
+
+auto test_stop_when_attributes() {
+    test_std::inplace_stop_source source;
+    test::sender_env              s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_detail::stop_when(s,
+    // source.get_token()));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_detail::stop_when(s, source.get_token()));
+}
 } // namespace
 
 TEST(exec_stop_when) {
@@ -149,4 +166,5 @@ TEST(exec_stop_when) {
     }
     test_std::inplace_stop_source source;
     test_std::sync_wait(test_detail::stop_when(test_std::just(), source.get_token()));
+    test_stop_when_attributes();
 }

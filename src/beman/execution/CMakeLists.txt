@@ -44,6 +44,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/bulk.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/call_result_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/callable.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/call_with_default.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/check_type_alias_exist.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/child_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/class_type.hpp
@@ -66,6 +67,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope_base.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/counting_scope_join.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/data_type.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_same_as.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_tuple.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decayed_type_list.hpp
@@ -269,6 +271,7 @@ if(BEMAN_USE_MODULES)
                     bulk.cppm
                     call_result_t.cppm
                     callable.cppm
+                    call_with_default.cppm
                     check_type_alias_exist.cppm
                     child_type.cppm
                     class_type.cppm
@@ -289,6 +292,7 @@ if(BEMAN_USE_MODULES)
                     counting_scope_base.cppm
                     counting_scope_join.cppm
                     counting_scope.cppm
+                    data_type.cppm
                     decayed_same_as.cppm
                     decayed_tuple.cppm
                     decayed_type_list.cppm

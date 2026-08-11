@@ -1,42 +1,48 @@
 // src/beman/execution/tests/exec-snd-expos.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <tuple>
 #include <utility>
-#include <test/execution.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
 #else
-#include <beman/execution/detail/child_type.hpp>
-#include <beman/execution/detail/write_env.hpp>
-#include <beman/execution/detail/make_sender.hpp>
-#include <beman/execution/detail/basic_sender.hpp>
-#include <beman/execution/detail/completion_signatures_for.hpp>
-#include <beman/execution/detail/connect_all_result.hpp>
-#include <beman/execution/detail/product_type.hpp>
-#include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/basic_operation.hpp>
-#include <beman/execution/detail/connect_all.hpp>
-#include <beman/execution/detail/fwd_env.hpp>
-#include <beman/execution/detail/make_env.hpp>
-#include <beman/execution/detail/join_env.hpp>
-#include <beman/execution/detail/sched_env.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/query_with_default.hpp>
-#include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/impls_for.hpp>
-#include <beman/execution/detail/state_type.hpp>
-#include <beman/execution/detail/basic_state.hpp>
-#include <beman/execution/detail/indices_for.hpp>
-#include <beman/execution/detail/valid_specialization.hpp>
-#include <beman/execution/detail/env_type.hpp>
 #include <beman/execution/detail/basic_receiver.hpp>
+#include <beman/execution/detail/basic_sender.hpp>
+#include <beman/execution/detail/basic_state.hpp>
+#include <beman/execution/detail/child_type.hpp>
+#include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/completion_tag.hpp>
+#include <beman/execution/detail/connect_all.hpp>
+#include <beman/execution/detail/connect_all_result.hpp>
+#include <beman/execution/detail/data_type.hpp>
+#include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/env_type.hpp>
+#include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/impls_for.hpp>
+#include <beman/execution/detail/indices_for.hpp>
+#include <beman/execution/detail/join_env.hpp>
+#include <beman/execution/detail/make_env.hpp>
+#include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/query_with_default.hpp>
+#include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/scheduler.hpp>
-#include <beman/execution.hpp>
+#include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/state_type.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
+#include <beman/execution/detail/valid_specialization.hpp>
+#include <beman/execution/detail/write_env.hpp>
+#include <beman/execution.hpp>
 
 #include <beman/execution/detail/suppress_push.hpp>
 #endif
@@ -188,10 +194,38 @@ struct receiver {
 
 // ------------------------------------------------------------------------
 
+template <typename T>
+struct set_value_test_receiver {
+    using receiver_concept = test_std::receiver_tag;
+    T&    single_arg;
+    bool& no_arg;
+    auto  set_value(auto&& value) noexcept -> void {
+        no_arg     = false;
+        single_arg = value;
+    }
+};
+
+auto test_set_value_macro() -> void {
+#ifdef BEMAN_EXECUTION_SET_VALUE
+    int  value{42};
+    bool no_arg{false};
+    ASSERT(value == 42);
+    ASSERT(not no_arg);
+    BEMAN_EXECUTION_SET_VALUE(set_value_test_receiver<int>{value, no_arg}, []() noexcept { return 43; }());
+    ASSERT(value == 43);
+    ASSERT(not no_arg);
+    BEMAN_EXECUTION_SET_VALUE(set_value_test_receiver<int>{value, no_arg}, []() noexcept {}());
+    ASSERT(value == 43);
+    ASSERT(no_arg);
+#endif
+}
+
 template <bool Expect, typename Query>
 auto test_fwd_env_helper() -> void {
     env e{42};
     static_assert(Expect == requires() { test_detail::fwd_env(e).query(Query()); });
+    static_assert(Expect == false ||
+                  std::same_as<test_detail::fwd_env_t<env>, decltype(test_detail::fwd_env(std::declval<env>()))>);
 }
 auto test_fwd_env() -> void {
     env e{42};
@@ -293,6 +327,9 @@ struct sender {
 template <typename W>
 struct scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() noexcept -> sender<W> { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
     auto query(const test_std::get_domain_t&) const noexcept -> domain { return {}; }
@@ -301,6 +338,9 @@ struct scheduler {
 template <>
 struct scheduler<none> {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() noexcept -> sender<none> { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
 };
@@ -347,7 +387,46 @@ struct env<two_missing> {
         return {};
     }
 };
+
+struct has_value_domain {};
+template <>
+struct env<has_value_domain> {
+    auto query(const test_std::get_completion_domain_t<test_std::set_value_t>&) const noexcept -> domain { return {}; }
+};
 } // namespace completion_domain
+auto test_compl_domain() -> void {
+    namespace cd = completion_domain;
+    static_assert(
+        std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(test_std::just(), test_std::env<>())),
+                     decltype(test_std::indeterminate_domain())>);
+
+    static_assert(requires {
+        test_std::get_completion_domain<test_std::set_value_t>(test_std::get_env(cd::sender<cd::has_value_domain>()));
+    });
+    static_assert(requires {
+        test_std::get_completion_domain<test_std::set_value_t>(test_std::get_env(cd::sender<cd::has_value_domain>()),
+                                                               cd::env<cd::has_value_domain>());
+    });
+    static_assert(
+        std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::has_value_domain>())),
+                     decltype(cd::domain())>);
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(
+                                   cd::sender<cd::has_value_domain>(), cd::env<cd::has_value_domain>())),
+                               decltype(cd::domain())>);
+
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::common>())),
+                               decltype(test_std::indeterminate_domain())>);
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::common>(),
+                                                                                         test_std::env<>())),
+                               decltype(test_std::indeterminate_domain())>);
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::common>(),
+                                                                                         cd::env<cd::common>())),
+                               decltype(test_std::indeterminate_domain())>);
+    static_assert(std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(cd::sender<cd::none>(),
+                                                                                         test_std::env<>())),
+                               decltype(test_std::indeterminate_domain())>);
+}
+
 auto test_completion_domain() -> void {
     namespace cd = completion_domain;
     static_assert(test_std::sender<cd::sender<cd::common>>);
@@ -421,6 +500,9 @@ struct get_domain_late_scheduler {
         auto get_env() const noexcept -> env { return {}; }
     };
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() noexcept -> sender { return {}; }
     auto operator==(const get_domain_late_scheduler&) const -> bool = default;
     auto query(const test_std::get_domain_t&) const noexcept -> dom { return {}; }
@@ -1191,105 +1273,12 @@ auto test_make_sender() -> void {
     }
 }
 
-template <typename>
-struct property {
-    struct data {
-        int  value{};
-        auto operator==(const data&) const -> bool = default;
-    };
-};
-
-struct write_env_env {
-    struct base {};
-    int  value{};
-    auto query(const property<base>&) const -> property<base>::data { return {this->value}; }
-};
-struct write_env_added {
-    int value{};
-    struct added {};
-    auto query(const property<added>&) const noexcept -> property<added>::data { return {this->value}; }
-};
-
-struct write_env_receiver {
-    using receiver_concept = test_std::receiver_tag;
-
-    bool* result{nullptr};
-
-    auto get_env() const noexcept -> write_env_env { return {42}; }
-    auto set_value(bool value) && noexcept -> void { *this->result = value; }
-};
-
-struct write_env_sender {
-    using sender_concept        = test_std::sender_tag;
-    using completion_signatures = test_std::completion_signatures<test_std::set_value_t(bool)>;
-    template <typename, typename...>
-    static consteval auto get_completion_signatures() -> completion_signatures {
-        return {};
-    }
-    template <typename Receiver>
-    struct state {
-        using operation_state_concept = test_std::operation_state_tag;
-        std::remove_cvref_t<Receiver> receiver;
-
-        auto start() & noexcept -> void {
-            using base_property  = property<write_env_env::base>;
-            using added_property = property<write_env_added::added>;
-            bool result{false};
-
-            if constexpr (requires {
-                              test_std::get_env(receiver).query(base_property{});
-                              test_std::get_env(receiver).query(added_property{});
-                          }) {
-                result = (base_property::data{42} == test_std::get_env(receiver).query(base_property{})) &&
-                         (added_property::data{43} == test_std::get_env(receiver).query(added_property{}));
-            }
-
-            test_std::set_value(::std::move(receiver), result);
-        }
-    };
-
-    template <typename Receiver>
-    auto connect(Receiver&& receiver) noexcept -> state<Receiver> {
-        return {std::forward<Receiver>(receiver)};
-    }
-};
-
-auto test_write_env() -> void {
-    static_assert(test_std::sender<write_env_sender>);
-    static_assert(test_std::receiver<write_env_receiver>);
-    static_assert(test_detail::queryable<write_env_added>);
-    auto plain_op(test_std::connect(write_env_sender{}, write_env_receiver{}));
-    static_assert(std::same_as<write_env_env, decltype(test_std::get_env(write_env_receiver{}))>);
-    static_assert(std::same_as<write_env_env, decltype(test_std::get_env(plain_op.receiver))>);
-    using base_property = property<write_env_env::base>;
-    ASSERT(base_property::data{42} == test_std::get_env(plain_op.receiver).query(base_property{}));
-
-    auto we_sender{test_std::write_env(write_env_sender{}, write_env_added{43})};
-
-    static_assert(test_std::sender_in<write_env_sender>);
-    static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(bool)>,
-                               decltype(test_std::get_completion_signatures<write_env_sender, write_env_env>())>);
-
-    using we_type = std::remove_cvref_t<decltype(we_sender)>;
-    static_assert(std::same_as<test_detail::completion_signatures_for<we_type, write_env_env>,
-                               test_std::completion_signatures<test_std::set_value_t(bool)>>);
-    static_assert(std::same_as<test_detail::completion_signatures_for<decltype(we_sender), test_std::env<>>,
-                               test_std::completion_signatures<test_std::set_value_t(bool)>>);
-    static_assert(std::same_as<test_detail::completion_signatures_for<decltype(we_sender)&, test_std::env<>>,
-                               test_std::completion_signatures<test_std::set_value_t(bool)>>);
-    static_assert(test_std::sender_in<decltype(we_sender)>);
-    static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(bool)>,
-                               decltype(test_std::get_completion_signatures<decltype(we_sender), write_env_env>())>);
-
-    static_assert(test_std::sender<decltype(we_sender)>);
-    static_assert(std::same_as<test_std::write_env_t, test_std::tag_of_t<decltype(we_sender)>>);
-
-    bool has_both_properties{false};
-    ASSERT(not has_both_properties);
-    auto we_op{test_std::connect(we_sender, write_env_receiver{&has_both_properties})};
-    test_std::start(we_op);
-    ASSERT(has_both_properties);
-    test::use(we_op);
+template <typename... T>
+struct data_sender : test_detail::product_type<T...> {};
+auto test_data_type() -> void {
+    static_assert(std::same_as<int&&, test_detail::data_type<data_sender<bool, int, int, double>>>);
+    static_assert(std::same_as<int&, test_detail::data_type<data_sender<bool, int, int, double>&>>);
+    static_assert(std::same_as<const int&, test_detail::data_type<const data_sender<bool, int, int, double>&>>);
 }
 
 template <typename... T>
@@ -1304,11 +1293,13 @@ auto test_child_type() -> void {
 } // namespace
 
 TEST(exec_snd_expos) {
+    test_set_value_macro();
     test_fwd_env();
     test_make_env();
     test_join_env();
     test_sched_env();
     test_completion_domain();
+    test_compl_domain();
     test_query_with_default();
     test_get_domain_early();
     test_get_domain_late();
@@ -1328,6 +1319,6 @@ TEST(exec_snd_expos) {
     test_completion_signatures_for();
     test_basic_sender();
     test_make_sender<int>();
-    test_write_env();
+    test_data_type();
     test_child_type();
 }

@@ -4,9 +4,14 @@
 #ifndef INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_OPTIONAL_SENDER
 #define INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_OPTIONAL_SENDER
 
-#include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <optional>
 #include <utility>
+#endif
+#include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else

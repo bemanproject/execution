@@ -1,8 +1,13 @@
 // src/beman/execution/tests/exec-get-compl-sched.test.cpp          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
 #include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -33,6 +38,9 @@ struct sender {
 template <typename Tag>
 struct scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     int  value{};
     auto operator==(const scheduler&) const -> bool = default;
     auto schedule() noexcept -> sender<Tag> { return {}; }
@@ -100,11 +108,18 @@ TEST(exec_get_compl_sched) {
     test_tag<true, test_std::set_value_t>(e);
     test_tag<false, tag>(e);
 
+    test_std::env<> ev{};
     static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_error_t>(e)),
+                                 scheduler<test_std::set_error_t>>);
+    static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_error_t>(e, ev)),
                                  scheduler<test_std::set_error_t>>);
     static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_stopped_t>(e)),
                                  scheduler<test_std::set_stopped_t>>);
+    static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_stopped_t>(e, ev)),
+                                 scheduler<test_std::set_stopped_t>>);
     static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(e)),
+                                 scheduler<test_std::set_value_t>>);
+    static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(e, ev)),
                                  scheduler<test_std::set_value_t>>);
     ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(e) == scheduler<test_std::set_error_t>{19});
     ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(e) == scheduler<test_std::set_stopped_t>{20});

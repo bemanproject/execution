@@ -1,9 +1,14 @@
 // src/beman/execution/tests/execution-syn.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <variant>
-#include <test/execution.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
@@ -43,6 +48,34 @@ import beman.execution.detail;
 namespace {
 auto use(auto&&) -> void {}
 
+auto test_execution_policies() -> void {
+    struct non_policy {};
+
+    static_assert(test_std::is_execution_policy<non_policy>::value == false);
+    static_assert(test_std::is_execution_policy<non_policy>{} == false);
+    static_assert(test_std::is_execution_policy_v<non_policy> == false);
+
+    static_assert(test_std::is_execution_policy<test_std::sequenced_policy>::value == true);
+    static_assert(test_std::is_execution_policy<test_std::sequenced_policy>{} == true);
+    static_assert(test_std::is_execution_policy_v<test_std::sequenced_policy> == true);
+    static_assert(std::same_as<const test_std::sequenced_policy, decltype(test_std::seq)>);
+
+    static_assert(test_std::is_execution_policy<test_std::parallel_policy>::value == true);
+    static_assert(test_std::is_execution_policy<test_std::parallel_policy>{} == true);
+    static_assert(test_std::is_execution_policy_v<test_std::parallel_policy> == true);
+    static_assert(std::same_as<const test_std::parallel_policy, decltype(test_std::par)>);
+
+    static_assert(test_std::is_execution_policy<test_std::parallel_unsequenced_policy>::value == true);
+    static_assert(test_std::is_execution_policy<test_std::parallel_unsequenced_policy>{} == true);
+    static_assert(test_std::is_execution_policy_v<test_std::parallel_unsequenced_policy> == true);
+    static_assert(std::same_as<const test_std::parallel_unsequenced_policy, decltype(test_std::par_unseq)>);
+
+    static_assert(test_std::is_execution_policy<test_std::unsequenced_policy>::value == true);
+    static_assert(test_std::is_execution_policy<test_std::unsequenced_policy>{} == true);
+    static_assert(test_std::is_execution_policy_v<test_std::unsequenced_policy> == true);
+    static_assert(std::same_as<const test_std::unsequenced_policy, decltype(test_std::unseq)>);
+}
+
 auto test_queries() -> void {
     // std
     static_assert(
@@ -76,6 +109,9 @@ struct scheduler {
         auto get_env() const noexcept -> env { return {}; }
     };
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
 
     auto schedule() const noexcept -> sender { return {}; }
     auto operator==(const scheduler&) const -> bool = default;
@@ -491,4 +527,5 @@ TEST(execution_syn) {
     test_sender_adaptor();
     test_as_awaitable();
     test_exec_env();
+    test_execution_policies();
 }

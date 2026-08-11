@@ -1,12 +1,18 @@
 // src/beman/execution/tests/exec-when-all.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <test/sender_env.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <optional>
 #include <utility>
 #include <tuple>
 #include <variant>
-#include <test/execution.hpp>
+#endif
 // #include <beman/execution/detail/suppress_push.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
@@ -280,6 +286,18 @@ auto test_when_all_with_variant() -> void {
         },
         v1);
 }
+
+auto test_when_all_attributes() {
+    test::sender_env s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::when_all(s));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::when_all(s));
+    test::test_sender_env<false>(42, test::test_forwardable_attr{}, test_std::when_all(s, s));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::when_all(s, s));
+    test::test_sender_env<false>(42, test::test_forwardable_attr{}, test_std::when_all(s, s, s));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::when_all(s, s, s));
+}
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -296,4 +314,6 @@ TEST(exec_when_all) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "the when_all tests shouldn't throw");
     }
+
+    test_when_all_attributes();
 }

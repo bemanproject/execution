@@ -17,7 +17,6 @@ if(PROJECT_IS_TOP_LEVEL)
     enable_testing()
 endif()
 
-set(TODO stop_token) #-dk:TODO including that causes a linker error
 set(TODO suspend_never) #-dk:TODO including that causes ASAN errors
 
 set(EXAMPLES
@@ -33,6 +32,7 @@ set(EXAMPLES
     sender_demo
     stackoverflow
     stopping
+    stop_token
     when_all_cancel
 )
 
