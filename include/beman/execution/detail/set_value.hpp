@@ -50,6 +50,9 @@ struct set_value_t {
 
     template <typename Receiver, typename... Args>
     auto operator()(Receiver&& receiver, Args&&... args) const noexcept -> void {
+        static_assert(noexcept(::std::forward<Receiver>(receiver).set_value(::std::forward<Args>(args)...)),
+                      "the call to receiver.set_value(args...) has to be noexcept");
+
         ::std::forward<Receiver>(receiver).set_value(::std::forward<Args>(args)...);
     }
 };

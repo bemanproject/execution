@@ -24,9 +24,10 @@ namespace beman::execution {
 struct get_delegation_scheduler_t {
     template <typename Env>
         requires requires(Env&& env, const get_delegation_scheduler_t& g) {
-            { auto(::std::as_const(env).query(g)) } noexcept -> ::beman::execution::scheduler;
+            { auto(::std::as_const(env).query(g)) } -> ::beman::execution::scheduler;
         }
     auto operator()(Env&& env) const noexcept {
+        static_assert(noexcept(::std::as_const(env).query(*this)));
         return ::std::as_const(env).query(*this);
     }
     constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }

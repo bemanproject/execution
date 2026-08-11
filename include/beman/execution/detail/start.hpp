@@ -21,23 +21,14 @@ struct start_t {
     auto operator()(const State&) const -> void = BEMAN_EXECUTION_DELETE("state needs to have a start() member");
 
     template <typename State>
-        requires(not requires(State& state) {
-                    { state.start() } noexcept;
-                })
-    auto operator()(State&) const -> void = BEMAN_EXECUTION_DELETE("state start() member has to be noexcept");
-    template <typename State>
-        requires(not requires(const State& state) {
-                    { state.start() } noexcept;
-                })
-    auto operator()(const State&) const -> void = BEMAN_EXECUTION_DELETE("state start() member has to be noexcept");
-
-    template <typename State>
     auto operator()(const State& state) const noexcept -> void {
+        static_assert(noexcept(state.start()), "state start() member has to be noexcept");
         state.start();
     }
     // NOLINTBEGIN(misc-no-recursion)
     template <typename State>
     auto operator()(State& state) const noexcept -> void {
+        static_assert(noexcept(state.start()), "state start() member has to be noexcept");
         state.start();
     }
     // NOLINTEND(misc-no-recursion)

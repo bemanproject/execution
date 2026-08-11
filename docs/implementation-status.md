@@ -15,13 +15,13 @@ The indicators come in groups of threes:
 Each section containing subelements reflects the state of the "worst" element.
 
 # &#x1F534;&#x1F534;&#x1F534; [exec](https://wg21.link/exec) Execution control library
-## &#x1F6A7;&#x2705;&#x2705; [exec.general](https://wg21.link/exec.general) General
+## &#x2705;&#x2705;&#x2705; [exec.general](https://wg21.link/exec.general) General
 
-- &#x1F6A7;&#x274E;&#x274E; [<code><i>MANDATE-NOTHROW</i>(expr)</code>](https://wg21.link/exec.general#5) &#x21d2; <code>noexcept(<i>expr</i>)</code> is `true`
+- &#x274E;&#x274E;&#x274E; [<code><i>MANDATE-NOTHROW</i>(expr)</code>](https://wg21.link/exec.general#5) &#x21d2; <code>noexcept(<i>expr</i>)</code> is `true`
 - &#x2705;&#x2705;&#x2705; [<code><i>movable-value</i>&lt;T&gt;</code>](https://wg21.link/exec.general#6): [`movable_value.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/movable_value.hpp)
 - &#x2705;&#x2705;&#x2705; [<code><i>MATCHING-SIG</i>&lt;F1, F2&gt;</code>](https://wg21.link/exec.general#7): [`matching_sig.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/matching_sig.hpp)
 - &#x2705;&#x2705;&#x2705; [<code><i>AS-EXCEPT-PTR</i>(error)</code>](https://wg21.link/exec.general#8): [`as_except_ptr.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/as_except_ptr.hpp)
-- &#x1F6A7;&#x274E;&#x274E; [<code><i>as-const</i>(error)</code>](https://wg21.link/exec.general#9): <code>[std::as_const](https://wg21.link/utility.as.const)(error)</code>
+- &#x274E;&#x274E;&#x274E; [<code><i>as-const</i>(error)</code>](https://wg21.link/exec.general#9): <code>[std::as_const](https://wg21.link/utility.as.const)(error)</code>
 
 ## &#x1F6A7;&#x2705;&#x2705; [exec.queryable](https://wg21.link/exec.queryable) Query and queryables
 ### &#x1F6A7;&#x274E;&#x274E; [exec.queryable.general](https://wg21.link/exec.queryable.general) General

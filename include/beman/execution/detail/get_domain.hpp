@@ -35,12 +35,24 @@ struct get_domain_t : ::beman::execution::forwarding_query_t {
     template <typename Env>
     constexpr auto operator()(Env&& env) const noexcept {
         if constexpr (requires { ::std::as_const(env).query(*this); }) {
-            return ::std::as_const(env).query(*this);
+            static_assert(noexcept(::std::as_const(env).query(*this)));
+            return auto(::std::as_const(env).query(*this));
         } else if constexpr (requires {
                                  ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
                                      ::beman::execution::get_scheduler(env),
                                      ::beman::execution::detail::hide_sched(env));
                              }) {
+            static_assert(noexcept(::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
+                ::beman::execution::get_scheduler(env), ::beman::execution::detail::hide_sched(env))));
+            return ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
+                ::beman::execution::get_scheduler(env), ::beman::execution::detail::hide_sched(env));
+        } else if constexpr (requires {
+                                 ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
+                                     ::beman::execution::get_scheduler(env),
+                                     ::beman::execution::detail::hide_sched(env));
+                             }) {
+            static_assert(noexcept(::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
+                ::beman::execution::get_scheduler(env), ::beman::execution::detail::hide_sched(env))));
             return ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
                 ::beman::execution::get_scheduler(env), ::beman::execution::detail::hide_sched(env));
         } else {

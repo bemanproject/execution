@@ -57,7 +57,7 @@ TEST(exec_set_stopped) {
     static_assert(std::same_as<const test_std::set_stopped_t, decltype(test_std::set_stopped)>);
 
     test_callable<receiver>();
-    test_noexcept<receiver_throwing>();
+    //-dk:TODO verify that this fails to compile test_noexcept<receiver_throwing>();
 
     bool called{false};
     ASSERT(not called);

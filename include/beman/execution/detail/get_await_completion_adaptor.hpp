@@ -21,10 +21,9 @@ import beman.execution.detail.forwarding_query;
 namespace beman::execution {
 struct get_await_completion_adaptor_t {
     template <typename Env>
-        requires requires(Env&& env, const get_await_completion_adaptor_t& g) {
-            { ::std::as_const(env).query(g) } noexcept;
-        }
+        requires requires(Env&& env, const get_await_completion_adaptor_t& g) { ::std::as_const(env).query(g); }
     auto operator()(Env&& env) const noexcept {
+        static_assert(noexcept(::std::as_const(env).query(*this)));
         return ::std::as_const(env).query(*this);
     }
     static constexpr auto query(const ::beman::execution::forwarding_query_t&) noexcept -> bool { return true; }

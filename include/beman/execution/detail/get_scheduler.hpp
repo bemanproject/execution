@@ -33,6 +33,8 @@ struct get_scheduler_t : ::beman::execution::forwarding_query_t {
                 ::std::as_const(env).query(self), ::beman::execution::detail::hide_sched(env));
         }
     auto operator()(Env&& env) const noexcept {
+        static_assert(noexcept(::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(
+            ::std::as_const(env).query(*this), ::beman::execution::detail::hide_sched(env))));
         return ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(
             ::std::as_const(env).query(*this), ::beman::execution::detail::hide_sched(env));
     }
