@@ -102,11 +102,11 @@ $(document).ready(function(){initNavTree('md_docs_modules.html',''); initResizab
 <div class="contents">
 <div class="textblock"><p>Author: Dietmar Kühl <a href="#" onclick="location.href='mai'+'lto:'+'die'+'tm'+'ar.'+'ku'+'ehl'+'@m'+'e.c'+'om'; return false;">dietm<span class="obfuscator">.nosp@m.</span>ar.k<span class="obfuscator">.nosp@m.</span>uehl@<span class="obfuscator">.nosp@m.</span>me.c<span class="obfuscator">.nosp@m.</span>om</a> Date: 2026-02-05</p>
 <p>Originally <a href="https://github.com/bemanproject/execution"><code>beman.execution</code></a> was implemented with out <code>module</code> support. Eventually, <code>module</code> support in all compilers and in <a href="https://cmake.org/"><code>cmake</code></a> made it reasonable to add <code>module</code> support. This document describes some of the experiences of the journey adding <code>module</code> support for <a href="https://github.com/bemanproject/execution"><code>beman.execution</code></a>. It is likely that my attempts on how to support <code>module</code>s were misguided and I'm happy to learn how things can be done properly or better.</p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md110"></a>
 History of Adding Module Support</h1>
 <p>First, let's start describing what I did. The starting point for that was a working <a href="https://github.com/bemanproject/execution"><code>beman.execution</code></a> implementation which had no <code>module</code> support. It had tests and some examples and the <code>CMakeLists.txt</code> built these. The default build procedure run from the <code>Makefile</code> was already set up to use <code>ninja</code>.</p>
 <p>Claus Klein had started to land <code>cmake</code> support of <code>module</code>s. In particular there were <code>cmake</code> rules to detect whether there is a dependency scanner and whether <code>import std;</code> is supported. The statement from Claus was that using <code>import std;</code> would be the second step - the first step is to actually create a <code>module</code> for <a href="https://github.com/bemanproject/execution"><code>beman.execution</code></a> including the standard library headers.</p>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md111"></a>
 Use &lt;tt&gt;export using&lt;/tt&gt;</h2>
 <p>I had tried to create a <code>module</code> right after the Hagenberg meeting at the end of 2025. Since I was clueless how to go about that I had asked people who worked on the <code>module</code> specification and implemented the corresponding support in compilers. The recommendation was to create a <code>module</code> file, include all the headers, start the <code>module</code>, and have <code>export using &lt;name&gt;;</code> declarations. That is, something like this:</p>
 <div class="fragment"><div class="line"> {c++}</div>
@@ -122,7 +122,7 @@ Use &lt;tt&gt;export using&lt;/tt&gt;</h2>
 <div class="line">}</div>
 </div><!-- fragment --><p>Creating a file like that was fairly mechanical work and I just did it. I tried it. There were a bunch of errors which I could work out easily but eventually I got stuck with inscrutable errors. Since I never planned to write about the experience I don't recall what the errors were. When I asked about it the message was that neither <code>cmake</code> nor the compilers are quite there. So I abandoned this first attempt.</p>
 <p>Time passed and in the beginning of 2026 some <code>cmake</code> support for <code>module</code>s was added via a PR to the repository. The code wasn't ready to use <code>module</code> but it seems reasonable to retry. A first feeble try to get things built using the <code>export using</code> approach again resulted in errors and there were voice stating that this won't work but <code>module</code> support should actually work. The error messages seemed to imply that I should <code>export</code> the declarations immediately. So I abandoned that particular approach, again.</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md112"></a>
 Generate Module Friendly Code: &lt;tt&gt;mk-module.py&lt;/tt&gt;</h2>
 <p>The attempts up to this point had indicated a few things which were somewhat misaligned with the way the code in <a href="https://github.com/bemanproject/execution"><code>beman.execution</code></a> is laid out. The code is structured into lots of small <em>components</em> (loosely based on John Lakos's idea of components in his 1996 version of "Large-Scale C++"). Each component consists of</p>
 <ul>
@@ -176,16 +176,16 @@ Profit! </li>
 <li>Symbols were undefined.</li>
 </ul>
 <p>I ended up spending quite a bit of time reshuffling where headers go, fixing some actual bugs, and working around what looks like compiler problems. Most of that was, however, fairly mechanical and eventually I got a <code>module</code> declaration working with all major C++ compilers (using recent versions of each).</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md113"></a>
 Retry &lt;tt&gt;export using&lt;/tt&gt;</h2>
 <p>Using a script to generate a <code>module</code> file restructured to better match the <code>module</code> needs did get me a working <code>module</code> definition. However, that shouldn't really be necessary. While fixing various minor bugs I did fix a few things which looked as if they may have had an impact when trying to use <code>export using &lt;name&gt;</code>. So tried that approach again and this time it worked, at least, for some of the compilers. That looked promising!</p>
 <p>One compiler put up a fight, though! I'm using the an exposition-only <code>product_type</code> class template as is described in <a href="https://eel.is/c++draft/exec#snd.expos-17">[exec]</a> and I got a compiler error about using <code>std::get&lt;N&gt;(<em>sender</em>)</code>. After some experimentation I found that <code>export</code>ing the <code>product_type</code> template and the relevant <code>tuple_size</code> and <code>tuple_element</code> specialization I could resolve this problem, too.</p>
 <p>Once I got past that I encountered a problem which is probably quite common: following the specification of exposition-only <code>impls_for</code> class template I used lambda functions for the various "overrides". One compiler complained about undefined symbols about these! Of course, using lambda functions in a header is problematic because each instance of a lambda function has a different type, even if they are spelled identical! So I replaced all of these lambda functions by <code>struct</code>s which only have one member which is an <code>operator()</code>.</p>
 <p>With that I also got a working <code>module</code> definition. While I'm quite fond of my generator I prefer this approach! There shouldn't be a need to rewrite an implementation just to make it a <code>module</code>. I should also get away not needing any macros to insert/remove the <code>export</code> keywords from declarations. Instead, the <code>export</code>ed names are just listed in the module definition file. What is currently missing is a bit of a clean-up to remove some of the artifacts. Also, there may be more implementation details exported than is actually necessary.</p>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md114"></a>
 &lt;tt&gt;import std;&lt;/tt&gt;</h2>
 <p>Currently, <code>import std;</code> is <em>not</em>, yet, used. It should be straight forward to conditionally choose between <code>import std;</code> and including the headers.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md115"></a>
 Changes Needed to Support Modules</h1>
 <p>When enabling modules I needed to apply quite a few, mostly rather simple changes. Some of the necessary changes did take me a bit to actually discover. Here is broadly what I needed to change:</p>
 <ul>
@@ -223,11 +223,11 @@ Changes Needed to Support Modules</h1>
 </div><!-- fragment --><p class="startli">However, the compiler insisted in the definition of the function that neither of the two expressions from the <code>requires</code> clause was valid. Eventually I just turned the <code>query</code> into two overloads, the first requiring that <code>q(e1)</code> is valid and the second requiring that <code>q(e1)</code> is not valid but <code>q(e2)</code> is valid. I think it was only one compiler causing this issue.</p>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md116"></a>
 Scanning and Building</h1>
 <p>One of the things which seems odd is that each time <code><a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman.execution</a></code> is built, the files are scanned for dependencies. That scanning often takes longer than the actual build of the respective object file. Also, since the <code>module</code> gets rebuild, all the tests <code>import</code>ing the <code>module</code> get built again. When developing with including headers only the tests which included modified headers (possibly indirectly) needed to be rebuilt. Since the components and tests were created in dependency order, that normally meant that only one test needed to be rebuilt. Only if an already tested component needed to be changed multiple tests needed to be built.</p>
 <p>The promise of <code>module</code>s was that builds get faster. I don't have objective measurements but it seems the development actually got slower. While concentrating on fixing a particular component I often removed all other tests and the examples from the build.</p>
-<h1><a class="anchor" id="autotoc_md10"></a>
+<h1><a class="anchor" id="autotoc_md117"></a>
 Modules vs. Testing</h1>
 <p>Testing the <code>module</code> components is, yet, another issue! There are a few issues and I haven't worked out all of them, yet:</p>
 <ol type="1">
@@ -238,7 +238,7 @@ Modules vs. Testing</h1>
 <p class="startli">That didn't quite occur to me but it <em>seems</em> that may actually work! An initial test seems to show that the compilers do not get upset about multiple <code>import <a class="el" href="namespacebeman_1_1execution.html" title="Namespace for asynchronous operations and their vocabulary.">beman.execution</a></code> statements.</p>
 </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md118"></a>
 Conclusion</h1>
 <p>So far it isn't clear to me whether <code>module</code>s do provide a benefit. The main sticking points are:</p>
 <ol type="1">

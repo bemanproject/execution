@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('md_docs_intro_examples.html',''); init
   <div class="headertitle"><div class="title">intro_examples </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md1"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md108"></a>
 Introduction by Example</h1>
 <p>This page provides a series of examples showing how to use the <code>std::execution</code> components.</p>
 <details >
@@ -110,11 +110,16 @@ Introduction by Example</h1>
 <p>Code: [<code>examples/intro_1_hello_world.cpp</code>]() </p><div class="fragment"><div class="line"><span class="comment">// examples/intro_1_hello_world.cpp                                   -*-C++-*-</span></div>
 <div class="line"><span class="comment">// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception</span></div>
 <div class="line"> </div>
+<div class="line"><span class="preprocessor">#include &lt;beman/execution/detail/common.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#ifdef BEMAN_HAS_IMPORT_STD</span></div>
+<div class="line"><span class="keyword">import</span> std;</div>
+<div class="line"><span class="preprocessor">#else</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;optional&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tuple&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;variant&gt;</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="preprocessor">#ifdef BEMAN_HAS_MODULES</span></div>
 <div class="line"><span class="keyword">import</span> <a class="code hl_namespace" href="namespacebeman.html">beman</a>.<a class="code hl_namespace" href="namespacebeman_1_1execution.html">execution</a>;</div>
 <div class="line"><span class="preprocessor">#else</span></div>
@@ -129,17 +134,19 @@ Introduction by Example</h1>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    <span class="comment">// clang-format off</span></div>
+<div class="line"><span class="preprocessor">#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ &gt; 15) || !defined(BEMAN_HAS_MODULES)</span></div>
 <div class="line">    <span class="keyword">auto</span> [result] =</div>
 <div class="line">    <a class="code hl_variable" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519">ex::sync_wait</a>(</div>
 <div class="line">        ex::when_all(</div>
 <div class="line">            <a class="code hl_variable" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">ex::just</a>(<span class="stringliteral">&quot;hello, &quot;</span>s),</div>
 <div class="line">            <a class="code hl_variable" href="namespacebeman_1_1execution.html#acdbad94bfa3d61a849a61c99a753d5da">ex::just</a>(<span class="stringliteral">&quot;world&quot;</span>s)</div>
 <div class="line">        ) | <a class="code hl_variable" href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3">ex::then</a>([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; s1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; s2) { <span class="keywordflow">return</span> s1 + s2; })</div>
-<div class="line">        ) .value_or(std::tuple(<span class="stringliteral">&quot;&quot;</span>s))</div>
+<div class="line">        ).value_or(std::tuple(<span class="stringliteral">&quot;&quot;</span>s))</div>
 <div class="line">        ;</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line">    <span class="comment">// clang-format on</span></div>
 <div class="line"> </div>
-<div class="line">    std::cout &lt;&lt; result &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line">    <span class="comment">// std::cout &lt;&lt; std::get&lt;0&gt;(v) &lt;&lt; &#39;\n&#39;;</span></div>
 <div class="line">}</div>
 <div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine.hpp:56</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html_a43774ecef52b77ef5d3f668bfcc51519"><div class="ttname"><a href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519">beman::execution::sync_wait</a></div><div class="ttdeci">constexpr ::beman::execution::sync_wait_t sync_wait</div><div class="ttdoc">sync_wait(sender) starts sender and waits for its completion.</div><div class="ttdef"><b>Definition:</b> sync_wait.hpp:186</div></div>
@@ -188,12 +195,17 @@ world"</code>: it uses components for dealing with asynchronous work to synchron
 <p>Code: [<code>examples/intro_2_hello_async.cpp</code>]() </p><div class="fragment"><div class="line"><span class="comment">// examples/intro_2_hello_async.cpp                                   -*-C++-*-</span></div>
 <div class="line"><span class="comment">// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception</span></div>
 <div class="line"> </div>
+<div class="line"><span class="preprocessor">#include &lt;beman/execution/detail/common.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#ifdef BEMAN_HAS_IMPORT_STD</span></div>
+<div class="line"><span class="keyword">import</span> std;</div>
+<div class="line"><span class="preprocessor">#else</span></div>
 <div class="line"><span class="preprocessor">#include &lt;chrono&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;queue&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="preprocessor">#ifdef BEMAN_HAS_MODULES</span></div>
 <div class="line"><span class="keyword">import</span> <a class="code hl_namespace" href="namespacebeman.html">beman</a>.<a class="code hl_namespace" href="namespacebeman_1_1execution.html">execution</a>;</div>
 <div class="line"><span class="preprocessor">#else</span></div>
@@ -210,6 +222,7 @@ world"</code>: it uses components for dealing with asynchronous work to synchron
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    std::cout &lt;&lt; std::unitbuf;</div>
+<div class="line"><span class="preprocessor">#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ &gt; 15) || !defined(BEMAN_HAS_MODULES)</span></div>
 <div class="line">    intro::timer timer;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// clang-format off</span></div>
@@ -229,6 +242,7 @@ world"</code>: it uses components for dealing with asynchronous work to synchron
 <div class="line">    <span class="comment">// clang-format on</span></div>
 <div class="line"> </div>
 <div class="line">    std::cout &lt;&lt; result &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><p></p>
 </details>

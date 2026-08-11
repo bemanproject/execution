@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beman::execution: beman::execution::completion_signatures&lt;... &gt; Struct Template Reference</title>
+<title>beman::execution: beman::execution::completion_signatures&lt; Signatures &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -97,7 +97,11 @@ $(document).ready(function(){initNavTree('structbeman_1_1execution_1_1completion
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">beman::execution::completion_signatures&lt;... &gt; Struct Template Reference</div></div>
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="structbeman_1_1execution_1_1completion__signatures-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">beman::execution::completion_signatures&lt; Signatures &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -105,9 +109,28 @@ $(document).ready(function(){initNavTree('structbeman_1_1execution_1_1completion
  <a href="structbeman_1_1execution_1_1completion__signatures.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1completion__signatures_1_1completion__signatures__tag.html">completion_signatures_tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution_1_1completion__signatures_1_1completion__signatures__tag_3_01Tag_07A_8_8_8_08_4.html">completion_signatures_tag&lt; Tag(A...)&gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ae3f4e4af5782420027939ea964030a2c"><td class="memTemplParams" colspan="2"><a id="ae3f4e4af5782420027939ea964030a2c" name="ae3f4e4af5782420027939ea964030a2c"></a>
+template&lt;typename Tag &gt; </td></tr>
+<tr class="memitem:ae3f4e4af5782420027939ea964030a2c"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>count_of</b> (Tag)</td></tr>
+<tr class="separator:ae3f4e4af5782420027939ea964030a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1738b9c7c02218ff417d94e493dceb4a"><td class="memTemplParams" colspan="2"><a id="a1738b9c7c02218ff417d94e493dceb4a" name="a1738b9c7c02218ff417d94e493dceb4a"></a>
+template&lt;typename Fun &gt; </td></tr>
+<tr class="memitem:a1738b9c7c02218ff417d94e493dceb4a"><td class="memTemplItemLeft" align="right" valign="top">static constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>for_each</b> (Fun &amp;&amp;fun)</td></tr>
+<tr class="separator:a1738b9c7c02218ff417d94e493dceb4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;::beman::execution::detail::completion_signature...&gt;<br />
-struct beman::execution::completion_signatures&lt;... &gt;</div><p>Class template used to a specify a list of completion signatures. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;::beman::execution::detail::completion_signature... Signatures&gt;<br />
+struct beman::execution::completion_signatures&lt; Signatures &gt;</div><p>Class template used to a specify a list of completion signatures. </p>
 <p>This class template is primarily used for type computations and objects of any specializaion are empty. Objects may be created to return them from functions used for type computations like get_completion_signatures(sender, env). </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/beman/execution/detail/<a class="el" href="completion__signatures_8hpp_source.html">completion_signatures.hpp</a></li>

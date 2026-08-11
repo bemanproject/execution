@@ -124,11 +124,11 @@ Collaboration diagram for beman::execution::get_start_scheduler_t:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:adefd11968f60157a9ebce908f6d2ed80"><td class="memTemplParams" colspan="2"><a id="adefd11968f60157a9ebce908f6d2ed80" name="adefd11968f60157a9ebce908f6d2ed80"></a>
+<tr class="memitem:aa0609a86c1529c81eabca0fb9996a00a"><td class="memTemplParams" colspan="2"><a id="aa0609a86c1529c81eabca0fb9996a00a" name="aa0609a86c1529c81eabca0fb9996a00a"></a>
 template&lt;typename Env &gt; <br />
-requires requires(const <a class="el" href="structbeman_1_1execution_1_1get__start__scheduler__t.html">get_start_scheduler_t</a>&amp; self, const Env&amp; <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) { env.query(self); }</td></tr>
-<tr class="memitem:adefd11968f60157a9ebce908f6d2ed80"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (const Env &amp;<a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) const noexcept</td></tr>
-<tr class="separator:adefd11968f60157a9ebce908f6d2ed80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires requires(const <a class="el" href="structbeman_1_1execution_1_1get__start__scheduler__t.html">get_start_scheduler_t</a>&amp; self, const Env&amp; <a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) { { auto(::std::as_const(<a class="el" href="structbeman_1_1execution_1_1env.html">env</a>).query(self)) } noexcept -&gt; <a class="el" href="conceptbeman_1_1execution_1_1scheduler.html">beman::execution::scheduler</a>; }</td></tr>
+<tr class="memitem:aa0609a86c1529c81eabca0fb9996a00a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (const Env &amp;<a class="el" href="structbeman_1_1execution_1_1env.html">env</a>) const noexcept</td></tr>
+<tr class="separator:aa0609a86c1529c81eabca0fb9996a00a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/beman/execution/detail/<a class="el" href="get__start__scheduler_8hpp_source.html">get_start_scheduler.hpp</a></li>

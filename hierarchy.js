@@ -28,7 +28,9 @@ var hierarchy =
       [ "std::common_type< D, ::beman::execution::indeterminate_domain< Domains... > >", "structstd_1_1common__type_3_01D_00_01_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains_8_8_8_01_4_01_4.html", null ]
     ] ],
     [ "std::common_type<::beman::execution::indeterminate_domain< Domains1... >, ::beman::execution::indeterminate_domain< Domains2... > >", "structstd_1_1common__type_3_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains1_8_8_8_0165f01b763af7a8575fe9cb0bab769a35.html", null ],
-    [ "beman::execution::completion_signatures<... >", "structbeman_1_1execution_1_1completion__signatures.html", null ],
+    [ "beman::execution::completion_signatures< Signatures >", "structbeman_1_1execution_1_1completion__signatures.html", null ],
+    [ "beman::execution::completion_signatures< Signatures >::completion_signatures_tag< typename >", "structbeman_1_1execution_1_1completion__signatures_1_1completion__signatures__tag.html", null ],
+    [ "beman::execution::completion_signatures< Signatures >::completion_signatures_tag< Tag(A...)>", "structbeman_1_1execution_1_1completion__signatures_1_1completion__signatures__tag_3_01Tag_07A_8_8_8_08_4.html", null ],
     [ "tst::connector< Sndr, Rcvr >", "structtst_1_1connector.html", null ],
     [ "tst::connector< inner_sender, Receiver >", "structtst_1_1connector.html", null ],
     [ "tst::add_set_value< Sender >::contains_set_value< typename >", "structtst_1_1add__set__value_1_1contains__set__value.html", null ],

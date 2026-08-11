@@ -8,7 +8,7 @@ var annotated_dup =
           [ "receiver_proxy", "structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html", null ]
         ] ],
         [ "as_awaitable_t", "structbeman_1_1execution_1_1as__awaitable__t.html", null ],
-        [ "completion_signatures", "structbeman_1_1execution_1_1completion__signatures.html", null ],
+        [ "completion_signatures", "structbeman_1_1execution_1_1completion__signatures.html", "structbeman_1_1execution_1_1completion__signatures" ],
         [ "counting_scope", "classbeman_1_1execution_1_1counting__scope.html", "classbeman_1_1execution_1_1counting__scope" ],
         [ "default_domain", "structbeman_1_1execution_1_1default__domain.html", null ],
         [ "dependent_sender_error", "structbeman_1_1execution_1_1dependent__sender__error.html", null ],
