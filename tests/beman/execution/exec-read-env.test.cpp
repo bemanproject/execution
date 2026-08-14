@@ -139,10 +139,10 @@ auto test_read_env_check_types() -> void {
                                                  test_std::env<>>();
     test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)), test_env<true>>();
 #if 0
-    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)),
-                                                 test_env<false>>();
-    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_std::get_allocator)),
-                                                          test_std::env<>>();
+     test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)),
+                                                  test_env<false>>();
+     test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_std::get_allocator)),
+                                                           test_std::env<>>();
 #endif
 }
 } // namespace

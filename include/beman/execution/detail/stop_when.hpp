@@ -69,7 +69,7 @@ struct beman::execution::detail::stop_when_t::sender {
 
     template <::beman::execution::receiver Rcvr>
     struct base_state {
-        using rcvr_t                  = ::std::remove_cvref_t<Rcvr>;
+        using rcvr_t = ::std::remove_cvref_t<Rcvr>;
         rcvr_t                                  rcvr;
         ::beman::execution::inplace_stop_source source{};
         base_state(Rcvr&& r) : rcvr(::std::forward<Rcvr>(r)) {}
@@ -93,7 +93,7 @@ struct beman::execution::detail::stop_when_t::sender {
         };
         struct env {
             base_state<Rcvr>* st;
-            auto        query(const ::beman::execution::get_stop_token_t&) const noexcept {
+            auto              query(const ::beman::execution::get_stop_token_t&) const noexcept {
                 return this->st->source.get_token();
             }
             template <typename Q, typename... A>
@@ -135,8 +135,8 @@ struct beman::execution::detail::stop_when_t::sender {
 
         template <::beman::execution::sender S, ::beman::execution::stoppable_token T, ::beman::execution::receiver R>
         state(S&& s, T&& t, R&& r)
-            : tok(::std::forward<T>(t)),
-              base_state<Rcvr>{::std::forward<R>(r)},
+            : base_state<Rcvr>{::std::forward<R>(r)},
+              tok(::std::forward<T>(t)),
               inner_state(::beman::execution::connect(::std::forward<S>(s), receiver{this})) {}
 
         auto start() & noexcept {
