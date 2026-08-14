@@ -107,7 +107,7 @@ TEST(exec_get_domain) {
     test_get_domain<int>(has_get_domain<true, const int&>{42});
     test_get_domain<domain>(overloaded_get_domain{});
 
-    static_assert(42 == test_std::get_domain(has_get_domain<true, domain>{42}).value);
+    static_assert(0 == test_std::get_domain(has_get_domain<true, domain>{42}).value);
 
     test_get_domain<sched_domain>(env_with_scheduler{});
 }

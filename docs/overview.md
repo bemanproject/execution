@@ -821,10 +821,11 @@ tries the following transformations:
 <li><code><i>sender-awaitable</i>{<i>adapt-for-await-completion</i>(transform_sender(<i>expr</i>, get_env(<i>promise</i>))), <i>promise</i>}</code> if this expression is well-formed; otherwise</li>
 <li><code><i>expr</i></code></li>
 </ol>
-
 </details>
+
 - `with_awaitable_sender`
 - `apply_sender`
+
 <details>
 <summary><code>completion_signatures&lt;<i>Sig</i>...&gt;</code></summary>
 The template specialization <code>completion_signatures&lt;<i>Sig</i>...&gt;</code> is a list

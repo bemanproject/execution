@@ -71,9 +71,18 @@ struct custom_result {
     auto operator==(const custom_result&) const -> bool = default;
 };
 
+struct get_test_domain_t {
+    template <typename Env>
+    auto operator()(const Env& ev) const noexcept -> domain {
+        return ev.query(*this);
+    }
+};
+inline constexpr get_test_domain_t get_test_domain{};
+
 struct env {
     int  value{};
     auto query(const test_std::get_domain_t&) const noexcept { return domain{value}; }
+    auto query(const get_test_domain_t&) const noexcept { return domain{value}; }
     auto query(const non_forwardable_t&) const noexcept { return true; }
     auto query(const forwardable_t&, int a, int b) const noexcept { return (value + a) * b; }
 };
@@ -444,7 +453,7 @@ auto test_completion_domain() -> void {
 }
 
 auto test_query_with_default() -> void {
-    auto result1{test_detail::query_with_default(test_std::get_domain, env{43}, default_domain{74})};
+    auto result1{test_detail::query_with_default(get_test_domain, env{43}, default_domain{74})};
     static_assert(std::same_as<domain, decltype(result1)>);
     ASSERT(result1.value == 43);
 

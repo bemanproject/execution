@@ -1,3 +1,6 @@
+<!--
+SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+-->
 # Implementation Status
 
 Meaning of the status indicators (in order best to worst):

@@ -54,7 +54,7 @@ auto test_noexcept() {
     static_assert(requires { test_std::set_error(std::declval<R>(), arg()); });
     //-dk:TODO verify this fails to compile static_assert(not requires { test_std::set_error(std::declval<R>(), obj);
     //}); -dk:TODO verify this fails to compile static_assert(not requires { test_std::set_error(std::declval<R>(),
-    //arg_throwing()); });
+    // arg_throwing()); });
 }
 } // namespace
 
