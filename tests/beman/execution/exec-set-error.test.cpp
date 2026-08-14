@@ -50,7 +50,7 @@ void test_callable() {
 
 template <typename R>
 auto test_noexcept() {
-    test::throws obj{};
+    [[maybe_unused]] test::throws obj{};
     static_assert(requires { test_std::set_error(std::declval<R>(), arg()); });
     //-dk:TODO verify this fails to compile static_assert(not requires { test_std::set_error(std::declval<R>(), obj);
     //}); -dk:TODO verify this fails to compile static_assert(not requires { test_std::set_error(std::declval<R>(),
