@@ -17,7 +17,6 @@ import beman.execution;
 import beman.execution.detail;
 #else
 #include <beman/execution/detail/stop_when.hpp>
-#include <beman/execution/detail/inplace_stop_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/set_value.hpp>
@@ -143,7 +142,7 @@ TEST(exec_stop_when) {
         test_std::inplace_stop_source source2;
         completion                    comp{completion::none};
         auto                          state{test_std::connect(test_detail::stop_when(sender{}, source1.get_token()),
-                                                              receiver{source2.get_token(), comp})};
+                                     receiver{source2.get_token(), comp})};
         ASSERT(comp == completion::none);
         test_std::start(state);
         ASSERT(comp == completion::none);
@@ -156,7 +155,7 @@ TEST(exec_stop_when) {
         test_std::inplace_stop_source source2;
         completion                    comp{completion::none};
         auto                          state{test_std::connect(test_detail::stop_when(sender{}, source1.get_token()),
-                                                              receiver{source2.get_token(), comp})};
+                                     receiver{source2.get_token(), comp})};
         ASSERT(comp == completion::none);
         test_std::start(state);
         ASSERT(comp == completion::none);

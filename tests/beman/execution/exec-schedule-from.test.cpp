@@ -11,7 +11,7 @@ import std;
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/detail/schedules_from.hpp>
+#include <beman/execution/detail/schedule_from.hpp>
 #include <beman/execution.hpp>
 #endif
 

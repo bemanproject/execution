@@ -33,8 +33,8 @@ e.g.:
     specified scheduler`.
 - `let_value(sender, fun)` to produce a sender based on `sender`'s
     results.
-- `on(scheduler, sender)` to execute `sender` on `scheduler`.
-- `transfer(sender, scheduler)` to complete with with `sender`'s
+- `starts_on(scheduler, sender)` to start `sender` on `scheduler`.
+- `continues_on(sender, scheduler)` to complete with with `sender`'s
     results on `scheduler`.
 - `when_all(sender ...)` to complete when all `sender`s have
     completed.
@@ -57,7 +57,6 @@ This project requires at least the following to build:
 
 * A C++ compiler that conforms to the C++23 standard or greater
 * CMake 3.30 or later
-* (Test Only) GoogleTest
 
 You can disable building tests by setting CMake option `BEMAN_EXECUTION_BUILD_TESTS` to
 `OFF` when configuring the project.
