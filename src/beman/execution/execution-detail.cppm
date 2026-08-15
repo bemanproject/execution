@@ -40,6 +40,7 @@ export import beman.execution.detail.immovable;
 export import beman.execution.detail.impls_for;
 export import beman.execution.detail.indices_for;
 export import beman.execution.detail.indirect_meta_apply;
+export import beman.execution.detail.infallible_scheduler;
 export import beman.execution.detail.inline_attrs;
 export import beman.execution.detail.inline_scheduler;
 export import beman.execution.detail.is_awaitable;

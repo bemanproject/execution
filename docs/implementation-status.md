@@ -75,10 +75,10 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x2705;&#x2705;&#x2705; [exec.get.compl.domain](https://wg21.link/exec.get.compl.domain) `execution::get_completion_domain`: [`get_completion_domain.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_domain.hpp)
 
 ### &#x2705;&#x2705;&#x2705; [exec.get.await.adapt](https://wg21.link/exec.get.await.adapt) `execution::get_await_completion_adaptor`: [`get_await_completion_adaptor.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_await_completion_adaptor.hpp)
-## &#x2705;&#x1F534;&#x2705; [exec.sched](https://wg21.link/exec.sched) Schedulers
+## &#x2705;&#x2705;&#x2705; [exec.sched](https://wg21.link/exec.sched) Schedulers
 
 - &#x2705;&#x2705;&#x2705; [`scheduler`](https://wg21.link/exec.sched#1): [`scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/scheduler.hpp)
-- &#x2705;&#x1F534;&#x2705; [<code><i>infallible-scheduler</i></code>](https://wg21.link/exec.sched#8): [`infallible_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/infallible_scheduler.hpp)
+- &#x2705;&#x2705;&#x2705; [<code><i>infallible-scheduler</i></code>](https://wg21.link/exec.sched#8): [`infallible_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/infallible_scheduler.hpp)
 
 ## &#x1F534;&#x1F534;&#x1F534; [exec.recv](https://wg21.link/exec.recv) Receivers
 ### &#x1F534;&#x1F534;&#x1F534; [exec.recv.concepts](https://wg21.link/exec.recv.concepts) Receiver concepts

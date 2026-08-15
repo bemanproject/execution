@@ -1019,13 +1019,9 @@ expressions <code><i>HIDE-SCHED</i>(q).query(tag, a...)</code> is
 </details>
 
 <details>
-<summary><code><i>infallible-scheduler</i>&lt;Sched&gt;</code></summary>
+<summary><code><i>infallible-scheduler</i>&lt;<i>Sched</i>, <i>Env</i>&gt;</code></summary>
 
-Determines if <code>Sched</code> is a scheduler (i.e., <code>scheduler&lt;Sched&gt;</code> is <code>true</code>)
-and if <code>Sched</code>'s sender has only a <code>set_value_t()</code> completion signature when used with
-an environment with an <code>unstoppable_token&lt;Tok&gt;</code> stop token <code>Tok</code>. If the
-stop token <code>Tok</code> is not <code>unstoppable_token&lt;Tok&gt;</code> the completion signatures
-can include a <code>set_stopped_t()</code> completion signature in addition to the <code>set_value_t()</code> completion signature.
+Determines if <code><i>Sched</i></code> is a scheduler (i.e., <code>scheduler&lt;<i>Sched</i>&gt;</code> is <code>true</code>) and if <code><i>sched</i></code>'s sender has only a <code>set_value_t()</code> completion signature when used with an environment with an <code>unstoppable_token&lt;Tok&gt;</code> stop token <code>Tok</code>. If the stop token <code>Tok</code> is not <code>unstoppable_token&lt;Tok&gt;</code> the completion signatures can include a <code>set_stopped_t()</code> completion signature in addition to the <code>set_value_t()</code> completion signature.
 </details>
 
 <details>
