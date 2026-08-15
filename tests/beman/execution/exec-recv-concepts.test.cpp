@@ -174,10 +174,10 @@ struct receiver {
 
 struct inlinable_receiver {
     using receiver_concept = test_std::receiver_tag;
-    static auto make_receiver_for(inlinable_state& child) noexcept -> inlinable_receiver {
+    static auto make_receiver_for(inlinable_state&) noexcept -> inlinable_receiver {
         return inlinable_receiver{};
     }
-    static auto make_receiver_for(non_inlinable_state& child) noexcept -> receiver { return receiver{}; }
+    static auto make_receiver_for(non_inlinable_state&) noexcept -> receiver { return receiver{}; }
 };
 static_assert(test_std::receiver<inlinable_receiver>);
 
