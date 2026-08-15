@@ -34,7 +34,7 @@ e.g.:
 - `let_value(sender, fun)` to produce a sender based on `sender`'s
     results.
 - `starts_on(scheduler, sender)` to start `sender` on `scheduler`.
-- `continues_on(sender, scheduler)` to complete with with `sender`'s
+- `continues_on(sender, scheduler)` to complete with `sender`'s
     results on `scheduler`.
 - `when_all(sender ...)` to complete when all `sender`s have
     completed.
