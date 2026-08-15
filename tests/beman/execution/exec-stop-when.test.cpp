@@ -17,7 +17,6 @@ import beman.execution;
 import beman.execution.detail;
 #else
 #include <beman/execution/detail/stop_when.hpp>
-#include <beman/execution/detail/inplace_stop_token.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/set_value.hpp>

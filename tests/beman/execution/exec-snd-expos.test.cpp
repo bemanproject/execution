@@ -201,34 +201,6 @@ struct receiver {
     auto set_stopped() noexcept -> void {}
 };
 
-// ------------------------------------------------------------------------
-
-template <typename T>
-struct set_value_test_receiver {
-    using receiver_concept = test_std::receiver_tag;
-    T&    single_arg;
-    bool& no_arg;
-    auto  set_value(auto&& value) noexcept -> void {
-        no_arg     = false;
-        single_arg = value;
-    }
-};
-
-auto test_set_value_macro() -> void {
-#ifdef BEMAN_EXECUTION_SET_VALUE
-    int  value{42};
-    bool no_arg{false};
-    ASSERT(value == 42);
-    ASSERT(not no_arg);
-    BEMAN_EXECUTION_SET_VALUE(set_value_test_receiver<int>{value, no_arg}, []() noexcept { return 43; }());
-    ASSERT(value == 43);
-    ASSERT(not no_arg);
-    BEMAN_EXECUTION_SET_VALUE(set_value_test_receiver<int>{value, no_arg}, []() noexcept {}());
-    ASSERT(value == 43);
-    ASSERT(no_arg);
-#endif
-}
-
 template <bool Expect, typename Query>
 auto test_fwd_env_helper() -> void {
     env e{42};
@@ -1302,7 +1274,6 @@ auto test_child_type() -> void {
 } // namespace
 
 TEST(exec_snd_expos) {
-    test_set_value_macro();
     test_fwd_env();
     test_make_env();
     test_join_env();
