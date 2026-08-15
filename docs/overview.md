@@ -35,6 +35,7 @@ Required members for <code>_State_</code>:
 - The type `operation_state_concept` is an alias for `operation_state_tag` or a type derived thereof.
 - <code><i>state</i>.<a href=‘#start’>start</a>() & noexcept</code>
 
+<blockquote>
 <details>
 <summary>Example</summary>
 
@@ -55,6 +56,7 @@ struct example_state
 static_assert(std::execution::operation_state<example_state<SomeReceiver>>);
 ```
 </details>
+</blockquote>
 </details>
 <details>
 <summary><code>receiver&lt;<i>Receiver</i>&gt;</code></summary>
@@ -79,6 +81,7 @@ Typical members for <code>_Receiver_</code>:
 - <code><a href=‘set_error’>set_error</a>(error) && noexcept -> void</code>
 - <code><a href=‘set_stopped’>set_stopped</a>() && noexcept -> void</code>
 
+<blockquote>
 <details>
 <summary>Example</summary>
 
@@ -113,12 +116,14 @@ struct example_receiver
 static_assert(std::execution::receiver<example_receiver<SomeReceiver>>);
 ```
 </details>
+</blockquote>
 </details>
 <details>
 <summary><code>receiver_of&lt;<i>Receiver, Completions</i>&gt;</code></summary>
 
 The concept <code>receiver_of&lt;<i>Receiver, Completions</i>&gt;</code> tests whether <code><a href=‘#receiver’>std::execution::receiver</a>&lt;_Receiver_&gt;</code> is true and if an object of type <code>_Receiver_</code> can be invoked with each of the <a href=‘#completion-signal’>completion signals</a> in <code>_Completions_</code>.
 
+<blockquote>
 <details>
 <summary>Example</summary>
 
@@ -155,6 +160,7 @@ static_assert(not std::execution::receiver_of<example_receiver,
 
 ```
 </details>
+</blockquote>
 </details>
 <details>
 <summary><code>scheduler&lt;<i>Scheduler</i>&gt;</code></summary>
@@ -164,9 +170,11 @@ Requirements for <code>_Scheduler_</code>:
 - The type <code>_Scheduler_::scheduler_concept</code> is an alias for `scheduler_tag` or a type derived thereof.
 - <code><a href=‘#schedule’>schedule</a>(_scheduler_) -> <a href=‘sender’>sender</a></code>
 - The <a href=‘#get-completion-scheduler’>value completion scheduler</a> of the <code><a href=‘sender’>sender</a></code>’s <a href=‘#environment’>environment</a> is the <code>_scheduler_</code>:
-    _scheduler_ == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;(
-       std::execution::get_env(std::execution::schedule(_scheduler_))
-    )
+
+    <code><i>scheduler</i> == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;(
+       std::execution::get_env(std::execution::schedule(<i>scheduler</i>))
+    )</code>
+
 - <code>std::equality_comparable&lt;_Scheduler_&gt;</code>
 - <code>std::copy_constructible&lt;_Scheduler_&gt;</code>
 </details>
@@ -187,6 +195,7 @@ Typical members for <code>_Sender_</code>:
 - <code>_Sender_::completion_signatures</code> is a type alias for <code><a href=‘completion-signatures’>std::execution::completion_signatures</a>&lt;...&gt;</code> (if there is no <code><a href=‘get_completion_signatures’>get_completion_signatures</a></code> member).
 - <code><a href=‘#connect’>connect</a>(_sender_, <a href=‘#receiver’>receiver</a>) -&gt; <a href=‘#operation-state’>operation_state</a></code>
 
+<blockquote>
 <details>
 <summary>Example</summary>
 The example shows a sender implementing an operation similar to <code><a href=‘#just’>just</a>(_value)</code>.
@@ -222,11 +231,12 @@ struct example_sender
 static_assert(std::execution::sender<example_sender>);
 ```
 </details>
+</blockquote>
 </details>
 <details>
 <summary><code>sender_in&lt;<i>Sender, Env</i> = std::execution::env&lt;&gt;&gt;</code></summary>
 
-The concept <code>sender_in&lt;<i>Sender, Env</i>&gt;</code> tests whether <code>_Sender_</code> is a <code><a href=‘#sender’>sender</a></code>, <code>_Env_</code> is a destructible type, and <code><a href=‘#get_completion_signatures’>std::execution::get_completion_signatures</a>(_sender_, _env_)</code> yields a specialization of <code><a href=‘#completion_signatures’>std::execution::completion_signatures</a></code>.
+The concept <code>sender_in&lt;<i>Sender, Env</i>&gt;</code> tests whether <code>_Sender_</code> is a <code><a href=‘#sender’>sender</a></code>, <code>_Env_</code> is a destructible type, and <code><a href=‘#get_completion_signatures’>std::execution::get_completion_signatures&lt;_Sender_, _Env_&gt;</a>()</code> yields a specialization of <code><a href=‘#completion_signatures’>std::execution::completion_signatures</a></code>.
 </details>
 <details>
 <summary><code><i>sender-to</i>&lt;<i>Sender, Receiver</i>&gt;</code></summary>
@@ -241,33 +251,30 @@ To determine if <code>_Receiver_</code> can receive all <a href=‘#completion-s
 The concept <code>sends_stopped&lt;<i>Sender, Env</i>&gt;</code> determines if <code>_Sender_</code> may send a <code><a href=‘#set_stopped’>stopped</a></code> <a href=‘#completion-signals’>completion signal</a>. To do so, the concepts determines if <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, _env_)</code> contains the signatures <code><a href=‘#set_stopped’>std::execution::set_stopped_t</a>()</code>.
 </details>
 <details>
-<summary><code>stoppable_token&lt;_Token_&gt;</code></summary>
-A <code>stoppable_token&lt;_Token_&gt;</code>, e.g., obtained via <code><a href=‘#get-stop-token’>std::execution::get_stop_token</a>(_env_)</code> is used to support cancellation of asynchronous operations. Using <code>_token_.stop_requested()</code> an active operation can poll whether it was requested to cancel. An inactive operation waiting for a notification can use an object of a specialization of the template <code>_Token_::callback_type</code> to get notified when cancellation is requested.
+<summary><code>stoppable_token&lt;<i>Token</i>&gt;</code></summary>
+A <code>stoppable_token&lt;<i>Token</i>&gt;</code>, e.g., obtained via <code><a href=‘#get-stop-token’>std::execution::get_stop_token</a>(<i>env</i>)</code> is used to support cancellation of asynchronous operations. Using <code><i>token</i>.stop_requested()</code> an active operation can poll whether it was requested to cancel. An inactive operation waiting for a notification can use an object of a specialization of the template <code><i>Token</i>::callback_type</code> to get notified when cancellation is requested.
 
 Required members for <code>_Token_</code>:
 
-- <code>_Token_::callback_type&lt;_Callback_&gt;</code> can be specialized with a <code>std::callable&lt;_Callback_&gt;</code> type.
-- <code>_token_.stop_requested() const noexcept -&gt; bool</code>
-- <code>_token_.stop_possible() const noexcept -&gt; bool</code>
-- <code>std::copyable&lt;_Token_&gt;</code>
-- <code>std::equality_comparable&lt;_Token_&gt;</code>
-- <code>std::swappable&lt;_Token_&gt;</code>
+- <code><i>Token</i>::callback_type&lt;<i>Callback</i>&gt;</code> can be specialized with a <code>std::callable&lt;<i>Callback</i>&gt;</code> type.
+- <code><i>token</i>.stop_requested() const noexcept -&gt; bool</code>
+- <code><i>token</i>.stop_possible() const noexcept -&gt; bool</code>
+- <code>std::copyable&lt;<i>Token</i>&gt;</code>
+- <code>std::equality_comparable&lt;<i>Token</i>&gt;</code>
+- <code>std::swappable&lt;<i>Token</i>&gt;</code>
 <blockquote>
 <details>
 <summary>Example: concept use</summary>
-<div>
 
 ```c++
 static_assert(std::execution::unstoppable_token<std::execution::never_stop_token>);
 static_assert(std::execution::unstoppable_token<std::execution::stop_token>);
 static_assert(std::execution::unstoppable_token<std::execution::inline_stop_token>);
 ```
-</div>
 </details>
 <details>
 <summary>Example: polling</summary>
-<blockquote>
-This example shows a sketch of using a <code>stoppable_token&lt;_Token_&gt;</code> to cancel an active operation. The computation in this example is represented as `sleep_for`.
+This example shows a sketch of using a <code>stoppable_token&lt;<i>Token</i>&gt;</code> to cancel an active operation. The computation in this example is represented as <code>sleep_for</code>.
 
 ```c++
 void compute(std::stoppable_token auto token)
@@ -278,12 +285,10 @@ void compute(std::stoppable_token auto token)
     }
 }
 ```
-</blockquote>
 </details>
 <details>
 <summary>Example: inactive</summary>
-<blockquote>
-This example shows how an <code><a href=‘#operation-state’>operation_state</a></code> can use the <code>callback_type</code> together with a <code>_token_</code> to get notified when cancellation is requested.
+This example shows how an <code><a href=‘#operation-state’>operation_state</a></code> can use the <code>callback_type</code> together with a <code><i>token</i></code> to get notified when cancellation is requested.
 
 ```c++
 template <std::execution::receiver Receiver>
@@ -330,17 +335,17 @@ struct example_state
     }
 };
 ```
-</blockquote>
 </details>
 </blockquote>
 </details>
+
 <details>
-<summary><code>unstoppable_token&lt;_Token_&gt;</code></summary>
-The concept <code>unstoppable_token&lt;Token&gt;</code> is modeled by a <code>_Token_</code> if <code>stoppable_token&lt;_Token_&gt;</code> is true and it can statically be determined that both <code>_token_.stop_requested()</code> and <code>_token_.stop_possible()</code> are `constexpr` epxressions yielding `false`. This concept is used to avoid extra work when using stop tokens which will never indicate that cancellations are requested.
+<summary><code>unstoppable_token&lt;<i>Token</i>&gt;</code></summary>
+The concept <code>unstoppable_token&lt;<i>Token</i>&gt;</code> is modeled by a <code><i>Token</i></code> if <code>stoppable_token&lt;<i>Token</i>&gt;</code> is true and it can statically be determined that both <code><i>token</i>.stop_requested()</code> and <code><i>token</i>.stop_possible()</code> are <code>constexpr</code> epxressions yielding <code>false</code>. This concept is used to avoid extra work when using stop tokens which will never indicate that cancellations are requested.
 <blockquote>
 <details>
 <summary>Example</summary>
-The concept yields `true` for the <code><a href=‘#never-stop-token’>std::execution::never_stop_token</a></code>:
+The concept yields <code>true</code> for the <code><a href=‘#never-stop-token’>std::execution::never_stop_token</a></code>:
 
 ```c++
 static_assert(std::execution::unstoppable_token<std::execution::never_stop_token>);
@@ -356,7 +361,7 @@ The queries are used to obtain properties associated with an object.
 
 <details>
 <summary>Example defining a query on an environment</summary>
-This example shows how to define an environment class which provides a <a href=‘#get-allocator’><code>get_allocator</code></a> query. The objects stores a `std::pmr::memory_resource*` and returns a correspondingly initialized `std::pmr::polymorphic_allocator<>`.
+This example shows how to define an environment class which provides a <a href=‘#get-allocator’><code>get_allocator</code></a> query. The objects stores a <code>std::pmr::memory_resource*</code> and returns a correspondingly initialized <code>std::pmr::polymorphic_allocator&lt;&gt;</code>.
 
 ```
 struct alloc_env {
@@ -370,20 +375,20 @@ struct alloc_env {
 </details>
 <details>
 <summary><code>forwarding_query(<i>query</i>) -> bool</code></summary>
-<b>Default</b>: `false`
+<b>Default</b>: <code>false</code>
 <br/>
-The expression <code>forwarding_query(<i>query</i>)</code> is a `constexpr` query used to determine if the query <code><i>query</i></code> should be forwarded when wrapping an environment. The expression is required to be a core constant expression if <code><i>query</i></code> is a core constant expression.
+The expression <code>forwarding_query(<i>query</i>)</code> is a <code>constexpr</code> query used to determine if the query <code><i>query</i></code> should be forwarded when wrapping an environment. The expression is required to be a core constant expression if <code><i>query</i></code> is a core constant expression.
 
 The result of the expression is determined as follows:
 <ol>
-    <li>The result is the value of the expression <code><i>query</i>.query(forwarding_query)</code> if this expression is valid and `noexcept`.</li>
+    <li>The result is the value of the expression <code><i>query</i>.query(forwarding_query)</code> if this expression is valid and <code>noexcept</code>.</li>
     <li>The result is <code>true</code> if the type of <code><i>query</i></code> is <code>public</code>ly derived from <code>forwarding_query</code>.</li>
     <li>Otherwise the result is <code>false</code>.</li>
 </ol>
 <blockquote>
 <details>
 <summary>Example</summary>
-When defining a custom query <code><i>custom</i></code> it is desirable to allow the query getting forwarded. It is necessary to explicit define the result of <code>forwarding_query(<i>custom</i>)</code>. The result can be defined by providing a corresponding `query` member function. When using this approach the function isn’t allowed to throw, needs to return `bool`, and needs to be a core constant expression:
+When defining a custom query <code><i>custom</i></code> it is desirable to allow the query getting forwarded. It is necessary to explicit define the result of <code>forwarding_query(<i>custom</i>)</code>. The result can be defined by providing a corresponding <code>query</code> member function. When using this approach the function isn’t allowed to throw, needs to return <code>bool</code>, and needs to be a core constant expression:
 
 ```
 struct custom_t {
@@ -395,7 +400,7 @@ struct custom_t {
 inline constexpr custom_t custom{};
 ```
 
-Alternatively, the query can be defined as forwarding by deriving publicly from `forwarding_query_t`:
+Alternatively, the query can be defined as forwarding by deriving publicly from <code>forwarding_query_t</code>:
 
 ```
 struct custom_t: forwarding_query_t {
@@ -406,15 +411,20 @@ struct custom_t: forwarding_query_t {
 </blockquote>
 </details>
 <details>
+<summary><code>get_await_completion_adaptor(<i>queryable</i>) -> <i>awaiter</i></code></summary>
+If the expression <code>get_await_completion_adaptor(<i>queryable</i>)</code> is valid it yields an awaiter depending on the <code><i>queryable</i></code>.  This query is used while getting an awaiter from a sender.
+</details>
+
+<details>
 <summary><code>get_env(<i>queryable</i>) -> <i>env</i></code></summary>
-<b>Default</b>: <a href='#env'>`env&lt;&gt;`</a>
+<b>Default</b>: <a href='#env'><code>env&lt;&gt;</code></a>
 <br/>
-The expression <code>get_env(<i>queryable</i>)</code> is used to get the environment <code><i>env</i></code> associated with <code><i>queryable</i></code>. To provide a non-default environment for a <code><i>queryable</i></code> a `get_env` member needs to be defined. If <code><i>queryable</i></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href=‘#env’>env&lt;&gt;</a></code> is returned.
+The expression <code>get_env(<i>queryable</i>)</code> is used to get the environment <code><i>env</i></code> associated with <code><i>queryable</i></code>. To provide a non-default environment for a <code><i>queryable</i></code> a <code>get_env</code> member needs to be defined. If <code><i>queryable</i></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href=‘#env’>env&lt;&gt;</a></code> is returned.
 The value of the expression is <ol>
    <li>the result of <code>as_const(<i>queryable</i>).get_env()</code> if this expression is valid and <code>noexcept</code>.</li>
    <li><code>env&lt;&gt;</code> otherwise.
 </ol>
-<div>
+<blockquote>
 <details>
 <summary>Example</summary>
 The example defines an <a href=‘#environment’>environment</a> class <code>env</code> which stores a pointer to the relevant data and is returned as the <a href=‘#environment’>environment</a> for the type `queryable`:
@@ -425,7 +435,7 @@ struct data { /*...*/ };
 struct env { data* d; /* ... */ };
 
 struct queryable {
-    data* d;\
+    data* d;
     // ...
     env get_env() const noexcept { return { this->d }; }
 };
@@ -433,8 +443,9 @@ struct queryable {
 
 Note that the `get_env` member is both `const` and `noexcept`.
 </details>
-</div>
+</blockquote>
 </details>
+
 <details>
 <summary><code>get_allocator(<i>env</i>) -> <i>allocator</i></code></summary>
 <b>Default</b>: <i>none</i>
@@ -446,10 +457,10 @@ The expression <code>get_allocator(<i>env</i>)</code> returns an <code><i>alloca
    <li>the result of the expression satisfies <code><i>simple-allocator</i></code>.</li>
 </ul>
 Otherwise the expression is ill-formed.
-<div>
+<blockquote>
 <details>
 <summary>Example</summary>
-This example shows how to define an environment class which provides a <a href=‘#get-allocator’><code>get_allocator</code></a> query. The objects stores a `std::pmr::memory_resource*` and returns a correspondingly initialized `std::pmr::polymorphic_allocator<>`.
+This example shows how to define an environment class which provides a <a href=‘#get-allocator’><code>get_allocator</code></a> query. The objects stores a <code>std::pmr::memory_resource*</code> and returns a correspondingly initialized <code>std::pmr::polymorphic_allocator&lt;&gt;</code>.
 
 ```
 struct alloc_env {
@@ -461,8 +472,9 @@ struct alloc_env {
 };
 ```
 </details>
-</div>
+</blockquote>
 </details>
+
 <details>
 <summary><code>get_completion_domain&lt;<i>Tag</i>&gt;(<i>attrs</i>) -> <i>domain</i></code></summary>
 <b>Default</b>: <i>none</i>
@@ -504,23 +516,27 @@ To determine the result the <code><i>sender</i></code> is first transformed usin
     <li><code>completion_signatures&lt;set_value_t(<i>T</i>), set_error_t(exception_ptr), set_stopped_t()&gt;</code> if <code><i>New-Sender-Type</i></code> is an awaitable type which would yield an object of type <code><i>T</i></code> when it is <code>co_await</code>ed;</li>
     <li>invalid otherwise.</li>
 </ol>
-<div>
+<blockquote>
 <details>
 <summary>Example</summary>
-When a <a href=‘#sender’><code>sender</code></a> doesn’t need to compute the completion signatures based on an <a href=‘#environment’>environment</a> it is easiest to use a the type alias, e.g.:
+Even when a <a href=‘#sender’><code>sender</code></a> doesn’t need to compute the completion signatures based on an <a href=‘#environment’>environment</a> it is necessary to provide <code>get_completion_signatures</code> member function, e.g.:
+
 ```c++
 struct sender {
     using sender_concept = std::execution::sender_tag;
-    using completion_signatures = std::completion_signatures<
-        std::execution::set_value_t(int),
-        std::execution::set_error_t(std::error_code),
-        std::execution::set_stopped()
-    >;
+    template <typename...>
+    static consteval void get_completion_signatures() {
+        return std::completion_signatures<
+            std::execution::set_value_t(int),
+            std::execution::set_error_t(std::error_code),
+            std::execution::set_stopped()
+        >{};
+    }
     // ...
 };
 ```
 </details>
-</div>
+</blockquote>
 </details>
 <details>
 <summary><code>get_delegation_scheduler(<i>env</i>) -> <i>scheduler</i></code></summary>
@@ -534,7 +550,7 @@ Otherwise the expression is invalid.
 </details>
 <details>
 <summary><code>get_domain(<i>env</i>) -> <i>domain</i></code></summary>
-The expression <code>get_domain(<i>env</i>)</code> yields the domain associated with <code><i>env</i></code>. The value of the expression is equivalent to
+The expression <code>get_domain(<i>env</i>)</code> yields the domain associated with <code><i>env</i></code>. The value of the expression is equivalent to return <code>D()</code> where <code>D</code> is the type of the expression
 <ol>
    <li><code>auto(as_const(<i>env</i>).query(get_domain))</code> if this expression is valid;</li>
    <li>otherwise, <code>get_completion_domain&lt;set_value_t&gt;(get_scheduler(env), <i>HIDE-SCHED</i>(env))</code> if this expression is valid;</li>
@@ -574,7 +590,7 @@ Otherwise the expression is invalid.
 
 If the expression <code>get_start_scheduler(get_env(<i>rcvr</i>))</code>
 is well-formed it should yield the scheduler the operation state resulting
-from <code>connect(<i>sndr></i>, <i>rcvr</i>)</code> gets <code>start</code>ed on.
+from <code>connect(<i>sndr</i>, <i>rcvr</i>)</code> gets <code>start</code>ed on.
 </details>
 <details>
 <summary><code>get_stop_token(<i>env</i>) -> <i>stoppable_token</i></code></summary>
@@ -618,7 +634,7 @@ Sender factories create a sender which forms the start of a graph of lazy work i
 
 <details>
 <summary><code>just(<i>value...</i>) -> <i>sender-of</i>&lt;set_value_t(<i>Value...</i>)&gt;</code></summary>
-The expression <code>just(<i>value...</i>)</code> creates a sender which sends <code><i>value...</i></code> on the `set_value` (success) channel when started (note that <code><i>value...</i></code> can be empty).
+The expression <code>just(<i>value...</i>)</code> creates a sender which sends <code><i>value...</i></code> on the <code>set_value</code> (success) channel when started (note that <code><i>value...</i></code> can be empty).
 
 <b>Completions</b>
 <ul>
@@ -627,7 +643,7 @@ The expression <code>just(<i>value...</i>)</code> creates a sender which sends <
 </details>
 <details>
 <summary><code>just_error(<i>error</i>) -> <i>sender-of</i>&lt;set_error_t(<i>Error</i>)&gt;</code></summary>
-The expression <code>just_error(<i>error</i>)</code> creates a sender which sends <code><i>error</i></code> on the `set_error` (failure) channel when started.
+The expression <code>just_error(<i>error</i>)</code> creates a sender which sends <code><i>error</i></code> on the <code>set_error</code> (failure) channel when started.
 
 <b>Completions</b>
 <ul>
@@ -636,7 +652,7 @@ The expression <code>just_error(<i>error</i>)</code> creates a sender which send
 </details>
 <details>
 <summary><code>just_stopped() -> <i>sender-of</i>&lt;set_stopped_t()&gt;</code></summary>
-The expression <code>just_stopped()</code> creates a sender which sends a completion on the `set_stopped` (cancellation) channel when started.
+The expression <code>just_stopped()</code> creates a sender which sends a completion on the <code>set_stopped</code> (cancellation) channel when started.
 
 <b>Completions</b>
 <ul>
@@ -645,7 +661,7 @@ The expression <code>just_stopped()</code> creates a sender which sends a comple
 </details>
 <details>
 <summary><code>read_env(<i>query</i>) -> <i>sender-of</i>&lt;set_value_t(<i>query-result</i>)&gt;</code></summary>
-The expression <code>read_env(<i>query</i>)</code> creates a sender which sends the result of querying <code><i>query</i></code> the environment of the <code><i>receiver</i></code> it gets connected to on the `set_value` channel when started. Put differently, it calls <code>set_value(move(<i>receiver</i>), <i>query</i>(get_env(<i>receiver</i>)))</code>. For example, in a coroutine it may be useful to extra the stop token associated with the coroutine which can be done using <code>read_env</code>:
+The expression <code>read_env(<i>query</i>)</code> creates a sender which sends the result of querying <code><i>query</i></code> the environment of the <code><i>receiver</i></code> it gets connected to on the <code>set_value</code> channel when started. Put differently, it calls <code>set_value(move(<i>receiver</i>), <i>query</i>(get_env(<i>receiver</i>)))</code>. For example, in a coroutine it may be useful to extra the stop token associated with the coroutine which can be done using <code>read_env</code>:
 
 ```c++
 auto token = co_await read_env(get_stop_token);
@@ -658,7 +674,7 @@ auto token = co_await read_env(get_stop_token);
 </details>
 <details>
 <summary><code>schedule(<i>scheduler</i>) -> <i>sender-of</i>&lt;set_value_t()&gt;</code></summary>
-The expression <code>schedule(<i>scheduler</i>)</code> creates a sender which upon success completes on the <code>set_value</code> channel without any arguments running on the execution context associated with <code><i>scheduler</i></code>. Depending on the scheduler it is possible that the sender can complete with an error if the scheduling fails or using `set_stopped()` if the operation gets cancelled before it is successful.
+The expression <code>schedule(<i>scheduler</i>)</code> creates a sender which upon success completes on the <code>set_value</code> channel without any arguments running on the execution context associated with <code><i>scheduler</i></code>. Depending on the scheduler it is possible that the sender can complete with an error if the scheduling fails or using <code>set_stopped()</code> if the operation gets cancelled before it is successful.
 
 <b>Completions</b>
 <ul>
@@ -673,8 +689,7 @@ The sender adaptors take one or more senders and adapt their respective behavior
 
 <details>
 <summary><code>affine(<i>sender</i>) -> <i>sender-of</i><<i>completions-of</i>(<i>sender</i>)></code></summary>
-The expression <code>affine(<i>sender</i>)</code> creates
-a sender which completes on the same scheduler it was started on, even if <code><i>sender</i></code> changes the scheduler. The scheduler to resume on is determined using <code>get_scheduler(get_env(<i>rcvr</i>))</code> where <code><i>rcvr</i></code> is the receiver the sender is <code>connect</code>ed to.
+The expression <code>affine(<i>sender</i>)</code> creates a sender which completes on the same scheduler it was started on, even if <code><i>sender</i></code> changes the scheduler. The scheduler to resume on is determined using <code>get_start_scheduler(get_env(<i>rcvr</i>))</code> where <code><i>rcvr</i></code> is the receiver the sender is <code>connect</code>ed to. The scheduler <code><i>sched</i></code> returned from <code>get_start_scheduler(get_env(<i>rcvr</i>))</code> has to be infallible, i.e., the completion signtures of <code>scheduler(<i>sched</i>)</code> only contain <code>set_value_t()</code>.
 
 The primary use of <code>affine</code> is implementing scheduler affinity for <code>task</code>.
 </details>

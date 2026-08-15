@@ -26,11 +26,11 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x2705;&#x2705;&#x2705; [<code><i>AS-EXCEPT-PTR</i>(error)</code>](https://wg21.link/exec.general#8): [`as_except_ptr.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/as_except_ptr.hpp)
 - &#x274E;&#x274E;&#x274E; [<code><i>as-const</i>(error)</code>](https://wg21.link/exec.general#9): <code>[std::as_const](https://wg21.link/utility.as.const)(error)</code>
 
-## &#x1F6A7;&#x2705;&#x2705; [exec.queryable](https://wg21.link/exec.queryable) Query and queryables
-### &#x1F6A7;&#x274E;&#x274E; [exec.queryable.general](https://wg21.link/exec.queryable.general) General
-### &#x1F6A7;&#x2705;&#x2705; [exec.queryable.concept](https://wg21.link/exec.queryable.concept) Queryable concept
+## &#x2705;&#x2705;&#x2705; [exec.queryable](https://wg21.link/exec.queryable) Query and queryables
+### &#x274E;&#x274E;&#x274E; [exec.queryable.general](https://wg21.link/exec.queryable.general) General
+### &#x2705;&#x2705;&#x2705; [exec.queryable.concept](https://wg21.link/exec.queryable.concept) Queryable concept
 
-- &#x1F6A7;&#x2705;&#x2705; [<code><i>queryable</i>&lt;Q&gt;</code>](https://wg21.link/exec.queryable.concept#1): [`queryable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/queryable.hpp)
+- &#x2705;&#x2705;&#x2705; [<code><i>queryable</i>&lt;Q&gt;</code>](https://wg21.link/exec.queryable.concept#1): [`queryable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/queryable.hpp)
 
 ## &#x274E;&#x274E;&#x274E; [exec.async.ops](https://wg21.link/exec.async.ops) Asynchronous operations
 ## &#x2705;&#x2705;&#x1F534; [execution.syn](https://wg21.link/execution.syn) Header `<execution>` synopsis
@@ -52,7 +52,7 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x2705;&#x2705;&#x2705; [<code><i>single-sender-value_type</i>&lt;Sndr, Env...&gt;</code>](https://wg21.link/exec.queryable.concept#1): [`single_sender_value_type.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/single_sender_value_type.hpp)
 - &#x2705;&#x2705;&#x2705; [<code><i>single-sender</i>&lt;Sndr, Env...&gt;</code>](https://wg21.link/exec.queryable.concept#1): [`single_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/single_sender.hpp)
 
-## &#x1F534;&#x1F534;&#x1F534; [exec.queries](https://wg21.link/exec.queries) Queries
+## &#x2705;&#x2705;&#x2705; [exec.queries](https://wg21.link/exec.queries) Queries
 ### &#x2705;&#x2705;&#x2705; [exec.queries.expos](https://wg21.link/exec.queries.expos) Query utilities
 
 - &#x2705;&#x2705;&#x2705; [<code><i>TRY-QUERY</i>(q, tag, a...)</code>](https://wg21.link/exec.queries.expos#2): [`try_query.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/try_query.hpp)
@@ -72,14 +72,9 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x2705;&#x2705;&#x2705; [`get_forward_progress_guarantee`](https://wg21.link/exec.get.fwd.progress#2): [`get_forward_progress_guarantee.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_forward_progress_guarantee.hpp)
 
 ### &#x2705;&#x2705;&#x2705; [exec.get.compl.sched](https://wg21.link/exec.get.compl.sched) `execution::get_completion_scheduler`: [`get_completion_scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_scheduler.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.get.compl.domain](https://wg21.link/exec.get.compl.domain) `execution::get_completion_domain`: [`get_completion_domain.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_domain.hpp)
 
-- &#x274E; check [exec.get.compl.sched p6](https://wg21.link/exec.get.compl.sched#6)
-
-### &#x2705;&#x2705;&#x1F534; [exec.get.compl.domain](https://wg21.link/exec.get.compl.domain) `execution::get_completion_domain`: [`get_completion_domain.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_domain.hpp)
-
-- &#x274E; check [exec.get.compl.domain p3](https://wg21.link/exec.get.compl.domain#3
-
-### &#x2705;&#x1F534;&#x1F534; [exec.get.await.adapt](https://wg21.link/exec.get.await.adapt) `execution::get_await_completion_adaptor`: [`get_await_completion_adaptor.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_await_completion_adaptor.hpp)
+### &#x2705;&#x2705;&#x2705; [exec.get.await.adapt](https://wg21.link/exec.get.await.adapt) `execution::get_await_completion_adaptor`: [`get_await_completion_adaptor.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_await_completion_adaptor.hpp)
 ## &#x2705;&#x1F534;&#x2705; [exec.sched](https://wg21.link/exec.sched) Schedulers
 
 - &#x2705;&#x2705;&#x2705; [`scheduler`](https://wg21.link/exec.sched#1): [`scheduler.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/scheduler.hpp)
