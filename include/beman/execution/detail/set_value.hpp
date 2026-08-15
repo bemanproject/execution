@@ -12,19 +12,6 @@ import std;
 #include <utility>
 #endif
 
-// ----------------------------------------------------------------------------
-
-#define BEMAN_EXECUTION_SET_VALUE(rcvr, expr)                           \
-    [&]() noexcept(noexcept((expr))) -> void {                          \
-        if constexpr (::std::same_as<decltype((expr)), void>) {         \
-            (expr), ::beman::execution::set_value(::std::move((rcvr))); \
-        } else {                                                        \
-            ::beman::execution::set_value(::std::move((rcvr)), (expr)); \
-        }                                                               \
-    }()
-
-// ----------------------------------------------------------------------------
-
 namespace beman::execution {
 /*!
  * \brief Type of the customization point object for successful completions.
