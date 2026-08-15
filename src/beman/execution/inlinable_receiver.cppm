@@ -7,5 +7,5 @@ module;
 export module beman.execution.detail.inlinable_receiver;
 
 namespace beman::execution {
-    export using beman::execution::inlinable_receiver;
-} // namespace beman::execution::detail
+export using beman::execution::inlinable_receiver;
+} // namespace beman::execution

@@ -20,12 +20,13 @@ import beman.execution.detail.receiver;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution {
-    template <typename Receiver, typename ChildOp>
-    concept inlinable_receiver = ::beman::execution::receiver<Receiver>
-        && requires(ChildOp* child) {
-            { ::std::remove_cvref_t<Receiver>::make_receiver_for(*child) } noexcept -> ::std::same_as<::std::remove_cvref_t<Receiver>> ;
-    };
-}
+template <typename Receiver, typename ChildOp>
+concept inlinable_receiver = ::beman::execution::receiver<Receiver> && requires(ChildOp* child) {
+    {
+        ::std::remove_cvref_t<Receiver>::make_receiver_for(*child)
+    } noexcept -> ::std::same_as<::std::remove_cvref_t<Receiver>>;
+};
+} // namespace beman::execution
 
 // ----------------------------------------------------------------------------
 

@@ -168,16 +168,16 @@ auto test_receiver_of() -> void {
 
 struct inlinable_state {};
 struct non_inlinable_state {};
-struct receiver { using receiver_concept = test_std::receiver_tag; };
+struct receiver {
+    using receiver_concept = test_std::receiver_tag;
+};
 
 struct inlinable_receiver {
     using receiver_concept = test_std::receiver_tag;
     static auto make_receiver_for(inlinable_state& child) noexcept -> inlinable_receiver {
         return inlinable_receiver{};
     }
-    static auto make_receiver_for(non_inlinable_state& child) noexcept -> receiver {
-        return receiver{};
-    }
+    static auto make_receiver_for(non_inlinable_state& child) noexcept -> receiver { return receiver{}; }
 };
 static_assert(test_std::receiver<inlinable_receiver>);
 
