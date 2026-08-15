@@ -26,6 +26,13 @@ The term _enviroment_ refers to the bag of properties associated with an <code>_
 This section lists the concepts from `std::execution`.
 
 <details>
+<summary><code>inlinable_receiver&lt;<i>Rcvr</i>, <i>Child</i>&gt;</code></summary>
+The concecpt <code>inlinable_receiver&lt;<i>Rcvr</i>, <i>Child</i>&gt;</code> detects if a
+receiver of type <code><i>Rcvr</i></code> can be obtained from a <code><i>Child</i></code>
+reference using <code><i>Rcvr</i>::make_receiver_for(<i>child</i>)</code>. It is unspecified if any of the standard library receivers is a <code>inlinable_receiver</code>.
+</details>
+
+<details>
 <summary><code>operation_state&lt;<i>State</i>&gt;</code></summary>
 
 Operation states represent asynchronous operations ready to be <code><a href=‘#start’>start</a></code>ed or executing. Operation state objects are normally neither movable nor copyable. Once <code><a href=‘#start’>start</a></code>ed the object needs to be kept alive until a <a href=‘#completion-signal’>completion signal</a> is received. Users don’t interact with operation states explicitly except when implementing new sender algorithms.
