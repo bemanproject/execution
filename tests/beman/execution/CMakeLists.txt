@@ -17,6 +17,7 @@ list(
     exec-completion-storage.test
     exec-connect.test
     exec-continues-on.test
+    exec-counting-scopes-general.test
     exec-dependent-sender.test
     exec-domain-default.test
     exec-env.test

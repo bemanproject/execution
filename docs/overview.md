@@ -1107,6 +1107,26 @@ The expression <code><i>SCHED-ENV</i>(sch)</code> yields a queryable <code>o</co
 </details>
 
 <details>
+<summary><code><i>scope-join-t</i></code></summary>
+The type <code><i>scope-join-t</i></code> is used with <code><i>basic-sender</i></code>
+to create a sender which completes when a counting scope becomes closed and empty.
+</details>
+
+<details>
+<summary><code><i>scope-state-type</i></code></summary>
+The type <code><i>scope-state-type</i></code> is used to represent the state a counting scope is currently in. The values are
+<ul>
+<li><code><i>unused</i></li>
+<li><code><i>open</i></li>
+<li><code><i>open-and-joining</i></li>
+<li><code><i>closed</i></li>
+<li><code><i>closed-and-joining</i></li>
+<li><code><i>unused-and-closed</i></li>
+<li><code><i>joined</i></li>
+</ul>
+<details>
+
+<details>
 <summary><code><i>sender-awaitable</i>&lt;Sndr, Promise&gt;</code></summary>
 The specialization <code><i>sender-awaitable</i>&lt;Sndr, Promise&gt;</code> is an awaiter implemented by getting the result of the <code>Sndr</code> completion.
 </details>

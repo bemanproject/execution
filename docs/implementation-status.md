@@ -106,7 +106,7 @@ Each section containing subelements reflects the state of the "worst" element.
 - &#x2705;&#x1F534;&#x2705; [exec.snd.expos p8](https://wg21.link/exec.snd.expos#8) <code><i>COMMON-DOMAIN</i>(domains...)</code>: [`common_domain.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/common_domain.hpp)
 - &#x2705;&#x2705;&#x2705; [exec.snd.expos p9](https://wg21.link/exec.snd.expos#9) <code><i>COMPL-DOMAIN</i>(sndr, ev...)</code>: [`compl_domain.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/compl_domain.hpp) &#x1F6A8; the name appears to be unused!
 - &#x2705;&#x2705;&#x2705; [exec.snd.expos p10](https://wg21.link/exec.snd.expos#10) <code><i>SCHED-ENV</i>(sch)</code>: [`sched_env.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sched_env.hpp)
-- &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.snd.expos p11](https://wg21.link/exec.snd.expos#11) <code><i>SET-VALUE</i>(rcvr, expr)</code>: [`set_value.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/set_value.hpp), <code><i>TRY-EVAL<i>(expr)</i></code>: [`common.hpp](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/common.hpp), <code><i>TRY-SET-VALUE</i>(rcvr, expr)</code>
+- &#x1F6A7;&#x1F6A7;&#x1F6A7; [exec.snd.expos p11](https://wg21.link/exec.snd.expos#11) <code><i>SET-VALUE</i>(rcvr, expr)</code>: [`set_value.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/set_value.hpp), <code><i>TRY-EVAL</i>(expr)</code>: [`common.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/common.hpp), <code><i>TRY-SET-VALUE</i>(rcvr, expr)</code>
 - &#x2705;&#x2705;&#x2705; [exec.snd.expos p12](https://wg21.link/exec.snd.expos#12) <code><i>query-with-default</i>(tag, env, value)</code>: [`query_with_default.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/query_with_default.hpp)
 - &#x2705;&#x1F534;&#x1F534; [exec.snd.expos p15](https://wg21.link/exec.snd.expos#15) <code><i>emplace-from</i>{fun}</code>: [`emplace_from.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/emplace_from.hpp)
 - &#x2705;&#x1F534;&#x1F534; [exec.snd.expos p12](https://wg21.link/exec.snd.expos#16) <code><i>on-stop-request</i>{stop_source}</code>: [`on_stop_request.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/on_stop_request.hpp)
@@ -264,9 +264,9 @@ Each section containing subelements reflects the state of the "worst" element.
 ## &#x2705;&#x2705;&#x1F534; [exec.coro.util](https://wg21.link/exec.coro.util) Coroutine utilities
 ### &#x2705;&#x2705;&#x1F534; [exec.as.awaitable](https://wg21.link/exec.as.awaitable) `execution::as_awaitable`
 
-- &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p1](https://wg21.link/exec.as.awaitable#1) <code><i>awaitable-sender<i></code>: [`awaitable_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/awaitable_sender.hpp)
-- &#x1F534;&#x1F534;&#x1F534; [exec.as.awaitable p1](https://wg21.link/exec.as.awaitable#1) <code><i>has-queryable-await-completion-adaptor<i></code>: &#x1F6A8; this name appears to be is unused
-- &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p2](https://wg21.link/exec.as.awaitable#2) <code><i>sender-awaitable<i></code>: : [`sender_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sender_awaitable.hpp)
+- &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p1](https://wg21.link/exec.as.awaitable#1) <code><i>awaitable-sender</i></code>: [`awaitable_sender.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/awaitable_sender.hpp)
+- &#x1F534;&#x1F534;&#x1F534; [exec.as.awaitable p1](https://wg21.link/exec.as.awaitable#1) <code><i>has-queryable-await-completion-adaptor</i></code>: &#x1F6A8; this name appears to be is unused
+- &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p2](https://wg21.link/exec.as.awaitable#2) <code><i>sender-awaitable</i></code>: : [`sender_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/sender_awaitable.hpp)
 - &#x2705;&#x2705;&#x2705; [exec.as.awaitable p7](https://wg21.link/exec.as.awaitable#7) <code>as_awaitable</code>: : [`as_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/as_awaitable.hpp)
 - &#x2705;&#x1F534;&#x2705; [exec.as.awaitable p8](https://wg21.link/exec.as.awaitable#8) <code><i>adapt-for-await-completion</i></code>: : [`as_awaitable.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/as_awaitable.hpp)
 
@@ -289,8 +289,8 @@ Each section containing subelements reflects the state of the "worst" element.
 ### &#x1F534;&#x1F534;&#x1F534; [exec.counting.scopes](https://wg21.link/exec.counting.scopes) Counting scopes
 #### &#x1F534;&#x1F534;&#x1F534; [exec.counting.scopes.general](https://wg21.link/exec.counting.scopes.general) General
 
-- &#x2705;&#x2705;&#x1F534; [exec.counting.scopes.general p3](https://wg21.link/exec.counting.scopes.general#3) <code><i>scope-join-t</i></code>: [`counting_scope_join.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/counting_scope_join.hpp)
-- &#x2705;&#x1F534;&#x1F534; [exec.counting.scopes.general p3](https://wg21.link/exec.counting.scopes.general#3) <code><i>scope-state-type</i></code>: [`counting_scope_join.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/counting_scope_base.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.counting.scopes.general p3](https://wg21.link/exec.counting.scopes.general#3) <code><i>scope-join-t</i></code>: [`counting_scope_join.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/counting_scope_join.hpp)
+- &#x2705;&#x2705;&#x2705; [exec.counting.scopes.general p3](https://wg21.link/exec.counting.scopes.general#3) <code><i>scope-state-type</i></code>: [`counting_scope_base.hpp`](https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/counting_scope_base.hpp)
 - &#x1F534;&#x1F534;&#x1F534; [exec.counting.scopes.general p5](https://wg21.link/exec.counting.scopes.general#5) <code><i>association-t</i></code>
 
 #### &#x2705;&#x2705;&#x1F534; [exec.scope.simple.counting](https://wg21.link/exec.scope.simple.counting) Simple Counting Scope

@@ -130,6 +130,4 @@ struct beman::execution::detail::counting_scope_join_t::state : ::beman::executi
 
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-
 #endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COUNTING_SCOPE_JOIN

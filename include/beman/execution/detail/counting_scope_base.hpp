@@ -91,7 +91,7 @@ class beman::execution::detail::counting_scope_base : ::beman::execution::detail
         counting_scope_base* scope;
     };
 
-  private:
+  public:
     enum class state_t : unsigned char {
         unused,
         open,
@@ -102,6 +102,7 @@ class beman::execution::detail::counting_scope_base : ::beman::execution::detail
         joined
     };
 
+  private:
     auto try_associate() noexcept -> assoc_t;
 
     auto disassociate() noexcept -> void;
