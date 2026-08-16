@@ -6,8 +6,9 @@
 import beman.execution;
 import beman.execution.detail;
 #else
-#include <beman/execution/detail/receiver_of.hpp>
 #include <beman/execution/detail/has_completions.hpp>
+#include <beman/execution/detail/inlinable_receiver.hpp>
+#include <beman/execution/detail/receiver_of.hpp>
 #include <beman/execution/detail/valid_completion_for.hpp>
 #include <beman/execution.hpp>
 #endif
@@ -164,10 +165,30 @@ auto test_receiver_of() -> void {
                                                                             test_std::set_error_t(int),
                                                                             test_std::set_stopped_t()>>);
 }
+
+struct inlinable_state {};
+struct non_inlinable_state {};
+struct receiver {
+    using receiver_concept = test_std::receiver_tag;
+};
+
+struct inlinable_receiver {
+    using receiver_concept = test_std::receiver_tag;
+    static auto make_receiver_for(inlinable_state&) noexcept -> inlinable_receiver { return inlinable_receiver{}; }
+    static auto make_receiver_for(non_inlinable_state&) noexcept -> receiver { return receiver{}; }
+};
+static_assert(test_std::receiver<inlinable_receiver>);
+
+auto test_inlinable_receiver() -> void {
+    static_assert(not test_std::inlinable_receiver<inlinable_receiver, int>);
+    static_assert(not test_std::inlinable_receiver<inlinable_receiver, non_inlinable_state>);
+    static_assert(test_std::inlinable_receiver<inlinable_receiver, inlinable_state>);
+}
 } // namespace
 
 TEST(exec_recv_concepts) {
     test_valid_completion_for();
     test_has_completions();
     test_receiver_of();
+    test_inlinable_receiver();
 }

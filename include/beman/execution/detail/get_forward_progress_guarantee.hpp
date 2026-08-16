@@ -29,6 +29,7 @@ struct get_forward_progress_guarantee_t {
     template <beman::execution::detail::almost_scheduler Object>
         requires requires(const Object& object, const get_forward_progress_guarantee_t& tag) { object.query(tag); }
     auto operator()(const Object& object) const noexcept -> forward_progress_guarantee {
+        static_assert(noexcept(object.query(*this)));
         static_assert(::std::same_as<decltype(object.query(*this)), forward_progress_guarantee>);
         return object.query(*this);
     }

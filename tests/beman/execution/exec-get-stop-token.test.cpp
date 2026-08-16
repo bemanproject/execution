@@ -56,7 +56,8 @@ TEST(exec_get_stop_token) {
 
     test_get_stop_token<test_std::never_stop_token>(no_get_stop_token());
     test_get_stop_token<stop_token>(has_get_stop_token<true>());
-    test_get_stop_token<test_std::never_stop_token>(has_get_stop_token<false>());
+    //-dk:TODO test this fails to compile:
+    // test_get_stop_token<test_std::never_stop_token>(has_get_stop_token<false>());
     test_get_stop_token<test_std::never_stop_token>(non_const_get_stop_token());
     test_get_stop_token<stop_token>(inconsistent_get_stop_token());
 

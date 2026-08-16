@@ -24,9 +24,10 @@ namespace beman::execution::detail {
 struct forwarding_query_t {
     template <typename Object>
         requires requires(Object&& object, const forwarding_query_t& query) {
-            { ::std::forward<Object>(object).query(query) } noexcept -> ::std::same_as<bool>;
+            { ::std::forward<Object>(object).query(query) } -> ::std::same_as<bool>;
         }
     constexpr auto operator()(Object&& object) const noexcept -> bool {
+        static_assert(noexcept(::std::forward<Object>(object).query(*this)));
         return ::std::forward<Object>(object).query(*this);
     }
     template <typename Object>

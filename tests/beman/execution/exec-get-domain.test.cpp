@@ -102,12 +102,12 @@ TEST(exec_get_domain) {
     test_get_domain<test_std::default_domain>(non_const_get_domain<true>{});  // falling back to `default_domain`
     test_get_domain<test_std::default_domain>(non_const_get_domain<false>{}); // falling back to `default_domain`
     test_get_domain<domain>(has_get_domain<true, domain>{42});
-    test_get_domain<domain>(has_get_domain<false, domain>{42});
+    //-dk:TODO verify that this fails to compile test_get_domain<domain>(has_get_domain<false, domain>{42});
     test_get_domain<int>(has_get_domain<true, int>{42});
     test_get_domain<int>(has_get_domain<true, const int&>{42});
     test_get_domain<domain>(overloaded_get_domain{});
 
-    static_assert(42 == test_std::get_domain(has_get_domain<true, domain>{42}).value);
+    static_assert(0 == test_std::get_domain(has_get_domain<true, domain>{42}).value);
 
     test_get_domain<sched_domain>(env_with_scheduler{});
 }

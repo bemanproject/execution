@@ -5,7 +5,7 @@ if(BEMAN_USE_MODULES)
     list(APPEND execution_tests execution-module.test stop-token-module.test)
 endif()
 
-list(APPEND unsupported_execution_tests exec-split.test exec-spawn-future.test)
+list(APPEND unsupported_execution_tests exec-split.test)
 
 list(
     APPEND execution_tests
@@ -17,6 +17,7 @@ list(
     exec-completion-storage.test
     exec-connect.test
     exec-continues-on.test
+    exec-counting-scopes-general.test
     exec-dependent-sender.test
     exec-domain-default.test
     exec-env.test
@@ -24,6 +25,7 @@ list(
     exec-general.test
     exec-getcomplsigs.test
     exec-get-allocator.test
+    exec-get-await-adapt.test
     exec-get-compl-domain.test
     exec-get-compl-sched.test
     exec-get-delegation-scheduler.test
@@ -64,6 +66,7 @@ list(
     exec-snd-expos.test
     exec-snd-transform.test
     exec-spawn.test
+    exec-spawn-future.test
     exec-starts-on.test
     exec-stop-when.test
     exec-stopped-err.test

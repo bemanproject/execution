@@ -77,7 +77,7 @@ TEST(exec_get_delegation_scheduler) {
     static_assert(test_std::forwarding_query((test_std::get_delegation_scheduler)));
 
     test_get_delegation_scheduler<false>(test_std::env<>{});
-    test_get_delegation_scheduler<false>(env<false, scheduler>{});
+    //-dk:TODO verify that this fails to compile test_get_delegation_scheduler<false>(env<false, scheduler>{});
     test_get_delegation_scheduler<false>(env<true, scheduler::sender>{});
     test_get_delegation_scheduler<true>(env<true, scheduler>{17});
 }

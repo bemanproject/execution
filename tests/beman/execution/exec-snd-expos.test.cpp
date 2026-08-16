@@ -71,9 +71,18 @@ struct custom_result {
     auto operator==(const custom_result&) const -> bool = default;
 };
 
+struct get_test_domain_t {
+    template <typename Env>
+    auto operator()(const Env& ev) const noexcept -> domain {
+        return ev.query(*this);
+    }
+};
+inline constexpr get_test_domain_t get_test_domain{};
+
 struct env {
     int  value{};
     auto query(const test_std::get_domain_t&) const noexcept { return domain{value}; }
+    auto query(const get_test_domain_t&) const noexcept { return domain{value}; }
     auto query(const non_forwardable_t&) const noexcept { return true; }
     auto query(const forwardable_t&, int a, int b) const noexcept { return (value + a) * b; }
 };
@@ -416,7 +425,7 @@ auto test_completion_domain() -> void {
 }
 
 auto test_query_with_default() -> void {
-    auto result1{test_detail::query_with_default(test_std::get_domain, env{43}, default_domain{74})};
+    auto result1{test_detail::query_with_default(get_test_domain, env{43}, default_domain{74})};
     static_assert(std::same_as<domain, decltype(result1)>);
     ASSERT(result1.value == 43);
 
@@ -918,17 +927,17 @@ auto test_product_type() -> void {
     test::use(i, b, c);
 
 #if 0 //-dk:TODO it seems exporting constrained tuple_size/tuple_element doesn't work
-    struct derived : decltype(prod) {};
-    static_assert(3u == std::tuple_size<derived>::value);
-    static_assert(std::same_as<int, std::tuple_element<0u, derived>::type>);
-    static_assert(std::same_as<bool, std::tuple_element<1u, derived>::type>);
-    static_assert(std::same_as<char, std::tuple_element<2u, derived>::type>);
-    derived d{1, true, 'c'};
-    auto&& [di, db, dc] = d;
-    assert(di == d.get<0>());
-    assert(db == d.get<1>());
-    assert(dc == d.get<2>());
-    test::use(di, db, dc);
+     struct derived : decltype(prod) {};
+     static_assert(3u == std::tuple_size<derived>::value);
+     static_assert(std::same_as<int, std::tuple_element<0u, derived>::type>);
+     static_assert(std::same_as<bool, std::tuple_element<1u, derived>::type>);
+     static_assert(std::same_as<char, std::tuple_element<2u, derived>::type>);
+     derived d{1, true, 'c'};
+     auto&& [di, db, dc] = d;
+     assert(di == d.get<0>());
+     assert(db == d.get<1>());
+     assert(dc == d.get<2>());
+     test::use(di, db, dc);
 #endif
 }
 auto test_connect_all() -> void {
@@ -1093,15 +1102,15 @@ auto test_completion_signatures_for() -> void {
     //-dk:TODO restore test static_assert(not test_std::sender_in<completion_signatures_for_sender, bad_env>);
 
 #if 0
-        //-dk:TODO restore completion_signatures_for tests or remove completion_signatures for
-        static_assert(std::same_as<
-            test_detail::completion_signatures_for<completion_signatures_for_sender, test_std::env<>>,
-            completion_signatures_for_sender::empty_env_sigs
-        >);
-        static_assert(std::same_as<
-            test_detail::completion_signatures_for<completion_signatures_for_sender, local_env>,
-            completion_signatures_for_sender::env_sigs
-        >);
+         //-dk:TODO restore completion_signatures_for tests or remove completion_signatures for
+         static_assert(std::same_as<
+             test_detail::completion_signatures_for<completion_signatures_for_sender, test_std::env<>>,
+             completion_signatures_for_sender::empty_env_sigs
+         >);
+         static_assert(std::same_as<
+             test_detail::completion_signatures_for<completion_signatures_for_sender, local_env>,
+             completion_signatures_for_sender::env_sigs
+         >);
 #endif
     static_assert(
         not test_detail::valid_completion_signatures<test_detail::no_completion_signatures_defined_in_sender>);
@@ -1189,15 +1198,15 @@ auto test_basic_sender() -> void {
     static_assert(test_std::dependent_sender<basic_sender>);
     static_assert(test_std::sender_in<basic_sender, local_env>);
 #if 0
-        //-dk:TODO restore completion_sigatures_for test
-        static_assert(std::same_as<
-            basic_sender_tag::sender::completion_signatures,
-            test_detail::completion_signatures_for<basic_sender, env>
-        >);
-        static_assert(std::same_as<
-            basic_sender_tag::sender::completion_signatures,
-            test_detail::completion_signatures_for<basic_sender, env>
-        >);
+         //-dk:TODO restore completion_sigatures_for test
+         static_assert(std::same_as<
+             basic_sender_tag::sender::completion_signatures,
+             test_detail::completion_signatures_for<basic_sender, env>
+         >);
+         static_assert(std::same_as<
+             basic_sender_tag::sender::completion_signatures,
+             test_detail::completion_signatures_for<basic_sender, env>
+         >);
 #endif
 
     auto ge{test_std::get_env(bs)};
@@ -1207,19 +1216,19 @@ auto test_basic_sender() -> void {
     auto op{test_std::connect(bs, receiver{})};
     test::use(op);
 #if 0
-        static_assert(std::same_as<
-            basic_sender_tag::sender::completion_signatures,
-            decltype(bs.get_completion_signatures(env{}))
-        >);
-        static_assert(std::same_as<
-            basic_sender_tag::sender::completion_signatures,
-            decltype(cbs.get_completion_signatures(env{}))
-        >);
-        static_assert(std::same_as<
-            basic_sender_tag::sender::completion_signatures,
-            decltype(basic_sender{ basic_sender_tag{}, data{}, sender0 {} }
-                .get_completion_signatures(env{}))
-        >);
+         static_assert(std::same_as<
+             basic_sender_tag::sender::completion_signatures,
+             decltype(bs.get_completion_signatures(env{}))
+         >);
+         static_assert(std::same_as<
+             basic_sender_tag::sender::completion_signatures,
+             decltype(cbs.get_completion_signatures(env{}))
+         >);
+         static_assert(std::same_as<
+             basic_sender_tag::sender::completion_signatures,
+             decltype(basic_sender{ basic_sender_tag{}, data{}, sender0 {} }
+                 .get_completion_signatures(env{}))
+         >);
 #endif
     static_assert(std::same_as<std::index_sequence_for<sender0>, basic_sender::indices_for>);
 }

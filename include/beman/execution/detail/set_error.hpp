@@ -32,14 +32,12 @@ struct set_error_t {
                     ::std::forward<Receiver>(receiver).set_error(::std::forward<Error>(error));
                 })
     = BEMAN_EXECUTION_DELETE("set_error requires a suitable member overload on the receiver");
-    template <typename Receiver, typename Error>
-        requires(not noexcept(::std::declval<Receiver>().set_error(::std::declval<Error>())))
-    auto operator()(Receiver&&, Error&&) const
-        -> void = BEMAN_EXECUTION_DELETE("the call to receiver.set_error(error) has to be noexcept");
 
     // NOLINTBEGIN(misc-no-recursion)
     template <typename Receiver, typename Error>
     auto operator()(Receiver&& receiver, Error&& error) const noexcept -> void {
+        static_assert(noexcept(::std::forward<Receiver>(receiver).set_error(::std::forward<Error>(error))),
+                      "the call to receiver.set_error(error) has to be noexcept");
         ::std::forward<Receiver>(receiver).set_error(::std::forward<Error>(error));
     }
     // NOLINTEND(misc-no-recursion)

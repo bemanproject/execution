@@ -101,6 +101,7 @@ export import beman.execution.detail.unstoppable_token;
 // [exec.recv], receivers
 export import beman.execution.detail.receiver;
 export import beman.execution.detail.receiver_of;
+export import beman.execution.detail.inlinable_receiver;
 
 // [exec.snd], senders
 export import beman.execution.detail.sender;
