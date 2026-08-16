@@ -128,6 +128,11 @@ Concepts</h2>
 <p>This section lists the concepts from <code>std::execution</code>.</p>
 <details >
 <summary >
+<code>inlinable_receiver&lt;<em>Rcvr</em>, <em>Child</em>&gt;</code></summary>
+<p>The concecpt <code>inlinable_receiver&lt;<em>Rcvr</em>, <em>Child</em>&gt;</code> detects if a receiver of type <code><em>Rcvr</em></code> can be obtained from a <code><em>Child</em></code> reference using <code><em>Rcvr</em>::make_receiver_for(<em>child</em>)</code>. It is unspecified if any of the standard library receivers is a <code>inlinable_receiver</code>. </p>
+</details>
+<details >
+<summary >
 <code>operation_state&lt;<em>State</em>&gt;</code></summary>
 <p></p>
 <p>Operation states represent asynchronous operations ready to be <code><a href="‘#start’">start</a></code>ed or executing. Operation state objects are normally neither movable nor copyable. Once <code><a href="‘#start’">start</a></code>ed the object needs to be kept alive until a <a href="‘#completion-signal’">completion signal</a> is received. Users don’t interact with operation states explicitly except when implementing new sender algorithms.</p>
@@ -136,6 +141,7 @@ Concepts</h2>
 <li>The type <code>operation_state_concept</code> is an alias for <code>operation_state_tag</code> or a type derived thereof.</li>
 <li><code><em>state</em>.<a href="‘#start’">start</a>() &amp; noexcept</code></li>
 </ul>
+<blockquote class="doxtable">
 <details >
 <summary >
 Example</summary>
@@ -155,6 +161,7 @@ Example</summary>
 <div class="line"> </div>
 <div class="line">static_assert(std::execution::operation_state&lt;example_state&lt;SomeReceiver&gt;&gt;);</div>
 </div><!-- fragment --> </details>
+</blockquote>
 </details>
 <details >
 <summary >
@@ -175,6 +182,7 @@ Example</summary>
 <li><code><a href="‘set_error’">set_error</a>(error) &amp;&amp; noexcept -&gt; void</code></li>
 <li><code><a href="‘set_stopped’">set_stopped</a>() &amp;&amp; noexcept -&gt; void</code></li>
 </ul>
+<blockquote class="doxtable">
 <details >
 <summary >
 Example</summary>
@@ -208,12 +216,14 @@ Example</summary>
 <div class="line"> </div>
 <div class="line">static_assert(std::execution::receiver&lt;example_receiver&lt;SomeReceiver&gt;&gt;);</div>
 </div><!-- fragment --> </details>
+</blockquote>
 </details>
 <details >
 <summary >
 <code>receiver_of&lt;<em>Receiver, Completions</em>&gt;</code></summary>
 <p></p>
 <p>The concept <code>receiver_of&lt;<em>Receiver, Completions</em>&gt;</code> tests whether <code><a href="‘#receiver’">std::execution::receiver</a>&lt;<em>Receiver</em>&gt;</code> is true and if an object of type <code><em>Receiver</em></code> can be invoked with each of the <a href="‘#completion-signal’">completion signals</a> in <code><em>Completions</em></code>.</p>
+<blockquote class="doxtable">
 <details >
 <summary >
 Example</summary>
@@ -247,6 +257,7 @@ Example</summary>
 <div class="line">        std::execution::set_value_t(int)</div>
 <div class="line">    &gt;);</div>
 </div><!-- fragment --> </details>
+</blockquote>
 </details>
 <details >
 <summary >
@@ -255,7 +266,9 @@ Example</summary>
 <p>Requirements for <code><em>Scheduler</em></code>:</p><ul>
 <li>The type <code><em>Scheduler</em>::scheduler_concept</code> is an alias for <code>scheduler_tag</code> or a type derived thereof.</li>
 <li><code><a href="‘#schedule’">schedule</a>(<em>scheduler</em>) -&gt; <a href="‘sender’">sender</a></code></li>
-<li>The <a href="‘#get-completion-scheduler’">value completion scheduler</a> of the <code><a href="‘sender’">sender</a></code>’s <a href="‘#environment’">environment</a> is the <code><em>scheduler</em></code>: <em>scheduler</em> == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;( std::execution::get_env(std::execution::schedule(<em>scheduler</em>)) )</li>
+<li><p class="startli">The <a href="‘#get-completion-scheduler’">value completion scheduler</a> of the <code><a href="‘sender’">sender</a></code>’s <a href="‘#environment’">environment</a> is the <code><em>scheduler</em></code>:</p>
+<p class="startli"><code><em>scheduler</em> == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;( std::execution::get_env(std::execution::schedule(<em>scheduler</em>)) )</code></p>
+</li>
 <li><code>std::equality_comparable&lt;<em>Scheduler</em>&gt;</code></li>
 <li><code>std::copy_constructible&lt;<em>Scheduler</em>&gt;</code> </li>
 </ul>
@@ -277,6 +290,7 @@ Example</summary>
 <li><code><em>Sender</em>::completion_signatures</code> is a type alias for <code><a href="‘completion-signatures’">std::execution::completion_signatures</a>&lt;...&gt;</code> (if there is no <code><a href="‘get_completion_signatures’">get_completion_signatures</a></code> member).</li>
 <li><code><a href="‘#connect’">connect</a>(<em>sender</em>, <a href="‘#receiver’">receiver</a>) -&gt; <a href="‘#operation-state’">operation_state</a></code></li>
 </ul>
+<blockquote class="doxtable">
 <details >
 <summary >
 Example</summary>
@@ -311,12 +325,13 @@ Example</summary>
 <div class="line"> </div>
 <div class="line">static_assert(std::execution::sender&lt;example_sender&gt;);</div>
 </div><!-- fragment --> </details>
+</blockquote>
 </details>
 <details >
 <summary >
 <code>sender_in&lt;<em>Sender, Env</em> = std::execution::env&lt;&gt;&gt;</code></summary>
 <p></p>
-<p>The concept <code>sender_in&lt;<em>Sender, Env</em>&gt;</code> tests whether <code><em>Sender</em></code> is a <code><a href="‘#sender’">sender</a></code>, <code><em>Env</em></code> is a destructible type, and <code><a href="‘#get_completion_signatures’">std::execution::get_completion_signatures</a>(<em>sender</em>, <em>env</em>)</code> yields a specialization of <code><a href="‘#completion_signatures’">std::execution::completion_signatures</a></code>. </p>
+<p>The concept <code>sender_in&lt;<em>Sender, Env</em>&gt;</code> tests whether <code><em>Sender</em></code> is a <code><a href="‘#sender’">sender</a></code>, <code><em>Env</em></code> is a destructible type, and <code><a href="‘#get_completion_signatures’">std::execution::get_completion_signatures&lt;<em>Sender</em>, <em>Env</em>&gt;</a>()</code> yields a specialization of <code><a href="‘#completion_signatures’">std::execution::completion_signatures</a></code>. </p>
 </details>
 <details >
 <summary >
@@ -346,15 +361,15 @@ Example</summary>
 <details >
 <summary >
 Example: concept use</summary>
-<div></div><div><div class="fragment"><div class="line"> {c++}</div>
+<p></p>
+<div class="fragment"><div class="line"> {c++}</div>
 <div class="line">static_assert(std::execution::unstoppable_token&lt;std::execution::never_stop_token&gt;);</div>
 <div class="line">static_assert(std::execution::unstoppable_token&lt;std::execution::stop_token&gt;);</div>
 <div class="line">static_assert(std::execution::unstoppable_token&lt;std::execution::inline_stop_token&gt;);</div>
-</div><!-- fragment --> </div> </details>
+</div><!-- fragment --> </details>
 <details >
 <summary >
 Example: polling</summary>
-<blockquote class="doxtable">
 <p>This example shows a sketch of using a <code>stoppable_token&lt;<em>Token</em>&gt;</code> to cancel an active operation. The computation in this example is represented as <code>sleep_for</code>.</p>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">void compute(std::stoppable_token auto token)</div>
@@ -364,12 +379,10 @@ Example: polling</summary>
 <div class="line">         std::this_thread::sleep_for(1s);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --> </blockquote>
-</details>
+</div><!-- fragment --> </details>
 <details >
 <summary >
 Example: inactive</summary>
-<blockquote class="doxtable">
 <p>This example shows how an <code><a href="‘#operation-state’">operation_state</a></code> can use the <code>callback_type</code> together with a <code><em>token</em></code> to get notified when cancellation is requested.</p>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">template &lt;std::execution::receiver Receiver&gt;</div>
@@ -415,8 +428,7 @@ Example: inactive</summary>
 <div class="line">        }</div>
 <div class="line">    }</div>
 <div class="line">};</div>
-</div><!-- fragment --> </blockquote>
-</details>
+</div><!-- fragment --> </details>
 </blockquote>
 </li>
 </ul>
@@ -424,7 +436,7 @@ Example: inactive</summary>
 <details >
 <summary >
 <code>unstoppable_token&lt;<em>Token</em>&gt;</code></summary>
-<p>The concept <code>unstoppable_token&lt;Token&gt;</code> is modeled by a <code><em>Token</em></code> if <code>stoppable_token&lt;<em>Token</em>&gt;</code> is true and it can statically be determined that both <code><em>token</em>.stop_requested()</code> and <code><em>token</em>.stop_possible()</code> are <code>constexpr</code> epxressions yielding <code>false</code>. This concept is used to avoid extra work when using stop tokens which will never indicate that cancellations are requested. </p><blockquote class="doxtable">
+<p>The concept <code>unstoppable_token&lt;<em>Token</em>&gt;</code> is modeled by a <code><em>Token</em></code> if <code>stoppable_token&lt;<em>Token</em>&gt;</code> is true and it can statically be determined that both <code><em>token</em>.stop_requested()</code> and <code><em>token</em>.stop_possible()</code> are <code>constexpr</code> epxressions yielding <code>false</code>. This concept is used to avoid extra work when using stop tokens which will never indicate that cancellations are requested. </p><blockquote class="doxtable">
 <details >
 <summary >
 Example</summary>
@@ -485,15 +497,21 @@ Example</summary>
 </details>
 <details >
 <summary >
+<code>get_await_completion_adaptor(<em>queryable</em>) -&gt; <em>awaiter</em></code></summary>
+<p>If the expression <code>get_await_completion_adaptor(<em>queryable</em>)</code> is valid it yields an awaiter depending on the <code><em>queryable</em></code>. This query is used while getting an awaiter from a sender. </p>
+</details>
+<details >
+<summary >
 <code>get_env(<em>queryable</em>) -&gt; <em>env</em></code></summary>
-<p><b>Default</b>: <a href="#env"><code>env&amp;lt;&amp;gt;</code></a> <br  />
+<p><b>Default</b>: <a href="#env"><code>env&lt;&gt;</code></a> <br  />
  The expression <code>get_env(<em>queryable</em>)</code> is used to get the environment <code><em>env</em></code> associated with <code><em>queryable</em></code>. To provide a non-default environment for a <code><em>queryable</em></code> a <code>get_env</code> member needs to be defined. If <code><em>queryable</em></code> doesn’t provide the <code>get_env</code> query an object of type <code><a href="‘#env’">env&lt;&gt;</a></code> is returned. The value of the expression is </p><ol>
 <li>
 the result of <code>as_const(<em>queryable</em>).get_env()</code> if this expression is valid and <code>noexcept</code>. </li>
 <li>
 <code>env&lt;&gt;</code> otherwise. </li>
 </ol>
-<div> <details >
+<blockquote class="doxtable">
+<details >
 <summary >
 Example</summary>
 <p>The example defines an <a href="‘#environment’">environment</a> class <code>env</code> which stores a pointer to the relevant data and is returned as the <a href="‘#environment’">environment</a> for the type <code>queryable</code>:</p>
@@ -503,13 +521,14 @@ Example</summary>
 <div class="line">struct env { data* d; /* ... */ };</div>
 <div class="line"> </div>
 <div class="line">struct queryable {</div>
-<div class="line">    data* d;\</div>
+<div class="line">    data* d;</div>
 <div class="line">    // ...</div>
 <div class="line">    env get_env() const noexcept { return { this-&gt;d }; }</div>
 <div class="line">};</div>
 </div><!-- fragment --><p>Note that the <code>get_env</code> member is both <code>const</code> and <code>noexcept</code>. </p>
 </details>
-</div> </details>
+</blockquote>
+</details>
 <details >
 <summary >
 <code>get_allocator(<em>env</em>) -&gt; <em>allocator</em></code></summary>
@@ -522,7 +541,8 @@ the expression is <code>noexcept</code>; </li>
 <li>
 the result of the expression satisfies <code><em>simple-allocator</em></code>. </li>
 </ul>
-<p>Otherwise the expression is ill-formed. </p><div> <details >
+<p>Otherwise the expression is ill-formed. </p><blockquote class="doxtable">
+<details >
 <summary >
 Example</summary>
 <p>This example shows how to define an environment class which provides a <a href="‘#get-allocator’"><code>get_allocator</code></a> query. The objects stores a <code>std::pmr::memory_resource*</code> and returns a correspondingly initialized <code>std::pmr::polymorphic_allocator&lt;&gt;</code>.</p>
@@ -534,7 +554,8 @@ Example</summary>
 <div class="line">   }</div>
 <div class="line">};</div>
 </div><!-- fragment --> </details>
-</div> </details>
+</blockquote>
+</details>
 <details >
 <summary >
 <code>get_completion_domain&lt;<em>Tag</em>&gt;(<em>attrs</em>) -&gt; <em>domain</em></code></summary>
@@ -585,21 +606,27 @@ the type <code>remove_cvref_t&lt;<em>New-Sender-Type</em>&gt;::completion_signat
 <li>
 invalid otherwise. </li>
 </ol>
-<div> <details >
+<blockquote class="doxtable">
+<details >
 <summary >
 Example</summary>
-<p>When a <a href="‘#sender’"><code>sender</code></a> doesn’t need to compute the completion signatures based on an <a href="‘#environment’">environment</a> it is easiest to use a the type alias, e.g.: </p><div class="fragment"><div class="line"> {c++}</div>
+<p>Even when a <a href="‘#sender’"><code>sender</code></a> doesn’t need to compute the completion signatures based on an <a href="‘#environment’">environment</a> it is necessary to provide <code>get_completion_signatures</code> member function, e.g.:</p>
+<div class="fragment"><div class="line"> {c++}</div>
 <div class="line">struct sender {</div>
 <div class="line">    using sender_concept = std::execution::sender_tag;</div>
-<div class="line">    using completion_signatures = std::completion_signatures&lt;</div>
-<div class="line">        std::execution::set_value_t(int),</div>
-<div class="line">        std::execution::set_error_t(std::error_code),</div>
-<div class="line">        std::execution::set_stopped()</div>
-<div class="line">    &gt;;</div>
+<div class="line">    template &lt;typename...&gt;</div>
+<div class="line">    static consteval void get_completion_signatures() {</div>
+<div class="line">        return std::completion_signatures&lt;</div>
+<div class="line">            std::execution::set_value_t(int),</div>
+<div class="line">            std::execution::set_error_t(std::error_code),</div>
+<div class="line">            std::execution::set_stopped()</div>
+<div class="line">        &gt;{};</div>
+<div class="line">    }</div>
 <div class="line">    // ...</div>
 <div class="line">};</div>
 </div><!-- fragment --> </details>
-</div> </details>
+</blockquote>
+</details>
 <details >
 <summary >
 <code>get_delegation_scheduler(<em>env</em>) -&gt; <em>scheduler</em></code></summary>
@@ -616,7 +643,7 @@ the expression’s type satisfies <code>scheduler</code>. </li>
 <details >
 <summary >
 <code>get_domain(<em>env</em>) -&gt; <em>domain</em></code></summary>
-<p>The expression <code>get_domain(<em>env</em>)</code> yields the domain associated with <code><em>env</em></code>. The value of the expression is equivalent to </p><ol>
+<p>The expression <code>get_domain(<em>env</em>)</code> yields the domain associated with <code><em>env</em></code>. The value of the expression is equivalent to return <code>D()</code> where <code>D</code> is the type of the expression </p><ol>
 <li>
 <code>auto(as_const(<em>env</em>).query(get_domain))</code> if this expression is valid; </li>
 <li>
@@ -664,7 +691,7 @@ this expression is <code>noexcept</code>; </li>
 the expression’s type satisfies <code>scheduler</code>. </li>
 </ol>
 <p>Otherwise the expression is invalid.</p>
-<p>If the expression <code>get_start_scheduler(get_env(<em>rcvr</em>))</code> is well-formed it should yield the scheduler the operation state resulting from <code>connect(<em>sndr&gt;</em>, <em>rcvr</em>)</code> gets <code>start</code>ed on. </p>
+<p>If the expression <code>get_start_scheduler(get_env(<em>rcvr</em>))</code> is well-formed it should yield the scheduler the operation state resulting from <code>connect(<em>sndr</em>, <em>rcvr</em>)</code> gets <code>start</code>ed on. </p>
 </details>
 <details >
 <summary >
@@ -768,7 +795,7 @@ Sender Adaptors</h3>
 <details >
 <summary >
 <code>affine(<em>sender</em>) -&gt; <em>sender-of</em>&lt;<em>completions-of</em>(<em>sender</em>)&gt;</code></summary>
-<p>The expression <code>affine(<em>sender</em>)</code> creates a sender which completes on the same scheduler it was started on, even if <code><em>sender</em></code> changes the scheduler. The scheduler to resume on is determined using <code>get_scheduler(get_env(<em>rcvr</em>))</code> where <code><em>rcvr</em></code> is the receiver the sender is <code>connect</code>ed to.</p>
+<p>The expression <code>affine(<em>sender</em>)</code> creates a sender which completes on the same scheduler it was started on, even if <code><em>sender</em></code> changes the scheduler. The scheduler to resume on is determined using <code>get_start_scheduler(get_env(<em>rcvr</em>))</code> where <code><em>rcvr</em></code> is the receiver the sender is <code>connect</code>ed to. The scheduler <code><em>sched</em></code> returned from <code>get_start_scheduler(get_env(<em>rcvr</em>))</code> has to be infallible, i.e., the completion signtures of <code>scheduler(<em>sched</em>)</code> only contain <code>set_value_t()</code>.</p>
 <p>The primary use of <code>affine</code> is implementing scheduler affinity for <code>task</code>. </p>
 </details>
 <details >
@@ -937,11 +964,12 @@ Helpers</h2>
 <li>
 <code><em>expr</em></code> </li>
 </ol>
-<p></p>
 </details>
 <ul>
 <li><code>with_awaitable_sender</code></li>
-<li><code>apply_sender</code> <details >
+<li><code>apply_sender</code></li>
+</ul>
+<details >
 <summary >
 <code>completion_signatures&lt;<em>Sig</em>...&gt;</code></summary>
 <p>The template specialization <code>completion_signatures&lt;<em>Sig</em>...&gt;</code> is a list of completion signatures used to declare and compute the result types of senders.</p>
@@ -952,7 +980,7 @@ Helpers</h2>
 <code><em>for-each</em>(<em>fun</em>)</code> invoking <code><em>fun</em></code> with a pointer to each of the completion signatures <code><em>Sig</em>...</code>. The function is used to verify the completion signature types. </li>
 </ol>
 </details>
-</li>
+<ul>
 <li><code>completion_signatures_t</code></li>
 <li><code>connect_result_t</code></li>
 <li><code>default_domain</code> <details >
@@ -1130,9 +1158,9 @@ equivalent to <code>q.query(tag, a...)</code> otherwise </li>
 </details>
 <details >
 <summary >
-<code><em>infallible-scheduler</em>&lt;Sched&gt;</code></summary>
+<code><em>infallible-scheduler</em>&lt;<em>Sched</em>, <em>Env</em>&gt;</code></summary>
 <p></p>
-<p>Determines if <code>Sched</code> is a scheduler (i.e., <code>scheduler&lt;Sched&gt;</code> is <code>true</code>) and if <code>Sched</code>'s sender has only a <code>set_value_t()</code> completion signature when used with an environment with an <code>unstoppable_token&lt;Tok&gt;</code> stop token <code>Tok</code>. If the stop token <code>Tok</code> is not <code>unstoppable_token&lt;Tok&gt;</code> the completion signatures can include a <code>set_stopped_t()</code> completion signature in addition to the <code>set_value_t()</code> completion signature. </p>
+<p>Determines if <code><em>Sched</em></code> is a scheduler (i.e., <code>scheduler&lt;<em>Sched</em>&gt;</code> is <code>true</code>) and if <code><em>sched</em></code>'s sender has only a <code>set_value_t()</code> completion signature when used with an environment with an <code>unstoppable_token&lt;Tok&gt;</code> stop token <code>Tok</code>. If the stop token <code>Tok</code> is not <code>unstoppable_token&lt;Tok&gt;</code> the completion signatures can include a <code>set_stopped_t()</code> completion signature in addition to the <code>set_value_t()</code> completion signature. </p>
 </details>
 <details >
 <summary >
@@ -1206,15 +1234,45 @@ ill-formed </li>
 </details>
 <details >
 <summary >
+<code><em>scope-join-t</em></code></summary>
+<p>The type <code><em>scope-join-t</em></code> is used with <code><em>basic-sender</em></code> to create a sender which completes when a counting scope becomes closed and empty. </p>
+</details>
+<details >
+<summary >
+<code><em>scope-state-type</em></code></summary>
+<p>The type <code><em>scope-state-type</em></code> is used to represent the state a counting scope is currently in. The values are </p><ul>
+<li>
+<code><em>unused</em> </code></li>
+<li>
+<code><code><em>open</em> </code></code></li>
+<li>
+<code><code><code><em>open-and-joining</em> </code></code></code></li>
+<li>
+<code><code><code><code><em>closed</em> </code></code></code></code></li>
+<li>
+<code><code><code><code><code><em>closed-and-joining</em> </code></code></code></code></code></li>
+<li>
+<code><code><code><code><code><code><em>unused-and-closed</em> </code></code></code></code></code></code></li>
+<li>
+<code><code><code><code><code><code><code><em>joined</em> </code></code></code></code></code></code></code></li>
+</ul>
+<details >
+<summary >
+Details</summary>
+<p><code><code><code><code><code><code><code></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code></p><details >
+<summary >
 <code><em>sender-awaitable</em>&lt;Sndr, Promise&gt;</code></summary>
 <p>The specialization <code><em>sender-awaitable</em>&lt;Sndr, Promise&gt;</code> is an awaiter implemented by getting the result of the <code>Sndr</code> completion. </p>
 </details>
-<details >
+<p></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code></p><details >
 <summary >
 <code>concept <em>single-sender</em>&lt;Sndr, Env...&gt;</code></summary>
 <p>The test <code><em>single-sender</em>&lt;Sndr, Env...&gt;</code> is <code>true</code> if <code>Sndr</code> has exactly one successful completion signature when using an environment of type <code>Env...</code>. </p>
 </details>
-<details >
+<p></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code></p><details >
 <summary >
 <code><em>single-sender-value-type</em>&lt;Sndr, Env...&gt;</code></summary>
 <p>The type <code><em>single-sender-value-type</em>&lt;Sndr, Env...&gt;</code> is defined if <code>Sndr</code> has exactly one successful completion signature <code>set_value_t(T...)</code> when using an environment of type <code>Env...</code>. The type is </p><ul>
@@ -1226,25 +1284,32 @@ ill-formed </li>
 <code>std::tuple&lt;T...&gt;</code> otherwise. </li>
 </ul>
 </details>
-<details >
+<p></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code></p><details >
 <summary >
 <code><em>stop-when</em>(<em>sndr</em>, <em>token</em>)</code></summary>
 <p></p>
 </details>
-<details >
+<p></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code></p><details >
 <summary >
 <code><em>TRY-QUERY</em>(q, tag, a...)</code></summary>
 <p>Tries to apply the query <code>tag</code> to the queryable object <code>q</code>: if passing the arguments <code>a...</code> is valid passes these arguments (<code><em>AS-CONST</em>(q).query(tag, a...)</code>), otherwise queries <code>q</code> for <code>tag</code> without the arguments (<code><em>AS-CONST</em>(q).query(tag)</code>), although the arguments are evaluated. </p>
 </details>
-<details >
+<p></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code></p><details >
 <summary >
 <code>concept <em>valid-completion-for</em>&lt;Signature, Rcvr&gt;</code></summary>
 <p>This concept determines if an object of type <code>Rcvr</code> supports the completion signature <code>Signature</code>. </p>
 </details>
-<details >
+<p></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code></p><details >
 <summary >
 <code>concept <em>valid-specialization</em>&lt;T, Args...&gt;</code></summary>
 <p>This concept determines the class template <code>T</code> can be specialized with arguments <code>Args...</code>, i.e., if <code>T&lt;Args...&gt;</code> is valid. </p>
+</details>
+<p></code></code></code></code></code></code></code></p>
+</details>
 </details>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

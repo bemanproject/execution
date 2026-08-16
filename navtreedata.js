@@ -29,16 +29,17 @@ var NAVTREE =
     [ "contributing", "md_docs_contributing.html", [
       [ "Contributing to <tt>beman::execution</tt>", "md_docs_contributing.html#autotoc_md0", null ]
     ] ],
-    [ "Implementation Status", "md_docs_implementation_status.html", [
+    [ "implementation-status", "md_docs_implementation_status.html", [
+      [ "Implementation Status", "md_docs_implementation_status.html#autotoc_md1", null ],
       [ "&#x1F534;&#x1F534;&#x1F534; <a href=\"https://wg21.link/exec\" >exec</a> Execution control library", "md_docs_implementation_status.html#autotoc_md2", [
-        [ "&#x1F6A7;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.general\" >exec.general</a> General", "md_docs_implementation_status.html#autotoc_md3", null ],
-        [ "&#x1F6A7;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.queryable\" >exec.queryable</a> Query and queryables", "md_docs_implementation_status.html#autotoc_md4", [
-          [ "&#x1F6A7;&#x274E;&#x274E; <a href=\"https://wg21.link/exec.queryable.general\" >exec.queryable.general</a> General", "md_docs_implementation_status.html#autotoc_md5", null ],
-          [ "&#x1F6A7;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.queryable.concept\" >exec.queryable.concept</a> Queryable concept", "md_docs_implementation_status.html#autotoc_md6", null ]
+        [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.general\" >exec.general</a> General", "md_docs_implementation_status.html#autotoc_md3", null ],
+        [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.queryable\" >exec.queryable</a> Query and queryables", "md_docs_implementation_status.html#autotoc_md4", [
+          [ "&#x274E;&#x274E;&#x274E; <a href=\"https://wg21.link/exec.queryable.general\" >exec.queryable.general</a> General", "md_docs_implementation_status.html#autotoc_md5", null ],
+          [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.queryable.concept\" >exec.queryable.concept</a> Queryable concept", "md_docs_implementation_status.html#autotoc_md6", null ]
         ] ],
         [ "&#x274E;&#x274E;&#x274E; <a href=\"https://wg21.link/exec.async.ops\" >exec.async.ops</a> Asynchronous operations", "md_docs_implementation_status.html#autotoc_md7", null ],
         [ "&#x2705;&#x2705;&#x1F534; <a href=\"https://wg21.link/execution.syn\" >execution.syn</a> Header <tt><execution></tt> synopsis", "md_docs_implementation_status.html#autotoc_md8", null ],
-        [ "&#x1F534;&#x1F534;&#x1F534; <a href=\"https://wg21.link/exec.queries\" >exec.queries</a> Queries", "md_docs_implementation_status.html#autotoc_md9", [
+        [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.queries\" >exec.queries</a> Queries", "md_docs_implementation_status.html#autotoc_md9", [
           [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.queries.expos\" >exec.queries.expos</a> Query utilities", "md_docs_implementation_status.html#autotoc_md10", null ],
           [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.fwd.env\" >exec.fwd.env</a> <tt>forwarding_query</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/forwarding_query.hpp\" ><tt>forwarding_query.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md11", null ],
           [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.get.allocator\" >exec.get.allocator</a> <tt>get_allocator</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_allocator.hpp\" ><tt>get_allocator.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md12", null ],
@@ -50,12 +51,12 @@ var NAVTREE =
           [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.get.delegation.scheduler\" >exec.get.delegation.scheduler</a> <tt>execution::get_delegation_scheduler</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_delegation_scheduler.hpp\" ><tt>get_delegation_scheduler.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md18", null ],
           [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.get.fwd.progress\" >exec.get.fwd.progress</a> <tt>execution::get_forward_progress_guarantee</tt>", "md_docs_implementation_status.html#autotoc_md19", null ],
           [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.get.compl.sched\" >exec.get.compl.sched</a> <tt>execution::get_completion_scheduler</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_scheduler.hpp\" ><tt>get_completion_scheduler.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md20", null ],
-          [ "&#x2705;&#x2705;&#x1F534; <a href=\"https://wg21.link/exec.get.compl.domain\" >exec.get.compl.domain</a> <tt>execution::get_completion_domain</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_domain.hpp\" ><tt>get_completion_domain.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md21", null ],
-          [ "&#x2705;&#x1F534;&#x1F534; <a href=\"https://wg21.link/exec.get.await.adapt\" >exec.get.await.adapt</a> <tt>execution::get_await_completion_adaptor</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_await_completion_adaptor.hpp\" ><tt>get_await_completion_adaptor.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md22", null ]
+          [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.get.compl.domain\" >exec.get.compl.domain</a> <tt>execution::get_completion_domain</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_completion_domain.hpp\" ><tt>get_completion_domain.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md21", null ],
+          [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.get.await.adapt\" >exec.get.await.adapt</a> <tt>execution::get_await_completion_adaptor</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/get_await_completion_adaptor.hpp\" ><tt>get_await_completion_adaptor.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md22", null ]
         ] ],
-        [ "&#x2705;&#x1F534;&#x2705; <a href=\"https://wg21.link/exec.sched\" >exec.sched</a> Schedulers", "md_docs_implementation_status.html#autotoc_md23", null ],
-        [ "&#x1F534;&#x1F534;&#x1F534; <a href=\"https://wg21.link/exec.recv\" >exec.recv</a> Receivers", "md_docs_implementation_status.html#autotoc_md24", [
-          [ "&#x1F534;&#x1F534;&#x1F534; <a href=\"https://wg21.link/exec.recv.concepts\" >exec.recv.concepts</a> Receiver concepts", "md_docs_implementation_status.html#autotoc_md25", null ],
+        [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.sched\" >exec.sched</a> Schedulers", "md_docs_implementation_status.html#autotoc_md23", null ],
+        [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.recv\" >exec.recv</a> Receivers", "md_docs_implementation_status.html#autotoc_md24", [
+          [ "&#x2705;&#x2705;&#x12705; <a href=\"https://wg21.link/exec.recv.concepts\" >exec.recv.concepts</a> Receiver concepts", "md_docs_implementation_status.html#autotoc_md25", null ],
           [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.set.value\" >exec.set.value</a> <tt>execution::set_value</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/set_value.hpp\" ><tt>set_value.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md26", null ],
           [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.set.error\" >exec.set.error</a> <tt>execution::set_error</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/set_error.hpp\" ><tt>set_error.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md27", null ],
           [ "&#x2705;&#x2705;&#x2705; <a href=\"https://wg21.link/exec.set.stopped\" >exec.set.stopped</a> <tt>execution::set_stopped</tt>: <a href=\"https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/set_stopped.hpp\" ><tt>set_stopped.hpp</tt></a>", "md_docs_implementation_status.html#autotoc_md28", null ]
@@ -185,7 +186,6 @@ var NAVTREE =
     [ "resources", "md_docs_resources.html", [
       [ "Resources Related to <tt>beman::execution</tt>", "md_docs_resources.html#autotoc_md132", null ]
     ] ],
-    [ "ToDo", "md_docs_TODO.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -210,8 +210,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "affine_8hpp_source.html",
-"md_docs_implementation_status.html#autotoc_md41",
-"structbeman_1_1execution_1_1nostopstate__t.html"
+"md_docs_implementation_status.html#autotoc_md39",
+"structbeman_1_1execution_1_1is__execution__policy_3_01_1_1beman_1_1execution_1_1sequenced__policy_01_4.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

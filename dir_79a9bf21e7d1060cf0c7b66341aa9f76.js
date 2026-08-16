@@ -93,6 +93,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "indices_for.hpp", "indices__for_8hpp_source.html", null ],
     [ "indirect_meta_apply.hpp", "indirect__meta__apply_8hpp_source.html", null ],
     [ "infallible_scheduler.hpp", "infallible__scheduler_8hpp_source.html", null ],
+    [ "inlinable_receiver.hpp", "inlinable__receiver_8hpp_source.html", null ],
     [ "inline_attrs.hpp", "inline__attrs_8hpp_source.html", null ],
     [ "inline_scheduler.hpp", "inline__scheduler_8hpp_source.html", null ],
     [ "inplace_stop_source.hpp", "inplace__stop__source_8hpp_source.html", null ],

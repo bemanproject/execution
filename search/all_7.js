@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['implementation_20status_0',['Implementation Status',['../md_docs_implementation_status.html',1,'']]],
+  ['implementation_2dstatus_0',['implementation-status',['../md_docs_implementation_status.html',1,'']]],
   ['indeterminate_5fdomain_1',['indeterminate_domain',['../structbeman_1_1execution_1_1indeterminate__domain.html',1,'beman::execution']]],
   ['inline_5fscheduler_2',['inline_scheduler',['../structbeman_1_1execution_1_1inline__scheduler.html',1,'beman::execution']]],
   ['inplace_5fstop_5fcallback_3',['inplace_stop_callback',['../classbeman_1_1execution_1_1inplace__stop__callback.html',1,'beman::execution']]],

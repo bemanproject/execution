@@ -182,31 +182,33 @@ $(document).ready(function(){initNavTree('get__completion__scheduler_8hpp_source
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>             ::beman::execution::scheduler&lt;Q&gt;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keyword">auto</span> get_completion_scheduler_t&lt;Tag&gt;::operator()(<span class="keyword">const</span> Q&amp; q, <span class="keyword">const</span> E&amp;... e) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::beman::execution::detail::compl_sched_recurse_queryable&lt;Tag, Q, E...&gt;) {</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        return ::beman::execution::detail::recurse_query(::beman::execution::detail::try_query(q, *<span class="keyword">this</span>, e...), e...);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="keyword">static_assert</span>(::beman::execution::scheduler&lt;Q&gt;);</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keywordflow">return</span> q;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    }</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>}</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keyword">static_assert</span>(<span class="keyword">noexcept</span>(</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            ::beman::execution::detail::recurse_query(::beman::execution::detail::try_query(q, *<span class="keyword">this</span>, e...), e...)));</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        return ::beman::execution::detail::recurse_query(::beman::execution::detail::try_query(q, *<span class="keyword">this</span>, e...), e...);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keyword">static_assert</span>(::beman::execution::scheduler&lt;Q&gt;);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordflow">return</span> q;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    }</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="keyword">template</span> &lt;::beman::execution::detail::completion_tag Tag&gt;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">using </span>get_completion_scheduler_t = ::beman::execution::detail::get_completion_scheduler_t&lt;Tag&gt;;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keyword">template</span> &lt;::beman::execution::detail::completion_tag Tag&gt;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> get_completion_scheduler_t&lt;Tag&gt; get_completion_scheduler{};</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keyword">using </span>get_completion_scheduler_t = ::beman::execution::detail::get_completion_scheduler_t&lt;Tag&gt;;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keyword">template</span> &lt;::beman::execution::detail::completion_tag Tag&gt;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> get_completion_scheduler_t&lt;Tag&gt; get_completion_scheduler{};</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>} <span class="comment">// namespace beman::execution</span></div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_GET_COMPLETION_SCHEDULER</span></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1detail_1_1completion__tag_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1detail_1_1completion__tag.html">beman::execution::detail::completion_tag</a></div><div class="ttdef"><b>Definition:</b> completion_tag.hpp:32</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_1_1detail_html"><div class="ttname"><a href="namespacebeman_1_1execution_1_1detail.html">beman::execution::detail</a></div><div class="ttdef"><b>Definition:</b> affine.hpp:56</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine.hpp:56</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_a26102229c0893bcb416cb2acb6b9fed6"><div class="ttname"><a href="namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6">beman::execution::forwarding_query_t</a></div><div class="ttdeci">beman::execution::detail::forwarding_query_t forwarding_query_t</div><div class="ttdoc">Type of the forwarding_query customization point object.</div><div class="ttdef"><b>Definition:</b> forwarding_query.hpp:44</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_a26102229c0893bcb416cb2acb6b9fed6"><div class="ttname"><a href="namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6">beman::execution::forwarding_query_t</a></div><div class="ttdeci">beman::execution::detail::forwarding_query_t forwarding_query_t</div><div class="ttdoc">Type of the forwarding_query customization point object.</div><div class="ttdef"><b>Definition:</b> forwarding_query.hpp:45</div></div>
 <div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine.hpp:56</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beman::execution: beman::execution::get_stop_token_t Struct Reference</title>
+<title>beman::execution: beman::execution::inlinable_receiver Concept Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structbeman_1_1execution_1_1get__stop__token__t.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('conceptbeman_1_1execution_1_1inlinable__receiver.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -97,37 +97,23 @@ $(document).ready(function(){initNavTree('structbeman_1_1execution_1_1get__stop_
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="structbeman_1_1execution_1_1get__stop__token__t-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">beman::execution::get_stop_token_t Struct Reference</div></div>
+  <div class="headertitle"><div class="title">beman::execution::inlinable_receiver Concept Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a323b13c267455b44090c8013c58a77a1"><td class="memTemplParams" colspan="2"><a id="a323b13c267455b44090c8013c58a77a1" name="a323b13c267455b44090c8013c58a77a1"></a>
-template&lt;typename Object &gt; <br />
-requires requires(Object&amp;&amp; object, const <a class="el" href="structbeman_1_1execution_1_1get__stop__token__t.html">get_stop_token_t</a>&amp; tag) { { ::std::as_const(object).query(tag) } -&gt; ::beman::execution::detail::decayed_stoppable_token; }</td></tr>
-<tr class="memitem:a323b13c267455b44090c8013c58a77a1"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Object &amp;&amp;object) const noexcept</td></tr>
-<tr class="separator:a323b13c267455b44090c8013c58a77a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa603c00bc0bad2ce71a858aa18926153"><td class="memTemplParams" colspan="2"><a id="aa603c00bc0bad2ce71a858aa18926153" name="aa603c00bc0bad2ce71a858aa18926153"></a>
-template&lt;typename Object &gt; </td></tr>
-<tr class="memitem:aa603c00bc0bad2ce71a858aa18926153"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Object &amp;&amp;) const noexcept -&gt; <a class="el" href="classbeman_1_1execution_1_1never__stop__token.html">::beman::execution::never_stop_token</a></td></tr>
-<tr class="separator:aa603c00bc0bad2ce71a858aa18926153"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5ffe8f4d5fc0e28a481c65047d0c152"><td class="memItemLeft" align="right" valign="top"><a id="aa5ffe8f4d5fc0e28a481c65047d0c152" name="aa5ffe8f4d5fc0e28a481c65047d0c152"></a>
-constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>query</b> (const <a class="el" href="namespacebeman_1_1execution.html#a26102229c0893bcb416cb2acb6b9fed6">::beman::execution::forwarding_query_t</a> &amp;) const noexcept -&gt; bool</td></tr>
-<tr class="separator:aa5ffe8f4d5fc0e28a481c65047d0c152"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/beman/execution/detail/<a class="el" href="get__stop__token_8hpp_source.html">get_stop_token.hpp</a></li>
-</ul>
-</div><!-- contents -->
+<h2 class="groupheader">Concept definition</h2>
+<div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Receiver, <span class="keyword">typename</span> ChildOp&gt;</div>
+<div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="conceptbeman_1_1execution_1_1inlinable__receiver.html">beman::execution::inlinable_receiver</a> =  ::beman::execution::receiver&lt;Receiver&gt; &amp;&amp; <span class="keyword">requires</span>(ChildOp* child) {</div>
+<div class="line">    {</div>
+<div class="line">        ::std::remove_cvref_t&lt;Receiver&gt;::make_receiver_for(*child)</div>
+<div class="line">    } <span class="keyword">noexcept</span> -&gt; ::std::same_as&lt;::std::remove_cvref_t&lt;Receiver&gt;&gt;;</div>
+<div class="line">}</div>
+<div class="ttc" id="aconceptbeman_1_1execution_1_1inlinable__receiver_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1inlinable__receiver.html">beman::execution::inlinable_receiver</a></div><div class="ttdef"><b>Definition:</b> inlinable_receiver.hpp:24</div></div>
+</div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespacebeman.html">beman</a></li><li class="navelem"><a class="el" href="namespacebeman_1_1execution.html">execution</a></li><li class="navelem"><a class="el" href="structbeman_1_1execution_1_1get__stop__token__t.html">get_stop_token_t</a></li>
+    <li class="navelem"><a class="el" href="namespacebeman.html">beman</a></li><li class="navelem"><a class="el" href="namespacebeman_1_1execution.html">execution</a></li><li class="navelem"><a class="el" href="conceptbeman_1_1execution_1_1inlinable__receiver.html">inlinable_receiver</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6 </li>
   </ul>
 </div>
