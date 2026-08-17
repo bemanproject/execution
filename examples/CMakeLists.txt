@@ -36,6 +36,9 @@ set(EXAMPLES
     stop_token
     when_all_cancel
 )
+set(xEXAMPLES
+    tutorial-create-a-sender
+)
 
 if(BEMAN_USE_MODULES)
     #-dk:TODO gcc doesn't like the modules: list(APPEND EXAMPLES modules modules_and_header)

@@ -139,12 +139,17 @@ inline auto beman::execution::inplace_stop_source::request_stop() -> bool {
             this->running   = it;
             this->id        = ::std::this_thread::get_id();
             this->callbacks = it->next;
-            {
+            if (this->callbacks) {
                 relock r(&guard);
                 guard.unlock();
                 it->call();
+                this->running = nullptr;
+            } else {
+                guard.unlock();
+                it->call();
+                this->running = nullptr;
+                break;
             }
-            this->running = nullptr;
         }
         return true;
     }

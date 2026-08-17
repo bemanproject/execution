@@ -9,7 +9,6 @@
 import std;
 #else
 #include <cstdlib>
-#include <iostream>
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
@@ -40,16 +39,11 @@ class beman::execution::counting_scope : public ::beman::execution::detail::coun
   public:
     class token;
 
-    ~counting_scope() { std::cout << "counting_scope dtor\n"; }
     auto join() noexcept -> ::beman::execution::sender auto {
         return ::beman::execution::detail::counting_scope_join(this);
     }
     auto get_token() noexcept -> token;
-    auto request_stop() noexcept -> void {
-      std::cout << "counting_scope.request_stop()\n";
-      this->stop_source.request_stop();
-      std::cout << "counting_scope.request_stop() done\n";
-    }
+    auto request_stop() noexcept -> void { this->stop_source.request_stop(); }
 
   private:
     ::beman::execution::inplace_stop_source stop_source{};

@@ -9,7 +9,6 @@
 import std;
 #else
 #include <atomic>
-#include <iostream>
 #include <optional>
 #include <type_traits>
 #include <utility>
@@ -87,9 +86,7 @@ struct beman::execution::detail::stop_when_t::sender {
 
         struct cb_t {
             ::beman::execution::inplace_stop_source& source;
-            auto                                     operator()() const noexcept {
-                this->source.request_stop();
-            }
+            auto                                     operator()() const noexcept { this->source.request_stop(); }
         };
         struct env {
             base_state<Rcvr>* st;
@@ -137,12 +134,7 @@ struct beman::execution::detail::stop_when_t::sender {
         state(S&& s, T&& t, R&& r)
             : base_state<Rcvr>{::std::forward<R>(r)},
               tok(::std::forward<T>(t)),
-              inner_state(::beman::execution::connect(::std::forward<S>(s), receiver{this})) {
-                std::cout << "stop_when ctor\n";
-              }
-              ~state() {
-                std::cout << "stop_when dtor\n";
-              }
+              inner_state(::beman::execution::connect(::std::forward<S>(s), receiver{this})) {}
 
         auto start() & noexcept {
             this->cb1.emplace(this->tok, cb_t{this->source});

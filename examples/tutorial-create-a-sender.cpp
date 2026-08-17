@@ -6,6 +6,7 @@
 #include <stack>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail;
 #else
 #include <beman/execution/execution.hpp>
 #endif
@@ -105,7 +106,7 @@ struct stop_test {
 
         struct cb {
             state* self;
-            auto operator()() const noexcept -> void {
+            auto   operator()() const noexcept -> void {
                 std::cout << "cb\n";
                 ex::set_value(std::move(self->rcvr));
             }
@@ -114,13 +115,14 @@ struct stop_test {
 
         std::remove_cvref_t<Rcvr> rcvr;
         std::optional<callback>   callb;
-        auto start() & noexcept -> void {
+        auto                      start() & noexcept -> void {
+            std::cout << "stop_test start\n";
             this->callb.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), cb{this});
         }
     };
     template <typename Rcvr>
     state<Rcvr> connect(Rcvr&& rcvr) const {
-        return { std::forward<Rcvr>(rcvr) };
+        return {std::forward<Rcvr>(rcvr)};
     }
 };
 } // namespace
@@ -128,12 +130,12 @@ struct stop_test {
 
 int main() {
     std::cout << std::unitbuf;
-#if 0
+#if 1
     asynchronous_stack<int> st;
     ex::counting_scope      scope;
     [[maybe_unused]] auto   sender = st.pop() | ex::then([](int v) { std::cout << "got value=" << v << "\n"; });
 
-#if 0
+#if 1
     for (int value{1}; value < 4; ++value) {
         st.push(value);
     }
@@ -155,12 +157,42 @@ int main() {
     std::cout << "pushed 4,5,6\n";
 #endif
 
-    ex::spawn(stop_test(), scope.get_token());
-
     std::cout << "requesting stop\n";
     scope.request_stop();
     std::cout << "requested stop\n";
-    ex::sync_wait(scope.join() | ex::then([]{ std::cout << "joined\n"; }));
+    ex::sync_wait(scope.join() | ex::then([] { std::cout << "joined\n"; }));
     std::cout << "joined\n";
+#else
+
+    std::optional<ex::inplace_stop_source> source1{};
+    source1.emplace();
+    std::optional<ex::inplace_stop_source> source2{};
+    source2.emplace();
+    struct receiver {
+        using receiver_concept = ex::receiver_tag;
+        std::optional<ex::inplace_stop_source>& source1;
+        std::optional<ex::inplace_stop_source>& source2;
+        auto query(ex::get_stop_token_t) const noexcept { return this->source2->get_token(); }
+        auto get_env() const noexcept {
+            std::cout << "get_env\n";
+            return *this;
+        }
+        auto set_value() noexcept {
+            std::cout << "receiver::set_value\n";
+            source1.reset();
+            std::cout << "receiver::set_value done\n";
+        }
+        auto set_stopped() noexcept { std::cout << "receiver::set_stopped\n"; }
+    };
+#if 1
+    auto sws(ex::connect(ex::detail::stop_when(stop_test(), source1->get_token()), receiver{source1, source2}));
+#else
+    auto sws(ex::connect(stop_test(), receiver{source1, source2}));
+#endif
+    std::cout << "start\n";
+    ex::start(sws);
+    std::cout << "request stop\n";
+    source1->request_stop();
+    std::cout << "requested stop\n";
 #endif
 }
