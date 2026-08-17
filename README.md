@@ -1,15 +1,18 @@
+# beman.execution: Building Block For Asynchronous Programs
 <!--
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
-# beman.execution: Building Block For Asynchronous Programs
 
-<img src="https://github.com/bemanproject/beman/blob/main/images/logos/beman_logo-beman_library_under_development.png" style="width:5%; height:auto;">
+<!-- markdownlint-disable line-length -->
+[![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg)](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#the-beman-library-maturity-model)![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg)[![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)[![Compiler Explorer Example](https://img.shields.io/badge/Try%20it%20on%20Compiler%20Explorer-grey?logo=compilerexplorer&logoColor=67c52a)](https://godbolt.org/z/jeMEWGYbM)
+<!-- markdownlint-restore -->
 
-![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)
 
-`beman.execution` provides the basic vocabulary for asynchronous
-programming as well as important algorithms implemented in terms
-of this vocabulary. The key entities of the vocabulary are:
+`beman.execution` provides the basic vocabulary for asynchronous programming as well as important algorithms implemented in terms of this vocabulary.
+
+**Implements**: [`std::execution` (P2300R10)](http://wg21.link/P2300R10).
+
+The key entities of the vocabulary are:
 
 - `scheduler` used to control where operations are executed.
     - The key operation is `schedule(scheduler) -> sender`.
@@ -30,14 +33,12 @@ e.g.:
     specified scheduler`.
 - `let_value(sender, fun)` to produce a sender based on `sender`'s
     results.
-- `on(scheduler, sender)` to execute `sender` on `scheduler`.
-- `transfer(sender, scheduler)` to complete with with `sender`'s
+- `starts_on(scheduler, sender)` to start `sender` on `scheduler`.
+- `continues_on(sender, scheduler)` to complete with `sender`'s
     results on `scheduler`.
 - `when_all(sender ...)` to complete when all `sender`s have
     completed.
 - `bulk(...)` to executed execute work, potentially concurrently.
-
-**Implements:** [`std::execution` (P2300R10)](http://wg21.link/P2300R10).
 
 **Status**: [Under development and not yet ready for production use.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#under-development-and-not-yet-ready-for-production-use)
 
@@ -48,13 +49,20 @@ There are plenty of things which need to be done. See the
 for some ideas how to contribute. The [resources page](https://github.com/bemanproject/execution/blob/main/docs/resources.md)
 contains some links for general information about the sender/receivers and `std::execution`.
 
-## Build
+## Dependencies
 
-## Preconditions
+### Build Environment
 
-- cmake v3.30 or newer
-- ninja v1.13.0 or newer
-- A compiler that supports at least C++23
+This project requires at least the following to build:
+
+* A C++ compiler that conforms to the C++23 standard or greater
+* CMake 3.30 or later
+
+You can disable building tests by setting CMake option `BEMAN_EXECUTION_BUILD_TESTS` to
+`OFF` when configuring the project.
+
+You can disable building examples by setting CMake option `BEMAN_EXECUTION_BUILD_EXAMPLES` to
+`OFF` when configuring the project.
 
 
 | Library | Linux | MacOS | Windows |

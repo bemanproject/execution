@@ -1,9 +1,15 @@
 // tests/beman/execution/exec-on.test.cpp                           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
-#include <test/thread_pool.hpp>
 #include <test/execution.hpp>
+#include <test/thread_pool.hpp>
+#include <test/sender_env.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
@@ -59,6 +65,19 @@ struct on_receiver {
     auto get_env() const noexcept { return test_detail::make_env(test_std::get_scheduler, pool.get_scheduler()); }
 };
 static_assert(test_std::receiver<on_receiver>);
+
+auto test_on_attributes() {
+    test_std::run_loop loop{};
+    test::sender_env   s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::on(loop.get_scheduler(), s));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::on(loop.get_scheduler(), s));
+    test::test_sender_env<true>(
+        42, test::test_forwardable_attr{}, test_std::on(s, loop.get_scheduler(), test_std::then([]() {})));
+    test::test_sender_env<false>(
+        84, test::test_non_forwardable_attr{}, test_std::on(s, loop.get_scheduler(), test_std::then([]() {})));
+}
 } // namespace
 
 TEST(exec_on) {
@@ -124,4 +143,6 @@ TEST(exec_on) {
     assert(on_id == pool_id);
     assert(cont_id == std::this_thread::get_id());
     assert(on_id != std::this_thread::get_id());
+
+    test_on_attributes();
 }

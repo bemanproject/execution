@@ -16,7 +16,7 @@ import std;
 namespace beman::execution::detail {
 /*!
  * \brief Helper type alias to get the type after decaying the argument
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <auto&& Tag>

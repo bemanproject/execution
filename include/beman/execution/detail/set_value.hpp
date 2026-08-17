@@ -12,12 +12,10 @@ import std;
 #include <utility>
 #endif
 
-// ----------------------------------------------------------------------------
-
 namespace beman::execution {
 /*!
  * \brief Type of the customization point object for successful completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 struct set_value_t {
     template <typename Receiver, typename... Args>
@@ -39,13 +37,16 @@ struct set_value_t {
 
     template <typename Receiver, typename... Args>
     auto operator()(Receiver&& receiver, Args&&... args) const noexcept -> void {
+        static_assert(noexcept(::std::forward<Receiver>(receiver).set_value(::std::forward<Args>(args)...)),
+                      "the call to receiver.set_value(args...) has to be noexcept");
+
         ::std::forward<Receiver>(receiver).set_value(::std::forward<Args>(args)...);
     }
 };
 /*!
  * \var set_value
  * \brief Customization point object for successful completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 inline constexpr set_value_t set_value{};
 } // namespace beman::execution

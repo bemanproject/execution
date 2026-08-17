@@ -1,8 +1,9 @@
 // tests/beman/execution/exec-associate.test.cpp                          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/common.hpp>
 #include <test/execution.hpp>
+#include <test/sender_env.hpp>
+#include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -102,6 +103,18 @@ struct scope {
 static_assert(test_std::scope_token<scope::token>);
 static_assert(test_std::scope_association<scope::assoc>);
 
+auto test_associate_attributes() {
+    test_std::counting_scope scope{};
+    test::sender_env         s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::associate(s,
+    // scope.get_token()));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::associate(s, scope.get_token()));
+
+    scope.close();
+    test_std::sync_wait(scope.join());
+}
 } // namespace
 
 TEST(exec_associate) {
@@ -238,4 +251,5 @@ TEST(exec_associate) {
         ASSERT(completes_with_value(test_std::just(1) | test_std::associate(null_token{})));
         ASSERT(!completes_with_value(test_std::just(1) | test_std::associate(expired_token{})));
     }
+    test_associate_attributes();
 }

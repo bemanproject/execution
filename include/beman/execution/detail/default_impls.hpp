@@ -39,7 +39,7 @@ import beman.execution.detail.start;
 namespace beman::execution::detail {
 /*!
  * \brief Helper type providing default implementations for basic_sender
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 struct default_impls {
@@ -89,6 +89,9 @@ struct default_impls {
         }
     };
     static constexpr auto complete = complete_impl{};
+
+    template <typename Sender, typename... Env>
+    static consteval auto check_types() -> void {}
 };
 } // namespace beman::execution::detail
 

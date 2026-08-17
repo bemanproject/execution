@@ -1,0 +1,87 @@
+// examples/sender_demo.cpp                                           -*-C++-*-
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <iostream>
+#include <memory_resource>
+#include <string>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+import beman.execution.detail;
+#else
+#include <beman/execution.hpp>
+#endif
+
+namespace ex = beman::execution;
+
+template <typename Receiver>
+struct just_op_state {
+    using operation_state_concept = ex::operation_state_tag;
+    std::remove_cvref_t<Receiver> rec;
+    std::pmr::string              value;
+
+    template <typename R>
+    just_op_state(R&& r, std::pmr::string&& val)
+        : rec(std::forward<R>(r)), value(std::move(val), ex::get_allocator(ex::get_env(rec))) {}
+
+    void start() & noexcept { ex::set_value(std::move(rec), std::move(value)); }
+};
+
+struct test_receiver {
+    using receiver_concept = ex::receiver_tag;
+    auto set_value(auto&&...) && noexcept -> void { std::cout << "set_value\n"; }
+    auto set_error(auto&&) && noexcept -> void { std::cout << "set_error\n"; }
+    auto set_stopped() && noexcept -> void { std::cout << "set_stopped\n"; }
+};
+
+static_assert(ex::receiver<test_receiver>);
+static_assert(ex::operation_state<just_op_state<test_receiver>>);
+
+template <typename T>
+struct just_sender {
+    using sender_concept        = ex::sender_tag;
+    using completion_signatures = ex::completion_signatures<ex::set_value_t(T)>;
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+        return {};
+    }
+
+    T value;
+    template <ex::receiver Receiver>
+    auto connect(Receiver&& r) && -> just_op_state<Receiver> {
+        return {std::forward<Receiver>(r), std::move(value)};
+    }
+};
+
+static_assert(ex::sender<just_sender<std::pmr::string>>);
+static_assert(ex::sender_in<just_sender<std::pmr::string>>);
+
+int main() {
+    try {
+        auto                  j = just_sender<std::pmr::string>{std::pmr::string("value")};
+        auto                  t = std::move(j) | ex::then([](const std::pmr::string& v) { return v + " then"; });
+        auto                  w = ex::when_all(std::move(t));
+        [[maybe_unused]] auto e =
+            ex::write_env(std::move(w), ex::detail::make_env(ex::get_allocator, std::pmr::polymorphic_allocator<>()));
+
+        std::cout << "before start\n";
+#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ > 15) || !defined(BEMAN_HAS_MODULES)
+        auto r = ex::sync_wait(std::move(e));
+        if (r) {
+            auto [v] = *r;
+            std::cout << "produced='" << v << "'\n";
+        } else
+            std::cout << "operation was cancelled\n";
+#endif
+        std::cout << "after start\n";
+    } catch (const std::exception& ex) {
+        std::cout << "ERROR: " << ex.what() << "\n";
+    }
+}

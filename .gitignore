@@ -41,6 +41,7 @@ cmake-build-*
 .cache
 .vscode
 .idea
+.init
 compile_commands.json
 stagedir
 

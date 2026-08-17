@@ -1,8 +1,13 @@
 // src/beman/execution/tests/exec-get-scheduler.test.cpp            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
 #include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -15,6 +20,9 @@ import beman.execution;
 namespace {
 struct scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     struct sender {
         using sender_concept = test_std::sender_tag;
     };
@@ -35,6 +43,7 @@ TEST(exec_get_scheduler) {
     static_assert(test_std::forwarding_query(test_std::get_scheduler));
     env  e{17};
     auto sched{test_std::get_scheduler(e)};
+    static_assert(noexcept(test_std::get_scheduler(e)));
     static_assert(::std::same_as<scheduler, decltype(sched)>);
     ASSERT(sched == scheduler{17});
 }

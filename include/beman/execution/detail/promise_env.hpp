@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_PROMISE_ENV
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_PROMISE_ENV
 
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------

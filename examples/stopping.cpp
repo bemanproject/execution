@@ -6,18 +6,25 @@
 // which gets started in a thread. To stop this thread
 // the corresponding stop source is requested to stop.
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <chrono>
 #include <iostream>
+#include <mutex>
 #include <thread>
 #include <cassert>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/execution.hpp>
-#include <beman/execution/stop_token.hpp>
+#include <beman/execution.hpp>
+#include <beman/stop_token.hpp>
 #endif
 
 using namespace std::chrono;
+using namespace std::chrono_literals;
 namespace ex = beman::execution;
 
 // ----------------------------------------------------------------------------
@@ -82,20 +89,21 @@ struct receiver {
 
 int main() {
     ex::inplace_stop_source source;
+    std::mutex              mtx;
 
-    std::thread t([token = source.get_token()] {
-        ex::sync_wait(
-            inject_cancel_sender{token, ex::read_env(ex::get_stop_token) | ex::then([](ex::inplace_stop_token tok) {
-                                            while (not tok.stop_requested()) {
-                                                std::cout << "sleeping\n";
-                                                std::this_thread::sleep_for(10ms);
-                                            }
-                                        })});
+    std::thread t([token = source.get_token(), &mtx] {
+        ex::sync_wait(inject_cancel_sender{
+            token, ex::read_env(ex::get_stop_token) | ex::then([&mtx](ex::inplace_stop_token tok) {
+                       while (not tok.stop_requested()) {
+                           (void)std::lock_guard(mtx), std::cout << "sleeping\n";
+                           std::this_thread::sleep_for(10ms);
+                       }
+                   })});
     });
 
     // std::cin.get();
     std::this_thread::sleep_for(100ms);
-    std::cout << "requesting stop\n";
+    (void)std::lock_guard(mtx), std::cout << "requesting stop\n";
     source.request_stop();
 
     t.join();

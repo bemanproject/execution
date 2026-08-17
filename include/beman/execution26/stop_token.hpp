@@ -4,7 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_STOP_TOKEN
 #define INCLUDED_BEMAN_EXECUTION26_STOP_TOKEN
 
-#include <beman/execution/stop_token.hpp>
+#include <beman/stop_token.hpp>
 
 // ----------------------------------------------------------------------------
 

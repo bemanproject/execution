@@ -31,9 +31,10 @@ namespace beman::execution {
 struct get_stop_token_t {
     template <typename Object>
         requires requires(Object&& object, const get_stop_token_t& tag) {
-            { ::std::as_const(object).query(tag) } noexcept -> ::beman::execution::detail::decayed_stoppable_token;
+            { ::std::as_const(object).query(tag) } -> ::beman::execution::detail::decayed_stoppable_token;
         }
     auto operator()(Object&& object) const noexcept {
+        static_assert(noexcept(::std::as_const(object).query(*this)));
         return ::std::as_const(object).query(*this);
     }
 

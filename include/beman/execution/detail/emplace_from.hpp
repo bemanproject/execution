@@ -24,7 +24,7 @@ import beman.execution.detail.nothrow_callable;
 namespace beman::execution::detail {
 /*!
  * \brief Helper class to get the result of a function which may be only called once.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Fun>

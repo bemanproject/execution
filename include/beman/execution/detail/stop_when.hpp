@@ -9,6 +9,7 @@
 import std;
 #else
 #include <atomic>
+#include <iostream>
 #include <optional>
 #include <type_traits>
 #include <utility>
@@ -68,31 +69,31 @@ struct beman::execution::detail::stop_when_t::sender {
     std::remove_cvref_t<Sndr> sndr;
 
     template <::beman::execution::receiver Rcvr>
-    struct state {
+    struct base_state {
+        using rcvr_t = ::std::remove_cvref_t<Rcvr>;
+        rcvr_t                                  rcvr;
+        ::beman::execution::inplace_stop_source source{};
+        base_state(Rcvr&& r) : rcvr(::std::forward<Rcvr>(r)) {}
+        virtual ~base_state() noexcept          = default;
+        virtual auto reset() & noexcept -> void = 0;
+    };
+    template <::beman::execution::receiver Rcvr>
+    struct state : base_state<Rcvr> {
         using operation_state_concept = ::beman::execution::operation_state_tag;
-        using rcvr_t                  = ::std::remove_cvref_t<Rcvr>;
+        using rcvr_t                  = base_state<Rcvr>::rcvr_t;
         using token1_t                = ::std::remove_cvref_t<Tok>;
         using token2_t =
             decltype(::beman::execution::get_stop_token(::beman::execution::get_env(::std::declval<rcvr_t>())));
 
-        struct base_state {
-            rcvr_t                                  rcvr;
-            ::beman::execution::inplace_stop_source source{};
-            std::atomic<bool>                       run_stop{true};
-        };
         struct cb_t {
-            base_state* st;
-            auto        operator()() const noexcept {
-                this->st->run_stop = false;
-                this->st->source.request_stop();
-                if (this->st->run_stop.exchange(true)) {
-                    ::beman::execution::set_stopped(::std::move(this->st->rcvr));
-                }
+            ::beman::execution::inplace_stop_source& source;
+            auto                                     operator()() const noexcept {
+                this->source.request_stop();
             }
         };
         struct env {
-            base_state* st;
-            auto        query(const ::beman::execution::get_stop_token_t&) const noexcept {
+            base_state<Rcvr>* st;
+            auto              query(const ::beman::execution::get_stop_token_t&) const noexcept {
                 return this->st->source.get_token();
             }
             template <typename Q, typename... A>
@@ -106,47 +107,52 @@ struct beman::execution::detail::stop_when_t::sender {
 
         struct receiver {
             using receiver_concept = ::beman::execution::receiver_tag;
-            base_state* st;
+            base_state<Rcvr>* st;
 
             auto get_env() const noexcept -> env { return env{this->st}; }
             template <typename... A>
             auto set_value(A&&... a) const noexcept -> void {
-                if (this->st->run_stop.exchange(true)) {
-                    ::beman::execution::set_value(::std::move(this->st->rcvr), ::std::forward<A>(a)...);
-                }
+                this->st->reset();
+                ::beman::execution::set_value(::std::move(this->st->rcvr), ::std::forward<A>(a)...);
             }
             template <typename E>
             auto set_error(E&& e) const noexcept -> void {
-                if (this->st->run_stop.exchange(true)) {
-                    ::beman::execution::set_error(::std::move(this->st->rcvr), ::std::forward<E>(e));
-                }
+                this->st->reset();
+                ::beman::execution::set_error(::std::move(this->st->rcvr), ::std::forward<E>(e));
             }
             auto set_stopped() const noexcept -> void {
-                if (this->st->run_stop.exchange(true)) {
-                    ::beman::execution::set_stopped(::std::move(this->st->rcvr));
-                }
+                this->st->reset();
+                ::beman::execution::set_stopped(::std::move(this->st->rcvr));
             }
         };
         using inner_state_t =
             decltype(::beman::execution::connect(::std::declval<Sndr>(), ::std::declval<receiver>()));
 
         token1_t                                                               tok;
-        base_state                                                             base;
         std::optional<::beman::execution::stop_callback_for_t<token1_t, cb_t>> cb1;
         std::optional<::beman::execution::stop_callback_for_t<token2_t, cb_t>> cb2;
         inner_state_t                                                          inner_state;
 
         template <::beman::execution::sender S, ::beman::execution::stoppable_token T, ::beman::execution::receiver R>
         state(S&& s, T&& t, R&& r)
-            : tok(::std::forward<T>(t)),
-              base{::std::forward<R>(r)},
-              inner_state(::beman::execution::connect(::std::forward<S>(s), receiver{&this->base})) {}
+            : base_state<Rcvr>{::std::forward<R>(r)},
+              tok(::std::forward<T>(t)),
+              inner_state(::beman::execution::connect(::std::forward<S>(s), receiver{this})) {
+                std::cout << "stop_when ctor\n";
+              }
+              ~state() {
+                std::cout << "stop_when dtor\n";
+              }
 
         auto start() & noexcept {
-            this->cb1.emplace(this->tok, cb_t{&this->base});
-            this->cb2.emplace(::beman::execution::get_stop_token(::beman::execution::get_env(this->base.rcvr)),
-                              cb_t{&this->base});
+            this->cb1.emplace(this->tok, cb_t{this->source});
+            this->cb2.emplace(::beman::execution::get_stop_token(::beman::execution::get_env(this->rcvr)),
+                              cb_t{this->source});
             ::beman::execution::start(this->inner_state);
+        }
+        auto reset() & noexcept -> void override {
+            this->cb1.reset();
+            this->cb2.reset();
         }
     };
 

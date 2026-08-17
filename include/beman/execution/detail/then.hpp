@@ -192,23 +192,23 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
 namespace beman::execution {
 /*!
  * \brief <code>then_t</code> is the type of <code>then</code>.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 using then_t = ::beman::execution::detail::then_t<::beman::execution::set_value_t>;
 /*!
  * \brief <code>upon_error_t</code> is the type of <code>upon_error</code>.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 using upon_error_t = ::beman::execution::detail::then_t<::beman::execution::set_error_t>;
 /*!
  * \brief <code>upon_stopped_t</code> is the type of <code>upon_stopped</code>.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 using upon_stopped_t = ::beman::execution::detail::then_t<::beman::execution::set_stopped_t>;
 
 /*!
  * \brief <code>then(_sender_, _fun_)</code> yields a sender transforming a <code>set_value_t(_A_...)</code> completion
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * `then` is a callable object of type `then_t`. Invoking <code>then(_sender_, _fun_)</code> or
@@ -245,7 +245,7 @@ using upon_stopped_t = ::beman::execution::detail::then_t<::beman::execution::se
  * <h4>Example</h4>
  *
  * <pre example="doc-then.cpp">
- * #include <beman/execution/execution.hpp>
+ * #include <beman/execution.hpp>
  * #include <cassert>
  * namespace ex = beman::execution;
  *
@@ -261,7 +261,7 @@ inline constexpr ::beman::execution::then_t then{};
 /*!
  * \brief <code>upon_error(_sender_, _fun_)</code> yields a sender transforming a <code>set_error_t(_E_)</code>
  * completion
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * `upon_error` is a callable object of type `upon_error_t`. Invoking <code>upon_error(_sender_, _fun_)</code> or
@@ -299,7 +299,7 @@ inline constexpr ::beman::execution::then_t then{};
  * <h4>Example</h4>
  *
  * <pre example="doc-upon_error.cpp">
- * #include <beman/execution/execution.hpp>
+ * #include <beman/execution.hpp>
  * #include <cassert>
  * namespace ex = beman::execution;
  *
@@ -315,7 +315,7 @@ inline constexpr ::beman::execution::upon_error_t upon_error{};
 /*!
  * \brief <code>upon_stopped(_sender_, _fun_)</code> yields a sender transforming a <code>set_stopped_t()</code>
  * completion
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * `upon_stopped` is a callable object of type `upon_stopped_t`. Invoking <code>upon_stopped(_sender_, _fun_)</code> or
@@ -350,7 +350,7 @@ inline constexpr ::beman::execution::upon_error_t upon_error{};
  * <h4>Example</h4>
  *
  * <pre example="doc-upon_stopped.cpp">
- * #include <beman/execution/execution.hpp>
+ * #include <beman/execution.hpp>
  * #include <cassert>
  * namespace ex = beman::execution;
  *

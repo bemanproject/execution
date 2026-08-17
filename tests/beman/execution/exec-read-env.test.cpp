@@ -1,8 +1,13 @@
 // src/beman/execution/tests/exec-read-env.test.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
 #include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail.join_env;
@@ -29,19 +34,29 @@ struct domain {
     auto operator==(const domain&) const -> bool = default;
 };
 
+struct get_test_domain_t {
+    template <typename Env>
+    auto operator()(const Env& ev) const noexcept -> domain {
+        return ev.query(*this);
+    }
+};
+inline constexpr get_test_domain_t get_test_domain{};
+
 struct env {
     int  value{};
     auto query(test_std::get_domain_t) const noexcept -> domain { return {this->value}; }
+    auto query(get_test_domain_t) const noexcept -> domain { return {this->value}; }
 };
 
 struct receiver {
     using receiver_concept = test_std::receiver_tag;
 
     int   value{};
+    int   expect{};
     bool* called{};
 
     auto set_value(domain d) && noexcept -> void {
-        ASSERT(d == domain{this->value});
+        ASSERT(d == domain{this->expect});
         *this->called = true;
     }
     auto set_error(auto&&) && noexcept -> void {
@@ -54,8 +69,10 @@ struct receiver {
 
 auto test_read_env() -> void {
     static_assert(test_std::receiver<receiver>);
-    ASSERT(domain{17} == test_std::get_domain(env{17}));
-    ASSERT(domain{17} == test_std::get_domain(test_std::get_env(receiver{17})));
+    ASSERT(domain{} == test_std::get_domain(env{17}));
+    ASSERT(domain{} == test_std::get_domain(test_std::get_env(receiver{17, 0})));
+    ASSERT(domain{17} == get_test_domain(env{17}));
+    ASSERT(domain{17} == get_test_domain(test_std::get_env(receiver{17, 0})));
     auto sender{test_std::read_env(test_std::get_domain)};
     test::use(sender);
     static_assert(test_std::sender<decltype(sender)>);
@@ -67,10 +84,14 @@ auto test_read_env() -> void {
                      decltype(test_std::get_completion_signatures<decltype(sender), env>())>);
 
     bool called{};
-    auto op{test_std::connect(test_std::read_env(test_std::get_domain), receiver{17, &called})};
-    test::use(op);
+    auto op1{test_std::connect(test_std::read_env(test_std::get_domain), receiver{17, 0, &called})};
     ASSERT(not called);
-    test_std::start(op);
+    test_std::start(op1);
+    ASSERT(called);
+
+    called = false;
+    auto op2{test_std::connect(test_std::read_env(get_test_domain), receiver{17, 17, &called})};
+    test_std::start(op2);
     ASSERT(called);
 }
 
@@ -98,10 +119,37 @@ auto test_read_env_completions() -> void {
     test_std::sync_wait(test_std::when_all(test_std::read_env(test_std::get_stop_token)));
     test_std::sync_wait(test_std::when_all(test_std::read_env(test_std::get_scheduler)));
 }
+
+struct test_query_t {
+    auto operator()(auto&& env) const noexcept { return env.query(*this); }
+};
+inline constexpr test_query_t test_query{};
+
+template <bool Valid>
+struct test_env {
+    auto query(test_query_t) const noexcept {
+        if constexpr (Valid) {
+            return std::allocator<int>{};
+        }
+    }
+};
+
+auto test_read_env_check_types() -> void {
+    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_std::get_stop_token)),
+                                                 test_std::env<>>();
+    test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)), test_env<true>>();
+#if 0
+     test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_query)),
+                                                  test_env<false>>();
+     test_std::read_env_t::impls_for::check_types<decltype(test_std::read_env(test_std::get_allocator)),
+                                                           test_std::env<>>();
+#endif
+}
 } // namespace
 
 TEST(exec_read_env) {
     static_assert(std::same_as<const test_std::read_env_t, decltype(test_std::read_env)>);
     test_read_env();
     test_read_env_completions();
+    test_read_env_check_types();
 }

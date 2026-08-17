@@ -28,6 +28,7 @@ class asynchronous_stack {
         struct stop_fun {
             state& st;
             void   operator()() noexcept {
+                std::cout << "stop callback start\n";
                 state& s = this->st;
                 this->st.callback.reset();
                 for (auto it{&this->st.self.awaiting}; it; it = &(*it)->next) {
@@ -36,7 +37,9 @@ class asynchronous_stack {
                         break;
                     }
                 }
+                std::cout << "stop callback completing\n";
                 ex::set_stopped(std::move(s.rcvr));
+                std::cout << "stop callback done\n";
             }
         };
         using stop_token_t = ex::stop_token_of_t<decltype(ex::get_env(std::declval<Rcvr&>()))>;
@@ -89,14 +92,48 @@ class asynchronous_stack {
 
 static_assert(ex::sender<asynchronous_stack<int>::pop_sender>);
 static_assert(ex::sender_in<asynchronous_stack<int>::pop_sender>);
+
+struct stop_test {
+    using sender_concept = ex::sender_tag;
+    template <typename...>
+    static consteval auto get_completion_signatures() {
+        return ex::completion_signatures<ex::set_value_t()>();
+    }
+    template <typename Rcvr>
+    struct state {
+        using operation_state_concept = ex::operation_state_tag;
+
+        struct cb {
+            state* self;
+            auto operator()() const noexcept -> void {
+                std::cout << "cb\n";
+                ex::set_value(std::move(self->rcvr));
+            }
+        };
+        using callback = ex::stop_callback_for_t<ex::stop_token_of_t<ex::env_of_t<Rcvr>>, cb>;
+
+        std::remove_cvref_t<Rcvr> rcvr;
+        std::optional<callback>   callb;
+        auto start() & noexcept -> void {
+            this->callb.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), cb{this});
+        }
+    };
+    template <typename Rcvr>
+    state<Rcvr> connect(Rcvr&& rcvr) const {
+        return { std::forward<Rcvr>(rcvr) };
+    }
+};
 } // namespace
 // ----------------------------------------------------------------------------
 
 int main() {
-    ex::counting_scope      scope;
+    std::cout << std::unitbuf;
+#if 0
     asynchronous_stack<int> st;
+    ex::counting_scope      scope;
     [[maybe_unused]] auto   sender = st.pop() | ex::then([](int v) { std::cout << "got value=" << v << "\n"; });
 
+#if 0
     for (int value{1}; value < 4; ++value) {
         st.push(value);
     }
@@ -116,9 +153,14 @@ int main() {
         st.push(value);
     }
     std::cout << "pushed 4,5,6\n";
+#endif
 
+    ex::spawn(stop_test(), scope.get_token());
+
+    std::cout << "requesting stop\n";
     scope.request_stop();
     std::cout << "requested stop\n";
-    ex::sync_wait(scope.join());
+    ex::sync_wait(scope.join() | ex::then([]{ std::cout << "joined\n"; }));
     std::cout << "joined\n";
+#endif
 }

@@ -120,6 +120,7 @@ constexpr auto is_product_type(const ::beman::execution::detail::product_type<T.
 
 } // namespace beman::execution::detail
 
+#ifndef BEMAN_EXECUTION_DETAIL_PRODUCT_TYPE_CPPM
 namespace std {
 template <typename... T>
 struct tuple_size<::beman::execution::detail::product_type<T...>>
@@ -131,6 +132,7 @@ struct tuple_element<I, ::beman::execution::detail::product_type<T...>> {
         ::std::decay_t<decltype(::std::declval<::beman::execution::detail::product_type<T...>>().template get<I>())>;
 };
 } // namespace std
+#endif
 
 // ----------------------------------------------------------------------------
 

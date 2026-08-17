@@ -1,13 +1,18 @@
 // src/beman/execution/tests/exec-continues-on.test.cpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
 #include <test/execution.hpp>
+#include <test/sender_env.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
 #include <beman/execution/detail/continues_on.hpp>
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -19,6 +24,9 @@ struct non_sender {};
 struct custom_domain : test_std::default_domain {};
 
 struct scheduler {
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     struct env {
         auto query(const test_std::get_completion_scheduler_t<test_std::set_value_t>&) const noexcept -> scheduler {
             return {};
@@ -75,7 +83,8 @@ auto test_constraints(Scheduler&& scheduler, Sender&& sender) {
         auto domain{test_std::get_domain(scheduler)};
         test::check_type<custom_domain&>(domain);
 
-        auto s{test_std::continues_on(::std::forward<Sender>(sender), ::std::forward<Scheduler>(scheduler))};
+        [[maybe_unused]] auto s{
+            test_std::continues_on(::std::forward<Sender>(sender), ::std::forward<Scheduler>(scheduler))};
     }
 }
 
@@ -88,6 +97,15 @@ auto test_use(Scheduler&& scheduler, Sender&& sender) {
         std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(s))),
                      std::remove_cvref_t<Scheduler>>);
     //-dk:TODO test_std::sync_wait(std::move(s));
+}
+
+auto test_continues_on_attributes() {
+    test_std::run_loop loop;
+    test::sender_env   s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::continues_on(s, loop.get_scheduler()));
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::continues_on(s, loop.get_scheduler()));
 }
 } // namespace
 
@@ -104,4 +122,5 @@ TEST(exec_continues_on) {
     test_constraints<true>(scheduler{}, sender{});
 
     test_use(scheduler{}, sender{});
+    test_continues_on_attributes();
 }

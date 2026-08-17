@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
@@ -13,7 +14,7 @@ repos:
 
   # Config file: .codespellrc
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.2
+    rev: v2.4.3
     hooks:
       - id: codespell
         files: ^.*\.(cmake|cpp|cppm|hpp|txt|md|mds|json|js|in|yaml|yml|py|toml)$
@@ -24,7 +25,7 @@ repos:
   # See also: https://github.com/ssciwr/clang-format-wheel
   # Config file: .clang-format
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v22.1.5
+    rev: v22.1.8
     hooks:
       - id: clang-format
         types_or: [c++, c, json, javascript]
@@ -32,7 +33,7 @@ repos:
 
   # CMake linting and formatting
   - repo: https://github.com/BlankSpruce/gersemi-pre-commit
-    rev: 0.27.7
+    rev: 0.28.0
     hooks:
       - id: gersemi
         name: CMake linting
@@ -48,7 +49,7 @@ repos:
   # Config file: pyproject.toml
   # first Python sort imports
   - repo: https://github.com/pycqa/isort
-    rev: 9.0.0a3
+    rev: 9.0.0b2
     hooks:
       - id: isort
 
@@ -60,9 +61,10 @@ repos:
       - id: black
 
   # Beman Standard checking via beman-tidy
-  # - repo : https://github.com/bemanproject/beman-tidy
-  #   rev: v0.5.1
-  #   hooks:
-  #   - id: beman-tidy
+  - repo: https://github.com/bemanproject/beman-tidy
+    rev: v0.5.4
+    hooks:
+      - id: beman-tidy
+        args: [".", "--verbose", "--require-all"]
 
 exclude: 'infra/'

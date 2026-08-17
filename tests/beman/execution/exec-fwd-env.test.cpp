@@ -1,12 +1,17 @@
 // src/beman/execution/tests/exec-fwd-env.test.cpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
 #include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -40,10 +45,15 @@ TEST(exec_fwd_env) {
 
     static_assert(not test_std::forwarding_query(0));
     static_assert(test_std::forwarding_query(derived()));
+    static_assert(noexcept(test_std::forwarding_query(derived())));
     static_assert(test_std::forwarding_query(static_query<>()));
-    static_assert(not test_std::forwarding_query(static_query<false>()));
+    static_assert(noexcept(test_std::forwarding_query(static_query<>())));
+    //-dk:TODO verify this fails to compile: static_assert(not test_std::forwarding_query(static_query<false>()));
+    static_assert(noexcept(test_std::forwarding_query(static_query<false>())));
     static_assert(not test_std::forwarding_query(static_query<true, int>()));
+    static_assert(noexcept(test_std::forwarding_query(static_query<true, int>())));
     static_assert(not test_std::forwarding_query(static_query<true, bool, false>()));
+    static_assert(noexcept(test_std::forwarding_query(static_query<true, bool, false>())));
 
     static_assert(test_std::forwarding_query(rvalue_query()));
     rvalue_query rq{};

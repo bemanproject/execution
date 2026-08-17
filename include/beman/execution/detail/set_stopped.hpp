@@ -17,7 +17,7 @@ import std;
 namespace beman::execution {
 /*!
  * \brief Type of the customization point object for cancellation completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 struct set_stopped_t {
     template <typename Receiver>
@@ -30,20 +30,18 @@ struct set_stopped_t {
     auto operator()(Receiver&&) const -> void
         requires(not requires(Receiver&& receiver) { ::std::forward<Receiver>(receiver).set_stopped(); })
     = BEMAN_EXECUTION_DELETE("set_stopped requires a suitable member overload on the receiver");
-    template <typename Receiver>
-        requires(not noexcept(::std::declval<Receiver>().set_stopped()))
-    auto operator()(Receiver&&) const
-        -> void = BEMAN_EXECUTION_DELETE("the call to receiver.set_stopped() has to be noexcept");
 
     template <typename Receiver>
     auto operator()(Receiver&& receiver) const noexcept -> void {
+        static_assert(noexcept(::std::forward<Receiver>(receiver).set_stopped()),
+                      "the call to receiver.set_stopped() has to be noexcept");
         ::std::forward<Receiver>(receiver).set_stopped();
     }
 };
 
 /*!
  * \brief Customization point object for cancellation completions.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 inline constexpr set_stopped_t set_stopped{};
 } // namespace beman::execution

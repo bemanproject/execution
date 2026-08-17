@@ -1,6 +1,13 @@
 // src/beman/execution/tests/exec-let.test.cpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <test/sender_env.hpp>
+#include <test/completion_test.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <array>
 #include <cstdlib>
 #include <concepts>
@@ -8,8 +15,7 @@
 #include <memory_resource>
 #include <span>
 #include <vector>
-#include <test/execution.hpp>
-#include <test/completion_test.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -154,6 +160,24 @@ auto test_completion_signatures() -> void {
     test_std::sync_wait(test::completion_test(test_std::let_value(
         test_std::just(), []() noexcept { return test_std::just() | test_std::then([]() noexcept {}); })));
 }
+
+auto test_let_attributes() {
+    test::sender_env s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    test::test_sender_env<true>(
+        42, test::test_forwardable_attr{}, test_std::let_value(s, [] { return test_std::just(); }));
+    test::test_sender_env<false>(
+        84, test::test_non_forwardable_attr{}, test_std::let_value(s, [] { return test_std::just(); }));
+    test::test_sender_env<true>(
+        42, test::test_forwardable_attr{}, test_std::let_error(s, [](auto) { return test_std::just(); }));
+    test::test_sender_env<false>(
+        84, test::test_non_forwardable_attr{}, test_std::let_error(s, [](auto) { return test_std::just(); }));
+    test::test_sender_env<true>(
+        42, test::test_forwardable_attr{}, test_std::let_stopped(s, [] { return test_std::just(); }));
+    test::test_sender_env<false>(
+        84, test::test_non_forwardable_attr{}, test_std::let_stopped(s, [] { return test_std::just(); }));
+}
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -174,5 +198,14 @@ TEST(exec_let) {
         // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 
-    return EXIT_SUCCESS;
+    test_std::sync_wait(test_std::just() |
+                        (test_std::let_value([] { return test_std::just(); }) | test_std::then([] {})));
+    test_std::sync_wait(test_std::just_error(0) |
+                        (test_std::let_error([](auto) { return test_std::just(); }) | test_std::then([] {})));
+    test_std::sync_wait(test_std::just_stopped() |
+                        (test_std::let_stopped([] { return test_std::just(); }) | test_std::then([] {})));
+
+    test_let_attributes();
+
+    return 0;
 }

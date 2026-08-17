@@ -1,4 +1,4 @@
-// include/beman/execution/execution.hpp -*-C++-*-
+// include/beman/execution.hpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION_EXECUTION
@@ -18,8 +18,12 @@ import beman.execution.detail.connect;
 import beman.execution.detail.continues_on;
 import beman.execution.detail.counting_scope;
 import beman.execution.detail.dependent_sender;
+import beman.execution.detail.enter_scope_sender_in;
+import beman.execution.detail.enter_scope_sender;
 import beman.execution.detail.env;
-import beman.execution.detail.execution_policy;
+import beman.execution.detail.exit_scope_sender_in;
+import beman.execution.detail.exit_scope_sender_of_t;
+import beman.execution.detail.exit_scope_sender;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
@@ -41,6 +45,8 @@ import beman.execution.detail.let;
 import beman.execution.detail.matching_sig;
 import beman.execution.detail.on;
 import beman.execution.detail.operation_state;
+import beman.execution.detail.parallel_scheduler;
+import beman.execution.detail.parallel_scheduler_replacement;
 import beman.execution.detail.prop;
 import beman.execution.detail.read_env;
 import beman.execution.detail.receiver;
@@ -65,12 +71,16 @@ import beman.execution.detail.stopped_as_error;
 import beman.execution.detail.stopped_as_optional;
 import beman.execution.detail.sync_wait;
 import beman.execution.detail.sync_wait_with_variant;
+import beman.execution.detail.task;
+import beman.execution.detail.task_scheduler;
 import beman.execution.detail.then;
 import beman.execution.detail.valid_completion_for;
 import beman.execution.detail.valid_completion_signatures;
 import beman.execution.detail.when_all_with_variant;
 import beman.execution.detail.when_all;
 import beman.execution.detail.with_awaitable_senders;
+import beman.execution.detail.with_error;
+import beman.execution.detail.within;
 import beman.execution.detail.write_env;
 #else
 #include <beman/execution/detail/affine.hpp>
@@ -83,8 +93,13 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/counting_scope.hpp>
 #include <beman/execution/detail/dependent_sender.hpp>
+#include <beman/execution/detail/enter_scope_sender_in.hpp>
+#include <beman/execution/detail/enter_scope_sender.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/execution_policy.hpp>
+#include <beman/execution/detail/exit_scope_sender_in.hpp>
+#include <beman/execution/detail/exit_scope_sender_of_t.hpp>
+#include <beman/execution/detail/exit_scope_sender.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_await_completion_adaptor.hpp>
@@ -106,6 +121,8 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/matching_sig.hpp>
 #include <beman/execution/detail/on.hpp>
 #include <beman/execution/detail/operation_state.hpp>
+#include <beman/execution/detail/parallel_scheduler.hpp>
+#include <beman/execution/detail/parallel_scheduler_replacement.hpp>
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/receiver.hpp>
@@ -130,12 +147,16 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/stopped_as_optional.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #include <beman/execution/detail/sync_wait_with_variant.hpp>
+#include <beman/execution/detail/task.hpp>
+#include <beman/execution/detail/task_scheduler.hpp>
 #include <beman/execution/detail/then.hpp>
 #include <beman/execution/detail/valid_completion_for.hpp>
 #include <beman/execution/detail/valid_completion_signatures.hpp>
 #include <beman/execution/detail/when_all_with_variant.hpp>
 #include <beman/execution/detail/when_all.hpp>
 #include <beman/execution/detail/with_awaitable_senders.hpp>
+#include <beman/execution/detail/with_error.hpp>
+#include <beman/execution/detail/within.hpp>
 #include <beman/execution/detail/write_env.hpp>
 #endif
 

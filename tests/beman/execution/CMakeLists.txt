@@ -14,8 +14,10 @@ list(
     exec-associate.test
     exec-awaitable.test
     exec-bulk.test
+    exec-completion-storage.test
     exec-connect.test
     exec-continues-on.test
+    exec-counting-scopes-general.test
     exec-dependent-sender.test
     exec-domain-default.test
     exec-env.test
@@ -23,6 +25,7 @@ list(
     exec-general.test
     exec-getcomplsigs.test
     exec-get-allocator.test
+    exec-get-await-adapt.test
     exec-get-compl-domain.test
     exec-get-compl-sched.test
     exec-get-delegation-scheduler.test
@@ -36,10 +39,12 @@ list(
     exec-just.test
     exec-let.test
     exec-on.test
+    exec-parallel-scheduler.test
     exec-opstate-start.test
     exec-opstate.test
     exec-prop.test
     exec-queries-expos.test
+    exec-queryable-concept.test
     exec-read-env.test
     exec-recv-concepts.test
     exec-recv.test
@@ -47,9 +52,11 @@ list(
     exec-run-loop-types.test
     exec-sched.test
     exec-schedule.test
+    exec-schedule-from.test
     exec-scope-concepts.test
     exec-scope-counting.test
     exec-scope-simple-counting.test
+    exec-scope-snd-concepts.test
     exec-sender-adaptor-closure.test
     exec-set-error.test
     exec-set-stopped.test
@@ -58,19 +65,23 @@ list(
     exec-snd-concepts.test
     exec-snd-expos.test
     exec-snd-transform.test
-    exec-spawn-future.test
     exec-spawn.test
+    exec-spawn-future.test
     exec-starts-on.test
     exec-stop-when.test
-    exec-stopped-as-error.test
-    exec-stopped-as-optional.test
+    exec-stopped-err.test
+    exec-stopped-opt.test
     exec-sync-wait.test
     exec-sync-wait-with-variant.test
+    exec-task.test
+    exec-task-scheduler.test
     exec-then.test
-    exec-utils-cmplsigs.test
+    exec-unstoppable.test
+    exec-cmplsigs.test
     exec-when-all.test
     exec-with-awaitable-senders.test
-    execution-queryable-concept.test
+    exec-within.test
+    exec-write-env.test
     execution-syn.test
     forward-like.test
     function-objects.test
@@ -129,6 +140,18 @@ foreach(test ${execution_tests})
     endif()
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
+
+# Disable ThreadSanitizer for this specific test target (Clang only)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(
+        beman.execution.stopsource-cons.test
+        PRIVATE -fno-sanitize=thread
+    )
+    target_link_options(
+        beman.execution.stopsource-cons.test
+        PRIVATE -fno-sanitize=thread
+    )
+endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     return()

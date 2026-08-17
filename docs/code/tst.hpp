@@ -4,9 +4,9 @@
 #ifndef INCLUDED_EXAMPLES_TST
 #define INCLUDED_EXAMPLES_TST
 
-#include "tst-config.hpp"
-#include "tst-repeat_effect_until.hpp"
-#include "tst-sync_wait.hpp"
-#include "tst-timer.hpp"
+#include "tst_config.hpp"
+#include "tst_repeat_effect_until.hpp"
+#include "tst_sync_wait.hpp"
+#include "tst_timer.hpp"
 
 #endif

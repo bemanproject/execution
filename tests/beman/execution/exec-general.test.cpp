@@ -1,17 +1,22 @@
 // src/beman/execution/tests/exec-general.test.cpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <exception>
 #include <system_error>
-#include <test/execution.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail.movable_value;
 import beman.execution.detail.matching_sig;
 import beman.execution.detail.as_except_ptr;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/matching_sig.hpp>
 #include <beman/execution/detail/as_except_ptr.hpp>
@@ -41,6 +46,7 @@ struct non_copyable {
 };
 
 auto test_movable_value() -> void {
+    // [exec.general] p6
     static_assert(test_detail::movable_value<int>);
     static_assert(test_detail::movable_value<int&>);
     static_assert(test_detail::movable_value<const int&>);
@@ -54,6 +60,7 @@ auto test_movable_value() -> void {
 }
 
 auto test_matching_sig() -> void {
+    // [exec.general] p7
     static_assert(test_detail::matching_sig<int(), int()>);
     static_assert(not test_detail::matching_sig<bool(), int()>);
 
@@ -64,6 +71,7 @@ auto test_matching_sig() -> void {
 }
 
 auto test_as_except_ptr() -> void {
+    // [exec.general] p8
     std::exception_ptr       ep(std::make_exception_ptr(42));
     std::exception_ptr       mep(ep);
     const std::exception_ptr cep(std::make_exception_ptr(42));

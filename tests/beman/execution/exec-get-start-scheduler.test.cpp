@@ -1,9 +1,13 @@
 // src/beman/execution/tests/exec-get-start-scheduler.test.cpp          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
-#include <iostream>
 #include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <concepts>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -32,6 +36,9 @@ struct test_sched_env;
 
 struct test_scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     auto schedule() const -> test_sched_sender;
     auto operator==(const test_scheduler&) const -> bool = default;
     int  scheduler_id                                    = 0;
@@ -48,7 +55,8 @@ struct test_sched_env {
     auto query(test_std::get_completion_scheduler_t<test_std::set_value_t>) const noexcept {
         return test_scheduler{scheduler_id};
     }
-    int scheduler_id = 0;
+    auto query(test_std::get_start_scheduler_t) const noexcept { return test_scheduler{scheduler_id + 1}; }
+    int  scheduler_id = 0;
 };
 
 struct test_sched_sender {
@@ -71,6 +79,13 @@ auto test_scheduler::schedule() const -> test_sched_sender { return {scheduler_i
 } // namespace
 
 TEST(exec_get_start_scheduler) {
+    static_assert(std::same_as<const test_std::get_start_scheduler_t, decltype(test_std::get_start_scheduler)>);
+    static_assert(test_std::forwarding_query(test_std::get_start_scheduler));
+    auto sched = test_std::get_start_scheduler(test_sched_env{42});
+    static_assert(noexcept(test_std::get_start_scheduler(test_sched_env{42})));
+    static_assert(::std::same_as<test_scheduler, decltype(sched)>);
+    ASSERT(sched == test_scheduler{43});
+
     {
         test_scheduler sched{42};
         auto sndr = test_std::schedule(sched) |

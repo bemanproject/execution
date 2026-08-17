@@ -1,11 +1,16 @@
 // tests/beman/execution/exec-spawn.test.cpp                          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
 #include <utility>
 #include <memory>
-#include <test/execution.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
@@ -203,6 +208,9 @@ TEST(exec_spawn) {
     test_overload<true>(sender<true>{}, token<true>{}, env{});
     test_overload<false>(sender<false>{}, token<true>{}, env{});
     test_overload<false>(sender<true>{}, token<false>{}, env{});
+    token<true> lvalue{};
+    test_overload<true>(sender<true>{}, lvalue, env{});
+    test_overload<true>(sender<true>{}, std::as_const(lvalue), env{});
 
     test_spawn_state_base();
     test_spawn_receiver<true, test_std::spawn_t::receiver>();

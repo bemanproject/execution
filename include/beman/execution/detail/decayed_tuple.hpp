@@ -17,7 +17,7 @@ import std;
 namespace beman::execution::detail {
 /*!
  * \brief Helper type alias to get type type of a tuple after decaying the argument types
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename... T>

@@ -28,7 +28,7 @@ namespace beman::execution::detail {
 template <typename T, typename Context>
 /*!
  * \brief Utility function use to move a possibly allocator aware object with an allocator from an environment.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 auto allocator_aware_move(T&& obj, Context&& context) noexcept -> decltype(auto) {

@@ -1,5 +1,5 @@
 // include/beman/execution/detail/transform_sender.hpp              _*_C++_*_
-// SPDX_License_Identifier: Apache_2.0 WITH LLVM_exception
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TRANSFORM_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TRANSFORM_SENDER

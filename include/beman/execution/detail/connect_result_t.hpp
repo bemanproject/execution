@@ -21,7 +21,7 @@ import beman.execution.detail.connect;
 namespace beman::execution {
 /*!
  * \brief Type alias to determine the operation state type returned from `connect()`.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 template <typename Sender, typename Receiver>
 using connect_result_t = decltype(::beman::execution::connect(::std::declval<Sender>(), ::std::declval<Receiver>()));

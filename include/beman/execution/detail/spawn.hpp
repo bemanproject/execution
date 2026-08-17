@@ -9,12 +9,14 @@
 import std;
 #else
 #include <memory>
+#include <type_traits>
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.connect;
 import beman.execution.detail.connect_result_t;
 import beman.execution.detail.env;
+import beman.execution.detail.queryable;
 import beman.execution.detail.receiver;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender;
@@ -25,6 +27,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
@@ -53,11 +56,11 @@ struct spawn_t {
     template <typename Alloc, ::beman::execution::scope_token Tok, ::beman::execution::sender Sndr>
     struct state : state_base {
         using op_t     = ::beman::execution::connect_result_t<Sndr, receiver>;
-        using assoc_t  = ::std::remove_cvref_t<decltype(::std::declval<Tok&>().try_associate())>;
+        using assoc_t  = ::std::remove_cvref_t<decltype(::std::declval<const Tok&>().try_associate())>;
         using alloc_t  = typename ::std::allocator_traits<Alloc>::template rebind_alloc<state>;
         using traits_t = ::std::allocator_traits<alloc_t>;
 
-        state(Alloc a, Sndr&& sndr, Tok tok)
+        state(Alloc a, Sndr&& sndr, const Tok& tok)
             : alloc(a),
               op(::beman::execution::connect(::std::forward<Sndr>(sndr), receiver{this})),
               assoc(tok.try_associate()) {
@@ -83,7 +86,8 @@ struct spawn_t {
     };
 
     template <::beman::execution::sender Sender, ::beman::execution::scope_token Token, typename Env>
-    auto operator()(Sender&& sender, Token&& tok, Env&& env) const {
+        requires ::beman::execution::detail::queryable<::std::remove_cvref_t<Env>>
+    auto operator()(Sender&& sender, const Token& tok, Env&& env) const {
         auto new_sender{tok.wrap(::std::forward<Sender>(sender))};
         auto [all, senv] = ::beman::execution::detail::spawn_get_allocator(new_sender, env);
 
@@ -93,11 +97,16 @@ struct spawn_t {
         using traits_t = ::std::allocator_traits<alloc_t>;
         alloc_t  alloc(all);
         state_t* op{traits_t::allocate(alloc, 1u)};
-        traits_t::construct(alloc, op, all, ::beman::execution::write_env(::std::move(new_sender), senv), tok);
+        try {
+            traits_t::construct(alloc, op, all, ::beman::execution::write_env(::std::move(new_sender), senv), tok);
+        } catch (...) {
+            traits_t::deallocate(alloc, op, 1u);
+            throw;
+        }
     }
     template <::beman::execution::sender Sender, ::beman::execution::scope_token Token>
-    auto operator()(Sender&& sender, Token&& token) const {
-        return (*this)(::std::forward<Sender>(sender), ::std::forward<Token>(token), ::beman::execution::env<>{});
+    auto operator()(Sender&& sender, const Token& token) const {
+        return (*this)(::std::forward<Sender>(sender), token, ::beman::execution::env<>{});
     }
 };
 } // namespace beman::execution::detail

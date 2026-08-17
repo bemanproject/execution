@@ -45,7 +45,7 @@ struct is_set_value<::beman::execution::set_value_t(Args...)> : ::std::true_type
  * - set_stopped_t() to indicate that operation was cancelled.
  * - set_value_t(A...) for successful completion with a set of argument.
  *
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \concept copmletion_signature
  * \internal
  */

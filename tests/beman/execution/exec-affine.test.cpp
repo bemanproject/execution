@@ -2,10 +2,15 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/sender_env.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 #include <tuple>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
@@ -66,6 +71,9 @@ receiver(Sched, awaiter* = nullptr) -> receiver<Sched>;
 
 struct test_scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
 
     struct data {
         std::size_t connected_{};
@@ -104,7 +112,8 @@ struct test_scheduler {
         }
     };
 
-    auto        schedule() const noexcept { return sender{this->data_}; }
+    auto schedule() const noexcept { return sender{this->data_}; }
+    // TODO(CK): prevent -Wunneeded-internal-declaration error!
     friend auto operator==(const test_scheduler&, const test_scheduler&) noexcept -> bool = default;
 };
 
@@ -152,6 +161,14 @@ auto test_affine_specializations(Sender&& sender, std::size_t count = 0u) -> voi
     assert(data.connected_ == count);
     assert(data.started_ == count);
 }
+
+auto test_affine_attributes() {
+    test::sender_env s{42};
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
+    test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
+    test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::affine(s));
+    test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::affine(s));
+}
 } // namespace
 
 TEST(affine) {
@@ -167,7 +184,7 @@ TEST(affine) {
     assert(s == loop.get_scheduler());
     auto st{test_std::transform_sender(test_std::affine(test_std::just(42)), test_std::get_env(r))};
     test_std::connect(std::move(st), std::move(r));
-    auto s0{test_std::connect(test_std::affine(test_std::just(42)), receiver(loop.get_scheduler()))};
+    [[maybe_unused]] auto s0{test_std::connect(test_std::affine(test_std::just(42)), receiver(loop.get_scheduler()))};
 
     std::thread t{[&]() noexcept { loop.run(); }};
     auto        r0 = test_std::sync_wait(test_std::affine(test_std::just(42)));
@@ -205,6 +222,8 @@ TEST(affine) {
 
     loop.finish();
     t.join();
+
+    test_affine_attributes();
 
     return 0;
 }

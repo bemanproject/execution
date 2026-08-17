@@ -20,11 +20,16 @@ export import beman.execution.detail.connect_result_t; // [exec.connect], the co
 import beman.execution.detail.continues_on;
 import beman.execution.detail.counting_scope;
 import beman.execution.detail.default_domain;
+export import beman.execution.detail.enter_scope_sender;
+export import beman.execution.detail.enter_scope_sender_in;
 export import beman.execution.detail.indeterminate_domain;
 export import beman.execution.detail.env;
 export import beman.execution.detail.env_of_t;
 export import beman.execution.detail.error_types_of_t; // [exec.getcomplsigs], completion signatures
 export import beman.execution.detail.execution_policy;
+export import beman.execution.detail.exit_scope_sender;
+export import beman.execution.detail.exit_scope_sender_in;
+export import beman.execution.detail.exit_scope_sender_of_t;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_await_completion_adaptor;
@@ -46,6 +51,8 @@ import beman.execution.detail.never_stop_token;
 import beman.execution.detail.nostopstate;
 import beman.execution.detail.on;
 export import beman.execution.detail.operation_state; // [exec.opstate], operation states
+import beman.execution.detail.parallel_scheduler;
+import beman.execution.detail.parallel_scheduler_replacement;
 import beman.execution.detail.prop;
 import beman.execution.detail.read_env;
 import beman.execution.detail.run_loop;
@@ -82,6 +89,7 @@ export import beman.execution.detail.value_types_of_t; // [exec.getcomplsigs], c
 import beman.execution.detail.when_all;
 import beman.execution.detail.when_all_with_variant;
 export import beman.execution.detail.with_awaitable_senders; // [exec.with.awaitable.senders]
+export import beman.execution.detail.within;
 import beman.execution.detail.write_env;
 import beman.execution.detail.inline_scheduler;
 
@@ -93,6 +101,7 @@ export import beman.execution.detail.unstoppable_token;
 // [exec.recv], receivers
 export import beman.execution.detail.receiver;
 export import beman.execution.detail.receiver_of;
+export import beman.execution.detail.inlinable_receiver;
 
 // [exec.snd], senders
 export import beman.execution.detail.sender;
@@ -100,6 +109,11 @@ export import beman.execution.detail.sender_in;
 export import beman.execution.detail.sender_to;
 export import beman.execution.detail.dependent_sender;
 export import beman.execution.detail.sends_stopped;
+
+// [exec.task]
+export import beman.execution.detail.task;
+export import beman.execution.detail.task_scheduler;
+export import beman.execution.detail.with_error;
 
 namespace beman::execution {
 
@@ -241,6 +255,17 @@ export using ::beman::execution::stopped_as_error;
 
 // [exec.run.loop], run_loop
 export using ::beman::execution::run_loop;
+
+// [exec.parallel.scheduler], parallel scheduler
+export using ::beman::execution::parallel_scheduler;
+export using ::beman::execution::get_parallel_scheduler;
+
+namespace parallel_scheduler_replacement {
+export using ::beman::execution::parallel_scheduler_replacement::receiver_proxy;
+export using ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy;
+export using ::beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend;
+export using ::beman::execution::parallel_scheduler_replacement::query_parallel_scheduler_backend;
+} // namespace parallel_scheduler_replacement
 
 // [exec.consumers], consumers
 export using ::beman::execution::sync_wait_t;

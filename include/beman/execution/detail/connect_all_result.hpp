@@ -22,7 +22,7 @@ import beman.execution.detail.indices_for;
 namespace beman::execution::detail {
 /*!
  * \brief Helper type used to determine the state type when connecting all senders in a basic_sender
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Sender, typename Receiver>

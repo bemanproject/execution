@@ -18,15 +18,16 @@ import std;
 namespace beman::execution::detail {
 /*!
  * \brief Actual implementation of the forwarding_query customization point object
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 struct forwarding_query_t {
     template <typename Object>
         requires requires(Object&& object, const forwarding_query_t& query) {
-            { ::std::forward<Object>(object).query(query) } noexcept -> ::std::same_as<bool>;
+            { ::std::forward<Object>(object).query(query) } -> ::std::same_as<bool>;
         }
     constexpr auto operator()(Object&& object) const noexcept -> bool {
+        static_assert(noexcept(::std::forward<Object>(object).query(*this)));
         return ::std::forward<Object>(object).query(*this);
     }
     template <typename Object>
@@ -39,12 +40,12 @@ struct forwarding_query_t {
 namespace beman::execution {
 /*!
  * \brief Type of the forwarding_query customization point object
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  */
 using forwarding_query_t = beman::execution::detail::forwarding_query_t;
 /*!
  * \brief The customization point object to determine whether queries should be forwarded
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  *
  * \details
  * The `constexpr` call `forwarding_query(q)` determines whether the query `q` passed

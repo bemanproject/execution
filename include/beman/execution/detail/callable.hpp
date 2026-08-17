@@ -16,7 +16,7 @@ import std;
 namespace beman::execution::detail {
 /*!
  * \brief Concept used to detect callable objects.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \concept callable
  * \internal
  */

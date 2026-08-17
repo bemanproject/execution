@@ -1,15 +1,20 @@
 // examples/stackoverflow.cpp                                         -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <coroutine>
 #include <iostream>
 #include <memory>
 #include <type_traits>
 #include <utility>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 namespace ex = beman::execution;

@@ -1,0 +1,52 @@
+// examples/intro_2_hello_async.cpp                                   -*-C++-*-
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <chrono>
+#include <iostream>
+#include <queue>
+#include <string>
+#include <thread>
+#include <tuple>
+#endif
+#ifdef BEMAN_HAS_MODULES
+import beman.execution;
+#else
+#include <beman/execution.hpp>
+#endif
+#include "intro_timer.hpp"
+
+namespace ex = ::beman::execution;
+using namespace std::string_literals;
+using namespace std::chrono_literals;
+
+// ----------------------------------------------------------------------------
+// Please see the explanation in docs/intro_examples.md for an explanation.
+
+int main() {
+    std::cout << std::unitbuf;
+#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ > 15) || !defined(BEMAN_HAS_MODULES)
+    intro::timer timer;
+
+    // clang-format off
+     auto [result] = ex::sync_wait(
+         ex::when_all(
+             timer.run(),
+             ex::when_all(
+                 timer.resume_after(3s)
+                     | ex::then([] { std::cout << "h\n"; return std::string("hello"); }),
+                 timer.resume_after(1s)
+                     | ex::then([] { std::cout << ",\n"; return std::string(", "); }),
+                 timer.resume_after(2s)
+                     | ex::then([] { std::cout << "w\n"; return std::string("world"); })
+             ) | ex::then([](auto const& s1, auto const& s2, auto const& s3) { return s1 + s2 + s3; })
+         )
+     ).value_or(std::tuple(std::string("")));
+    // clang-format on
+
+    std::cout << result << "\n";
+#endif
+}

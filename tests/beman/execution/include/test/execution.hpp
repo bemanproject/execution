@@ -4,18 +4,25 @@
 #ifndef INCLUDED_TEST_EXECUTION
 #define INCLUDED_TEST_EXECUTION
 
+#include <beman/execution/detail/common.hpp>
+#undef NDEBUG
+#include <cassert>
+#include <csignal>
+#include <version>
+#ifndef _MSC_VER
+#include <unistd.h>
+#include <sys/wait.h>
+#endif
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <cstddef>
 #ifndef _MSC_VER
-#include <cstdlib>
-#include <unistd.h>
-#include <sys/wait.h>
 #include <iostream>
 #endif
 #include <source_location>
-
-#undef NDEBUG
-#include <cassert>
+#endif
 
 #define ASSERT(condition) assert(condition)
 #define ASSERT_UNREACHABLE() assert(::test::unreachable_helper())
@@ -69,16 +76,16 @@ inline auto death([[maybe_unused]] auto                   fun,
     default: {
         int stat{};
         ASSERT(rc == ::wait(&stat));
-        if (stat == EXIT_SUCCESS) {
+        if (stat == 0) {
             ::std::cerr << "failed death test at " << "file=" << location.file_name() << ":" << location.line() << "\n"
                         << std::flush;
-            ASSERT(stat != EXIT_SUCCESS);
+            ASSERT(stat != 0);
         }
     } break;
     case 0: {
         ::close(2);
         fun();
-        ::std::exit(EXIT_SUCCESS);
+        ::std::exit(0);
     } break;
     }
 #endif

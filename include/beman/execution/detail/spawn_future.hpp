@@ -152,26 +152,26 @@ template <typename Allocator, ::beman::execution::scope_token Token, ::beman::ex
 struct spawn_future_state
     : ::beman::execution::detail::spawn_future_state_base<::beman::execution::detail::spawn_future_sigs<Sndr, Env>> {
     using alloc_t          = typename ::std::allocator_traits<Allocator>::template rebind_alloc<spawn_future_state>;
-    using assoc_t          = ::std::remove_cvref_t<decltype(::std::declval<Token&>().try_associate())>;
+    using assoc_t          = ::std::remove_cvref_t<decltype(::std::declval<const Token&>().try_associate())>;
     using traits_t         = ::std::allocator_traits<alloc_t>;
     using spawned_sender_t = ::beman::execution::detail::future_spawned_sender<Sndr, Env>;
     using sigs_t           = ::beman::execution::detail::spawn_future_sigs<Sndr, Env>;
-    using receiver_tag     = ::beman::execution::detail::spawn_future_receiver<sigs_t>;
+    using receiver_t       = ::beman::execution::detail::spawn_future_receiver<sigs_t>;
     static_assert(::beman::execution::sender<spawned_sender_t>);
-    static_assert(::beman::execution::receiver<receiver_tag>);
-    using op_t = ::beman::execution::connect_result_t<spawned_sender_t, receiver_tag>;
+    static_assert(::beman::execution::receiver<receiver_t>);
+    using op_t = ::beman::execution::connect_result_t<spawned_sender_t, receiver_t>;
 
     template <::beman::execution::sender S>
-    spawn_future_state(auto a, S&& s, Token tok, Env env)
+    spawn_future_state(auto a, S&& s, const Token& tok, Env env)
         : alloc(::std::move(a)),
           op(::beman::execution::write_env(
                  ::beman::execution::detail::stop_when(::std::forward<S>(s), source.get_token()), env),
-             receiver_tag{this}),
+             receiver_t{this}),
           assoc(tok.try_associate()) {
         if (this->assoc) {
             ::beman::execution::start(this->op);
         } else {
-            ::beman::execution::set_stopped(receiver_tag{this});
+            ::beman::execution::set_stopped(receiver_t{this});
         }
     }
     auto complete() noexcept -> void override {
@@ -248,7 +248,7 @@ class spawn_future_t {
   public:
     template <::beman::execution::sender Sndr, ::beman::execution::scope_token Tok, typename Ev>
         requires ::beman::execution::detail::queryable<::std::remove_cvref_t<Ev>>
-    auto operator()(Sndr&& sndr, Tok&& tok, Ev&& ev) const {
+    auto operator()(Sndr&& sndr, const Tok& tok, Ev&& ev) const {
         //-dk:TODO why decltype(auto) instead of auto?
         auto make{[&]() -> decltype(auto) { return tok.wrap(::std::forward<Sndr>(sndr)); }};
         using sndr_t = decltype(make());
@@ -271,8 +271,8 @@ class spawn_future_t {
         return ::beman::execution::detail::make_sender(*this, ::std::unique_ptr<state_t, deleter>{op});
     }
     template <::beman::execution::sender Sndr, ::beman::execution::scope_token Tok>
-    auto operator()(Sndr&& sndr, Tok&& tok) const {
-        return (*this)(::std::forward<Sndr>(sndr), ::std::forward<Tok>(tok), ::beman::execution::env<>{});
+    auto operator()(Sndr&& sndr, const Tok& tok) const {
+        return (*this)(::std::forward<Sndr>(sndr), tok, ::beman::execution::env<>{});
     }
 
   private:

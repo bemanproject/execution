@@ -19,16 +19,14 @@ set(BEMAN_EXECUTION_TARGET_PREFIX ${PROJECT_NAME}) # NOTE: used in src, and docs
 
 #===============================================================================
 if(BEMAN_USE_MODULES)
-    option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
-
     set(CMAKE_CXX_SCAN_FOR_MODULES ON)
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
     # CMake requires the language standard to be specified as compile feature
     # when a target provides C++23 modules and the target will be installed
-    add_library(${BEMAN_EXECUTION_TARGET_PREFIX} STATIC) # FIXME: only static yet! CK
-    add_library(beman::execution ALIAS ${BEMAN_EXECUTION_TARGET_PREFIX})
+    add_library(beman.execution STATIC) # FIXME: only static yet! CK
+    add_library(beman::execution ALIAS beman.execution)
     target_compile_features(
         ${BEMAN_EXECUTION_TARGET_PREFIX}
         PUBLIC cxx_std_${CMAKE_CXX_STANDARD}
@@ -61,14 +59,6 @@ if(BEMAN_USE_MODULES)
             DLL_NAME_WITH_SOVERSION TRUE
     )
 
-    # FIXME: Quickfix only to prevent linker problems on windows dll? CK
-    if(WIN32 AND BUILD_SHARED_LIBS)
-        set_target_properties(
-            ${BEMAN_EXECUTION_TARGET_PREFIX}
-            PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON
-        )
-    endif()
-
     find_package(Threads REQUIRED)
     target_link_libraries(
         ${BEMAN_EXECUTION_TARGET_PREFIX}
@@ -93,8 +83,8 @@ endif()
 #===============================================================================
 
 option(
-    BEMAN_EXECUTION_ENABLE_TESTING
-    "Enable building tests and test infrastructure. Values: { ON, OFF }."
+    BEMAN_EXECUTION_BUILD_TESTS
+    "Enable building tests and test infrastructure. Default: ${PROJECT_IS_TOP_LEVEL}. Values: { ON, OFF }."
     ${PROJECT_IS_TOP_LEVEL}
 )
 
@@ -106,6 +96,15 @@ option(
 
 add_subdirectory(src/beman/execution)
 
+if(NOT BEMAN_USE_MODULES)
+    add_library(beman.execution INTERFACE)
+    target_link_libraries(
+        beman.execution
+        INTERFACE ${BEMAN_EXECUTION_TARGET_NAME}
+    )
+    add_library(beman::execution ALIAS beman.execution)
+endif()
+
 #===============================================================================
 # NOTE: this must be done before tests! CK
 include(infra/cmake/beman-install-library.cmake)
@@ -114,9 +113,8 @@ beman_install_library(${BEMAN_EXECUTION_TARGET_PREFIX} TARGETS ${BEMAN_EXECUTION
 )
 #===============================================================================
 
-enable_testing()
-
-if(BEMAN_EXECUTION_ENABLE_TESTING)
+if(BEMAN_EXECUTION_BUILD_TESTS)
+    enable_testing()
     add_subdirectory(tests/beman/execution)
 endif()
 

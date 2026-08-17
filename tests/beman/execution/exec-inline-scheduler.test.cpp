@@ -1,14 +1,19 @@
 // tests/beman/execution/exec-inline-scheduler.test.cpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <test/execution.hpp>
+#include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <concepts>
 #include <type_traits>
-#include <test/execution.hpp>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -24,6 +29,9 @@ struct test_receiver {
 
 struct custom_scheduler {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
     int id{};
 
     struct state {
@@ -58,6 +66,9 @@ struct custom_domain {
 
 struct sched_with_domain {
     using scheduler_concept = test_std::scheduler_tag;
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
 
     struct state {
         using operation_state_concept = test_std::operation_state_tag;
@@ -148,6 +159,9 @@ auto test_sender_env_is_inline_attrs() {
     auto sndr  = test_std::schedule(test_std::inline_scheduler{});
     auto attrs = test_std::get_env(sndr);
     static_assert(std::same_as<decltype(attrs), test_detail::inline_attrs<test_std::set_value_t>>);
+
+    auto sched = test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), sndr);
+    static_assert(std::same_as<decltype(sched), test_std::inline_scheduler>);
 }
 
 auto test_inline_attrs_completion_scheduler() {

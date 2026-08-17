@@ -45,7 +45,8 @@ TEST(exec_opstate) {
     test_operation_state<true, no_start>();
 
     test_operation_state<true, operation_state<true, test_std::operation_state_tag>>();
-    test_operation_state<false, operation_state<false, test_std::operation_state_tag>>();
+    //-dk:TODO verify that this fails to compile test_operation_state<false, operation_state<false,
+    // test_std::operation_state_tag>>();
     test_operation_state<false, operation_state<true, base>>();
     test_operation_state<true, operation_state<true, opstate_base>>();
     test_operation_state<false, operation_state<true, test_std::operation_state_tag>&>();

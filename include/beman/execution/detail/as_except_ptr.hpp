@@ -21,10 +21,11 @@ import std;
 namespace beman::execution::detail {
 /*!
  * \brief Turn an error into a suitable exception_ptr.
- * \headerfile beman/execution/execution.hpp <beman/execution/execution.hpp>
+ * \headerfile beman/execution.hpp <beman/execution.hpp>
  * \internal
  */
 template <typename Error>
+//-dk:TODO add a proper precondition
 decltype(auto) as_except_ptr(Error&& error) {
     if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>) {
         return ::std::forward<Error>(error);

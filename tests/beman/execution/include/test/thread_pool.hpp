@@ -5,17 +5,21 @@
 #ifndef INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_THREAD_POOL
 #define INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_THREAD_POOL
 
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
 #include <condition_variable>
 #include <memory>
 #include <mutex>
 #include <optional>
 #include <thread>
 #include <utility>
+#endif
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/execution.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -73,6 +77,9 @@ struct test::thread_pool {
 
     struct scheduler {
         using scheduler_concept = test_std::scheduler_tag;
+        auto query(test_std::get_forward_progress_guarantee_t) const noexcept {
+            return test_std::forward_progress_guarantee::weakly_parallel;
+        }
         struct env {
             test::thread_pool* pool;
 

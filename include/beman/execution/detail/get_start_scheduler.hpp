@@ -12,8 +12,10 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.forwarding_query;
+import beman.execution.detail.scheduler;
 #else
 #include <beman/execution/detail/forwarding_query.hpp>
+#include <beman/execution/detail/scheduler.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -21,9 +23,12 @@ import beman.execution.detail.forwarding_query;
 namespace beman::execution {
 struct get_start_scheduler_t : ::beman::execution::forwarding_query_t {
     template <typename Env>
-        requires requires(const get_start_scheduler_t& self, const Env& env) { env.query(self); }
+        requires requires(const get_start_scheduler_t& self, const Env& env) {
+            { auto(::std::as_const(env).query(self)) } -> beman::execution::scheduler;
+        }
     auto operator()(const Env& env) const noexcept {
-        return env.query(*this);
+        static_assert(noexcept(::std::as_const(env).query(*this)));
+        return ::std::as_const(env).query(*this);
     }
 };
 
