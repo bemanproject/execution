@@ -59,9 +59,11 @@ class beman::execution::inplace_stop_token {
 
 class beman::execution::inplace_stop_source {
     struct callback_base : public ::beman::execution::detail::virtual_immovable {
-        callback_base*                  next{};
-        std::atomic<std::atomic<bool>*> done{};
-        auto                            call() -> void;
+        callback_base*     next{};
+        std::atomic<bool*> done{};
+        auto               call() -> void;
+
+        static_assert(std::atomic<bool*>::is_always_lock_free, "atomic<bool*> is not lock free");
 
       protected:
         callback_base()                = default;
@@ -79,10 +81,10 @@ class beman::execution::inplace_stop_source {
   private:
     template <typename CallbackFun>
     friend class ::beman::execution::inplace_stop_callback;
-    ::std::atomic<bool>           stopped{};
-    ::std::thread::id             id{};
-    ::std::mutex                  lock;
-    callback_base*                callbacks{};
+    ::std::atomic<bool> stopped{};
+    ::std::thread::id   id{};
+    ::std::mutex        lock;
+    callback_base*      callbacks{};
 
     auto add(callback_base* cb) -> void;
     auto deregister(callback_base* cb) -> void;
@@ -116,7 +118,7 @@ class beman::execution::inplace_stop_callback final : public ::beman::execution:
 
 // ----------------------------------------------------------------------------
 
-auto beman::execution::inplace_stop_source::callback_base::call() -> void { this->do_call(); }
+inline auto beman::execution::inplace_stop_source::callback_base::call() -> void { this->do_call(); }
 
 // ----------------------------------------------------------------------------
 
@@ -141,9 +143,9 @@ inline auto beman::execution::inplace_stop_source::get_token() const -> ::beman:
 }
 
 inline auto beman::execution::inplace_stop_source::request_stop() -> bool {
-    bool              rc{};
-    std::atomic<bool> done{false};
-    auto*             it{[this, &rc, &done] {
+    bool  rc{};
+    bool  done{false};
+    auto* it{[this, &rc, &done] {
         ::std::lock_guard guard(this->lock);
         rc = !this->stopped.exchange(true);
         this->stopped.exchange(true);
