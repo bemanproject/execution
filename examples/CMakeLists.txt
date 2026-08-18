@@ -20,6 +20,7 @@ endif()
 set(TODO suspend_never) #-dk:TODO including that causes ASAN errors
 
 set(EXAMPLES
+    tutorial-create-a-sender
     allocator
     doc_just
     doc_just_error
@@ -34,6 +35,9 @@ set(EXAMPLES
     stopping
     stop_token
     when_all_cancel
+)
+set(xEXAMPLES
+    tutorial-create-a-sender
 )
 
 if(BEMAN_USE_MODULES)

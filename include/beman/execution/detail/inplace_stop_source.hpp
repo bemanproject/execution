@@ -59,8 +59,16 @@ class beman::execution::inplace_stop_token {
 
 class beman::execution::inplace_stop_source {
     struct callback_base : public ::beman::execution::detail::virtual_immovable {
-        callback_base* next{};
-        virtual auto   call() -> void = 0;
+        callback_base*     next{};
+        std::atomic<bool*> done{};
+        auto               call() -> void;
+
+        static_assert(std::atomic<bool*>::is_always_lock_free, "atomic<bool*> is not lock free");
+
+      protected:
+        callback_base()                = default;
+        virtual ~callback_base()       = default;
+        virtual auto do_call() -> void = 0;
     };
 
   public:
@@ -73,11 +81,10 @@ class beman::execution::inplace_stop_source {
   private:
     template <typename CallbackFun>
     friend class ::beman::execution::inplace_stop_callback;
-    ::std::atomic<bool>           stopped{};
-    ::std::atomic<callback_base*> running{};
-    ::std::thread::id             id{};
-    ::std::mutex                  lock;
-    callback_base*                callbacks{};
+    ::std::atomic<bool> stopped{};
+    ::std::thread::id   id{};
+    ::std::mutex        lock;
+    callback_base*      callbacks{};
 
     auto add(callback_base* cb) -> void;
     auto deregister(callback_base* cb) -> void;
@@ -103,11 +110,15 @@ class beman::execution::inplace_stop_callback final : public ::beman::execution:
     auto operator=(inplace_stop_callback&&) -> inplace_stop_callback&      = delete;
 
   private:
-    auto call() -> void override;
+    auto do_call() -> void override;
 
     CallbackFun                              fun;
     ::beman::execution::inplace_stop_source* source;
 };
+
+// ----------------------------------------------------------------------------
+
+inline auto beman::execution::inplace_stop_source::callback_base::call() -> void { this->do_call(); }
 
 // ----------------------------------------------------------------------------
 
@@ -132,51 +143,60 @@ inline auto beman::execution::inplace_stop_source::get_token() const -> ::beman:
 }
 
 inline auto beman::execution::inplace_stop_source::request_stop() -> bool {
-    using relock = ::std::unique_ptr<::std::unique_lock<::std::mutex>, decltype([](auto p) { p->lock(); })>;
-    if (false == this->stopped.exchange(true)) {
-        ::std::unique_lock guard(this->lock);
-        for (auto it = this->callbacks; it != nullptr; it = this->callbacks) {
-            this->running   = it;
-            this->id        = ::std::this_thread::get_id();
-            this->callbacks = it->next;
-            {
-                relock r(&guard);
-                guard.unlock();
-                it->call();
-            }
-            this->running = nullptr;
+    bool  rc{};
+    bool  done{false};
+    auto* it{[this, &rc, &done] {
+        ::std::lock_guard guard(this->lock);
+        rc = !this->stopped.exchange(true);
+        this->stopped.exchange(true);
+        this->id = ::std::this_thread::get_id();
+        for (auto it = this->callbacks; it;) {
+            std::exchange(it, it->next)->done = &done;
         }
-        return true;
+        return std::exchange(this->callbacks, nullptr);
+    }()};
+
+    while (it) {
+        auto cur{std::exchange(it, it->next)};
+        done = false;
+        cur->call();
+        if (!done) {
+            cur->done = nullptr;
+        }
     }
-    return false;
+    return rc;
 }
 
 inline auto beman::execution::inplace_stop_source::add(callback_base* cb) -> void {
-    if (this->stopped) {
-        cb->call();
-    } else {
+    {
         ::std::lock_guard guard(this->lock);
-        cb->next = ::std::exchange(this->callbacks, cb);
+        if (!this->stopped) {
+            cb->next = ::std::exchange(this->callbacks, cb);
+            return;
+        }
     }
+    cb->call();
 }
 
 inline auto beman::execution::inplace_stop_source::deregister(callback_base* cb) -> void {
-    ::std::unique_lock guard(this->lock);
-    if (this->running == cb) {
-        if (this->id == ::std::this_thread::get_id()) {
+    {
+        ::std::unique_lock guard(this->lock);
+
+        if (!this->stopped) {
+            for (callback_base** it{&this->callbacks}; *it; it = &(*it)->next) {
+                if (*it == cb) {
+                    *it = cb->next;
+                    break;
+                }
+            }
             return;
         }
-        guard.unlock();
-        while (this->running == cb) {
-        }
-        return;
     }
-
-    for (callback_base** it{&this->callbacks}; *it; it = &(*it)->next) {
-        if (*it == cb) {
-            *it = cb->next;
-            break;
-        }
+    if (this->id != ::std::this_thread::get_id()) {
+        while (cb->done)
+            ;
+    } else if (cb->done) {
+        *cb->done = true;
     }
 }
 
@@ -191,7 +211,7 @@ inline beman::execution::inplace_stop_callback<CallbackFun>::inplace_stop_callba
 }
 
 template <typename CallbackFun>
-inline auto beman::execution::inplace_stop_callback<CallbackFun>::call() -> void {
+inline auto beman::execution::inplace_stop_callback<CallbackFun>::do_call() -> void {
     this->fun();
 }
 
