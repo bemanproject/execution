@@ -14,13 +14,17 @@ import beman.execution.detail.join_env;
 #else
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/common.hpp>
+#include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/get_domain.hpp>
+#include <beman/execution/detail/inline_scheduler.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/start.hpp>
+#include <beman/execution/detail/get_allocator.hpp>
+#include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #include <beman/execution/detail/when_all.hpp>
@@ -66,6 +70,28 @@ struct receiver {
     }
     auto get_env() const noexcept -> env { return {this->value}; }
 };
+
+struct env1 {
+    static auto query(test_std::get_allocator_t) noexcept { return std::allocator<char>{}; }
+};
+
+struct env2 {
+    static auto query(test_std::get_scheduler_t) noexcept { return test_std::inline_scheduler{}; }
+};
+
+auto test_read_env_concept() -> void {
+    static_assert(test_std::dependent_sender<decltype(test_std::read_env(test_std::get_domain))>);
+    static_assert(test_std::dependent_sender<decltype(test_std::read_env(test_std::get_allocator))>);
+    static_assert(test_std::sender_in<decltype(test_std::read_env(test_std::get_domain)), env>);
+
+    static_assert(not test_std::sender_in<decltype(test_std::read_env(test_std::get_allocator)), env>);
+    static_assert(test_std::sender_in<decltype(test_std::read_env(test_std::get_allocator)), env1>);
+    static_assert(not test_std::sender_in<decltype(test_std::read_env(test_std::get_allocator)), env2>);
+
+    static_assert(not test_std::sender_in<decltype(test_std::read_env(test_std::get_scheduler)), env>);
+    static_assert(not test_std::sender_in<decltype(test_std::read_env(test_std::get_scheduler)), env1>);
+    static_assert(test_std::sender_in<decltype(test_std::read_env(test_std::get_scheduler)), env2>);
+}
 
 auto test_read_env() -> void {
     static_assert(test_std::receiver<receiver>);
@@ -149,6 +175,7 @@ auto test_read_env_check_types() -> void {
 
 TEST(exec_read_env) {
     static_assert(std::same_as<const test_std::read_env_t, decltype(test_std::read_env)>);
+    test_read_env_concept();
     test_read_env();
     test_read_env_completions();
     test_read_env_check_types();

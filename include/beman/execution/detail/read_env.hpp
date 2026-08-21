@@ -53,6 +53,7 @@ struct read_env_t {
     template <typename, typename>
     struct get_signatures;
     template <typename Query, typename Env>
+        requires std::invocable<Query, const Env&>
     struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::read_env_t, Query>,
                           Env> {
         using set_value_type = ::beman::execution::set_value_t(
@@ -65,6 +66,7 @@ struct read_env_t {
 
   public:
     template <typename Sender, typename Env>
+        requires requires { typename get_signatures<::std::remove_cvref_t<Sender>, Env>::type; }
     static consteval auto get_completion_signatures() {
         return typename get_signatures<::std::remove_cvref_t<Sender>, Env>::type{};
     }

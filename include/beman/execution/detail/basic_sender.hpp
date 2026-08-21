@@ -113,12 +113,11 @@ struct basic_sender : ::beman::execution::detail::product_type<Tag, Data, Child.
     }
 #endif
     template <::beman::execution::detail::decays_to<basic_sender> Self, typename... Env>
-        requires(sizeof...(Env) == 1) || (... && !::beman::execution::dependent_sender<Child>)
-    static consteval auto get_completion_signatures() {
-        if constexpr (requires { Tag::template get_completion_signatures<Self, Env...>(); })
-            return Tag::template get_completion_signatures<Self, Env...>();
-        else
-            return ::beman::execution::detail::completion_signatures_for<Self, Env...>{};
+        requires((sizeof...(Env) == 1) || (... && !::beman::execution::dependent_sender<Child>)) &&
+                requires { Tag::template get_completion_signatures<Self, Env...>(); }
+    static consteval auto
+    get_completion_signatures() noexcept(noexcept(Tag::template get_completion_signatures<Self, Env...>())) {
+        return Tag::template get_completion_signatures<Self, Env...>();
     }
 
     template <::beman::execution::detail::decays_to<basic_sender> Self>

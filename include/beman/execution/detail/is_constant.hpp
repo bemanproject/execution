@@ -8,8 +8,11 @@
 
 namespace beman::execution::detail {
 template <auto>
-concept is_constant = true;
-}
+auto verify_constexpr() noexcept -> void {}
+
+template <auto Constexpr>
+concept is_constant = requires { beman::execution::detail::verify_constexpr<Constexpr>(); };
+} // namespace beman::execution::detail
 
 // ----------------------------------------------------------------------------
 
