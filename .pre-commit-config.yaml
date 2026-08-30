@@ -33,7 +33,7 @@ repos:
 
   # CMake linting and formatting
   - repo: https://github.com/BlankSpruce/gersemi-pre-commit
-    rev: 0.28.0
+    rev: 0.28.1
     hooks:
       - id: gersemi
         name: CMake linting
@@ -49,7 +49,7 @@ repos:
   # Config file: pyproject.toml
   # first Python sort imports
   - repo: https://github.com/pycqa/isort
-    rev: 9.0.0b2
+    rev: 9.0.0b5
     hooks:
       - id: isort
 
