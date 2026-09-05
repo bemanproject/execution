@@ -89,6 +89,7 @@ list(
     issue-144.test
     issue-174.test
     issue-186.test
+    issue-313.test
     meta-combine.test
     meta-contains.test
     meta-filter.test
