@@ -97,7 +97,7 @@ struct test_source : immovable {
         ::std::unique_lock guard(this->d_lock);
         this->d_cond.wait(
             guard, [this] { return this->d_in_progress == false || this->d_id == ::std::this_thread::get_id(); });
-        ::std::exchange(this->d_callback, &this->d_no_call);
+        (void)::std::exchange(this->d_callback, &this->d_no_call);
     }
 };
 } // namespace

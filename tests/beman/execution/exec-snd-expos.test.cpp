@@ -1099,7 +1099,7 @@ auto test_completion_signatures_for() -> void {
     struct bad_env {};
     static_assert(test_std::sender_in<completion_signatures_for_sender, test_std::env<>>);
     static_assert(test_std::sender_in<completion_signatures_for_sender, local_env>);
-    //-dk:TODO restore test static_assert(not test_std::sender_in<completion_signatures_for_sender, bad_env>);
+    static_assert(not test_std::sender_in<completion_signatures_for_sender, bad_env>);
 
 #if 0
          //-dk:TODO restore completion_signatures_for tests or remove completion_signatures for
