@@ -20,7 +20,7 @@ endif()
 set(TODO suspend_never) #-dk:TODO including that causes ASAN errors
 
 set(EXAMPLES
-    tutorial-create-a-sender
+    tutorial_create_a_sender
     allocator
     doc_just
     doc_just_error
