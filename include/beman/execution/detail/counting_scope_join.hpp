@@ -60,7 +60,8 @@ struct counting_scope_join_t {
 
     template <typename Sender, typename...>
     static consteval auto get_completion_signatures() noexcept {
-        return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>{};
+        return ::beman::execution::completion_signatures<::beman::execution::set_value_t(),
+                                                         ::beman::execution::set_stopped_t()>{};
     }
     struct impls_for : ::beman::execution::detail::default_impls {
         struct get_state_impl {
