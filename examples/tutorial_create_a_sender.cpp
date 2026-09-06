@@ -31,7 +31,6 @@ class asynchronous_stack {
             void   operator()() noexcept {
                 std::cout << "stop callback start\n";
                 state& s = this->st;
-                this->st.callback.reset();
                 for (auto it{&this->st.self.awaiting}; it; it = &(*it)->next) {
                     if (*it == &this->st) {
                         *it = this->st.next;

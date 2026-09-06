@@ -148,7 +148,6 @@ inline auto beman::execution::inplace_stop_source::request_stop() -> bool {
     auto* it{[this, &rc, &done] {
         ::std::lock_guard guard(this->lock);
         rc = !this->stopped.exchange(true);
-        this->stopped.exchange(true);
         this->id = ::std::this_thread::get_id();
         for (auto it = this->callbacks; it;) {
             std::exchange(it, it->next)->done = &done;
