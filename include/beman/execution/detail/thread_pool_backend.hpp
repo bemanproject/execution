@@ -249,7 +249,7 @@ class thread_pool_backend_base
 };
 
 struct thread_pool_backend : ::beman::execution::detail::thread_pool_backend_base {
-    explicit thread_pool_backend(::std::in_place_t) : workers(::std::make_unique<::std::thread[]>(num_threads())) {}
+    explicit thread_pool_backend(::std::in_place_t) : workers(::new ::std::thread[num_threads()]) {}
 
     thread_pool_backend() : thread_pool_backend(::std::in_place) {
         for (auto& worker : ::std::span(workers.get(), num_threads())) {
