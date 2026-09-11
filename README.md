@@ -4,7 +4,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
 <!-- markdownlint-disable line-length -->
-[![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg)](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#the-beman-library-maturity-model)![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg)[![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)[![Compiler Explorer Example](https://img.shields.io/badge/Try%20it%20on%20Compiler%20Explorer-grey?logo=compilerexplorer&logoColor=67c52a)](https://godbolt.org/z/jeMEWGYbM)
+[![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg)](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#the-beman-library-maturity-model)![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp26.svg)![Build Status](https://github.com/bemanproject/execution/actions/workflows/ci_tests.yml/badge.svg)[![Coverage](https://coveralls.io/repos/github/bemanproject/execution/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/execution?branch=main)[![Compiler Explorer Example](https://img.shields.io/badge/Try%20it%20on%20Compiler%20Explorer-grey?logo=compilerexplorer&logoColor=67c52a)](https://godbolt.org/z/jeMEWGYbM)
 <!-- markdownlint-restore -->
 
 
@@ -64,10 +64,12 @@ You can disable building tests by setting CMake option `BEMAN_EXECUTION_BUILD_TE
 You can disable building examples by setting CMake option `BEMAN_EXECUTION_BUILD_EXAMPLES` to
 `OFF` when configuring the project.
 
-
-| Library | Linux | MacOS | Windows |
-| ------- | ----- | ----- | ------- |
-| build | ![Linux build status](https://github.com/bemanproject/execution/actions/workflows/linux.yml/badge.svg) | ![MacOS build status](https://github.com/bemanproject/execution/actions/workflows/macos.yml/badge.svg) | ![Window build status](https://github.com/bemanproject/execution/actions/workflows/windows.yml/badge.svg) |
+By default, `beman.execution`
+provides [query_parallel_scheduler_backend](https://eel.is/c++draft/exec.parschedrepl.query). If you want to use a
+custom
+`parallel_scheduler_backend`, you can disable the default `query_parallel_scheduler_backend`
+implementation by setting CMake option
+`BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND` to `OFF` when configuring the project.
 
 The following instructions build the library and the examples:
 
