@@ -4,26 +4,29 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_THREAD_POOL_BACKEND
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_THREAD_POOL_BACKEND
 
+#include <cassert>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
+#include <algorithm>
+#include <atomic>
 #include <condition_variable>
 #include <cstddef>
+#include <exception>
 #include <memory>
-#include <memory_resource>
 #include <mutex>
-#include <queue>
+#include <new>
+#include <span>
 #include <thread>
 #include <utility>
-#include <vector>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.parallel_scheduler_replacement;
-import beman.execution.detail.unreachable;
+import beman.execution.detail.psched_bulk_sender;
 #else
 #include <beman/execution/detail/parallel_scheduler_replacement.hpp>
-#include <beman/execution/detail/unreachable.hpp>
+#include <beman/execution/detail/psched_bulk_sender.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -32,64 +35,100 @@ namespace beman::execution::detail {
 class thread_pool_backend_base
     : public ::beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend {
   protected:
-    struct task {
-        task() noexcept : next(nullptr) {}
+    struct task_base {
+        task_base() noexcept : next(nullptr) {}
 
-        task(const task&) = delete;
+        task_base(const task_base&) = delete;
 
-        task(task&&) = delete;
+        task_base(task_base&&) = delete;
 
-        virtual ~task() = default;
+        virtual ~task_base() = default;
 
-        auto operator=(const task&) -> task& = delete;
+        auto operator=(const task_base&) -> task_base& = delete;
 
-        auto operator=(task&&) -> task& = delete;
+        auto operator=(task_base&&) -> task_base& = delete;
 
-        virtual auto exec(::std::pmr::polymorphic_allocator<>) noexcept -> void = 0;
+        virtual auto exec() noexcept -> void = 0;
 
-        task* next;
+        task_base* next;
     };
 
-    struct schedule_task : task {
+    struct schedule_task : task_base {
         explicit schedule_task(::beman::execution::parallel_scheduler_replacement::receiver_proxy& p) noexcept
             : proxy(p) {}
 
-        auto exec(::std::pmr::polymorphic_allocator<> alloc) noexcept -> void override {
+        auto exec() noexcept -> void override {
             auto& proxy_ref = proxy;
-            alloc.delete_object(this);
+            ::std::destroy_at(this);
             proxy_ref.set_value();
         }
 
         ::beman::execution::parallel_scheduler_replacement::receiver_proxy& proxy;
     };
 
-    struct bulk_task : task {
-        struct shared_state_type {
-            ::std::span<bulk_task>       tasks;
-            ::std::atomic<::std::size_t> counter;
+    // `schedule_task` is small enough to fit directly into the pre-allocated storage provided by `schedule()`
+    static_assert(sizeof(schedule_task) <= psched_storage_size && alignof(schedule_task) <= psched_storage_alignment);
+
+    struct single_bulk_task : task_base {
+        single_bulk_task(::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& p,
+                         ::std::size_t                                                                 shape) noexcept
+            : proxy(p), shape(shape) {}
+
+        auto exec() noexcept -> void override {
+            proxy.execute(0uz, shape);
+            auto& proxy_ref = proxy;
+            ::std::destroy_at(this);
+            proxy_ref.set_value();
+        }
+
+        ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& proxy;
+        ::std::size_t                                                                 shape;
+    };
+
+    // `single_bulk_task` is small enough to fit directly into the pre-allocated storage provided by
+    // `schedule_bulk_chunked()`/`schedule_bulk_unchunked()`
+    static_assert(sizeof(single_bulk_task) <= psched_storage_size &&
+                  alignof(single_bulk_task) <= psched_storage_alignment);
+
+    struct batched_bulk_task : task_base {
+        struct cookie_type {
+            cookie_type(batched_bulk_task* head, ::std::size_t chunk_count) noexcept
+                : head(head), chunk_count(chunk_count), ref_count(chunk_count) {}
+            batched_bulk_task*           head;
+            ::std::size_t                chunk_count;
+            ::std::atomic<::std::size_t> ref_count;
         };
 
-        bulk_task(::std::shared_ptr<shared_state_type>                                          counter,
-                  ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& proxy,
-                  ::std::size_t                                                                 i,
-                  ::std::size_t                                                                 j) noexcept
-            : shared_state(::std::move(counter)), proxy(proxy), i(i), j(j) {}
+        batched_bulk_task(cookie_type*                                                                  cookie,
+                          ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& proxy,
+                          ::std::size_t                                                                 i,
+                          ::std::size_t                                                                 j) noexcept
+            : cookie(cookie), proxy(proxy), i(i), j(j) {}
 
-        auto exec(::std::pmr::polymorphic_allocator<> alloc) noexcept -> void override {
+        auto exec() noexcept -> void override {
             proxy.execute(i, j);
-            if (shared_state->counter.fetch_sub(1uz, ::std::memory_order_acq_rel) == 1uz) {
-                auto& proxy_ref = proxy;
-                ::std::ranges::destroy(shared_state->tasks);
-                alloc.deallocate_object(shared_state->tasks.data(), shared_state->tasks.size());
+            if (cookie->ref_count.fetch_sub(1uz, ::std::memory_order_acq_rel) == 1uz) {
+                auto       head        = cookie->head;
+                const auto chunk_count = cookie->chunk_count;
+                auto&      proxy_ref   = proxy;
+                ::std::destroy_at(cookie);
+                ::std::destroy_n(head, chunk_count);
+                ::operator delete(
+                    head, chunk_count * sizeof(batched_bulk_task), ::std::align_val_t{alignof(batched_bulk_task)});
                 proxy_ref.set_value();
             }
         }
 
-        ::std::shared_ptr<shared_state_type>                                          shared_state;
+        cookie_type*                                                                  cookie;
         ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& proxy;
         ::std::size_t                                                                 i;
         ::std::size_t                                                                 j;
     };
+
+    // The cookie of a batch lives in the pre-allocated storage too, so a batch costs exactly one allocation:
+    // the chunk array itself.
+    static_assert(sizeof(batched_bulk_task::cookie_type) <= psched_storage_size &&
+                  alignof(batched_bulk_task::cookie_type) <= psched_storage_alignment);
 
   public:
     thread_pool_backend_base() = default;
@@ -104,7 +143,7 @@ class thread_pool_backend_base
 
     auto operator=(thread_pool_backend_base&&) -> thread_pool_backend_base& = delete;
 
-    auto shutdown() -> void {
+    auto shutdown() noexcept -> void {
         ::std::unique_lock guard{mtx};
         shutdown_requested = true;
         guard.unlock();
@@ -112,22 +151,27 @@ class thread_pool_backend_base
     }
 
     auto schedule(::beman::execution::parallel_scheduler_replacement::receiver_proxy& proxy,
-                  ::std::span<::std::byte>) noexcept -> void override {
-        try {
-            ::std::unique_lock                  guard{mtx};
-            ::std::pmr::polymorphic_allocator<> alloc{&mempool};
-            auto*                               t = alloc.new_object<schedule_task>(proxy);
-            if (tasks_end == nullptr) {
-                tasks_begin = t;
-            } else {
-                tasks_end->next = t;
-            }
-            tasks_end = t;
-            guard.unlock();
-            cv.notify_one();
-        } catch (...) {
-            proxy.set_error(::std::current_exception());
-        }
+                  ::std::span<::std::byte> storage) noexcept -> void override {
+        push_back(::std::construct_at(reinterpret_cast<schedule_task*>(storage.data()), proxy)); // nothrow!
+    }
+
+    auto schedule_bulk_chunked(::std::size_t                                                                 shape,
+                               ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& proxy,
+                               ::std::span<::std::byte> storage) noexcept -> void override {
+        const ::std::size_t chunk_length = (shape + num_threads() - 1uz) / num_threads();
+        schedule_bulk(shape, chunk_length, proxy, storage);
+    }
+
+    auto schedule_bulk_unchunked(::std::size_t                                                                 shape,
+                                 ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& proxy,
+                                 ::std::span<::std::byte> storage) noexcept -> void override {
+        schedule_bulk_chunked(shape, proxy, storage);
+    }
+
+  protected:
+    [[nodiscard]] static auto num_threads() noexcept -> ::std::size_t {
+        static const ::std::size_t count = ::std::max(1u, ::std::thread::hardware_concurrency());
+        return count;
     }
 
     auto schedule_bulk(::std::size_t                                                                 shape,
@@ -139,105 +183,97 @@ class thread_pool_backend_base
             return;
         }
 
-        const ::std::size_t                             chunk_count = (shape + chunk_length - 1uz) / chunk_length;
-        ::std::pmr::polymorphic_allocator<>             alloc{&mempool};
-        ::std::shared_ptr<bulk_task::shared_state_type> shared_state;
-        bulk_task*                                      batch = nullptr;
+        const ::std::size_t chunk_count = (shape + chunk_length - 1uz) / chunk_length;
         try {
-            batch        = alloc.allocate_object<bulk_task>(chunk_count);
-            shared_state = ::std::allocate_shared<bulk_task::shared_state_type>(
-                alloc, ::std::span(batch, chunk_count), chunk_count);
+            if (chunk_count == 1uz) {
+                push_back(::std::construct_at(reinterpret_cast<single_bulk_task*>(storage.data()), proxy, shape));
+            } else {
+                auto head = static_cast<batched_bulk_task*>(::operator new(
+                    chunk_count * sizeof(batched_bulk_task), ::std::align_val_t{alignof(batched_bulk_task)}));
+                // NOLINTBEGIN(*-reinterpret-cast, *-pointer-arithmetic-on-polymorphic-object, *-ctr56-cpp)
+                auto cookie = ::std::construct_at(
+                    reinterpret_cast<batched_bulk_task::cookie_type*>(storage.data()), head, chunk_count);
+
+                batched_bulk_task* prev = nullptr;
+                for (::std::size_t i = 0; i < chunk_count; ++i) {
+                    const ::std::size_t begin = i * chunk_length;
+                    const ::std::size_t end   = ::std::min(begin + chunk_length, shape);
+                    auto                task  = ::std::construct_at(head + i, cookie, proxy, begin, end);
+                    if (prev) {
+                        prev->next = task;
+                    }
+                    prev = task;
+                }
+                // NOLINTEND(*-reinterpret-cast, *-pointer-arithmetic-on-polymorphic-object, *-ctr56-cpp)
+                push_back(head, chunk_count);
+            }
         } catch (...) {
-            if (batch) {
-                alloc.deallocate_object(batch, chunk_count);
-            }
             proxy.set_error(::std::current_exception());
-            return;
         }
+    }
 
-        bulk_task* prev = nullptr;
-        for (::std::size_t i = 0; i < chunk_count; ++i) {
-            const ::std::size_t begin = i * chunk_length;
-            const ::std::size_t end   = ::std::min(begin + chunk_length, shape);
-            // NOLINTBEGIN(*-pointer-arithmetic-on-polymorphic-object, *-ctr56-cpp)
-            ::std::construct_at(batch + i, shared_state, proxy, begin, end);
-            if (prev) {
-                prev->next = &batch[i];
-            }
-            prev = &batch[i];
-            // NOLINTEND(*-pointer-arithmetic-on-polymorphic-object, *-ctr56-cpp)
-        }
-
+    auto push_back(task_base* t, ::std::size_t n = 1uz) noexcept -> void {
         ::std::unique_lock guard{mtx};
-        if (tasks_end == nullptr) {
-            tasks_begin = batch;
-        } else {
-            tasks_end->next = batch;
+        for (::std::size_t i = 0; i < n; ++i) {
+            if (auto prev_back = ::std::exchange(back, t)) {
+                prev_back->next = t;
+            } else {
+                front = t;
+            }
+            t = t->next;
         }
-        tasks_end = prev;
+        assert(t == nullptr);
         guard.unlock();
-        cv.notify_all();
+        if (n == 1uz) {
+            cv.notify_one();
+        } else {
+            cv.notify_all();
+        }
     }
 
-    auto schedule_bulk_chunked(::std::size_t                                                                 shape,
-                               ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& proxy,
-                               ::std::span<::std::byte> storage) noexcept -> void override {
-        const ::std::size_t chunk_length = (shape + num_threads - 1uz) / num_threads;
-        schedule_bulk(shape, chunk_length, proxy, storage);
-    }
-
-    auto schedule_bulk_unchunked(::std::size_t                                                                 shape,
-                                 ::beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy& proxy,
-                                 ::std::span<::std::byte> storage) noexcept -> void override {
-        schedule_bulk(shape, 1uz, proxy, storage);
+    [[nodiscard]] auto pop_front() noexcept -> task_base* {
+        ::std::unique_lock guard{mtx};
+        cv.wait(guard, [this] { return front != nullptr || shutdown_requested; });
+        if (front == back) {
+            back = nullptr;
+        }
+        return front ? ::std::exchange(front, front->next) : nullptr;
     }
 
   protected:
-    inline static ::std::size_t                          num_threads = ::std::thread::hardware_concurrency();
-    inline static ::std::pmr::synchronized_pool_resource mempool;
-    bool                                                 shutdown_requested = false;
-    ::std::mutex                                         mtx;
-    ::std::condition_variable                            cv;
-    task*                                                tasks_begin = nullptr;
-    task*                                                tasks_end   = nullptr;
+    bool                      shutdown_requested = false;
+    ::std::mutex              mtx;
+    ::std::condition_variable cv;
+    task_base*                front = nullptr;
+    task_base*                back  = nullptr;
 };
 
 struct thread_pool_backend : ::beman::execution::detail::thread_pool_backend_base {
-    explicit thread_pool_backend(::std::in_place_t) : workers(num_threads, &mempool) {}
+    explicit thread_pool_backend(::std::in_place_t) : workers(::std::make_unique<::std::thread[]>(num_threads())) {}
 
     thread_pool_backend() : thread_pool_backend(::std::in_place) {
-        for (::std::size_t i = 0; i < num_threads; ++i) {
-            workers[i] = ::std::thread([this]() noexcept { this->run(); });
+        for (auto& worker : ::std::span(workers.get(), num_threads())) {
+            worker = ::std::thread(&thread_pool_backend::run, this);
         }
     }
 
     ~thread_pool_backend() override {
         shutdown();
-        for (auto& worker : workers) {
-            worker.join();
+        for (auto& worker : ::std::span(workers.get(), num_threads())) {
+            if (worker.joinable()) {
+                worker.join();
+            }
         }
     }
 
   private:
     auto run() noexcept -> void {
-        while (true) {
-            ::std::unique_lock guard{mtx};
-            cv.wait(guard, [this]() noexcept { return tasks_begin != nullptr || shutdown_requested; });
-            if (shutdown_requested && tasks_begin == nullptr) {
-                return;
-            }
-            auto task   = tasks_begin;
-            tasks_begin = task->next;
-            if (tasks_begin == nullptr) {
-                tasks_end = nullptr;
-            }
-            task->next = nullptr;
-            guard.unlock();
-            task->exec(&mempool);
+        while (auto task = pop_front()) {
+            task->exec();
         }
     }
 
-    ::std::pmr::vector<::std::thread> workers;
+    ::std::unique_ptr<::std::thread[]> workers;
 };
 
 } // namespace beman::execution::detail
