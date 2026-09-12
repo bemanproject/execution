@@ -75,6 +75,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/decays_to.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_impls.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/default_parallel_scheduler_backend.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/dependent_sender_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/execution_policy.hpp
@@ -222,6 +223,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/task_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/then.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/thread_pool_backend.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/transform_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/try_query.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/type_list.hpp
@@ -243,6 +245,13 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/within.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/write_env.hpp
 )
+
+if(BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND)
+    target_compile_definitions(
+        ${BEMAN_EXECUTION_TARGET_NAME}
+        INTERFACE BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND
+    )
+endif()
 
 if(BEMAN_USE_MODULES)
     target_sources(
@@ -446,6 +455,7 @@ if(BEMAN_USE_MODULES)
                     task.cppm
                     task_scheduler.cppm
                     then.cppm
+                    thread_pool_backend.cppm
                     transform_sender.cppm
                     try_query.cppm
                     type_list.cppm

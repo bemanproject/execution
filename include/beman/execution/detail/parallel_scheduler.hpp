@@ -45,6 +45,7 @@ import beman.execution.detail.stop_token_of_t;
 #else
 #include <beman/execution/detail/bulk.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
+#include <beman/execution/detail/default_parallel_scheduler_backend.hpp> // IWYU pragma: keep
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/execution_policy.hpp>
 #include <beman/execution/detail/forward_like.hpp>

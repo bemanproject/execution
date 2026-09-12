@@ -94,6 +94,12 @@ option(
     ${PROJECT_IS_TOP_LEVEL}
 )
 
+option(
+    BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND
+    "Enable building default parallel_scheduler backend implementation. Default: ON. Values: { ON, OFF }."
+    ON
+)
+
 add_subdirectory(src/beman/execution)
 
 if(NOT BEMAN_USE_MODULES)

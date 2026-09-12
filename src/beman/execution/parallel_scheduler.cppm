@@ -2,6 +2,7 @@ module;
 // src/beman/execution/parallel_scheduler.cppm                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution/detail/default_parallel_scheduler_backend.hpp> // IWYU pragma: keep
 #include <beman/execution/detail/parallel_scheduler.hpp>
 
 export module beman.execution.detail.parallel_scheduler;
