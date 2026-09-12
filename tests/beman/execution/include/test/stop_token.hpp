@@ -245,7 +245,7 @@ inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void
     ::std::atomic<bool> done{};
     ::std::thread       thread([&done] {
         using namespace ::std::chrono_literals;
-        ::std::this_thread::sleep_for(10ms);
+        ::std::this_thread::sleep_for(100ms);
         ASSERT(done);
     });
 

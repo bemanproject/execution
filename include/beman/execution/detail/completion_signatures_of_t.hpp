@@ -1,8 +1,8 @@
-// include/beman/execution/detail/completion_signaturess_of_t.hpp   -*-C++-*-
+// include/beman/execution/detail/completion_signatures_of_t.hpp   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_OF
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_OF
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_OF_T
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_OF_T
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_MODULES
@@ -31,4 +31,4 @@ using completion_signatures_of_t = decltype(::beman::execution::get_completion_s
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_OF
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_COMPLETION_SIGNATURES_OF_T
