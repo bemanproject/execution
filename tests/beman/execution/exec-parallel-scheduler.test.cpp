@@ -127,7 +127,7 @@ auto test_parallel_scheduler_schedule() -> void {
 }
 } // namespace
 
-#ifndef BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND
+#if !BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND
 namespace beman::execution::parallel_scheduler_replacement {
 auto query_parallel_scheduler_backend() -> std::shared_ptr<parallel_scheduler_backend> {
     static auto backend = std::make_shared<::test_detail::thread_pool_backend>();
