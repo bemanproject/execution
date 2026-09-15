@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_PSCHED_BULK_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_PSCHED_BULK_SENDER
 
+#include <cassert>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
