@@ -125,15 +125,25 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>env</b> = ::beman::e
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aafea1eda6ec022344c373ce82a853a61"><td class="memItemLeft" align="right" valign="top"><a id="aafea1eda6ec022344c373ce82a853a61" name="aafea1eda6ec022344c373ce82a853a61"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>query</b> (<a class="el" href="structbeman_1_1execution_1_1get__forward__progress__guarantee__t.html">::beman::execution::get_forward_progress_guarantee_t</a>) const noexcept -&gt; ::beman::execution::forward_progress_guarantee</td></tr>
-<tr class="separator:aafea1eda6ec022344c373ce82a853a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54dcc0e7811b9cb53f3bb3b2f1603e16"><td class="memItemLeft" align="right" valign="top"><a id="a54dcc0e7811b9cb53f3bb3b2f1603e16" name="a54dcc0e7811b9cb53f3bb3b2f1603e16"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="structbeman_1_1execution_1_1inline__scheduler.html">inline_scheduler</a> &amp;) const -&gt; bool=default</td></tr>
 <tr class="separator:a54dcc0e7811b9cb53f3bb3b2f1603e16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ac43d00f091b7ea59b0a547a1a61002d6"><td class="memItemLeft" align="right" valign="top"><a id="ac43d00f091b7ea59b0a547a1a61002d6" name="ac43d00f091b7ea59b0a547a1a61002d6"></a>
+static auto&#160;</td><td class="memItemRight" valign="bottom"><b>query</b> (<a class="el" href="structbeman_1_1execution_1_1get__forward__progress__guarantee__t.html">::beman::execution::get_forward_progress_guarantee_t</a>) noexcept -&gt; ::beman::execution::forward_progress_guarantee</td></tr>
+<tr class="separator:ac43d00f091b7ea59b0a547a1a61002d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a956635329e9255e8823629475dba4fb4"><td class="memTemplParams" colspan="2"><a id="a956635329e9255e8823629475dba4fb4" name="a956635329e9255e8823629475dba4fb4"></a>
+template&lt;typename Env &gt; <br />
+requires requires(const Env&amp; env) { ::beman::execution::get_scheduler(env); }</td></tr>
+<tr class="memitem:a956635329e9255e8823629475dba4fb4"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>query</b> (const ::beman::execution::get_completion_scheduler_t&lt;<a class="el" href="structbeman_1_1execution_1_1set__value__t.html">::beman::execution::set_value_t</a> &gt; &amp;, const Env &amp;env) noexcept</td></tr>
+<tr class="separator:a956635329e9255e8823629475dba4fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac22d9dc856a014c5da0d865ce3aa559"><td class="memTemplParams" colspan="2"><a id="aac22d9dc856a014c5da0d865ce3aa559" name="aac22d9dc856a014c5da0d865ce3aa559"></a>
+template&lt;typename Env &gt; <br />
+requires requires(const Env&amp; env) { ::beman::execution::get_domain(env); }</td></tr>
+<tr class="memitem:aac22d9dc856a014c5da0d865ce3aa559"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>query</b> (const ::beman::execution::get_completion_domain_t&lt;<a class="el" href="structbeman_1_1execution_1_1set__value__t.html">::beman::execution::set_value_t</a> &gt; &amp;, const Env &amp;env) noexcept</td></tr>
+<tr class="separator:aac22d9dc856a014c5da0d865ce3aa559"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af60acb9c48d6ce713558c0b39d2cd9f4"><td class="memItemLeft" align="right" valign="top"><a id="af60acb9c48d6ce713558c0b39d2cd9f4" name="af60acb9c48d6ce713558c0b39d2cd9f4"></a>
 static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>schedule</b> () noexcept -&gt; <a class="el" href="structbeman_1_1execution_1_1inline__scheduler_1_1sender.html">sender</a></td></tr>
 <tr class="separator:af60acb9c48d6ce713558c0b39d2cd9f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
