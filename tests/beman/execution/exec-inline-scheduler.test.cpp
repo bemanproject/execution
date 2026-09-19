@@ -204,9 +204,12 @@ auto test_get_completion_scheduler_with_env() {
         auto query(test_std::get_scheduler_t) const noexcept { return custom_scheduler{7}; }
     };
 
-    auto sched = test_std::get_completion_scheduler<test_std::set_value_t>(attrs, test_env{});
+    auto sched  = test_std::get_completion_scheduler<test_std::set_value_t>(attrs, test_env{});
+    auto sched1 = test_std::get_completion_scheduler<test_std::set_value_t>(test_std::inline_scheduler{}, test_env{});
     static_assert(std::same_as<decltype(sched), custom_scheduler>);
+    static_assert(std::same_as<decltype(sched), decltype(sched1)>);
     ASSERT(sched == custom_scheduler{7});
+    ASSERT(sched == sched1);
 }
 
 auto test_get_completion_domain_with_env() {
@@ -217,8 +220,10 @@ auto test_get_completion_domain_with_env() {
         auto query(test_std::get_domain_t) const noexcept { return custom_domain{}; }
     };
 
-    auto dom = test_std::get_completion_domain<test_std::set_value_t>(attrs, test_env{});
+    auto dom  = test_std::get_completion_domain<test_std::set_value_t>(attrs, test_env{});
+    auto dom1 = test_std::get_completion_domain<test_std::set_value_t>(test_std::inline_scheduler{}, test_env{});
     static_assert(std::same_as<decltype(dom), custom_domain>);
+    static_assert(std::same_as<decltype(dom), decltype(dom1)>);
 }
 
 } // namespace

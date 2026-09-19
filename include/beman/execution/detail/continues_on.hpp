@@ -136,7 +136,8 @@ struct continues_on_t {
                                                                   ::beman::execution::detail::fwd_env(env)...);
             }
         auto query(::beman::execution::get_completion_scheduler_t<Tag>, const Env&... env) const noexcept {
-            return ::beman::execution::get_completion_scheduler<Tag>(this->sch, env...);
+            return ::beman::execution::get_completion_scheduler<Tag>(this->sch,
+                                                                     ::beman::execution::detail::fwd_env(env)...);
         }
 
         template <typename Tag, typename... Env>
