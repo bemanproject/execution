@@ -60,49 +60,27 @@ import beman.execution.detail.transform_sender;
 
 namespace beman::execution::detail {
 struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
-    template <typename>
-    struct env_needs_get_start_scheduler {
-        using sender_concept = ::beman::execution::sender_tag;
-        template <typename, typename Env>
-        static constexpr auto get_completion_signatures() {
-            return env_needs_get_start_scheduler<Env>{};
-        }
-    };
-
     template <::beman::execution::detail::sender_for<on_t> OutSndr, typename Env>
-    auto transform_sender(::beman::execution::set_value_t, OutSndr&& out_sndr, const Env& env) const
+    static auto transform_sender(::beman::execution::set_value_t, OutSndr&& out_sndr, const Env& env)
         -> decltype(auto) {
-        struct not_a_scheduler_t {};
         auto&& data  = out_sndr.template get<1>();
         auto&& child = out_sndr.template get<2>();
 
         if constexpr (::beman::execution::scheduler<decltype(data)>) {
-            auto sch{::beman::execution::detail::query_with_default(
-                ::beman::execution::get_start_scheduler, env, not_a_scheduler_t{})};
-            if constexpr (::std::same_as<not_a_scheduler_t, decltype(sch)>) {
-                return env_needs_get_start_scheduler<Env>{};
-            } else {
-                return ::beman::execution::continues_on(
-                    ::beman::execution::starts_on(::beman::execution::detail::forward_like<OutSndr>(data),
-                                                  ::beman::execution::detail::forward_like<OutSndr>(child)),
-                    ::std::move(sch));
-            }
+            auto start_sch = ::beman::execution::get_start_scheduler(env);
+            return ::beman::execution::continues_on(
+                ::beman::execution::starts_on(::beman::execution::detail::forward_like<OutSndr>(data),
+                                              ::beman::execution::detail::forward_like<OutSndr>(child)),
+                ::std::move(start_sch));
         } else {
             auto& [sch, closure] = data;
-            auto orig_sch{::beman::execution::detail::call_with_default(
-                ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>,
-                not_a_scheduler_t{},
-                ::beman::execution::get_env(child),
-                env)};
+            auto orig_sch        = ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(
+                ::beman::execution::get_env(child), env);
 
-            if constexpr (::std::same_as<not_a_scheduler_t, decltype(orig_sch)>) {
-                return env_needs_get_start_scheduler<Env>{};
-            } else {
-                return ::beman::execution::continues_on(
-                    ::beman::execution::detail::forward_like<OutSndr>(closure)(::beman::execution::continues_on(
-                        ::beman::execution::detail::forward_like<OutSndr>(child), sch)),
-                    orig_sch);
-            }
+            return ::beman::execution::continues_on(
+                ::beman::execution::detail::forward_like<OutSndr>(closure)(
+                    ::beman::execution::continues_on(::beman::execution::detail::forward_like<OutSndr>(child), sch)),
+                orig_sch);
         }
     }
 
@@ -116,7 +94,7 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
               ::beman::execution::detail::is_sender_adaptor_closure Closure>
         requires ::beman::execution::detail::is_sender_adaptor_closure<Sndr>
     auto operator()(Sndr&&, Sch&&, Closure&&) const -> void =
-        BEMAN_EXECUTION_DELETE("on(sch, sndr) requires that sndr isn't both a sender and sender adaptor closure");
+        BEMAN_EXECUTION_DELETE("on(sndr, sch, closure) requires that sndr isn't both a sender and sender adaptor closure");
 
     template <::beman::execution::scheduler Sch, ::beman::execution::sender Sndr>
     auto operator()(Sch&& sch, Sndr&& sndr) const {
@@ -138,15 +116,51 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     }
     template <typename, typename...>
     struct get_signatures;
-    template <typename Data, ::beman::execution::sender Sndr, typename... Env>
-    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Data, Sndr>,
-                          Env...> {
-        using type = ::beman::execution::completion_signatures_of_t<Sndr, Env...>;
+
+    /// for `on(scheduler, sender)`
+    template <typename Sched, typename Child, typename Env>
+    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Sched, Child>,
+                          Env> {
+
+        static consteval auto get() noexcept
+            requires ::std::invocable<::beman::execution::get_start_scheduler_t, Env>
+        {
+            using transformed_sndr = decltype(on_t::transform_sender(
+                ::beman::execution::set_value,
+                ::std::declval<
+                    ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Sched, Child>>(),
+                ::std::declval<Env>()));
+            return ::beman::execution::get_completion_signatures<transformed_sndr, Env>();
+        }
     };
 
-    template <typename Sender, typename... Env>
-    static consteval auto get_completion_signatures() {
-        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+    /// for `on(sender, scheduler, closure)`
+    template <typename Sched, typename Closure, typename Child, typename Env>
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t,
+                                                 ::beman::execution::detail::product_type<Sched, Closure>,
+                                                 Child>,
+        Env> {
+        static constexpr auto get() noexcept
+            requires ::std::invocable<::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>,
+                                      ::beman::execution::env_of_t<Child>,
+                                      Env>
+        {
+            using transformed_sndr = decltype(on_t::transform_sender(
+                ::beman::execution::set_value,
+                ::std::declval<
+                    ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t,
+                                                             ::beman::execution::detail::product_type<Sched, Closure>,
+                                                             Child>>(),
+                ::std::declval<Env>()));
+            return ::beman::execution::get_completion_signatures<transformed_sndr, Env>();
+        }
+    };
+
+    template <typename Sender, typename Env>
+        requires requires { get_signatures<std::remove_cvref_t<Sender>, Env>::get(); }
+    static consteval auto get_completion_signatures() noexcept {
+        return get_signatures<std::remove_cvref_t<Sender>, Env>::get();
     }
 };
 
