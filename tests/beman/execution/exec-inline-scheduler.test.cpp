@@ -76,7 +76,8 @@ struct sched_with_domain {
     };
     struct sender {
         using sender_concept = test_std::sender_tag;
-        static consteval auto get_completion_signatures() {
+        template <typename...>
+        static consteval auto get_completion_signatures() noexcept {
             return test_std::completion_signatures<test_std::set_value_t()>();
         }
         template <typename R>
