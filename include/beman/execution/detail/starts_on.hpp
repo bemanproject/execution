@@ -24,6 +24,7 @@ import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
 import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
+import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_env;
 import beman.execution.detail.join_env;
 import beman.execution.detail.just;
@@ -53,6 +54,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_completion_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/just.hpp>
