@@ -241,6 +241,8 @@ struct when_all_t {
         };
         static constexpr auto get_env{get_env_impl{}};
 
+        struct nonesuch {};
+
         enum class disposition : unsigned char { started, error, stopped };
 
         template <typename... Values>
@@ -249,7 +251,6 @@ struct when_all_t {
 
         template <typename Receiver, typename... Sender>
         struct state_type {
-            struct nonesuch {};
             using env_t     = when_all_env<::beman::execution::env_of_t<Receiver>>;
             using copy_fail = ::std::conditional_t<
                 (... && ::beman::execution::value_types_of_t<Sender,
