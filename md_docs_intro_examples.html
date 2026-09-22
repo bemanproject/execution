@@ -134,7 +134,6 @@ Introduction by Example</h1>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    <span class="comment">// clang-format off</span></div>
-<div class="line"><span class="preprocessor">#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ &gt; 15) || !defined(BEMAN_HAS_MODULES)</span></div>
 <div class="line">    <span class="keyword">auto</span> [result] =</div>
 <div class="line">    <a class="code hl_variable" href="namespacebeman_1_1execution.html#a43774ecef52b77ef5d3f668bfcc51519">ex::sync_wait</a>(</div>
 <div class="line">        ex::when_all(</div>
@@ -143,7 +142,6 @@ Introduction by Example</h1>
 <div class="line">        ) | <a class="code hl_variable" href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3">ex::then</a>([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; s1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; s2) { <span class="keywordflow">return</span> s1 + s2; })</div>
 <div class="line">        ).value_or(std::tuple(<span class="stringliteral">&quot;&quot;</span>s))</div>
 <div class="line">        ;</div>
-<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line">    <span class="comment">// clang-format on</span></div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// std::cout &lt;&lt; std::get&lt;0&gt;(v) &lt;&lt; &#39;\n&#39;;</span></div>
@@ -222,7 +220,6 @@ world"</code>: it uses components for dealing with asynchronous work to synchron
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    std::cout &lt;&lt; std::unitbuf;</div>
-<div class="line"><span class="preprocessor">#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ &gt; 15) || !defined(BEMAN_HAS_MODULES)</span></div>
 <div class="line">    intro::timer timer;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// clang-format off</span></div>
@@ -242,7 +239,6 @@ world"</code>: it uses components for dealing with asynchronous work to synchron
 <div class="line">    <span class="comment">// clang-format on</span></div>
 <div class="line"> </div>
 <div class="line">    std::cout &lt;&lt; result &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><p></p>
 </details>
