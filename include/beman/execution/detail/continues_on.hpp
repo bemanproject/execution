@@ -123,7 +123,7 @@ struct continues_on_t {
         Env> {
         using scheduler_sender      = ::beman::execution::schedule_result_t<Scheduler>;
         using additional_signatures = ::std::conditional_t<
-            ::beman::execution::sends_stopped<scheduler_sender>,
+            ::beman::execution::sends_stopped<scheduler_sender, Env>,
             ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr),
                                                       ::beman::execution::set_stopped_t()>,
             ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
