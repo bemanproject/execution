@@ -100,6 +100,17 @@ auto test_parallel_scheduler_schedule() -> void {
         ASSERT(i == 114514);
     }
     {
+        static constexpr auto square = [](int i) noexcept { return i * i; };
+        auto                  work = test_std::when_all(test_std::on(sch, test_std::just(0) | test_std::then(square)),
+                                                        test_std::on(sch, test_std::just(1) | test_std::then(square)),
+                                                        test_std::on(sch, test_std::just(2) | test_std::then(square)));
+
+        if (auto result = test_std::sync_wait(std::move(work))) {
+            auto [i, j, k] = result.value();
+            ASSERT(i == 0 && j == 1 && k == 4);
+        }
+    }
+    {
         bool invoked = false;
         test_std::sync_wait(test_std::schedule(sch) |
                             test_std::bulk(test_std::par, 0uz, [&invoked](std::size_t) noexcept { invoked = true; }));

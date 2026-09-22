@@ -24,12 +24,14 @@ import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
 import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
+import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_env;
 import beman.execution.detail.join_env;
 import beman.execution.detail.just;
 import beman.execution.detail.let;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
+import beman.execution.detail.meta.unique;
 import beman.execution.detail.query_with_default;
 import beman.execution.detail.sched_env;
 import beman.execution.detail.schedule_result_t;
@@ -40,7 +42,6 @@ import beman.execution.detail.sends_stopped;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
-import beman.execution.detail.write_env;
 #else
 #include <beman/execution/detail/basic_sender.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
@@ -53,12 +54,14 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_completion_domain.hpp>
 #include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/schedule_result_t.hpp>
 #include <beman/execution/detail/scheduler.hpp>
@@ -67,7 +70,6 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
-#include <beman/execution/detail/write_env.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -75,7 +77,7 @@ import beman.execution.detail.write_env;
 namespace beman::execution::detail {
 struct starts_on_t {
     template <::beman::execution::detail::sender_for<::beman::execution::detail::starts_on_t> Sender, typename Env>
-    auto transform_sender(::beman::execution::set_value_t, Sender&& sender, const Env&) const noexcept {
+    static auto transform_sender(::beman::execution::set_value_t, Sender&& sender, const Env&) noexcept {
         auto&&         sched{sender.template get<1>()};
         auto&&         child{sender.template get<2>()};
         constexpr bool is_nothrow = ::std::is_nothrow_move_constructible_v<::std::remove_cvref_t<decltype(child)>>;
@@ -95,22 +97,14 @@ struct starts_on_t {
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::starts_on_t, Scheduler, Child>,
         Env> {
-        using scheduler_sender = ::beman::execution::schedule_result_t<Scheduler>;
-        using child_env        = decltype(::beman::execution::detail::join_env(
-            ::beman::execution::detail::sched_env(::std::declval<Scheduler>()),
-            ::beman::execution::detail::fwd_env(::std::declval<Env>())));
-
-        template <typename... E>
-        using as_set_error = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
-
-        using value_and_error_types = ::beman::execution::detail::meta::combine<
-            ::beman::execution::completion_signatures_of_t<Child, child_env>,
-            ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>>;
-        using stopped_types =
-            ::std::conditional_t<::beman::execution::sends_stopped<scheduler_sender, Env>,
-                                 ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
-                                 ::beman::execution::completion_signatures<>>;
-        using type = ::beman::execution::detail::meta::combine<value_and_error_types, stopped_types>;
+        static consteval auto get() {
+            using transformed_sndr = decltype(starts_on_t::transform_sender(
+                ::beman::execution::set_value,
+                ::std::declval<::beman::execution::detail::
+                                   basic_sender<::beman::execution::detail::starts_on_t, Scheduler, Child>>(),
+                ::std::declval<Env>()));
+            return ::beman::execution::get_completion_signatures<transformed_sndr, Env>();
+        }
     };
 
     template <typename Scheduler, typename ChildAttrs>
@@ -153,8 +147,8 @@ struct starts_on_t {
 
   public:
     template <typename Sender, typename... Env>
-    static consteval auto get_completion_signatures() noexcept {
-        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
+    static consteval auto get_completion_signatures() {
+        return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {

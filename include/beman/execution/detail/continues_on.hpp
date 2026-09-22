@@ -50,6 +50,7 @@ import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.sender_in;
+import beman.execution.detail.sends_stopped;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
@@ -84,6 +85,7 @@ import beman.execution.detail.start;
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/sender_in.hpp>
+#include <beman/execution/detail/sends_stopped.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
@@ -119,13 +121,18 @@ struct continues_on_t {
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, Scheduler, Sender>,
         Env> {
-        using scheduler_sender = ::beman::execution::schedule_result_t<Scheduler>;
+        using scheduler_sender      = ::beman::execution::schedule_result_t<Scheduler>;
+        using additional_signatures = ::std::conditional_t<
+            ::beman::execution::sends_stopped<scheduler_sender, Env>,
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr),
+                                                      ::beman::execution::set_stopped_t()>,
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
         template <typename... E>
         using as_set_error = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
-        using type         = ::beman::execution::detail::meta::combine<
+        using type         = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
             decltype(::beman::execution::get_completion_signatures<Sender, Env>()),
             ::beman::execution::error_types_of_t<scheduler_sender, Env, as_set_error>,
-            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
+            additional_signatures>>;
     };
 
     template <typename Scheduler, typename ChildAttrs>
