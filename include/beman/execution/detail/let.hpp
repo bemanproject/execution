@@ -184,26 +184,24 @@ struct let_t {
             ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
     };
 
+    template <typename T>
+    using other_completion = let_other_completion<Completion, T>;
+
+    template <typename T>
+    using matching_completion = let_matching_completion<Completion, T>;
+
     template <typename, typename...>
     struct get_signatures;
 
     template <typename Fun, typename Child>
         requires ::beman::execution::detail::non_dependent_successor<Completion, Child, Fun>::value
-    struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Completion>, Fun, Child>>
-        : get_signatures<
-              ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Completion>, Fun, Child>,
-              ::beman::execution::env<>> {};
+    struct get_signatures<::beman::execution::detail::basic_sender<let_t, Fun, Child>>
+        : get_signatures<::beman::execution::detail::basic_sender<let_t, Fun, Child>, ::beman::execution::env<>> {};
 
     template <typename Fun, typename Child, typename Env>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Completion>, Fun, Child>,
         Env> {
-        template <typename T>
-        using other_completion = let_other_completion<Completion, T>;
-        template <typename T>
-        using matching_completion = let_matching_completion<Completion, T>;
-
         using successor_env =
             ::beman::execution::detail::join_env<let_env_t<Child, Env>, ::beman::execution::detail::fwd_env<Env>>;
 
