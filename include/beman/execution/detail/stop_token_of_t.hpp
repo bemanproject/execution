@@ -1,8 +1,8 @@
 // include/beman/execution/detail/stop_token_of_t.hpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_TOKEN_OF
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_TOKEN_OF
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_TOKEN_OF_T
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_TOKEN_OF_T
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -25,4 +25,4 @@ using stop_token_of_t = ::std::remove_cvref_t<decltype(::beman::execution::get_s
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_TOKEN_OF
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_TOKEN_OF_T

@@ -1,8 +1,8 @@
 // include/beman/execution/detail/store_receiver.hpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_STORE_RECEIVER
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_STORE_RECEIVER
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STORE_RECEIVER
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_STORE_RECEIVER
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD

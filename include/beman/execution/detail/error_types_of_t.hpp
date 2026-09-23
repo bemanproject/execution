@@ -1,8 +1,8 @@
 // include/beman/execution/detail/error_types_of_t.hpp              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF_T
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF_T
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -46,4 +46,4 @@ using error_types_of_t =
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_ERROR_TYPES_OF_T

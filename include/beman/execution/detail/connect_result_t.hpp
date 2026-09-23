@@ -1,8 +1,8 @@
 // include/beman/execution/detail/connect_result_t.hpp              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT_T
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT_T
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -29,4 +29,4 @@ using connect_result_t = decltype(::beman::execution::connect(::std::declval<Sen
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_CONNECT_RESULT_T
