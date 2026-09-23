@@ -148,7 +148,7 @@ struct continues_on_t {
             using child_sigs_t = decltype(child_sigs);
             using extra_sigs_t = ::beman::execution::detail::meta::filter<is_not_set_value, decltype(sched_sigs)>;
             using type         = ::beman::execution::detail::meta::unique<
-                        ::beman::execution::detail::meta::combine<child_sigs_t, exception_signature, extra_sigs_t>>;
+                ::beman::execution::detail::meta::combine<child_sigs_t, exception_signature, extra_sigs_t>>;
             return type{};
         }
     };
