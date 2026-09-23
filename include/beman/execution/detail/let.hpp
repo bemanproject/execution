@@ -170,48 +170,52 @@ struct let_t {
     using let_env_t = decltype(let_env(::std::declval<Sndr>(), ::std::declval<Env>()));
 
   private:
+    template <typename, typename>
+    struct apply_decayed;
+    template <typename Fun, typename... Args>
+    struct apply_decayed<Fun, Completion(Args...)> {
+        static_assert(::std::invocable<Fun, ::std::decay_t<Args>&...>,
+                      "The callback function object of the `let` adapter shall be invocable with `Args&...`");
+        using sender_type = ::beman::execution::detail::call_result_t<Fun, ::std::decay_t<Args>&...>;
+        static_assert(::beman::execution::sender<sender_type>, "`Fun` shall return a sender");
+        using completions = ::std::conditional_t<
+            noexcept(::std::declval<Fun>()(::std::declval<::std::decay_t<Args>&>()...)),
+            ::beman::execution::completion_signatures<>,
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
+    };
+
     template <typename, typename...>
     struct get_signatures;
 
-    template <typename Comp, typename Fun, typename Child>
+    template <typename Fun, typename Child>
         requires ::beman::execution::detail::non_dependent_successor<Completion, Child, Fun>::value
     struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Comp>, Fun, Child>>
-        : get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Comp>, Fun, Child>,
-                         ::beman::execution::env<>> {};
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Completion>, Fun, Child>>
+        : get_signatures<
+              ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Completion>, Fun, Child>,
+              ::beman::execution::env<>> {};
 
-    template <typename Comp, typename Fun, typename Child, typename Env>
+    template <typename Fun, typename Child, typename Env>
     struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Comp>, Fun, Child>,
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Completion>, Fun, Child>,
         Env> {
         template <typename T>
-        using other_completion = let_other_completion<Comp, T>;
+        using other_completion = let_other_completion<Completion, T>;
         template <typename T>
-        using matching_completion = let_matching_completion<Comp, T>;
-
-        template <typename>
-        struct apply_decayed;
-        template <typename C, typename... A>
-        struct apply_decayed<C(A...)> {
-            using sender_type = ::beman::execution::detail::call_result_t<Fun, ::std::decay_t<A>...>;
-            using completions = ::std::conditional_t<
-                noexcept(::std::declval<Fun>()(::std::declval<::std::decay_t<A>>()...)),
-                ::beman::execution::completion_signatures<>,
-                ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>;
-        };
+        using matching_completion = let_matching_completion<Completion, T>;
 
         using successor_env =
             ::beman::execution::detail::join_env<let_env_t<Child, Env>, ::beman::execution::detail::fwd_env<Env>>;
 
         template <typename>
         struct get_completions;
-        template <template <typename...> class L, typename... C>
-        struct get_completions<L<C...>> {
+        template <typename... Sigs>
+        struct get_completions<::beman::execution::completion_signatures<Sigs...>> {
             using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
                 ::beman::execution::completion_signatures<>,
-                ::beman::execution::completion_signatures_of_t<typename apply_decayed<C>::sender_type,
+                ::beman::execution::completion_signatures_of_t<typename apply_decayed<Fun, Sigs>::sender_type,
                                                                successor_env>...,
-                typename apply_decayed<C>::completions...>>;
+                typename apply_decayed<Fun, Sigs>::completions...>>;
         };
 
         using upstream_completions = ::beman::execution::completion_signatures_of_t<Child, Env>;
@@ -271,7 +275,7 @@ struct let_t {
         struct to_state {
             template <typename Tuple>
             using trans =
-                decltype(::beman::execution::connect(::std::apply(::std::declval<Fun>(), ::std::declval<Tuple>()),
+                decltype(::beman::execution::connect(::std::apply(::std::declval<Fun>(), ::std::declval<Tuple&>()),
                                                      ::std::declval<let_receiver<Receiver, Env>>()));
         };
 
@@ -308,28 +312,33 @@ struct let_t {
                 {},
                 {}};
         }};
+
+        template <typename Receiver, typename Env, typename Fun, typename... Args>
+        static constexpr bool nothrow =
+            ::std::is_nothrow_constructible_v<::beman::execution::detail::decayed_tuple<Args...>, Args...> &&
+            noexcept(::beman::execution::connect(
+                ::std::invoke(::std::move(::std::declval<Fun>()), ::std::declval<::std::decay_t<Args>&>()...),
+                ::std::declval<let_receiver<Receiver, Env>>()));
+
         template <typename Receiver, typename... Args>
-        static auto let_bind(auto& state, Receiver& receiver, Args&&... args) noexcept(
-            noexcept(::beman::execution::connect(::std::invoke(::std::move(state.fun), ::std::forward<Args>(args)...),
-                                                 let_receiver<Receiver, decltype(state.env)>{receiver, state.env}))) {
+        static auto let_bind(auto& state, Receiver& receiver, Args&&... args) {
             using args_t = ::beman::execution::detail::decayed_tuple<Args...>;
             auto mkop{[&] {
-                return ::beman::execution::connect(
-                    ::std::apply(::std::move(state.fun),
-                                 ::std::move(state.args.template emplace<args_t>(::std::forward<Args>(args)...))),
-                    let_receiver<Receiver, decltype(state.env)>{receiver, state.env});
+                auto& tpl = state.args.template emplace<args_t>(::std::forward<Args>(args)...);
+                return ::beman::execution::connect(::std::apply(::std::move(state.fun), tpl),
+                                                   let_receiver<Receiver, decltype(state.env)>{receiver, state.env});
             }};
             ::beman::execution::start(
                 state.ops2.template emplace<decltype(mkop())>(beman::execution::detail::emplace_from{mkop}));
         }
         struct complete_impl {
-            template <class Tag, class... Args>
-            auto operator()(auto, auto& state, auto& receiver, Tag, Args&&... args) const {
+            template <typename Tag, typename Receiver, typename... Args>
+            auto operator()(auto, auto& state, Receiver& receiver, Tag, Args&&... args) const {
                 if constexpr (::std::same_as<Tag, Completion>) {
                     try {
-                        let_bind(state, receiver, ::std::forward<Args>(args)...);
+                        (let_bind)(state, receiver, ::std::forward<Args>(args)...);
                     } catch (...) {
-                        if constexpr (not noexcept(let_bind(state, receiver, ::std::forward<Args>(args)...))) {
+                        if constexpr (not nothrow<Receiver, decltype(state.env), decltype(state.fun), Args...>) {
                             ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
                         }
                     }
