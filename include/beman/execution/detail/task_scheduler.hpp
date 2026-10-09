@@ -149,7 +149,7 @@ struct task_scheduler_backend : ::beman::execution::parallel_scheduler_replaceme
         allocated_state_holder(Sndr                                                                sndr,
                                ::beman::execution::parallel_scheduler_replacement::receiver_proxy& proxy,
                                Alloc                                                               alloc)
-            : alloc(std::move(alloc)),
+            : alloc(::std::move(alloc)),
               op(::beman::execution::connect(::std::move(sndr), rcvr_wrapper{proxy, *this})) {}
 
         auto destroy() noexcept -> void override { ::beman::execution::detail::delete_object(alloc, this); }
@@ -378,7 +378,7 @@ class task_scheduler {
 
   private:
     explicit task_scheduler(::std::shared_ptr<::beman::execution::detail::task_scheduler_backend> backend) noexcept
-        : backend_(std::move(backend)) {}
+        : backend_(::std::move(backend)) {}
 
     ::std::shared_ptr<::beman::execution::detail::task_scheduler_backend> backend_;
 };
