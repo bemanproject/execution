@@ -82,6 +82,44 @@ auto test_bulk() {
     }
 }
 
+auto test_bulk_predecessor_result() {
+    {
+        auto sndr = test_std::just(std::make_unique<int>(114)) |
+                    test_std::bulk(test_std::par, 1, [](int i, std::unique_ptr<int>& ptr) noexcept {
+                        ASSERT(ptr && *ptr == 114);
+                        ASSERT(i == 0);
+                    });
+        auto [ptr] = test_std::sync_wait(std::move(sndr)).value();
+        ASSERT(ptr && *ptr == 114);
+    }
+    {
+        auto sndr = test_std::just(std::make_unique<int>(514)) |
+                    test_std::bulk_chunked(test_std::par, 1, [](int i, int j, std::unique_ptr<int>& ptr) noexcept {
+                        ASSERT(ptr && *ptr == 514);
+                        ASSERT(i == 0 && j == 1);
+                    });
+        auto [ptr] = test_std::sync_wait(std::move(sndr)).value();
+        ASSERT(ptr && *ptr == 514);
+    }
+    {
+        auto sndr = test_std::just(std::make_unique<int>(114)) |
+                    test_std::bulk_unchunked(test_std::par, 1, [](int i, std::unique_ptr<int>& ptr) noexcept {
+                        ASSERT(ptr && *ptr == 114);
+                        ASSERT(i == 0);
+                    });
+        auto [ptr] = test_std::sync_wait(std::move(sndr)).value();
+        ASSERT(ptr && *ptr == 114);
+    }
+    {
+        auto [vec] =
+            test_std::sync_wait(
+                test_std::just(std::vector{1, 2, 3, 4}) |
+                test_std::bulk(test_std::par, 4uz, [](std::size_t i, std::vector<int>& vec) noexcept { vec[i] *= 2; }))
+                .value();
+        ASSERT((vec == std::vector{2, 4, 6, 8}));
+    }
+}
+
 auto test_bulk_noexcept() {
     auto b0             = test_std::bulk(test_std::just(), test_std::seq, 1, [](int) noexcept {});
     auto b0_env         = test_std::get_env(b0);
@@ -560,6 +598,7 @@ TEST(exec_bulk) {
     try {
 
         test_bulk();
+        test_bulk_predecessor_result();
         test_bulk_noexcept();
         test_bulk_pipeable();
         test_bulk_chunked();
