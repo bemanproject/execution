@@ -84,29 +84,29 @@ auto test_bulk() {
 
 auto test_bulk_predecessor_result() {
     {
-        auto sndr = test_std::just(std::make_unique<int>(114)) |
-                    test_std::bulk(test_std::par, 1, [](int i, std::unique_ptr<int>& ptr) noexcept {
+        auto sndr  = test_std::just(std::make_unique<int>(114)) |
+                     test_std::bulk(test_std::par, 1, [](int i, std::unique_ptr<int>& ptr) noexcept {
                         ASSERT(ptr && *ptr == 114);
                         ASSERT(i == 0);
-                    });
+                     });
         auto [ptr] = test_std::sync_wait(std::move(sndr)).value();
         ASSERT(ptr && *ptr == 114);
     }
     {
-        auto sndr = test_std::just(std::make_unique<int>(514)) |
-                    test_std::bulk_chunked(test_std::par, 1, [](int i, int j, std::unique_ptr<int>& ptr) noexcept {
+        auto sndr  = test_std::just(std::make_unique<int>(514)) |
+                     test_std::bulk_chunked(test_std::par, 1, [](int i, int j, std::unique_ptr<int>& ptr) noexcept {
                         ASSERT(ptr && *ptr == 514);
                         ASSERT(i == 0 && j == 1);
-                    });
+                     });
         auto [ptr] = test_std::sync_wait(std::move(sndr)).value();
         ASSERT(ptr && *ptr == 514);
     }
     {
-        auto sndr = test_std::just(std::make_unique<int>(114)) |
-                    test_std::bulk_unchunked(test_std::par, 1, [](int i, std::unique_ptr<int>& ptr) noexcept {
+        auto sndr  = test_std::just(std::make_unique<int>(114)) |
+                     test_std::bulk_unchunked(test_std::par, 1, [](int i, std::unique_ptr<int>& ptr) noexcept {
                         ASSERT(ptr && *ptr == 114);
                         ASSERT(i == 0);
-                    });
+                     });
         auto [ptr] = test_std::sync_wait(std::move(sndr)).value();
         ASSERT(ptr && *ptr == 114);
     }
