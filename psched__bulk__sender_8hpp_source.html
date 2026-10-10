@@ -208,12 +208,12 @@ $(document).ready(function(){initNavTree('psched__bulk__sender_8hpp_source.html'
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            assert(IsChunked || !is_parallel_policy || end - begin == 1uz);</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keyword">const</span> Shape first   = is_parallel_policy ? <span class="keyword">static_cast&lt;</span>Shape<span class="keyword">&gt;</span>(begin) : Shape(0);</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            <span class="keyword">const</span> Shape last    = is_parallel_policy ? <span class="keyword">static_cast&lt;</span>Shape<span class="keyword">&gt;</span>(end) : shape;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            <span class="keyword">const</span> <span class="keyword">auto</span>  call_fn = [=, <span class="keyword">this</span>]&lt;<span class="keyword">typename</span>... Args&gt;(<span class="keyword">const</span> Args&amp;... args) {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            <span class="keyword">const</span> <span class="keyword">auto</span>  call_fn = [=, <span class="keyword">this</span>]&lt;<span class="keyword">typename</span>... Args&gt;(Args&amp;... args) {</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (IsChunked) {</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                    <span class="keyword">static_assert</span>(::std::invocable&lt;Fn, Shape, Shape, <span class="keyword">const</span> Args&amp;...&gt;);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                    <span class="keyword">static_assert</span>(::std::invocable&lt;Fn, Shape, Shape, Args&amp;...&gt;);</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                    fn(first, last, args...);</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                    <span class="keyword">static_assert</span>(::std::invocable&lt;Fn, Shape, <span class="keyword">const</span> Args&amp;...&gt;);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                    <span class="keyword">static_assert</span>(::std::invocable&lt;Fn, Shape, Args&amp;...&gt;);</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                    <span class="keywordflow">for</span> (Shape i = first; i &lt; last; ++i) {</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                        fn(i, args...);</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                    }</div>
@@ -224,7 +224,7 @@ $(document).ready(function(){initNavTree('psched__bulk__sender_8hpp_source.html'
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::std::same_as&lt;T, ::std::monostate&gt;) {</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                        ::beman::execution::detail::unreachable();</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                        ::std::apply(call_fn, ::std::move(tpl));</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                        ::std::apply(call_fn, tpl);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                    }</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                },</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                result);</div>
@@ -237,7 +237,7 @@ $(document).ready(function(){initNavTree('psched__bulk__sender_8hpp_source.html'
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                ::std::visit(</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                    [&amp;]&lt;<span class="keyword">typename</span> T&gt;(T tpl) {</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::std::same_as&lt;T, std::monostate&gt;) {</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::std::same_as&lt;T, ::std::monostate&gt;) {</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                            ::beman::execution::detail::unreachable();</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                            ::std::apply(call_set_value, ::std::move(tpl));</div>
@@ -314,7 +314,7 @@ $(document).ready(function(){initNavTree('psched__bulk__sender_8hpp_source.html'
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="keyword">using </span>sub_state_t = <a class="code hl_typedef" href="namespacebeman_1_1execution.html#a04076b97aa86da382501e357c0b88cf1">::beman::execution::connect_result_t&lt;Child, receiver_ref&gt;</a>;</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        state(::std::shared_ptr&lt;backend_type&gt; backend, Child child, Rcvr rcvr, Policy policy, Shape shape, Fn fn)</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            : proxy(std::move(backend), ::std::move(rcvr), ::std::move(policy), ::std::move(shape), ::std::move(fn)),</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            : proxy(::std::move(backend), ::std::move(rcvr), ::std::move(policy), ::std::move(shape), ::std::move(fn)),</div>
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>              sub_state(::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(::std::move(child), receiver_ref{&amp;proxy})) {}</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        <span class="keyword">auto</span> start() &amp; <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> { ::beman::execution::start(sub_state); }</div>

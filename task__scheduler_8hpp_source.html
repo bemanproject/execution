@@ -251,7 +251,7 @@ $(document).ready(function(){initNavTree('task__scheduler_8hpp_source.html','');
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        allocated_state_holder(Sndr                                                                sndr,</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                               <a class="code hl_struct" href="structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html">::beman::execution::parallel_scheduler_replacement::receiver_proxy</a>&amp; proxy,</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                               Alloc                                                               alloc)</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            : alloc(std::move(alloc)),</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            : alloc(::std::move(alloc)),</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>              op(::<a class="code hl_namespace" href="namespacebeman.html">beman</a>::execution::<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">connect</a>(::std::move(sndr), rcvr_wrapper{proxy, *this})) {}</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        <span class="keyword">auto</span> destroy() noexcept -&gt; <span class="keywordtype">void</span><span class="keyword"> override </span>{ ::beman::execution::detail::delete_object(alloc, <span class="keyword">this</span>); }</div>
@@ -480,7 +480,7 @@ $(document).ready(function(){initNavTree('task__scheduler_8hpp_source.html','');
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keyword">explicit</span> task_scheduler(::std::shared_ptr&lt;::beman::execution::detail::task_scheduler_backend&gt; backend) noexcept</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>        : backend_(std::move(backend)) {}</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>        : backend_(::std::move(backend)) {}</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    ::std::shared_ptr&lt;::beman::execution::detail::task_scheduler_backend&gt; backend_;</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>};</div>

@@ -164,20 +164,20 @@ $(document).ready(function(){initNavTree('bulk_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">static</span> <span class="keyword">auto</span> invoke(F&amp; fn, Shape shape, Args&amp;... args) <span class="keyword">noexcept</span>(is_nothrow_invocable) -&gt; <span class="keywordtype">void</span> {</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">if</span> (shape &gt; <span class="keyword">static_cast&lt;</span>Shape<span class="keyword">&gt;</span>(0)) [[likely]] {</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            std::invoke(fn, 0, shape, args...);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            ::std::invoke(fn, 0, shape, args...);</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        }</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    }</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>};</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> Shape, <span class="keyword">typename</span>... Args&gt;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">struct </span>bulk_traits&lt;false, F, Shape, Args...&gt; { <span class="comment">// for bulk_unchunked</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_invocable = ::std::invocable&lt;F, Shape, Args...&gt;;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_invocable = ::std::invocable&lt;F&amp;, Shape, Args&amp;...&gt;;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_nothrow_invocable = ::std::is_nothrow_invocable_v&lt;F, Shape, Args...&gt;;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_nothrow_invocable = ::std::is_nothrow_invocable_v&lt;F&amp;, Shape, Args&amp;...&gt;;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">static</span> <span class="keyword">auto</span> invoke(F&amp; fn, Shape shape, Args&amp;... args) <span class="keyword">noexcept</span>(is_nothrow_invocable) -&gt; <span class="keywordtype">void</span> {</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = <span class="keyword">static_cast&lt;</span>Shape<span class="keyword">&gt;</span>(0); i &lt; shape; ++i) {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            std::invoke(fn, i, args...);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            ::std::invoke(fn, i, args...);</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        }</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    }</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>};</div>
@@ -344,10 +344,10 @@ $(document).ready(function(){initNavTree('bulk_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Shape, <span class="keyword">typename</span> Fn&gt;</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keyword">static</span> <span class="keyword">auto</span> wrap_chunked(Fn f) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keywordflow">return</span> [f = std::move(f)]&lt;<span class="keyword">typename</span>... Args&gt;(Shape begin, Shape end, Args&amp;&amp;... args) <span class="keyword">noexcept</span>(</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keywordflow">return</span> [f = ::std::move(f)]&lt;<span class="keyword">typename</span>... Args&gt;(Shape begin, Shape end, Args&amp;&amp;... args) <span class="keyword">noexcept</span>(</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                   ::std::is_nothrow_invocable_v&lt;Fn&amp;, Shape, Args&amp;...&gt;) {</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <span class="keywordflow">while</span> (begin != end) {</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                std::invoke(f, begin++, args...);</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                ::std::invoke(f, begin++, args...);</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            }</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        };</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    }</div>
