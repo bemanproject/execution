@@ -62,20 +62,20 @@ struct bulk_traits<true, F, Shape, Args...> { // for bulk_chunked
 
     static auto invoke(F& fn, Shape shape, Args&... args) noexcept(is_nothrow_invocable) -> void {
         if (shape > static_cast<Shape>(0)) [[likely]] {
-            std::invoke(fn, 0, shape, args...);
+            ::std::invoke(fn, 0, shape, args...);
         }
     }
 };
 
 template <typename F, typename Shape, typename... Args>
 struct bulk_traits<false, F, Shape, Args...> { // for bulk_unchunked
-    static constexpr bool is_invocable = ::std::invocable<F, Shape, Args...>;
+    static constexpr bool is_invocable = ::std::invocable<F&, Shape, Args&...>;
 
-    static constexpr bool is_nothrow_invocable = ::std::is_nothrow_invocable_v<F, Shape, Args...>;
+    static constexpr bool is_nothrow_invocable = ::std::is_nothrow_invocable_v<F&, Shape, Args&...>;
 
     static auto invoke(F& fn, Shape shape, Args&... args) noexcept(is_nothrow_invocable) -> void {
         for (auto i = static_cast<Shape>(0); i < shape; ++i) {
-            std::invoke(fn, i, args...);
+            ::std::invoke(fn, i, args...);
         }
     }
 };
@@ -242,10 +242,10 @@ struct bulk_t {
 
     template <typename Shape, typename Fn>
     static auto wrap_chunked(Fn f) noexcept {
-        return [f = std::move(f)]<typename... Args>(Shape begin, Shape end, Args&&... args) noexcept(
+        return [f = ::std::move(f)]<typename... Args>(Shape begin, Shape end, Args&&... args) noexcept(
                    ::std::is_nothrow_invocable_v<Fn&, Shape, Args&...>) {
             while (begin != end) {
-                std::invoke(f, begin++, args...);
+                ::std::invoke(f, begin++, args...);
             }
         };
     }

@@ -169,6 +169,26 @@ auto test_parallel_scheduler_schedule() -> void {
             }
         }
     }
+    {
+        auto sndr = test_std::schedule(sch) | test_std::then([] { return std::make_unique<int>(114); }) |
+                    test_std::bulk(test_std::par, 1, [](int i, std::unique_ptr<int>& ptr) noexcept {
+                        ASSERT(ptr && *ptr == 114);
+                        ASSERT(i == 0);
+                    });
+        if (auto result = test_std::sync_wait(std::move(sndr))) {
+            auto [ptr] = std::move(*result);
+            ASSERT(ptr && *ptr == 114);
+        }
+    }
+    {
+        if (auto result = test_std::sync_wait(
+                test_std::schedule(sch) | test_std::then([] { return std::vector{1, 2, 3, 4}; }) |
+                test_std::bulk(
+                    test_std::par, 4uz, [](std::size_t i, std::vector<int>& vec) noexcept { vec[i] *= 2; }))) {
+            auto [vec] = std::move(*result);
+            ASSERT((vec == std::vector{2, 4, 6, 8}));
+        }
+    }
 }
 } // namespace
 

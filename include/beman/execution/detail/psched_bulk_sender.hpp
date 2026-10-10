@@ -106,12 +106,12 @@ struct psched_bulk_sender {
             assert(IsChunked || !is_parallel_policy || end - begin == 1uz);
             const Shape first   = is_parallel_policy ? static_cast<Shape>(begin) : Shape(0);
             const Shape last    = is_parallel_policy ? static_cast<Shape>(end) : shape;
-            const auto  call_fn = [=, this]<typename... Args>(const Args&... args) {
+            const auto  call_fn = [=, this]<typename... Args>(Args&... args) {
                 if constexpr (IsChunked) {
-                    static_assert(::std::invocable<Fn, Shape, Shape, const Args&...>);
+                    static_assert(::std::invocable<Fn, Shape, Shape, Args&...>);
                     fn(first, last, args...);
                 } else {
-                    static_assert(::std::invocable<Fn, Shape, const Args&...>);
+                    static_assert(::std::invocable<Fn, Shape, Args&...>);
                     for (Shape i = first; i < last; ++i) {
                         fn(i, args...);
                     }
@@ -122,7 +122,7 @@ struct psched_bulk_sender {
                     if constexpr (::std::same_as<T, ::std::monostate>) {
                         ::beman::execution::detail::unreachable();
                     } else {
-                        ::std::apply(call_fn, ::std::move(tpl));
+                        ::std::apply(call_fn, tpl);
                     }
                 },
                 result);
@@ -135,7 +135,7 @@ struct psched_bulk_sender {
             try {
                 ::std::visit(
                     [&]<typename T>(T tpl) {
-                        if constexpr (::std::same_as<T, std::monostate>) {
+                        if constexpr (::std::same_as<T, ::std::monostate>) {
                             ::beman::execution::detail::unreachable();
                         } else {
                             ::std::apply(call_set_value, ::std::move(tpl));
@@ -212,7 +212,7 @@ struct psched_bulk_sender {
         using sub_state_t = ::beman::execution::connect_result_t<Child, receiver_ref>;
 
         state(::std::shared_ptr<backend_type> backend, Child child, Rcvr rcvr, Policy policy, Shape shape, Fn fn)
-            : proxy(std::move(backend), ::std::move(rcvr), ::std::move(policy), ::std::move(shape), ::std::move(fn)),
+            : proxy(::std::move(backend), ::std::move(rcvr), ::std::move(policy), ::std::move(shape), ::std::move(fn)),
               sub_state(::beman::execution::connect(::std::move(child), receiver_ref{&proxy})) {}
 
         auto start() & noexcept -> void { ::beman::execution::start(sub_state); }
