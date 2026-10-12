@@ -93,6 +93,29 @@ auto test_read_env_concept() -> void {
     static_assert(test_std::sender_in<decltype(test_std::read_env(test_std::get_scheduler)), env2>);
 }
 
+template <typename Expected, typename Env>
+struct test_receiver {
+    using receiver_concept = test_std::receiver_tag;
+
+    auto get_env() const noexcept { return env; }
+
+    auto set_value(const auto& value) const noexcept -> void { ASSERT(value == expected); }
+
+    Expected expected;
+    Env      env;
+};
+
+auto test_read_env_attrs() -> void {
+    test_std::run_loop loop;
+    auto               env  = test_std::prop{test_std::get_start_scheduler, loop.get_scheduler()};
+    auto               sndr = test_std::read_env(test_std::get_start_scheduler);
+    auto          expected  = test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), env);
+    test_receiver rcvr{expected, env};
+    auto          op = test_std::connect(sndr, std::move(rcvr));
+    test_std::start(op);
+    ASSERT(loop.get_scheduler() == expected);
+}
+
 auto test_read_env() -> void {
     static_assert(test_std::receiver<receiver>);
     ASSERT(domain{} == test_std::get_domain(env{17}));
@@ -176,6 +199,7 @@ auto test_read_env_check_types() -> void {
 TEST(exec_read_env) {
     static_assert(std::same_as<const test_std::read_env_t, decltype(test_std::read_env)>);
     test_read_env_concept();
+    test_read_env_attrs();
     test_read_env();
     test_read_env_completions();
     test_read_env_check_types();

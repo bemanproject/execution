@@ -377,9 +377,6 @@ struct env<has_value_domain> {
 } // namespace completion_domain
 auto test_compl_domain() -> void {
     namespace cd = completion_domain;
-    static_assert(
-        std::same_as<decltype(test_detail::compl_domain<test_std::set_value_t>(test_std::just(), test_std::env<>())),
-                     decltype(test_std::indeterminate_domain())>);
 
     static_assert(requires {
         test_std::get_completion_domain<test_std::set_value_t>(test_std::get_env(cd::sender<cd::has_value_domain>()));

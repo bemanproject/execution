@@ -163,8 +163,6 @@ TEST(exec_on) {
     assert(cont_id == std::this_thread::get_id());
     assert(on_id != std::this_thread::get_id());
 
-#if 0
-//-dk:TODO
     test_std::sync_wait(test_std::on(test_std::just(17), pool.get_scheduler(), test_std::then([&on_id](int val) {
                                          assert(val == 17);
                                          on_id = std::this_thread::get_id();
@@ -174,15 +172,13 @@ TEST(exec_on) {
                             assert(val == 42);
                             cont_id = std::this_thread::get_id();
                         }));
-#endif
     assert(on_id == pool_id);
     assert(cont_id == std::this_thread::get_id());
     assert(on_id != std::this_thread::get_id());
 
-#if 0
-    //-dk:TODO
     test_std::sync_wait(test_std::just(17) | test_std::on(pool.get_scheduler(), test_std::then([&on_id](int val) {
                                                               assert(val == 17);
+
                                                               on_id = std::this_thread::get_id();
                                                               return 42;
                                                           })) |
@@ -190,7 +186,6 @@ TEST(exec_on) {
                             assert(val == 42);
                             cont_id = std::this_thread::get_id();
                         }));
-#endif
     assert(on_id == pool_id);
     assert(cont_id == std::this_thread::get_id());
     assert(on_id != std::this_thread::get_id());
