@@ -1,8 +1,8 @@
 // include/beman/execution/detail/indeterminate_domain.hpp            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_INDETERMINATE_DOMAIN
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_INDETERMINATE_DOMAIN
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_INDETERMINATE_DOMAIN
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_INDETERMINATE_DOMAIN
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
