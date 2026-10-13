@@ -12,11 +12,9 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.default_domain;
 import beman.execution.detail.get_domain;
 import beman.execution.detail.get_start_scheduler;
 #else
-#include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
 #endif
@@ -31,15 +29,14 @@ class sched_env {
 
   public:
     template <typename S>
-    explicit sched_env(S sch) noexcept(std::is_nothrow_constructible_v<Scheduler, S>) : sched(::std::move(sch)) {}
+    explicit sched_env(S sch) noexcept(::std::is_nothrow_constructible_v<Scheduler, S>) : sched(::std::move(sch)) {}
 
     auto query(::beman::execution::get_start_scheduler_t) const noexcept { return this->sched; }
 
-    auto query(::beman::execution::get_domain_t q) const noexcept {
-        if constexpr (requires { this->sched.query(q); })
-            return this->sched.query(q);
-        else
-            return ::beman::execution::default_domain{};
+    auto query(::beman::execution::get_domain_t q) const noexcept
+        requires requires { this->sched.query(q); }
+    {
+        return this->sched.query(q);
     }
 };
 

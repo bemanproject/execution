@@ -189,6 +189,24 @@ auto test_parallel_scheduler_schedule() -> void {
             ASSERT((vec == std::vector{2, 4, 6, 8}));
         }
     }
+    {
+        auto sndr      = test_std::schedule(sch) | test_std::continues_on(test_std::inline_scheduler{});
+        auto attrs     = test_std::get_env(sndr);
+        auto compl_sch = test_std::get_completion_scheduler<test_std::set_value_t>(attrs, test_std::env{});
+        ASSERT(compl_sch == sch);
+        using psched_domain = decltype(test_std::get_completion_domain<>(sch));
+        using compl_domain  = decltype(test_std::get_completion_domain<>(attrs, test_std::env{}));
+        static_assert(std::same_as<psched_domain, compl_domain>);
+    }
+    {
+        auto sndr      = test_std::starts_on(test_std::inline_scheduler{}, test_std::schedule(sch));
+        auto attrs     = test_std::get_env(sndr);
+        auto compl_sch = test_std::get_completion_scheduler<test_std::set_value_t>(attrs, test_std::env{});
+        ASSERT(compl_sch == sch);
+        using psched_domain = decltype(test_std::get_completion_domain<>(sch));
+        using compl_domain  = decltype(test_std::get_completion_domain<>(attrs, test_std::env{}));
+        static_assert(std::same_as<psched_domain, compl_domain>);
+    }
 }
 } // namespace
 
