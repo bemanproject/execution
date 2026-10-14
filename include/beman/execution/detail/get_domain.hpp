@@ -16,14 +16,14 @@ import std;
 import beman.execution.detail.default_domain;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_completion_domain;
-import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.hide_sched;
 import beman.execution.detail.set_value;
 #else
 #include <beman/execution/detail/default_domain.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_completion_domain.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/hide_sched.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #endif
@@ -40,20 +40,20 @@ struct get_domain_t : ::beman::execution::forwarding_query_t {
             return type{};
         } else if constexpr (requires {
                                  ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
-                                     ::beman::execution::get_scheduler(env),
+                                     ::beman::execution::get_start_scheduler(env),
                                      ::beman::execution::detail::hide_sched(env));
                              }) {
             using type = decltype(auto(::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
-                ::beman::execution::get_scheduler(env), ::beman::execution::detail::hide_sched(env))));
+                ::beman::execution::get_start_scheduler(env), ::beman::execution::detail::hide_sched(env))));
             static_assert(noexcept(type{}));
             return type{};
         } else if constexpr (requires {
                                  ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
-                                     ::beman::execution::get_scheduler(env),
+                                     ::beman::execution::get_start_scheduler(env),
                                      ::beman::execution::detail::hide_sched(env));
                              }) {
             using type = decltype(auto(::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
-                ::beman::execution::get_scheduler(env), ::beman::execution::detail::hide_sched(env))));
+                ::beman::execution::get_start_scheduler(env), ::beman::execution::detail::hide_sched(env))));
             static_assert(noexcept(type{}));
             return type{};
         } else {

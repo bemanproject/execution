@@ -18,7 +18,7 @@ import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_domain;
-import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.inline_attrs;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.receiver;
@@ -32,7 +32,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_forward_progress_guarantee.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/inline_attrs.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/receiver.hpp>
@@ -54,10 +54,10 @@ struct inline_scheduler {
     }
 
     template <typename Env>
-        requires requires(const Env& env) { ::beman::execution::get_scheduler(env); }
+        requires requires(const Env& env) { ::beman::execution::get_start_scheduler(env); }
     static auto query(const ::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>&,
                       const Env& env) noexcept {
-        return ::beman::execution::get_scheduler(env);
+        return ::beman::execution::get_start_scheduler(env);
     }
 
     template <typename Env>
@@ -89,8 +89,6 @@ struct inline_scheduler {
             -> state<Rcvr> {
             return {::std::forward<Rcvr>(receiver)};
         }
-
-        inline_scheduler query(const ::beman::execution::get_scheduler_t&) const noexcept { return {}; }
     };
 
     static constexpr auto schedule() noexcept -> sender { return {}; }

@@ -4,12 +4,12 @@
 #include <test/execution.hpp>
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.get_domain;
-import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.hide_sched;
 import beman.execution.detail.try_query;
 #else
 #include <beman/execution/detail/get_domain.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/hide_sched.hpp>
 #include <beman/execution/detail/try_query.hpp>
 #endif
@@ -37,9 +37,9 @@ struct test_queryable {
     int query(test_std::get_domain_t, arg<0>) const noexcept { return 48; }
     int query(test_std::get_domain_t, arg<0>, arg<1>) const noexcept { return 49; }
 
-    int query(test_std::get_scheduler_t) const noexcept { return 50; }
-    int query(test_std::get_scheduler_t, arg<0>) const noexcept { return 51; }
-    int query(test_std::get_scheduler_t, arg<0>, arg<1>) const noexcept { return 52; }
+    int query(test_std::get_start_scheduler_t) const noexcept { return 50; }
+    int query(test_std::get_start_scheduler_t, arg<0>) const noexcept { return 51; }
+    int query(test_std::get_start_scheduler_t, arg<0>, arg<1>) const noexcept { return 52; }
 };
 
 template <bool Value, typename Q, typename Tag, typename... Args>
@@ -84,9 +84,9 @@ auto test_hide_query() -> void {
     test_hide_query_exists<false>(48, test_queryable{}, test_std::get_domain, arg<0>{});
     test_hide_query_exists<false>(49, test_queryable{}, test_std::get_domain, arg<0>{}, arg<1>{});
 
-    test_hide_query_exists<false>(50, test_queryable{}, test_std::get_scheduler);
-    test_hide_query_exists<false>(51, test_queryable{}, test_std::get_scheduler, arg<0>{});
-    test_hide_query_exists<false>(52, test_queryable{}, test_std::get_scheduler, arg<0>{}, arg<1>{});
+    test_hide_query_exists<false>(50, test_queryable{}, test_std::get_start_scheduler);
+    test_hide_query_exists<false>(51, test_queryable{}, test_std::get_start_scheduler, arg<0>{});
+    test_hide_query_exists<false>(52, test_queryable{}, test_std::get_start_scheduler, arg<0>{}, arg<1>{});
 }
 } // namespace
 

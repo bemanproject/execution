@@ -455,13 +455,9 @@ class propagator<StopSource, StopToken> {
 
 template <typename Sched, typename Env, typename Alloc>
 auto make_sched(const Env& env, const Alloc& alloc) noexcept -> Sched {
-    if constexpr (requires {
-                      ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
-                  }) {
+    if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
         return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
-    } else if constexpr (requires {
-                             ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
-                         }) {
+    } else if constexpr (requires { Sched(::beman::execution::get_scheduler(env)); }) {
         return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
     } else if constexpr (::std::default_initializable<Sched>) {
         return Sched();
@@ -802,7 +798,8 @@ class task {
     template <typename ParentPromise>
     auto as_awaitable(ParentPromise& parent) && noexcept -> awaiter<ParentPromise> {
         auto env = ::beman::execution::get_env(parent);
-        return awaiter<ParentPromise>(parent, ::std::move(this->handle), env);
+        return awaiter<ParentPromise>(
+            ::std::coroutine_handle<ParentPromise>::from_promise(parent), ::std::move(this->handle), env);
     }
 
   private:

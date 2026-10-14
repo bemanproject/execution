@@ -160,16 +160,13 @@ auto test_sender_env_is_inline_attrs() {
     auto sndr  = test_std::schedule(test_std::inline_scheduler{});
     auto attrs = test_std::get_env(sndr);
     static_assert(std::same_as<decltype(attrs), test_detail::inline_attrs<test_std::set_value_t>>);
-
-    auto sched = test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), sndr);
-    static_assert(std::same_as<decltype(sched), test_std::inline_scheduler>);
 }
 
 auto test_inline_attrs_completion_scheduler() {
     auto attrs = test_detail::inline_attrs<test_std::set_value_t>{};
 
     struct test_env {
-        auto query(test_std::get_scheduler_t) const noexcept { return custom_scheduler{42}; }
+        auto query(test_std::get_start_scheduler_t) const noexcept { return custom_scheduler{42}; }
     };
 
     auto sched = attrs.query(test_std::get_completion_scheduler<test_std::set_value_t>, test_env{});
@@ -202,7 +199,7 @@ auto test_get_completion_scheduler_with_env() {
     auto attrs = test_std::get_env(sndr);
 
     struct test_env {
-        auto query(test_std::get_scheduler_t) const noexcept { return custom_scheduler{7}; }
+        auto query(test_std::get_start_scheduler_t) const noexcept { return custom_scheduler{7}; }
     };
 
     auto sched  = test_std::get_completion_scheduler<test_std::set_value_t>(attrs, test_env{});

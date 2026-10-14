@@ -18,6 +18,7 @@ import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.impls_for;
+import beman.execution.detail.inline_attrs;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.movable_value;
 import beman.execution.detail.product_type;
@@ -29,6 +30,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/impls_for.hpp>
+#include <beman/execution/detail/inline_attrs.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/product_type.hpp>
@@ -77,6 +79,13 @@ struct just_t {
         return typename get_signatures<::std::remove_cvref_t<Sender>>::type{};
     }
     struct impls_for : ::beman::execution::detail::default_impls {
+        struct get_attrs_impl {
+            auto operator()(const auto&) const noexcept -> ::beman::execution::detail::inline_attrs<Completion> {
+                return {};
+            }
+        };
+        static constexpr auto get_attrs{get_attrs_impl{}};
+
         struct start_impl {
             template <typename State>
             auto operator()(State& state, auto& receiver) const noexcept -> void {

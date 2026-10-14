@@ -21,7 +21,7 @@ import beman.execution.detail.queryable;
 
 namespace beman::execution::detail {
 struct get_domain_t;
-struct get_scheduler_t;
+struct get_start_scheduler_t;
 
 template <::beman::execution::detail::queryable Q>
 struct hide_sched_t {
@@ -35,7 +35,7 @@ struct hide_sched_t {
     auto query(::beman::execution::detail::get_domain_t, Args&&... args) const noexcept -> void = delete;
 
     template <typename... Args>
-    auto query(::beman::execution::detail::get_scheduler_t, Args&&... args) const noexcept -> void = delete;
+    auto query(::beman::execution::detail::get_start_scheduler_t, Args&&... args) const noexcept -> void = delete;
 
     const Q& q;
 };

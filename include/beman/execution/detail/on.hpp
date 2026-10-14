@@ -77,7 +77,7 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
         if constexpr (::beman::execution::scheduler<decltype(data)>) {
             return ::std::bool_constant<::std::invocable<::beman::execution::get_start_scheduler_t, Env>>{};
         } else {
-            ::std::bool_constant<
+            return ::std::bool_constant<
                 ::std::invocable<::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>,
                                  ::beman::execution::env_of_t<decltype(child)>,
                                  Env>>{};

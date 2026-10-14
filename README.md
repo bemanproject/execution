@@ -30,7 +30,7 @@ Using these operations some fundamental algorithms are implemented,
 e.g.:
 
 - `just(args...)` as the starting point of a work graph without a
-    specified scheduler`.
+    specified scheduler.
 - `let_value(sender, fun)` to produce a sender based on `sender`'s
     results.
 - `starts_on(scheduler, sender)` to start `sender` on `scheduler`.
