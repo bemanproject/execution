@@ -49,9 +49,6 @@ var hierarchy =
       [ "beman::execution::is_execution_policy< typename >", "structbeman_1_1execution_1_1is__execution__policy.html", null ],
       [ "tst::add_set_value< Sender >::is_set_value< S >", "structtst_1_1add__set__value_1_1is__set__value.html", null ]
     ] ],
-    [ "beman::execution::detail::forwarding_query_t", null, [
-      [ "beman::execution::get_start_scheduler_t", "structbeman_1_1execution_1_1get__start__scheduler__t.html", null ]
-    ] ],
     [ "beman::execution::get_allocator_t", "structbeman_1_1execution_1_1get__allocator__t.html", null ],
     [ "beman::execution::get_await_completion_adaptor_t", "structbeman_1_1execution_1_1get__await__completion__adaptor__t.html", null ],
     [ "beman::execution::get_delegation_scheduler_t", "structbeman_1_1execution_1_1get__delegation__scheduler__t.html", null ],

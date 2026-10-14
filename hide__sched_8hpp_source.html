@@ -123,7 +123,7 @@ $(document).ready(function(){initNavTree('hide__sched_8hpp_source.html',''); ini
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span>beman::execution::detail {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">struct </span>get_domain_t;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">struct </span>get_scheduler_t;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">struct </span>get_start_scheduler_t;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">template</span> &lt;::beman::execution::detail::queryable Q&gt;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">struct </span>hide_sched_t {</div>
@@ -137,7 +137,7 @@ $(document).ready(function(){initNavTree('hide__sched_8hpp_source.html',''); ini
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">auto</span> query(::beman::execution::detail::get_domain_t, Args&amp;&amp;... args) <span class="keyword">const</span> <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> = <span class="keyword">delete</span>;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">auto</span> query(::beman::execution::detail::get_scheduler_t, Args&amp;&amp;... args) <span class="keyword">const</span> <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">auto</span> query(::beman::execution::detail::get_start_scheduler_t, Args&amp;&amp;... args) <span class="keyword">const</span> <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> = <span class="keyword">delete</span>;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">const</span> Q&amp; q;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>};</div>

@@ -11,7 +11,6 @@ var namespacebeman_1_1execution =
     [ "get_delegation_scheduler_t", "structbeman_1_1execution_1_1get__delegation__scheduler__t.html", null ],
     [ "get_env_t", "structbeman_1_1execution_1_1get__env__t.html", null ],
     [ "get_forward_progress_guarantee_t", "structbeman_1_1execution_1_1get__forward__progress__guarantee__t.html", null ],
-    [ "get_start_scheduler_t", "structbeman_1_1execution_1_1get__start__scheduler__t.html", null ],
     [ "get_stop_token_t", "structbeman_1_1execution_1_1get__stop__token__t.html", null ],
     [ "indeterminate_domain", "structbeman_1_1execution_1_1indeterminate__domain.html", null ],
     [ "inline_scheduler", "structbeman_1_1execution_1_1inline__scheduler.html", "structbeman_1_1execution_1_1inline__scheduler" ],
