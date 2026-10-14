@@ -207,6 +207,17 @@ auto test_parallel_scheduler_schedule() -> void {
         using compl_domain  = decltype(test_std::get_completion_domain<>(attrs, test_std::env{}));
         static_assert(std::same_as<psched_domain, compl_domain>);
     }
+    {
+        struct task_env {
+            using start_scheduler_type = test_std::inline_scheduler;
+        };
+        static auto child  = []() -> test_std::task<int> { co_return 42; };
+        static auto parent = []() -> test_std::task<int, task_env> { co_return co_await child(); };
+        if (auto result = test_std::sync_wait(test_std::starts_on(sch, parent()))) {
+            auto [i] = *result;
+            ASSERT(i == 42);
+        }
+    }
 }
 } // namespace
 
