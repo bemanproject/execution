@@ -118,8 +118,7 @@ struct psched_bulk_sender {
                             fn(i, args...);
                         }
                     }
-                }
-                catch (...) {
+                } catch (...) {
                     if (!has_exception.exchange(true, ::std::memory_order_relaxed)) {
                         exception = ::std::current_exception();
                     }

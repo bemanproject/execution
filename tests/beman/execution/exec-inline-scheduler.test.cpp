@@ -175,8 +175,8 @@ auto test_inline_attrs_completion_domain() {
 }
 
 auto test_connect_with_scheduler_env() {
-    bool called = false;
-    auto sndr   = test_std::schedule(test_std::inline_scheduler{});
+    bool               called = false;
+    auto               sndr   = test_std::schedule(test_std::inline_scheduler{});
     sched_env_receiver rcvr{called};
     auto               sch =
         test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), test_std::get_env(rcvr));
