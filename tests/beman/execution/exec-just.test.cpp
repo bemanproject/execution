@@ -3,6 +3,7 @@
 
 #include <test/execution.hpp>
 #include <test/completion_test.hpp>
+#include <test/thread_pool.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -164,6 +165,33 @@ auto test_just() -> void {
     test_just_stopped();
 }
 
+auto test_just_attrs() -> void {
+    test::thread_pool pool;
+    struct test_domain : test_std::default_domain {};
+    struct test_env {
+        auto        query(test_std::get_start_scheduler_t) const noexcept { return sch; }
+        static auto query(test_std::get_domain_t) noexcept { return test_domain{}; }
+
+        test::thread_pool::scheduler sch;
+    };
+    test_env env{pool.get_scheduler()};
+    auto domain1 = test_std::get_completion_domain<test_std::set_value_t>(test_std::get_env(test_std::just()), env);
+    auto domain2 =
+        test_std::get_completion_domain<test_std::set_error_t>(test_std::get_env(test_std::just_error(0)), env);
+    auto domain3 =
+        test_std::get_completion_domain<test_std::set_stopped_t>(test_std::get_env(test_std::just_stopped()), env);
+    static_assert(std::same_as<decltype(domain1), test_domain>);
+    static_assert(std::same_as<decltype(domain2), test_domain>);
+    static_assert(std::same_as<decltype(domain3), test_domain>);
+
+    auto sch1 = test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(test_std::just()), env);
+    auto sch2 =
+        test_std::get_completion_scheduler<test_std::set_error_t>(test_std::get_env(test_std::just_error(0)), env);
+    auto sch3 =
+        test_std::get_completion_scheduler<test_std::set_stopped_t>(test_std::get_env(test_std::just_stopped()), env);
+    ASSERT(pool.get_scheduler() == sch1 && sch1 == sch2 && sch2 == sch3);
+}
+
 struct memory_env {
     std::pmr::polymorphic_allocator<> allocator;
     auto                              query(const test_std::get_allocator_t&) const noexcept { return allocator; }
@@ -225,6 +253,7 @@ TEST(exec_just) {
     try {
         test_just_constraints();
         test_just();
+        test_just_attrs();
         test_completion_signatures();
         test_just_allocator();
     } catch (...) {

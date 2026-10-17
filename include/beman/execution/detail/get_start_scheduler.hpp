@@ -20,7 +20,7 @@ import beman.execution.detail.scheduler;
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution {
+namespace beman::execution::detail {
 struct get_start_scheduler_t : ::beman::execution::forwarding_query_t {
     template <typename Env>
         requires requires(const get_start_scheduler_t& self, const Env& env) {
@@ -31,7 +31,10 @@ struct get_start_scheduler_t : ::beman::execution::forwarding_query_t {
         return ::std::as_const(env).query(*this);
     }
 };
+} // namespace beman::execution::detail
 
+namespace beman::execution {
+using get_start_scheduler_t = ::beman::execution::detail::get_start_scheduler_t;
 inline constexpr get_start_scheduler_t get_start_scheduler{};
 } // namespace beman::execution
 

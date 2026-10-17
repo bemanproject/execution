@@ -67,7 +67,6 @@ struct parallel_scheduler_backend {
         -> void = 0;
 };
 
-// TODO(P2079R10): provide the project-supported link-time replaceability hook.
 auto query_parallel_scheduler_backend() -> ::std::shared_ptr<parallel_scheduler_backend>;
 
 } // namespace beman::execution::parallel_scheduler_replacement

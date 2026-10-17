@@ -15,7 +15,10 @@ import std;
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.get_forward_progress_guarantee;
-import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_completion_domain;
+import beman.execution.detail.get_completion_scheduler;
+import beman.execution.detail.get_domain;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.inline_attrs;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.receiver;
@@ -25,8 +28,11 @@ import beman.execution.detail.sender;
 import beman.execution.detail.set_value;
 #else
 #include <beman/execution/detail/completion_signatures.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
+#include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_forward_progress_guarantee.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/inline_attrs.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/receiver.hpp>
@@ -42,10 +48,25 @@ struct inline_scheduler {
 
     using env = ::beman::execution::detail::inline_attrs<::beman::execution::set_value_t>;
 
-    auto query(::beman::execution::get_forward_progress_guarantee_t) const noexcept
+    static auto query(::beman::execution::get_forward_progress_guarantee_t) noexcept
         -> ::beman::execution::forward_progress_guarantee {
         return ::beman::execution::forward_progress_guarantee::weakly_parallel;
     }
+
+    template <typename Env>
+        requires requires(const Env& env) { ::beman::execution::get_start_scheduler(env); }
+    static auto query(const ::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>&,
+                      const Env& env) noexcept {
+        return ::beman::execution::get_start_scheduler(env);
+    }
+
+    template <typename Env>
+        requires requires(const Env& env) { ::beman::execution::get_domain(env); }
+    static auto query(const ::beman::execution::get_completion_domain_t<::beman::execution::set_value_t>&,
+                      const Env& env) noexcept {
+        return ::beman::execution::get_domain(env);
+    }
+
     template <::beman::execution::receiver Rcvr>
     struct state {
         using operation_state_concept = ::beman::execution::operation_state_tag;
@@ -68,8 +89,6 @@ struct inline_scheduler {
             -> state<Rcvr> {
             return {::std::forward<Rcvr>(receiver)};
         }
-
-        inline_scheduler query(const ::beman::execution::get_scheduler_t&) const noexcept { return {}; }
     };
 
     static constexpr auto schedule() noexcept -> sender { return {}; }

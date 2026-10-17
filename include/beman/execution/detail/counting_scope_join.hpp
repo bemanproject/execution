@@ -20,10 +20,12 @@ import beman.execution.detail.counting_scope_base;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_start_scheduler;
+import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.receiver;
 import beman.execution.detail.schedule;
+import beman.execution.detail.schedule_result_t;
 import beman.execution.detail.set_value;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
@@ -36,10 +38,12 @@ import beman.execution.detail.start;
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/schedule.hpp>
+#include <beman/execution/detail/schedule_result_t.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
@@ -58,11 +62,14 @@ struct counting_scope_join_t {
         return ::beman::execution::detail::make_sender(*this, ptr);
     }
 
-    template <typename Sender, typename...>
-    static consteval auto get_completion_signatures() noexcept {
-        return ::beman::execution::completion_signatures<::beman::execution::set_value_t(),
-                                                         ::beman::execution::set_stopped_t()>{};
+    template <typename, typename Env>
+        requires ::std::invocable<::beman::execution::get_start_scheduler_t, Env>
+    static consteval auto get_completion_signatures() {
+        using start_sched_t = ::std::invoke_result_t<::beman::execution::get_start_scheduler_t, Env>;
+        return ::beman::execution::get_completion_signatures<::beman::execution::schedule_result_t<start_sched_t>,
+                                                             Env>();
     }
+
     struct impls_for : ::beman::execution::detail::default_impls {
         struct get_state_impl {
 

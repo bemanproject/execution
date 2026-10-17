@@ -87,9 +87,9 @@ inline auto test_scheduler::schedule() const -> test_sched_sender { return {}; }
 
 static_assert(test_std::scheduler<test_scheduler>);
 
-// Env that has get_scheduler but no get_domain
+// Env that has get_start_scheduler but no get_domain
 struct env_with_scheduler {
-    auto query(test_std::get_scheduler_t) const noexcept { return test_scheduler{}; }
+    auto query(test_std::get_start_scheduler_t) const noexcept { return test_scheduler{}; }
 };
 } // namespace
 

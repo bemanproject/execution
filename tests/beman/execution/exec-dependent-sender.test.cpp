@@ -12,6 +12,7 @@ import std;
 import beman.execution;
 #else
 #include <beman/execution/detail/dependent_sender.hpp>
+#include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/read_env.hpp>

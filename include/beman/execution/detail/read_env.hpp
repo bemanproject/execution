@@ -20,7 +20,11 @@ import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.data_type;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.env_of_t;
+import beman.execution.detail.get_completion_domain;
+import beman.execution.detail.get_completion_scheduler;
+import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.sender;
@@ -32,7 +36,11 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/data_type.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
+#include <beman/execution/detail/get_completion_scheduler.hpp>
+#include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/set_error.hpp>
@@ -71,6 +79,37 @@ struct read_env_t {
         return typename get_signatures<::std::remove_cvref_t<Sender>, Env>::type{};
     }
     struct impls_for : ::beman::execution::detail::default_impls {
+        template <typename Query>
+        struct attrs {
+            template <typename Tag, typename Env>
+                requires requires(const Env& env) { ::beman::execution::get_start_scheduler(env); } &&
+                         (::std::same_as<Tag, ::beman::execution::set_value_t> ||
+                          (!::std::is_nothrow_invocable_v<Query, const Env&> &&
+                           ::std::same_as<Tag, ::beman::execution::set_error_t>))
+            constexpr auto query(const ::beman::execution::get_completion_scheduler_t<Tag>&,
+                                 const Env& env) const noexcept {
+                return ::beman::execution::get_start_scheduler(env);
+            }
+
+            template <typename Tag, typename Env>
+                requires requires(const Env& env) { ::beman::execution::get_domain(env); } &&
+                         (::std::same_as<Tag, ::beman::execution::set_value_t> ||
+                          (!::std::is_nothrow_invocable_v<Query, const Env&> &&
+                           ::std::same_as<Tag, ::beman::execution::set_error_t>))
+            constexpr auto query(const ::beman::execution::get_completion_domain_t<Tag>&,
+                                 const Env& env) const noexcept {
+                return ::beman::execution::get_domain(env);
+            }
+        };
+
+        struct get_attrs_impl {
+            template <typename Query>
+            auto operator()(const Query&) const noexcept {
+                return attrs<Query>{};
+            }
+        };
+        static constexpr auto get_attrs{get_attrs_impl{}};
+
         struct start_impl {
             template <typename Query, typename Receiver>
             auto operator()(Query query, Receiver& receiver) const noexcept -> void {

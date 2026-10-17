@@ -150,7 +150,6 @@ eager(Sender&&) -> eager<std::remove_cvref_t<Sender>>;
 } // namespace
 
 auto main() -> int {
-#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ > 15) || !defined(BEMAN_HAS_MODULES)
     auto s{eager{ex::when_all(await_stop{})}};
 
     ex::inplace_stop_source source{};
@@ -160,5 +159,4 @@ auto main() -> int {
     std::cout << "started\n";
     source.request_stop();
     std::cout << "done\n";
-#endif
 }

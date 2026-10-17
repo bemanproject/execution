@@ -99,6 +99,15 @@ auto test_use(Scheduler&& scheduler, Sender&& sender) {
     //-dk:TODO test_std::sync_wait(std::move(s));
 }
 
+auto test_inline_scheduler() {
+    test_std::run_loop loop;
+    auto sndr = test_std::continues_on(test_std::schedule(loop.get_scheduler()), test_std::inline_scheduler{});
+    auto env  = test_std::prop{test_std::get_start_scheduler, scheduler{}};
+    auto sch  = test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), env);
+    static_assert(std::same_as<decltype(sch), decltype(loop.get_scheduler())>);
+    ASSERT(sch == loop.get_scheduler());
+}
+
 auto test_continues_on_attributes() {
     test_std::run_loop loop;
     test::sender_env   s{42};
@@ -122,5 +131,6 @@ TEST(exec_continues_on) {
     test_constraints<true>(scheduler{}, sender{});
 
     test_use(scheduler{}, sender{});
+    test_inline_scheduler();
     test_continues_on_attributes();
 }

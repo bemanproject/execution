@@ -7,5 +7,6 @@ module;
 export module beman.execution.detail.counting_scope_join;
 
 namespace beman::execution::detail {
+export using beman::execution::detail::counting_scope_join_t;
 export using beman::execution::detail::counting_scope_join;
 } // namespace beman::execution::detail

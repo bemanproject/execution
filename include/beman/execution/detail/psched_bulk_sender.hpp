@@ -4,10 +4,12 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_PSCHED_BULK_SENDER
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_PSCHED_BULK_SENDER
 
+#include <cassert>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
+#include <atomic>
 #include <cstddef>
 #include <concepts>
 #include <exception>
@@ -75,7 +77,7 @@ import beman.execution.detail.value_types_of_t;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-inline constexpr ::std::size_t psched_storage_alignment = alignof(void*);
+inline constexpr ::std::size_t psched_storage_alignment = alignof(::std::max_align_t);
 inline constexpr ::std::size_t psched_storage_size      = 6uz * sizeof(void*);
 template <bool IsChunked, typename Policy, typename Shape, typename Fn, typename Child>
 struct psched_bulk_sender {
@@ -101,14 +103,24 @@ struct psched_bulk_sender {
         auto get_env() const noexcept { return ::beman::execution::get_env(rcvr); }
 
         auto execute(::std::size_t begin, ::std::size_t end) noexcept -> void final {
+            assert(begin < end);
+            assert(IsChunked || !is_parallel_policy || end - begin == 1uz);
             const Shape first   = is_parallel_policy ? static_cast<Shape>(begin) : Shape(0);
             const Shape last    = is_parallel_policy ? static_cast<Shape>(end) : shape;
-            const auto  call_fn = [=, this]<typename... Args>(const Args&... args) {
-                if constexpr (IsChunked) {
-                    fn(first, last, args...);
-                } else {
-                    for (Shape i = first; i < last; ++i) {
-                        fn(i, args...);
+            const auto  call_fn = [=, this]<typename... Args>(Args&... args) {
+                try {
+                    if constexpr (IsChunked) {
+                        static_assert(::std::invocable<Fn, Shape, Shape, Args&...>);
+                        fn(first, last, args...);
+                    } else {
+                        static_assert(::std::invocable<Fn, Shape, Args&...>);
+                        for (Shape i = first; i < last; ++i) {
+                            fn(i, args...);
+                        }
+                    }
+                } catch (...) {
+                    if (!has_exception.exchange(true, ::std::memory_order_relaxed)) {
+                        exception = ::std::current_exception();
                     }
                 }
             };
@@ -117,20 +129,24 @@ struct psched_bulk_sender {
                     if constexpr (::std::same_as<T, ::std::monostate>) {
                         ::beman::execution::detail::unreachable();
                     } else {
-                        ::std::apply(call_fn, ::std::move(tpl));
+                        ::std::apply(call_fn, tpl);
                     }
                 },
                 result);
         }
 
         auto set_value() noexcept -> void final {
+            if (exception) [[unlikely]] {
+                this->set_error(exception);
+                return;
+            }
             const auto call_set_value = [this]<typename... Args>(Args&&... args) {
                 ::beman::execution::set_value(::std::move(rcvr), ::std::forward<Args>(args)...);
             };
             try {
                 ::std::visit(
                     [&]<typename T>(T tpl) {
-                        if constexpr (::std::same_as<T, std::monostate>) {
+                        if constexpr (::std::same_as<T, ::std::monostate>) {
                             ::beman::execution::detail::unreachable();
                         } else {
                             ::std::apply(call_set_value, ::std::move(tpl));
@@ -165,6 +181,8 @@ struct psched_bulk_sender {
         Policy                                                                          policy;
         Shape                                                                           shape;
         Fn                                                                              fn;
+        ::std::atomic<bool>                                                             has_exception{false};
+        ::std::exception_ptr                                                            exception;
     };
 
     template <typename Rcvr>
@@ -207,7 +225,7 @@ struct psched_bulk_sender {
         using sub_state_t = ::beman::execution::connect_result_t<Child, receiver_ref>;
 
         state(::std::shared_ptr<backend_type> backend, Child child, Rcvr rcvr, Policy policy, Shape shape, Fn fn)
-            : proxy(std::move(backend), ::std::move(rcvr), ::std::move(policy), ::std::move(shape), ::std::move(fn)),
+            : proxy(::std::move(backend), ::std::move(rcvr), ::std::move(policy), ::std::move(shape), ::std::move(fn)),
               sub_state(::beman::execution::connect(::std::move(child), receiver_ref{&proxy})) {}
 
         auto start() & noexcept -> void { ::beman::execution::start(sub_state); }

@@ -22,6 +22,7 @@ export import beman.execution.detail.connect_all;
 export import beman.execution.detail.connect_all_result;
 export import beman.execution.detail.connect_awaitable;
 export import beman.execution.detail.counting_scope_base;
+export import beman.execution.detail.counting_scope_join;
 export import beman.execution.detail.data_type;
 export import beman.execution.detail.decayed_tuple;
 export import beman.execution.detail.decayed_typeof;

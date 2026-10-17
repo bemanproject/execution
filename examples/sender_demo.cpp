@@ -72,14 +72,12 @@ int main() {
             ex::write_env(std::move(w), ex::detail::make_env(ex::get_allocator, std::pmr::polymorphic_allocator<>()));
 
         std::cout << "before start\n";
-#if !defined(__GNUC__) || defined(__clang__) || (__GNUC__ > 15) || !defined(BEMAN_HAS_MODULES)
         auto r = ex::sync_wait(std::move(e));
         if (r) {
             auto [v] = *r;
             std::cout << "produced='" << v << "'\n";
         } else
             std::cout << "operation was cancelled\n";
-#endif
         std::cout << "after start\n";
     } catch (const std::exception& ex) {
         std::cout << "ERROR: " << ex.what() << "\n";

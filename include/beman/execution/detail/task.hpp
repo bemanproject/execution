@@ -4,11 +4,11 @@
 #ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TASK
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK
 
+#include <cassert>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
-#include <cassert>
 #include <concepts>
 #include <coroutine>
 #include <exception>
@@ -141,7 +141,7 @@ struct allocator_support {
     }
 
     template <typename... Args>
-    auto operator new(std::size_t size, const Args&... args) -> void* {
+    auto operator new(::std::size_t size, const Args&... args) -> void* {
         if constexpr (::std::same_as<Allocator, ::std::allocator<::std::byte>>) {
             Allocator alloc{};
             return allocator_traits::allocate(alloc, size);
@@ -313,7 +313,7 @@ class result_type<Value, ::beman::execution::completion_signatures<::beman::exec
                 ::beman::execution::detail::sub_visit<2uz>(
                     []<typename E>(E& error) {
                         if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::exception_ptr>) {
-                            std::rethrow_exception(::std::move(error));
+                            ::std::rethrow_exception(::std::move(error));
                         } else if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::error_code>) {
                             throw ::std::system_error{::std::move(error)};
                         } else {
@@ -339,7 +339,7 @@ class result_type<Value, ::beman::execution::completion_signatures<>> {
   private:
     using value_type = ::std::conditional_t<::std::same_as<void, Value>, void_type, Value>;
 
-    ::std::variant<std::monostate, value_type> result;
+    ::std::variant<::std::monostate, value_type> result;
 
   public:
     template <typename T>
@@ -455,15 +455,11 @@ class propagator<StopSource, StopToken> {
 
 template <typename Sched, typename Env, typename Alloc>
 auto make_sched(const Env& env, const Alloc& alloc) noexcept -> Sched {
-    if constexpr (requires {
-                      ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
-                  }) {
+    if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
         return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
-    } else if constexpr (requires {
-                             ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
-                         }) {
+    } else if constexpr (requires { Sched(::beman::execution::get_scheduler(env)); }) {
         return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
-    } else if constexpr (std::default_initializable<Sched>) {
+    } else if constexpr (::std::default_initializable<Sched>) {
         return Sched();
     } else {
         static_assert(false,
@@ -494,7 +490,7 @@ class state_base : public result_type<Value, error_types_of_t<Environment>> {
 
     auto operator=(state_base&&) -> state_base& = delete;
 
-    auto complete() noexcept -> std::coroutine_handle<> { return this->do_complete(); }
+    auto complete() noexcept -> ::std::coroutine_handle<> { return this->do_complete(); }
     auto get_allocator() noexcept -> allocator_type { return this->do_get_allocator(); }
     auto get_stop_token() noexcept -> stop_token_type { return this->do_get_stop_token(); }
     auto get_environment() noexcept -> Environment& { return this->do_get_environment(); }
@@ -521,7 +517,7 @@ struct state : state_base<Value, Environment> {
     template <typename H, typename Env>
     state(Receiver r, H h, const Env& env) noexcept
         : rcvr(::std::move(r)),
-          handle(std::move(h)),
+          handle(::std::move(h)),
           holder(env),
           scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
           propagator(::beman::execution::get_stop_token(env)) {}
@@ -570,7 +566,7 @@ class awaiter : public state_base<Value, Environment> {
 
     explicit awaiter(::std::coroutine_handle<ParentPromise> parent, handle<OwnPromise> h, const auto& env) noexcept
         : parent(parent),
-          handle(std::move(h)),
+          handle(::std::move(h)),
           holder(env),
           scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
           propagator(::beman::execution::get_stop_token(env)) {}
@@ -586,7 +582,7 @@ class awaiter : public state_base<Value, Environment> {
     auto await_resume() -> Value { return this->result_resume(); }
 
   private:
-    auto do_complete() noexcept -> std::coroutine_handle<> final {
+    auto do_complete() noexcept -> ::std::coroutine_handle<> final {
         if (this->no_completion_set()) {
             return this->parent.promise().unhandled_stopped();
         }
@@ -709,7 +705,7 @@ class promise_type : public ::beman::execution::detail::task::promise_base<::std
         }
     }
 
-    auto unhandled_stopped() -> std::coroutine_handle<> { return this->get_state()->complete(); }
+    auto unhandled_stopped() -> ::std::coroutine_handle<> { return this->get_state()->complete(); }
 
     auto get_return_object() noexcept {
         return Coroutine(::beman::execution::detail::task::handle<promise_type>(this));
@@ -802,7 +798,8 @@ class task {
     template <typename ParentPromise>
     auto as_awaitable(ParentPromise& parent) && noexcept -> awaiter<ParentPromise> {
         auto env = ::beman::execution::get_env(parent);
-        return awaiter<ParentPromise>(parent, ::std::move(this->handle), env);
+        return awaiter<ParentPromise>(
+            ::std::coroutine_handle<ParentPromise>::from_promise(parent), ::std::move(this->handle), env);
     }
 
   private:
