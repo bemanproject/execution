@@ -9,6 +9,7 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
+#include <atomic>
 #include <cstddef>
 #include <concepts>
 #include <exception>
@@ -107,13 +108,19 @@ struct psched_bulk_sender {
             const Shape first   = is_parallel_policy ? static_cast<Shape>(begin) : Shape(0);
             const Shape last    = is_parallel_policy ? static_cast<Shape>(end) : shape;
             const auto  call_fn = [=, this]<typename... Args>(Args&... args) {
-                if constexpr (IsChunked) {
-                    static_assert(::std::invocable<Fn, Shape, Shape, Args&...>);
-                    fn(first, last, args...);
-                } else {
-                    static_assert(::std::invocable<Fn, Shape, Args&...>);
-                    for (Shape i = first; i < last; ++i) {
-                        fn(i, args...);
+                try {
+                    if constexpr (IsChunked) {
+                        static_assert(::std::invocable<Fn, Shape, Shape, Args&...>);
+                        fn(first, last, args...);
+                    } else {
+                        static_assert(::std::invocable<Fn, Shape, Args&...>);
+                        for (Shape i = first; i < last; ++i) {
+                            fn(i, args...);
+                        }
+                    }
+                } catch (...) {
+                    if (!has_exception.exchange(true, ::std::memory_order_relaxed)) {
+                        exception = ::std::current_exception();
                     }
                 }
             };
@@ -129,6 +136,10 @@ struct psched_bulk_sender {
         }
 
         auto set_value() noexcept -> void final {
+            if (exception) [[unlikely]] {
+                this->set_error(exception);
+                return;
+            }
             const auto call_set_value = [this]<typename... Args>(Args&&... args) {
                 ::beman::execution::set_value(::std::move(rcvr), ::std::forward<Args>(args)...);
             };
@@ -170,6 +181,8 @@ struct psched_bulk_sender {
         Policy                                                                          policy;
         Shape                                                                           shape;
         Fn                                                                              fn;
+        ::std::atomic<bool>                                                             has_exception{false};
+        ::std::exception_ptr                                                            exception;
     };
 
     template <typename Rcvr>
