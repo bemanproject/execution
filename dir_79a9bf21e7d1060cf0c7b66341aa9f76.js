@@ -106,7 +106,6 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "join_env.hpp", "join__env_8hpp_source.html", null ],
     [ "just.hpp", "just_8hpp_source.html", null ],
     [ "let.hpp", "let_8hpp_source.html", null ],
-    [ "logger.hpp", "logger_8hpp_source.html", null ],
     [ "make_env.hpp", "make__env_8hpp_source.html", null ],
     [ "make_sender.hpp", "make__sender_8hpp_source.html", null ],
     [ "matching_sig.hpp", "matching__sig_8hpp_source.html", null ],
