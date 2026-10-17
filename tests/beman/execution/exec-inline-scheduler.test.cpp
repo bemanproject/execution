@@ -96,18 +96,7 @@ struct sched_env_receiver {
     bool& called;
 
     struct env {
-        auto query(test_std::get_scheduler_t) const noexcept { return custom_scheduler{42}; }
-    };
-    auto set_value() && noexcept -> void { called = true; }
-    auto get_env() const noexcept { return env{}; }
-};
-
-struct domain_env_receiver {
-    using receiver_concept = test_std::receiver_tag;
-    bool& called;
-
-    struct env {
-        auto query(test_std::get_scheduler_t) const noexcept { return sched_with_domain{}; }
+        auto query(test_std::get_start_scheduler_t) const noexcept { return custom_scheduler{42}; }
     };
     auto set_value() && noexcept -> void { called = true; }
     auto get_env() const noexcept { return env{}; }
@@ -186,9 +175,13 @@ auto test_inline_attrs_completion_domain() {
 }
 
 auto test_connect_with_scheduler_env() {
-    bool called = false;
-    auto sndr   = test_std::schedule(test_std::inline_scheduler{});
-    auto op     = test_std::connect(sndr, sched_env_receiver{called});
+    bool               called = false;
+    auto               sndr   = test_std::schedule(test_std::inline_scheduler{});
+    sched_env_receiver rcvr{called};
+    auto               sch =
+        test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), test_std::get_env(rcvr));
+    ASSERT(sch == custom_scheduler{42});
+    auto op = test_std::connect(sndr, rcvr);
     ASSERT(!called);
     test_std::start(op);
     ASSERT(called);
