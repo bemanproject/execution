@@ -219,6 +219,34 @@ auto test_parallel_scheduler_schedule() -> void {
         }
     }
 }
+
+auto test_parallel_scheduler_exception_propagation() -> void {
+    auto sch = test_std::get_parallel_scheduler();
+    try {
+        test_std::sync_wait(test_std::schedule(sch) | test_std::then([] { throw 114; }));
+    } catch (int n) {
+        ASSERT(n == 114);
+    }
+    try {
+        test_std::sync_wait(test_std::schedule(sch) | test_std::bulk(test_std::par, 4, [](int i) {
+                                if (i == 2) {
+                                    throw 514;
+                                }
+                            }));
+    } catch (int n) {
+        ASSERT(n == 514);
+    }
+    try {
+        test_std::sync_wait(test_std::schedule(sch) | test_std::bulk(test_std::seq, 3, [](int i) {
+                                if (i == 1) {
+                                    throw 114514;
+                                }
+                            }));
+    } catch (int n) {
+        ASSERT(n == 114514);
+    }
+}
+
 } // namespace
 
 #if !BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND
@@ -234,4 +262,5 @@ TEST(exec_parallel_scheduler) {
     test_parallel_scheduler_synopsis();
     test_replaceability_synopsis();
     test_parallel_scheduler_schedule();
+    test_parallel_scheduler_exception_propagation();
 }
