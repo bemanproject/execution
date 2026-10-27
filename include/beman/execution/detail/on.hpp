@@ -27,6 +27,7 @@ import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_start_scheduler;
+import beman.execution.detail.is_completion_query;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.product_type;
@@ -54,6 +55,7 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
+#include <beman/execution/detail/is_completion_query.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/product_type.hpp>
@@ -160,24 +162,15 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     }
 
   private:
-    template <typename>
-    struct is_completion_query : ::std::false_type {};
-
-    template <typename Tag>
-    struct is_completion_query<::beman::execution::get_completion_scheduler_t<Tag>> : ::std::true_type {};
-
-    template <typename Tag>
-    struct is_completion_query<::beman::execution::get_completion_domain_t<Tag>> : ::std::true_type {};
-
     template <typename ChildAttrs>
     struct attrs_base {
         template <typename Query, typename... Args>
-            requires(!is_completion_query<::std::remove_cvref_t<Query>>::value) &&
-                    requires(const ChildAttrs& child_attrs, Query query, Args&&... args) {
-                        query(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Args>(args)...);
+            requires(!::beman::execution::detail::is_completion_query_v<Query>) &&
+                    requires(const Query& q, const ChildAttrs& child_attrs, Args&&... args) {
+                        q(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Args>(args)...);
                     }
-        auto query(Query query, Args&&... args) const noexcept {
-            return query(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Args>(args)...);
+        auto query(Query q, Args&&... args) const noexcept {
+            return q(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Args>(args)...);
         }
 
         ChildAttrs child_attrs;

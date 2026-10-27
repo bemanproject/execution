@@ -37,6 +37,7 @@ import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_env;
 import beman.execution.detail.hide_sched;
 import beman.execution.detail.impls_for;
+import beman.execution.detail.is_completion_query;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
@@ -75,6 +76,7 @@ import beman.execution.detail.start;
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/hide_sched.hpp>
 #include <beman/execution/detail/impls_for.hpp>
+#include <beman/execution/detail/is_completion_query.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
@@ -188,12 +190,13 @@ struct continues_on_t {
             return ::beman::execution::get_completion_domain<Tag>(this->sch, this->template wrap_env<Tag>(env)...);
         }
 
-        template <typename Q, typename... Args>
-            requires requires(const ChildAttrs& child_attrs, Q q, Args&&... args) {
-                child_attrs.query(q, ::std::forward<Args>(args)...);
-            }
-        auto query(Q q, Args&&... args) const noexcept {
-            return this->child_attrs.query(q, ::std::forward<Args>(args)...);
+        template <typename Query, typename... Args>
+            requires(!::beman::execution::detail::is_completion_query_v<Query>) &&
+                    requires(const Query& q, const ChildAttrs& child_attrs, Args&&... args) {
+                        q(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Args>(args)...);
+                    }
+        auto query(Query q, Args&&... args) const noexcept {
+            return q(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Args>(args)...);
         }
 
         Scheduler  sch;

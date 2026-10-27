@@ -26,6 +26,7 @@ import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_env;
+import beman.execution.detail.is_completion_query;
 import beman.execution.detail.join_env;
 import beman.execution.detail.just;
 import beman.execution.detail.let;
@@ -56,6 +57,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/is_completion_query.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/let.hpp>
@@ -115,15 +117,11 @@ struct starts_on_t {
         }
 
         template <typename Tag, typename... Env>
-        auto query(::beman::execution::get_completion_scheduler_t<Tag>, const Env&... env) const noexcept {
-            if constexpr (requires {
-                              ::beman::execution::get_completion_scheduler<Tag>(this->child_attrs,
-                                                                                this->wrap_env(env)...);
-                          }) {
-                return ::beman::execution::get_completion_scheduler<Tag>(this->child_attrs, this->wrap_env(env)...);
-            } else {
-                return this->sch;
+            requires requires(const attrs& self, const ChildAttrs& child_attrs, const Env&... env) {
+                ::beman::execution::get_completion_scheduler<Tag>(child_attrs, self.wrap_env(env)...);
             }
+        auto query(::beman::execution::get_completion_scheduler_t<Tag>, const Env&... env) const noexcept {
+            return ::beman::execution::get_completion_scheduler<Tag>(this->child_attrs, this->wrap_env(env)...);
         }
 
         template <typename Tag, typename... Env>
@@ -133,12 +131,13 @@ struct starts_on_t {
             return {};
         }
 
-        template <typename Tag, typename... Env>
-            requires requires(const Tag& tag, const ChildAttrs& child_attrs, Env&&... env) {
-                tag(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Env>(env)...);
-            }
-        auto query(Tag tag, Env&&... env) const noexcept {
-            return tag(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Env>(env)...);
+        template <typename Query, typename... Args>
+            requires(!::beman::execution::detail::is_completion_query_v<Query>) &&
+                    requires(const Query& q, const ChildAttrs& child_attrs, Args&&... args) {
+                        q(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Args>(args)...);
+                    }
+        auto query(Query q, Args&&... args) const noexcept {
+            return q(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Args>(args)...);
         }
 
         Scheduler  sch;

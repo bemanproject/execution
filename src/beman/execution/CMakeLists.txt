@@ -127,6 +127,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/intrusive_stack.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_awaitable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_awaiter.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_completion_query.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/is_constant.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/join_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/just.hpp
@@ -360,6 +361,7 @@ if(BEMAN_USE_MODULES)
                     intrusive_stack.cppm
                     is_awaitable.cppm
                     is_awaiter.cppm
+                    is_completion_query.cppm
                     is_constant.cppm
                     is_sender.cppm
                     join_env.cppm

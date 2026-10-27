@@ -56,6 +56,8 @@ class run_loop {
         run_loop* loop;
 
         template <typename Completion>
+            requires ::std::same_as<Completion, ::beman::execution::set_value_t> ||
+                     ::std::same_as<Completion, ::beman::execution::set_stopped_t>
         auto query(const ::beman::execution::get_completion_scheduler_t<Completion>&) const noexcept -> scheduler {
             return {this->loop};
         }
@@ -130,6 +132,13 @@ class run_loop {
         static constexpr auto query(::beman::execution::get_forward_progress_guarantee_t) noexcept
             -> ::beman::execution::forward_progress_guarantee {
             return ::beman::execution::forward_progress_guarantee::parallel;
+        }
+
+        template <typename Completion>
+            requires ::std::same_as<Completion, ::beman::execution::set_value_t> ||
+                     ::std::same_as<Completion, ::beman::execution::set_stopped_t>
+        auto query(::beman::execution::get_completion_scheduler_t<Completion>) const noexcept -> scheduler {
+            return *this;
         }
     };
 

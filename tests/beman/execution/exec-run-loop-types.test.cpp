@@ -118,14 +118,13 @@ TEST(exec_run_loop_types) {
     });
     // p7.2:
     auto e{test_std::get_env(sender)};
+    static_assert(not std::invocable<test_std::get_completion_scheduler_t<test_std::set_error_t>, decltype(e)>);
     static_assert(requires {
-        { test_std::get_completion_scheduler<test_std::set_error_t>(e) } noexcept -> std::same_as<decltype(scheduler)>;
         {
             test_std::get_completion_scheduler<test_std::set_stopped_t>(e)
         } noexcept -> std::same_as<decltype(scheduler)>;
         { test_std::get_completion_scheduler<test_std::set_value_t>(e) } noexcept -> std::same_as<decltype(scheduler)>;
     });
-    ASSERT(scheduler == test_std::get_completion_scheduler<test_std::set_error_t>(e));
     ASSERT(scheduler == test_std::get_completion_scheduler<test_std::set_stopped_t>(e));
     ASSERT(scheduler == test_std::get_completion_scheduler<test_std::set_value_t>(e));
 
