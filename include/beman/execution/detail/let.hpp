@@ -37,6 +37,7 @@ import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_domain;
+import beman.execution.detail.hide_completion_queries;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_env;
@@ -71,6 +72,7 @@ import beman.execution.detail.type_list;
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/gather_signatures.hpp>
 #include <beman/execution/detail/get_completion_domain.hpp>
+#include <beman/execution/detail/hide_completion_queries.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_env.hpp>
@@ -310,6 +312,15 @@ struct let_t {
                 {},
                 {}};
         }};
+
+        struct get_attrs_impl {
+            auto operator()(const auto&, const auto& child) const noexcept {
+                using ChildAttrs = ::std::remove_cvref_t<decltype(::beman::execution::get_env(child))>;
+                return ::beman::execution::detail::hide_completion_queries<ChildAttrs>{
+                    ::beman::execution::get_env(child)};
+            }
+        };
+        static constexpr auto get_attrs{get_attrs_impl{}};
 
         template <typename Receiver, typename Env, typename Fun, typename... Args>
         static constexpr bool nothrow =

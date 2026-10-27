@@ -16,10 +16,16 @@ import std;
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.continues_on;
+import beman.execution.detail.default_impls;
 import beman.execution.detail.env;
 import beman.execution.detail.forward_like;
+import beman.execution.detail.get_completion_domain;
+import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
+import beman.execution.detail.get_env;
 import beman.execution.detail.get_start_scheduler;
+import beman.execution.detail.hide_completion_queries;
+import beman.execution.detail.hide_sched;
 import beman.execution.detail.infallible_scheduler;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.nested_sender_has_affine;
@@ -36,8 +42,12 @@ import beman.execution.detail.unstoppable_scheduler;
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/forward_like.hpp>
+#include <beman/execution/detail/get_completion_domain.hpp>
+#include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
+#include <beman/execution/detail/hide_completion_queries.hpp>
+#include <beman/execution/detail/hide_sched.hpp>
 #include <beman/execution/detail/infallible_scheduler.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/nested_sender_has_affine.hpp>
@@ -120,6 +130,47 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
                 ::beman::execution::detail::unstoppable_scheduler{::beman::execution::get_start_scheduler(env)});
         }
     }
+
+  private:
+    template <typename ChildAttrs>
+    struct attrs : ::beman::execution::detail::hide_completion_queries<ChildAttrs> {
+        using base = ::beman::execution::detail::hide_completion_queries<ChildAttrs>;
+
+        using base::query;
+
+        template <typename Tag, typename Env>
+            requires ::std::invocable<::beman::execution::get_start_scheduler_t, Env> &&
+                     ::beman::execution::detail::infallible_scheduler<
+                         ::std::invoke_result_t<::beman::execution::get_start_scheduler_t, Env>,
+                         Env> &&
+                     requires {
+                         ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(
+                             ::beman::execution::get_start_scheduler(::std::declval<Env>()),
+                             ::beman::execution::detail::hide_sched(::std::declval<Env>()));
+                     }
+        static auto query(::beman::execution::get_completion_scheduler_t<Tag>, const Env& env) noexcept {
+            auto sch = ::beman::execution::get_start_scheduler(env);
+            return ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(
+                sch, ::beman::execution::detail::hide_sched(env));
+        }
+
+        template <typename Tag, typename Env>
+            requires ::std::invocable<::beman::execution::get_start_scheduler_t, Env> &&
+                     ::beman::execution::detail::infallible_scheduler<
+                         ::std::invoke_result_t<::beman::execution::get_start_scheduler_t, Env>,
+                         Env> &&
+                     requires {
+                         ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
+                             ::beman::execution::get_start_scheduler(::std::declval<Env>()),
+                             ::beman::execution::detail::hide_sched(::std::declval<Env>()));
+                     }
+        static auto query(::beman::execution::get_completion_domain_t<Tag>, const Env& env) noexcept {
+            auto sch = ::beman::execution::get_start_scheduler(env);
+            return ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
+                sch, ::beman::execution::detail::hide_sched(env));
+        }
+    };
+
     template <typename, typename...>
     struct get_signatures;
 
@@ -144,10 +195,21 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
         static consteval auto get() { return ::beman::execution::get_completion_signatures<Child>(); }
     };
 
+  public:
     template <typename Sender, typename... Env>
     static consteval auto get_completion_signatures() {
         return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }
+
+    struct impls_for : ::beman::execution::detail::default_impls {
+        struct get_attrs_impl {
+            auto operator()(const auto&, const auto& child) const noexcept {
+                using ChildAttrs = ::std::remove_cvref_t<decltype(::beman::execution::get_env(child))>;
+                return attrs<ChildAttrs>{::beman::execution::get_env(child)};
+            }
+        };
+        static constexpr auto get_attrs{get_attrs_impl{}};
+    };
 };
 
 } // namespace beman::execution::detail

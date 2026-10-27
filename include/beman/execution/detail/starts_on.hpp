@@ -26,7 +26,7 @@ import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.get_env;
-import beman.execution.detail.is_completion_query;
+import beman.execution.detail.hide_completion_queries;
 import beman.execution.detail.join_env;
 import beman.execution.detail.just;
 import beman.execution.detail.let;
@@ -57,7 +57,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/get_completion_scheduler.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/get_env.hpp>
-#include <beman/execution/detail/is_completion_query.hpp>
+#include <beman/execution/detail/hide_completion_queries.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/let.hpp>
@@ -110,11 +110,18 @@ struct starts_on_t {
     };
 
     template <typename Scheduler, typename ChildAttrs>
-    struct attrs {
+    struct attrs : ::beman::execution::detail::hide_completion_queries<ChildAttrs> {
+        using base = ::beman::execution::detail::hide_completion_queries<ChildAttrs>;
+
+        attrs(Scheduler sch, ChildAttrs child_attrs) noexcept
+            : base(::std::move(child_attrs)), sch(::std::move(sch)) {}
+
         template <typename Env>
         auto wrap_env(const Env& env) const noexcept {
             return ::beman::execution::detail::join_env(::beman::execution::detail::sched_env(this->sch), env);
         }
+
+        using base::query;
 
         template <typename Tag, typename... Env>
             requires requires(const attrs& self, const ChildAttrs& child_attrs, const Env&... env) {
@@ -131,17 +138,7 @@ struct starts_on_t {
             return {};
         }
 
-        template <typename Query, typename... Args>
-            requires(!::beman::execution::detail::is_completion_query_v<Query>) &&
-                    requires(const Query& q, const ChildAttrs& child_attrs, Args&&... args) {
-                        q(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Args>(args)...);
-                    }
-        auto query(Query q, Args&&... args) const noexcept {
-            return q(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Args>(args)...);
-        }
-
-        Scheduler  sch;
-        ChildAttrs child_attrs;
+        Scheduler sch;
     };
 
   public:
@@ -153,9 +150,9 @@ struct starts_on_t {
     struct impls_for : ::beman::execution::detail::default_impls {
         struct get_attrs_impl {
             auto operator()(const auto& sch, const auto& child) const noexcept {
-                using Sch      = ::std::remove_cvref_t<decltype(sch)>;
-                using ChildEnv = ::std::remove_cvref_t<decltype(::beman::execution::get_env(child))>;
-                return attrs<Sch, ChildEnv>{sch, ::beman::execution::get_env(child)};
+                using Sch        = ::std::remove_cvref_t<decltype(sch)>;
+                using ChildAttrs = ::std::remove_cvref_t<decltype(::beman::execution::get_env(child))>;
+                return attrs<Sch, ChildAttrs>{sch, ::beman::execution::get_env(child)};
             }
         };
         static constexpr auto get_attrs{get_attrs_impl{}};

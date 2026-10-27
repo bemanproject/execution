@@ -27,7 +27,7 @@ import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_start_scheduler;
-import beman.execution.detail.is_completion_query;
+import beman.execution.detail.hide_completion_queries;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.product_type;
@@ -55,7 +55,7 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
-#include <beman/execution/detail/is_completion_query.hpp>
+#include <beman/execution/detail/hide_completion_queries.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/product_type.hpp>
@@ -163,22 +163,10 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
 
   private:
     template <typename ChildAttrs>
-    struct attrs_base {
-        template <typename Query, typename... Args>
-            requires(!::beman::execution::detail::is_completion_query_v<Query>) &&
-                    requires(const Query& q, const ChildAttrs& child_attrs, Args&&... args) {
-                        q(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Args>(args)...);
-                    }
-        auto query(Query q, Args&&... args) const noexcept {
-            return q(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Args>(args)...);
-        }
+    struct attrs1 : ::beman::execution::detail::hide_completion_queries<ChildAttrs> {
+        using base = ::beman::execution::detail::hide_completion_queries<ChildAttrs>;
 
-        ChildAttrs child_attrs;
-    };
-
-    template <typename ChildAttrs>
-    struct attrs1 : attrs_base<ChildAttrs> {
-        using attrs_base<ChildAttrs>::query;
+        using base::query;
 
         template <typename Tag, typename Env>
             requires requires(const Env& env) {
@@ -202,14 +190,16 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     };
 
     template <typename ChildAttrs>
-    struct attrs2 : attrs_base<ChildAttrs> {
-        using attrs_base<ChildAttrs>::query;
+    struct attrs2 : ::beman::execution::detail::hide_completion_queries<ChildAttrs> {
+        using base = ::beman::execution::detail::hide_completion_queries<ChildAttrs>;
 
         template <typename Env>
         auto original_sched(const Env& env) const noexcept {
             return ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(this->child_attrs,
                                                                                                  env);
         }
+
+        using base::query;
 
         template <typename Tag, typename Env>
             requires requires(const attrs2& self, const Env& env) {
