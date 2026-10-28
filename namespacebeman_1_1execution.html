@@ -936,14 +936,8 @@ template&lt;typename Sender , typename Env  = ::beman::execution::env&lt;&gt;&gt
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{!::std::same_as&lt;</div>
-<div class="line">    ::beman::execution::detail::type_list&lt;&gt;,</div>
-<div class="line">    ::beman::execution::detail::gather_signatures&lt;<a class="code hl_struct" href="structbeman_1_1execution_1_1set__stopped__t.html">::beman::execution::set_stopped_t</a>,</div>
-<div class="line">                                                  <a class="code hl_typedef" href="namespacebeman_1_1execution.html#a9ae9faece7cd1ecdd77f800df873d081">::beman::execution::completion_signatures_of_t&lt;Sender, Env&gt;</a>,</div>
-<div class="line">                                                  ::beman::execution::detail::type_list,</div>
-<div class="line">                                                  ::beman::execution::detail::type_list&gt;&gt;}</div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_a9ae9faece7cd1ecdd77f800df873d081"><div class="ttname"><a href="namespacebeman_1_1execution.html#a9ae9faece7cd1ecdd77f800df873d081">beman::execution::completion_signatures_of_t</a></div><div class="ttdeci">decltype(::beman::execution::get_completion_signatures&lt; Sender, Env... &gt;()) completion_signatures_of_t</div><div class="ttdoc">Alias to access the completion signatures of a sender.</div><div class="ttdef"><b>Definition:</b> completion_signatures_of_t.hpp:29</div></div>
-<div class="ttc" id="astructbeman_1_1execution_1_1set__stopped__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__stopped__t.html">beman::execution::set_stopped_t</a></div><div class="ttdoc">Type of the customization point object for cancellation completions.</div><div class="ttdef"><b>Definition:</b> set_stopped.hpp:22</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">    ::beman::execution::detail::sends&lt;::beman::execution::set_stopped_t, Sender, Env&gt;</div>
 </div><!-- fragment -->
 </div>
 </div>
