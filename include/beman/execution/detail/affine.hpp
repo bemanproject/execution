@@ -148,7 +148,7 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
                              ::beman::execution::get_start_scheduler(::std::declval<Env>()),
                              ::beman::execution::detail::hide_sched(::std::declval<Env>()));
                      }
-        static auto query(::beman::execution::get_completion_scheduler_t<Tag>, const Env& env) noexcept {
+        auto query(::beman::execution::get_completion_scheduler_t<Tag>, const Env& env) const noexcept {
             auto sch = ::beman::execution::get_start_scheduler(env);
             return ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(
                 sch, ::beman::execution::detail::hide_sched(env));
@@ -164,7 +164,7 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
                              ::beman::execution::get_start_scheduler(::std::declval<Env>()),
                              ::beman::execution::detail::hide_sched(::std::declval<Env>()));
                      }
-        static auto query(::beman::execution::get_completion_domain_t<Tag>, const Env& env) noexcept {
+        auto query(::beman::execution::get_completion_domain_t<Tag>, const Env& env) const noexcept {
             auto sch = ::beman::execution::get_start_scheduler(env);
             return ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
                 sch, ::beman::execution::detail::hide_sched(env));
