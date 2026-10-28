@@ -19,6 +19,7 @@ import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.continues_on;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.dependent_sender;
 import beman.execution.detail.env;
 import beman.execution.detail.error_types_of_t;
 import beman.execution.detail.forward_like;
@@ -51,6 +52,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/forward_like.hpp>
@@ -98,8 +100,11 @@ struct starts_on_t {
   private:
     template <typename, typename...>
     struct get_signatures;
-    template <typename Sender>
-    struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
+    template <typename Scheduler, typename Child>
+        requires(!::beman::execution::dependent_sender<::beman::execution::schedule_result_t<Scheduler>>)
+    struct get_signatures<
+        ::beman::execution::detail::basic_sender<::beman::execution::detail::starts_on_t, Scheduler, Child>>
+        : get_signatures<Child, ::beman::execution::env<>> {};
     template <typename Scheduler, typename Child, typename Env>
         requires requires {
             starts_on_t::transform_sender(
