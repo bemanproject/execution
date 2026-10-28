@@ -25,11 +25,13 @@ import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
 import beman.execution.detail.error_types_of_t;
+import beman.execution.detail.fwd_env;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.sends_stopped;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
@@ -46,11 +48,13 @@ import beman.execution.detail.variant_or_empty;
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
+#include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/sends_stopped.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_value.hpp>
@@ -78,20 +82,22 @@ struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_
     template <typename Sender>
     struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
     template <::beman::execution::sender Child, typename State, typename Env>
+        requires ::beman::execution::sender_in<Child, ::beman::execution::detail::fwd_env_t<Env>>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::into_variant_t, State, Child>,
         Env> {
 
         static consteval auto get() {
-            using variant_type = ::beman::execution::value_types_of_t<Child, Env>;
+            using env_t        = ::beman::execution::detail::fwd_env_t<Env>;
+            using variant_type = ::beman::execution::value_types_of_t<Child, env_t>;
             using value_types  = ::std::conditional_t<
                 ::std::same_as<variant_type, ::beman::execution::detail::empty_variant>,
                 ::beman::execution::completion_signatures<>,
                 ::beman::execution::completion_signatures<::beman::execution::set_value_t(variant_type)>>;
 
-            using error_types = ::beman::execution::error_types_of_t<Child, Env, make_error_types>;
+            using error_types = ::beman::execution::error_types_of_t<Child, env_t, make_error_types>;
             using stopped_types =
-                ::std::conditional_t<::beman::execution::sends_stopped<Child, Env>,
+                ::std::conditional_t<::beman::execution::sends_stopped<Child, env_t>,
                                      ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
                                      ::beman::execution::completion_signatures<>>;
             using type = ::beman::execution::detail::meta::
@@ -102,6 +108,7 @@ struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_
 
   public:
     template <::beman::execution::sender Sender, typename... Env>
+        requires requires { get_signatures<::std::remove_cvref_t<Sender>, Env...>{}; }
     static consteval auto get_completion_signatures() {
         return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }

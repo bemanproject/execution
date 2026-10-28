@@ -14,6 +14,7 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
+import beman.execution.detail.child_type;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.continues_on;
@@ -39,6 +40,7 @@ import beman.execution.detail.schedule_result_t;
 import beman.execution.detail.scheduler;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_for;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.sends_stopped;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
@@ -68,6 +70,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/schedule_result_t.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender_for.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/sends_stopped.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
@@ -79,6 +82,8 @@ import beman.execution.detail.set_value;
 namespace beman::execution::detail {
 struct starts_on_t {
     template <::beman::execution::detail::sender_for<::beman::execution::detail::starts_on_t> Sender, typename Env>
+        requires ::beman::execution::sender_in<::beman::execution::detail::child_type<Sender>,
+                                               ::beman::execution::detail::fwd_env_t<Env>>
     static auto transform_sender(::beman::execution::set_value_t, Sender&& sender, const Env&) noexcept {
         auto&&         sched{sender.template get<1>()};
         auto&&         child{sender.template get<2>()};
@@ -96,6 +101,13 @@ struct starts_on_t {
     template <typename Sender>
     struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
     template <typename Scheduler, typename Child, typename Env>
+        requires requires {
+            starts_on_t::transform_sender(
+                ::beman::execution::set_value,
+                ::std::declval<::beman::execution::detail::
+                                   basic_sender<::beman::execution::detail::starts_on_t, Scheduler, Child>>(),
+                ::std::declval<Env>());
+        }
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::starts_on_t, Scheduler, Child>,
         Env> {
@@ -143,6 +155,7 @@ struct starts_on_t {
 
   public:
     template <typename Sender, typename... Env>
+        requires requires { get_signatures<::std::remove_cvref_t<Sender>, Env...>{}; }
     static consteval auto get_completion_signatures() {
         return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }

@@ -28,6 +28,7 @@ import beman.execution.detail.scheduler_tag;
 import beman.execution.detail.sender;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
+import beman.execution.detail.stop_token_of_t;
 import beman.execution.detail.unstoppable_token;
 #else
 #include <beman/execution/detail/completion_signatures.hpp>
@@ -42,6 +43,7 @@ import beman.execution.detail.unstoppable_token;
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
+#include <beman/execution/detail/stop_token_of_t.hpp>
 #include <beman/execution/detail/unstoppable_token.hpp>
 #endif
 
@@ -93,20 +95,9 @@ class run_loop {
     };
     struct sender {
         using sender_concept = ::beman::execution::sender_tag;
-        template <typename Self, typename... Env>
+        template <typename, typename Env>
         static consteval auto get_completion_signatures() noexcept {
-            // [exec.getcomplsigs] permits sizeof...(Env) == 0. Answering that
-            // query as if for env<> matches [exec.run.loop]'s formula, whose
-            // E = env<> has an unstoppable stop token, and matches how the
-            // other environment-sensitive senders here (then, into_variant)
-            // handle the empty pack. Without this the member's body is
-            // ill-formed for an empty pack -- get_stop_token() with no
-            // argument -- and because the return type is deduced, that is a
-            // hard error rather than a substitution failure.
-            if constexpr (0u == sizeof...(Env))
-                return get_completion_signatures<Self, ::beman::execution::env<>>();
-            else if constexpr (::beman::execution::unstoppable_token<decltype(::beman::execution::get_stop_token(
-                                   std::declval<Env>()...))>)
+            if constexpr (::beman::execution::unstoppable_token<::beman::execution::stop_token_of_t<Env>>)
                 return ::beman::execution::completion_signatures<::beman::execution::set_value_t()>{};
             else
                 return ::beman::execution::completion_signatures<::beman::execution::set_value_t(),

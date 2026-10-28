@@ -38,13 +38,13 @@ struct hide_completion_queries {
     template <typename Query, typename... Args>
         requires(!::beman::execution::detail::is_completion_query<Query>::value) &&
                 requires(const Query& q, const ChildAttrs& child_attrs, Args&&... args) {
-                    q(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Args>(args)...);
+                    ::beman::execution::detail::fwd_env(child_attrs).query(q, ::std::forward<Args>(args)...);
                 }
     auto query(Query q, Args&&... args) const noexcept {
-        return q(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Args>(args)...);
+        return ::beman::execution::detail::fwd_env(child_attrs).query(q, ::std::forward<Args>(args)...);
     }
 
-    ChildAttrs child_attrs;
+    ::std::remove_cvref_t<ChildAttrs> child_attrs;
 };
 } // namespace beman::execution::detail
 

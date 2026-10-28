@@ -53,6 +53,7 @@ import beman.execution.detail.receiver;
 import beman.execution.detail.sched_env;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
@@ -87,6 +88,7 @@ import beman.execution.detail.type_list;
 #include <beman/execution/detail/sched_env.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
@@ -112,7 +114,7 @@ struct get_successor_senders;
 
 template <typename Fun, typename... Args>
 struct get_successor_senders<Fun, ::beman::execution::detail::type_list<Args...>> {
-    using type = std::invoke_result_t<Fun, Args...>;
+    using type = std::invoke_result_t<Fun, ::std::decay_t<Args>&...>;
 };
 
 template <typename, typename>
@@ -125,13 +127,30 @@ struct non_dependent_successor_helper<Fun, ::beman::execution::detail::type_list
                               typename ::beman::execution::detail::get_successor_senders<Fun, TypeLists>::type>)> {};
 
 template <typename Completion, typename Child, typename Fun>
-struct non_dependent_successor
-    : ::beman::execution::detail::non_dependent_successor_helper<
-          Fun,
-          ::beman::execution::detail::gather_signatures<Completion,
-                                                        ::beman::execution::completion_signatures_of_t<Child>,
-                                                        ::beman::execution::detail::type_list,
-                                                        ::beman::execution::detail::type_list>> {};
+using non_dependent_successor = ::beman::execution::detail::non_dependent_successor_helper<
+    Fun,
+    ::beman::execution::detail::gather_signatures<Completion,
+                                                  ::beman::execution::completion_signatures_of_t<Child>,
+                                                  ::beman::execution::detail::type_list,
+                                                  ::beman::execution::detail::type_list>>;
+
+template <typename, typename, typename>
+struct successor_in_helper;
+
+template <typename Env, typename Fun, typename... TypeLists>
+struct successor_in_helper<Env, Fun, ::beman::execution::detail::type_list<TypeLists...>>
+    : std::bool_constant<(... && ::beman::execution::sender_in<
+                                     typename ::beman::execution::detail::get_successor_senders<Fun, TypeLists>::type,
+                                     Env>)> {};
+
+template <typename Completion, typename Child, typename Fun, typename Env>
+using successor_in = ::beman::execution::detail::successor_in_helper<
+    Env,
+    Fun,
+    ::beman::execution::detail::gather_signatures<Completion,
+                                                  ::beman::execution::completion_signatures_of_t<Child, Env>,
+                                                  ::beman::execution::detail::type_list,
+                                                  ::beman::execution::detail::type_list>>;
 
 template <typename Completion>
 struct let_t {
@@ -192,6 +211,10 @@ struct let_t {
     template <typename T>
     using matching_completion = let_matching_completion<Completion, T>;
 
+    template <typename Child, typename Env>
+    using successor_env =
+        ::beman::execution::detail::join_env<let_env_t<Child, Env>, ::beman::execution::detail::fwd_env<Env>>;
+
     template <typename, typename...>
     struct get_signatures;
 
@@ -201,12 +224,11 @@ struct let_t {
         : get_signatures<::beman::execution::detail::basic_sender<let_t, Fun, Child>, ::beman::execution::env<>> {};
 
     template <typename Fun, typename Child, typename Env>
+        requires ::beman::execution::sender_in<Child, ::beman::execution::detail::fwd_env_t<Env>> &&
+                 ::beman::execution::detail::successor_in<Completion, Child, Fun, successor_env<Child, Env>>::value
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::let_t<Completion>, Fun, Child>,
         Env> {
-        using successor_env =
-            ::beman::execution::detail::join_env<let_env_t<Child, Env>, ::beman::execution::detail::fwd_env<Env>>;
-
         template <typename>
         struct get_completions;
         template <typename... Sigs>
@@ -214,12 +236,13 @@ struct let_t {
             using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
                 ::beman::execution::completion_signatures<>,
                 ::beman::execution::completion_signatures_of_t<typename apply_decayed<Fun, Sigs>::sender_type,
-                                                               successor_env>...,
+                                                               successor_env<Child, Env>>...,
                 typename apply_decayed<Fun, Sigs>::completions...>>;
         };
 
-        using upstream_completions = ::beman::execution::completion_signatures_of_t<Child, Env>;
-        using other_completions    = ::beman::execution::detail::meta::filter<other_completion, upstream_completions>;
+        using upstream_completions =
+            ::beman::execution::completion_signatures_of_t<Child, ::beman::execution::detail::fwd_env<Env>>;
+        using other_completions = ::beman::execution::detail::meta::filter<other_completion, upstream_completions>;
         using matching_completions =
             ::beman::execution::detail::meta::filter<matching_completion, upstream_completions>;
         using type = ::beman::execution::detail::meta::unique<
@@ -231,9 +254,9 @@ struct let_t {
 
   public:
     template <typename Sender, typename... Env>
-        requires requires { get_signatures<std::remove_cvref_t<Sender>, Env...>::get(); }
+        requires requires { get_signatures<::std::remove_cvref_t<Sender>, Env...>{}; }
     static consteval auto get_completion_signatures() {
-        return get_signatures<std::remove_cvref_t<Sender>, Env...>::get();
+        return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {

@@ -12,13 +12,6 @@ import std;
 import beman.execution;
 import beman.execution.detail;
 #else
-#include <beman/execution/detail/product_type.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/sender_decompose.hpp>
-#include <beman/execution/detail/sender_for.hpp>
-#include <beman/execution/detail/sender_in.hpp>
-#include <beman/execution/detail/tag_of_t.hpp>
-
 #include <beman/execution.hpp>
 #endif
 
@@ -161,7 +154,28 @@ auto test_sender_in() -> void {
     static_assert(not test_std::sender_in<sender_in, non_queryable>);
     static_assert(test_std::sender_in<sender_in>);
     static_assert(test_std::sender_in<sender_in, queryable>);
-    //-dk:TODO add missing test cases for sender_in
+
+    test_std::run_loop loop;
+    test_std::prop     env_has_allocator{test_std::get_allocator, std::allocator<std::byte>{}};
+    test_std::prop     env_has_start_scheduler{test_std::get_start_scheduler, loop.get_scheduler()};
+
+    auto sndr = test_std::just() |
+                test_std::let_value([] { return test_std::read_env(test_std::get_allocator) | test_std::affine(); });
+    static_assert(!test_std::sender_in<decltype(sndr), test_std::env<>>);
+    static_assert(test_std::sender_in<decltype(sndr), decltype(env_has_allocator)>);
+    auto [al] = test_std::sync_wait(sndr | test_std::write_env(env_has_allocator)).value();
+    ASSERT(al == std::allocator<std::byte>{});
+
+    auto sndr2 = test_std::when_all(test_std::read_env(test_std::get_allocator),
+                                    test_std::read_env(test_std::get_start_scheduler));
+    static_assert(!test_std::sender_in<decltype(sndr2), test_std::env<>>);
+    static_assert(!test_std::sender_in<decltype(test_std::starts_on(loop.get_scheduler(), sndr2)), test_std::env<>>);
+    static_assert(!test_std::sender_in<decltype(sndr2), decltype(env_has_allocator)>);
+    static_assert(test_std::sender_in<decltype(sndr2 | test_std::write_env(env_has_start_scheduler)),
+                                      decltype(env_has_allocator)>);
+    static_assert(!test_std::sender_in<decltype(sndr2), decltype(env_has_start_scheduler)>);
+    static_assert(test_std::sender_in<decltype(sndr2 | test_std::write_env(env_has_allocator)),
+                                      decltype(env_has_start_scheduler)>);
 }
 
 auto test_tag_of_t() -> void {

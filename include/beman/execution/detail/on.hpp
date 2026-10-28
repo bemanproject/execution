@@ -221,55 +221,6 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
                                                                   ::beman::execution::detail::fwd_env(env));
         }
     };
-
-    template <typename, typename...>
-    struct get_signatures;
-
-    /// for `on(scheduler, sender)`
-    template <typename Sched, typename Child, typename Env>
-    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Sched, Child>,
-                          Env> {
-        static consteval auto get()
-            requires ::std::invocable<::beman::execution::get_start_scheduler_t, Env>
-        {
-            using transformed_sndr = decltype(on_t::transform_sender(
-                ::beman::execution::set_value,
-                ::std::declval<
-                    ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Sched, Child>>(),
-                ::std::declval<Env>()));
-            return ::beman::execution::get_completion_signatures<transformed_sndr, Env>();
-        }
-    };
-
-    /// for `on(sender, scheduler, closure)`
-    template <typename Sched, typename Closure, typename Child, typename Env>
-    struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t,
-                                                 ::beman::execution::detail::product_type<Sched, Closure>,
-                                                 Child>,
-        Env> {
-        static consteval auto get()
-            requires ::std::invocable<::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>,
-                                      ::beman::execution::env_of_t<Child>,
-                                      Env>
-        {
-            using transformed_sndr = decltype(on_t::transform_sender(
-                ::beman::execution::set_value,
-                ::std::declval<
-                    ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t,
-                                                             ::beman::execution::detail::product_type<Sched, Closure>,
-                                                             Child>>(),
-                ::std::declval<Env>()));
-            return ::beman::execution::get_completion_signatures<transformed_sndr, Env>();
-        }
-    };
-
-  public:
-    template <typename Sender, typename Env>
-        requires requires { get_signatures<std::remove_cvref_t<Sender>, Env>::get(); }
-    static consteval auto get_completion_signatures() noexcept {
-        return get_signatures<std::remove_cvref_t<Sender>, Env>::get();
-    }
 };
 
 } // namespace beman::execution::detail

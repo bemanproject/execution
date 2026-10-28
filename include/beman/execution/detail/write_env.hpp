@@ -24,6 +24,7 @@ import beman.execution.detail.make_sender;
 import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.queryable;
 import beman.execution.detail.sender;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.sender_adaptor_closure;
 #else
 #include <beman/execution/detail/default_impls.hpp>
@@ -34,6 +35,7 @@ import beman.execution.detail.sender_adaptor_closure;
 #include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/queryable.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #endif
 
@@ -41,14 +43,19 @@ import beman.execution.detail.sender_adaptor_closure;
 
 namespace beman::execution::detail {
 
-template <typename NewEnv, bool, typename... Env>
-struct write_env_env_type {
-    using type = decltype(::beman::execution::detail::join_env(::std::declval<NewEnv>(), ::std::declval<Env>()...));
-};
+template <typename NewEnv, typename... Env>
+struct write_env_env_type;
+
 template <typename NewEnv>
-struct write_env_env_type<NewEnv, false> {
+struct write_env_env_type<NewEnv> {
     using type = NewEnv;
 };
+
+template <typename NewEnv, typename Env>
+struct write_env_env_type<NewEnv, Env> {
+    using type = ::beman::execution::detail::join_env<NewEnv, Env>;
+};
+
 struct write_env_t {
     template <::beman::execution::sender Sender, ::beman::execution::detail::queryable Env>
     constexpr auto operator()(Sender&& sender, Env&& env) const {
@@ -71,18 +78,21 @@ struct write_env_t {
     template <typename, typename...>
     struct get_signatures;
     template <typename NewEnv, typename Child, typename... Env>
+        requires ::beman::execution::sender_in<Child, typename write_env_env_type<NewEnv, Env...>::type>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::write_env_t, NewEnv, Child>,
         Env...> {
-        using type = decltype(::beman::execution::get_completion_signatures<
-                              Child,
-                              typename write_env_env_type<NewEnv, 0 < sizeof...(Env), Env...>::type>());
-    };
+        static consteval auto get() {
+            return ::beman::execution::get_completion_signatures<Child,
+                                                                 typename write_env_env_type<NewEnv, Env...>::type>();
+        }
+    }; // namespace beman::execution::detail
 
   public:
     template <typename Sender, typename... Env>
+        requires requires { get_signatures<::std::remove_cvref_t<Sender>, Env...>{}; }
     static consteval auto get_completion_signatures() {
-        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+        return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
