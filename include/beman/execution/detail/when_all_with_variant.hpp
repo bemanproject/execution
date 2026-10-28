@@ -24,6 +24,7 @@ import beman.execution.detail.into_variant;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_for;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.set_value;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
@@ -41,6 +42,7 @@ import beman.execution.detail.when_all;
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_for.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
@@ -70,6 +72,7 @@ struct when_all_with_variant_t {
     template <typename Sender>
     struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
     template <typename Data, typename Env, typename... Children>
+        requires(... && ::beman::execution::sender_in<Children, when_all_env<Env>>)
     struct get_signatures<::beman::execution::detail::
                               basic_sender<::beman::execution::detail::when_all_with_variant_t, Data, Children...>,
                           Env> {
@@ -128,6 +131,7 @@ struct when_all_with_variant_t {
 
   public:
     template <::beman::execution::sender Sender, typename... Env>
+        requires requires { get_signatures<::std::remove_cvref_t<Sender>, Env...>{}; }
     static consteval auto get_completion_signatures() {
         return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }

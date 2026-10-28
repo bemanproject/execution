@@ -27,6 +27,7 @@ import beman.execution.detail.get_completion_scheduler;
 import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_start_scheduler;
+import beman.execution.detail.hide_completion_queries;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.product_type;
@@ -54,6 +55,7 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/get_domain.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
+#include <beman/execution/detail/hide_completion_queries.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/product_type.hpp>
@@ -160,32 +162,11 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     }
 
   private:
-    template <typename>
-    struct is_completion_query : ::std::false_type {};
-
-    template <typename Tag>
-    struct is_completion_query<::beman::execution::get_completion_scheduler_t<Tag>> : ::std::true_type {};
-
-    template <typename Tag>
-    struct is_completion_query<::beman::execution::get_completion_domain_t<Tag>> : ::std::true_type {};
-
     template <typename ChildAttrs>
-    struct attrs_base {
-        template <typename Query, typename... Args>
-            requires(!is_completion_query<::std::remove_cvref_t<Query>>::value) &&
-                    requires(const ChildAttrs& child_attrs, Query query, Args&&... args) {
-                        query(::beman::execution::detail::fwd_env(child_attrs), ::std::forward<Args>(args)...);
-                    }
-        auto query(Query query, Args&&... args) const noexcept {
-            return query(::beman::execution::detail::fwd_env(this->child_attrs), ::std::forward<Args>(args)...);
-        }
+    struct attrs1 : ::beman::execution::detail::hide_completion_queries<ChildAttrs> {
+        using base = ::beman::execution::detail::hide_completion_queries<ChildAttrs>;
 
-        ChildAttrs child_attrs;
-    };
-
-    template <typename ChildAttrs>
-    struct attrs1 : attrs_base<ChildAttrs> {
-        using attrs_base<ChildAttrs>::query;
+        using base::query;
 
         template <typename Tag, typename Env>
             requires requires(const Env& env) {
@@ -209,14 +190,16 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
     };
 
     template <typename ChildAttrs>
-    struct attrs2 : attrs_base<ChildAttrs> {
-        using attrs_base<ChildAttrs>::query;
+    struct attrs2 : ::beman::execution::detail::hide_completion_queries<ChildAttrs> {
+        using base = ::beman::execution::detail::hide_completion_queries<ChildAttrs>;
 
         template <typename Env>
         auto original_sched(const Env& env) const noexcept {
             return ::beman::execution::get_completion_scheduler<::beman::execution::set_value_t>(this->child_attrs,
                                                                                                  env);
         }
+
+        using base::query;
 
         template <typename Tag, typename Env>
             requires requires(const attrs2& self, const Env& env) {
@@ -238,55 +221,6 @@ struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
                                                                   ::beman::execution::detail::fwd_env(env));
         }
     };
-
-    template <typename, typename...>
-    struct get_signatures;
-
-    /// for `on(scheduler, sender)`
-    template <typename Sched, typename Child, typename Env>
-    struct get_signatures<::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Sched, Child>,
-                          Env> {
-        static consteval auto get()
-            requires ::std::invocable<::beman::execution::get_start_scheduler_t, Env>
-        {
-            using transformed_sndr = decltype(on_t::transform_sender(
-                ::beman::execution::set_value,
-                ::std::declval<
-                    ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t, Sched, Child>>(),
-                ::std::declval<Env>()));
-            return ::beman::execution::get_completion_signatures<transformed_sndr, Env>();
-        }
-    };
-
-    /// for `on(sender, scheduler, closure)`
-    template <typename Sched, typename Closure, typename Child, typename Env>
-    struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t,
-                                                 ::beman::execution::detail::product_type<Sched, Closure>,
-                                                 Child>,
-        Env> {
-        static consteval auto get()
-            requires ::std::invocable<::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>,
-                                      ::beman::execution::env_of_t<Child>,
-                                      Env>
-        {
-            using transformed_sndr = decltype(on_t::transform_sender(
-                ::beman::execution::set_value,
-                ::std::declval<
-                    ::beman::execution::detail::basic_sender<::beman::execution::detail::on_t,
-                                                             ::beman::execution::detail::product_type<Sched, Closure>,
-                                                             Child>>(),
-                ::std::declval<Env>()));
-            return ::beman::execution::get_completion_signatures<transformed_sndr, Env>();
-        }
-    };
-
-  public:
-    template <typename Sender, typename Env>
-        requires requires { get_signatures<std::remove_cvref_t<Sender>, Env>::get(); }
-    static consteval auto get_completion_signatures() noexcept {
-        return get_signatures<std::remove_cvref_t<Sender>, Env>::get();
-    }
 };
 
 } // namespace beman::execution::detail

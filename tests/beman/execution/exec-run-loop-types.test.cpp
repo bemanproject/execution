@@ -99,16 +99,7 @@ TEST(exec_run_loop_types) {
         ::std::same_as<test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>,
                        decltype(test_std::get_completion_signatures<decltype(sender),
                                                                     decltype(token_env{source.get_token()})>())>);
-    // [exec.getcomplsigs] constrains sizeof...(Env) <= 1, so the
-    // zero-environment query is well-formed and must be answered. It is
-    // answered as for env<>, whose stop token is unstoppable.
-    static_assert(::std::same_as<test_std::completion_signatures<test_std::set_value_t()>,
-                                 decltype(test_std::get_completion_signatures<decltype(sender)>())>);
-    // ... and because detail::non_dependent_sender is itself spelled with that
-    // query inside a requires-expression, a sender that cannot answer it makes
-    // the concept ill-formed rather than false. Asserting the concept is what
-    // pins that down.
-    static_assert(not test_std::dependent_sender<decltype(sender)>);
+    static_assert(test_std::dependent_sender<decltype(sender)>);
     // p7:
     static_assert(
         test_std::receiver_of<receiver, decltype(test_std::get_completion_signatures<decltype(sender), env>())>);
@@ -118,14 +109,13 @@ TEST(exec_run_loop_types) {
     });
     // p7.2:
     auto e{test_std::get_env(sender)};
+    static_assert(not std::invocable<test_std::get_completion_scheduler_t<test_std::set_error_t>, decltype(e)>);
     static_assert(requires {
-        { test_std::get_completion_scheduler<test_std::set_error_t>(e) } noexcept -> std::same_as<decltype(scheduler)>;
         {
             test_std::get_completion_scheduler<test_std::set_stopped_t>(e)
         } noexcept -> std::same_as<decltype(scheduler)>;
         { test_std::get_completion_scheduler<test_std::set_value_t>(e) } noexcept -> std::same_as<decltype(scheduler)>;
     });
-    ASSERT(scheduler == test_std::get_completion_scheduler<test_std::set_error_t>(e));
     ASSERT(scheduler == test_std::get_completion_scheduler<test_std::set_stopped_t>(e));
     ASSERT(scheduler == test_std::get_completion_scheduler<test_std::set_value_t>(e));
 

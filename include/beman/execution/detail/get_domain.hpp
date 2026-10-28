@@ -47,15 +47,6 @@ struct get_domain_t : ::beman::execution::forwarding_query_t {
                 ::beman::execution::get_start_scheduler(env), ::beman::execution::detail::hide_sched(env))));
             static_assert(noexcept(type{}));
             return type{};
-        } else if constexpr (requires {
-                                 ::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
-                                     ::beman::execution::get_start_scheduler(env),
-                                     ::beman::execution::detail::hide_sched(env));
-                             }) {
-            using type = decltype(auto(::beman::execution::get_completion_domain<::beman::execution::set_value_t>(
-                ::beman::execution::get_start_scheduler(env), ::beman::execution::detail::hide_sched(env))));
-            static_assert(noexcept(type{}));
-            return type{};
         } else {
             return ::beman::execution::default_domain{};
         }

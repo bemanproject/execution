@@ -12,6 +12,7 @@ import std;
 #include <cstdlib>
 #include <concepts>
 #include <exception>
+#include <functional>
 #include <memory_resource>
 #include <span>
 #include <vector>
@@ -85,6 +86,25 @@ auto test_let_value() {
     auto state1{test_std::connect(s1, receiver{})};
     test::use(state1);
     test_std::start(state1);
+
+    test_std::sync_wait(test_std::just(42) | test_std::let_value([](int& i) noexcept {
+                            ASSERT(i == 42);
+                            return test_std::just(std::ref(i)) | test_std::let_value([&i](int& j) noexcept {
+                                       ASSERT(&i == &j);
+                                       ASSERT(i == 42 && i == j);
+                                       return test_std::just();
+                                   });
+                        }));
+
+    auto [vec] = test_std::sync_wait(test_std::just(std::vector{1, 2, 3}) |
+                                     test_std::let_value([](std::vector<int>& v) noexcept {
+                                         for (int& i : v) {
+                                             i *= 2;
+                                         }
+                                         return test_std::just(std::move(v));
+                                     }))
+                     .value();
+    ASSERT((vec == std::vector{2, 4, 6}));
 }
 
 template <std::size_t Size>
@@ -120,7 +140,6 @@ auto test_let_value_allocator() -> void {
     auto             s{ex::just(std::span(values)) | ex::let_value(fun()) | ex::then([](auto&&) noexcept {})};
     static_assert(test_std::sender<decltype(s)>);
     static_assert(test_std::sender_in<decltype(s)>);
-    //-dk:TODO static_assert(std::same_as<void, decltype(test_std::get_completion_signatures(s, test_std::env<>{}))>);
     ex::sync_wait(s);
 }
 

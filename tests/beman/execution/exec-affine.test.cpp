@@ -29,6 +29,7 @@ import beman.execution;
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/starts_on.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
+#include <beman/execution/detail/task_scheduler.hpp>
 #include <beman/execution/detail/then.hpp>
 #include <beman/execution/detail/when_all.hpp>
 #include <beman/execution/detail/write_env.hpp>
@@ -168,6 +169,17 @@ auto test_affine_attributes() {
     test::test_sender_env<true>(84, test::test_non_forwardable_attr{}, s);
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::affine(s));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::affine(s));
+
+    test_std::run_loop loop;
+    test_std::prop     env{test_std::get_start_scheduler, test_std::task_scheduler(loop.get_scheduler())};
+    auto               sndr = s | test_std::affine();
+    auto               sch  = test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), env);
+
+    static_assert(std::same_as<decltype(sch), test_std::task_scheduler>);
+    ASSERT(sch == loop.get_scheduler());
+
+    using domain = decltype(test_std::get_completion_domain<>(test_std::get_env(sndr), env));
+    static_assert(std::same_as<domain, test_std::task_scheduler::domain>);
 }
 } // namespace
 
