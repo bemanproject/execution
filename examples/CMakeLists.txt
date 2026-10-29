@@ -41,6 +41,10 @@ if(BEMAN_USE_MODULES)
     list(APPEND EXAMPLES modules_and_header)
 endif()
 
+if(BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND)
+    list(APPEND EXAMPLES async_inclusive_scan)
+endif()
+
 foreach(EXAMPLE ${EXAMPLES})
     set(EXAMPLE_TARGET ${PROJECT_NAME}.${EXAMPLE})
     add_executable(${EXAMPLE_TARGET})

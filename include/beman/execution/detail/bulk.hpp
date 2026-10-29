@@ -19,8 +19,11 @@ import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.env;
 import beman.execution.detail.execution_policy;
 import beman.execution.detail.forward_like;
+import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.unique;
@@ -28,6 +31,7 @@ import beman.execution.detail.product_type;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_value;
 #else
@@ -35,8 +39,11 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/execution_policy.hpp>
 #include <beman/execution/detail/forward_like.hpp>
+#include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
@@ -44,6 +51,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #endif
@@ -129,21 +137,26 @@ struct bulk_algo_t {
     template <typename, typename...>
     struct get_signatures;
     template <typename Policy, typename Shape, typename F, typename Sender, typename... Env>
+        requires ::beman::execution::sender_in<Sender, ::beman::execution::detail::fwd_env_t<Env>...>
     struct get_signatures<
         ::beman::execution::detail::
             basic_sender<bulk_algo_t, ::beman::execution::detail::product_type<Policy, Shape, F>, Sender>,
         Env...> {
-        using type = typename ::beman::execution::detail::bulk_transform_signatures<
-            is_chunked,
-            F,
-            Shape,
-            ::beman::execution::completion_signatures_of_t<Sender, Env...>>::type;
+        static consteval auto get() {
+            [[maybe_unused]] auto child_sigs =
+                ::beman::execution::get_completion_signatures<Sender, ::beman::execution::detail::fwd_env_t<Env>...>();
+            using child_sigs_t = decltype(child_sigs);
+            using type         = typename ::beman::execution::detail::
+                bulk_transform_signatures<is_chunked, F, Shape, child_sigs_t>::type;
+            return type{};
+        }
     };
 
   public:
     template <typename Sender, typename... Env>
-    static consteval auto get_completion_signatures() noexcept {
-        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
+        requires requires { get_signatures<::std::remove_cvref_t<Sender>, Env...>{}; }
+    static consteval auto get_completion_signatures() {
+        return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
@@ -212,7 +225,7 @@ struct bulk_t {
     }
 
     template <::beman::execution::detail::sender_for<bulk_t> Sender, typename Env>
-    auto transform_sender(::beman::execution::set_value_t, Sender&& sndr, const Env&) const {
+    static auto transform_sender(::beman::execution::set_value_t, Sender&& sndr, const Env&) {
         auto data  = ::beman::execution::detail::forward_like<Sender>(sndr.template get<1>());
         auto child = ::beman::execution::detail::forward_like<Sender>(sndr.template get<2>());
 
@@ -223,23 +236,10 @@ struct bulk_t {
         return bulk_chunked_t{}(::std::move(child),
                                 policy,
                                 shape,
-                                this->wrap_chunked<::std::remove_cvref_t<decltype(shape)>>(::std::move(f)));
+                                bulk_t::wrap_chunked<::std::remove_cvref_t<decltype(shape)>>(::std::move(f)));
     }
 
   private:
-    template <typename, typename...>
-    struct get_signatures;
-    template <typename Policy, typename Shape, typename F, typename Sender, typename... Env>
-    struct get_signatures<::beman::execution::detail::
-                              basic_sender<bulk_t, ::beman::execution::detail::product_type<Policy, Shape, F>, Sender>,
-                          Env...> {
-        using type = typename ::beman::execution::detail::bulk_transform_signatures<
-            false,
-            F,
-            Shape,
-            ::beman::execution::completion_signatures_of_t<Sender, Env...>>::type;
-    };
-
     template <typename Shape, typename Fn>
     static auto wrap_chunked(Fn f) noexcept {
         return [f = ::std::move(f)]<typename... Args>(Shape begin, Shape end, Args&&... args) noexcept(
@@ -250,10 +250,15 @@ struct bulk_t {
         };
     }
 
+    template <typename Sender>
+    using transformed_sender = decltype(bulk_t::transform_sender(
+        ::beman::execution::set_value, ::std::declval<Sender>(), ::std::declval<::beman::execution::env<>>()));
+
   public:
-    template <typename Sender, typename... Env>
-    static consteval auto get_completion_signatures() noexcept {
-        return typename get_signatures<::std::remove_cvref_t<Sender>, Env...>::type{};
+    template <::beman::execution::sender Sender>
+        requires ::beman::execution::sender_in<transformed_sender<Sender>>
+    static consteval auto get_completion_signatures() {
+        return ::beman::execution::get_completion_signatures<transformed_sender<Sender>>();
     }
 };
 

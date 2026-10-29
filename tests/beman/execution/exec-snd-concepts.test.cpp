@@ -176,6 +176,11 @@ auto test_sender_in() -> void {
     static_assert(!test_std::sender_in<decltype(sndr2), decltype(env_has_start_scheduler)>);
     static_assert(test_std::sender_in<decltype(sndr2 | test_std::write_env(env_has_allocator)),
                                       decltype(env_has_start_scheduler)>);
+
+    auto sndr3 =
+        test_std::read_env(test_std::get_allocator) | test_std::bulk(test_std::par, 1, [](int, auto&) noexcept {});
+    static_assert(!test_std::sender_in<decltype(sndr3), test_std::env<>>);
+    static_assert(test_std::sender_in<decltype(sndr3), decltype(env_has_allocator)>);
 }
 
 auto test_tag_of_t() -> void {
