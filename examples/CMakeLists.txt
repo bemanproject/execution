@@ -30,6 +30,7 @@ set(EXAMPLES
     intro_5_consumer
     playground
     sender_demo
+    sleep_sort
     stackoverflow
     stopping
     stop_token

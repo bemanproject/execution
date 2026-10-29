@@ -52,6 +52,12 @@ struct sender {
     };
 
     base** handle{};
+
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept -> completion_signatures {
+        return {};
+    }
+
     template <test_std::receiver Rcvr>
     auto connect(Rcvr&& rcvr) -> state<Rcvr> {
         return state<Rcvr>{std::forward<Rcvr>(rcvr), *this->handle};

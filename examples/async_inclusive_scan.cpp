@@ -64,6 +64,6 @@ auto main() -> int {
     std::vector<int>       input(n);
     std::vector<int>       output(input.size());
     std::iota(input.begin(), input.end(), 1); // NOLINT
-    ex::sync_wait(async_inclusive_scan(scheduler, 4, input.begin(), input.end(), output.begin())).value();
+    auto _ = ex::sync_wait(async_inclusive_scan(scheduler, 4, input.begin(), input.end(), output.begin())).value();
     std::println("{}", output);
 }
