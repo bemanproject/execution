@@ -172,7 +172,7 @@ $(document).ready(function(){initNavTree('affine_8hpp_source.html',''); initResi
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="namespacebeman.html">   72</a></span><span class="keyword">namespace </span>beman::execution::detail {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keyword">struct </span>affine_t : <a class="code hl_struct" href="structbeman_1_1execution_1_1sender__adaptor__closure.html">::beman::execution::sender_adaptor_closure</a>&lt;affine_t&gt; {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keyword">struct </span>affine_t {</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">template</span> &lt;::beman::execution::sender Sender&gt;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keyword">auto</span> operator()(Sender&amp;&amp; sender)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        return ::beman::execution::detail::make_sender(</div>
@@ -266,7 +266,6 @@ $(document).ready(function(){initNavTree('affine_8hpp_source.html',''); initResi
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1hide__completion__queries_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1hide__completion__queries.html">beman::execution::detail::hide_completion_queries</a></div><div class="ttdef"><b>Definition:</b> hide_completion_queries.hpp:37</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1detail_1_1unstoppable__scheduler_html"><div class="ttname"><a href="structbeman_1_1execution_1_1detail_1_1unstoppable__scheduler.html">beman::execution::detail::unstoppable_scheduler</a></div><div class="ttdef"><b>Definition:</b> unstoppable_scheduler.hpp:27</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1env_html"><div class="ttname"><a href="structbeman_1_1execution_1_1env.html">beman::execution::env</a></div><div class="ttdef"><b>Definition:</b> env.hpp:66</div></div>
-<div class="ttc" id="astructbeman_1_1execution_1_1sender__adaptor__closure_html"><div class="ttname"><a href="structbeman_1_1execution_1_1sender__adaptor__closure.html">beman::execution::sender_adaptor_closure</a></div><div class="ttdoc">CRTP base class for pipeable sender adaptor closure objects.</div><div class="ttdef"><b>Definition:</b> sender_adaptor_closure.hpp:54</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__value__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__value__t.html">beman::execution::set_value_t</a></div><div class="ttdoc">Type of the customization point object for successful completions.</div><div class="ttdef"><b>Definition:</b> set_value.hpp:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

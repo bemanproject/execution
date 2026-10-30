@@ -137,7 +137,7 @@ $(document).ready(function(){initNavTree('stopped__as__error_8hpp_source.html','
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">namespace </span>beman::execution::detail {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">struct </span>stopped_as_error_t : <a class="code hl_struct" href="structbeman_1_1execution_1_1sender__adaptor__closure.html">::beman::execution::sender_adaptor_closure</a>&lt;stopped_as_error_t&gt; {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">struct </span>stopped_as_error_t {</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">template</span> &lt;::beman::execution::detail::sender_for&lt;stopped_as_error_t&gt; Sndr, <span class="keyword">typename</span> Env&gt;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">auto</span> transform_sender(<a class="code hl_struct" href="structbeman_1_1execution_1_1set__value__t.html">::beman::execution::set_value_t</a>, Sndr&amp;&amp; sndr, Env&amp;&amp;) const noexcept {</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">auto</span>&amp;&amp; data  = sndr.template get&lt;1&gt;();</div>
@@ -178,7 +178,6 @@ $(document).ready(function(){initNavTree('stopped__as__error_8hpp_source.html','
 <div class="ttc" id="anamespacebeman_1_1execution_1_1detail_html"><div class="ttname"><a href="namespacebeman_1_1execution_1_1detail.html">beman::execution::detail</a></div><div class="ttdef"><b>Definition:</b> affine.hpp:72</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine.hpp:72</div></div>
 <div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine.hpp:72</div></div>
-<div class="ttc" id="astructbeman_1_1execution_1_1sender__adaptor__closure_html"><div class="ttname"><a href="structbeman_1_1execution_1_1sender__adaptor__closure.html">beman::execution::sender_adaptor_closure</a></div><div class="ttdoc">CRTP base class for pipeable sender adaptor closure objects.</div><div class="ttdef"><b>Definition:</b> sender_adaptor_closure.hpp:54</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1set__value__t_html"><div class="ttname"><a href="structbeman_1_1execution_1_1set__value__t.html">beman::execution::set_value_t</a></div><div class="ttdoc">Type of the customization point object for successful completions.</div><div class="ttdef"><b>Definition:</b> set_value.hpp:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

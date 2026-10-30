@@ -14,14 +14,8 @@ var hierarchy =
       [ "beman::execution::stop_callback< CallbackFun >", "classbeman_1_1execution_1_1stop__callback.html", null ]
     ] ],
     [ "beman::execution::detail::pipeable::closure_t", null, [
-      [ "beman::execution::sender_adaptor_closure< affine_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< bound_sender_adaptor_closure< Adaptor, BoundArgs... > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< composed_sender_adaptor_closure< Inner, Outer > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< into_variant_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< on_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< stopped_as_error_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< stopped_as_optional_t >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
-      [ "beman::execution::sender_adaptor_closure< then_t< Completion > >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ],
       [ "beman::execution::sender_adaptor_closure< D >", "structbeman_1_1execution_1_1sender__adaptor__closure.html", null ]
     ] ],
     [ "std::common_type<::beman::execution::indeterminate_domain< Domains... >, D >", "structstd_1_1common__type_3_1_1beman_1_1execution_1_1indeterminate__domain_3_01Domains_8_8_8_01_4_00_01D_01_4.html", [
