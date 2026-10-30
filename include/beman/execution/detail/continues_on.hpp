@@ -26,7 +26,6 @@ import beman.execution.detail.connect;
 import beman.execution.detail.connect_result_t;
 import beman.execution.detail.decayed_tuple;
 import beman.execution.detail.default_impls;
-import beman.execution.detail.dependent_sender;
 import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
 import beman.execution.detail.error_types_of_t;
@@ -67,7 +66,6 @@ import beman.execution.detail.start;
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/default_impls.hpp>
-#include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
@@ -167,22 +165,20 @@ struct continues_on_t {
 
     template <typename, typename...>
     struct get_signatures;
-    template <typename Scheduler, typename Sender>
-        requires(!::beman::execution::dependent_sender<::beman::execution::schedule_result_t<Scheduler>>)
-    struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, Scheduler, Sender>>
-        : get_signatures<Sender, ::beman::execution::env<>> {};
-    template <typename Scheduler, typename Sender, typename Env>
-        requires ::beman::execution::sender_in<Sender, ::beman::execution::detail::fwd_env_t<Env>>
+
+    template <typename Scheduler, typename Sender, typename... Env>
+        requires ::beman::execution::sender_in<::beman::execution::schedule_result_t<Scheduler>,
+                                               ::beman::execution::detail::fwd_env_t<Env>...> &&
+                 ::beman::execution::sender_in<Sender, ::beman::execution::detail::fwd_env_t<Env>...>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::continues_on_t, Scheduler, Sender>,
-        Env> {
+        Env...> {
         static consteval auto get() {
-            using env_t                      = ::beman::execution::detail::fwd_env_t<Env>;
-            [[maybe_unused]] auto child_sigs = ::beman::execution::get_completion_signatures<Sender, env_t>();
+            [[maybe_unused]] auto child_sigs =
+                ::beman::execution::get_completion_signatures<Sender, ::beman::execution::detail::fwd_env_t<Env>...>();
             [[maybe_unused]] auto sched_sigs =
                 ::beman::execution::get_completion_signatures<::beman::execution::schedule_result_t<Scheduler>,
-                                                              env_t>();
+                                                              ::beman::execution::detail::fwd_env_t<Env>...>();
             using child_sigs_t     = decltype(child_sigs);
             using extra_sigs_t     = ::beman::execution::detail::meta::filter<is_not_set_value, decltype(sched_sigs)>;
             using error_completion = ::std::conditional_t<

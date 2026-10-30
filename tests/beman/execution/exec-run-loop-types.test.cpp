@@ -16,6 +16,7 @@ import beman.execution;
 #include <beman/execution/detail/inplace_stop_source.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/connect.hpp>
+#include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
@@ -24,6 +25,7 @@ import beman.execution;
 #include <beman/execution/detail/receiver_of.hpp>
 #include <beman/execution/detail/scheduler.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/starts_on.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -138,6 +140,9 @@ TEST(exec_run_loop_types) {
 
     ASSERT(unstopped_result == signal_type::value);
     ASSERT(stopped_result == signal_type::stopped);
+
+    static_assert(test_std::dependent_sender<decltype(test_std::just() | test_std::continues_on(rl.get_scheduler()))>);
+    static_assert(test_std::dependent_sender<decltype(test_std::starts_on(rl.get_scheduler(), test_std::just()))>);
 
     //-dk:TODO more thorough run_loop tests
 }

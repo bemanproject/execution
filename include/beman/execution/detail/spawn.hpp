@@ -20,6 +20,9 @@ import beman.execution.detail.queryable;
 import beman.execution.detail.receiver;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender;
+import beman.execution.detail.sender_in;
+import beman.execution.detail.sends;
+import beman.execution.detail.set_error;
 import beman.execution.detail.spawn_get_allocator;
 import beman.execution.detail.start;
 import beman.execution.detail.write_env;
@@ -31,6 +34,9 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_in.hpp>
+#include <beman/execution/detail/sends.hpp>
+#include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/spawn_get_allocator.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/write_env.hpp>
@@ -92,6 +98,11 @@ struct spawn_t {
         auto [all, senv] = ::beman::execution::detail::spawn_get_allocator(new_sender, env);
 
         using sender_t = decltype(::beman::execution::write_env(::std::move(new_sender), senv));
+        static_assert(::beman::execution::sender_in<sender_t, ::beman::execution::env<>>);
+        static_assert(
+            !::beman::execution::detail::sends<::beman::execution::set_error_t, sender_t, ::beman::execution::env<>>,
+            "`the sender must either succeed or be canceled; it cannot fail!");
+
         using state_t  = state<decltype(all), Token, sender_t>;
         using alloc_t  = typename ::std::allocator_traits<decltype(all)>::template rebind_alloc<state_t>;
         using traits_t = ::std::allocator_traits<alloc_t>;

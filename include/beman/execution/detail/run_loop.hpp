@@ -117,7 +117,7 @@ class run_loop {
 
         run_loop* loop;
 
-        auto schedule() noexcept -> sender { return {this->loop}; }
+        auto schedule() const noexcept -> sender { return {this->loop}; }
         auto operator==(const scheduler&) const -> bool = default;
 
         static constexpr auto query(::beman::execution::get_forward_progress_guarantee_t) noexcept

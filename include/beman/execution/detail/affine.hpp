@@ -78,7 +78,7 @@ namespace beman::execution::detail {
  * scheduler obtained the receiver's environment. The get_start_scheduler query is used
  * to obtain the scheduler on which the sender gets started.
  */
-struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
+struct affine_t {
     /**
      * @brief Adapt a sender with affine.
      *

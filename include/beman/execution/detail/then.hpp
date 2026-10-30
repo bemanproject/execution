@@ -114,7 +114,7 @@ struct then_exception<Comp, Fun, ::beman::execution::completion_signatures<Compl
 };
 
 template <typename Completion>
-struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
+struct then_t {
     template <::beman::execution::detail::movable_value Fun>
     auto operator()(Fun&& fun) const noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Fun>, Fun>) {
         return ::beman::execution::detail::make_sender_adaptor(*this, std::forward<decltype(fun)>(fun));
@@ -135,16 +135,15 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
   private:
     template <typename, typename...>
     struct get_signatures;
-    template <typename Sender>
-    struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
-    template <typename Comp, typename Fun, typename Child, typename Env>
-        requires ::beman::execution::sender_in<Child, ::beman::execution::detail::fwd_env_t<Env>>
+
+    template <typename Comp, typename Fun, typename Child, typename... Env>
+        requires ::beman::execution::sender_in<Child, ::beman::execution::detail::fwd_env_t<Env>...>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::then_t<Comp>, Fun, Child>,
-        Env> {
+        Env...> {
         static consteval auto get() {
             [[maybe_unused]] auto child_sigs =
-                ::beman::execution::get_completion_signatures<Child, ::beman::execution::detail::fwd_env_t<Env>>();
+                ::beman::execution::get_completion_signatures<Child, ::beman::execution::detail::fwd_env_t<Env>...>();
             using child_sigs_t = decltype(child_sigs);
             using type         = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
                 ::beman::execution::detail::meta::transform<
