@@ -64,7 +64,7 @@ import beman.execution.detail.variant_or_empty;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_t> {
+struct into_variant_t {
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
         return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender));

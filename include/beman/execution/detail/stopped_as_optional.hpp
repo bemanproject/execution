@@ -43,7 +43,7 @@ import beman.execution.detail.then;
 #endif
 
 namespace beman::execution::detail {
-struct stopped_as_optional_t : ::beman::execution::sender_adaptor_closure<stopped_as_optional_t> {
+struct stopped_as_optional_t {
     template <::beman::execution::detail::sender_for<stopped_as_optional_t> Sndr, typename Env>
     auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, Env&&) const noexcept {
         static_assert(

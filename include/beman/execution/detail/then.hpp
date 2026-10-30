@@ -114,7 +114,7 @@ struct then_exception<Comp, Fun, ::beman::execution::completion_signatures<Compl
 };
 
 template <typename Completion>
-struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
+struct then_t {
     template <::beman::execution::detail::movable_value Fun>
     auto operator()(Fun&& fun) const noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Fun>, Fun>) {
         return ::beman::execution::detail::make_sender_adaptor(*this, std::forward<decltype(fun)>(fun));
