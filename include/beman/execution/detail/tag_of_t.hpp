@@ -1,8 +1,8 @@
 // include/beman/execution/detail/tag_of_t.hpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF_T
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF_T
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -25,4 +25,4 @@ using tag_of_t = typename decltype(::beman::execution::detail::get_sender_meta(:
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_TAG_OF_T

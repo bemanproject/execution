@@ -1,8 +1,8 @@
 // include/beman/execution/detail/value_types_of_t.hpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_VALUE_TYPE_OF
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_VALUE_TYPE_OF
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_VALUE_TYPE_OF_T
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_VALUE_TYPE_OF_T
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_MODULES
@@ -38,4 +38,4 @@ using value_types_of_t =
 }
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_VALUE_TYPE_OF
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_VALUE_TYPE_OF_T
