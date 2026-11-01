@@ -77,8 +77,8 @@ static_assert(ex::sender<big_scheduler::sender>);
 static_assert(ex::scheduler<big_scheduler>);
 
 struct simple_resource : std::pmr::memory_resource {
-    void* do_allocate(std::size_t bytes, std::size_t alignment) override { return std::malloc(bytes); }
-    void  do_deallocate(void* p, std::size_t bytes, std::size_t alignment) override { std::free(p); }
+    void* do_allocate(std::size_t bytes, std::size_t) override { return std::malloc(bytes); }
+    void  do_deallocate(void* p, std::size_t, std::size_t) override { std::free(p); }
     bool  do_is_equal(const std::pmr::memory_resource& other) const noexcept override { return this == &other; }
 };
 inline constinit simple_resource resource{};
@@ -100,6 +100,15 @@ struct allocator_env {
 };
 } // namespace
 
+#if defined(__SANITIZE_THREAD__)
+#  define BEMAN_TSAN_ENABLED 1
+#elif defined(__has_feature)
+#  if __has_feature(thread_sanitizer)
+#    define BEMAN_TSAN_ENABLED 1
+#  endif
+#endif
+
+#ifndef BEMAN_TSAN_ENABLED
 void* operator new(std::size_t size) {
     std::abort();
     return std::malloc(size);
@@ -109,7 +118,10 @@ void* operator new[](std::size_t size) {
     return std::malloc(size);
 }
 void operator delete(void* ptr) noexcept { std::free(ptr); }
+void operator delete(void* ptr, std::size_t) noexcept { std::free(ptr); }
 void operator delete[](void* ptr) noexcept { std::free(ptr); }
+void operator delete[](void* ptr, std::size_t) noexcept { std::free(ptr); }
+#endif
 
 int main() {
     ex::sync_wait(
