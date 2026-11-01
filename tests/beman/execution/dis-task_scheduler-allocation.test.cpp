@@ -101,11 +101,11 @@ struct allocator_env {
 } // namespace
 
 #if defined(__SANITIZE_THREAD__)
-#  define BEMAN_TSAN_ENABLED 1
+#define BEMAN_TSAN_ENABLED 1
 #elif defined(__has_feature)
-#  if __has_feature(thread_sanitizer)
-#    define BEMAN_TSAN_ENABLED 1
-#  endif
+#if __has_feature(thread_sanitizer)
+#define BEMAN_TSAN_ENABLED 1
+#endif
 #endif
 
 #ifndef BEMAN_TSAN_ENABLED
