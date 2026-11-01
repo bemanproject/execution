@@ -54,6 +54,7 @@ import beman.execution.detail.receiver;
 import beman.execution.detail.schedule_from;
 import beman.execution.detail.schedule;
 import beman.execution.detail.scheduler;
+import beman.execution.detail.scheduler_tag;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_in;
@@ -130,6 +131,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/schedule_from.hpp>
 #include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/scheduler.hpp>
+#include <beman/execution/detail/scheduler_tag.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_in.hpp>
