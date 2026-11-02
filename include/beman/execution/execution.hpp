@@ -51,6 +51,7 @@ import beman.execution.detail.parallel_scheduler_replacement;
 import beman.execution.detail.prop;
 import beman.execution.detail.read_env;
 import beman.execution.detail.receiver;
+import beman.execution.detail.run_loop;
 import beman.execution.detail.schedule_from;
 import beman.execution.detail.schedule;
 import beman.execution.detail.scheduler;
@@ -128,6 +129,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/run_loop.hpp>
 #include <beman/execution/detail/schedule_from.hpp>
 #include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/scheduler.hpp>
