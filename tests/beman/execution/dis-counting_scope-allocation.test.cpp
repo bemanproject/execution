@@ -94,7 +94,7 @@ int main(int ac, char*[]) {
     ex::env              env{ex::prop{ex::get_allocator, alloc}};
 
     ex::run_loop loop{};
-    std::jthread thread([&] { loop.run(); });
+    std::thread thread([&] { loop.run(); });
     disable_new();
 
     ex::counting_scope scope{};
@@ -111,4 +111,6 @@ int main(int ac, char*[]) {
               env);
 
     ex::sync_wait(scope.join());
+
+    thread.join();
 }
