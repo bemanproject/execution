@@ -32,7 +32,7 @@ template <typename Allocator, typename Alloc, typename... A>
 Allocator find_allocator(const ::std::allocator_arg_t&, const Alloc& alloc, const A&...) noexcept {
     static_assert(
         requires(const Alloc& a) { Allocator(a); },
-        "The allocator needs to be constructible from the argument following std::allocator");
+        "The allocator needs to be constructible from the argument following std::allocator_arg");
     return Allocator(alloc);
 }
 template <typename Allocator, typename A0, typename... A>
