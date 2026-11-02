@@ -1,8 +1,8 @@
 // include/beman/execution/detail/is_constant.hpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_IS_CONSTANT
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_IS_CONSTANT
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_IS_CONSTANT
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_IS_CONSTANT
 
 // ----------------------------------------------------------------------------
 

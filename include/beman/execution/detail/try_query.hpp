@@ -1,8 +1,8 @@
 // include/beman/execution/detail/try_query.hpp                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_TRY_QUERY
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_TRY_QUERY
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_TRY_QUERY
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_TRY_QUERY
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
