@@ -26,7 +26,7 @@ set(EXAMPLES
     doc_just_stopped
     inspect
     intro_1_hello_world
-    intro_2_hello_async
+    # intro_2_hello_async
     intro_5_consumer
     playground
     sender_demo

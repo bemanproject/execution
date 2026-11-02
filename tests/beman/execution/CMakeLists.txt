@@ -11,6 +11,7 @@ list(
     APPEND execution_tests
     allocator-requirements-general.test
     dis-task_scheduler-allocation.test
+    dis-counting_scope-allocation.test
     exec-affine.test
     exec-associate.test
     exec-awaitable.test
