@@ -86,6 +86,7 @@ struct allocator_env {
     using allocator_type = std::pmr::polymorphic_allocator<std::byte>;
 };
 } // namespace
+
 // ----------------------------------------------------------------------------
 
 int main(int ac, char*[]) {

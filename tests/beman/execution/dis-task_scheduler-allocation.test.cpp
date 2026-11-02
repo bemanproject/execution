@@ -26,6 +26,31 @@ import std;
 
 // ----------------------------------------------------------------------------
 
+#if defined(__SANITIZE_THREAD__)
+#define BEMAN_TSAN_ENABLED 1
+#elif defined(__has_feature)
+#if __has_feature(thread_sanitizer)
+#define BEMAN_TSAN_ENABLED 1
+#endif
+#endif
+
+#ifndef BEMAN_TSAN_ENABLED
+void* operator new(std::size_t size) {
+    std::abort();
+    return std::malloc(size);
+}
+void* operator new[](std::size_t size) {
+    std::abort();
+    return std::malloc(size);
+}
+void operator delete(void* ptr) noexcept { std::free(ptr); }
+void operator delete(void* ptr, std::size_t) noexcept { std::free(ptr); }
+void operator delete[](void* ptr) noexcept { std::free(ptr); }
+void operator delete[](void* ptr, std::size_t) noexcept { std::free(ptr); }
+#endif
+
+// ----------------------------------------------------------------------------
+
 namespace {
 constexpr std::size_t big_size{40};
 struct big_scheduler {
@@ -76,23 +101,27 @@ static_assert(big_size <= sizeof(big_scheduler));
 static_assert(ex::sender<big_scheduler::sender>);
 static_assert(ex::scheduler<big_scheduler>);
 
-struct simple_resource : std::pmr::memory_resource {
-    void* do_allocate(std::size_t bytes, std::size_t) override { return std::malloc(bytes); }
-    void  do_deallocate(void* p, std::size_t, std::size_t) override { std::free(p); }
-    bool  do_is_equal(const std::pmr::memory_resource& other) const noexcept override { return this == &other; }
-};
-inline constinit simple_resource resource{};
+inline std::pmr::memory_resource* malloc_resource() {
+    struct resource_t : std::pmr::memory_resource {
+        void* do_allocate(std::size_t bytes, std::size_t) override { return std::malloc(bytes); }
+        void  do_deallocate(void* p, std::size_t, std::size_t) override { std::free(p); }
+        bool  do_is_equal(const std::pmr::memory_resource& other) const noexcept override { return this == &other; }
+    };
+    static constinit resource_t res{};
+    return &res;
+}
 
 template <typename T>
-struct simple_allocator {
-    using value_type   = T;
-    simple_allocator() = default;
+struct allocator {
+    using value_type = T;
+    std::pmr::memory_resource* resource{};
+    allocator(std::pmr::memory_resource* r) : resource(r) {}
     template <typename U>
-    simple_allocator(const simple_allocator<U>&) noexcept {}
-    T*   allocate(std::size_t n) { return static_cast<T*>(resource.allocate(n * sizeof(T))); }
-    void deallocate(T* p, std::size_t) noexcept { resource.deallocate(p, 0, alignof(T)); }
-    bool operator==(const simple_allocator&) const noexcept = default;
-         operator std::pmr::memory_resource*() const noexcept { return &resource; }
+    allocator(const allocator<U>& other) : resource(other.resource) {}
+    T*   allocate(std::size_t n) { return static_cast<T*>(resource->allocate(n * sizeof(T))); }
+    void deallocate(T* p, std::size_t) noexcept { resource->deallocate(p, 0, alignof(T)); }
+    bool operator==(const allocator&) const noexcept = default;
+         operator std::pmr::memory_resource*() const noexcept { return resource; }
 };
 
 struct allocator_env {
@@ -100,36 +129,12 @@ struct allocator_env {
 };
 } // namespace
 
-#if defined(__SANITIZE_THREAD__)
-#define BEMAN_TSAN_ENABLED 1
-#elif defined(__has_feature)
-#if __has_feature(thread_sanitizer)
-#define BEMAN_TSAN_ENABLED 1
-#endif
-#endif
+// ----------------------------------------------------------------------------
 
-#ifndef BEMAN_TSAN_ENABLED
-void* operator new(std::size_t size) {
-    std::abort();
-    return std::malloc(size);
-}
-void* operator new[](std::size_t size) {
-    std::abort();
-    return std::malloc(size);
-}
-void operator delete(void* ptr) noexcept { std::free(ptr); }
-void operator delete(void* ptr, std::size_t) noexcept { std::free(ptr); }
-void operator delete[](void* ptr) noexcept { std::free(ptr); }
-void operator delete[](void* ptr, std::size_t) noexcept { std::free(ptr); }
-#endif
-
-int main() {
-    ex::sync_wait(
-        ex::starts_on(big_scheduler{},
-                      [](std::allocator_arg_t, simple_allocator<std::byte>)
-                          -> ex::task<void, allocator_env> {
-                          auto s = co_await ex::read_env(ex::get_start_scheduler);
-                          co_await ex::starts_on(s, ex::just());
-                      }(std::allocator_arg, simple_allocator<std::byte>{}) |
-                                 ex::write_env(ex::env{ex::prop{ex::get_allocator, simple_allocator<std::byte>{}}})));
+int main(int ac, char*[]) {
+    allocator<std::byte> alloc(ac == 1 ? malloc_resource() : std::pmr::new_delete_resource());
+    ex::sync_wait(ex::starts_on(big_scheduler{}, [](std::allocator_arg_t, auto) -> ex::task<void, allocator_env> {
+        auto s = co_await ex::read_env(ex::get_start_scheduler);
+        co_await ex::starts_on(s, ex::just());
+    }(std::allocator_arg, alloc) | ex::write_env(ex::env{ex::prop{ex::get_allocator, alloc}})));
 }
