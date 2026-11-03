@@ -34,9 +34,11 @@ struct decomposable_sender {
 
 TEST(issue252) {
     static_assert(ex::sender<non_decomposable_sender>);
-    static_assert(std::same_as<void, ex::tag_of_t<non_decomposable_sender>>);
     static_assert(std::same_as<ex::completion_signatures<ex::set_value_t()>,
                                decltype(ex::get_completion_signatures<non_decomposable_sender, ex::env<>>())>);
 
+    static_assert(std::same_as<void, ex::tag_of_t<non_decomposable_sender>>);
     static_assert(std::same_as<decomposable_sender::tag, ex::tag_of_t<decomposable_sender>>);
+
+    (void)ex::get_completion_signatures<non_decomposable_sender, ex::env<>>();
 }
