@@ -100,6 +100,35 @@ The implementation compiles and passes tests using [clang](https://clang.llvm.or
 | Clang    | 22-19   | C++26, C++23  | libc++           |
 | MSVC     | latest  | C++23         | MSVC STL         |
 
+### Installation
+
+#### Vcpkg
+
+The release workflow publishes `beman-execution` to the [Beman vcpkg registry](https://github.com/bemanproject/vcpkg-registry).
+After a release containing the port has been published, in your project's `vcpkg-configuration.json`, use the registry configuration from
+[this repository](vcpkg-configuration.json) and set the Beman registry's `baseline` to a registry commit
+that contains the desired `beman-execution` version.
+
+Add `beman-execution` to your project's `vcpkg.json`:
+
+```json
+{
+  "dependencies": ["beman-execution"]
+}
+```
+
+Run `vcpkg install` from your project directory. Configure CMake with the vcpkg toolchain file
+(`scripts/buildsystems/vcpkg.cmake` in your vcpkg installation) and link against the exported target:
+
+```cmake
+find_package(beman.execution CONFIG REQUIRED)
+target_link_libraries(your_target PRIVATE beman::execution)
+```
+
+The default package provides headers, including `<beman/execution.hpp>`. To use
+`import beman.execution;` with a module-capable toolchain, replace the dependency entry with
+`{"name": "beman-execution", "features": ["modules"]}`.
+
 ## License
 
 beman.execution is licensed under the Apache License v2.0 with LLVM Exceptions.

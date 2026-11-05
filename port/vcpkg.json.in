@@ -1,0 +1,22 @@
+{
+  "name": "beman-execution",
+  "version-semver": "@VERSION@",
+  "description": "Implementation of the std::execution (P2300, sender/receiver) proposal",
+  "homepage": "https://github.com/bemanproject/execution",
+  "license": "Apache-2.0 WITH LLVM-exception",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "modules": {
+      "description": "Provide beman.execution as a C++ module"
+    }
+  }
+}

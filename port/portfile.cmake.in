@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO bemanproject/execution
+    REF "v@VERSION@"
+    SHA512 @SHA512@
+    HEAD_REF main
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES modules BEMAN_USE_MODULES
+)
+
+if("modules" IN_LIST FEATURES)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DBEMAN_EXECUTION_BUILD_TESTS=OFF
+        -DBEMAN_EXECUTION_BUILD_EXAMPLES=OFF
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME beman.execution
+    CONFIG_PATH lib/cmake/beman.execution
+)
+
+if("modules" IN_LIST FEATURES)
+    # The relocated Debug CMake exports reference module files under share/.
+    file(
+        GLOB debug_bmi_dirs
+        "${CURRENT_PACKAGES_DIR}/debug/share/beman.execution/bmi-*_Debug"
+    )
+    foreach(debug_bmi_dir IN LISTS debug_bmi_dirs)
+        file(
+            COPY "${debug_bmi_dir}"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/share/beman.execution"
+        )
+    endforeach()
+    file(
+        REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/debug/include"
+        "${CURRENT_PACKAGES_DIR}/debug/share"
+    )
+else()
+    file(
+        REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/debug"
+        "${CURRENT_PACKAGES_DIR}/lib"
+    )
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
