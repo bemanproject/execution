@@ -172,7 +172,7 @@ auto test_affine_attributes() {
 
     test_std::run_loop loop;
     test_std::prop     env{test_std::get_start_scheduler, test_std::task_scheduler(loop.get_scheduler())};
-    auto               sndr = s | test_std::affine();
+    auto               sndr = s | test_std::affine;
     auto               sch  = test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), env);
 
     static_assert(std::same_as<decltype(sch), test_std::task_scheduler>);
@@ -185,7 +185,7 @@ auto test_affine_attributes() {
 
 TEST(affine) {
     static_assert(test_std::sender<decltype(test_std::affine(test_std::just(42)))>);
-    static_assert(test_std::sender<decltype(test_std::just(42) | test_std::affine())>);
+    static_assert(test_std::sender<decltype(test_std::just(42) | test_std::affine)>);
 
     static_assert(test_std::sender_in<decltype(test_std::affine(test_std::just(42))), test_std::env<>>);
 

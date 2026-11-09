@@ -26,7 +26,7 @@ import beman.execution.detail;
 // ----------------------------------------------------------------------------
 namespace {
 auto test_stopped_as_optional() -> void {
-    test_std::sender auto sndr1 = test_std::just(42) | test_std::stopped_as_optional();
+    test_std::sender auto sndr1 = test_std::just(42) | test_std::stopped_as_optional;
     using sigs_of_sndr1         = test_std::completion_signatures_of_t<decltype(sndr1), test_detail::sync_wait_env>;
     static_assert(
         std::same_as<sigs_of_sndr1, test_std::completion_signatures<test_std::set_value_t(std::optional<int>)>>);
