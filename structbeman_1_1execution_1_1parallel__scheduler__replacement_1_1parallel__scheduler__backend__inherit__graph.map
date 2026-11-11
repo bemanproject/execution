@@ -1,8 +1,8 @@
 <map id="beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend" name="beman::execution::parallel_scheduler_replacement::parallel_scheduler_backend">
-<area shape="rect" id="node1" title=" " alt="" coords="5,41,208,96"/>
-<area shape="rect" id="node2" title=" " alt="" coords="265,15,454,55"/>
-<area shape="rect" id="node5" title=" " alt="" coords="256,81,463,121"/>
-<area shape="rect" id="node3" title=" " alt="" coords="511,5,700,60"/>
-<area shape="rect" id="node4" title=" " alt="" coords="748,5,937,60"/>
-<area shape="rect" id="node6" title=" " alt="" coords="514,85,697,125"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,44,207,106"/>
+<area shape="rect" id="node2" title=" " alt="" coords="263,16,452,61"/>
+<area shape="rect" id="node5" title=" " alt="" coords="255,87,460,132"/>
+<area shape="rect" id="node3" title=" " alt="" coords="508,5,696,67"/>
+<area shape="rect" id="node4" title=" " alt="" coords="744,5,933,67"/>
+<area shape="rect" id="node6" title=" " alt="" coords="511,91,693,136"/>
 </map>
