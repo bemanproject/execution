@@ -116,7 +116,7 @@ SIMPLE_BUILD = build/simple-$(shell uname -s)
 simple: simple-test
 
 simple-config:
-	cmake -G Ninja -S . -B $(SIMPLE_BUILD) -DBEMAN_USE_MODULES=OFF -DCXXFLAGS=
+	cmake -G Ninja -S . -B $(SIMPLE_BUILD) -DBEMAN_USE_MODULES=OFF -DCMAKE_BUILD_TYPE=Debug
 
 simple-build: simple-config
 	CXXFLAGS= cmake --build $(SIMPLE_BUILD)
