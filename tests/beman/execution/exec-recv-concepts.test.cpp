@@ -205,15 +205,17 @@ struct test_basic_state {
 
     using child_op_t = test_std::connect_result_t<Sndr, receiver_t>;
 
-    test_basic_state(Sndr sndr, Rcvr rcvr)
-        : child_op(test_std::connect(std::move(sndr), receiver_t{this})), rcvr(std::move(rcvr)) {}
+    test_basic_state(Sndr sndr, Rcvr rcvr) : rcvr(std::move(rcvr)) {
+        // The child operation state should be created after the receiver is constructed
+        ::new (static_cast<void*>(storage)) child_op_t(test_std::connect(std::move(sndr), receiver_t{this}));
+    }
 
-    auto start() & noexcept -> void { test_std::start(child_op); }
+    auto start() & noexcept -> void { test_std::start(*::std::launder(reinterpret_cast<child_op_t*>(storage))); }
 
     auto get_receiver() noexcept -> Rcvr& { return rcvr; }
 
-    child_op_t child_op;
-    Rcvr       rcvr;
+    alignas(child_op_t) std::byte storage[sizeof(child_op_t)];
+    Rcvr rcvr;
 };
 
 template <typename Sndr, typename Rcvr>
