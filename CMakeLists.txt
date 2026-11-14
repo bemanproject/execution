@@ -100,6 +100,12 @@ option(
     ON
 )
 
+option(
+    BEMAN_EXECUTION_WITH_GCD_SUPPORT
+    "Enable support for libdispatch (Grand Central Dispatch). Default: OFF. Values: { ON, OFF }."
+    OFF
+)
+
 add_subdirectory(src/beman/execution)
 
 if(NOT BEMAN_USE_MODULES)

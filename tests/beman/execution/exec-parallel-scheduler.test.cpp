@@ -11,6 +11,7 @@ import std;
 #include <condition_variable>
 #include <cstddef>
 #include <exception>
+#include <limits>
 #include <memory>
 #include <mutex>
 #include <numeric>
@@ -48,6 +49,52 @@ struct bulk_proxy : replaceability::bulk_item_receiver_proxy {
     auto set_stopped() noexcept -> void override {}
     auto execute(::std::size_t, ::std::size_t) noexcept -> void override {}
 };
+
+struct inline_pool_backend : test_std::detail::thread_pool_backend_base {
+    static auto run_single(replaceability::bulk_item_receiver_proxy& proxy, std::size_t shape, bool one_by_one)
+        -> void {
+        alignas(single_bulk_task) std::byte storage[sizeof(single_bulk_task)];
+        std::construct_at(reinterpret_cast<single_bulk_task*>(storage), proxy, shape, one_by_one)->exec(0);
+    }
+
+  private:
+    auto submit(task_base* task, std::size_t count) noexcept -> void override {
+        for (std::size_t i = 0; i < count; ++i) {
+            auto* next = task->next;
+            task->exec();
+            task = next;
+        }
+    }
+};
+
+auto test_thread_pool_bulk_boundaries() -> void {
+    struct tracking_proxy : replaceability::bulk_item_receiver_proxy {
+        std::size_t end         = 0;
+        bool        completed   = false;
+        bool        unit_ranges = false;
+
+        auto execute(std::size_t begin, std::size_t next) noexcept -> void override {
+            ASSERT(begin == end);
+            ASSERT(next > begin);
+            ASSERT(!unit_ranges || next - begin == 1);
+            end = next;
+        }
+        auto set_value() noexcept -> void override { completed = true; }
+        auto set_error(std::exception_ptr) noexcept -> void override { ASSERT(false); }
+        auto set_stopped() noexcept -> void override { ASSERT(false); }
+    };
+
+    tracking_proxy single;
+    single.unit_ranges = true;
+    inline_pool_backend::run_single(single, 4, true);
+    ASSERT(single.completed && single.end == 4);
+
+    tracking_proxy                      large;
+    inline_pool_backend                 pool;
+    alignas(std::max_align_t) std::byte storage[256];
+    pool.schedule_bulk_chunked((std::numeric_limits<std::size_t>::max)(), large, storage);
+    ASSERT(large.completed && large.end == (std::numeric_limits<std::size_t>::max)());
+}
 
 struct backend : replaceability::parallel_scheduler_backend {
     auto schedule(replaceability::receiver_proxy&, ::std::span<::std::byte>) noexcept -> void override {}
@@ -259,6 +306,7 @@ auto query_parallel_scheduler_backend() -> std::shared_ptr<parallel_scheduler_ba
 #endif // BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND
 
 TEST(exec_parallel_scheduler) {
+    test_thread_pool_bulk_boundaries();
     test_parallel_scheduler_synopsis();
     test_replaceability_synopsis();
     test_parallel_scheduler_schedule();
