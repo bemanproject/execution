@@ -104,7 +104,7 @@ $(document).ready(function(){initNavTree('conceptbeman_1_1execution_1_1inlinable
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Receiver, <span class="keyword">typename</span> ChildOp&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="conceptbeman_1_1execution_1_1inlinable__receiver.html">beman::execution::inlinable_receiver</a> =  ::beman::execution::receiver&lt;Receiver&gt; &amp;&amp; <span class="keyword">requires</span>(ChildOp* child) {</div>
 <div class="line">    {</div>
-<div class="line">        ::std::remove_cvref_t&lt;Receiver&gt;::make_receiver_for(*child)</div>
+<div class="line">        ::std::remove_cvref_t&lt;Receiver&gt;::make_receiver_for(child)</div>
 <div class="line">    } <span class="keyword">noexcept</span> -&gt; ::std::same_as&lt;::std::remove_cvref_t&lt;Receiver&gt;&gt;;</div>
 <div class="line">}</div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1inlinable__receiver_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1inlinable__receiver.html">beman::execution::inlinable_receiver</a></div><div class="ttdef"><b>Definition:</b> inlinable_receiver.hpp:24</div></div>

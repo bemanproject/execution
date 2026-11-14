@@ -125,7 +125,7 @@ $(document).ready(function(){initNavTree('inlinable__receiver_8hpp_source.html',
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Receiver, <span class="keyword">typename</span> ChildOp&gt;</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="conceptbeman_1_1execution_1_1inlinable__receiver.html">   24</a></span><span class="keyword">concept </span><a class="code hl_concept" href="conceptbeman_1_1execution_1_1inlinable__receiver.html">inlinable_receiver</a> = ::beman::execution::receiver&lt;Receiver&gt; &amp;&amp; <span class="keyword">requires</span>(ChildOp* child) {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        ::std::remove_cvref_t&lt;Receiver&gt;::make_receiver_for(*child)</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        ::std::remove_cvref_t&lt;Receiver&gt;::make_receiver_for(child)</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    } <span class="keyword">noexcept</span> -&gt; ::std::same_as&lt;::std::remove_cvref_t&lt;Receiver&gt;&gt;;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>};</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>} <span class="comment">// namespace beman::execution</span></div>
