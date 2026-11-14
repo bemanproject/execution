@@ -210,7 +210,9 @@ struct test_basic_state {
         ::new (static_cast<void*>(storage)) child_op_t(test_std::connect(std::move(sndr), receiver_t{this}));
     }
 
-    auto start() & noexcept -> void { test_std::start(*::std::launder(reinterpret_cast<child_op_t*>(storage))); }
+    ~test_basic_state() { std::destroy_at(std::launder(reinterpret_cast<child_op_t*>(storage))); }
+
+    auto start() & noexcept -> void { test_std::start(*std::launder(reinterpret_cast<child_op_t*>(storage))); }
 
     auto get_receiver() noexcept -> Rcvr& { return rcvr; }
 
@@ -256,7 +258,7 @@ struct test_basic_sender {
 
 struct test_adaptor : test_std::sender_adaptor_closure<test_adaptor> {
     template <typename Sndr>
-    auto operator()(Sndr sndr) {
+    auto operator()(Sndr sndr) const noexcept {
         return test_basic_sender<test_adaptor, Sndr>{*this, std::move(sndr)};
     }
 };
