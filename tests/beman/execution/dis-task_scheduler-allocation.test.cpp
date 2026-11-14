@@ -137,4 +137,17 @@ int main(int ac, char*[]) {
         auto s = co_await ex::read_env(ex::get_start_scheduler);
         co_await ex::starts_on(s, ex::just());
     }(std::allocator_arg, alloc) | ex::write_env(ex::env{ex::prop{ex::get_allocator, alloc}})));
+
+    if (ac == 2) {
+        ex::sync_wait(ex::starts_on(big_scheduler(), [](std::allocator_arg_t, auto) -> ex::task<void, allocator_env> {
+            auto s = co_await ex::read_env(ex::get_start_scheduler);
+            co_await ex::starts_on(s, ex::just());
+        }(std::allocator_arg, alloc)));
+    }
+
+    ex::sync_wait(ex::starts_on(ex::task_scheduler(big_scheduler(), alloc),
+                                [](std::allocator_arg_t, auto) -> ex::task<void, allocator_env> {
+                                    auto s = co_await ex::read_env(ex::get_start_scheduler);
+                                    co_await ex::starts_on(s, ex::just());
+                                }(std::allocator_arg, alloc)));
 }
