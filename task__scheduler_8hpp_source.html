@@ -446,7 +446,7 @@ $(document).ready(function(){initNavTree('task__scheduler_8hpp_source.html','');
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keyword">explicit</span> task_scheduler(Sched&amp;&amp; sched, Alloc alloc = {})</div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>        : backend_(::std::allocate_shared&lt;</div>
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                   ::beman::execution::detail::task_scheduler_backend_for&lt;::std::remove_cvref_t&lt;Sched&gt;, Alloc&gt;&gt;(</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>              alloc, ::std::forward&lt;Sched&gt;(sched), ::std::move(alloc))) {}</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>              alloc, ::std::forward&lt;Sched&gt;(sched), alloc)) {}</div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <span class="keyword">template</span> &lt;::beman::execution::detail::simple_allocator Alloc&gt;</div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    <span class="keyword">explicit</span> task_scheduler(task_scheduler sched, <span class="keyword">const</span> Alloc&amp;) noexcept : task_scheduler(::std::move(sched)) {}</div>

@@ -851,7 +851,7 @@ Sender Adaptors</h3>
 </details>
 <details >
 <summary >
-<code>on(<em>sched</em>, <em>sndr</em>)</code>, <code>on(<em>sndr, _sched</em>, <em>closure</em>)</code></summary>
+<code>on(<em>sched</em>, <em>sndr</em>)</code>, <code>on(<em>sndr</em>, <em>sched</em>, <em>closure</em>)</code></summary>
 <p>The <code>on</code> algorithm is a pipeable sender adaptor. Let <code><em>on-sender</em></code> be </p><ul>
 <li>
 <code><em>sndr</em></code> when the form <code>on(<em>sched</em>, <em>sndr</em>)</code> is used; </li>
@@ -923,7 +923,21 @@ Sender Adaptors</h3>
 <details >
 <summary >
 <code>write_env(<em>sender</em>, <em>env</em>) -&gt; <em>sender</em></code></summary>
-<p>The expression <code>write_env(<em>sender</em>, <em>env</em>)</code> creates a sender which passes a receiver to <code><em>sender</em></code> which combines the environment <code><em>env</em></code> with the environment from the receiver's environment. The queries from <code><em>env</em></code> take precedence over those from the receiver's environment. </p>
+<p>The expression <code>write_env(<em>sender</em>, <em>env</em>)</code> creates a sender which passes a receiver to <code><em>sender</em></code> which combines the environment <code><em>env</em></code> with the environment from the receiver's environment. The queries from <code><em>env</em></code> take precedence over those from the receiver's environment. </p><details >
+<summary >
+Example</summary>
+<p></p>
+<p>This example shows using <code>write_env</code> providing an environment with an allocator:</p>
+<div class="fragment"><div class="line"> {c++}</div>
+<div class="line">std::pmr::monotonic_buffer_resource        mbr;</div>
+<div class="line">std::pmr::polymorphic_allocator&lt;std::byte&gt; mbr_alloc(&amp;mbr);</div>
+<div class="line">ex::sync_wait(</div>
+<div class="line">      ex::read_env(ex::get_allocator)</div>
+<div class="line">    | ex::then([&amp;](auto alloc){ assert(mbr_alloc == alloc); })</div>
+<div class="line">    | ex::write_env(ex::env{ex::prop{ex::get_allocator, mbr_alloc}})</div>
+<div class="line">);</div>
+</div><!-- fragment --><p>Note that <code>write_env</code> affects the sender passed as first argument or, when using <code>|</code>, the sender before the <code>|</code>. </p>
+</details>
 </details>
 <h3><a class="anchor" id="autotoc_md127"></a>
 Sender Consumers</h3>
@@ -1012,7 +1026,7 @@ Helpers</h2>
 <li>
 <code><em>loop</em>.finish()</code> to request <code><em>loop</em></code> to exit processing work items. Note that <code>run_loop</code> doesn't maintain a stop source, i.e., when this operation is invoked the work doesn't get cancelled. </li>
 <li>
-<code><em>loop</em>.run()</code> to have the current thread executed work items scheduled on <code><em>loop</em></code>. The thread will continue processing work items as long as <code><em>loop</em>.finish()</code> wasn't called or there is work scheduled on <code><em>loop</em></code>. </li>
+<code><em>loop</em>.run()</code> to have the current thread execute work items scheduled on <code><em>loop</em></code>. The thread will continue processing work items as long as <code><em>loop</em>.finish()</code> wasn't called or there is work scheduled on <code><em>loop</em></code>. </li>
 </ul>
 </details>
 </li>
@@ -1307,6 +1321,23 @@ Details</summary>
 <summary >
 <code>concept <em>valid-specialization</em>&lt;T, Args...&gt;</code></summary>
 <p>This concept determines the class template <code>T</code> can be specialized with arguments <code>Args...</code>, i.e., if <code>T&lt;Args...&gt;</code> is valid. </p>
+</details>
+<p></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code></p><details >
+<summary >
+<code>concept <em>simple-allocator</em>&lt;Alloc&gt;</code></summary>
+<p></p>
+<p>The concept <code><em>simple-allocator</em>&lt;Alloc&gt;</code> determines if <code>Alloc</code> is a basic allocator. If <code>alloc</code> is an object of type <code>Alloc</code>, the following need to be <code>true</code>:</p>
+<ul>
+<li>
+<code>alloc.allocate(n)</code> has type <code>Alloc::value_type*</code>. </li>
+<li>
+<code>alloc.deallocate(alloc.allocate(n), n)</code> needs to be valid. </li>
+<li>
+The type <code>Alloc</code> needs to be copy-constructible. </li>
+<li>
+Two objects of type <code>Alloc</code> need to be equality comparable. </li>
+</ul>
 </details>
 <p></code></code></code></code></code></code></code></p>
 </details>
