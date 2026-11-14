@@ -139,6 +139,7 @@ foreach(test ${execution_tests})
     else()
         target_link_libraries(${TEST_EXE} PRIVATE beman::execution_headers)
     endif()
+    target_compile_definitions(${TEST_EXE} PRIVATE NOMINMAX)
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
