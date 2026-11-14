@@ -741,13 +741,13 @@ The expression <code>let_stopped(<i>upstream</i>, <i>fun</i>)</code> yields a se
 The expression <code>let_value(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which uses a successful completion (<code>set_value</code>) of <code><i>upstream</i></code> as arguments to invoke <code><i>fun</i></code> which has to return another sender <code><i>inner-sndr</i></code> and the completion of <code><i>inner-sndr</i></code> becomes the completion of <code><i>sndr</i></code>. If this invocation results in an exception <code><i>sndr</i></code> completes with an error completion the result of <code>std::current_exception</code>. If <code><i>upstream</i></code> completes with a cancellation (<code>set_stopped</code>) or with an error (<code>set_error</code>) this completion becomes the completion of <code><i>sndr</i></code>.
 </details>
 <details>
-<summary><code>on(_sched_, _sndr_)</code>, <code>on(_sndr, _sched_, _closure_)</code></summary>
+<summary><code>on(<i>sched</i>, <i>sndr</i>)</code>, <code>on(<i>sndr</i>, <i>sched</i>, <i>closure</i>)</code></summary>
 The <code>on</code> algorithm is a pipeable sender adaptor. Let <code><i>on-sender</i></code> be
 <ul>
-  <li><code>_sndr_</code> when the form <code>on(_sched_, _sndr_)</code> is used;</li>
-  <li><code>_closure_(_sndr_)</code> when the form <code>on(_sndr_, _sched_, _closure_)</code> is used.</li>
+  <li><code><i>sndr</i></code> when the form <code>on(<i>sched</i>, <i>sndr</i>)</code> is used;</li>
+  <li><code><i>closure</i>(<i>sndr</i>)</code> when the form <code>on(<i>sndr</i>, <i>sched</i>, <i>closure</i>)</code> is used.</li>
 </ul>
-The sender <code><i>on-sndr</i></code> is started on <code>_sched_</code>'s execution context.
+The sender <code><i>on-sndr</i></code> is started on <code><i>sched</i></code>'s execution context.
 The <code>on</code> algorithm completes on the original scheduler (obtained using <code>get_start_scheduler</code>) with the result of the <code><i>on-sndr</i></code>.
 </details>
 <details>
@@ -808,6 +808,24 @@ The expression <code>write_env(<i>sender</i>, <i>env</i>)</code> creates a sende
 which passes a receiver to <code><i>sender</i></code> which combines the environment
 <code><i>env</i></code> with the environment from the receiver's environment. The
 queries from <code><i>env</i></code> take precedence over those from the receiver's environment.
+<details>
+<summary>Example</summary>
+
+This example shows using `write_env` providing an environment with an allocator:
+
+```c++
+std::pmr::monotonic_buffer_resource        mbr;
+std::pmr::polymorphic_allocator<std::byte> mbr_alloc(&mbr);
+ex::sync_wait(
+      ex::read_env(ex::get_allocator)
+    | ex::then([&](auto alloc){ assert(mbr_alloc == alloc); })
+    | ex::write_env(ex::env{ex::prop{ex::get_allocator, mbr_alloc}})
+);
+```
+
+Note that `write_env` affects the sender passed as first argument or, when using
+`|`, the sender before the `|`.
+</details>
 </details>
 
 
@@ -890,7 +908,7 @@ an object <code><i>loop</i></code> of type <code>run_loop</code> are:
 <ul>
 <li><code><i>loop</i>.get_scheduler()</code> to get a scheduler scheduling work on <code><i>loop</i></code>.</li>
 <li><code><i>loop</i>.finish()</code> to request <code><i>loop</i></code> to exit processing work items. Note that <code>run_loop</code> doesn't maintain a stop source, i.e., when this operation is invoked the work doesn't get cancelled.</li>
-<li><code><i>loop</i>.run()</code> to have the current thread executed work items scheduled on <code><i>loop</i></code>. The thread will continue processing work items as long as <code><i>loop</i>.finish()</code> wasn't called or there is work scheduled on <code><i>loop</i></code>.
+<li><code><i>loop</i>.run()</code> to have the current thread execute work items scheduled on <code><i>loop</i></code>. The thread will continue processing work items as long as <code><i>loop</i>.finish()</code> wasn't called or there is work scheduled on <code><i>loop</i></code>.
 </ul>
 </details>
 
@@ -1166,4 +1184,20 @@ This concept determines if an object of type <code>Rcvr</code> supports the comp
 <details>
 <summary><code>concept <i>valid-specialization</i>&lt;T, Args...&gt;</code></summary>
 This concept determines the class template <code>T</code> can be specialized with arguments <code>Args...</code>, i.e., if <code>T&lt;Args...&gt;</code> is valid.
+</details>
+
+
+<details>
+<summary><code>concept <i>simple-allocator</i>&lt;Alloc&gt;</code></summary>
+
+The concept <code><i>simple-allocator</i>&lt;Alloc&gt;</code> determines if
+<code>Alloc</code> is a basic allocator. If `alloc` is an object of type
+`Alloc`, the following need to be `true`:
+
+<ul>
+    <li>`alloc.allocate(n)` has type `Alloc::value_type*`.</li>
+    <li>`alloc.deallocate(alloc.allocate(n), n)` needs to be valid.</i>
+    <li>The type `Alloc` needs to be copy-constructible.</i>
+    <li>Two objects of type `Alloc` need to be equality comparable.</i>
+</ul>
 </details>

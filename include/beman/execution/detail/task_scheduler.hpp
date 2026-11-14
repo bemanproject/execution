@@ -344,7 +344,7 @@ class task_scheduler {
     explicit task_scheduler(Sched&& sched, Alloc alloc = {})
         : backend_(::std::allocate_shared<
                    ::beman::execution::detail::task_scheduler_backend_for<::std::remove_cvref_t<Sched>, Alloc>>(
-              alloc, ::std::forward<Sched>(sched), ::std::move(alloc))) {}
+              alloc, ::std::forward<Sched>(sched), alloc)) {}
 
     template <::beman::execution::detail::simple_allocator Alloc>
     explicit task_scheduler(task_scheduler sched, const Alloc&) noexcept : task_scheduler(::std::move(sched)) {}
