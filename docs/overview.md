@@ -29,7 +29,7 @@ This section lists the concepts from `std::execution`.
 <summary><code>inlinable_receiver&lt;<i>Rcvr</i>, <i>Child</i>&gt;</code></summary>
 The concecpt <code>inlinable_receiver&lt;<i>Rcvr</i>, <i>Child</i>&gt;</code> detects if a
 receiver of type <code><i>Rcvr</i></code> can be obtained from a <code><i>Child</i></code>
-reference using <code><i>Rcvr</i>::make_receiver_for(<i>child</i>)</code>. It is unspecified if any of the standard library receivers is a <code>inlinable_receiver</code>.
+pointer using <code><i>Rcvr</i>::make_receiver_for(<i>child</i>)</code>. It is unspecified if any of the standard library receivers is a <code>inlinable_receiver</code>.
 </details>
 
 <details>
