@@ -160,7 +160,7 @@ auto test_sender_in() -> void {
     test_std::prop     env_has_start_scheduler{test_std::get_start_scheduler, loop.get_scheduler()};
 
     auto sndr = test_std::just() |
-                test_std::let_value([] { return test_std::read_env(test_std::get_allocator) | test_std::affine(); });
+                test_std::let_value([] { return test_std::read_env(test_std::get_allocator) | test_std::affine; });
     static_assert(!test_std::sender_in<decltype(sndr), test_std::env<>>);
     static_assert(test_std::sender_in<decltype(sndr), decltype(env_has_allocator)>);
     auto [al] = test_std::sync_wait(sndr | test_std::write_env(env_has_allocator)).value();
