@@ -70,7 +70,10 @@ struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_
         return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender));
     }
 
-    auto operator()() const noexcept { return ::beman::execution::detail::make_sender_adaptor(*this); }
+    [[deprecated("use `sender | into_variant` instead of `sender | into_variant()`")]] auto
+    operator()() const noexcept {
+        return *this;
+    }
 
   private:
     template <typename... E>

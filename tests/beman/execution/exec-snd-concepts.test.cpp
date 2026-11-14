@@ -160,7 +160,7 @@ auto test_sender_in() -> void {
     test_std::prop     env_has_start_scheduler{test_std::get_start_scheduler, loop.get_scheduler()};
 
     auto sndr = test_std::just() |
-                test_std::let_value([] { return test_std::read_env(test_std::get_allocator) | test_std::affine(); });
+                test_std::let_value([] { return test_std::read_env(test_std::get_allocator) | test_std::affine; });
     static_assert(!test_std::sender_in<decltype(sndr), test_std::env<>>);
     static_assert(test_std::sender_in<decltype(sndr), decltype(env_has_allocator)>);
     auto [al] = test_std::sync_wait(sndr | test_std::write_env(env_has_allocator)).value();
@@ -176,6 +176,19 @@ auto test_sender_in() -> void {
     static_assert(!test_std::sender_in<decltype(sndr2), decltype(env_has_start_scheduler)>);
     static_assert(test_std::sender_in<decltype(sndr2 | test_std::write_env(env_has_allocator)),
                                       decltype(env_has_start_scheduler)>);
+
+    auto sndr3 =
+        test_std::read_env(test_std::get_allocator) | test_std::bulk(test_std::par, 1, [](int, auto&) noexcept {});
+    static_assert(!test_std::sender_in<decltype(sndr3), test_std::env<>>);
+    static_assert(test_std::sender_in<decltype(sndr3), decltype(env_has_allocator)>);
+
+    auto sndr4 = test_std::read_env(test_std::get_allocator) | test_std::continues_on(loop.get_scheduler());
+    static_assert(!test_std::sender_in<decltype(sndr4), test_std::env<>>);
+    static_assert(test_std::sender_in<decltype(sndr4), decltype(env_has_allocator)>);
+
+    auto sndr5 = test_std::starts_on(loop.get_scheduler(), test_std::read_env(test_std::get_allocator));
+    static_assert(!test_std::sender_in<decltype(sndr5), test_std::env<>>);
+    static_assert(test_std::sender_in<decltype(sndr5), decltype(env_has_allocator)>);
 }
 
 auto test_tag_of_t() -> void {

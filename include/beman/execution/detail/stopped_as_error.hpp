@@ -35,7 +35,7 @@ import beman.execution.detail.set_value;
 #endif
 
 namespace beman::execution::detail {
-struct stopped_as_error_t : ::beman::execution::sender_adaptor_closure<stopped_as_error_t> {
+struct stopped_as_error_t {
     template <::beman::execution::detail::sender_for<stopped_as_error_t> Sndr, typename Env>
     auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, Env&&) const noexcept {
         auto&& data  = sndr.template get<1>();

@@ -12,16 +12,20 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.child_type;
+import beman.execution.detail.fwd_env;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.product_type;
 import beman.execution.detail.sender;
+import beman.execution.detail.sender_in;
 #else
 #include <beman/execution/detail/child_type.hpp>
+#include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -30,8 +34,11 @@ namespace beman::execution::detail {
 
 struct schedule_from_t {
     template <typename Self, typename... Env>
+        requires ::beman::execution::sender_in<::beman::execution::detail::child_type<Self>,
+                                               ::beman::execution::detail::fwd_env_t<Env>...>
     static consteval auto get_completion_signatures() {
-        return ::beman::execution::get_completion_signatures<::beman::execution::detail::child_type<Self>, Env...>();
+        return ::beman::execution::get_completion_signatures<::beman::execution::detail::child_type<Self>,
+                                                             ::beman::execution::detail::fwd_env_t<Env>...>();
     }
 
     template <::beman::execution::sender Sender>

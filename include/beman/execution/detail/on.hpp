@@ -72,7 +72,7 @@ import beman.execution.detail.transform_sender;
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-struct on_t : ::beman::execution::sender_adaptor_closure<on_t> {
+struct on_t {
     template <typename Env, typename OutSndr>
     static auto dry_run(OutSndr&& out_sndr) noexcept {
         auto& [_, data, child] = out_sndr;

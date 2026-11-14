@@ -18,6 +18,7 @@ import beman.execution.detail.child_type;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.continues_on;
+import beman.execution.detail.data_type;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.dependent_sender;
 import beman.execution.detail.env;
@@ -51,6 +52,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/continues_on.hpp>
+#include <beman/execution/detail/data_type.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/env.hpp>
@@ -98,34 +100,6 @@ struct starts_on_t {
     }
 
   private:
-    template <typename, typename...>
-    struct get_signatures;
-    template <typename Scheduler, typename Child>
-        requires(!::beman::execution::dependent_sender<::beman::execution::schedule_result_t<Scheduler>>)
-    struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::starts_on_t, Scheduler, Child>>
-        : get_signatures<Child, ::beman::execution::env<>> {};
-    template <typename Scheduler, typename Child, typename Env>
-        requires requires {
-            starts_on_t::transform_sender(
-                ::beman::execution::set_value,
-                ::std::declval<::beman::execution::detail::
-                                   basic_sender<::beman::execution::detail::starts_on_t, Scheduler, Child>>(),
-                ::std::declval<Env>());
-        }
-    struct get_signatures<
-        ::beman::execution::detail::basic_sender<::beman::execution::detail::starts_on_t, Scheduler, Child>,
-        Env> {
-        static consteval auto get() {
-            using transformed_sndr = decltype(starts_on_t::transform_sender(
-                ::beman::execution::set_value,
-                ::std::declval<::beman::execution::detail::
-                                   basic_sender<::beman::execution::detail::starts_on_t, Scheduler, Child>>(),
-                ::std::declval<Env>()));
-            return ::beman::execution::get_completion_signatures<transformed_sndr, Env>();
-        }
-    };
-
     template <typename Scheduler, typename ChildAttrs>
     struct attrs : ::beman::execution::detail::hide_completion_queries<ChildAttrs> {
         using base = ::beman::execution::detail::hide_completion_queries<ChildAttrs>;
@@ -158,11 +132,17 @@ struct starts_on_t {
         Scheduler sch;
     };
 
+    template <typename Sender>
+    using transformed_sender = decltype(starts_on_t::transform_sender(
+        ::beman::execution::set_value, ::std::declval<Sender>(), ::std::declval<::beman::execution::env<>>()));
+
   public:
-    template <typename Sender, typename... Env>
-        requires requires { get_signatures<::std::remove_cvref_t<Sender>, Env...>{}; }
+    template <::beman::execution::sender Sender>
+        requires(!::beman::execution::dependent_sender<
+                    ::beman::execution::schedule_result_t<::beman::execution::detail::data_type<Sender>>>) &&
+                ::beman::execution::sender_in<transformed_sender<Sender>>
     static consteval auto get_completion_signatures() {
-        return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
+        return ::beman::execution::get_completion_signatures<transformed_sender<Sender>>();
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
