@@ -112,6 +112,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_stop_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/has_as_awaitable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/has_completions.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/hide_completion_queries.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/hide_sched.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/immovable.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/impls_for.hpp
@@ -187,6 +188,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_has_affine.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_in.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sender_to.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sends.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sends_stopped.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/set_error.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/set_stopped.hpp
@@ -345,6 +347,7 @@ if(BEMAN_USE_MODULES)
                     get_stop_token.cppm
                     has_as_awaitable.cppm
                     has_completions.cppm
+                    hide_completion_queries.cppm
                     hide_sched.cppm
                     immovable.cppm
                     impls_for.cppm
@@ -419,6 +422,7 @@ if(BEMAN_USE_MODULES)
                     sender_in.cppm
                     sender.cppm
                     sender_to.cppm
+                    sends.cppm
                     sends_stopped.cppm
                     set_error.cppm
                     set_stopped.cppm

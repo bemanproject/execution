@@ -151,6 +151,7 @@ struct when_all_t {
     template <typename Sender>
     struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
     template <typename Data, typename Env, typename... Sender>
+        requires(... && ::beman::execution::sender_in<Sender, when_all_env<Env>>)
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::when_all_t, Data, Sender...>,
         Env> {
@@ -220,6 +221,7 @@ struct when_all_t {
 
   public:
     template <typename Sender, typename... Env>
+        requires requires { get_signatures<::std::remove_cvref_t<Sender>, Env...>{}; }
     static consteval auto get_completion_signatures() {
         return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
     }

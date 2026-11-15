@@ -114,16 +114,6 @@ auto test_starts_on_start_scheduler() {
     static_assert(std::same_as<decltype(sched), scheduler>);
 }
 
-auto test_starts_on_attrs() {
-    using starts_on_sender = decltype(test_std::starts_on(scheduler{}, sender{}));
-    using attrs            = decltype(test_std::get_env(std::declval<const starts_on_sender&>()));
-
-    static_assert(not has_start_scheduler_query<attrs>);
-    static_assert(
-        std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(std::declval<const attrs&>())),
-                     scheduler>);
-}
-
 auto test_starts_on_attributes() {
     test_std::run_loop loop;
     test::sender_env   s{42};
@@ -148,7 +138,6 @@ TEST(exec_starts_on) {
 
     test_use(scheduler{}, sender{});
     test_starts_on_completions();
-    test_starts_on_attrs();
     test_starts_on_start_scheduler();
     test_starts_on_attributes();
 }

@@ -24,6 +24,8 @@ import beman.execution.detail.default_impls;
 import beman.execution.detail.dependent_sender;
 import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env;
+import beman.execution.detail.fwd_env;
+import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
@@ -33,6 +35,7 @@ import beman.execution.detail.movable_value;
 import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
@@ -46,6 +49,8 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/dependent_sender_error.hpp>
 #include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
@@ -56,6 +61,7 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
@@ -108,7 +114,7 @@ struct then_exception<Comp, Fun, ::beman::execution::completion_signatures<Compl
 };
 
 template <typename Completion>
-struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
+struct then_t {
     template <::beman::execution::detail::movable_value Fun>
     auto operator()(Fun&& fun) const noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Fun>, Fun>) {
         return ::beman::execution::detail::make_sender_adaptor(*this, std::forward<decltype(fun)>(fun));
@@ -129,27 +135,33 @@ struct then_t : ::beman::execution::sender_adaptor_closure<then_t<Completion>> {
   private:
     template <typename, typename...>
     struct get_signatures;
-    template <typename Sender>
-    struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
-    template <typename Comp, typename Fun, typename Child, typename Env>
+
+    template <typename Comp, typename Fun, typename Child, typename... Env>
+        requires ::beman::execution::sender_in<Child, ::beman::execution::detail::fwd_env_t<Env>...>
     struct get_signatures<
         ::beman::execution::detail::basic_sender<::beman::execution::detail::then_t<Comp>, Fun, Child>,
-        Env> {
-        using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
-            ::beman::execution::detail::meta::transform<
-                ::beman::execution::detail::then_transform_t<Fun, Comp>::template transform,
-                ::beman::execution::completion_signatures_of_t<Child, Env>>,
-            ::std::conditional_t<
-                ::beman::execution::detail::
-                    then_exception<Comp, Fun, ::beman::execution::completion_signatures_of_t<Child, Env>>::value,
-                ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>,
-                ::beman::execution::completion_signatures<>>>>;
+        Env...> {
+        static consteval auto get() {
+            [[maybe_unused]] auto child_sigs =
+                ::beman::execution::get_completion_signatures<Child, ::beman::execution::detail::fwd_env_t<Env>...>();
+            using child_sigs_t = decltype(child_sigs);
+            using type         = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
+                ::beman::execution::detail::meta::transform<
+                    ::beman::execution::detail::then_transform_t<Fun, Comp>::template transform,
+                    child_sigs_t>,
+                ::std::conditional_t<
+                    ::beman::execution::detail::then_exception<Comp, Fun, child_sigs_t>::value,
+                    ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>,
+                    ::beman::execution::completion_signatures<>>>>;
+            return type{};
+        }
     };
 
   public:
     template <typename Sender, typename... Env>
+        requires requires { get_signatures<::std::remove_cvref_t<Sender>, Env...>{}; }
     static consteval auto get_completion_signatures() {
-        return typename get_signatures<std::remove_cvref_t<Sender>, Env...>::type{};
+        return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {

@@ -359,6 +359,11 @@ class task_scheduler {
         return domain{};
     }
 
+    auto query(::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>) const noexcept
+        -> ::beman::execution::task_scheduler {
+        return *this;
+    }
+
     friend auto operator==(const task_scheduler& lhs, const task_scheduler& rhs) noexcept -> bool {
         if (lhs.backend_ == nullptr) {
             return rhs.backend_ == nullptr;

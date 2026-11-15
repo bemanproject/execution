@@ -31,6 +31,7 @@ set(EXAMPLES
     intro_5_consumer
     playground
     sender_demo
+    sleep_sort
     stackoverflow
     stopping
     stop_token
@@ -41,6 +42,10 @@ set(xEXAMPLES tutorial-create-a-sender)
 if(BEMAN_USE_MODULES)
     #-dk:TODO gcc doesn't like the modules: list(APPEND EXAMPLES modules modules_and_header)
     list(APPEND EXAMPLES modules_and_header)
+endif()
+
+if(BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND)
+    list(APPEND EXAMPLES async_inclusive_scan)
 endif()
 
 foreach(EXAMPLE ${EXAMPLES})

@@ -67,7 +67,10 @@ struct stopped_as_optional_t : ::beman::execution::sender_adaptor_closure<stoppe
         return ::beman::execution::detail::make_sender(stopped_as_optional_t{}, {}, ::std::forward<Sndr>(sndr));
     }
 
-    auto operator()() const noexcept { return ::beman::execution::detail::make_sender_adaptor(*this); }
+    [[deprecated("use `sender | stopped_as_optional` instead of `sender | stopped_as_optional()`")]] auto
+    operator()() const noexcept {
+        return *this;
+    }
 };
 
 } // namespace beman::execution::detail

@@ -123,6 +123,11 @@ class parallel_scheduler {
         return {};
     }
 
+    auto query(::beman::execution::get_completion_scheduler_t<::beman::execution::set_value_t>) const noexcept
+        -> parallel_scheduler {
+        return *this;
+    }
+
     auto schedule() const noexcept -> sender;
 
   private:

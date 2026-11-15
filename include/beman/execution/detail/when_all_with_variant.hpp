@@ -24,6 +24,7 @@ import beman.execution.detail.into_variant;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_for;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.set_value;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
@@ -41,6 +42,7 @@ import beman.execution.detail.when_all;
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_for.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
@@ -52,7 +54,7 @@ import beman.execution.detail.when_all;
 namespace beman::execution::detail {
 struct when_all_with_variant_t {
     template <::beman::execution::detail::sender_for<when_all_with_variant_t> Sender, typename Env>
-    auto transform_sender(::beman::execution::set_value_t, Sender&& sender, const Env&) const noexcept {
+    static auto transform_sender(::beman::execution::set_value_t, Sender&& sender, const Env&) noexcept {
         return ::std::forward<Sender>(sender).apply([](auto&&, auto&&, auto&&... child) {
             return ::beman::execution::when_all(
                 ::beman::execution::into_variant(::beman::execution::detail::forward_like<Sender>(child))...);
@@ -65,22 +67,6 @@ struct when_all_with_variant_t {
     }
 
   private:
-    template <typename, typename...>
-    struct get_signatures;
-    template <typename Sender>
-    struct get_signatures<Sender> : get_signatures<Sender, ::beman::execution::env<>> {};
-    template <typename Data, typename Env, typename... Children>
-    struct get_signatures<::beman::execution::detail::
-                              basic_sender<::beman::execution::detail::when_all_with_variant_t, Data, Children...>,
-                          Env> {
-
-        static consteval auto get() {
-            using sndr_t = decltype(::beman::execution::when_all(
-                ::beman::execution::into_variant(::std::declval<Children>())...));
-            return ::beman::execution::get_completion_signatures<sndr_t, Env>();
-        }
-    };
-
     template <typename... Children>
     struct attrs {
         template <typename Tag, typename... Env>
@@ -126,10 +112,15 @@ struct when_all_with_variant_t {
         }
     };
 
+    template <typename Sender>
+    using transformed_sender = decltype(when_all_with_variant_t::transform_sender(
+        ::beman::execution::set_value, ::std::declval<Sender>(), ::std::declval<::beman::execution::env<>>()));
+
   public:
-    template <::beman::execution::sender Sender, typename... Env>
+    template <::beman::execution::sender Sender>
+        requires ::beman::execution::sender_in<transformed_sender<Sender>>
     static consteval auto get_completion_signatures() {
-        return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
+        return ::beman::execution::get_completion_signatures<transformed_sender<Sender>>();
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
