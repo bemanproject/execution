@@ -1,4 +1,4 @@
-// examples/tutorial/create-a-sender.cpp                              -*-C++-*-
+// examples/tutorial_create_a_sender.cpp                              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <iostream>
@@ -29,7 +29,6 @@ class asynchronous_stack {
         struct stop_fun {
             state& st;
             void   operator()() noexcept {
-                std::cout << "stop callback start\n";
                 state& s = this->st;
                 for (auto it{&this->st.self.awaiting}; it; it = &(*it)->next) {
                     if (*it == &this->st) {
@@ -37,9 +36,7 @@ class asynchronous_stack {
                         break;
                     }
                 }
-                std::cout << "stop callback completing\n";
                 ex::set_stopped(std::move(s.rcvr));
-                std::cout << "stop callback done\n";
             }
         };
         using stop_token_t = ex::stop_token_of_t<decltype(ex::get_env(std::declval<Rcvr&>()))>;
@@ -80,7 +77,7 @@ class asynchronous_stack {
         }
     };
 
-    void push(T value) {
+    void push(T value) noexcept(noexcept(std::move(value))) {
         if (this->awaiting) {
             std::exchange(this->awaiting, this->awaiting->next)->complete(std::move(value));
         } else {
@@ -105,19 +102,13 @@ struct stop_test {
 
         struct cb {
             state* self;
-            auto   operator()() const noexcept -> void {
-                std::cout << "cb\n";
-                ex::set_value(std::move(self->rcvr));
-            }
+            auto   operator()() const noexcept -> void { ex::set_value(std::move(self->rcvr)); }
         };
         using callback = ex::stop_callback_for_t<ex::stop_token_of_t<ex::env_of_t<Rcvr>>, cb>;
 
         std::remove_cvref_t<Rcvr> rcvr;
         std::optional<callback>   callb;
-        auto                      start() & noexcept -> void {
-            std::cout << "stop_test start\n";
-            this->callb.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), cb{this});
-        }
+        auto start() & noexcept -> void { this->callb.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), cb{this}); }
     };
     template <typename Rcvr>
     state<Rcvr> connect(Rcvr&& rcvr) const {
@@ -128,13 +119,10 @@ struct stop_test {
 // ----------------------------------------------------------------------------
 
 int main() {
-    std::cout << std::unitbuf;
-#if 1
     asynchronous_stack<int> st;
     ex::counting_scope      scope;
     [[maybe_unused]] auto   sender = st.pop() | ex::then([](int v) { std::cout << "got value=" << v << "\n"; });
 
-#if 1
     for (int value{1}; value < 4; ++value) {
         st.push(value);
     }
@@ -154,44 +142,10 @@ int main() {
         st.push(value);
     }
     std::cout << "pushed 4,5,6\n";
-#endif
 
     std::cout << "requesting stop\n";
     scope.request_stop();
     std::cout << "requested stop\n";
     ex::sync_wait(scope.join() | ex::then([] { std::cout << "joined\n"; }));
     std::cout << "joined\n";
-#else
-
-    std::optional<ex::inplace_stop_source> source1{};
-    source1.emplace();
-    std::optional<ex::inplace_stop_source> source2{};
-    source2.emplace();
-    struct receiver {
-        using receiver_concept = ex::receiver_tag;
-        std::optional<ex::inplace_stop_source>& source1;
-        std::optional<ex::inplace_stop_source>& source2;
-        auto query(ex::get_stop_token_t) const noexcept { return this->source2->get_token(); }
-        auto get_env() const noexcept {
-            std::cout << "get_env\n";
-            return *this;
-        }
-        auto set_value() noexcept {
-            std::cout << "receiver::set_value\n";
-            source1.reset();
-            std::cout << "receiver::set_value done\n";
-        }
-        auto set_stopped() noexcept { std::cout << "receiver::set_stopped\n"; }
-    };
-#if 1
-    auto sws(ex::connect(ex::detail::stop_when(stop_test(), source1->get_token()), receiver{source1, source2}));
-#else
-    auto sws(ex::connect(stop_test(), receiver{source1, source2}));
-#endif
-    std::cout << "start\n";
-    ex::start(sws);
-    std::cout << "request stop\n";
-    source1->request_stop();
-    std::cout << "requested stop\n";
-#endif
 }

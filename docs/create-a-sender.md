@@ -11,7 +11,9 @@ is an asynchronous operation which either completes immediately if
 there is work or completes when new work becomes available. Pushing
 to the asynchronous stack succeeds immediately. It could be an
 extension to impose a limit on the stack size and make pushing also
-an asynchronous operation, making the two operations somewhat symmetric.
+an asynchronous operation, making the two operations somewhat
+symmetric. This implementation doesn't do any protection against
+concurrent accesses from multiple threads.
 
 The interface to the asynchronous stack could look like this:
 
@@ -98,7 +100,7 @@ public:
 
 The `pop_sender` itself actually doesn't really do any work: it
 wouldn't even know where to send any results to. Instead, it is the
-interface used to `ex::connect` to a receiver which is provides a
+interface used to `ex::connect` to a receiver which provides a
 way to notify the completion. When `ex::connect(sndr, rcvr)` is
 invoked (and there are no customizations) it behaves as if
 `sndr.connect(rcvr)` was invoked. Thus, `pop_sender` should have a
@@ -196,7 +198,7 @@ int main() {
 ```
 
 Running the resulting executable (on my Mac that is
-`./build/simple-Darwin/stagedir/bin/beman_execution.example.tutorial-create-a-sender`)
+`beman_execution.example.tutorial_create_a_sender` in the `stagedir`)
 results in printing that it got value 17:
 
 ```
@@ -234,11 +236,11 @@ int main() {
     asynchronous_stack<int> st;
     auto sender = st.pop() | ex::then([](int v) noexcept { std::cout << "got value=" << v << "\n"; });
 
-    for (int value{1}; value < 4; ++ value) {
+    for (int value{1}; value < 4; ++value) {
         st.push(value);
     }
 
-    for (int value{1}; value < 4; ++ value) {
+    for (int value{1}; value < 4; ++value) {
         ex::sync_wait(sender);
     }
 }
@@ -254,8 +256,8 @@ for an intrusive list: there is no need to do a separate allocation.
 The list is built by deriving from a `struct node` which simply has
 a `next` pointer to another `node` and a `virtual` function `complete`
 taking a `T` object as argument. The `asynchronous_stack` keeps a
-list of `node`s named `awaiting` in the example. This example doesn't
-to be fair: the most recently started `pop_sender` is the first one
+list of `node`s named `awaiting` in the example. This example isnt't
+entirely fair: the most recently started `pop_sender` is the first one
 to complete. Since the `node` becomes a base class of `state`, it
 is easiest to give `state` a constructor:
 
@@ -270,7 +272,7 @@ class asynchronous_stack {
     node*         awaiting{};
 
     template <ex::receiver Rcvr>
-    struct state: node {
+    struct state : node {
         // ...
         state(Rcvr&& r, asynchronous_stack& s): rcvr(std::forward<Rcvr>(r)), self(s) {}
         void start() & noexcept {
@@ -278,8 +280,7 @@ class asynchronous_stack {
                 T value(std::move(this->self.stack.top()));
                 this->self.stack.pop();
                 ex::set_value(std::move(rcvr), std::move(value));
-            }
-            else {
+            } else {
                 this->next = std::exchange(this->self.awaiting, this);
             }
         }
@@ -294,8 +295,8 @@ class asynchronous_stack {
 
 The new logic added is in `start` which now adds itself to the list
 of `awaiting` operation state by replacing `awaiting` with itself
-an setting its `next` pointer to the previous head of the list. To
-take advantage of already `awaiting` operation states the `push`
+and setting its `next` pointer to the previous head of the list. To
+take advantage of already-waiting operation states the `push`
 function needs to check if there is any `node` and, if so, extract
 this node `n` and invoke `n->complete(std::move(value))`:
 
@@ -306,8 +307,7 @@ class asynchronous_stack {
     void       push(T value) {
         if (this->awaiting) {
             std::exchange(this->awaiting, this->awaiting->next)->complete(std::move(value));
-        }
-        else {
+        } else {
             this->stack.push(std::move(value));
         }
     }
@@ -330,12 +330,12 @@ int main() {
     asynchronous_stack<int> st;
     auto sender = st.pop() | ex::then([](int v) noexcept { std::cout << "got value=" << v << "\n"; });
 
-    for (int value{1}; value < 4; ++ value) {
+    for (int value{1}; value < 4; ++value) {
         st.push(value);
     }
     std::cout << "pushed 1,2,3\n";
 
-    for (int value{1}; value < 7; ++ value) {
+    for (int value{1}; value < 7; ++value) {
         ex::spawn(st.pop() | ex::then([value](int v) noexcept {
             std::cout << "got value=" << v << " for request " << value << "\n";
         }), scope.get_token());
@@ -343,7 +343,7 @@ int main() {
 
     std::cout << "requested 6 values\n";
 
-    for (int value{4}; value < 7; ++ value) {
+    for (int value{4}; value < 7; ++value) {
         st.push(value);
     }
     std::cout << "pushed 4,5,6\n";
@@ -358,10 +358,10 @@ completes. The example is carefully setup to contain no outstanding
 work when synchronously awaiting `scope.join()`. However, if more
 `pop()` requests get `spawn`ed into the `scope` than there are
 elements which are `push`ed, the operation will never complete! To
-deal with that situation it is possibly to `scope.request_stop()`
+deal with that situation it is possible to `scope.request_stop()`
 before awaiting completion of `scope.join()`. The `scope.request_stop()`
-will stop all outstanding work - assuming it can be stopped. But
-`pop_sender` has no support, yet, for getting stopped.
+will stop all outstanding work - assuming it can be stopped. The
+next section add support for `pop_sender`s to get stopped.
 
 The way to support stop requests is to set up a stop callback using
 the stop token associated with a receiver `r`. To get the stop token
@@ -374,23 +374,24 @@ template <typename T>
 class asynchronous_stack {
     // ...
     template <ex::receiver Rcvr>
-    struct state: node {
+    struct state : node {
         // ...
         struct stop_fun {
             state& st;
             void operator()() noexcept {
-                this->st.callback.reset();
-                for (auto it{&this->st.stack.awaiting}; it; it = &(*it)->next) {
+                for (auto it{&this->st.self.awaiting}; it; it = &(*it)->next) {
                     if (*it == &this->st) {
                         *it = this->st.next;
                         break;
                     }
                 }
-                ex::set_stopped(std::move(st.rcvr));
+                ex::set_stopped(std::move(this->st.rcvr));
             }
         };
         using stop_token_t = ex::stop_token_of_t<decltype(ex::get_env(std::declval<Rcvr&>()))>;
         using callback_t = ex::stop_callback_for_t<stop_token_t, stop_fun>;
+        std::remove_cvref_t<Rcvr> rcvr;
+        asynchronous_stack&       self;
         std::optional<callback_t> callback;
         state(Rcvr&& r, asynchronous_stack& s): rcvr(std::forward<Rcvr>(r)), self(s) {}
         void start() & noexcept {
@@ -398,8 +399,7 @@ class asynchronous_stack {
                 T value(std::move(this->self.stack.top()));
                 this->self.stack.pop();
                 ex::set_value(std::move(rcvr), std::move(value));
-            }
-            else {
+            } else {
                 this->next = std::exchange(this->self.awaiting, this);
                 this->callback.emplace(ex::get_stop_token(ex::get_env(this->rcvr)), stop_fun{*this});
             }
@@ -421,3 +421,12 @@ class asynchronous_stack {
     // ...
 };
 ```
+
+Note that this implementaton of an asynchronous stack only does
+pointer operations. Thus, there is no failure mode: the operations
+either succeed resulting in a `set_value()` completion or they get
+stopped/cancelled resulting in `set_stopped()` completion. There
+is no `set_error()` completion. It assumes that moving a value can't
+fail, though. If moving values may fail, i.e., the can throw, the
+exception should be handled and result in a call to
+`set_error(std::exception_ptr)`.
