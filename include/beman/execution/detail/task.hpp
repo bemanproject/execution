@@ -5,6 +5,8 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK
 
 #include <cassert>
+#include <cstdint>
+#include <cstring>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -26,7 +28,6 @@ import beman.execution.detail.completion_signatures;
 import beman.execution.detail.decayed_same_as;
 import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
-import beman.execution.detail.find_allocator;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_env;
@@ -62,7 +63,6 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/decayed_same_as.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
-#include <beman/execution/detail/find_allocator.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
@@ -127,54 +127,112 @@ class handle {
     auto get_env() const noexcept { return ::beman::execution::get_env(*this->h); }
 };
 
-template <typename Allocator>
+struct co_memory {
+    struct default_align_t {
+        alignas(__STDCPP_DEFAULT_NEW_ALIGNMENT__)::std::byte _[__STDCPP_DEFAULT_NEW_ALIGNMENT__];
+    };
+
+    static constexpr auto ceiling_division(::std::uintptr_t n, ::std::uintptr_t m) noexcept -> ::std::uintptr_t {
+        assert(m != 0);
+        return (n + m - 1) / m;
+    }
+
+    static constexpr auto ceiling_align(::std::uintptr_t n, ::std::uintptr_t m) noexcept -> ::std::uintptr_t {
+        assert(m != 0);
+        return ceiling_division(n, m) * m;
+    }
+
+    static auto align_address(void* ptr, ::std::size_t alignment, ::std::size_t least_offset) noexcept -> void* {
+        auto least = reinterpret_cast<::std::uintptr_t>(static_cast<::std::byte*>(ptr) + least_offset);
+        return reinterpret_cast<void*>(ceiling_align(least, alignment));
+    };
+
+    using dealloc_fn_t = void (*)(default_align_t*, ::std::size_t) noexcept;
+
+    template <typename Alloc>
+    static auto allocate(Alloc alloc, ::std::size_t n) -> void* {
+        using alloc_t      = typename ::std::allocator_traits<Alloc>::template rebind_alloc<default_align_t>;
+        using alloc_traits = ::std::allocator_traits<alloc_t>;
+        alloc_t allocator_(::std::move(alloc));
+        if constexpr (::std::default_initializable<Alloc> and
+                      alloc_traits::is_always_equal::value) { // for stateless-allocator
+            /*
+             * layout:
+             *  +-----------------+-----------------------+------------------+
+             *  | coroutine state | deallocating function | possible padding |
+             *  +-----------------+-----------------------+------------------+
+             *           |                   |
+             *      `n` bytes    `sizeof(dealloc_fn_t)` bytes
+             */
+            auto offset_of_dealloc_fn = n;
+            n += sizeof(dealloc_fn_t);
+            void*        result     = alloc_traits::allocate(allocator_, ceiling_division(n, sizeof(default_align_t)));
+            dealloc_fn_t dealloc_fn = +[](default_align_t* ptr, ::std::size_t co_state_size) noexcept {
+                auto    length = co_state_size + sizeof(dealloc_fn_t);
+                alloc_t alloc_(Alloc{});
+                alloc_traits::deallocate(alloc_, ptr, ceiling_division(length, alignof(default_align_t)));
+            };
+            ::std::memcpy(static_cast<::std::byte*>(result) + offset_of_dealloc_fn, &dealloc_fn, sizeof(dealloc_fn_t));
+            return result;
+        } else {
+            /*
+             * layout:
+             *  +-----------------+-----------------------+------------------+-----------+------------------+
+             *  | coroutine state | deallocating function | possible padding | allocator | possible padding |
+             *  +-----------------+-----------------------+------------------+-----------+------------------+
+             *           |                   |                                     |
+             *      `n` bytes    `sizeof(dealloc_fn_t)` bytes           `sizeof(alloc_t)` bytes
+             */
+            static constexpr ::std::size_t max_alignment = (::std::max)(alignof(alloc_t), alignof(default_align_t));
+            auto                           offset_of_dealloc_fn = n;
+            n += sizeof(dealloc_fn_t);
+            void* result = alloc_traits::allocate(
+                allocator_, (n + sizeof(alloc_t) + max_alignment - 1) / alignof(default_align_t));
+            dealloc_fn_t dealloc_fn = +[](default_align_t* ptr, ::std::size_t co_state_size) noexcept {
+                auto length     = co_state_size + sizeof(dealloc_fn_t);
+                auto alloc_ptr_ = ::std::launder(static_cast<alloc_t*>(align_address(ptr, alignof(alloc_t), length)));
+                alloc_t alloc_  = ::std::move(*alloc_ptr_);
+                ::std::destroy_at(alloc_ptr_);
+                alloc_traits::deallocate(
+                    alloc_, ptr, (length + sizeof(alloc_t) + max_alignment - 1) / alignof(default_align_t));
+            };
+            ::std::memcpy(static_cast<::std::byte*>(result) + offset_of_dealloc_fn, &dealloc_fn, sizeof(dealloc_fn_t));
+            void(::std::construct_at(static_cast<alloc_t*>(align_address(result, alignof(alloc_t), n)),
+                                     ::std::move(allocator_)));
+            return result;
+        }
+    }
+
+    static auto deallocate(void* ptr, ::std::size_t n) noexcept -> void {
+        dealloc_fn_t dealloc_fn = nullptr;
+        ::std::memcpy(&dealloc_fn, static_cast<::std::byte*>(ptr) + n, sizeof(dealloc_fn_t));
+        dealloc_fn(static_cast<default_align_t*>(ptr), n);
+    }
+};
+
+template <typename Alloc>
 struct allocator_support {
-    using allocator_traits = ::std::allocator_traits<Allocator>;
-
-    static auto offset(::std::size_t size) noexcept -> ::std::size_t {
-        return (size + alignof(Allocator) - 1u) & ~(alignof(Allocator) - 1u);
+    auto operator new(::std::size_t n) -> void* {
+        static_assert(::std::default_initializable<Alloc>);
+        return co_memory::allocate(Alloc(), n);
     }
 
-    static auto get_allocator(void* ptr, ::std::size_t size) noexcept -> Allocator* {
-        ptr = static_cast<::std::byte*>(ptr) + offset(size);
-        return ::std::launder(reinterpret_cast<Allocator*>(ptr));
+    template <typename OtherAlloc, typename... Args>
+    auto operator new(::std::size_t n, ::std::allocator_arg_t, const OtherAlloc& other_alloc, const Args&...)
+        -> void* {
+        static_assert(::beman::execution::detail::simple_allocator<OtherAlloc>);
+        return co_memory::allocate(other_alloc, n);
     }
 
-    template <typename... Args>
-    auto operator new(::std::size_t size, const Args&... args) -> void* {
-        if constexpr (::std::same_as<Allocator, ::std::allocator<::std::byte>>) {
-            Allocator alloc{};
-            return allocator_traits::allocate(alloc, size);
-        } else {
-            Allocator alloc{::beman::execution::detail::find_allocator<Allocator>(args...)};
-            void*     ptr{allocator_traits::allocate(alloc, allocator_support::offset(size) + sizeof(Allocator))};
-            try {
-                new (allocator_support::get_allocator(ptr, size)) Allocator(alloc);
-            } catch (...) {
-                allocator_traits::deallocate(
-                    alloc, static_cast<::std::byte*>(ptr), allocator_support::offset(size) + sizeof(Allocator));
-                throw;
-            }
-            return ptr;
-        }
+    template <typename This, typename OtherAlloc, typename... Args>
+    auto
+    operator new(::std::size_t n, const This&, ::std::allocator_arg_t, const OtherAlloc& other_alloc, const Args&...)
+        -> void* {
+        static_assert(::beman::execution::detail::simple_allocator<OtherAlloc>);
+        return co_memory::allocate(other_alloc, n);
     }
 
-    auto operator delete(void* ptr, ::std::size_t size) noexcept -> void {
-        if constexpr (::std::same_as<Allocator, ::std::allocator<::std::byte>>) {
-            Allocator alloc{};
-            allocator_traits::deallocate(alloc, static_cast<::std::byte*>(ptr), size);
-        } else {
-            Allocator* aptr{allocator_support::get_allocator(ptr, size)};
-            Allocator  alloc{*aptr};
-            aptr->~Allocator();
-            allocator_traits::deallocate(
-                alloc, static_cast<::std::byte*>(ptr), allocator_support::offset(size) + sizeof(Allocator));
-        }
-    }
-
-    auto operator delete(void* ptr, ::std::size_t size, const auto&...) noexcept -> void {
-        allocator_support::operator delete(ptr, size);
-    }
+    auto operator delete(void* ptr, ::std::size_t n) noexcept -> void { co_memory::deallocate(ptr, n); }
 };
 
 template <typename>

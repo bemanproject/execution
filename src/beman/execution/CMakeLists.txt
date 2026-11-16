@@ -91,7 +91,6 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/exit_scope_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/exit_scope_sender_in.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/exit_scope_sender_of_t.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/find_allocator.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/forward_like.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/forwarding_query.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/fwd_env.hpp
@@ -327,7 +326,6 @@ if(BEMAN_USE_MODULES)
                     exit_scope_sender.cppm
                     exit_scope_sender_in.cppm
                     exit_scope_sender_of_t.cppm
-                    find_allocator.cppm
                     forward_like.cppm
                     forwarding_query.cppm
                     fwd_env.cppm

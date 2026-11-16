@@ -95,6 +95,11 @@ auto pmr_allocator_task(std::allocator_arg_t, std::pmr::polymorphic_allocator<> 
     co_return 42;
 }
 
+// the coroutine allocator type is unrelated to the task's allocator_type (std::allocator<std::byte>)
+auto foreign_allocator_task(std::allocator_arg_t, std::pmr::polymorphic_allocator<>) -> test_std::task<int> {
+    co_return 67;
+}
+
 auto scheduler_task() -> test_std::task<int> {
     const auto scheduler = co_await test_std::read_env(test_std::get_scheduler);
     static_assert(std::same_as<std::remove_cvref_t<decltype(scheduler)>, test_std::task_scheduler>);
@@ -214,6 +219,20 @@ auto test_task_uses_pmr_allocator_arg() -> void {
     ASSERT(resource.deallocations == resource.allocations);
 }
 
+auto test_task_allocator_arg_unrelated_to_allocator_type() -> void {
+    counting_memory_resource          resource;
+    std::pmr::polymorphic_allocator<> allocator{&resource};
+
+    auto task = foreign_allocator_task(std::allocator_arg, allocator);
+    ASSERT(resource.allocations == 1uz);
+    ASSERT(resource.deallocations == 0uz);
+
+    auto result = test_std::sync_wait(std::move(task));
+    ASSERT(result.has_value());
+    ASSERT(std::get<0>(*result) == 67);
+    ASSERT(resource.deallocations == 1uz);
+}
+
 auto test_task_propagates_stop_token() -> void {
     test_std::inplace_stop_source source;
     ASSERT(source.request_stop());
@@ -233,5 +252,6 @@ TEST(exec_task) {
     test_task_stopped_completion();
     test_task_errors();
     test_task_uses_pmr_allocator_arg();
+    test_task_allocator_arg_unrelated_to_allocator_type();
     test_task_propagates_stop_token();
 }
