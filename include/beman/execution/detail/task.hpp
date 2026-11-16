@@ -690,10 +690,10 @@ struct promise_env {
 
     template <typename Q, typename... Args>
         requires(::beman::execution::forwarding_query(Q())) && requires(const Promise* p, Q q, Args&&... args) {
-            q(p->get_environment(), ::std::forward<Args>(args)...);
+            p->get_environment().query(q, ::std::forward<Args>(args)...);
         }
     auto query(Q q, Args&&... args) const noexcept {
-        return q(this->promise->get_environment(), ::std::forward<Args>(args)...);
+        return this->promise->get_environment().query(q, ::std::forward<Args>(args)...);
     }
 
     const Promise* promise;
