@@ -12,10 +12,8 @@ import std;
 #include <concepts>
 #endif
 #ifdef BEMAN_HAS_MODULES
-import beman.execution.detail.forwarding_query;
 import beman.execution.detail.almost_scheduler;
 #else
-#include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/almost_scheduler.hpp>
 #endif
 
@@ -33,8 +31,6 @@ struct get_forward_progress_guarantee_t {
         static_assert(::std::same_as<decltype(object.query(*this)), forward_progress_guarantee>);
         return object.query(*this);
     }
-
-    static constexpr auto query(const ::beman::execution::forwarding_query_t&) noexcept -> bool { return true; }
 };
 
 inline constexpr get_forward_progress_guarantee_t get_forward_progress_guarantee{};
