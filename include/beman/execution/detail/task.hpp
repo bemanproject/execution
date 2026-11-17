@@ -371,11 +371,11 @@ class result_type<Value, ::beman::execution::completion_signatures<::beman::exec
                 ::beman::execution::detail::sub_visit<2uz>(
                     []<typename E>(E& error) {
                         if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::exception_ptr>) {
-                            ::std::rethrow_exception(::std::move(error));
+                            BEMAN_EXECUTION_RETHROW(::std::move(error));
                         } else if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::error_code>) {
-                            throw ::std::system_error{::std::move(error)};
+                            BEMAN_EXECUTION_THROW(::std::system_error{::std::move(error)});
                         } else {
-                            throw ::std::move(error);
+                            BEMAN_EXECUTION_THROW(::std::move(error));
                         }
                     },
                     this->result);

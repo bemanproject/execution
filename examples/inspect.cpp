@@ -23,6 +23,7 @@ namespace ex = beman::execution;
 
 // ----------------------------------------------------------------------------
 
+#ifdef __cpp_rtti
 namespace meta {
 // The code in this namespace is a fairly basic way to print types. It can
 // almost certainly be done better, in particular using reflection. However,
@@ -186,10 +187,12 @@ struct logger_t {
 
 inline constexpr logger_t logger{};
 } // namespace
+#endif
 
 // ----------------------------------------------------------------------------
 
 int main() {
+#ifdef __cpp_rtti
     auto log = [](std::string_view name) {
         return [name](std::string_view msg) { std::cout << name << " message='" << msg << "'\n"; };
     };
@@ -201,4 +204,5 @@ int main() {
     ex::sync_wait(logger(ex::just(0, 1, 2), log("just(0, 1, 2)")));
     ex::sync_wait(logger(ex::just_error(0), log("just_error(0)")) | ex::upon_error([](auto) {}));
     ex::sync_wait(logger(ex::just_stopped(), log("just_stopped()")) | ex::upon_stopped([]() {}));
+#endif
 }
