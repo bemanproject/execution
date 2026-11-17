@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-cmake_minimum_required(VERSION 3.30...4.4)
+cmake_minimum_required(VERSION 3.30...4.5)
 
 include(./cmake/prelude.cmake)
 
@@ -69,13 +69,19 @@ else()
 endif()
 
 if(BEMAN_USE_MODULES AND BEMAN_HAS_IMPORT_STD)
+    if(
+        CMAKE_CXX_STDLIB_MODULES_JSON
+        AND CMAKE_VERSION VERSION_GREATER_EQUAL "4.5.0"
+    )
+    else()
+        set_target_properties(
+            ${BEMAN_EXECUTION_TARGET_PREFIX}
+            PROPERTIES CXX_MODULE_STD ON
+        )
+    endif()
     target_compile_definitions(
         ${BEMAN_EXECUTION_TARGET_PREFIX}
         PUBLIC BEMAN_HAS_IMPORT_STD
-    )
-    set_target_properties(
-        ${BEMAN_EXECUTION_TARGET_PREFIX}
-        PROPERTIES CXX_MODULE_STD ON
     )
 elseif(BEMAN_USE_MODULES)
     message(WARNING "Missing or disabled support for CMAKE_CXX_MODULE_STD!")
