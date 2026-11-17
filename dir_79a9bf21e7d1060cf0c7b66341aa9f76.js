@@ -135,7 +135,6 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "operation_state_task.hpp", "operation__state__task_8hpp_source.html", null ],
     [ "parallel_scheduler.hpp", "parallel__scheduler_8hpp_source.html", null ],
     [ "parallel_scheduler_replacement.hpp", "parallel__scheduler__replacement_8hpp_source.html", null ],
-    [ "poly.hpp", "poly_8hpp_source.html", null ],
     [ "product_type.hpp", "product__type_8hpp_source.html", null ],
     [ "promise_env.hpp", "promise__env_8hpp_source.html", null ],
     [ "prop.hpp", "prop_8hpp_source.html", null ],
