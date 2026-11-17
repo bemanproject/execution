@@ -131,6 +131,10 @@ beman_install_library(${BEMAN_EXECUTION_TARGET_PREFIX} TARGETS ${BEMAN_EXECUTION
 )
 #===============================================================================
 
+if(BEMAN_EXECUTION_BUILD_TESTS OR BEMAN_EXECUTION_BUILD_EXAMPLES)
+    include(cmake/std_par.cmake)
+endif()
+
 if(BEMAN_EXECUTION_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests/beman/execution)

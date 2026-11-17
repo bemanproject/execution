@@ -17,6 +17,8 @@ if(PROJECT_IS_TOP_LEVEL)
     enable_testing()
 endif()
 
+include(../cmake/std_par.cmake)
+
 set(TODO suspend_never) #-dk:TODO including that causes ASAN errors
 
 set(EXAMPLES
@@ -60,5 +62,6 @@ foreach(EXAMPLE ${EXAMPLES})
             PRIVATE beman::execution_headers
         )
     endif()
+    target_link_libraries(${EXAMPLE_TARGET} PRIVATE beman.execution.std_par)
     add_test(NAME ${EXAMPLE_TARGET} COMMAND ${EXAMPLE_TARGET})
 endforeach()
