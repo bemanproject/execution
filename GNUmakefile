@@ -8,13 +8,13 @@ MAKEFLAGS+= --warn-undefined-variables  # Warn when an undefined variable is ref
 ##################################################
 
 ifeq ($(origin CXX),default)
-  export CXX:= clang++-22
-  export CC:= clang-22
+  export CXX:= clang++-23
+  export CC:= clang-23
   export CXXFLAGS:= -stdlib=libc++ -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0
 endif
 
 PRESET?=release
-IMAGE?=ghcr.io/bemanproject/infra-containers-clang:22
+IMAGE?=ghcr.io/bemanproject/infra-containers-clang:23
 
 _build_path:=build/$(PRESET)
 

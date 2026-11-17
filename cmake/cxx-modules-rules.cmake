@@ -109,26 +109,33 @@ if(CMAKE_CXX_STANDARD GREATER_EQUAL 23)
 endif()
 
 if(BEMAN_USE_MODULES AND BEMAN_USE_STD_MODULE)
-    # -------------------------------------------------------------------------
-    # Tell CMake that we explicitly want `import std`.
-    # This will initialize the property on all targets declared after this to 1
-    # -------------------------------------------------------------------------
-    message(
-        STATUS
-        "CMAKE_CXX_COMPILER_IMPORT_STD=${CMAKE_CXX_COMPILER_IMPORT_STD}"
+    if(
+        CMAKE_CXX_STDLIB_MODULES_JSON
+        AND CMAKE_VERSION VERSION_GREATER_EQUAL "4.5.0"
     )
-    if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
-        set(CMAKE_CXX_MODULE_STD ON)
-        set(CMAKE_CXX_SCAN_FOR_MODULES ON)
-        option(
-            BEMAN_HAS_IMPORT_STD
-            "Build with import std; is possible and used!"
-            ${CMAKE_CXX_MODULE_STD}
-        )
-        message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
+        set(BEMAN_HAS_IMPORT_STD ON)
     else()
-        set(CMAKE_CXX_MODULE_STD OFF)
-        message(WARNING "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
+        # -------------------------------------------------------------------------
+        # Tell CMake that we explicitly want `import std`.
+        # This will initialize the property on all targets declared after this to 1
+        # -------------------------------------------------------------------------
+        message(
+            STATUS
+            "CMAKE_CXX_COMPILER_IMPORT_STD=${CMAKE_CXX_COMPILER_IMPORT_STD}"
+        )
+        if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
+            set(CMAKE_CXX_MODULE_STD ON)
+            set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+            option(
+                BEMAN_HAS_IMPORT_STD
+                "Build with import std; is possible and used!"
+                ${CMAKE_CXX_MODULE_STD}
+            )
+            message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
+        else()
+            set(CMAKE_CXX_MODULE_STD OFF)
+            message(WARNING "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
+        endif()
     endif()
     message(STATUS "BEMAN_HAS_IMPORT_STD=${BEMAN_HAS_IMPORT_STD}")
 endif()
