@@ -87,11 +87,8 @@ struct sync_wait_receiver {
     auto set_stopped() && noexcept -> void { this->state->loop.finish(); }
     template <typename... Args>
     auto set_value(Args&&... args) && noexcept -> void {
-        try {
-            this->state->result.emplace(::std::forward<Args>(args)...);
-        } catch (...) {
-            this->state->error = ::std::current_exception();
-        }
+        BEMAN_EXECUTION_TRY { this->state->result.emplace(::std::forward<Args>(args)...); }
+        BEMAN_EXECUTION_CATCH(...) { this->state->error = ::std::current_exception(); }
         this->state->loop.finish();
     }
 
@@ -110,7 +107,7 @@ struct sync_wait_t {
 
         state.loop.run();
         if (state.error) {
-            ::std::rethrow_exception(state.error);
+            BEMAN_EXECUTION_RETHROW(state.error);
         }
         return ::std::move(state.result);
     }

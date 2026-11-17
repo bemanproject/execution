@@ -9,17 +9,18 @@ import beman.execution;
 #endif
 
 TEST(stopsource_general) {
-    try {
+    BEMAN_EXECUTION_TRY {
         // Reference: [stopsource.general] p1.
         test::stop_source([] { return ::test_std::stop_source(); });
 
         ::test_std::stop_source source1;
         ::test_std::stop_source source2{::test_std::nostopstate};
         static_assert(noexcept(::test_std::stop_source(::test_std::nostopstate_t())));
-        try {
+        BEMAN_EXECUTION_TRY {
             ASSERT(not source2.stop_possible());
             ASSERT(not source2.stop_requested());
-        } catch (...) {
+        }
+        BEMAN_EXECUTION_CATCH(...) {
             // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
             ASSERT(nullptr == "the stop source should not throw");
         }
@@ -28,7 +29,8 @@ TEST(stopsource_general) {
         static_assert(noexcept(source1.stop_requested()));
         static_assert(noexcept(source1.stop_possible()));
         static_assert(noexcept(source1.request_stop()));
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "stop source tests shouldn't throw");
     }

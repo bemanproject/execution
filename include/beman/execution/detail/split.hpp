@@ -124,9 +124,8 @@ struct impls_for : ::beman::execution::detail::default_impls {
         template <class Tag, class... Args>
         void complete(Tag, Args&&... args) noexcept {
             using tuple_t = ::beman::execution::detail::decayed_tuple<Tag, Args...>;
-            try {
-                sh_state->result.template emplace<tuple_t>(Tag(), ::std::forward<Args>(args)...);
-            } catch (...) {
+            BEMAN_EXECUTION_TRY { sh_state->result.template emplace<tuple_t>(Tag(), ::std::forward<Args>(args)...); }
+            BEMAN_EXECUTION_CATCH(...) {
                 using tuple_err = ::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>;
                 sh_state->result.template emplace<tuple_err>(::beman::execution::set_error,
                                                              ::std::current_exception());
@@ -172,11 +171,12 @@ struct impls_for : ::beman::execution::detail::default_impls {
         using child_operation_state = ::beman::execution::connect_result_t<Sndr, split_receiver<Sndr>>;
 
         explicit shared_state(Sndr&& sndr) {
-            try {
+            BEMAN_EXECUTION_TRY {
                 op_state.emplace(::beman::execution::detail::emplace_from{[&] {
                     return ::beman::execution::connect(::std::forward<Sndr>(sndr), split_receiver<Sndr>{this});
                 }});
-            } catch (...) {
+            }
+            BEMAN_EXECUTION_CATCH(...) {
                 using error_tuple_t = ::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>;
                 result.template emplace<error_tuple_t>(::beman::execution::set_error, ::std::current_exception());
                 [[maybe_unused]] auto queue = waiting_states.pop_all_and_shutdown();
@@ -277,7 +277,7 @@ struct impls_for : ::beman::execution::detail::default_impls {
             } else {
                 assert(sh_state->result.index() > 0);
                 assert(!sh_state->result.valueless_by_exception());
-                try {
+                BEMAN_EXECUTION_TRY {
                     ::std::visit(
                         [&]<class Arg>(const Arg& arg) noexcept -> void {
                             if constexpr (!::std::same_as<::std::decay_t<Arg>, ::std::monostate>) {
@@ -289,7 +289,8 @@ struct impls_for : ::beman::execution::detail::default_impls {
                             }
                         },
                         sh_state->result);
-                } catch (...) {
+                }
+                BEMAN_EXECUTION_CATCH(...) {
                     // required by clang-tidy although it is not necessary here
                     // see valueless_by_exception() check above
                     std::terminate();

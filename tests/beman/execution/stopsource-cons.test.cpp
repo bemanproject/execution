@@ -24,21 +24,29 @@ bool fail{};
 }
 
 // NOLINTNEXTLINE(hicpp-no-malloc)
-auto operator new(::std::size_t size) -> void* { return fail ? throw ::std::bad_alloc() : ::std::malloc(size); }
+auto operator new(::std::size_t size) -> void* {
+#ifdef __cpp_exceptions
+    return fail ? throw ::std::bad_alloc() : ::std::malloc(size);
+#else
+    return fail ? nullptr : ::std::malloc(size);
+#endif
+}
 
 auto operator delete(void* ptr) noexcept -> void { ::std::free(ptr); }                // NOLINT(hicpp-no-malloc)
 auto operator delete(void* ptr, ::std::size_t) noexcept -> void { ::std::free(ptr); } // NOLINT(hicpp-no-malloc)
 
 TEST(stopsource_cons) {
     // Reference: [stopsource.cons] p1
-    try {
+    BEMAN_EXECUTION_TRY {
         ::test_std::stop_source source;
         ASSERT(source.stop_possible());
         ASSERT((not source.stop_requested()));
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         ASSERT(nullptr == "can't be reached"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 
+#ifdef __cpp_exceptions
     // Reference: [stopsource.cons] p3
     fail = true;
     try {
@@ -50,4 +58,5 @@ TEST(stopsource_cons) {
     } catch (...) {
         ASSERT(nullptr == "can't be reached"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
+#endif
 }

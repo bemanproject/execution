@@ -27,6 +27,7 @@ namespace beman::execution::detail {
 template <typename Error>
 //-dk:TODO add a proper precondition
 decltype(auto) as_except_ptr(Error&& error) {
+#ifdef __cpp_exceptions
     if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>) {
         return ::std::forward<Error>(error);
     } else if constexpr (::std::same_as<::std::error_code, ::std::decay_t<Error>>) {
@@ -34,6 +35,14 @@ decltype(auto) as_except_ptr(Error&& error) {
     } else {
         return ::std::make_exception_ptr(::std::forward<Error>(error));
     }
+#else
+    if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>) {
+        return ::std::forward<Error>(error);
+    } else {
+        ::std::terminate();
+        return ::std::exception_ptr();
+    }
+#endif
 }
 } // namespace beman::execution::detail
 

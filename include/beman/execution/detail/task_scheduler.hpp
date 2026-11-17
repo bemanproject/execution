@@ -287,7 +287,7 @@ struct task_scheduler_backend_for : task_scheduler_backend_sched<Sched> {
         using allocated_holder = typename base::template allocated_state_holder<Sndr, Alloc>;
         constexpr bool inlined =
             sizeof(inlined_holder) <= psched_storage_size && alignof(inlined_holder) <= psched_storage_alignment;
-        try {
+        BEMAN_EXECUTION_TRY {
             if constexpr (inlined) {
                 auto holder = ::new (static_cast<void*>(storage.data())) inlined_holder(::std::move(sndr), proxy);
                 holder->do_start();
@@ -296,9 +296,8 @@ struct task_scheduler_backend_for : task_scheduler_backend_sched<Sched> {
                     ::beman::execution::detail::new_object<allocated_holder>(alloc, ::std::move(sndr), proxy, alloc);
                 holder->do_start();
             }
-        } catch (...) {
-            proxy.set_error(::std::current_exception());
         }
+        BEMAN_EXECUTION_CATCH(...) { proxy.set_error(::std::current_exception()); }
     }
 
     [[no_unique_address]] Alloc alloc;

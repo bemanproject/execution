@@ -38,13 +38,16 @@ auto test_stopped_as_error_signatures() -> void {
     static_assert(
         std::same_as<sigs_of_sndr2,
                      test_std::completion_signatures<test_std::set_error_t(int), test_std::set_value_t(int)>>);
+#ifdef __cpp_exceptions
     try {
         test_std::sync_wait(std::move(sndr2));
     } catch (int e) {
         ASSERT(e == 114514);
     }
+#endif
 }
 
+#ifdef __cpp_exceptions
 auto test_stopped_as_std_error_code() -> void {
     try {
         auto snd = test_std::stopped_as_error(test::optional_sender<int>{},
@@ -54,6 +57,7 @@ auto test_stopped_as_std_error_code() -> void {
         ASSERT(e.code() == std::errc::operation_canceled);
     }
 }
+#endif // __cpp_exceptions
 
 auto test_stopped_as_error_attributes() {
     test::sender_env s{42};
@@ -67,6 +71,8 @@ auto test_stopped_as_error_attributes() {
 
 TEST(exec_stopped_as_error) {
     test_stopped_as_error_signatures();
+#ifdef __cpp_exceptions
     test_stopped_as_std_error_code();
+#endif
     test_stopped_as_error_attributes();
 }

@@ -110,10 +110,10 @@ consteval auto get_completion_signatures() -> ::beman::execution::detail::valid_
                                                              ::beman::execution::set_stopped_t()>{};
         }
     } else if constexpr (sizeof...(Env) == 0)
-        return (throw ::beman::execution::detail::dependent_sender_error<Sender>(),
+        return (BEMAN_EXECUTION_THROW(::beman::execution::detail::dependent_sender_error<Sender>()),
                 ::beman::execution::completion_signatures<>{});
     else
-        return (throw ::beman::execution::detail::get_completion_signatures_error<Sender, Env...>(),
+        return (BEMAN_EXECUTION_THROW(::beman::execution::detail::get_completion_signatures_error<Sender, Env...>()),
                 ::beman::execution::completion_signatures<>{});
 }
 } // namespace beman::execution

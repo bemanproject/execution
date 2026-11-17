@@ -21,12 +21,13 @@ template <typename T, typename Allocator, typename... Args>
     using alloc_traits = ::std::allocator_traits<alloc_t>;
     alloc_t alloc(allocator);
     auto    ptr = alloc_traits::allocate(alloc, 1);
-    try {
+    BEMAN_EXECUTION_TRY {
         alloc_traits::construct(alloc, ptr, ::std::forward<Args>(args)...);
         return ptr;
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         alloc_traits::deallocate(alloc, ptr, 1);
-        throw;
+        BEMAN_EXECUTION_THROW();
     }
 }
 

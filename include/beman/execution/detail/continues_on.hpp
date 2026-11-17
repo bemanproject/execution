@@ -328,11 +328,12 @@ struct continues_on_t {
                 using result_t         = ::beman::execution::detail::decayed_tuple<Tag, Args...>;
                 constexpr bool nothrow = (::std::is_nothrow_constructible_v<::std::decay_t<Args>, Args> && ...);
 
-                try {
+                BEMAN_EXECUTION_TRY {
                     [&]() noexcept(nothrow) {
                         state.async_result.template emplace<result_t>(Tag(), ::std::forward<Args>(args)...);
                     }();
-                } catch (...) {
+                }
+                BEMAN_EXECUTION_CATCH(...) {
                     if constexpr (!nothrow) {
                         state.async_result
                             .template emplace<::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>>(

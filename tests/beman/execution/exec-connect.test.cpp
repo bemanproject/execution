@@ -220,7 +220,7 @@ auto test_connect_awaitable() -> void {
             default:
                 return result;
             case 0:
-                throw ::std::runtime_error("exception");
+                BEMAN_EXECUTION_THROW(::std::runtime_error("exception"));
             }
         }
     };
@@ -243,7 +243,8 @@ auto test_connect_awaitable() -> void {
             this->iv = value;
             this->bv = true;
         }
-        auto set_error(const ::std::exception_ptr& error) && noexcept -> void {
+        auto set_error([[maybe_unused]] const ::std::exception_ptr& error) && noexcept -> void {
+#ifdef __cpp_exceptions
             try {
                 std::rethrow_exception(error);
             } catch (const std::runtime_error&) {
@@ -251,6 +252,7 @@ auto test_connect_awaitable() -> void {
             } catch (...) {
                 this->bv = false;
             }
+#endif
         }
         auto set_stopped() && noexcept -> void {}
     };
@@ -271,6 +273,7 @@ auto test_connect_awaitable() -> void {
         handle.resume();
         ASSERT(iv == 42 && bv == true);
     }
+#ifdef __cpp_exceptions
     {
         ::std::coroutine_handle<> handle{};
         int                       result{};
@@ -287,6 +290,7 @@ auto test_connect_awaitable() -> void {
         handle.resume();
         ASSERT(iv == 0 && bv == true);
     }
+#endif // __cpp_exceptions
 
     {
         ::std::coroutine_handle<> handle{};

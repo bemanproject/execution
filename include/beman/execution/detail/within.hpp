@@ -296,7 +296,7 @@ struct within_t::state {
 
         const auto p = std::get_if<enter_state>(&state_);
         assert(p);
-        try {
+        BEMAN_EXECUTION_TRY {
             auto  work_sender = ::std::move(p->work);
             auto& new_state =
                 this->state_.template emplace<work_state>(::beman::execution::detail::elide([&]() noexcept {
@@ -304,7 +304,8 @@ struct within_t::state {
                                       ::std::move(exit_sender)};
                 }));
             ::beman::execution::start(new_state.op);
-        } catch (...) {
+        }
+        BEMAN_EXECUTION_CATCH(...) {
             if constexpr (nothrow) {
                 ::beman::execution::detail::unreachable();
             } else {
