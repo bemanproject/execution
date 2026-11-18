@@ -70,6 +70,7 @@ auto test_matching_sig() -> void {
     static_assert(test_detail::matching_sig<int(int&&, bool&, double), int(int, bool&, double&&)>);
 }
 
+#ifdef __cpp_exceptions
 auto test_as_except_ptr() -> void {
     // [exec.general] p8
     std::exception_ptr       ep(std::make_exception_ptr(42));
@@ -86,7 +87,7 @@ auto test_as_except_ptr() -> void {
     //-dk:TODO set up death test: test_detail::as_except_ptr(::std::exception_ptr());
 
     static_assert(std::same_as<std::exception_ptr, decltype(test_detail::as_except_ptr(error{17}))>);
-#ifdef __cpp_exceptions
+
     try {
         std::rethrow_exception(test_detail::as_except_ptr(error{17}));
     } catch (error& e) {
@@ -106,8 +107,8 @@ auto test_as_except_ptr() -> void {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "wrong exception type produced by as_except_ptr for error code");
     }
-#endif // __cpp_exceptions
 }
+#endif // __cpp_exceptions
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -120,5 +121,7 @@ TEST(exec_general) {
     // p4.1 needs to be tested by uses of MANDATE-NOTHROW: 13 places
     test_movable_value(); // p4.2
     test_matching_sig();  // p4.3
+#ifdef __cpp_exceptions
     test_as_except_ptr(); // p4.4
+#endif
 }
