@@ -50,7 +50,13 @@ foreach(EXAMPLE ${EXAMPLES})
     set(EXAMPLE_TARGET ${PROJECT_NAME}.${EXAMPLE})
     add_executable(${EXAMPLE_TARGET})
     target_sources(${EXAMPLE_TARGET} PRIVATE ${EXAMPLE}.cpp)
-    target_compile_definitions(${EXAMPLE_TARGET} PRIVATE NOMINMAX)
+    target_compile_definitions(
+        ${EXAMPLE_TARGET}
+        PRIVATE
+            NOMINMAX
+            # disable libstdc++'s <execution> TBB backend that would require TBB
+            _GLIBCXX_USE_TBB_PAR_BACKEND=0
+    )
     if(BEMAN_USE_MODULES)
         target_compile_definitions(${EXAMPLE_TARGET} PUBLIC BEMAN_HAS_MODULES)
         target_link_libraries(${EXAMPLE_TARGET} PRIVATE beman::execution)
