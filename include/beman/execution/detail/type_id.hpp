@@ -25,7 +25,18 @@ struct type_info {
 template <typename T>
 consteval auto type_id_impl() -> type_info {
     ::std::string_view func_sig;
-#if defined(_MSC_VER)
+#if defined(__clang__)
+    func_sig                  = __PRETTY_FUNCTION__;
+    ::std::string_view prefix = "[T = ";
+    auto               start  = func_sig.find(prefix);
+    if (start != ::std::string_view::npos) {
+        start += prefix.size();
+        auto end = func_sig.find(']', start);
+        if (end != ::std::string_view::npos) {
+            return {func_sig.substr(start, end - start)};
+        }
+    }
+#elif defined(_MSC_VER)
     func_sig                  = __FUNCSIG__;
     ::std::string_view prefix = "type_id_impl<";
     ::std::string_view suffix = ">(void)";
@@ -35,17 +46,6 @@ consteval auto type_id_impl() -> type_info {
         start += prefix.size();
         auto end = func_sig.rfind(suffix);
         if (end != ::std::string_view::npos && end > start) {
-            return {func_sig.substr(start, end - start)};
-        }
-    }
-#elif defined(__clang__)
-    func_sig                  = __PRETTY_FUNCTION__;
-    ::std::string_view prefix = "[T = ";
-    auto               start  = func_sig.find(prefix);
-    if (start != ::std::string_view::npos) {
-        start += prefix.size();
-        auto end = func_sig.find(']', start);
-        if (end != ::std::string_view::npos) {
             return {func_sig.substr(start, end - start)};
         }
     }
