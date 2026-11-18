@@ -473,11 +473,11 @@ $(document).ready(function(){initNavTree('task_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>                ::beman::execution::detail::sub_visit&lt;2uz&gt;(</div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>                    []&lt;<span class="keyword">typename</span> E&gt;(E&amp; error) {</div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::std::same_as&lt;::std::remove_cvref_t&lt;E&gt;, ::std::exception_ptr&gt;) {</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>                            ::std::rethrow_exception(::std::move(error));</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>                            BEMAN_EXECUTION_RETHROW(::std::move(error));</div>
 <div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::std::same_as&lt;::std::remove_cvref_t&lt;E&gt;, ::std::error_code&gt;) {</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>                            throw ::std::system_error{::std::move(error)};</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>                            BEMAN_EXECUTION_THROW(::std::system_error{::std::move(error)});</div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>                            throw ::std::move(error);</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>                            BEMAN_EXECUTION_THROW(::std::move(error));</div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>                        }</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>                    },</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>                    this-&gt;result);</div>
@@ -973,7 +973,7 @@ $(document).ready(function(){initNavTree('task_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span> </div>
 <div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_TASK</span></div>
 <div class="ttc" id="aclassbeman_1_1execution_1_1inplace__stop__source_html"><div class="ttname"><a href="classbeman_1_1execution_1_1inplace__stop__source.html">beman::execution::inplace_stop_source</a></div><div class="ttdef"><b>Definition:</b> inplace_stop_source.hpp:60</div></div>
-<div class="ttc" id="aclassbeman_1_1execution_1_1task__scheduler_html"><div class="ttname"><a href="classbeman_1_1execution_1_1task__scheduler.html">beman::execution::task_scheduler</a></div><div class="ttdef"><b>Definition:</b> task_scheduler.hpp:309</div></div>
+<div class="ttc" id="aclassbeman_1_1execution_1_1task__scheduler_html"><div class="ttname"><a href="classbeman_1_1execution_1_1task__scheduler.html">beman::execution::task_scheduler</a></div><div class="ttdef"><b>Definition:</b> task_scheduler.hpp:331</div></div>
 <div class="ttc" id="aclassbeman_1_1execution_1_1task_html"><div class="ttname"><a href="classbeman_1_1execution_1_1task.html">beman::execution::task</a></div><div class="ttdef"><b>Definition:</b> task.hpp:810</div></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1detail_1_1decayed__same__as_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1detail_1_1decayed__same__as.html">beman::execution::detail::decayed_same_as</a></div><div class="ttdef"><b>Definition:</b> decayed_same_as.hpp:24</div></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1detail_1_1simple__allocator_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1detail_1_1simple__allocator.html">beman::execution::detail::simple_allocator</a></div><div class="ttdef"><b>Definition:</b> simple_allocator.hpp:20</div></div>

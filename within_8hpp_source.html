@@ -358,7 +358,7 @@ $(document).ready(function(){initNavTree('within_8hpp_source.html',''); initResi
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span> </div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        <span class="keyword">const</span> <span class="keyword">auto</span> p = std::get_if&lt;enter_state&gt;(&amp;state_);</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        assert(p);</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        BEMAN_EXECUTION_TRY {</div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>            <span class="keyword">auto</span>  work_sender = ::std::move(p-&gt;work);</div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>            <span class="keyword">auto</span>&amp; new_state =</div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                this-&gt;state_.template emplace&lt;work_state&gt;(::beman::execution::detail::elide([&amp;]() <span class="keyword">noexcept</span> {</div>
@@ -366,60 +366,61 @@ $(document).ready(function(){initNavTree('within_8hpp_source.html',''); initResi
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>                                      ::std::move(exit_sender)};</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>                }));</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>            ::beman::execution::start(new_state.op);</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (nothrow) {</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>                ::beman::execution::detail::unreachable();</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>                <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>(::std::move(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::current_exception());</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>            }</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        }</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    }</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span> </div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> E&gt;</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    <span class="keywordtype">void</span> on_enter_set_error(E&amp;&amp; e) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>(::std::move(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::forward&lt;E&gt;(e));</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    }</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="keywordtype">void</span> on_enter_set_stopped() noexcept { <a class="code hl_variable" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187">::beman::execution::set_stopped</a>(::std::move(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>)); }</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    <span class="keywordtype">void</span> on_work_completion(Tag t, Args&amp;&amp;... args) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        <span class="keyword">const</span> <span class="keyword">auto</span> p = std::get_if&lt;work_state&gt;(&amp;state_);</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        assert(p);</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        <span class="comment">// Put the args in the completion storage, before destroying the operation state.</span></div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        ::beman::execution::detail::completion_storage&lt;work_completions_t&gt; completion;</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        completion.store(t, ::std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="keyword">auto</span> exit_sender = ::std::move(p-&gt;exit_sender);</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        <span class="comment">// Replace the state as we transition to &quot;exit&quot; state.</span></div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        <span class="keyword">auto</span>&amp; new_state = this-&gt;state_.template emplace&lt;exit_state&gt;(::beman::execution::detail::elide([&amp;]() <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            <span class="keywordflow">return</span> exit_state{<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">::beman::execution::connect</a>(::std::move(exit_sender), exit_receiver_t{{*<span class="keyword">this</span>}}),</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>                              std::move(completion)};</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        }));</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        ::beman::execution::start(new_state.op);</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    }</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keywordtype">void</span> on_exit_set_value() noexcept {</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>        <span class="keyword">const</span> <span class="keyword">auto</span> p = std::get_if&lt;exit_state&gt;(&amp;state_);</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        assert(p);</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        std::move(p-&gt;work_completion).complete(::std::move(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>));</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    }</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>};</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>}; <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span> </div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span> </div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#af17556a95ac8b1c8af886e579e046139">  360</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespacebeman_1_1execution.html#af17556a95ac8b1c8af886e579e046139">within_t</a> = ::beman::execution::detail::within_t;</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#ad5c9cd091150876239546a8151d108b4">  372</a></span><span class="keyword">inline</span> constexpr ::beman::execution::within_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#ad5c9cd091150876239546a8151d108b4">within</a>{};</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span> </div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_WITHIN</span></div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        }</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        BEMAN_EXECUTION_CATCH(...) {</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (nothrow) {</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>                ::beman::execution::detail::unreachable();</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>                <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>(::std::move(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::current_exception());</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            }</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        }</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    }</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span> </div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> E&gt;</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    <span class="keywordtype">void</span> on_enter_set_error(E&amp;&amp; e) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>(::std::move(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::forward&lt;E&gt;(e));</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    }</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span> </div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keywordtype">void</span> on_enter_set_stopped() noexcept { <a class="code hl_variable" href="namespacebeman_1_1execution.html#a303495814a79f042a0887317843d6187">::beman::execution::set_stopped</a>(::std::move(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>)); }</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="keywordtype">void</span> on_work_completion(Tag t, Args&amp;&amp;... args) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        <span class="keyword">const</span> <span class="keyword">auto</span> p = std::get_if&lt;work_state&gt;(&amp;state_);</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        assert(p);</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="comment">// Put the args in the completion storage, before destroying the operation state.</span></div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        ::beman::execution::detail::completion_storage&lt;work_completions_t&gt; completion;</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        completion.store(t, ::std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        <span class="keyword">auto</span> exit_sender = ::std::move(p-&gt;exit_sender);</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        <span class="comment">// Replace the state as we transition to &quot;exit&quot; state.</span></div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        <span class="keyword">auto</span>&amp; new_state = this-&gt;state_.template emplace&lt;exit_state&gt;(::beman::execution::detail::elide([&amp;]() <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            <span class="keywordflow">return</span> exit_state{<a class="code hl_variable" href="namespacebeman_1_1execution.html#a4fbf35f4823d5db0af863feee680e072">::beman::execution::connect</a>(::std::move(exit_sender), exit_receiver_t{{*<span class="keyword">this</span>}}),</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                              std::move(completion)};</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        }));</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        ::beman::execution::start(new_state.op);</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    }</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    <span class="keywordtype">void</span> on_exit_set_value() noexcept {</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        <span class="keyword">const</span> <span class="keyword">auto</span> p = std::get_if&lt;exit_state&gt;(&amp;state_);</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        assert(p);</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        std::move(p-&gt;work_completion).complete(::std::move(this-&gt;<a class="code hl_struct" href="structreceiver.html">receiver</a>));</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    }</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>};</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>}; <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span> </div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#af17556a95ac8b1c8af886e579e046139">  361</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespacebeman_1_1execution.html#af17556a95ac8b1c8af886e579e046139">within_t</a> = ::beman::execution::detail::within_t;</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span> </div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution.html#ad5c9cd091150876239546a8151d108b4">  373</a></span><span class="keyword">inline</span> constexpr ::beman::execution::within_t <a class="code hl_variable" href="namespacebeman_1_1execution.html#ad5c9cd091150876239546a8151d108b4">within</a>{};</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span> </div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>} <span class="comment">// namespace beman::execution</span></div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span> </div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_WITHIN</span></div>
 <div class="ttc" id="aconceptbeman_1_1execution_1_1detail_1_1nothrow__callable_html"><div class="ttname"><a href="conceptbeman_1_1execution_1_1detail_1_1nothrow__callable.html">beman::execution::detail::nothrow_callable</a></div><div class="ttdef"><b>Definition:</b> nothrow_callable.hpp:23</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_1_1detail_1_1meta_html"><div class="ttname"><a href="namespacebeman_1_1execution_1_1detail_1_1meta.html">beman::execution::detail::meta</a></div><div class="ttdef"><b>Definition:</b> meta_combine.hpp:21</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_1_1detail_html"><div class="ttname"><a href="namespacebeman_1_1execution_1_1detail.html">beman::execution::detail</a></div><div class="ttdef"><b>Definition:</b> affine.hpp:72</div></div>
@@ -431,9 +432,9 @@ $(document).ready(function(){initNavTree('within_8hpp_source.html',''); initResi
 <div class="ttc" id="anamespacebeman_1_1execution_html_a88ba134b297e5c0b06590a57ae9d5dfe"><div class="ttname"><a href="namespacebeman_1_1execution.html#a88ba134b297e5c0b06590a57ae9d5dfe">beman::execution::set_value</a></div><div class="ttdeci">constexpr set_value_t set_value</div><div class="ttdoc">Customization point object for successful completions.</div><div class="ttdef"><b>Definition:</b> set_value.hpp:51</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html_a9ae9faece7cd1ecdd77f800df873d081"><div class="ttname"><a href="namespacebeman_1_1execution.html#a9ae9faece7cd1ecdd77f800df873d081">beman::execution::completion_signatures_of_t</a></div><div class="ttdeci">decltype(::beman::execution::get_completion_signatures&lt; Sender, Env... &gt;()) completion_signatures_of_t</div><div class="ttdoc">Alias to access the completion signatures of a sender.</div><div class="ttdef"><b>Definition:</b> completion_signatures_of_t.hpp:29</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html_aa65379c197caf507f0a53d984db83244"><div class="ttname"><a href="namespacebeman_1_1execution.html#aa65379c197caf507f0a53d984db83244">beman::execution::exit_scope_sender_of_t</a></div><div class="ttdeci">::beman::execution::detail::single_sender_value_type&lt; Sender, Env &gt; exit_scope_sender_of_t</div><div class="ttdoc">Represents the type of exit scope sender which an asynchronous operation formed from Sender in Env....</div><div class="ttdef"><b>Definition:</b> exit_scope_sender_of_t.hpp:42</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_ad5c9cd091150876239546a8151d108b4"><div class="ttname"><a href="namespacebeman_1_1execution.html#ad5c9cd091150876239546a8151d108b4">beman::execution::within</a></div><div class="ttdeci">constexpr ::beman::execution::within_t within</div><div class="ttdoc">within is a sender adaptor that runs a work sender within the scope of a scope sender.</div><div class="ttdef"><b>Definition:</b> within.hpp:372</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_ad5c9cd091150876239546a8151d108b4"><div class="ttname"><a href="namespacebeman_1_1execution.html#ad5c9cd091150876239546a8151d108b4">beman::execution::within</a></div><div class="ttdeci">constexpr ::beman::execution::within_t within</div><div class="ttdoc">within is a sender adaptor that runs a work sender within the scope of a scope sender.</div><div class="ttdef"><b>Definition:</b> within.hpp:373</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html_adbf95c8f3480ba2c1d78b8c612a9f2f7"><div class="ttname"><a href="namespacebeman_1_1execution.html#adbf95c8f3480ba2c1d78b8c612a9f2f7">beman::execution::env_of_t</a></div><div class="ttdeci">decltype(::beman::execution::get_env(::std::declval&lt; T &gt;())) env_of_t</div><div class="ttdoc">Determine the type of the environment associated with a type.</div><div class="ttdef"><b>Definition:</b> env_of_t.hpp:27</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_af17556a95ac8b1c8af886e579e046139"><div class="ttname"><a href="namespacebeman_1_1execution.html#af17556a95ac8b1c8af886e579e046139">beman::execution::within_t</a></div><div class="ttdeci">::beman::execution::detail::within_t within_t</div><div class="ttdoc">within_t is the type of within.</div><div class="ttdef"><b>Definition:</b> within.hpp:360</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_af17556a95ac8b1c8af886e579e046139"><div class="ttname"><a href="namespacebeman_1_1execution.html#af17556a95ac8b1c8af886e579e046139">beman::execution::within_t</a></div><div class="ttdeci">::beman::execution::detail::within_t within_t</div><div class="ttdoc">within_t is the type of within.</div><div class="ttdef"><b>Definition:</b> within.hpp:361</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html_af6f1fa81c64e7dc8ba45c7744cddae76"><div class="ttname"><a href="namespacebeman_1_1execution.html#af6f1fa81c64e7dc8ba45c7744cddae76">beman::execution::error_types_of_t</a></div><div class="ttdeci">::beman::execution::detail::gather_signatures&lt;::beman::execution::set_error_t, ::beman::execution::completion_signatures_of_t&lt; Sender, Env &gt;, ::std::type_identity_t, Variant &gt; error_types_of_t</div><div class="ttdoc">Type alias to get error types for a sender.</div><div class="ttdef"><b>Definition:</b> error_types_of_t.hpp:44</div></div>
 <div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine.hpp:72</div></div>
 <div class="ttc" id="astructbeman_1_1execution_1_1completion__signatures_html"><div class="ttname"><a href="structbeman_1_1execution_1_1completion__signatures.html">beman::execution::completion_signatures</a></div><div class="ttdoc">Class template used to a specify a list of completion signatures.</div><div class="ttdef"><b>Definition:</b> completion_signatures.hpp:33</div></div>

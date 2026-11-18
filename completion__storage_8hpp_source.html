@@ -156,34 +156,34 @@ $(document).ready(function(){initNavTree('completion__storage_8hpp_source.html',
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span>... Args&gt;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keyword">static</span> <span class="keyword">auto</span> store_into_variant(type&amp; storage, Tag t, Args&amp;&amp;... args) <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keyword">using </span>tuple_type = <span class="keyword">decltype</span>(select_tuple(t, ::std::forward&lt;Args&gt;(args)...));</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            storage.template emplace&lt;tuple_type&gt;(t, ::std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!std::is_nothrow_constructible_v&lt;tuple_type, Tag, Args&amp;&amp;...&gt;) {</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                store_into_variant(storage, <a class="code hl_struct" href="structbeman_1_1execution_1_1set__error__t.html">::beman::execution::set_error_t</a>{}, ::std::current_exception());</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                ::beman::execution::detail::unreachable();</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            }</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        }</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    }</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">template</span> &lt;::beman::execution::receiver Receiver&gt;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> complete_from_variant(type&amp;&amp; storage, Receiver&amp;&amp; <a class="code hl_struct" href="structreceiver.html">receiver</a>) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        std::visit(</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            [&amp;](<span class="keyword">auto</span>&amp;&amp; tuple_data) {</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                <span class="keyword">using </span>tuple_type = ::std::remove_cvref_t&lt;<span class="keyword">decltype</span>(tuple_data)&gt;;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;tuple_type, std::monostate&gt;) {</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                        ::beman::execution::detail::unreachable();</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                        ::std::apply(</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                            [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> tag, <span class="keyword">auto</span>&amp;&amp;... args) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                                tag(::std::forward&lt;Receiver&gt;(<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::forward&lt;<span class="keyword">decltype</span>(args)&gt;(args)...);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                            },</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                            <span class="comment">// Make a copy, in case the tuple is destroyed by the completion call.</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                            tuple_type{::std::move(tuple_data)});</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                    }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        BEMAN_EXECUTION_TRY { storage.template emplace&lt;tuple_type&gt;(t, ::std::forward&lt;Args&gt;(args)...); }</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        BEMAN_EXECUTION_CATCH(...) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!std::is_nothrow_constructible_v&lt;tuple_type, Tag, Args&amp;&amp;...&gt;) {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                store_into_variant(storage, <a class="code hl_struct" href="structbeman_1_1execution_1_1set__error__t.html">::beman::execution::set_error_t</a>{}, ::std::current_exception());</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                ::beman::execution::detail::unreachable();</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            }</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        }</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">template</span> &lt;::beman::execution::receiver Receiver&gt;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> complete_from_variant(type&amp;&amp; storage, Receiver&amp;&amp; <a class="code hl_struct" href="structreceiver.html">receiver</a>) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        std::visit(</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            [&amp;](<span class="keyword">auto</span>&amp;&amp; tuple_data) {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                <span class="keyword">using </span>tuple_type = ::std::remove_cvref_t&lt;<span class="keyword">decltype</span>(tuple_data)&gt;;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                BEMAN_EXECUTION_TRY {</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;tuple_type, std::monostate&gt;) {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                        ::beman::execution::detail::unreachable();</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                        ::std::apply(</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                            [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> tag, <span class="keyword">auto</span>&amp;&amp;... args) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                                tag(::std::forward&lt;Receiver&gt;(<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::forward&lt;<span class="keyword">decltype</span>(args)&gt;(args)...);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                            },</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                            <span class="comment">// Make a copy, in case the tuple is destroyed by the completion call.</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                            tuple_type{::std::move(tuple_data)});</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                    }</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                }</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                BEMAN_EXECUTION_CATCH(...) {</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!std::is_nothrow_constructible_v&lt;tuple_type, tuple_type&amp;&amp;&gt;) {</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                        <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>(::std::forward&lt;Receiver&gt;(<a class="code hl_struct" href="structreceiver.html">receiver</a>), ::std::current_exception());</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                    } <span class="keywordflow">else</span> {</div>

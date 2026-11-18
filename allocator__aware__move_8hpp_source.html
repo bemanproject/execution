@@ -129,7 +129,7 @@ $(document).ready(function(){initNavTree('allocator__aware__move_8hpp_source.htm
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span>beman::execution::detail {</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> Context&gt;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">auto</span> allocator_aware_move(T&amp;&amp; obj, Context&amp;&amp; context) <span class="keyword">noexcept</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    BEMAN_EXECUTION_TRY {</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { ::beman::execution::get_allocator(::beman::execution::get_env(context)); }) {</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">decltype</span>(::beman::execution::detail::is_product_type(obj))()) {</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                <span class="keywordflow">return</span> obj.make_from(::beman::execution::get_allocator(::beman::execution::get_env(context)),</div>
@@ -141,15 +141,16 @@ $(document).ready(function(){initNavTree('allocator__aware__move_8hpp_source.htm
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            return ::std::forward&lt;T&gt;(obj);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        }</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        ::std::terminate(); <span class="comment">//-dk:TODO investigate if that can be avoided</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>}</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_ALLOCATOR_AWARE_MOVE</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    BEMAN_EXECUTION_CATCH(...) {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        ::std::terminate(); <span class="comment">//-dk:TODO investigate if that can be avoided</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    }</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_ALLOCATOR_AWARE_MOVE</span></div>
 <div class="ttc" id="anamespacebeman_1_1execution_1_1detail_html"><div class="ttname"><a href="namespacebeman_1_1execution_1_1detail.html">beman::execution::detail</a></div><div class="ttdef"><b>Definition:</b> affine.hpp:72</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> affine.hpp:72</div></div>
 <div class="ttc" id="anamespacebeman_html"><div class="ttname"><a href="namespacebeman.html">beman</a></div><div class="ttdoc">Namespace for Beman projects http://github.com/bemanproject/beman.</div><div class="ttdef"><b>Definition:</b> affine.hpp:72</div></div>

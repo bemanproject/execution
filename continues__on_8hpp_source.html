@@ -430,37 +430,38 @@ $(document).ready(function(){initNavTree('continues__on_8hpp_source.html',''); i
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                <span class="keyword">using </span>result_t         = ::beman::execution::detail::decayed_tuple&lt;Tag, Args...&gt;;</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> nothrow = (::std::is_nothrow_constructible_v&lt;::std::decay_t&lt;Args&gt;, Args&gt; &amp;&amp; ...);</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                BEMAN_EXECUTION_TRY {</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                    [&amp;]() <span class="keyword">noexcept</span>(nothrow) {</div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                        state.async_result.template emplace&lt;result_t&gt;(Tag(), ::std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                    }();</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>                    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!nothrow) {</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>                        state.async_result</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>                            .template emplace&lt;::std::tuple&lt;::beman::execution::set_error_t, ::std::exception_ptr&gt;&gt;(</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                                <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>, ::std::current_exception());</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                    }</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                }</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                ::beman::execution::start(state.op_state);</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>            }</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>        };</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> complete{complete_impl{}};</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    };</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>};</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span> </div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span><span class="keyword">using </span>continues_on_t = ::beman::execution::detail::continues_on_t;</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> continues_on_t continues_on{};</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON</span></div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                }</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>                BEMAN_EXECUTION_CATCH(...) {</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>                    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!nothrow) {</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>                        state.async_result</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                            .template emplace&lt;::std::tuple&lt;::beman::execution::set_error_t, ::std::exception_ptr&gt;&gt;(</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                                <a class="code hl_variable" href="namespacebeman_1_1execution.html#a0c818e99f3355da27e1b2742a6412e80">::beman::execution::set_error</a>, ::std::current_exception());</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                    }</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>                }</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                ::beman::execution::start(state.op_state);</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>            }</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        };</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> complete{complete_impl{}};</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    };</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>};</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span> </div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span><span class="preprocessor">#include &lt;beman/execution/detail/suppress_pop.hpp&gt;</span></div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span> </div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span><span class="keyword">using </span>continues_on_t = ::beman::execution::detail::continues_on_t;</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> continues_on_t continues_on{};</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>} <span class="comment">// namespace beman::execution</span></div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span> </div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_CONTINUES_ON</span></div>
 <div class="ttc" id="aclassbeman_1_1execution_1_1detail_1_1fwd__env_html"><div class="ttname"><a href="classbeman_1_1execution_1_1detail_1_1fwd__env.html">beman::execution::detail::fwd_env</a></div><div class="ttdef"><b>Definition:</b> fwd_env.hpp:30</div></div>
 <div class="ttc" id="aclassbeman_1_1execution_1_1detail_1_1join__env_html"><div class="ttname"><a href="classbeman_1_1execution_1_1detail_1_1join__env.html">beman::execution::detail::join_env</a></div><div class="ttdef"><b>Definition:</b> join_env.hpp:19</div></div>
 <div class="ttc" id="aclassbeman_1_1execution_1_1detail_1_1sched__env_html"><div class="ttname"><a href="classbeman_1_1execution_1_1detail_1_1sched__env.html">beman::execution::detail::sched_env</a></div><div class="ttdef"><b>Definition:</b> sched_env.hpp:26</div></div>

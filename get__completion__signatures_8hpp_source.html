@@ -212,10 +212,10 @@ $(document).ready(function(){initNavTree('get__completion__signatures_8hpp_sourc
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                                                             <a class="code hl_struct" href="structbeman_1_1execution_1_1set__stopped__t.html">::beman::execution::set_stopped_t</a>()&gt;{};</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        }</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">sizeof</span>...(Env) == 0)</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">return</span> (throw ::beman::execution::detail::dependent_sender_error&lt;Sender&gt;(),</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">return</span> (BEMAN_EXECUTION_THROW(::beman::execution::detail::dependent_sender_error&lt;Sender&gt;()),</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                <a class="code hl_struct" href="structbeman_1_1execution_1_1completion__signatures.html">::beman::execution::completion_signatures&lt;&gt;</a>{});</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">return</span> (throw ::beman::execution::detail::get_completion_signatures_error&lt;Sender, Env...&gt;(),</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">return</span> (BEMAN_EXECUTION_THROW(::beman::execution::detail::get_completion_signatures_error&lt;Sender, Env...&gt;()),</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                <a class="code hl_struct" href="structbeman_1_1execution_1_1completion__signatures.html">::beman::execution::completion_signatures&lt;&gt;</a>{});</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>}</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>} <span class="comment">// namespace beman::execution</span></div>
