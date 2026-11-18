@@ -145,8 +145,8 @@ $(document).ready(function(){initNavTree('prop_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="structbeman_1_1execution_1_1prop.html">   43</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structbeman_1_1execution_1_1prop.html">beman::execution::prop</a> {</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">static_assert</span>(::beman::execution::detail::callable&lt;Query, ::beman::execution::detail::prop_like&lt;Value&gt;&gt;);</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    [[no_unique_address]] Query                                      query_{};</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    [[no_unique_address]] Value                                      value_{};</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    [[no_unique_address]] Query                                      query_;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    [[no_unique_address]] Value                                      value_;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    [[no_unique_address]] ::beman::execution::detail::non_assignable non_assignable_{};</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// prop(prop&amp;&amp;)                = default;</span></div>
