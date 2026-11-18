@@ -142,8 +142,13 @@ foreach(test ${execution_tests})
     else()
         target_link_libraries(${TEST_EXE} PRIVATE beman::execution_headers)
     endif()
-    target_link_libraries(${TEST_EXE} PRIVATE beman.execution.std_par)
-    target_compile_definitions(${TEST_EXE} PRIVATE NOMINMAX)
+    target_compile_definitions(
+        ${TEST_EXE}
+        PRIVATE
+            NOMINMAX
+            # disable libstdc++'s <execution> TBB backend that would require TBB
+            _GLIBCXX_USE_TBB_PAR_BACKEND=0
+    )
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
