@@ -106,7 +106,9 @@ auto inactive(Token token) -> void {
 } // namespace
 
 auto main() -> int {
+#ifdef __cpp_exceptions
     try {
+#endif
 
         exec::stop_source source;
         ::std::thread     act([token = source.get_token()] { active(token); });
@@ -119,7 +121,9 @@ auto main() -> int {
         act.join();
         inact.join();
         print("done\n");
+#ifdef __cpp_exceptions
     } catch (const std::exception& ex) {
         std::cout << "ERROR: " << ex.what() << "\n";
     }
+#endif
 }

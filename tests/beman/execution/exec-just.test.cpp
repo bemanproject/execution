@@ -250,13 +250,14 @@ TEST(exec_just) {
     using type = decltype(test_std::get_completion_signatures<decltype(test_std::just()), test_std::env<>>());
 
     static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>, type>);
-    try {
+    BEMAN_EXECUTION_TRY {
         test_just_constraints();
         test_just();
         test_just_attrs();
         test_completion_signatures();
         test_just_allocator();
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "the just tests shouldn't throw");
     }

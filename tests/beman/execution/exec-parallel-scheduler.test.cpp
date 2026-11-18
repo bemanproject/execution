@@ -267,6 +267,7 @@ auto test_parallel_scheduler_schedule() -> void {
     }
 }
 
+#ifdef __cpp_exceptions
 auto test_parallel_scheduler_exception_propagation() -> void {
     auto sch = test_std::get_parallel_scheduler();
     try {
@@ -293,6 +294,7 @@ auto test_parallel_scheduler_exception_propagation() -> void {
         ASSERT(n == 114514);
     }
 }
+#endif // __cpp_exceptions
 
 } // namespace
 
@@ -310,5 +312,7 @@ TEST(exec_parallel_scheduler) {
     test_parallel_scheduler_synopsis();
     test_replaceability_synopsis();
     test_parallel_scheduler_schedule();
+#ifdef __cpp_exceptions
     test_parallel_scheduler_exception_propagation();
+#endif
 }

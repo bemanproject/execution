@@ -170,7 +170,7 @@ struct then_t {
             template <typename Tag, typename... Args>
             auto operator()(auto, auto& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
                 if constexpr (::std::same_as<Completion, Tag>) {
-                    try {
+                    BEMAN_EXECUTION_TRY {
                         auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
                         if constexpr (::std::same_as<void, decltype(invoke())>) {
                             invoke();
@@ -178,7 +178,8 @@ struct then_t {
                         } else {
                             ::beman::execution::set_value(::std::move(receiver), invoke());
                         }
-                    } catch (...) {
+                    }
+                    BEMAN_EXECUTION_CATCH(...) {
                         if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
 
                                                        )) {

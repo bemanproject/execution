@@ -367,9 +367,8 @@ struct let_t {
             template <typename Tag, typename Receiver, typename... Args>
             auto operator()(auto, auto& state, Receiver& receiver, Tag, Args&&... args) const {
                 if constexpr (::std::same_as<Tag, Completion>) {
-                    try {
-                        (let_bind)(state, receiver, ::std::forward<Args>(args)...);
-                    } catch (...) {
+                    BEMAN_EXECUTION_TRY { (let_bind)(state, receiver, ::std::forward<Args>(args)...); }
+                    BEMAN_EXECUTION_CATCH(...) {
                         if constexpr (not nothrow<Receiver, decltype(state.env), decltype(state.fun), Args...>) {
                             ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
                         }

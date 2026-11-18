@@ -123,10 +123,11 @@ struct spawn_future_receiver {
 
     template <typename Tag, typename... T>
     auto set_complete(T&&... t) noexcept {
-        try {
+        BEMAN_EXECUTION_TRY {
             this->state->result.template emplace<::beman::execution::detail::decayed_tuple<Tag, T...>>(
                 Tag(), ::std::forward<T>(t)...);
-        } catch (...) {
+        }
+        BEMAN_EXECUTION_CATCH(...) {
             if constexpr (!state_t::has_non_throwing_args_copy) {
                 this->state->result
                     .template emplace<::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>>(
@@ -260,11 +261,10 @@ class spawn_future_t {
         using state_traits_t = ::std::allocator_traits<state_alloc_t>;
         state_alloc_t state_alloc(alloc);
         state_t*      op{state_traits_t::allocate(state_alloc, 1u)};
-        try {
-            state_traits_t::construct(state_alloc, op, alloc, make(), tok, senv);
-        } catch (...) {
+        BEMAN_EXECUTION_TRY { state_traits_t::construct(state_alloc, op, alloc, make(), tok, senv); }
+        BEMAN_EXECUTION_CATCH(...) {
             state_traits_t::deallocate(state_alloc, op, 1u);
-            throw;
+            BEMAN_EXECUTION_THROW();
         }
 
         using deleter = decltype([](state_t* p) noexcept { p->abandon(); });

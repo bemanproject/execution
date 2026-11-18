@@ -206,12 +206,13 @@ TEST(exec_let) {
     static_assert(std::same_as<const test_std::let_stopped_t, decltype(test_std::let_stopped)>);
     static_assert(std::same_as<const test_std::let_value_t, decltype(test_std::let_value)>);
 
-    try {
+    BEMAN_EXECUTION_TRY {
         test_let_value();
         test_let_value_allocator();
         test_let_value_env();
         test_completion_signatures();
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "let tests are not expected to throw");
         // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)

@@ -108,7 +108,7 @@ struct psched_bulk_sender {
             const Shape first   = is_parallel_policy ? static_cast<Shape>(begin) : Shape(0);
             const Shape last    = is_parallel_policy ? static_cast<Shape>(end) : shape;
             const auto  call_fn = [=, this]<typename... Args>(Args&... args) {
-                try {
+                BEMAN_EXECUTION_TRY {
                     if constexpr (IsChunked) {
                         static_assert(::std::invocable<Fn, Shape, Shape, Args&...>);
                         fn(first, last, args...);
@@ -118,7 +118,8 @@ struct psched_bulk_sender {
                             fn(i, args...);
                         }
                     }
-                } catch (...) {
+                }
+                BEMAN_EXECUTION_CATCH(...) {
                     if (!has_exception.exchange(true, ::std::memory_order_relaxed)) {
                         exception = ::std::current_exception();
                     }
@@ -143,7 +144,7 @@ struct psched_bulk_sender {
             const auto call_set_value = [this]<typename... Args>(Args&&... args) {
                 ::beman::execution::set_value(::std::move(rcvr), ::std::forward<Args>(args)...);
             };
-            try {
+            BEMAN_EXECUTION_TRY {
                 ::std::visit(
                     [&]<typename T>(T tpl) {
                         if constexpr (::std::same_as<T, ::std::monostate>) {
@@ -153,9 +154,8 @@ struct psched_bulk_sender {
                         }
                     },
                     ::std::move(result));
-            } catch (...) {
-                this->set_error(::std::current_exception());
             }
+            BEMAN_EXECUTION_CATCH(...) { this->set_error(::std::current_exception()); }
         }
 
         template <typename E>
@@ -195,20 +195,21 @@ struct psched_bulk_sender {
             using receiver_concept = ::beman::execution::receiver_tag;
 
             template <typename... Args>
-            auto set_value(Args&&... args) noexcept -> void try {
-                using arg_t = ::beman::execution::detail::decayed_tuple<Args...>;
-                proxy->result.template emplace<arg_t>(::std::forward<Args>(args)...);
-                if (!proxy->backend) [[unlikely]] {
-                    ::std::terminate();
+            auto set_value(Args&&... args) noexcept -> void {
+                BEMAN_EXECUTION_TRY {
+                    using arg_t = ::beman::execution::detail::decayed_tuple<Args...>;
+                    proxy->result.template emplace<arg_t>(::std::forward<Args>(args)...);
+                    if (!proxy->backend) [[unlikely]] {
+                        ::std::terminate();
+                    }
+                    const ::std::size_t s = is_parallel_policy ? proxy->shape : 1uz;
+                    if constexpr (IsChunked) {
+                        proxy->backend->schedule_bulk_chunked(s, *proxy, proxy->storage);
+                    } else {
+                        proxy->backend->schedule_bulk_unchunked(s, *proxy, proxy->storage);
+                    }
                 }
-                const ::std::size_t s = is_parallel_policy ? proxy->shape : 1uz;
-                if constexpr (IsChunked) {
-                    proxy->backend->schedule_bulk_chunked(s, *proxy, proxy->storage);
-                } else {
-                    proxy->backend->schedule_bulk_unchunked(s, *proxy, proxy->storage);
-                }
-            } catch (...) {
-                proxy->set_error(::std::current_exception());
+                BEMAN_EXECUTION_CATCH(...) { proxy->set_error(::std::current_exception()); }
             }
 
             template <typename E>

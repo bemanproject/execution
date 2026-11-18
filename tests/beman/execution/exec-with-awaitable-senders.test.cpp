@@ -55,20 +55,16 @@ coroutine test_await_tuple() {
 coroutine test_await_void() { co_await exec::just(); }
 
 void test_sync_wait_awaitable() {
-    try {
+    BEMAN_EXECUTION_TRY {
         auto [v] = exec::sync_wait(awaitable{}).value_or(std::tuple(0));
         ASSERT(v == 1);
-    } catch (...) {
-        ASSERT_UNREACHABLE();
     }
+    BEMAN_EXECUTION_CATCH(...) { ASSERT_UNREACHABLE(); }
 }
 
 void test_sync_wait_void_awaitable() {
-    try {
-        ASSERT(exec::sync_wait(void_awaitable{}));
-    } catch (...) {
-        ASSERT_UNREACHABLE();
-    }
+    BEMAN_EXECUTION_TRY { ASSERT(exec::sync_wait(void_awaitable{})); }
+    BEMAN_EXECUTION_CATCH(...) { ASSERT_UNREACHABLE(); }
 }
 
 coroutine test_mix_awaitable_and_sender() {

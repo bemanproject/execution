@@ -133,7 +133,7 @@ struct exception {
 };
 struct throws {
     throws() = default;
-    throws(throws&&) noexcept(false) { throw exception{42}; }
+    throws(throws&&) noexcept(false) { BEMAN_EXECUTION_THROW(exception{42}); }
 };
 static_assert(!std::is_nothrow_constructible_v<std::decay_t<throws>, throws>);
 
@@ -251,6 +251,7 @@ auto test_receiver() {
 #endif
     }
 
+#ifdef __cpp_exceptions
     {
         using c_t = test_std::completion_signatures<test_std::set_value_t(int, throws, char)>;
         state_base<c_t> state{};
@@ -275,6 +276,7 @@ auto test_receiver() {
         }
 #endif
     }
+#endif // __cpp_exceptions
 }
 
 struct allocator {

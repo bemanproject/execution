@@ -225,6 +225,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/thread_pool_backend.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/transform_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/try_query.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/type_id.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/type_list.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unspecified_promise.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/unstoppable.hpp
@@ -458,6 +459,7 @@ if(BEMAN_USE_MODULES)
                     thread_pool_backend.cppm
                     transform_sender.cppm
                     try_query.cppm
+                    type_id.cppm
                     type_list.cppm
                     unspecified_promise.cppm
                     unstoppable.cppm

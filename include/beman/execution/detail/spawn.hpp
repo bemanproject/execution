@@ -108,11 +108,12 @@ struct spawn_t {
         using traits_t = ::std::allocator_traits<alloc_t>;
         alloc_t  alloc(all);
         state_t* op{traits_t::allocate(alloc, 1u)};
-        try {
+        BEMAN_EXECUTION_TRY {
             traits_t::construct(alloc, op, all, ::beman::execution::write_env(::std::move(new_sender), senv), tok);
-        } catch (...) {
+        }
+        BEMAN_EXECUTION_CATCH(...) {
             traits_t::deallocate(alloc, op, 1u);
-            throw;
+            BEMAN_EXECUTION_THROW();
         }
     }
     template <::beman::execution::sender Sender, ::beman::execution::scope_token Token>

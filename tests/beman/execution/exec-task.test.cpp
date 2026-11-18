@@ -55,10 +55,12 @@ auto nested_stopped_task(bool& reached_after_stop) -> test_std::task<> {
     reached_after_stop = true;
 }
 
+#ifdef __cpp_exceptions
 auto throwing_task() -> test_std::task<int> {
     throw std::runtime_error("task failure");
     co_return 0;
 }
+#endif
 
 struct integer_error_environment {
     using error_types = test_std::completion_signatures<test_std::set_error_t(int)>;
@@ -183,6 +185,7 @@ auto test_task_stopped_completion() -> void {
     ASSERT(!reached_after_stop);
 }
 
+#ifdef __cpp_exceptions
 auto test_task_errors() -> void {
     bool caught{};
     try {
@@ -204,6 +207,7 @@ auto test_task_errors() -> void {
     }
     ASSERT(caught);
 }
+#endif // __cpp_exceptions
 
 auto test_task_uses_pmr_allocator_arg() -> void {
     counting_memory_resource          resource;
@@ -250,7 +254,9 @@ TEST(exec_task) {
     test_task_is_lazy_and_completes_with_values();
     test_task_awaits_senders_and_tasks();
     test_task_stopped_completion();
+#ifdef __cpp_exceptions
     test_task_errors();
+#endif
     test_task_uses_pmr_allocator_arg();
     test_task_allocator_arg_unrelated_to_allocator_type();
     test_task_propagates_stop_token();

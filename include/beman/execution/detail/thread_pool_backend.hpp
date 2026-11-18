@@ -226,7 +226,7 @@ class thread_pool_backend_base
         const ::std::size_t threads      = num_threads();
         const ::std::size_t chunk_length = shape / threads + (shape % threads != 0uz);
         const ::std::size_t chunk_count  = shape / chunk_length + (shape % chunk_length != 0uz);
-        try {
+        BEMAN_EXECUTION_TRY {
             if (chunk_count == 1uz) {
                 submit(::std::construct_at(
                     reinterpret_cast<single_bulk_task*>(storage.data()), proxy, shape, one_by_one));
@@ -250,9 +250,8 @@ class thread_pool_backend_base
                 // NOLINTEND(*-reinterpret-cast, *-pointer-arithmetic-on-polymorphic-object, *-ctr56-cpp)
                 submit(head, chunk_count);
             }
-        } catch (...) {
-            proxy.set_error(::std::current_exception());
         }
+        BEMAN_EXECUTION_CATCH(...) { proxy.set_error(::std::current_exception()); }
     }
 
     virtual auto submit(task_base* t, ::std::size_t n = 1uz) noexcept -> void = 0;

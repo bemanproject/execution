@@ -63,9 +63,8 @@ struct variant_for_signatures<::beman::execution::completion_signatures<Sigs...>
     template <typename Tag, typename... Args>
     static auto store_into_variant(type& storage, Tag t, Args&&... args) noexcept {
         using tuple_type = decltype(select_tuple(t, ::std::forward<Args>(args)...));
-        try {
-            storage.template emplace<tuple_type>(t, ::std::forward<Args>(args)...);
-        } catch (...) {
+        BEMAN_EXECUTION_TRY { storage.template emplace<tuple_type>(t, ::std::forward<Args>(args)...); }
+        BEMAN_EXECUTION_CATCH(...) {
             if constexpr (!std::is_nothrow_constructible_v<tuple_type, Tag, Args&&...>) {
                 store_into_variant(storage, ::beman::execution::set_error_t{}, ::std::current_exception());
             } else {
@@ -82,7 +81,7 @@ struct variant_for_signatures<::beman::execution::completion_signatures<Sigs...>
         std::visit(
             [&](auto&& tuple_data) {
                 using tuple_type = ::std::remove_cvref_t<decltype(tuple_data)>;
-                try {
+                BEMAN_EXECUTION_TRY {
                     if constexpr (std::is_same_v<tuple_type, std::monostate>) {
                         ::beman::execution::detail::unreachable();
                     } else {
@@ -93,7 +92,8 @@ struct variant_for_signatures<::beman::execution::completion_signatures<Sigs...>
                             // Make a copy, in case the tuple is destroyed by the completion call.
                             tuple_type{::std::move(tuple_data)});
                     }
-                } catch (...) {
+                }
+                BEMAN_EXECUTION_CATCH(...) {
                     if constexpr (!std::is_nothrow_constructible_v<tuple_type, tuple_type&&>) {
                         ::beman::execution::set_error(::std::forward<Receiver>(receiver), ::std::current_exception());
                     } else {
