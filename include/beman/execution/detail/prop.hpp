@@ -43,8 +43,8 @@ template <typename Query, typename Value>
 struct beman::execution::prop {
     static_assert(::beman::execution::detail::callable<Query, ::beman::execution::detail::prop_like<Value>>);
 
-    [[no_unique_address]] Query                                      query_{};
-    [[no_unique_address]] Value                                      value_{};
+    [[no_unique_address]] Query                                      query_;
+    [[no_unique_address]] Value                                      value_;
     [[no_unique_address]] ::beman::execution::detail::non_assignable non_assignable_{};
 
     // prop(prop&&)                = default;
