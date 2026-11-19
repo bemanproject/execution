@@ -36,6 +36,7 @@ list(
     exec-inline-scheduler.test
     exec-get-start-scheduler.test
     exec-get-scheduler.test
+    exec-get-scheduler-allocator.test
     exec-get-stop-token.test
     exec-into-variant.test
     exec-just.test

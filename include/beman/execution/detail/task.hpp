@@ -513,10 +513,20 @@ class propagator<StopSource, StopToken> {
 
 template <typename Sched, typename Env, typename Alloc>
 auto make_sched(const Env& env, const Alloc& alloc) noexcept -> Sched {
-    if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
-        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
-    } else if constexpr (requires { Sched(::beman::execution::get_scheduler(env)); }) {
-        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
+    if constexpr (requires {
+                      { ::beman::execution::get_start_scheduler(env) } -> std::same_as<Sched>;
+                  }) {
+        return ::beman::execution::get_start_scheduler(env);
+    } else if constexpr (requires {
+                             Sched(::beman::execution::get_start_scheduler(env),
+                                   ::beman::execution::get_scheduler_allocator(env));
+                         }) {
+        return ::std::make_obj_using_allocator<Sched>(::beman::execution::get_scheduler_allocator(env),
+                                                      ::beman::execution::get_start_scheduler(env));
+    } else if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
+        return Sched(::beman::execution::get_start_scheduler(env));
+    } else if constexpr (requires { Sched(::beman::execution::get_scheduler_allocator(env)); }) {
+        return ::std::make_obj_using_allocator<Sched>(::beman::execution::get_scheduler_allocator(env));
     } else if constexpr (::std::default_initializable<Sched>) {
         return Sched();
     } else {
