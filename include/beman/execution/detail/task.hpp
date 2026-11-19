@@ -513,8 +513,8 @@ class propagator<StopSource, StopToken> {
     StopToken stop_token_;
 };
 
-template <typename Sched, typename Env, typename Alloc>
-auto make_sched(const Env& env, const Alloc& alloc) noexcept -> Sched {
+template <typename Sched, typename Env>
+auto make_sched(const Env& env) noexcept -> Sched {
     if constexpr (requires {
                       { ::beman::execution::get_start_scheduler(env) } -> std::same_as<Sched>;
                   }) {
@@ -589,7 +589,7 @@ struct state : state_base<Value, Environment> {
         : rcvr(::std::move(r)),
           handle(::std::move(h)),
           holder(env),
-          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
+          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env)),
           propagator(::beman::execution::get_stop_token(env)) {}
 
     auto start() & noexcept -> void { this->handle.start(this).resume(); }
@@ -638,7 +638,7 @@ class awaiter : public state_base<Value, Environment> {
         : parent(parent),
           handle(::std::move(h)),
           holder(env),
-          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
+          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env)),
           propagator(::beman::execution::get_stop_token(env)) {}
 
     static constexpr auto await_ready() noexcept -> bool { return false; }
