@@ -14,9 +14,11 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.forwarding_query;
+import beman.execution.detail.get_allocator;
 import beman.execution.detail.simple_allocator;
 #else
 #include <beman/execution/detail/forwarding_query.hpp>
+#include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/simple_allocator.hpp>
 #endif
 
