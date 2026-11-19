@@ -41,6 +41,7 @@ import beman.execution.detail.get_domain;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_scheduler_allocator;
 import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 export import beman.execution.detail.inplace_stop_source; // [stopsource.inplace], class inplace_stop_source
