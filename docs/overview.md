@@ -820,7 +820,7 @@ where the scheduler's sender completes.
 <details>
 <summary><code>then(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code></summary>
 <a id='then'></a>
-The expression <code>then(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which on successful completion of <code><i>upstream</i></code> (<code>set_value</code>) calls <code><i>fun</i></code> with the arguments passed to <code>set_value</code> and yields the function return as its own result. If the function throws or <code><i>upstream</i></code> completes with an error (<code>set_error</code>) the exception or the error becomes <code><i>sndr</i></code>'s result. If <code><i>upstream</i></code> completes with a cancellation (<code>set_stopped</code>) <code><i>sndr</i></code> also complets with <code>set_stopped</code>.
+The expression <code>then(<i>upstream</i>, <i>fun</i>)</code> yields a sender <code><i>sndr</i></code> which on successful completion of <code><i>upstream</i></code> (<code>set_value</code>) calls <code><i>fun</i></code> with the arguments passed to <code>set_value</code> and yields the function return as its own result. If the function throws or <code><i>upstream</i></code> completes with an error (<code>set_error</code>) the exception or the error becomes <code><i>sndr</i></code>'s result. If <code><i>upstream</i></code> completes with a cancellation (<code>set_stopped</code>) <code><i>sndr</i></code> also completes with <code>set_stopped</code>.
 </details>
 <details>
 <summary><code>unstoppable(<i>sender</i>) -> <i>sender</i></code></summary>
