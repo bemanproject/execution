@@ -153,6 +153,7 @@ export using ::beman::execution::stop_token_of_t;
 
 export using ::beman::execution::get_domain_t;
 export using ::beman::execution::get_scheduler_t;
+export using ::beman::execution::get_scheduler_allocator_t;
 export using ::beman::execution::get_start_scheduler_t;
 export using ::beman::execution::get_delegation_scheduler_t;
 export using ::beman::execution::get_await_completion_adaptor_t;
@@ -160,6 +161,7 @@ export using ::beman::execution::get_forward_progress_guarantee_t;
 
 export using ::beman::execution::get_domain;
 export using ::beman::execution::get_scheduler;
+export using ::beman::execution::get_scheduler_allocator;
 export using ::beman::execution::get_start_scheduler;
 export using ::beman::execution::get_delegation_scheduler;
 export using ::beman::execution::get_await_completion_adaptor;
