@@ -276,15 +276,15 @@ $(document).ready(function(){initNavTree('psched__bulk__sender_8hpp_source.html'
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>      <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        <span class="keyword">alignas</span>(psched_storage_alignment)::std::byte storage[psched_storage_size];</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        ::std::shared_ptr&lt;backend_type&gt;                                                 backend;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        result_type                                                                     result;</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        [[no_unique_address]] ::beman::execution::detail::stop_propagator&lt;stop_token_t&gt; sp;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        Rcvr                                                                            rcvr;</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        Policy                                                                          policy;</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        Shape                                                                           shape;</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        Fn                                                                              fn;</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        ::std::atomic&lt;bool&gt;                                                             has_exception{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        ::std::exception_ptr                                                            exception;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        ::std::shared_ptr&lt;backend_type&gt;                                                                 backend;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        result_type                                                                                     result;</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::beman::execution::detail::stop_propagator&lt;stop_token_t&gt; sp;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        Rcvr                                                                                            rcvr;</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        Policy                                                                                          policy;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        Shape                                                                                           shape;</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        Fn                                                                                              fn;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        ::std::atomic&lt;bool&gt;  has_exception{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        ::std::exception_ptr exception;</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    };</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Rcvr&gt;</div>
@@ -357,12 +357,12 @@ $(document).ready(function(){initNavTree('psched__bulk__sender_8hpp_source.html'
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keyword">auto</span> get_env() const noexcept { return ::beman::execution::get_env(child); }</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    [[no_unique_address]] ::std::bool_constant&lt;IsChunked&gt; _;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    ::std::shared_ptr&lt;backend_type&gt;                       backend;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    Policy                                                policy;</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    Shape                                                 shape;</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    Fn                                                    fn;</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    Child                                                 child;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::std::bool_constant&lt;IsChunked&gt; _;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    ::std::shared_ptr&lt;backend_type&gt;                                       backend;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    Policy                                                                policy;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    Shape                                                                 shape;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    Fn                                                                    fn;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    Child                                                                 child;</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>};</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>} <span class="comment">// namespace beman::execution::detail</span></div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>

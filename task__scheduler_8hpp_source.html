@@ -260,8 +260,8 @@ $(document).ready(function(){initNavTree('task__scheduler_8hpp_source.html','');
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        <span class="keyword">auto</span> do_start() noexcept -&gt; <span class="keywordtype">void</span> { ::beman::execution::start(op); }</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        [[no_unique_address]] Alloc alloc;</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        op_t                        op;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] Alloc alloc;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        op_t                                        op;</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    };</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sndr&gt;</div>
@@ -425,7 +425,7 @@ $(document).ready(function(){initNavTree('task__scheduler_8hpp_source.html','');
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        BEMAN_EXECUTION_CATCH(...) { proxy.set_error(::std::current_exception()); }</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    }</div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    [[no_unique_address]] Alloc alloc;</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] Alloc alloc;</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>};</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>} <span class="comment">// namespace beman::execution::detail</span></div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
@@ -556,8 +556,8 @@ $(document).ready(function(){initNavTree('task__scheduler_8hpp_source.html','');
 <div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>            <span class="keywordflow">return</span> sp_.get_token();</div>
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>        }</div>
 <div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span> </div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>        [[no_unique_address]] ::beman::execution::detail::stop_propagator&lt;stop_token_t&gt; sp_;</div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>        Rcvr                                                                            rcvr_;</div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::beman::execution::detail::stop_propagator&lt;stop_token_t&gt; sp_;</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>        Rcvr                                                                                            rcvr_;</div>
 <div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>    };</div>
 <div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span> </div>
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>    <span class="keyword">template</span> &lt;::beman::execution::receiver Rcvr&gt;</div>

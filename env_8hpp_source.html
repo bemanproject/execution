@@ -166,7 +166,7 @@ $(document).ready(function(){initNavTree('env_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">template</span> &lt;::beman::execution::detail::queryable... Envs&gt;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="structbeman_1_1execution_1_1env.html">   66</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structbeman_1_1execution_1_1env.html">env</a> : ::beman::execution::detail::env_base&lt;Envs&gt;... {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    [[no_unique_address]] ::beman::execution::detail::non_assignable na_{};</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::beman::execution::detail::non_assignable na_{};</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Q, <span class="keyword">typename</span>... Args&gt;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keyword">requires</span>(::beman::execution::detail::has_query&lt;Envs, Q, Args...&gt; || ...)</div>
