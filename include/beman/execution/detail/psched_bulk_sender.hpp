@@ -174,15 +174,15 @@ struct psched_bulk_sender {
 
       public:
         alignas(psched_storage_alignment)::std::byte storage[psched_storage_size];
-        ::std::shared_ptr<backend_type>                                                 backend;
-        result_type                                                                     result;
-        [[no_unique_address]] ::beman::execution::detail::stop_propagator<stop_token_t> sp;
-        Rcvr                                                                            rcvr;
-        Policy                                                                          policy;
-        Shape                                                                           shape;
-        Fn                                                                              fn;
-        ::std::atomic<bool>                                                             has_exception{false};
-        ::std::exception_ptr                                                            exception;
+        ::std::shared_ptr<backend_type>                                                                 backend;
+        result_type                                                                                     result;
+        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::beman::execution::detail::stop_propagator<stop_token_t> sp;
+        Rcvr                                                                                            rcvr;
+        Policy                                                                                          policy;
+        Shape                                                                                           shape;
+        Fn                                                                                              fn;
+        ::std::atomic<bool>  has_exception{false};
+        ::std::exception_ptr exception;
     };
 
     template <typename Rcvr>
@@ -255,12 +255,12 @@ struct psched_bulk_sender {
 
     auto get_env() const noexcept { return ::beman::execution::get_env(child); }
 
-    [[no_unique_address]] ::std::bool_constant<IsChunked> _;
-    ::std::shared_ptr<backend_type>                       backend;
-    Policy                                                policy;
-    Shape                                                 shape;
-    Fn                                                    fn;
-    Child                                                 child;
+    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::std::bool_constant<IsChunked> _;
+    ::std::shared_ptr<backend_type>                                       backend;
+    Policy                                                                policy;
+    Shape                                                                 shape;
+    Fn                                                                    fn;
+    Child                                                                 child;
 };
 } // namespace beman::execution::detail
 

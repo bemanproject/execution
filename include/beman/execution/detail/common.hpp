@@ -21,6 +21,12 @@
 #define BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND 1
 #endif
 
+#if __has_cpp_attribute(msvc::no_unique_address)
+#define BEMAN_EXECUTION_NO_UNIQUE_ADDRESS msvc::no_unique_address
+#else
+#define BEMAN_EXECUTION_NO_UNIQUE_ADDRESS no_unique_address
+#endif
+
 #ifdef __cpp_exceptions
 #define BEMAN_EXECUTION_TRY try
 #define BEMAN_EXECUTION_CATCH(e) catch (e)
