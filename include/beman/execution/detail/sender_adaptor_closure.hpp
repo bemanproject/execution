@@ -111,8 +111,8 @@ using apply_cvref_t = decltype(::beman::execution::detail::forward_like<As>(std:
  */
 template <class Inner, class Outer>
 struct composed_sender_adaptor_closure : sender_adaptor_closure<composed_sender_adaptor_closure<Inner, Outer>> {
-    [[no_unique_address]] Inner inner;
-    [[no_unique_address]] Outer outer;
+    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] Inner inner;
+    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] Outer outer;
 
     template <class Self, sender Sender>
         requires callable<apply_cvref_t<Self, Inner>, Sender> and
@@ -139,7 +139,7 @@ template <class Adaptor, movable_value... BoundArgs>
 struct bound_sender_adaptor_closure : detail::product_type<std::decay_t<BoundArgs>...>,
                                       sender_adaptor_closure<bound_sender_adaptor_closure<Adaptor, BoundArgs...>> {
 
-    [[no_unique_address]] Adaptor adaptor;
+    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] Adaptor adaptor;
 
     template <class Self, sender Sender>
         requires callable<apply_cvref_t<Self, Adaptor>, Sender, apply_cvref_t<Self, BoundArgs>...>

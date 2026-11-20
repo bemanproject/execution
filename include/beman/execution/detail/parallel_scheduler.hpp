@@ -182,8 +182,8 @@ class parallel_scheduler::sender {
             return sp_.get_token();
         }
 
-        [[no_unique_address]] ::beman::execution::detail::stop_propagator<stop_token_t> sp_;
-        Rcvr                                                                            rcvr_;
+        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::beman::execution::detail::stop_propagator<stop_token_t> sp_;
+        Rcvr                                                                                            rcvr_;
     };
 
     template <::beman::execution::receiver Rcvr>

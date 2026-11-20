@@ -158,8 +158,8 @@ struct task_scheduler_backend : ::beman::execution::parallel_scheduler_replaceme
 
         auto do_start() noexcept -> void { ::beman::execution::start(op); }
 
-        [[no_unique_address]] Alloc alloc;
-        op_t                        op;
+        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] Alloc alloc;
+        op_t                                        op;
     };
 
     template <typename Sndr>
@@ -323,7 +323,7 @@ struct task_scheduler_backend_for : task_scheduler_backend_sched<Sched> {
         BEMAN_EXECUTION_CATCH(...) { proxy.set_error(::std::current_exception()); }
     }
 
-    [[no_unique_address]] Alloc alloc;
+    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] Alloc alloc;
 };
 } // namespace beman::execution::detail
 
@@ -454,8 +454,8 @@ class task_scheduler::sender {
             return sp_.get_token();
         }
 
-        [[no_unique_address]] ::beman::execution::detail::stop_propagator<stop_token_t> sp_;
-        Rcvr                                                                            rcvr_;
+        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::beman::execution::detail::stop_propagator<stop_token_t> sp_;
+        Rcvr                                                                                            rcvr_;
     };
 
     template <::beman::execution::receiver Rcvr>

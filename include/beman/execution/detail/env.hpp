@@ -64,7 +64,7 @@ struct find_env_with_args<Q, ::beman::execution::detail::type_list<Args...>, E0,
 namespace beman::execution {
 template <::beman::execution::detail::queryable... Envs>
 struct env : ::beman::execution::detail::env_base<Envs>... {
-    [[no_unique_address]] ::beman::execution::detail::non_assignable na_{};
+    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::beman::execution::detail::non_assignable na_{};
 
     template <typename Q, typename... Args>
         requires(::beman::execution::detail::has_query<Envs, Q, Args...> || ...)
