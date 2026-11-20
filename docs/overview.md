@@ -1364,4 +1364,3 @@ This concept determines if an object of type <code>Rcvr</code> supports the comp
 <a id='valid-specialization'></a>
 This concept determines if the class template <code>T</code> can be specialized with arguments <code>Args...</code>, i.e., if <code>T&lt;Args...&gt;</code> is valid.
 </details>
-
