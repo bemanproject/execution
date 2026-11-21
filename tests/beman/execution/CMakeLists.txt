@@ -157,9 +157,8 @@ foreach(test ${execution_tests})
             PROPERTIES
                 ENVIRONMENT
                     "TSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/tsan.supp"
-    )
-endif()
-
+        )
+    endif()
 endforeach()
 
 # Disable ThreadSanitizer for this specific test target (Clang only)
