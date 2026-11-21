@@ -8,7 +8,7 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
-#include <iostream>
+#include <atomic>
 #include <optional>
 #include <type_traits>
 #include <utility>
@@ -86,10 +86,7 @@ struct beman::execution::detail::stop_when_t::sender {
 
         struct cb_t {
             ::beman::execution::inplace_stop_source& source;
-            auto                                     operator()() const noexcept {
-                ::std::cout << "stop_when: stop requested\n" << ::std::flush;
-                this->source.request_stop();
-            }
+            auto                                     operator()() const noexcept { this->source.request_stop(); }
         };
         struct env {
             base_state<Rcvr>* st;
