@@ -36,6 +36,7 @@ list(
     exec-inline-scheduler.test
     exec-get-start-scheduler.test
     exec-get-scheduler.test
+    exec-get-scheduler-allocator.test
     exec-get-stop-token.test
     exec-into-variant.test
     exec-just.test
@@ -150,6 +151,14 @@ foreach(test ${execution_tests})
             _GLIBCXX_USE_TBB_PAR_BACKEND=0
     )
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
+    if(BEMAN_BUILDSYS_SANITIZER STREQUAL "TSan")
+        set_tests_properties(
+            ${TEST_EXE}
+            PROPERTIES
+                ENVIRONMENT
+                    "TSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/tsan.supp"
+        )
+    endif()
 endforeach()
 
 # Disable ThreadSanitizer for this specific test target (Clang only)

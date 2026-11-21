@@ -32,6 +32,7 @@ import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_scheduler_allocator;
 import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.inline_scheduler;
@@ -67,6 +68,7 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_scheduler_allocator.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/inline_scheduler.hpp>
@@ -511,12 +513,22 @@ class propagator<StopSource, StopToken> {
     StopToken stop_token_;
 };
 
-template <typename Sched, typename Env, typename Alloc>
-auto make_sched(const Env& env, const Alloc& alloc) noexcept -> Sched {
-    if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
-        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
-    } else if constexpr (requires { Sched(::beman::execution::get_scheduler(env)); }) {
-        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
+template <typename Sched, typename Env>
+auto make_sched(const Env& env) noexcept -> Sched {
+    if constexpr (requires {
+                      { ::beman::execution::get_start_scheduler(env) } -> std::same_as<Sched>;
+                  }) {
+        return ::beman::execution::get_start_scheduler(env);
+    } else if constexpr (requires {
+                             Sched(::beman::execution::get_start_scheduler(env),
+                                   ::beman::execution::get_scheduler_allocator(env));
+                         }) {
+        return ::std::make_obj_using_allocator<Sched>(::beman::execution::get_scheduler_allocator(env),
+                                                      ::beman::execution::get_start_scheduler(env));
+    } else if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
+        return Sched(::beman::execution::get_start_scheduler(env));
+    } else if constexpr (requires { Sched(::beman::execution::get_scheduler_allocator(env)); }) {
+        return ::std::make_obj_using_allocator<Sched>(::beman::execution::get_scheduler_allocator(env));
     } else if constexpr (::std::default_initializable<Sched>) {
         return Sched();
     } else {
@@ -577,7 +589,7 @@ struct state : state_base<Value, Environment> {
         : rcvr(::std::move(r)),
           handle(::std::move(h)),
           holder(env),
-          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
+          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env)),
           propagator(::beman::execution::get_stop_token(env)) {}
 
     auto start() & noexcept -> void { this->handle.start(this).resume(); }
@@ -626,7 +638,7 @@ class awaiter : public state_base<Value, Environment> {
         : parent(parent),
           handle(::std::move(h)),
           holder(env),
-          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
+          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env)),
           propagator(::beman::execution::get_stop_token(env)) {}
 
     static constexpr auto await_ready() noexcept -> bool { return false; }
