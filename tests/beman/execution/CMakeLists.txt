@@ -152,11 +152,11 @@ foreach(test ${execution_tests})
     )
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
     if(BEMAN_BUILDSYS_SANITIZER STREQUAL "TSan")
-    set_tests_properties(
-        ${TEST_EXE}
-        PROPERTIES
-            ENVIRONMENT
-                "TSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/tsan.supp"
+        set_tests_properties(
+            ${TEST_EXE}
+            PROPERTIES
+                ENVIRONMENT
+                    "TSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/tsan.supp"
     )
 endif()
 
