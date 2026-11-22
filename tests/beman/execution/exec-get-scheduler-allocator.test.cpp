@@ -45,6 +45,9 @@ struct with_non_allocator_and_get_allocator {
     auto query(test_std::get_scheduler_allocator_t) const noexcept { return non_allocator{}; }
     auto query(test_std::get_allocator_t) const noexcept { return allocator<plain>{}; }
 };
+struct with_get_allocator_and_non_allocator {
+    auto query(test_std::get_allocator_t) const noexcept { return non_allocator{}; }
+};
 template <bool Noexcept, typename A = allocator<sched>>
 struct with_scheduler_allocator {
     mutable std::remove_cvref_t<A> a;
@@ -84,6 +87,7 @@ TEST(exec_get_scheduler_allocator) {
     test_get_scheduler_allocator<false>(with_allocator<false>());
     test_get_scheduler_allocator<false>(with_both<false, false>());
     test_get_scheduler_allocator<false>(with_non_allocator_and_get_allocator());
+    test_get_scheduler_allocator<false>(with_get_allocator_and_non_allocator());
     test_get_scheduler_allocator<false>(with_both<false, true>());
 
     test_get_scheduler_allocator<true, allocator<sched>>(with_scheduler_allocator<true>());

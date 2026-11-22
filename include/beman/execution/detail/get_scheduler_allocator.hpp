@@ -59,11 +59,22 @@ struct get_scheduler_allocator_t {
                      { object.query(tag) } noexcept;
                  }))
     auto operator()(Object&& object) const noexcept
-        -> decltype(auto) = BEMAN_EXECUTION_DELETE("object.query(get_allocator) is needs to be noexcept");
+        -> decltype(auto) = BEMAN_EXECUTION_DELETE("object.query(get_allocator) needs to be noexcept");
     template <typename Object>
         requires((not requires(const Object& object, const get_scheduler_allocator_t& tag) { object.query(tag); }) &&
                  (requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
+                     object.query(tag);
+                 }) && (requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
                      { object.query(tag) } noexcept;
+                 }) && (!requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
+                     { object.query(tag) } noexcept -> ::beman::execution::detail::simple_allocator<>;
+                 }))
+    auto operator()(Object&& object) const noexcept
+        -> decltype(auto) = BEMAN_EXECUTION_DELETE("object.query(get_allocator) needs to produce a simple_allocator");
+    template <typename Object>
+        requires((not requires(const Object& object, const get_scheduler_allocator_t& tag) { object.query(tag); }) &&
+                 (requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
+                     { object.query(tag) } noexcept -> ::beman::execution::detail::simple_allocator<>;
                  }))
     auto operator()(Object&& object) const noexcept -> decltype(auto) {
         return ::std::as_const(object).query(::beman::execution::get_allocator);
