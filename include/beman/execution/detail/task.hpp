@@ -533,7 +533,7 @@ auto make_sched(const Env& env) noexcept -> Sched {
         return Sched();
     } else {
         static_assert(false,
-                      "`Env` should provide `get_start_scheduler` or `get_scheduler`; otherwise, `Sched` should be "
+                      "`Env` should provide `get_start_scheduler`; otherwise, `Sched` should be "
                       "default-initializable.");
         ::beman::execution::detail::unreachable();
     }

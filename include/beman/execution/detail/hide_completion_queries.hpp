@@ -1,8 +1,8 @@
 // include/beman/execution/detail/hide_completion_queries.hpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_HIDE_COMPLETION_QUERIES
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_HIDE_COMPLETION_QUERIES
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_HIDE_COMPLETION_QUERIES
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_HIDE_COMPLETION_QUERIES
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -50,4 +50,4 @@ struct hide_completion_queries {
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_HIDE_COMPLETION_QUERIES
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_HIDE_COMPLETION_QUERIES

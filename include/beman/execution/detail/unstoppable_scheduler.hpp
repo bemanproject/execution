@@ -1,8 +1,8 @@
 // include/beman/execution/detail/unstoppable_scheduler.hpp          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_SCHEDULER
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_SCHEDULER
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_SCHEDULER
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_SCHEDULER
 
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -47,4 +47,4 @@ struct unstoppable_scheduler {
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_SCHEDULER
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_UNSTOPPABLE_SCHEDULER

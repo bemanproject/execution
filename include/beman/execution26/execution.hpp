@@ -44,6 +44,8 @@ using ::beman::execution::get_env;
 using ::beman::execution::get_env_t;
 using ::beman::execution::get_parallel_scheduler;
 using ::beman::execution::get_scheduler;
+using ::beman::execution::get_scheduler_allocator;
+using ::beman::execution::get_scheduler_allocator_t;
 using ::beman::execution::get_scheduler_t;
 using ::beman::execution::get_stop_token;
 using ::beman::execution::get_stop_token_t;

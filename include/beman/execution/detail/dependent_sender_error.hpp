@@ -1,8 +1,8 @@
 // include/beman/execution/detail/dependent_sender_error.hpp          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_DEPENDENT_SENDER_ERROR
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_DEPENDENT_SENDER_ERROR
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_DEPENDENT_SENDER_ERROR
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_DEPENDENT_SENDER_ERROR
 
 // ----------------------------------------------------------------------------
 

@@ -22,7 +22,7 @@ import beman.execution.detail.simple_allocator;
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution {
+namespace beman::execution::detail {
 struct get_allocator_t {
     template <typename Object>
         requires(not requires(Object&& object, const get_allocator_t& tag) { ::std::as_const(object).query(tag); })
@@ -58,6 +58,10 @@ struct get_allocator_t {
     constexpr auto query(const ::beman::execution::forwarding_query_t&) const noexcept -> bool { return true; }
 };
 
+} // namespace beman::execution::detail
+
+namespace beman::execution {
+using get_allocator_t = ::beman::execution::detail::get_allocator_t;
 inline constexpr get_allocator_t get_allocator{};
 } // namespace beman::execution
 

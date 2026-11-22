@@ -1,8 +1,8 @@
 // include/beman/execution/detail/new_object.hpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_NEW_OBJECT
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_NEW_OBJECT
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_NEW_OBJECT
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_NEW_OBJECT
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -43,4 +43,4 @@ auto delete_object(const Allocator& allocator, T* ptr) noexcept -> void {
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_NEW_OBJECT
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_NEW_OBJECT

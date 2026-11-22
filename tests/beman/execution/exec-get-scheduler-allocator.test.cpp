@@ -7,6 +7,8 @@
 import std;
 #else
 #include <concepts>
+#include <cstddef>
+#include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
@@ -26,8 +28,8 @@ struct non_allocator {};
 template <typename T>
 struct allocator {
     using value_type = T;
-    auto allocate(std::size_t n) -> value_type* { return static_cast<T*>(operator new(n)); }
-    auto deallocate(value_type* ptr, size_t) { operator delete(ptr); }
+    auto allocate(std::size_t n) -> value_type* { return static_cast<T*>(operator new(n * sizeof(T))); }
+    auto deallocate(value_type* ptr, std::size_t) { operator delete(ptr); }
     bool operator==(const allocator&) const = default;
 };
 
@@ -36,6 +38,13 @@ static_assert(test_detail::simple_allocator<allocator<plain>>);
 static_assert(test_detail::simple_allocator<allocator<sched>>);
 
 struct with_neither {};
+struct with_non_allocator {
+    auto query(test_std::get_scheduler_allocator_t) const noexcept { return non_allocator{}; }
+};
+struct with_non_allocator_and_get_allocator {
+    auto query(test_std::get_scheduler_allocator_t) const noexcept { return non_allocator{}; }
+    auto query(test_std::get_allocator_t) const noexcept { return allocator<plain>{}; }
+};
 template <bool Noexcept, typename A = allocator<sched>>
 struct with_scheduler_allocator {
     mutable std::remove_cvref_t<A> a;
@@ -65,16 +74,22 @@ auto test_get_scheduler_allocator(const auto& env) {
 // ----------------------------------------------------------------------------
 
 TEST(exec_get_scheduler_allocator) {
+    static_assert(
+        std::same_as<const test_std::get_scheduler_allocator_t, decltype(test_std::get_scheduler_allocator)>);
+    static_assert(test_std::forwarding_query(test_std::get_scheduler_allocator));
+
     test_get_scheduler_allocator<false>(with_neither());
+    test_get_scheduler_allocator<false>(with_non_allocator());
     test_get_scheduler_allocator<false>(with_scheduler_allocator<false>());
     test_get_scheduler_allocator<false>(with_allocator<false>());
     test_get_scheduler_allocator<false>(with_both<false, false>());
+    test_get_scheduler_allocator<false>(with_non_allocator_and_get_allocator());
+    test_get_scheduler_allocator<false>(with_both<false, true>());
 
     test_get_scheduler_allocator<true, allocator<sched>>(with_scheduler_allocator<true>());
     test_get_scheduler_allocator<true, allocator<plain>>(with_allocator<true>());
     test_get_scheduler_allocator<true, allocator<sched>>(with_both<true, true>());
     test_get_scheduler_allocator<true, allocator<sched>>(with_both<true, false>());
-    test_get_scheduler_allocator<true, allocator<plain>>(with_both<false, true>());
 
     test_get_scheduler_allocator<true, allocator<sched>>(with_scheduler_allocator<true, allocator<sched>>());
     test_get_scheduler_allocator<true, allocator<sched>&>(with_scheduler_allocator<true, allocator<sched>&>());
