@@ -368,8 +368,11 @@ auto test_scheduler_lifetime() -> void {
     }
     {
         bool alive{true};
-        auto state{
-            test_std::connect([]() -> test_std::task<> { [[maybe_unused]] auto token{co_await test_std::read_env(test_std::get_stop_token)}; }(), receiver{&alive})};
+        auto state{test_std::connect(
+            []() -> test_std::task<> {
+                [[maybe_unused]] auto token{co_await test_std::read_env(test_std::get_stop_token)};
+            }(),
+            receiver{&alive})};
         test_std::start(state);
     }
 }
