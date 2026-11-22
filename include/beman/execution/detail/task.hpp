@@ -577,12 +577,13 @@ class state_base : public result_type<Value, error_types_of_t<Environment>> {
 template <typename Value, typename Environment, typename OwnPromise, typename Receiver>
 // ReSharper disable once CppPolymorphicClassWithNonVirtualPublicDestructor
 struct state : state_base<Value, Environment> {
-    using operation_state_concept = ::beman::execution::operation_state_tag;
-    using scheduler_type          = typename state_base<Value, Environment>::scheduler_type;
-    using allocator_type          = typename state_base<Value, Environment>::allocator_type;
-    using stop_source_type        = typename state_base<Value, Environment>::stop_source_type;
-    using stop_token_type         = typename state_base<Value, Environment>::stop_token_type;
-    using upstream_stop_token_t   = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Receiver>>;
+    using operation_state_concept  = ::beman::execution::operation_state_tag;
+    using scheduler_type           = typename state_base<Value, Environment>::scheduler_type;
+    using allocator_type           = typename state_base<Value, Environment>::allocator_type;
+    using stop_source_type         = typename state_base<Value, Environment>::stop_source_type;
+    using stop_token_type          = typename state_base<Value, Environment>::stop_token_type;
+    using upstream_stop_token_type = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Receiver>>;
+    using propagator_type = ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_type>;
 
     template <typename H, typename Env>
     state(Receiver r, H h, const Env& env) noexcept
@@ -625,23 +626,23 @@ struct state : state_base<Value, Environment> {
 
     auto do_get_environment() noexcept -> Environment& final { return this->holder.environment; }
 
-    Receiver                                                                              rcvr;
-    ::beman::execution::detail::task::handle<OwnPromise>                                  handle;
-    env_holder<Environment, ::beman::execution::env_of_t<Receiver>>                       holder;
-    ::std::optional<scheduler_type>                                                       scheduler;
-    using propagator_t = ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_t>;
-    ::std::optional<propagator_t> propagator;
+    Receiver                                                        rcvr;
+    ::beman::execution::detail::task::handle<OwnPromise>            handle;
+    env_holder<Environment, ::beman::execution::env_of_t<Receiver>> holder;
+    ::std::optional<scheduler_type>                                 scheduler;
+    ::std::optional<propagator_type>                                propagator;
 };
 
 template <typename Value, typename Environment, typename OwnPromise, typename ParentPromise>
 // ReSharper disable once CppPolymorphicClassWithNonVirtualPublicDestructor
 class awaiter : public state_base<Value, Environment> {
   public:
-    using allocator_type        = typename state_base<Value, Environment>::allocator_type;
-    using scheduler_type        = typename state_base<Value, Environment>::scheduler_type;
-    using stop_source_type      = typename state_base<Value, Environment>::stop_source_type;
-    using stop_token_type       = typename state_base<Value, Environment>::stop_token_type;
-    using upstream_stop_token_t = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<ParentPromise>>;
+    using allocator_type           = typename state_base<Value, Environment>::allocator_type;
+    using scheduler_type           = typename state_base<Value, Environment>::scheduler_type;
+    using stop_source_type         = typename state_base<Value, Environment>::stop_source_type;
+    using stop_token_type          = typename state_base<Value, Environment>::stop_token_type;
+    using upstream_stop_token_type = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<ParentPromise>>;
+    using propagator_type = ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_type>;
 
     explicit awaiter(::std::coroutine_handle<ParentPromise> parent, handle<OwnPromise> h, const auto& env) noexcept
         : parent(parent), handle(::std::move(h)), holder(env), scheduler(), propagator() {}
@@ -690,12 +691,11 @@ class awaiter : public state_base<Value, Environment> {
 
     auto do_get_environment() noexcept -> Environment& final { return this->holder.environment; }
 
-    ::std::coroutine_handle<ParentPromise>                                                parent;
-    ::beman::execution::detail::task::handle<OwnPromise>                                  handle;
-    env_holder<Environment, ::beman::execution::env_of_t<ParentPromise>>                  holder;
-    ::std::optional<scheduler_type>                                                       scheduler;
-    using propagator_t = ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_t>;
-    ::std::optional<propagator_t> propagator;
+    ::std::coroutine_handle<ParentPromise>                               parent;
+    ::beman::execution::detail::task::handle<OwnPromise>                 handle;
+    env_holder<Environment, ::beman::execution::env_of_t<ParentPromise>> holder;
+    ::std::optional<scheduler_type>                                      scheduler;
+    ::std::optional<propagator_type>                                     propagator;
 };
 
 template <typename Promise>
