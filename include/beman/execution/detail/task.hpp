@@ -32,6 +32,7 @@ import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_scheduler_allocator;
 import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.inline_scheduler;
@@ -67,6 +68,7 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_scheduler_allocator.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/inline_scheduler.hpp>
@@ -511,17 +513,27 @@ class propagator<StopSource, StopToken> {
     StopToken stop_token_;
 };
 
-template <typename Sched, typename Env, typename Alloc>
-auto make_sched(const Env& env, const Alloc& alloc) noexcept -> Sched {
-    if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
-        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
-    } else if constexpr (requires { Sched(::beman::execution::get_scheduler(env)); }) {
-        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
+template <typename Sched, typename Env>
+auto make_sched(const Env& env) noexcept -> Sched {
+    if constexpr (requires {
+                      { ::beman::execution::get_start_scheduler(env) } -> std::same_as<Sched>;
+                  }) {
+        return ::beman::execution::get_start_scheduler(env);
+    } else if constexpr (requires {
+                             Sched(::beman::execution::get_start_scheduler(env),
+                                   ::beman::execution::get_scheduler_allocator(env));
+                         }) {
+        return Sched(::beman::execution::get_start_scheduler(env), ::beman::execution::get_scheduler_allocator(env));
+    } else if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
+        return Sched(::beman::execution::get_start_scheduler(env));
+    } else if constexpr (requires { Sched(::beman::execution::get_scheduler_allocator(env)); }) {
+        return Sched(::beman::execution::get_scheduler_allocator(env));
     } else if constexpr (::std::default_initializable<Sched>) {
         return Sched();
     } else {
         static_assert(false,
-                      "`Env` should provide `get_start_scheduler` or `get_scheduler`; otherwise, `Sched` should be "
+                      "`Env` should provide `get_start_scheduler` and/or `get_scheduler_allocator`; otherwise, "
+                      "`Sched` should be "
                       "default-initializable.");
         ::beman::execution::detail::unreachable();
     }
@@ -565,25 +577,28 @@ class state_base : public result_type<Value, error_types_of_t<Environment>> {
 template <typename Value, typename Environment, typename OwnPromise, typename Receiver>
 // ReSharper disable once CppPolymorphicClassWithNonVirtualPublicDestructor
 struct state : state_base<Value, Environment> {
-    using operation_state_concept = ::beman::execution::operation_state_tag;
-    using scheduler_type          = typename state_base<Value, Environment>::scheduler_type;
-    using allocator_type          = typename state_base<Value, Environment>::allocator_type;
-    using stop_source_type        = typename state_base<Value, Environment>::stop_source_type;
-    using stop_token_type         = typename state_base<Value, Environment>::stop_token_type;
-    using upstream_stop_token_t   = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Receiver>>;
+    using operation_state_concept  = ::beman::execution::operation_state_tag;
+    using scheduler_type           = typename state_base<Value, Environment>::scheduler_type;
+    using allocator_type           = typename state_base<Value, Environment>::allocator_type;
+    using stop_source_type         = typename state_base<Value, Environment>::stop_source_type;
+    using stop_token_type          = typename state_base<Value, Environment>::stop_token_type;
+    using upstream_stop_token_type = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Receiver>>;
+    using propagator_type = ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_type>;
 
     template <typename H, typename Env>
     state(Receiver r, H h, const Env& env) noexcept
-        : rcvr(::std::move(r)),
-          handle(::std::move(h)),
-          holder(env),
-          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
-          propagator(::beman::execution::get_stop_token(env)) {}
+        : rcvr(::std::move(r)), handle(::std::move(h)), holder(env), scheduler(), propagator() {}
 
-    auto start() & noexcept -> void { this->handle.start(this).resume(); }
+    auto start() & noexcept -> void {
+        const auto& env = ::beman::execution::get_env(this->rcvr);
+        this->scheduler.emplace(::beman::execution::detail::task::make_sched<scheduler_type>(env));
+        this->handle.start(this).resume();
+    }
 
   private:
     auto do_complete() noexcept -> ::std::coroutine_handle<> final {
+        this->propagator.reset();
+        this->scheduler.reset();
         this->handle.reset();
         this->result_complete(::std::move(this->rcvr));
         return ::std::noop_coroutine();
@@ -599,41 +614,46 @@ struct state : state_base<Value, Environment> {
         }
     }
 
-    auto do_get_start_scheduler() noexcept -> scheduler_type final { return this->scheduler; }
+    auto do_get_start_scheduler() noexcept -> scheduler_type final { return *this->scheduler; }
 
-    auto do_get_stop_token() noexcept -> stop_token_type final { return this->propagator.get_token(); }
+    auto do_get_stop_token() noexcept -> stop_token_type final {
+        if (!this->propagator) {
+            const auto& env = ::beman::execution::get_env(this->rcvr);
+            this->propagator.emplace(::beman::execution::get_stop_token(env));
+        }
+        return this->propagator->get_token();
+    }
 
     auto do_get_environment() noexcept -> Environment& final { return this->holder.environment; }
 
-    Receiver                                                                              rcvr;
-    ::beman::execution::detail::task::handle<OwnPromise>                                  handle;
-    env_holder<Environment, ::beman::execution::env_of_t<Receiver>>                       holder;
-    scheduler_type                                                                        scheduler;
-    ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_t> propagator;
+    Receiver                                                        rcvr;
+    ::beman::execution::detail::task::handle<OwnPromise>            handle;
+    env_holder<Environment, ::beman::execution::env_of_t<Receiver>> holder;
+    ::std::optional<scheduler_type>                                 scheduler;
+    ::std::optional<propagator_type>                                propagator;
 };
 
 template <typename Value, typename Environment, typename OwnPromise, typename ParentPromise>
 // ReSharper disable once CppPolymorphicClassWithNonVirtualPublicDestructor
 class awaiter : public state_base<Value, Environment> {
   public:
-    using allocator_type        = typename state_base<Value, Environment>::allocator_type;
-    using scheduler_type        = typename state_base<Value, Environment>::scheduler_type;
-    using stop_source_type      = typename state_base<Value, Environment>::stop_source_type;
-    using stop_token_type       = typename state_base<Value, Environment>::stop_token_type;
-    using upstream_stop_token_t = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<ParentPromise>>;
+    using allocator_type           = typename state_base<Value, Environment>::allocator_type;
+    using scheduler_type           = typename state_base<Value, Environment>::scheduler_type;
+    using stop_source_type         = typename state_base<Value, Environment>::stop_source_type;
+    using stop_token_type          = typename state_base<Value, Environment>::stop_token_type;
+    using upstream_stop_token_type = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<ParentPromise>>;
+    using propagator_type = ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_type>;
 
     explicit awaiter(::std::coroutine_handle<ParentPromise> parent, handle<OwnPromise> h, const auto& env) noexcept
-        : parent(parent),
-          handle(::std::move(h)),
-          holder(env),
-          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
-          propagator(::beman::execution::get_stop_token(env)) {}
+        : parent(parent), handle(::std::move(h)), holder(env), scheduler(), propagator() {}
 
     static constexpr auto await_ready() noexcept -> bool { return false; }
 
     auto await_suspend([[maybe_unused]] ::std::coroutine_handle<ParentPromise> p) noexcept
         -> ::std::coroutine_handle<> {
         assert(p == this->parent);
+        const auto& env = ::beman::execution::get_env(this->parent.promise());
+        this->scheduler.emplace(::beman::execution::detail::task::make_sched<scheduler_type>(env));
         return this->handle.start(this);
     }
 
@@ -641,6 +661,8 @@ class awaiter : public state_base<Value, Environment> {
 
   private:
     auto do_complete() noexcept -> ::std::coroutine_handle<> final {
+        this->propagator.reset();
+        this->scheduler.reset();
         if (this->no_completion_set()) {
             return this->parent.promise().unhandled_stopped();
         }
@@ -657,17 +679,23 @@ class awaiter : public state_base<Value, Environment> {
         }
     }
 
-    auto do_get_start_scheduler() noexcept -> scheduler_type final { return this->scheduler; }
+    auto do_get_start_scheduler() noexcept -> scheduler_type final { return *this->scheduler; }
 
-    auto do_get_stop_token() noexcept -> stop_token_type final { return this->propagator.get_token(); }
+    auto do_get_stop_token() noexcept -> stop_token_type final {
+        if (!this->propagator) {
+            const auto& env = ::beman::execution::get_env(this->parent.promise());
+            this->propagator.emplace(::beman::execution::get_stop_token(env));
+        }
+        return this->propagator->get_token();
+    }
 
     auto do_get_environment() noexcept -> Environment& final { return this->holder.environment; }
 
-    ::std::coroutine_handle<ParentPromise>                                                parent;
-    ::beman::execution::detail::task::handle<OwnPromise>                                  handle;
-    env_holder<Environment, ::beman::execution::env_of_t<ParentPromise>>                  holder;
-    scheduler_type                                                                        scheduler;
-    ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_t> propagator;
+    ::std::coroutine_handle<ParentPromise>                               parent;
+    ::beman::execution::detail::task::handle<OwnPromise>                 handle;
+    env_holder<Environment, ::beman::execution::env_of_t<ParentPromise>> holder;
+    ::std::optional<scheduler_type>                                      scheduler;
+    ::std::optional<propagator_type>                                     propagator;
 };
 
 template <typename Promise>

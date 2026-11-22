@@ -107,6 +107,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_forward_progress_guarantee.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_scheduler.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_scheduler_allocator.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_start_scheduler.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/get_stop_token.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/has_as_awaitable.hpp
@@ -342,6 +343,7 @@ if(BEMAN_USE_MODULES)
                     get_env.cppm
                     get_forward_progress_guarantee.cppm
                     get_scheduler.cppm
+                    get_scheduler_allocator.cppm
                     get_start_scheduler.cppm
                     get_stop_token.cppm
                     has_as_awaitable.cppm

@@ -36,6 +36,7 @@ import beman.execution.detail.get_domain;
 import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_scheduler_allocator;
 import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.indeterminate_domain;
@@ -114,6 +115,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/get_forward_progress_guarantee.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_scheduler_allocator.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/indeterminate_domain.hpp>

@@ -1,0 +1,5 @@
+# libc++abi/libsupc++ are not built with TSan: the atomic reference count
+# of exception objects is invisible, so freeing the exception after
+# catching it on another thread is reported as a race.
+race:__cxa_end_catch
+race:__cxa_decrement_exception_refcount
