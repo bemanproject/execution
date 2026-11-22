@@ -316,11 +316,28 @@ struct test_allocator {
 };
 static_assert(test_detail::simple_allocator<test_allocator<int>>);
 
+struct test_stop_token {
+    template <typename Callback>
+    struct callback_type {
+        Callback callback;
+        callback_type(test_stop_token token, Callback c) : callback(::std::move(c)), alive(token.alive) {}
+        ~callback_type() { ASSERT(*alive); }
+        bool* alive;
+    };
+    ~test_stop_token() { ASSERT(*alive); }
+    auto  stop_requested() const noexcept -> bool { return false; }
+    auto  stop_possible() const noexcept -> bool { return true; }
+    auto  operator==(const test_stop_token&) const noexcept -> bool = default;
+    bool* alive;
+};
+static_assert(test_std::stoppable_token<test_stop_token>);
+
 auto test_scheduler_lifetime() -> void {
     struct receiver {
         bool* alive;
         using receiver_concept = test_std::receiver_tag;
         auto get_env() const noexcept -> receiver { return {this->alive}; }
+        auto query(test_std::get_stop_token_t) const noexcept -> test_stop_token { return {this->alive}; }
         auto query(test_std::get_start_scheduler_t) const noexcept -> test_scheduler { return {this->alive}; }
         auto query(test_std::get_scheduler_allocator_t) const noexcept -> test_allocator<std::byte> {
             return {this->alive};
@@ -347,6 +364,12 @@ auto test_scheduler_lifetime() -> void {
         bool alive{true};
         auto state{
             test_std::connect([]() -> test_std::task<> { co_await test_std::just_stopped(); }(), receiver{&alive})};
+        test_std::start(state);
+    }
+    {
+        bool alive{true};
+        auto state{
+            test_std::connect([]() -> test_std::task<> { [[maybe_unused]] auto token{co_await test_std::read_env(test_std::get_stop_token)}; }(), receiver{&alive})};
         test_std::start(state);
     }
 }
