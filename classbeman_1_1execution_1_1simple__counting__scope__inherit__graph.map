@@ -1,5 +1,7 @@
 <map id="beman::execution::simple_counting_scope" name="beman::execution::simple_counting_scope">
-<area shape="rect" id="node1" title=" " alt="" coords="5,191,195,235"/>
-<area shape="rect" id="node2" title=" " alt="" coords="9,98,191,143"/>
-<area shape="rect" id="node3" title=" " alt="" coords="9,5,191,50"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,191,195,235"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="9,98,191,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,156,102,191,98,190,98,160"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="9,5,191,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="101,63,103,98,97,97,99,68"/>
 </map>

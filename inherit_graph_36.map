@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structbeman_1_1execution_1_1schedule__t.html" title=" " alt="" coords="5,5,221,33"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,32,188,93"/>
+<area shape="rect" id="Node000001" href="$classbeman_1_1execution_1_1counting__scope_1_1token.html" title=" " alt="" coords="236,5,437,50"/>
+<area shape="poly" id="edge11_Node000000_Node000001" title=" " alt="" coords="202,44,238,42,232,43,204,50"/>
+<area shape="rect" id="Node000002" href="$classbeman_1_1execution_1_1simple__counting__scope_1_1token.html" title=" " alt="" coords="242,75,431,119"/>
+<area shape="poly" id="edge12_Node000000_Node000002" title=" " alt="" coords="203,75,244,83,239,84,203,80"/>
 </map>

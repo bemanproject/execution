@@ -1,4 +1,5 @@
 <map id="beman::execution::counting_scope::token" name="beman::execution::counting_scope::token">
-<area shape="rect" id="node1" title=" " alt="" coords="5,115,207,160"/>
-<area shape="rect" id="node2" title=" " alt="" coords="15,5,197,67"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,115,207,160"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="15,5,197,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,81,108,116,104,114,104,85"/>
 </map>

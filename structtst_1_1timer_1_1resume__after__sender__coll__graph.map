@@ -1,4 +1,5 @@
 <map id="tst::timer::resume_after_sender" name="tst::timer::resume_after_sender">
-<area shape="rect" id="node1" title=" " alt="" coords="5,98,144,143"/>
-<area shape="rect" id="node2" href="$classtst_1_1timer.html" title=" " alt="" coords="34,5,115,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,106,144,151"/>
+<area shape="rect" id="Node000002" href="$classtst_1_1timer.html" title=" " alt="" coords="34,5,115,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,47,77,106,72,105,72,50"/>
 </map>

@@ -1,3 +1,19 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structbeman_1_1execution_1_1inline__scheduler_1_1state.html" title=" " alt="" coords="5,5,197,50"/>
+<area shape="rect" id="Node000000" href="$structbeman_1_1execution26_1_1parallel__scheduler__replacement_1_1receiver__proxy.html" title=" " alt="" coords="5,160,221,222"/>
+<area shape="rect" id="Node000001" href="$structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="269,92,471,170"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="234,160,270,153,266,156,237,164"/>
+<area shape="rect" id="Node000003" href="$structbeman_1_1execution_1_1task__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="269,194,471,273"/>
+<area shape="poly" id="edge2_Node000000_Node000003" title=" " alt="" coords="235,209,271,216,266,218,237,214"/>
+<area shape="rect" id="Node000004" href="$structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="273,297,467,359"/>
+<area shape="poly" id="edge3_Node000000_Node000004" title=" " alt="" coords="215,227,222,231,237,245,247,258,256,270,270,283,289,297,284,297,267,288,252,274,243,261,234,248,219,236,215,232"/>
+<area shape="rect" id="Node000005" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1bulk__item__receiver__proxy.html" title=" " alt="" coords="273,383,467,444"/>
+<area shape="poly" id="edge4_Node000000_Node000005" title=" " alt="" coords="219,229,223,232,236,250,243,267,248,302,251,335,258,352,271,369,284,383,279,382,267,373,253,355,246,337,242,302,238,269,231,252,219,235,219,235"/>
+<area shape="rect" id="Node000006" href="$structbeman_1_1execution_1_1task__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="282,5,458,67"/>
+<area shape="poly" id="edge5_Node000000_Node000006" title=" " alt="" coords="162,149,212,112,267,77,292,66,288,69,270,81,215,116,166,152"/>
+<area shape="rect" id="Node000002" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html" title=" " alt="" coords="16,245,210,307"/>
+<area shape="poly" id="edge6_Node000002_Node000001" title=" " alt="" coords="213,235,219,231,234,219,243,206,252,193,267,179,286,169,282,172,270,184,256,197,247,210,238,222,222,236,217,239"/>
+<area shape="poly" id="edge7_Node000002_Node000003" title=" " alt="" coords="225,255,271,249,266,252,226,260"/>
+<area shape="poly" id="edge8_Node000002_Node000004" title=" " alt="" coords="225,296,275,308,270,309,226,302"/>
+<area shape="poly" id="edge9_Node000002_Node000005" title=" " alt="" coords="175,313,270,368,294,382,289,382,267,373,174,318"/>
+<area shape="poly" id="edge10_Node000002_Node000006" title=" " alt="" coords="217,233,219,232,232,213,239,194,242,156,245,118,252,97,267,77,283,65,280,69,271,81,257,100,250,119,248,157,245,195,237,215,223,235,221,237"/>
 </map>

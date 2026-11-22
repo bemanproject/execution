@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structtst_1_1timer_1_1when__done__sender_1_1state_1_1pred.html" title=" " alt="" coords="5,5,191,67"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="46,5,147,33"/>
+<area shape="rect" id="Node000001" href="$classbeman_1_1execution_1_1stop__callback.html" title=" " alt="" coords="236,10,427,55"/>
+<area shape="poly" id="edge24_Node000000_Node000001" title=" " alt="" coords="162,20,238,26,233,28,163,25"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="74,125,119,153"/>
+<area shape="rect" id="Node000003" href="$classbeman_1_1execution_1_1stop__callback.html" title=" " alt="" coords="245,92,418,136"/>
+<area shape="poly" id="edge25_Node000004_Node000003" title=" " alt="" coords="134,133,247,123,241,124,135,138"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,57,188,102"/>
+<area shape="poly" id="edge27_Node000002_Node000001" title=" " alt="" coords="202,55,238,51,233,52,204,61"/>
+<area shape="poly" id="edge26_Node000002_Node000003" title=" " alt="" coords="203,92,247,101,241,101,203,98"/>
 </map>

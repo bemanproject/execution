@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['contributing_0',['contributing',['../md_docs_contributing.html',1,'']]]
+  ['beman_3a_3aexecution_0',['beman::execution',['../md_docs_2contributing.html#autotoc_md0',1,'Contributing to &lt;span class=&quot;tt&quot;&gt;beman::execution&lt;/span&gt;'],['../md_docs_2resources.html#autotoc_md132',1,'Resources Related to &lt;span class=&quot;tt&quot;&gt;beman::execution&lt;/span&gt;']]],
+  ['building_1',['Scanning and Building',['../md_docs_2modules.html#autotoc_md116',1,'']]],
+  ['bulk_20execution_3a_3abulk_20execution_3a_3abulk_5fchunked_20and_20execution_3a_3abulk_5funchunked_3a_20bulk_20hpp_2',['✅✅🔴 &lt;a href=&quot;https://wg21.link/exec.bulk&quot;&gt;exec.bulk&lt;/a&gt; &lt;span class=&quot;tt&quot;&gt;execution::bulk&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;execution::bulk_chunked&lt;/span&gt;, and &lt;span class=&quot;tt&quot;&gt;execution::bulk_unchunked&lt;/span&gt;: &lt;a href=&quot;https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/bulk.hpp&quot;&gt;&lt;span class=&quot;tt&quot;&gt;bulk.hpp&lt;/span&gt;&lt;/a&gt;',['../md_docs_2implementation-status.html#autotoc_md58',1,'']]],
+  ['bulk_20hpp_3',['✅✅🔴 &lt;a href=&quot;https://wg21.link/exec.bulk&quot;&gt;exec.bulk&lt;/a&gt; &lt;span class=&quot;tt&quot;&gt;execution::bulk&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;execution::bulk_chunked&lt;/span&gt;, and &lt;span class=&quot;tt&quot;&gt;execution::bulk_unchunked&lt;/span&gt;: &lt;a href=&quot;https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/bulk.hpp&quot;&gt;&lt;span class=&quot;tt&quot;&gt;bulk.hpp&lt;/span&gt;&lt;/a&gt;',['../md_docs_2implementation-status.html#autotoc_md58',1,'']]],
+  ['by_20example_4',['Introduction by Example',['../md_docs_2intro__examples.html#autotoc_md108',1,'']]]
 ];

@@ -1,4 +1,5 @@
 <map id="beman::execution::task_scheduler::sender::rcvr_proxy&lt; Rcvr &gt;" name="beman::execution::task_scheduler::sender::rcvr_proxy&lt; Rcvr &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="14,115,191,177"/>
-<area shape="rect" id="node2" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html" title=" " alt="" coords="5,5,200,67"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="14,115,191,177"/>
+<area shape="rect" id="Node000002" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html" title=" " alt="" coords="5,5,200,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,80,105,115,100,114,101,85"/>
 </map>

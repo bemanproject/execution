@@ -1,4 +1,7 @@
 <map id="beman::execution::is_execution_policy&lt; ::beman::execution::unsequenced_policy &gt;" name="beman::execution::is_execution_policy&lt; ::beman::execution::unsequenced_policy &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="5,81,237,160"/>
-<area shape="rect" id="node2" title=" " alt="" coords="65,5,177,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="18,81,249,160"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,123,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,43,109,80,104,81,81,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="147,5,258,33"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,44,162,82,158,79,183,48"/>
 </map>

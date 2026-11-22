@@ -1,0 +1,16 @@
+var searchData=
+[
+  ['unsequenced_5fpolicy_0',['unsequenced_policy',['../structbeman_1_1execution_1_1unsequenced__policy.html',1,'beman::execution']]],
+  ['unstoppable_20execution_3a_3aunstoppable_3a_20unstoppable_20hpp_1',['✅✅✅ &lt;a href=&quot;https://wg21.link/exec.unstoppable&quot;&gt;exec.unstoppable&lt;/a&gt; &lt;span class=&quot;tt&quot;&gt;execution::unstoppable&lt;/span&gt;: &lt;a href=&quot;https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/unstoppable.hpp&quot;&gt;&lt;span class=&quot;tt&quot;&gt;unstoppable.hpp&lt;/span&gt;&lt;/a&gt;',['../md_docs_2implementation-status.html#autotoc_md51',1,'']]],
+  ['unstoppable_20hpp_2',['✅✅✅ &lt;a href=&quot;https://wg21.link/exec.unstoppable&quot;&gt;exec.unstoppable&lt;/a&gt; &lt;span class=&quot;tt&quot;&gt;execution::unstoppable&lt;/span&gt;: &lt;a href=&quot;https://github.com/bemanproject/execution/blob/main/include/beman/execution/detail/unstoppable.hpp&quot;&gt;&lt;span class=&quot;tt&quot;&gt;unstoppable.hpp&lt;/span&gt;&lt;/a&gt;',['../md_docs_2implementation-status.html#autotoc_md51',1,'']]],
+  ['unstoppable_5ftoken_3',['unstoppable_token',['../conceptbeman_1_1execution_1_1unstoppable__token.html',1,'beman::execution']]],
+  ['upon_5ferror_4',['upon_error',['../namespacebeman_1_1execution.html#afe7e6d1b61436b69aa7fa70b1f653271',1,'beman::execution']]],
+  ['upon_5ferror_5ft_5',['upon_error_t',['../namespacebeman_1_1execution.html#afd5483956d8fe4ac2e50693a7d82d030',1,'beman::execution']]],
+  ['upon_5fstopped_6',['upon_stopped',['../namespacebeman_1_1execution.html#a7e12a82c294cbf0775945930a63025d4',1,'beman::execution']]],
+  ['upon_5fstopped_5ft_7',['upon_stopped_t',['../namespacebeman_1_1execution.html#aec6812b9298c8860add157572f83e034',1,'beman::execution']]],
+  ['use_20export_20using_8',['Use &lt;span class=&quot;tt&quot;&gt;export using&lt;/span&gt;',['../md_docs_2modules.html#autotoc_md111',1,'']]],
+  ['uses_5fallocator_3c_3a_3abeman_3a_3aexecution_3a_3atask_5fscheduler_2c_20alloc_20_3e_9',['uses_allocator&lt;::beman::execution::task_scheduler, Alloc &gt;',['../structstd_1_1uses__allocator_3_1_1beman_1_1execution_1_1task__scheduler_00_01Alloc_01_4.html',1,'std']]],
+  ['using_10',['using',['../md_docs_2modules.html#autotoc_md113',1,'Retry &lt;span class=&quot;tt&quot;&gt;export using&lt;/span&gt;'],['../md_docs_2modules.html#autotoc_md111',1,'Use &lt;span class=&quot;tt&quot;&gt;export using&lt;/span&gt;']]],
+  ['util_20coroutine_20utilities_11',['✅✅🔴 &lt;a href=&quot;https://wg21.link/exec.coro.util&quot;&gt;exec.coro.util&lt;/a&gt; Coroutine utilities',['../md_docs_2implementation-status.html#autotoc_md80',1,'']]],
+  ['utilities_12',['utilities',['../md_docs_2implementation-status.html#autotoc_md71',1,'✅✅✅ &lt;a href=&quot;https://wg21.link/exec.envs&quot;&gt;exec.envs&lt;/a&gt; Queryable utilities'],['../md_docs_2implementation-status.html#autotoc_md10',1,'✅✅✅ &lt;a href=&quot;https://wg21.link/exec.queries.expos&quot;&gt;exec.queries.expos&lt;/a&gt; Query utilities'],['../md_docs_2implementation-status.html#autotoc_md80',1,'✅✅🔴 &lt;a href=&quot;https://wg21.link/exec.coro.util&quot;&gt;exec.coro.util&lt;/a&gt; Coroutine utilities'],['../md_docs_2implementation-status.html#autotoc_md92',1,'🔴🔴🔴 &lt;a href=&quot;https://wg21.link/exec.scope&quot;&gt;exec.scope&lt;/a&gt; Execution scope utilities']]]
+];

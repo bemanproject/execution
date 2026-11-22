@@ -1,4 +1,5 @@
 <map id="beman::execution::sender_adaptor_closure&lt; D &gt;" name="beman::execution::sender_adaptor_closure&lt; D &gt;">
-<area shape="rect" id="node1" title="CRTP base class for pipeable sender adaptor closure objects." alt="" coords="5,98,195,143"/>
-<area shape="rect" id="node2" title=" " alt="" coords="9,5,191,50"/>
+<area shape="rect" id="Node000001" title="CRTP base class for pipeable sender adaptor closure objects." alt="" coords="5,98,195,143"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="9,5,191,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,64,102,99,98,97,98,68"/>
 </map>

@@ -1,0 +1,15 @@
+<map id="beman::execution26::parallel_scheduler_replacement::receiver_proxy" name="beman::execution26::parallel_scheduler_replacement::receiver_proxy">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,211,221,273"/>
+<area shape="rect" id="Node000002" href="$structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="269,5,471,84"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,198,204,145,267,93,287,83,283,86,270,97,207,149,155,201"/>
+<area shape="rect" id="Node000003" href="$structbeman_1_1execution_1_1task__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="269,108,471,187"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,203,270,183,266,186,214,208"/>
+<area shape="rect" id="Node000004" href="$structbeman_1_1execution_1_1parallel__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="273,211,467,273"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="235,239,275,241,270,243,237,245"/>
+<area shape="rect" id="Node000005" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1bulk__item__receiver__proxy.html" title=" " alt="" coords="273,296,467,358"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="222,276,277,295,272,297,222,281"/>
+<area shape="rect" id="Node000007" href="$structbeman_1_1execution_1_1task__scheduler_1_1sender_1_1rcvr__proxy.html" title=" " alt="" coords="282,382,458,444"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="158,281,211,326,270,368,292,381,286,381,267,372,207,330,157,286"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="519,288,766,367"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="483,325,521,327,516,328,483,330"/>
+</map>

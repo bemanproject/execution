@@ -1,6 +1,9 @@
 <map id="tst::timer::when_done_sender::state&lt; Receiver &gt;::execute" name="tst::timer::when_done_sender::state&lt; Receiver &gt;::execute">
-<area shape="rect" id="node1" title=" " alt="" coords="25,225,211,286"/>
-<area shape="rect" id="node2" href="$structtst_1_1timer_1_1when__done__sender_1_1state.html" title=" " alt="" coords="18,115,218,160"/>
-<area shape="rect" id="node3" href="$classtst_1_1timer.html" title=" " alt="" coords="5,14,87,42"/>
-<area shape="rect" id="node4" href="$structtst_1_1connector.html" title=" " alt="" coords="111,5,269,50"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="25,241,211,302"/>
+<area shape="rect" id="Node000002" href="$structtst_1_1timer_1_1when__done__sender_1_1state.html" title=" " alt="" coords="18,123,218,168"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,181,121,241,115,239,116,185"/>
+<area shape="rect" id="Node000003" href="$classtst_1_1timer.html" title=" " alt="" coords="5,14,87,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="62,52,107,122,102,123,61,57"/>
+<area shape="rect" id="Node000004" href="$structtst_1_1connector.html" title=" " alt="" coords="111,5,269,50"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="170,61,134,124,129,121,167,65"/>
 </map>

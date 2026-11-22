@@ -1,0 +1,25 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,425,123,453"/>
+<area shape="rect" id="Node000001" href="$structbeman_1_1execution_1_1is__execution__policy_3_01_1_1beman_1_1execution_1_1parallel__policy_01_4.html" title=" " alt="" coords="190,92,384,170"/>
+<area shape="poly" id="edge31_Node000000_Node000001" title=" " alt="" coords="76,410,120,310,131,272,137,241,146,211,169,180,191,163,188,168,173,183,151,214,142,242,137,274,125,312,81,412"/>
+<area shape="rect" id="Node000003" href="$structbeman_1_1execution_1_1is__execution__policy_3_01_1_1beman_1_1execution_1_1parallel__unsequenced__policy_01_4.html" title=" " alt="" coords="190,194,384,273"/>
+<area shape="poly" id="edge32_Node000000_Node000003" title=" " alt="" coords="76,410,112,347,138,313,169,282,191,269,188,273,172,286,143,316,117,350,81,412"/>
+<area shape="rect" id="Node000004" href="$structbeman_1_1execution_1_1is__execution__policy_3_01_1_1beman_1_1execution_1_1sequenced__policy_01_4.html" title=" " alt="" coords="180,297,395,376"/>
+<area shape="poly" id="edge33_Node000000_Node000004" title=" " alt="" coords="107,416,170,386,199,374,195,378,172,391,110,420"/>
+<area shape="rect" id="Node000005" href="$structbeman_1_1execution_1_1is__execution__policy_3_01_1_1beman_1_1execution_1_1unsequenced__policy_01_4.html" title=" " alt="" coords="172,400,403,478"/>
+<area shape="poly" id="edge34_Node000000_Node000005" title=" " alt="" coords="137,436,173,437,169,440,140,441"/>
+<area shape="rect" id="Node000007" href="$structtst_1_1add__set__value_1_1is__set__value_3_01tst_1_1ex_1_1set__value__t_07A_8_8_8_08_4.html" title=" " alt="" coords="186,503,388,564"/>
+<area shape="poly" id="edge35_Node000000_Node000007" title=" " alt="" coords="106,457,172,488,201,501,196,503,170,493,106,463"/>
+<area shape="rect" id="Node000008" href="$structbeman_1_1execution_1_1is__execution__policy.html" title=" " alt="" coords="171,588,404,633"/>
+<area shape="poly" id="edge36_Node000000_Node000008" title=" " alt="" coords="80,464,118,521,143,549,172,574,194,588,189,588,169,578,140,553,114,524,79,469"/>
+<area shape="rect" id="Node000009" href="$structtst_1_1add__set__value_1_1is__set__value.html" title=" " alt="" coords="176,658,399,702"/>
+<area shape="poly" id="edge37_Node000000_Node000009" title=" " alt="" coords="73,465,87,507,107,554,135,602,172,643,191,658,186,657,169,648,131,606,102,557,82,509,72,470"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,272,120,299"/>
+<area shape="poly" id="edge38_Node000002_Node000001" title=" " alt="" coords="84,258,122,218,169,179,191,168,188,172,172,184,126,222,89,261"/>
+<area shape="poly" id="edge39_Node000002_Node000003" title=" " alt="" coords="133,267,191,254,188,258,136,271"/>
+<area shape="poly" id="edge40_Node000002_Node000004" title=" " alt="" coords="134,299,181,310,177,313,136,304"/>
+<area shape="poly" id="edge41_Node000002_Node000005" title=" " alt="" coords="86,308,126,348,172,386,191,398,186,400,169,390,122,352,87,314"/>
+<area shape="poly" id="edge43_Node000002_Node000007" title=" " alt="" coords="79,311,131,416,156,464,173,489,188,502,183,502,169,493,151,467,126,419,78,316"/>
+<area shape="rect" id="Node000006" href="$structstd_1_1uses__allocator_3_1_1beman_1_1execution_1_1task__scheduler_00_01Alloc_01_4.html" title=" " alt="" coords="196,5,378,67"/>
+<area shape="poly" id="edge42_Node000002_Node000006" title=" " alt="" coords="70,256,83,216,103,169,132,120,169,77,197,60,194,64,172,81,136,123,108,171,88,218,75,258"/>
+</map>

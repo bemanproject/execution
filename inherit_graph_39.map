@@ -1,3 +1,15 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structbeman_1_1execution_1_1sequenced__policy.html" title=" " alt="" coords="5,5,221,50"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,241,188,286"/>
+<area shape="rect" id="Node000001" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="248,5,459,50"/>
+<area shape="poly" id="edge18_Node000000_Node000001" title=" " alt="" coords="111,226,130,187,158,142,192,97,234,59,255,49,251,52,237,63,196,101,162,145,135,189,115,228"/>
+<area shape="rect" id="Node000002" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="250,74,457,152"/>
+<area shape="poly" id="edge19_Node000000_Node000002" title=" " alt="" coords="136,229,182,195,234,161,258,151,254,155,237,166,185,199,139,233"/>
+<area shape="rect" id="Node000003" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="236,176,471,255"/>
+<area shape="poly" id="edge20_Node000000_Node000003" title=" " alt="" coords="202,241,238,236,233,239,204,246"/>
+<area shape="rect" id="Node000004" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="259,280,448,341"/>
+<area shape="poly" id="edge21_Node000000_Node000004" title=" " alt="" coords="202,280,261,292,256,294,203,286"/>
+<area shape="rect" id="Node000005" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title=" " alt="" coords="254,365,453,426"/>
+<area shape="poly" id="edge22_Node000000_Node000005" title=" " alt="" coords="141,292,187,322,237,351,263,364,258,365,234,355,184,327,141,298"/>
+<area shape="rect" id="Node000006" href="$structbeman_1_1execution_1_1sender__adaptor__closure.html" title="CRTP base class for pipeable sender adaptor closure objects." alt="" coords="259,451,448,495"/>
+<area shape="poly" id="edge23_Node000000_Node000006" title=" " alt="" coords="118,297,167,369,200,405,237,436,261,451,256,450,234,441,196,409,163,372,116,302"/>
 </map>

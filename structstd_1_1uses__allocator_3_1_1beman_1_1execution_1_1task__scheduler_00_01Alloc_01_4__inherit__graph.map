@@ -1,4 +1,5 @@
 <map id="std::uses_allocator&lt;::beman::execution::task_scheduler, Alloc &gt;" name="std::uses_allocator&lt;::beman::execution::task_scheduler, Alloc &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="5,81,188,143"/>
-<area shape="rect" id="node2" title=" " alt="" coords="41,5,152,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,81,188,143"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="41,5,152,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,47,99,81,94,80,95,51"/>
 </map>

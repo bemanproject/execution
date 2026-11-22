@@ -1,5 +1,7 @@
 <map id="beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy" name="beman::execution::parallel_scheduler_replacement::bulk_item_receiver_proxy">
-<area shape="rect" id="node1" title=" " alt="" coords="248,14,442,76"/>
-<area shape="rect" id="node3" title=" " alt="" coords="490,5,737,84"/>
-<area shape="rect" id="node2" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html" title=" " alt="" coords="5,14,200,76"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="248,14,442,76"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="490,5,737,84"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="458,42,492,45,487,45,458,47"/>
+<area shape="rect" id="Node000002" href="$structbeman_1_1execution_1_1parallel__scheduler__replacement_1_1receiver__proxy.html" title=" " alt="" coords="5,14,200,76"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="215,42,250,44,245,45,215,47"/>
 </map>
