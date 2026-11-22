@@ -5,7 +5,6 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_GET_SCHEDULER_ALLOCATOR
 
 #include <beman/execution/detail/common.hpp>
-// #include <beman/execution/detail/suppress_push.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -28,52 +27,62 @@ namespace beman::execution::detail {
 struct get_scheduler_allocator_t {
     template <typename Object>
         requires(
-                    requires(const Object& object, const get_scheduler_allocator_t& tag) { object.query(tag); } &&
-                    !requires(const Object& object, const get_scheduler_allocator_t& tag) {
+                    requires(const ::std::remove_cvref_t<Object>& object, const get_scheduler_allocator_t& tag) {
+                        object.query(tag);
+                    } &&
+                    !requires(const ::std::remove_cvref_t<Object>& object, const get_scheduler_allocator_t& tag) {
                         { object.query(tag) } noexcept;
                     })
     auto operator()(Object&& object) const noexcept
         -> void = BEMAN_EXECUTION_DELETE("object.query(get_scheduler_allocator) needs to be noexcept when present");
     template <typename Object>
         requires(
-                    requires(const Object& object, const get_scheduler_allocator_t& tag) {
+                    requires(const ::std::remove_cvref_t<Object>& object, const get_scheduler_allocator_t& tag) {
                         { object.query(tag) } noexcept;
                     } &&
-                    !requires(const Object& object, const get_scheduler_allocator_t& tag) {
+                    !requires(const ::std::remove_cvref_t<Object>& object, const get_scheduler_allocator_t& tag) {
                         { object.query(tag) } -> ::beman::execution::detail::simple_allocator<>;
                     })
     auto operator()(Object&& object) const noexcept -> void = BEMAN_EXECUTION_DELETE(
         "object.query(get_scheduler_allocator) needs to return a simple_allocator<> when present");
     template <typename Object>
-        requires(requires(const Object& object, const get_scheduler_allocator_t& tag) {
+        requires(requires(const ::std::remove_cvref_t<Object>& object, const get_scheduler_allocator_t& tag) {
             { object.query(tag) } noexcept -> ::beman::execution::detail::simple_allocator<>;
         })
     auto operator()(Object&& object) const noexcept -> decltype(auto) {
         return ::std::as_const(object).query(*this);
     }
     template <typename Object>
-        requires((not requires(const Object& object, const get_scheduler_allocator_t& tag) { object.query(tag); }) &&
-                 (requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
+        requires((not requires(const ::std::remove_cvref_t<Object>& object, const get_scheduler_allocator_t& tag) {
                      object.query(tag);
-                 }) && (!requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
+                 }) &&
+                 (requires(const ::std::remove_cvref_t<Object>&       object,
+                           const ::beman::execution::get_allocator_t& tag) { object.query(tag); }) &&
+                 (!requires(const ::std::remove_cvref_t<Object>&       object,
+                            const ::beman::execution::get_allocator_t& tag) {
                      { object.query(tag) } noexcept;
                  }))
     auto operator()(Object&& object) const noexcept
-        -> decltype(auto) = BEMAN_EXECUTION_DELETE("object.query(get_allocator) needs to be noexcept");
+        -> void = BEMAN_EXECUTION_DELETE("object.query(get_allocator) needs to be noexcept");
     template <typename Object>
-        requires((not requires(const Object& object, const get_scheduler_allocator_t& tag) { object.query(tag); }) &&
-                 (requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
+        requires((not requires(const ::std::remove_cvref_t<Object>& object, const get_scheduler_allocator_t& tag) {
                      object.query(tag);
-                 }) && (requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
+                 }) &&
+                 (requires(const ::std::remove_cvref_t<Object>&       object,
+                           const ::beman::execution::get_allocator_t& tag) {
                      { object.query(tag) } noexcept;
-                 }) && (!requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
+                 }) &&
+                 (!requires(const ::std::remove_cvref_t<Object>&       object,
+                            const ::beman::execution::get_allocator_t& tag) {
                      { object.query(tag) } noexcept -> ::beman::execution::detail::simple_allocator<>;
                  }))
-    auto operator()(Object&& object) const noexcept
-        -> decltype(auto) = BEMAN_EXECUTION_DELETE("object.query(get_allocator) needs to produce a simple_allocator");
+    auto operator()(Object&& object) const noexcept -> void =
+        BEMAN_EXECUTION_DELETE("object.query(get_allocator) needs to return a simple_allocator<> when present");
     template <typename Object>
-        requires((not requires(const Object& object, const get_scheduler_allocator_t& tag) { object.query(tag); }) &&
-                 (requires(const Object& object, const ::beman::execution::get_allocator_t& tag) {
+        requires((not requires(const ::std::remove_cvref_t<Object>& object, const get_scheduler_allocator_t& tag) {
+                     object.query(tag);
+                 }) && (requires(const ::std::remove_cvref_t<Object>&       object,
+                                 const ::beman::execution::get_allocator_t& tag) {
                      { object.query(tag) } noexcept -> ::beman::execution::detail::simple_allocator<>;
                  }))
     auto operator()(Object&& object) const noexcept -> decltype(auto) {
@@ -88,10 +97,6 @@ namespace beman::execution {
 using get_scheduler_allocator_t = ::beman::execution::detail::get_scheduler_allocator_t;
 inline constexpr get_scheduler_allocator_t get_scheduler_allocator{};
 } // namespace beman::execution
-
-// ----------------------------------------------------------------------------
-
-// #include <beman/execution/detail/suppress_pop.hpp>
 
 // ----------------------------------------------------------------------------
 

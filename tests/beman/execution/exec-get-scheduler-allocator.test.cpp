@@ -63,9 +63,25 @@ struct with_both {
     auto query(test_std::get_scheduler_allocator_t) const noexcept(Noexcept1) { return allocator<sched>{}; }
     auto query(test_std::get_allocator_t) const noexcept(Noexcept2) { return allocator<plain>{}; }
 };
+struct with_non_const_scheduler_allocator {
+    auto query(test_std::get_scheduler_allocator_t) noexcept { return allocator<sched>{}; }
+};
+struct with_non_const_allocator {
+    auto query(test_std::get_allocator_t) noexcept { return allocator<plain>{}; }
+};
+struct with_non_const_scheduler_allocator_and_const_get_allocator {
+    auto query(test_std::get_scheduler_allocator_t) noexcept { return allocator<sched>{}; }
+    auto query(test_std::get_allocator_t) const noexcept { return allocator<plain>{}; }
+};
 
 template <bool Expect, typename Alloc = allocator<void>>
 auto test_get_scheduler_allocator(const auto& env) {
+    std::remove_cvref_t<decltype(env)> nonconst_env{env};
+    static_assert(Expect == requires { test_std::get_scheduler_allocator(nonconst_env); });
+    if constexpr (Expect) {
+        [[maybe_unused]] auto alloc = test_std::get_scheduler_allocator(nonconst_env);
+        static_assert(std::same_as<Alloc, decltype(test_std::get_scheduler_allocator(nonconst_env))>);
+    }
     static_assert(Expect == requires { test_std::get_scheduler_allocator(env); });
     if constexpr (Expect) {
         [[maybe_unused]] auto alloc = test_std::get_scheduler_allocator(env);
@@ -89,11 +105,14 @@ TEST(exec_get_scheduler_allocator) {
     test_get_scheduler_allocator<false>(with_non_allocator_and_get_allocator());
     test_get_scheduler_allocator<false>(with_get_allocator_and_non_allocator());
     test_get_scheduler_allocator<false>(with_both<false, true>());
+    test_get_scheduler_allocator<false>(with_non_const_scheduler_allocator());
+    test_get_scheduler_allocator<false>(with_non_const_allocator());
 
     test_get_scheduler_allocator<true, allocator<sched>>(with_scheduler_allocator<true>());
     test_get_scheduler_allocator<true, allocator<plain>>(with_allocator<true>());
     test_get_scheduler_allocator<true, allocator<sched>>(with_both<true, true>());
     test_get_scheduler_allocator<true, allocator<sched>>(with_both<true, false>());
+    test_get_scheduler_allocator<true, allocator<plain>>(with_non_const_scheduler_allocator_and_const_get_allocator());
 
     test_get_scheduler_allocator<true, allocator<sched>>(with_scheduler_allocator<true, allocator<sched>>());
     test_get_scheduler_allocator<true, allocator<sched>&>(with_scheduler_allocator<true, allocator<sched>&>());
