@@ -597,6 +597,7 @@ struct state : state_base<Value, Environment> {
   private:
     auto do_complete() noexcept -> ::std::coroutine_handle<> final {
         this->handle.reset();
+        this->scheduler.reset();
         this->result_complete(::std::move(this->rcvr));
         return ::std::noop_coroutine();
     }
@@ -611,7 +612,7 @@ struct state : state_base<Value, Environment> {
         }
     }
 
-    auto do_get_start_scheduler() noexcept -> scheduler_type final { return this->scheduler; }
+    auto do_get_start_scheduler() noexcept -> scheduler_type final { return *this->scheduler; }
 
     auto do_get_stop_token() noexcept -> stop_token_type final { return this->propagator.get_token(); }
 
@@ -620,7 +621,7 @@ struct state : state_base<Value, Environment> {
     Receiver                                                                              rcvr;
     ::beman::execution::detail::task::handle<OwnPromise>                                  handle;
     env_holder<Environment, ::beman::execution::env_of_t<Receiver>>                       holder;
-    scheduler_type                                                                        scheduler;
+    ::std::optional<scheduler_type>                                                       scheduler;
     ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_t> propagator;
 };
 
@@ -669,7 +670,7 @@ class awaiter : public state_base<Value, Environment> {
         }
     }
 
-    auto do_get_start_scheduler() noexcept -> scheduler_type final { return this->scheduler; }
+    auto do_get_start_scheduler() noexcept -> scheduler_type final { return *this->scheduler; }
 
     auto do_get_stop_token() noexcept -> stop_token_type final { return this->propagator.get_token(); }
 
@@ -678,7 +679,7 @@ class awaiter : public state_base<Value, Environment> {
     ::std::coroutine_handle<ParentPromise>                                                parent;
     ::beman::execution::detail::task::handle<OwnPromise>                                  handle;
     env_holder<Environment, ::beman::execution::env_of_t<ParentPromise>>                  holder;
-    scheduler_type                                                                        scheduler;
+    ::std::optional<scheduler_type>                                                       scheduler;
     ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_t> propagator;
 };
 
