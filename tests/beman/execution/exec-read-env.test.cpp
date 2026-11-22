@@ -29,6 +29,7 @@ import beman.execution.detail.join_env;
 #include <beman/execution/detail/sync_wait.hpp>
 #include <beman/execution/detail/when_all.hpp>
 #endif
+#include <test/lifetime.hpp>
 
 // ----------------------------------------------------------------------------
 
@@ -194,6 +195,15 @@ auto test_read_env_check_types() -> void {
                                                            test_std::env<>>();
 #endif
 }
+
+auto test_read_env_lifetime() {
+    test::lifetime(test_std::read_env(test_std::get_allocator));
+    test::lifetime(test_std::read_env(test_std::get_scheduler_allocator));
+    test::lifetime(test_std::read_env(test_std::get_stop_token));
+    test::lifetime(test_std::read_env(test_std::get_scheduler));
+    test::lifetime(test_std::read_env(test_std::get_delegation_scheduler));
+    test::lifetime(test_std::read_env(test_std::get_start_scheduler));
+}
 } // namespace
 
 TEST(exec_read_env) {
@@ -203,4 +213,5 @@ TEST(exec_read_env) {
     test_read_env();
     test_read_env_completions();
     test_read_env_check_types();
+    test_read_env_lifetime();
 }

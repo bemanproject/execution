@@ -1,7 +1,6 @@
 // tests/beman/execution/exec-task.test.cpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <test/execution.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -24,6 +23,8 @@ import beman.execution.detail.simple_allocator;
 #else
 #include <beman/execution/execution.hpp>
 #endif
+#include <test/execution.hpp>
+#include <test/lifetime.hpp>
 
 // ----------------------------------------------------------------------------
 
@@ -248,133 +249,14 @@ auto test_task_propagates_stop_token() -> void {
     ASSERT(value);
 }
 
-struct test_scheduler {
-    using scheduler_concept = test_std::scheduler_tag;
-    struct env {
-        auto query(test_std::get_completion_scheduler_t<test_std::set_value_t>) const noexcept -> test_scheduler {
-            return {this->alive};
-        }
-        ~env() { ASSERT(*alive); }
-        bool* alive;
-    };
-
-    template <test_std::receiver Receiver>
-    struct state {
-        using operation_state_concept = test_std::operation_state_tag;
-        std::remove_cvref_t<Receiver> receiver;
-        bool*                         alive;
-        auto                          start() & noexcept -> void { test_std::set_value(std::move(receiver)); }
-        ~state() { ASSERT(*alive); }
-    };
-    struct sender {
-        using sender_concept = test_std::sender_tag;
-
-        using completion_signatures = test_std::completion_signatures<test_std::set_value_t()>;
-        template <typename...>
-        static consteval auto get_completion_signatures() noexcept -> completion_signatures {
-            return {};
-        }
-        ~sender() { ASSERT(*alive); }
-        auto get_env() const noexcept -> env { return {this->alive}; }
-        template <test_std::receiver Receiver>
-        auto connect(Receiver&& r) && noexcept {
-            return state<Receiver>{std::forward<Receiver>(r), this->alive};
-        }
-        bool* alive;
-    };
-
-    ~test_scheduler() { ASSERT(*alive); }
-
-    auto schedule() const noexcept -> sender { return {this->alive}; }
-    auto operator==(const test_scheduler&) const noexcept -> bool = default;
-    auto query(test_std::get_forward_progress_guarantee_t) const noexcept -> test_std::forward_progress_guarantee {
-        return test_std::forward_progress_guarantee::concurrent;
-    }
-
-    bool* alive;
-};
-static_assert(test_std::sender<test_scheduler::sender>);
-static_assert(test_std::sender_in<test_scheduler::sender>);
-static_assert(test_std::scheduler<test_scheduler>);
-
-template <typename T>
-struct test_allocator {
-    using value_type = T;
-    test_allocator(bool* alive) : alive(alive) {}
-    template <typename U>
-    test_allocator(const test_allocator<U>& other) : alive(other.alive) {}
-    ~test_allocator() { ASSERT(*alive); }
-
-    auto allocate(std::size_t n) -> value_type* {
-        return static_cast<value_type*>(::operator new(n * sizeof(value_type)));
-    }
-    auto deallocate(value_type* p, std::size_t) -> void { ::operator delete(p); }
-
-    auto operator==(const test_allocator&) const noexcept -> bool = default;
-
-    bool* alive;
-};
-static_assert(test_detail::simple_allocator<test_allocator<int>>);
-
-struct test_stop_token {
-    template <typename Callback>
-    struct callback_type {
-        Callback callback;
-        callback_type(test_stop_token token, Callback c) : callback(::std::move(c)), alive(token.alive) {}
-        ~callback_type() { ASSERT(*alive); }
-        bool* alive;
-    };
-    ~test_stop_token() { ASSERT(*alive); }
-    auto  stop_requested() const noexcept -> bool { return false; }
-    auto  stop_possible() const noexcept -> bool { return true; }
-    auto  operator==(const test_stop_token&) const noexcept -> bool = default;
-    bool* alive;
-};
-static_assert(test_std::stoppable_token<test_stop_token>);
-
-auto test_scheduler_lifetime() -> void {
-    struct receiver {
-        bool* alive;
-        using receiver_concept = test_std::receiver_tag;
-        auto get_env() const noexcept -> receiver { return {this->alive}; }
-        auto query(test_std::get_stop_token_t) const noexcept -> test_stop_token { return {this->alive}; }
-        auto query(test_std::get_start_scheduler_t) const noexcept -> test_scheduler { return {this->alive}; }
-        auto query(test_std::get_scheduler_allocator_t) const noexcept -> test_allocator<std::byte> {
-            return {this->alive};
-        }
-
-        auto set_value() && noexcept -> void { *alive = false; }
-        auto set_error(std::exception_ptr) && noexcept -> void { *alive = false; }
-        auto set_stopped() && noexcept -> void { *alive = false; }
-    };
-    static_assert(test_std::receiver<receiver>);
-
-    {
-        bool alive{true};
-        auto state{test_std::connect([]() -> test_std::task<> { co_return; }(), receiver{&alive})};
-        test_std::start(state);
-    }
-    {
-        bool alive{true};
-        auto state{
-            test_std::connect([]() -> test_std::task<> { co_await test_std::just_error(42); }(), receiver{&alive})};
-        test_std::start(state);
-    }
-    {
-        bool alive{true};
-        auto state{
-            test_std::connect([]() -> test_std::task<> { co_await test_std::just_stopped(); }(), receiver{&alive})};
-        test_std::start(state);
-    }
-    {
-        bool alive{true};
-        auto state{test_std::connect(
-            []() -> test_std::task<> {
-                [[maybe_unused]] auto token{co_await test_std::read_env(test_std::get_stop_token)};
-            }(),
-            receiver{&alive})};
-        test_std::start(state);
-    }
+auto test_lifetimes() -> void {
+    test::lifetime([]() -> test_std::task<> { co_return; }());
+    test::lifetime([]() -> test_std::task<> { co_await test_std::just(); }());
+    test::lifetime([]() -> test_std::task<> { co_await test_std::just_stopped(); }());
+    test::lifetime([]() -> test_std::task<> { co_await test_std::just_error(42); }());
+    test::lifetime([]() -> test_std::task<> {
+        [[maybe_unused]] auto token{co_await test_std::read_env(test_std::get_stop_token)};
+    }());
 }
 } // namespace
 
@@ -389,5 +271,5 @@ TEST(exec_task) {
     test_task_uses_pmr_allocator_arg();
     test_task_allocator_arg_unrelated_to_allocator_type();
     test_task_propagates_stop_token();
-    test_scheduler_lifetime();
+    test_lifetimes();
 }
