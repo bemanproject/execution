@@ -110,6 +110,7 @@ var dir_79a9bf21e7d1060cf0c7b66341aa9f76 =
     [ "make_env.hpp", "make__env_8hpp_source.html", null ],
     [ "make_sender.hpp", "make__sender_8hpp_source.html", null ],
     [ "matching_sig.hpp", "matching__sig_8hpp_source.html", null ],
+    [ "meta_bind.hpp", "meta__bind_8hpp_source.html", null ],
     [ "meta_combine.hpp", "meta__combine_8hpp_source.html", null ],
     [ "meta_contain_same.hpp", "meta__contain__same_8hpp_source.html", null ],
     [ "meta_contains.hpp", "meta__contains_8hpp_source.html", null ],
