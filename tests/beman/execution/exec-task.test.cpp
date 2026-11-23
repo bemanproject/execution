@@ -13,6 +13,7 @@ import std;
 #include <memory_resource>
 #include <new>
 #include <stdexcept>
+#include <system_error>
 #include <thread>
 #include <tuple>
 #include <type_traits>
@@ -108,6 +109,14 @@ auto scheduler_task() -> test_std::task<int> {
     static_assert(std::same_as<std::remove_cvref_t<decltype(scheduler)>, test_std::task_scheduler>);
     co_await test_std::schedule(scheduler);
     co_return 42;
+}
+
+struct error_code_env {
+    using error_types = test_std::completion_signatures<test_std::set_error_t(std::error_code)>;
+};
+
+auto yield_error_code(std::errc ec) -> test_std::task<void, error_code_env> {
+    co_yield test_std::with_error{std::make_error_code(ec)};
 }
 
 struct stop_token_env {
@@ -207,6 +216,13 @@ auto test_task_errors() -> void {
         caught = true;
     }
     ASSERT(caught);
+
+    auto result = test_std::sync_wait_with_variant(yield_error_code(std::errc::invalid_argument) |
+                                                   test_std::upon_error([](auto ec) noexcept { return ec; }))
+                      .value();
+    ASSERT(std::holds_alternative<std::tuple<std::error_code>>(result));
+    auto [ec] = std::get<std::tuple<std::error_code>>(result);
+    ASSERT(ec == std::errc::invalid_argument);
 }
 #endif // __cpp_exceptions
 
@@ -376,6 +392,61 @@ auto test_scheduler_lifetime() -> void {
         test_std::start(state);
     }
 }
+
+struct test_query_t : test_std::forwarding_query_t {
+    template <typename Env>
+    auto operator()(const Env& env) const noexcept -> decltype(env.query(*this)) {
+        return env.query(*this);
+    }
+};
+inline constexpr test_query_t test_query{};
+
+struct test_own_env {
+    template <typename ReceiverEnv>
+        requires requires(const ReceiverEnv& parent) { test_query(parent); }
+    explicit test_own_env(const ReceiverEnv& parent) : value(test_query(parent)) {}
+
+    int value;
+};
+
+struct test_env {
+    template <typename ReceiverEnv>
+    using env_type = test_own_env;
+
+    explicit test_env(const test_own_env& own) noexcept : value(own.value) {}
+
+    auto query(test_query_t) const noexcept -> int { return value; }
+
+    int value;
+};
+
+auto test_task_env() -> void {
+    static auto tsk = []() -> test_std::task<int, test_env> { co_return co_await test_std::read_env(test_query); };
+    auto [result]   = test_std::sync_wait(tsk() | test_std::write_env(test_std::prop{test_query, 67})).value();
+    ASSERT(result == 67);
+}
+
+auto test_no_error() -> void {
+    struct env {
+        using error_types = test_std::completion_signatures<>;
+    };
+    static auto tsk    = []() -> test_std::task<int, env> { co_return 42; };
+    auto        result = test_std::sync_wait(tsk());
+    ASSERT(result.has_value());
+    ASSERT(std::get<0>(*result) == 42);
+}
+
+auto test_error_convertible() -> void {
+    struct env {
+        using error_types = test_std::completion_signatures<test_std::set_error_t(long)>;
+    };
+    static auto tsk = []() -> test_std::task<void, env> {
+        co_yield test_std::with_error(-7); // int -> long
+    };
+    long result = 0;
+    test_std::sync_wait(tsk() | test_std::upon_error([&result](long l) noexcept { result = l; }));
+    ASSERT(result == -7L);
+}
 } // namespace
 
 TEST(exec_task) {
@@ -390,4 +461,7 @@ TEST(exec_task) {
     test_task_allocator_arg_unrelated_to_allocator_type();
     test_task_propagates_stop_token();
     test_scheduler_lifetime();
+    test_task_env();
+    test_no_error();
+    test_error_convertible();
 }

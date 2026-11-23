@@ -135,6 +135,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/matching_sig.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_bind.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_combine.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_contain_same.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_contains.hpp
@@ -372,6 +373,7 @@ if(BEMAN_USE_MODULES)
                     make_env.cppm
                     make_sender.cppm
                     matching_sig.cppm
+                    meta_bind.cppm
                     meta_combine.cppm
                     meta_contains.cppm
                     meta_contain_same.cppm

@@ -36,7 +36,7 @@ struct receiver_proxy {
     virtual auto set_error(::std::exception_ptr) noexcept -> void = 0;
     virtual auto set_stopped() noexcept -> void                   = 0;
 
-    template <class P, class Query>
+    template <typename P, typename Query>
         requires(::std::same_as<P, ::std::remove_cv_t<P>> && ::std::is_object_v<P> && !::std::is_array_v<P>)
     auto try_query(Query) const noexcept -> ::std::optional<P> {
         if constexpr (::std::same_as<Query, ::beman::execution::get_stop_token_t> &&
