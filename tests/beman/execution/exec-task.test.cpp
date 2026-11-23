@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution/detail/common.hpp>
+#include <test/execution.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -23,7 +24,6 @@ import beman.execution.detail.simple_allocator;
 #else
 #include <beman/execution/execution.hpp>
 #endif
-#include <test/execution.hpp>
 #include <test/lifetime.hpp>
 
 // ----------------------------------------------------------------------------

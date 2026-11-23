@@ -5,6 +5,7 @@
 #define INCLUDED_TESTS_BEMAN_EXECUTION_INCLUDE_TEST_LIFETIME
 
 #include <beman/execution/detail/common.hpp>
+#include <test/execution.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -21,7 +22,6 @@ import beman.execution.detail.simple_allocator;
 #else
 #include <beman/execution/execution.hpp>
 #endif
-#include <test/execution.hpp>
 
 // ----------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ concept lifetime_object = requires(std::remove_cvref_t<T> t) { t.set_completing(
 template <typename T>
 auto lifetime_set_completing(T&& t) noexcept -> bool {
     if constexpr (lifetime_object<T>) {
-        static_assert(requires{ t.set_completing(); });
+        static_assert(requires { t.set_completing(); });
         t.set_completing();
     }
     return true;
@@ -166,6 +166,15 @@ template <test_std::sender Sender>
 auto lifetime(Sender&& sender) -> void {
     bool alive{true};
     auto state{test_std::connect(::std::forward<Sender>(sender), lifetime_receiver{&alive})};
+    test_std::start(state);
+}
+
+template <typename Fun>
+    requires requires(Fun&& f, test::lifetime_scheduler s) { f(s); }
+auto lifetime(Fun&& sender) -> void {
+    bool alive{true};
+    auto state{test_std::connect(test_std::continues_on(test_std::just(), test::lifetime_scheduler{&alive}),
+                                 test::lifetime_receiver{&alive})};
     test_std::start(state);
 }
 } // namespace test

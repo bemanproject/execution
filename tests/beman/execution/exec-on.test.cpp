@@ -136,7 +136,7 @@ auto test_on_attributes() {
 }
 
 auto test_on_lifetime() -> void {
-    //test::lifetime(test_std::on(test_std::inline_scheduler(), test_std::just()));
+    // test::lifetime(test_std::on(test_std::inline_scheduler(), test_std::just()));
 }
 } // namespace
 

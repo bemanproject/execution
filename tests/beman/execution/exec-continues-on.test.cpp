@@ -120,13 +120,13 @@ auto test_continues_on_attributes() {
 
 auto test_continues_on_lifetime() {
     test::lifetime(test_std::continues_on(test_std::just(), scheduler{}));
+    test::lifetime([](auto sched) { test_std::continues_on(test_std::just(), sched); });
     {
         bool alive{true};
-        auto state{test_std::connect(test_std::continues_on(test_std::just(), test::lifetime_scheduler{&alive}), test::lifetime_receiver{&alive})};
+        auto state{test_std::connect(test_std::continues_on(test_std::just(), test::lifetime_scheduler{&alive}),
+                                     test::lifetime_receiver{&alive})};
         test_std::start(state);
     }
-    //test::lifetime(test_std::let_value(test_std::read_env(test_std::get_scheduler), [](auto scheduler){
-    //    return test_std::continues_on(test_std::just(), scheduler); }));
 }
 } // namespace
 

@@ -201,8 +201,31 @@ auto test_let_attributes() {
 
 auto test_let_lifetime() {
     test::lifetime(test_std::let_value(test_std::just(), [] { return test_std::just(); }));
+    test::lifetime(test_std::let_value(test_std::just(), [] { return test_std::read_env(test_std::get_stop_token); }));
+    test::lifetime(test_std::let_value(test_std::just_error(0), [] { return test_std::just(); }));
+    test::lifetime(test_std::let_value(test_std::just_stopped(), [] { return test_std::just(); }));
+    test::lifetime(test_std::let_value(test_std::just(), [] {
+        throw 0;
+        return test_std::just();
+    }));
+    test::lifetime(test_std::let_error(test_std::just(), [](auto) { return test_std::just(); }));
     test::lifetime(test_std::let_error(test_std::just_error(0), [](auto) { return test_std::just(); }));
+    test::lifetime(test_std::let_error(test_std::just_error(0),
+                                       [](auto) { return test_std::read_env(test_std::get_stop_token); }));
+    test::lifetime(test_std::let_error(test_std::just_stopped(), [](auto) { return test_std::just(); }));
+    test::lifetime(test_std::let_error(test_std::just_error(0), [](auto) {
+        throw 0;
+        return test_std::just();
+    }));
+    test::lifetime(test_std::let_stopped(test_std::just(), [] { return test_std::just(); }));
+    test::lifetime(test_std::let_stopped(test_std::just_error(0), [] { return test_std::just(); }));
     test::lifetime(test_std::let_stopped(test_std::just_stopped(), [] { return test_std::just(); }));
+    test::lifetime(
+        test_std::let_stopped(test_std::just_stopped(), [] { return test_std::read_env(test_std::get_stop_token); }));
+    test::lifetime(test_std::let_stopped(test_std::just_stopped(), [] {
+        throw 0;
+        return test_std::just();
+    }));
 }
 } // namespace
 

@@ -11,6 +11,7 @@ import std;
 #include <concepts>
 #include <exception>
 #include <functional>
+#include <optional>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -265,19 +266,26 @@ struct let_t {
             using receiver_concept = ::beman::execution::receiver_tag;
 
             Receiver& receiver;
-            Env       env;
+            ::std::optional<Env>& env;
 
             auto get_env() const noexcept -> decltype(auto) {
-                return ::beman::execution::detail::join_env(
-                    this->env, ::beman::execution::detail::fwd_env(::beman::execution::get_env(this->receiver)));
+                using fwd_t =
+                    decltype(::beman::execution::detail::fwd_env(::beman::execution::get_env(this->receiver)));
+                return ::beman::execution::detail::join_env<const Env&, fwd_t>(
+                    *this->env, ::beman::execution::detail::fwd_env(::beman::execution::get_env(this->receiver)));
             }
             template <typename Error>
             auto set_error(Error&& error) && noexcept -> void {
+                this->env.reset();
                 ::beman::execution::set_error(::std::move(this->receiver), ::std::forward<Error>(error));
             }
-            auto set_stopped() && noexcept -> void { ::beman::execution::set_stopped(::std::move(this->receiver)); }
+            auto set_stopped() && noexcept -> void {
+                this->env.reset();
+                ::beman::execution::set_stopped(::std::move(this->receiver));
+            }
             template <typename... Args>
             auto set_value(Args&&... args) && noexcept -> void {
+                this->env.reset();
                 ::beman::execution::set_value(::std::move(this->receiver), ::std::forward<Args>(args)...);
             }
         };
@@ -324,7 +332,7 @@ struct let_t {
 
             struct state_t {
                 fun_t  fun;
-                env_t  env;
+                ::std::optional<env_t> env;
                 args_t args;
                 ops_t  ops2;
             };
@@ -357,8 +365,9 @@ struct let_t {
             using args_t = ::beman::execution::detail::decayed_tuple<Args...>;
             auto mkop{[&] {
                 auto& tpl = state.args.template emplace<args_t>(::std::forward<Args>(args)...);
-                return ::beman::execution::connect(::std::apply(::std::move(state.fun), tpl),
-                                                   let_receiver<Receiver, decltype(state.env)>{receiver, state.env});
+                return ::beman::execution::connect(
+                    ::std::apply(::std::move(state.fun), tpl),
+                    let_receiver<Receiver, ::std::remove_cvref_t<decltype(*state.env)>>{receiver, state.env});
             }};
             ::beman::execution::start(
                 state.ops2.template emplace<decltype(mkop())>(beman::execution::detail::emplace_from{mkop}));
@@ -369,11 +378,16 @@ struct let_t {
                 if constexpr (::std::same_as<Tag, Completion>) {
                     BEMAN_EXECUTION_TRY { (let_bind)(state, receiver, ::std::forward<Args>(args)...); }
                     BEMAN_EXECUTION_CATCH(...) {
-                        if constexpr (not nothrow<Receiver, decltype(state.env), decltype(state.fun), Args...>) {
+                        if constexpr (not nothrow<Receiver,
+                                                  typename decltype(state.env)::value_type,
+                                                  decltype(state.fun),
+                                                  Args...>) {
+                            state.env.reset();
                             ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
                         }
                     }
                 } else {
+                    state.env.reset();
                     Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
                 }
             }
