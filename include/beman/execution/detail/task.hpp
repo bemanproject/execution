@@ -383,7 +383,11 @@ class async_result {
             ::beman::execution::detail::unreachable();
             break;
         case 1:
-            break;
+            if constexpr (::std::same_as<void_type, value_type>) {
+                return;
+            } else {
+                return ::std::move(::std::get<1uz>(this->result));
+            }
         default:
             if constexpr (0uz < sizeof...(Errors)) {
                 ::beman::execution::detail::sub_visit<2uz>(
@@ -400,11 +404,6 @@ class async_result {
             }
             ::beman::execution::detail::unreachable();
             break;
-        }
-        if constexpr (::std::same_as<void_type, value_type>) {
-            return;
-        } else {
-            return ::std::move(::std::get<1uz>(this->result));
         }
     }
 
