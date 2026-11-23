@@ -16,6 +16,7 @@ import std;
 #include <exception>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <system_error>
 #include <type_traits>
 #include <utility>
@@ -37,9 +38,13 @@ import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.inline_scheduler;
 import beman.execution.detail.inplace_stop_source;
+import beman.execution.detail.meta.bind;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.contains;
+import beman.execution.detail.meta.filter;
 import beman.execution.detail.meta.index;
+import beman.execution.detail.meta.size;
+import beman.execution.detail.meta.to;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.receiver;
 import beman.execution.detail.scheduler;
@@ -73,9 +78,13 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/inline_scheduler.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
+#include <beman/execution/detail/meta_bind.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_contains.hpp>
+#include <beman/execution/detail/meta_filter.hpp>
 #include <beman/execution/detail/meta_index.hpp>
+#include <beman/execution/detail/meta_size.hpp>
+#include <beman/execution/detail/meta_to.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scheduler.hpp>
@@ -315,11 +324,8 @@ using stop_source_of_t = typename stop_source_of<Context>::type;
 
 struct void_type {};
 
-template <typename Value, typename Errors>
-class result_type;
-
 template <typename Value, typename... Errors>
-class result_type<Value, ::beman::execution::completion_signatures<::beman::execution::set_error_t(Errors)...>> {
+class async_result {
   private:
     using value_type = ::std::conditional_t<::std::same_as<void, Value>, void_type, Value>;
 
@@ -331,83 +337,20 @@ class result_type<Value, ::beman::execution::completion_signatures<::beman::exec
 
     template <typename E>
     auto set_error(E&& error) -> void {
-        static constexpr ::std::size_t index = ::beman::execution::detail::meta::
-            index_v<::beman::execution::detail::type_list<::std::remove_cvref_t<Errors>...>, ::std::remove_cvref_t<E>>;
-        static_assert(index != static_cast<::std::size_t>(-1),
-                      "Error type not supported: 'E' is not among the defined Errors.");
+        using supported_errors = ::beman::execution::detail::type_list<Errors...>;
+        using matched          = ::beman::execution::detail::meta::
+            filter<::beman::execution::detail::meta::bind<::std::is_convertible, E>::template front, supported_errors>;
+
+        static constexpr ::std::size_t matched_count = ::beman::execution::detail::meta::size_v<matched>;
+        static_assert(matched_count == 1uz, "`E` shall be convertible to exactly one of `Errors`.");
+
+        using matched_type = ::beman::execution::detail::meta::to<::std::type_identity_t, matched>;
+        static constexpr ::std::size_t index =
+            ::beman::execution::detail::meta::index_v<supported_errors, matched_type>;
         this->result.template emplace<2uz + index>(::std::forward<E>(error));
     }
 
     auto no_completion_set() const noexcept -> bool { return this->result.index() == 0uz; }
-
-    template <::beman::execution::receiver Receiver>
-    auto result_complete(Receiver rcvr) noexcept -> void {
-        switch (this->result.index()) {
-        case 0:
-            ::beman::execution::set_stopped(::std::move(rcvr));
-            break;
-        case 1:
-            if constexpr (::std::same_as<void_type, value_type>)
-                ::beman::execution::set_value(::std::move(rcvr));
-            else
-                ::beman::execution::set_value(::std::move(rcvr), ::std::move(::std::get<1uz>(this->result)));
-            break;
-        default:
-            if constexpr (0uz < sizeof...(Errors)) {
-                ::beman::execution::detail::sub_visit<2uz>(
-                    [&rcvr](auto& error) { ::beman::execution::set_error(::std::move(rcvr), ::std::move(error)); },
-                    this->result);
-            }
-            break;
-        }
-    }
-    auto result_resume() {
-        switch (this->result.index()) {
-        case 0:
-            ::beman::execution::detail::unreachable();
-            break;
-        case 1:
-            break;
-        default:
-            if constexpr (0uz < sizeof...(Errors))
-                ::beman::execution::detail::sub_visit<2uz>(
-                    []<typename E>(E& error) {
-                        if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::exception_ptr>) {
-                            BEMAN_EXECUTION_RETHROW(::std::move(error));
-                        } else if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::error_code>) {
-                            BEMAN_EXECUTION_THROW(::std::system_error{::std::move(error)});
-                        } else {
-                            BEMAN_EXECUTION_THROW(::std::move(error));
-                        }
-                    },
-                    this->result);
-            ::beman::execution::detail::unreachable();
-            break;
-        }
-        if constexpr (::std::same_as<void_type, value_type>) {
-            return;
-        } else {
-            return ::std::move(::std::get<1uz>(this->result));
-        }
-    }
-
-  private:
-    ::std::variant<::std::monostate, value_type, ::std::remove_cvref_t<Errors>...> result;
-};
-template <typename Value>
-class result_type<Value, ::beman::execution::completion_signatures<>> {
-  private:
-    using value_type = ::std::conditional_t<::std::same_as<void, Value>, void_type, Value>;
-
-    ::std::variant<::std::monostate, value_type> result;
-
-  public:
-    template <typename T>
-    auto set_value(T&& value) -> void {
-        this->result.template emplace<1uz>(::std::forward<T>(value));
-    }
-
-    auto no_completion_set() const noexcept -> bool { return this->result.index() == 0; }
 
     template <::beman::execution::receiver Receiver>
     auto result_complete(Receiver rcvr) noexcept -> void {
@@ -423,14 +366,40 @@ class result_type<Value, ::beman::execution::completion_signatures<>> {
             }
             break;
         default:
-            ::beman::execution::detail::unreachable();
+            if constexpr (0uz < sizeof...(Errors)) {
+                ::beman::execution::detail::sub_visit<2uz>(
+                    [&rcvr](auto& error) { ::beman::execution::set_error(::std::move(rcvr), ::std::move(error)); },
+                    this->result);
+            } else {
+                ::beman::execution::detail::unreachable();
+            }
             break;
         }
     }
 
-    auto result_resume() noexcept {
-        if (this->result.index() != 1) [[unlikely]] {
+    auto result_resume() noexcept(sizeof...(Errors) == 0uz) {
+        switch (this->result.index()) {
+        case 0:
             ::beman::execution::detail::unreachable();
+            break;
+        case 1:
+            break;
+        default:
+            if constexpr (0uz < sizeof...(Errors)) {
+                ::beman::execution::detail::sub_visit<2uz>(
+                    []<typename E>(E& error) {
+                        if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::exception_ptr>) {
+                            BEMAN_EXECUTION_RETHROW(::std::move(error));
+                        } else if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::error_code>) {
+                            BEMAN_EXECUTION_THROW(::std::system_error{::std::move(error)});
+                        } else {
+                            BEMAN_EXECUTION_THROW(::std::move(error));
+                        }
+                    },
+                    this->result);
+            }
+            ::beman::execution::detail::unreachable();
+            break;
         }
         if constexpr (::std::same_as<void_type, value_type>) {
             return;
@@ -438,7 +407,27 @@ class result_type<Value, ::beman::execution::completion_signatures<>> {
             return ::std::move(::std::get<1uz>(this->result));
         }
     }
+
+  private:
+    ::std::variant<::std::monostate, value_type, Errors...> result;
 };
+
+template <typename, typename>
+struct select_result_type;
+
+template <typename Value, typename... Errors>
+struct select_result_type<Value,
+                          ::beman::execution::completion_signatures<::beman::execution::set_error_t(Errors)...>> {
+    using type = async_result<Value, ::std::remove_cvref_t<Errors>...>;
+};
+
+template <typename Value>
+struct select_result_type<Value, ::beman::execution::completion_signatures<>> {
+    using type = async_result<Value>;
+};
+
+template <typename Value, typename ErrorTypes>
+using result_type = select_result_type<Value, ErrorTypes>::type;
 
 template <typename, typename>
 struct own_env {
@@ -516,7 +505,7 @@ class propagator<StopSource, StopToken> {
 template <typename Sched, typename Env>
 auto make_sched(const Env& env) noexcept -> Sched {
     if constexpr (requires {
-                      { ::beman::execution::get_start_scheduler(env) } -> std::same_as<Sched>;
+                      { ::beman::execution::get_start_scheduler(env) } -> ::std::same_as<Sched>;
                   }) {
         return ::beman::execution::get_start_scheduler(env);
     } else if constexpr (requires {
@@ -657,7 +646,7 @@ class awaiter : public state_base<Value, Environment> {
         return this->handle.start(this);
     }
 
-    auto await_resume() -> Value { return this->result_resume(); }
+    auto await_resume() noexcept(noexcept(this->result_resume())) -> Value { return this->result_resume(); }
 
   private:
     auto do_complete() noexcept -> ::std::coroutine_handle<> final {
@@ -787,6 +776,8 @@ class promise_type : public ::beman::execution::detail::task::promise_base<::std
         if constexpr (::beman::execution::detail::task::has_exception_signature<error_types>::value) {
             this->get_state()->set_error(::std::current_exception());
         } else {
+            assert(false && "Since `task::error_types` doesn't contain `set_error_t(std::exception_ptr)`, it is "
+                            "unable to handle exceptions.");
             ::std::terminate();
         }
     }
@@ -864,9 +855,9 @@ class task {
 
     task(task&&) noexcept = default;
 
-    task& operator=(const task&) = delete;
+    auto operator=(const task&) -> task& = delete;
 
-    task& operator=(task&&) noexcept = default;
+    auto operator=(task&&) noexcept -> task& = default;
 
     ~task() = default;
 
