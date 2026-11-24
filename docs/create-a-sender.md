@@ -422,7 +422,7 @@ class asynchronous_stack {
 };
 ```
 
-Note that this implementaton of an asynchronous stack only does
+Note that this implementation of an asynchronous stack only does
 pointer operations. Thus, there is no failure mode: the operations
 either succeed resulting in a `set_value()` completion or they get
 stopped/cancelled resulting in `set_stopped()` completion. There
