@@ -7,9 +7,11 @@
 import std;
 #else
 #include <condition_variable>
+#include <memory>
 #include <mutex>
 #include <thread>
 #include <tuple>
+#include <variant>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
@@ -21,13 +23,19 @@ import beman.execution;
 #include <beman/execution/detail/get_scheduler.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/inline_scheduler.hpp>
+#include <beman/execution/detail/into_variant.hpp>
 #include <beman/execution/detail/just.hpp>
+#include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/run_loop.hpp>
+#include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/starts_on.hpp>
+#include <beman/execution/detail/stopped_as_error.hpp>
+#include <beman/execution/detail/stopped_as_optional.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #include <beman/execution/detail/task_scheduler.hpp>
 #include <beman/execution/detail/then.hpp>
@@ -163,6 +171,37 @@ auto test_affine_specializations(Sender&& sender, std::size_t count = 0u) -> voi
     assert(data.started_ == count);
 }
 
+auto test_affine_completion_threads(test_std::scheduler auto scheduler, std::thread::id worker_thread) -> void {
+    const auto caller_thread = std::this_thread::get_id();
+    ASSERT(worker_thread != caller_thread);
+
+    const auto on_worker = [scheduler, worker_thread](auto sender) {
+        return test_std::let_value(test_std::schedule(scheduler), [worker_thread, sender]() noexcept {
+            ASSERT(std::this_thread::get_id() == worker_thread);
+            return sender;
+        });
+    };
+
+    const auto value = test_std::sync_wait(test_std::affine(on_worker(test_std::just(42))) |
+                                           test_std::then([caller_thread](int result) noexcept {
+                                               ASSERT(std::this_thread::get_id() == caller_thread);
+                                               return result;
+                                           }));
+    ASSERT(value == std::tuple{42});
+
+    const auto error = test_std::sync_wait(test_std::affine(on_worker(test_std::just_error(43))) |
+                                           test_std::upon_error([caller_thread](int result) noexcept {
+                                               ASSERT(std::this_thread::get_id() == caller_thread);
+                                               return result;
+                                           }));
+    ASSERT(error == std::tuple{43});
+
+    const auto stopped = test_std::sync_wait(
+        test_std::affine(on_worker(test_std::just_stopped())) |
+        test_std::upon_stopped([caller_thread]() noexcept { ASSERT(std::this_thread::get_id() == caller_thread); }));
+    ASSERT(stopped.has_value());
+}
+
 auto test_affine_attributes() {
     test::sender_env s{42};
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, s);
@@ -209,11 +248,14 @@ TEST(affine) {
     assert(v1 == 42);
 
     test_order_of_connect();
+    test_affine_completion_threads(loop.get_scheduler(), t.get_id());
+    test_affine_specializations(test_std::affine(test_std::starts_on(loop.get_scheduler(), test_std::just(42))), 1uz);
     test_affine_specializations(test_std::just(42));
     test_affine_specializations(test_std::just(42, true, 3.14));
+    test_affine_specializations(test_std::just(42) | test_std::into_variant);
     test_affine_specializations(test_std::just_error(42));
     test_affine_specializations(test_std::just_stopped());
-    test_affine_specializations(test_std::just_stopped());
+    test_affine_specializations(test_std::just_stopped() | test_std::stopped_as_error(-1));
     test_affine_specializations(test_std::read_env(test_std::get_stop_token));
     test_affine_specializations(test_std::write_env(
         test_std::just(42), test_std::env{test_std::prop{test_std::get_stop_token, test_std::never_stop_token{}}}));

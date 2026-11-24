@@ -25,10 +25,12 @@ import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
 import beman.execution.detail.error_types_of_t;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
+import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_in;
@@ -48,10 +50,12 @@ import beman.execution.detail.variant_or_empty;
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
+#include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_in.hpp>
@@ -68,6 +72,13 @@ struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_
     template <::beman::execution::sender Sender>
     auto operator()(Sender&& sender) const {
         return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender));
+    }
+
+    template <::beman::execution::sender Sender>
+        requires ::beman::execution::detail::nested_sender_has_affine<Sender>
+    static auto affine(Sender&& sndr) {
+        auto& [_, data, child] = sndr;
+        return into_variant_t{}(::beman::execution::detail::forward_like<Sender>(child).affine());
     }
 
     [[deprecated("use `sender | into_variant` instead of `sender | into_variant()`")]] auto

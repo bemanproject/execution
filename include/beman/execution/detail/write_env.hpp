@@ -15,9 +15,12 @@ import std;
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.data_type;
 import beman.execution.detail.default_impls;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_completion_signatures;
+import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.join_env;
 import beman.execution.detail.make_sender;
@@ -27,8 +30,11 @@ import beman.execution.detail.sender;
 import beman.execution.detail.sender_in;
 import beman.execution.detail.sender_adaptor_closure;
 #else
+#include <beman/execution/detail/data_type.hpp>
 #include <beman/execution/detail/default_impls.hpp>
+#include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/get_env.hpp>
+#include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/join_env.hpp>
 #include <beman/execution/detail/make_sender.hpp>
@@ -68,10 +74,15 @@ struct write_env_t {
         return ::beman::execution::detail::make_sender_adaptor(*this, ::std::forward<Env>(env));
     }
 
+    // A replacement start scheduler can change where the child's affine sender completes.
     template <::beman::execution::sender Sender>
-        requires ::beman::execution::detail::nested_sender_has_affine<Sender>
-    static auto affine(Sender&& sndr) noexcept {
-        return ::std::forward<Sender>(sndr);
+        requires(!::std::invocable<::beman::execution::get_start_scheduler_t,
+                                   ::beman::execution::detail::data_type<Sender>>) &&
+                ::beman::execution::detail::nested_sender_has_affine<Sender>
+    static auto affine(Sender&& sndr) {
+        auto& [_, data, child] = sndr;
+        return write_env_t{}(::beman::execution::detail::forward_like<Sender>(child).affine(),
+                             ::beman::execution::detail::forward_like<Sender>(data));
     }
 
   private:

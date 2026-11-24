@@ -18,6 +18,7 @@ import beman.execution.detail.just;
 import beman.execution.detail.let;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.movable_value;
+import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
@@ -28,6 +29,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/movable_value.hpp>
+#include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
@@ -58,6 +60,14 @@ struct stopped_as_error_t {
     template <::beman::execution::detail::movable_value Error>
     auto operator()(Error error) const {
         return ::beman::execution::detail::make_sender_adaptor(*this, ::std::move(error));
+    }
+
+    template <::beman::execution::sender Sndr>
+        requires ::beman::execution::detail::nested_sender_has_affine<Sndr>
+    static auto affine(Sndr&& sndr) {
+        auto& [_, error, child] = sndr;
+        return stopped_as_error_t{}(::beman::execution::detail::forward_like<Sndr>(child).affine(),
+                                    ::beman::execution::detail::forward_like<Sndr>(error));
     }
 };
 

@@ -24,6 +24,7 @@ import beman.execution.detail.default_impls;
 import beman.execution.detail.dependent_sender;
 import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.impls_for;
@@ -50,6 +51,7 @@ import beman.execution.detail.value_signature;
 #include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/dependent_sender_error.hpp>
 #include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/impls_for.hpp>
@@ -119,8 +121,10 @@ struct then_t {
     }
     template <::beman::execution::sender Sender>
         requires ::beman::execution::detail::nested_sender_has_affine<Sender>
-    static auto affine(Sender&& sndr) noexcept {
-        return ::std::forward<Sender>(sndr);
+    static auto affine(Sender&& sndr) {
+        auto& [_, data, child] = sndr;
+        return then_t{}(::beman::execution::detail::forward_like<Sender>(child).affine(),
+                        ::beman::execution::detail::forward_like<Sender>(data));
     }
 
   private:

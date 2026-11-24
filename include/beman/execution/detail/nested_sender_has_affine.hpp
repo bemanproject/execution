@@ -5,6 +5,11 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_NESTED_SENDER_HAS_AFFINE
 
 #include <beman/execution/detail/common.hpp>
+#ifdef BEMAN_HAS_IMPORT_STD
+import std;
+#else
+#include <utility>
+#endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.sender_has_affine;
 #else
@@ -16,7 +21,7 @@ import beman.execution.detail.sender_has_affine;
 namespace beman::execution::detail {
 template <typename Sender>
 concept nested_sender_has_affine = requires(Sender&& sndr) {
-    { sndr.template get<2>() } -> ::beman::execution::detail::sender_has_affine;
+    { ::std::forward<Sender>(sndr).template get<2>() } -> ::beman::execution::detail::sender_has_affine;
 };
 } // namespace beman::execution::detail
 
