@@ -40,6 +40,7 @@ import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
 import beman.execution.detail.transform_sender;
+import beman.execution.detail.value_signature;
 #else
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
@@ -66,21 +67,12 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
+#include <beman/execution/detail/value_signature.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-
-template <typename T>
-struct then_set_value {
-    using type = ::beman::execution::set_value_t(T);
-};
-template <>
-struct then_set_value<void> {
-    using type = ::beman::execution::set_value_t();
-};
-
 template <typename, typename, typename Completion>
 struct then_transform {
     using type = Completion;
@@ -88,8 +80,7 @@ struct then_transform {
 
 template <typename Fun, typename Completion, typename... T>
 struct then_transform<Fun, Completion, Completion(T...)> {
-    using type = typename ::beman::execution::detail::then_set_value<
-        ::beman::execution::detail::call_result_t<Fun, T...>>::type;
+    using type = ::beman::execution::detail::value_signature_t<::beman::execution::detail::call_result_t<Fun, T...>>;
 };
 
 template <typename Fun, typename Replace>

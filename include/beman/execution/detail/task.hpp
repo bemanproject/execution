@@ -62,6 +62,7 @@ import beman.execution.detail.task_scheduler;
 import beman.execution.detail.type_list;
 import beman.execution.detail.with_error;
 import beman.execution.detail.unreachable;
+import beman.execution.detail.value_signature;
 #else
 #include <beman/execution/detail/affine.hpp>
 #include <beman/execution/detail/as_awaitable.hpp>
@@ -102,6 +103,7 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/type_list.hpp>
 #include <beman/execution/detail/with_error.hpp>
 #include <beman/execution/detail/unreachable.hpp>
+#include <beman/execution/detail/value_signature.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -260,18 +262,6 @@ struct allocator_of<Context> {
 };
 template <typename Context>
 using allocator_of_t = typename allocator_of<Context>::type;
-
-template <typename R>
-struct value_signature {
-    using type = ::beman::execution::set_value_t(R);
-};
-template <>
-struct value_signature<void> {
-    using type = ::beman::execution::set_value_t();
-};
-
-template <typename R>
-using value_signature_t = typename value_signature<R>::type;
 
 template <typename>
 struct error_types_of {
@@ -846,7 +836,7 @@ class task {
     using awaiter = ::beman::execution::detail::task::awaiter<Value, Environment, promise_type, ParentPromise>;
 
     using signatures = ::beman::execution::detail::meta::combine<
-        ::beman::execution::completion_signatures<::beman::execution::detail::task::value_signature_t<Value>,
+        ::beman::execution::completion_signatures<::beman::execution::detail::value_signature_t<Value>,
                                                   ::beman::execution::set_stopped_t()>,
         error_types>;
 
