@@ -265,7 +265,7 @@ struct let_t {
         struct let_receiver {
             using receiver_concept = ::beman::execution::receiver_tag;
 
-            Receiver& receiver;
+            Receiver&             receiver;
             ::std::optional<Env>& env;
 
             auto get_env() const noexcept -> decltype(auto) {
@@ -331,10 +331,10 @@ struct let_t {
                     tuples_t>>>;
 
             struct state_t {
-                fun_t  fun;
+                fun_t                  fun;
                 ::std::optional<env_t> env;
-                args_t args;
-                ops_t  ops2;
+                args_t                 args;
+                ops_t                  ops2;
             };
             return state_t{
                 beman::execution::detail::allocator_aware_move(::beman::execution::detail::forward_like<Sender>(fun),
