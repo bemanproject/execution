@@ -32,7 +32,7 @@ template <typename T, typename Context>
  * \internal
  */
 auto allocator_aware_move(T&& obj, Context&& context) noexcept -> decltype(auto) {
-    try {
+    BEMAN_EXECUTION_TRY {
         if constexpr (requires { ::beman::execution::get_allocator(::beman::execution::get_env(context)); }) {
             if constexpr (decltype(::beman::execution::detail::is_product_type(obj))()) {
                 return obj.make_from(::beman::execution::get_allocator(::beman::execution::get_env(context)),
@@ -44,7 +44,8 @@ auto allocator_aware_move(T&& obj, Context&& context) noexcept -> decltype(auto)
         } else {
             return ::std::forward<T>(obj);
         }
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         ::std::terminate(); //-dk:TODO investigate if that can be avoided
     }
 }

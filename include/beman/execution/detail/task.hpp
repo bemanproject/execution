@@ -5,6 +5,8 @@
 #define INCLUDED_BEMAN_EXECUTION_DETAIL_TASK
 
 #include <cassert>
+#include <cstdint>
+#include <cstring>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -14,6 +16,7 @@ import std;
 #include <exception>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <system_error>
 #include <type_traits>
 #include <utility>
@@ -26,18 +29,22 @@ import beman.execution.detail.completion_signatures;
 import beman.execution.detail.decayed_same_as;
 import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
-import beman.execution.detail.find_allocator;
 import beman.execution.detail.forwarding_query;
 import beman.execution.detail.get_allocator;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_scheduler_allocator;
 import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.inline_scheduler;
 import beman.execution.detail.inplace_stop_source;
+import beman.execution.detail.meta.bind;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.contains;
+import beman.execution.detail.meta.filter;
 import beman.execution.detail.meta.index;
+import beman.execution.detail.meta.size;
+import beman.execution.detail.meta.to;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.receiver;
 import beman.execution.detail.scheduler;
@@ -55,6 +62,7 @@ import beman.execution.detail.task_scheduler;
 import beman.execution.detail.type_list;
 import beman.execution.detail.with_error;
 import beman.execution.detail.unreachable;
+import beman.execution.detail.value_signature;
 #else
 #include <beman/execution/detail/affine.hpp>
 #include <beman/execution/detail/as_awaitable.hpp>
@@ -62,18 +70,22 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/decayed_same_as.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
-#include <beman/execution/detail/find_allocator.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/get_allocator.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_scheduler_allocator.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/inline_scheduler.hpp>
 #include <beman/execution/detail/inplace_stop_source.hpp>
+#include <beman/execution/detail/meta_bind.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_contains.hpp>
+#include <beman/execution/detail/meta_filter.hpp>
 #include <beman/execution/detail/meta_index.hpp>
+#include <beman/execution/detail/meta_size.hpp>
+#include <beman/execution/detail/meta_to.hpp>
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scheduler.hpp>
@@ -91,6 +103,7 @@ import beman.execution.detail.unreachable;
 #include <beman/execution/detail/type_list.hpp>
 #include <beman/execution/detail/with_error.hpp>
 #include <beman/execution/detail/unreachable.hpp>
+#include <beman/execution/detail/value_signature.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -127,54 +140,112 @@ class handle {
     auto get_env() const noexcept { return ::beman::execution::get_env(*this->h); }
 };
 
-template <typename Allocator>
+struct co_memory {
+    struct default_align_t {
+        alignas(__STDCPP_DEFAULT_NEW_ALIGNMENT__)::std::byte _[__STDCPP_DEFAULT_NEW_ALIGNMENT__];
+    };
+
+    static constexpr auto ceiling_division(::std::uintptr_t n, ::std::uintptr_t m) noexcept -> ::std::uintptr_t {
+        assert(m != 0);
+        return (n + m - 1) / m;
+    }
+
+    static constexpr auto ceiling_align(::std::uintptr_t n, ::std::uintptr_t m) noexcept -> ::std::uintptr_t {
+        assert(m != 0);
+        return ceiling_division(n, m) * m;
+    }
+
+    static auto align_address(void* ptr, ::std::size_t alignment, ::std::size_t least_offset) noexcept -> void* {
+        auto least = reinterpret_cast<::std::uintptr_t>(static_cast<::std::byte*>(ptr) + least_offset);
+        return reinterpret_cast<void*>(ceiling_align(least, alignment));
+    };
+
+    using dealloc_fn_t = void (*)(default_align_t*, ::std::size_t) noexcept;
+
+    template <typename Alloc>
+    static auto allocate(Alloc alloc, ::std::size_t n) -> void* {
+        using alloc_t      = typename ::std::allocator_traits<Alloc>::template rebind_alloc<default_align_t>;
+        using alloc_traits = ::std::allocator_traits<alloc_t>;
+        alloc_t allocator_(::std::move(alloc));
+        if constexpr (::std::default_initializable<Alloc> and
+                      alloc_traits::is_always_equal::value) { // for stateless-allocator
+            /*
+             * layout:
+             *  +-----------------+-----------------------+------------------+
+             *  | coroutine state | deallocating function | possible padding |
+             *  +-----------------+-----------------------+------------------+
+             *           |                   |
+             *      `n` bytes    `sizeof(dealloc_fn_t)` bytes
+             */
+            auto offset_of_dealloc_fn = n;
+            n += sizeof(dealloc_fn_t);
+            void*        result     = alloc_traits::allocate(allocator_, ceiling_division(n, sizeof(default_align_t)));
+            dealloc_fn_t dealloc_fn = +[](default_align_t* ptr, ::std::size_t co_state_size) noexcept {
+                auto    length = co_state_size + sizeof(dealloc_fn_t);
+                alloc_t alloc_(Alloc{});
+                alloc_traits::deallocate(alloc_, ptr, ceiling_division(length, alignof(default_align_t)));
+            };
+            ::std::memcpy(static_cast<::std::byte*>(result) + offset_of_dealloc_fn, &dealloc_fn, sizeof(dealloc_fn_t));
+            return result;
+        } else {
+            /*
+             * layout:
+             *  +-----------------+-----------------------+------------------+-----------+------------------+
+             *  | coroutine state | deallocating function | possible padding | allocator | possible padding |
+             *  +-----------------+-----------------------+------------------+-----------+------------------+
+             *           |                   |                                     |
+             *      `n` bytes    `sizeof(dealloc_fn_t)` bytes           `sizeof(alloc_t)` bytes
+             */
+            static constexpr ::std::size_t max_alignment = (::std::max)(alignof(alloc_t), alignof(default_align_t));
+            auto                           offset_of_dealloc_fn = n;
+            n += sizeof(dealloc_fn_t);
+            void* result = alloc_traits::allocate(
+                allocator_, (n + sizeof(alloc_t) + max_alignment - 1) / alignof(default_align_t));
+            dealloc_fn_t dealloc_fn = +[](default_align_t* ptr, ::std::size_t co_state_size) noexcept {
+                auto length     = co_state_size + sizeof(dealloc_fn_t);
+                auto alloc_ptr_ = ::std::launder(static_cast<alloc_t*>(align_address(ptr, alignof(alloc_t), length)));
+                alloc_t alloc_  = ::std::move(*alloc_ptr_);
+                ::std::destroy_at(alloc_ptr_);
+                alloc_traits::deallocate(
+                    alloc_, ptr, (length + sizeof(alloc_t) + max_alignment - 1) / alignof(default_align_t));
+            };
+            ::std::memcpy(static_cast<::std::byte*>(result) + offset_of_dealloc_fn, &dealloc_fn, sizeof(dealloc_fn_t));
+            void(::std::construct_at(static_cast<alloc_t*>(align_address(result, alignof(alloc_t), n)),
+                                     ::std::move(allocator_)));
+            return result;
+        }
+    }
+
+    static auto deallocate(void* ptr, ::std::size_t n) noexcept -> void {
+        dealloc_fn_t dealloc_fn = nullptr;
+        ::std::memcpy(&dealloc_fn, static_cast<::std::byte*>(ptr) + n, sizeof(dealloc_fn_t));
+        dealloc_fn(static_cast<default_align_t*>(ptr), n);
+    }
+};
+
+template <typename Alloc>
 struct allocator_support {
-    using allocator_traits = ::std::allocator_traits<Allocator>;
-
-    static auto offset(::std::size_t size) noexcept -> ::std::size_t {
-        return (size + alignof(Allocator) - 1u) & ~(alignof(Allocator) - 1u);
+    auto operator new(::std::size_t n) -> void* {
+        static_assert(::std::default_initializable<Alloc>);
+        return co_memory::allocate(Alloc(), n);
     }
 
-    static auto get_allocator(void* ptr, ::std::size_t size) noexcept -> Allocator* {
-        ptr = static_cast<::std::byte*>(ptr) + offset(size);
-        return ::std::launder(reinterpret_cast<Allocator*>(ptr));
+    template <typename OtherAlloc, typename... Args>
+    auto operator new(::std::size_t n, ::std::allocator_arg_t, const OtherAlloc& other_alloc, const Args&...)
+        -> void* {
+        static_assert(::beman::execution::detail::simple_allocator<OtherAlloc>);
+        return co_memory::allocate(other_alloc, n);
     }
 
-    template <typename... Args>
-    auto operator new(::std::size_t size, const Args&... args) -> void* {
-        if constexpr (::std::same_as<Allocator, ::std::allocator<::std::byte>>) {
-            Allocator alloc{};
-            return allocator_traits::allocate(alloc, size);
-        } else {
-            Allocator alloc{::beman::execution::detail::find_allocator<Allocator>(args...)};
-            void*     ptr{allocator_traits::allocate(alloc, allocator_support::offset(size) + sizeof(Allocator))};
-            try {
-                new (allocator_support::get_allocator(ptr, size)) Allocator(alloc);
-            } catch (...) {
-                allocator_traits::deallocate(
-                    alloc, static_cast<::std::byte*>(ptr), allocator_support::offset(size) + sizeof(Allocator));
-                throw;
-            }
-            return ptr;
-        }
+    template <typename This, typename OtherAlloc, typename... Args>
+    auto
+    operator new(::std::size_t n, const This&, ::std::allocator_arg_t, const OtherAlloc& other_alloc, const Args&...)
+        -> void* {
+        static_assert(::beman::execution::detail::simple_allocator<OtherAlloc>);
+        return co_memory::allocate(other_alloc, n);
     }
 
-    auto operator delete(void* ptr, ::std::size_t size) noexcept -> void {
-        if constexpr (::std::same_as<Allocator, ::std::allocator<::std::byte>>) {
-            Allocator alloc{};
-            allocator_traits::deallocate(alloc, static_cast<::std::byte*>(ptr), size);
-        } else {
-            Allocator* aptr{allocator_support::get_allocator(ptr, size)};
-            Allocator  alloc{*aptr};
-            aptr->~Allocator();
-            allocator_traits::deallocate(
-                alloc, static_cast<::std::byte*>(ptr), allocator_support::offset(size) + sizeof(Allocator));
-        }
-    }
-
-    auto operator delete(void* ptr, ::std::size_t size, const auto&...) noexcept -> void {
-        allocator_support::operator delete(ptr, size);
-    }
+    auto operator delete(void* ptr, ::std::size_t n) noexcept -> void { co_memory::deallocate(ptr, n); }
 };
 
 template <typename>
@@ -191,18 +262,6 @@ struct allocator_of<Context> {
 };
 template <typename Context>
 using allocator_of_t = typename allocator_of<Context>::type;
-
-template <typename R>
-struct value_signature {
-    using type = ::beman::execution::set_value_t(R);
-};
-template <>
-struct value_signature<void> {
-    using type = ::beman::execution::set_value_t();
-};
-
-template <typename R>
-using value_signature_t = typename value_signature<R>::type;
 
 template <typename>
 struct error_types_of {
@@ -255,11 +314,8 @@ using stop_source_of_t = typename stop_source_of<Context>::type;
 
 struct void_type {};
 
-template <typename Value, typename Errors>
-class result_type;
-
 template <typename Value, typename... Errors>
-class result_type<Value, ::beman::execution::completion_signatures<::beman::execution::set_error_t(Errors)...>> {
+class async_result {
   private:
     using value_type = ::std::conditional_t<::std::same_as<void, Value>, void_type, Value>;
 
@@ -271,83 +327,20 @@ class result_type<Value, ::beman::execution::completion_signatures<::beman::exec
 
     template <typename E>
     auto set_error(E&& error) -> void {
-        static constexpr ::std::size_t index = ::beman::execution::detail::meta::
-            index_v<::beman::execution::detail::type_list<::std::remove_cvref_t<Errors>...>, ::std::remove_cvref_t<E>>;
-        static_assert(index != static_cast<::std::size_t>(-1),
-                      "Error type not supported: 'E' is not among the defined Errors.");
+        using supported_errors = ::beman::execution::detail::type_list<Errors...>;
+        using matched          = ::beman::execution::detail::meta::
+            filter<::beman::execution::detail::meta::bind<::std::is_convertible, E>::template front, supported_errors>;
+
+        static constexpr ::std::size_t matched_count = ::beman::execution::detail::meta::size_v<matched>;
+        static_assert(matched_count == 1uz, "`E` shall be convertible to exactly one of `Errors`.");
+
+        using matched_type = ::beman::execution::detail::meta::to<::std::type_identity_t, matched>;
+        static constexpr ::std::size_t index =
+            ::beman::execution::detail::meta::index_v<supported_errors, matched_type>;
         this->result.template emplace<2uz + index>(::std::forward<E>(error));
     }
 
     auto no_completion_set() const noexcept -> bool { return this->result.index() == 0uz; }
-
-    template <::beman::execution::receiver Receiver>
-    auto result_complete(Receiver rcvr) noexcept -> void {
-        switch (this->result.index()) {
-        case 0:
-            ::beman::execution::set_stopped(::std::move(rcvr));
-            break;
-        case 1:
-            if constexpr (::std::same_as<void_type, value_type>)
-                ::beman::execution::set_value(::std::move(rcvr));
-            else
-                ::beman::execution::set_value(::std::move(rcvr), ::std::move(::std::get<1uz>(this->result)));
-            break;
-        default:
-            if constexpr (0uz < sizeof...(Errors)) {
-                ::beman::execution::detail::sub_visit<2uz>(
-                    [&rcvr](auto& error) { ::beman::execution::set_error(::std::move(rcvr), ::std::move(error)); },
-                    this->result);
-            }
-            break;
-        }
-    }
-    auto result_resume() {
-        switch (this->result.index()) {
-        case 0:
-            ::beman::execution::detail::unreachable();
-            break;
-        case 1:
-            break;
-        default:
-            if constexpr (0uz < sizeof...(Errors))
-                ::beman::execution::detail::sub_visit<2uz>(
-                    []<typename E>(E& error) {
-                        if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::exception_ptr>) {
-                            ::std::rethrow_exception(::std::move(error));
-                        } else if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::error_code>) {
-                            throw ::std::system_error{::std::move(error)};
-                        } else {
-                            throw ::std::move(error);
-                        }
-                    },
-                    this->result);
-            ::beman::execution::detail::unreachable();
-            break;
-        }
-        if constexpr (::std::same_as<void_type, value_type>) {
-            return;
-        } else {
-            return ::std::move(::std::get<1uz>(this->result));
-        }
-    }
-
-  private:
-    ::std::variant<::std::monostate, value_type, ::std::remove_cvref_t<Errors>...> result;
-};
-template <typename Value>
-class result_type<Value, ::beman::execution::completion_signatures<>> {
-  private:
-    using value_type = ::std::conditional_t<::std::same_as<void, Value>, void_type, Value>;
-
-    ::std::variant<::std::monostate, value_type> result;
-
-  public:
-    template <typename T>
-    auto set_value(T&& value) -> void {
-        this->result.template emplace<1uz>(::std::forward<T>(value));
-    }
-
-    auto no_completion_set() const noexcept -> bool { return this->result.index() == 0; }
 
     template <::beman::execution::receiver Receiver>
     auto result_complete(Receiver rcvr) noexcept -> void {
@@ -363,22 +356,67 @@ class result_type<Value, ::beman::execution::completion_signatures<>> {
             }
             break;
         default:
+            if constexpr (0uz < sizeof...(Errors)) {
+                ::beman::execution::detail::sub_visit<2uz>(
+                    [&rcvr](auto& error) { ::beman::execution::set_error(::std::move(rcvr), ::std::move(error)); },
+                    this->result);
+            } else {
+                ::beman::execution::detail::unreachable();
+            }
+            break;
+        }
+    }
+
+    auto result_resume() noexcept(sizeof...(Errors) == 0uz) {
+        switch (this->result.index()) {
+        case 0:
+            ::beman::execution::detail::unreachable();
+            break;
+        case 1:
+            if constexpr (::std::same_as<void_type, value_type>) {
+                return;
+            } else {
+                return ::std::move(::std::get<1uz>(this->result));
+            }
+        default:
+            if constexpr (0uz < sizeof...(Errors)) {
+                ::beman::execution::detail::sub_visit<2uz>(
+                    []<typename E>(E& error) {
+                        if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::exception_ptr>) {
+                            BEMAN_EXECUTION_RETHROW(::std::move(error));
+                        } else if constexpr (::std::same_as<::std::remove_cvref_t<E>, ::std::error_code>) {
+                            BEMAN_EXECUTION_THROW(::std::system_error{::std::move(error)});
+                        } else {
+                            BEMAN_EXECUTION_THROW(::std::move(error));
+                        }
+                    },
+                    this->result);
+            }
             ::beman::execution::detail::unreachable();
             break;
         }
     }
 
-    auto result_resume() noexcept {
-        if (this->result.index() != 1) [[unlikely]] {
-            ::beman::execution::detail::unreachable();
-        }
-        if constexpr (::std::same_as<void_type, value_type>) {
-            return;
-        } else {
-            return ::std::move(::std::get<1uz>(this->result));
-        }
-    }
+  private:
+    ::std::variant<::std::monostate, value_type, Errors...> result;
 };
+
+template <typename, typename>
+struct select_result_type;
+
+template <typename Value, typename... Errors>
+struct select_result_type<Value,
+                          ::beman::execution::completion_signatures<::beman::execution::set_error_t(Errors)...>> {
+    using type = async_result<Value, ::std::remove_cvref_t<Errors>...>;
+};
+
+template <typename Value>
+struct select_result_type<Value, ::beman::execution::completion_signatures<>> {
+    using type = async_result<Value>;
+};
+
+template <typename Value, typename ErrorTypes>
+using result_type = select_result_type<Value, ErrorTypes>::type;
 
 template <typename, typename>
 struct own_env {
@@ -453,17 +491,27 @@ class propagator<StopSource, StopToken> {
     StopToken stop_token_;
 };
 
-template <typename Sched, typename Env, typename Alloc>
-auto make_sched(const Env& env, const Alloc& alloc) noexcept -> Sched {
-    if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
-        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_start_scheduler(env));
-    } else if constexpr (requires { Sched(::beman::execution::get_scheduler(env)); }) {
-        return ::std::make_obj_using_allocator<Sched>(alloc, ::beman::execution::get_scheduler(env));
+template <typename Sched, typename Env>
+auto make_sched(const Env& env) noexcept -> Sched {
+    if constexpr (requires {
+                      { ::beman::execution::get_start_scheduler(env) } -> ::std::same_as<Sched>;
+                  }) {
+        return ::beman::execution::get_start_scheduler(env);
+    } else if constexpr (requires {
+                             Sched(::beman::execution::get_start_scheduler(env),
+                                   ::beman::execution::get_scheduler_allocator(env));
+                         }) {
+        return Sched(::beman::execution::get_start_scheduler(env), ::beman::execution::get_scheduler_allocator(env));
+    } else if constexpr (requires { Sched(::beman::execution::get_start_scheduler(env)); }) {
+        return Sched(::beman::execution::get_start_scheduler(env));
+    } else if constexpr (requires { Sched(::beman::execution::get_scheduler_allocator(env)); }) {
+        return Sched(::beman::execution::get_scheduler_allocator(env));
     } else if constexpr (::std::default_initializable<Sched>) {
         return Sched();
     } else {
         static_assert(false,
-                      "`Env` should provide `get_start_scheduler` or `get_scheduler`; otherwise, `Sched` should be "
+                      "`Env` should provide `get_start_scheduler` and/or `get_scheduler_allocator`; otherwise, "
+                      "`Sched` should be "
                       "default-initializable.");
         ::beman::execution::detail::unreachable();
     }
@@ -507,25 +555,28 @@ class state_base : public result_type<Value, error_types_of_t<Environment>> {
 template <typename Value, typename Environment, typename OwnPromise, typename Receiver>
 // ReSharper disable once CppPolymorphicClassWithNonVirtualPublicDestructor
 struct state : state_base<Value, Environment> {
-    using operation_state_concept = ::beman::execution::operation_state_tag;
-    using scheduler_type          = typename state_base<Value, Environment>::scheduler_type;
-    using allocator_type          = typename state_base<Value, Environment>::allocator_type;
-    using stop_source_type        = typename state_base<Value, Environment>::stop_source_type;
-    using stop_token_type         = typename state_base<Value, Environment>::stop_token_type;
-    using upstream_stop_token_t   = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Receiver>>;
+    using operation_state_concept  = ::beman::execution::operation_state_tag;
+    using scheduler_type           = typename state_base<Value, Environment>::scheduler_type;
+    using allocator_type           = typename state_base<Value, Environment>::allocator_type;
+    using stop_source_type         = typename state_base<Value, Environment>::stop_source_type;
+    using stop_token_type          = typename state_base<Value, Environment>::stop_token_type;
+    using upstream_stop_token_type = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<Receiver>>;
+    using propagator_type = ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_type>;
 
     template <typename H, typename Env>
     state(Receiver r, H h, const Env& env) noexcept
-        : rcvr(::std::move(r)),
-          handle(::std::move(h)),
-          holder(env),
-          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
-          propagator(::beman::execution::get_stop_token(env)) {}
+        : rcvr(::std::move(r)), handle(::std::move(h)), holder(env), scheduler(), propagator() {}
 
-    auto start() & noexcept -> void { this->handle.start(this).resume(); }
+    auto start() & noexcept -> void {
+        this->scheduler.emplace(
+            ::beman::execution::detail::task::make_sched<scheduler_type>(::beman::execution::get_env(this->rcvr)));
+        this->handle.start(this).resume();
+    }
 
   private:
     auto do_complete() noexcept -> ::std::coroutine_handle<> final {
+        this->propagator.reset();
+        this->scheduler.reset();
         this->handle.reset();
         this->result_complete(::std::move(this->rcvr));
         return ::std::noop_coroutine();
@@ -541,48 +592,55 @@ struct state : state_base<Value, Environment> {
         }
     }
 
-    auto do_get_start_scheduler() noexcept -> scheduler_type final { return this->scheduler; }
+    auto do_get_start_scheduler() noexcept -> scheduler_type final { return *this->scheduler; }
 
-    auto do_get_stop_token() noexcept -> stop_token_type final { return this->propagator.get_token(); }
+    auto do_get_stop_token() noexcept -> stop_token_type final {
+        if (!this->propagator) {
+            const auto& env = ::beman::execution::get_env(this->rcvr);
+            this->propagator.emplace(::beman::execution::get_stop_token(env));
+        }
+        return this->propagator->get_token();
+    }
 
     auto do_get_environment() noexcept -> Environment& final { return this->holder.environment; }
 
-    Receiver                                                                              rcvr;
-    ::beman::execution::detail::task::handle<OwnPromise>                                  handle;
-    env_holder<Environment, ::beman::execution::env_of_t<Receiver>>                       holder;
-    scheduler_type                                                                        scheduler;
-    ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_t> propagator;
+    Receiver                                                        rcvr;
+    ::beman::execution::detail::task::handle<OwnPromise>            handle;
+    env_holder<Environment, ::beman::execution::env_of_t<Receiver>> holder;
+    ::std::optional<scheduler_type>                                 scheduler;
+    ::std::optional<propagator_type>                                propagator;
 };
 
 template <typename Value, typename Environment, typename OwnPromise, typename ParentPromise>
 // ReSharper disable once CppPolymorphicClassWithNonVirtualPublicDestructor
 class awaiter : public state_base<Value, Environment> {
   public:
-    using allocator_type        = typename state_base<Value, Environment>::allocator_type;
-    using scheduler_type        = typename state_base<Value, Environment>::scheduler_type;
-    using stop_source_type      = typename state_base<Value, Environment>::stop_source_type;
-    using stop_token_type       = typename state_base<Value, Environment>::stop_token_type;
-    using upstream_stop_token_t = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<ParentPromise>>;
+    using allocator_type           = typename state_base<Value, Environment>::allocator_type;
+    using scheduler_type           = typename state_base<Value, Environment>::scheduler_type;
+    using stop_source_type         = typename state_base<Value, Environment>::stop_source_type;
+    using stop_token_type          = typename state_base<Value, Environment>::stop_token_type;
+    using upstream_stop_token_type = ::beman::execution::stop_token_of_t<::beman::execution::env_of_t<ParentPromise>>;
+    using propagator_type = ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_type>;
 
     explicit awaiter(::std::coroutine_handle<ParentPromise> parent, handle<OwnPromise> h, const auto& env) noexcept
-        : parent(parent),
-          handle(::std::move(h)),
-          holder(env),
-          scheduler(::beman::execution::detail::task::make_sched<scheduler_type>(env, do_get_allocator())),
-          propagator(::beman::execution::get_stop_token(env)) {}
+        : parent(parent), handle(::std::move(h)), holder(env), scheduler(), propagator() {}
 
     static constexpr auto await_ready() noexcept -> bool { return false; }
 
     auto await_suspend([[maybe_unused]] ::std::coroutine_handle<ParentPromise> p) noexcept
         -> ::std::coroutine_handle<> {
         assert(p == this->parent);
+        const auto& env = ::beman::execution::get_env(this->parent.promise());
+        this->scheduler.emplace(::beman::execution::detail::task::make_sched<scheduler_type>(env));
         return this->handle.start(this);
     }
 
-    auto await_resume() -> Value { return this->result_resume(); }
+    auto await_resume() noexcept(noexcept(this->result_resume())) -> Value { return this->result_resume(); }
 
   private:
     auto do_complete() noexcept -> ::std::coroutine_handle<> final {
+        this->propagator.reset();
+        this->scheduler.reset();
         if (this->no_completion_set()) {
             return this->parent.promise().unhandled_stopped();
         }
@@ -599,17 +657,23 @@ class awaiter : public state_base<Value, Environment> {
         }
     }
 
-    auto do_get_start_scheduler() noexcept -> scheduler_type final { return this->scheduler; }
+    auto do_get_start_scheduler() noexcept -> scheduler_type final { return *this->scheduler; }
 
-    auto do_get_stop_token() noexcept -> stop_token_type final { return this->propagator.get_token(); }
+    auto do_get_stop_token() noexcept -> stop_token_type final {
+        if (!this->propagator) {
+            const auto& env = ::beman::execution::get_env(this->parent.promise());
+            this->propagator.emplace(::beman::execution::get_stop_token(env));
+        }
+        return this->propagator->get_token();
+    }
 
     auto do_get_environment() noexcept -> Environment& final { return this->holder.environment; }
 
-    ::std::coroutine_handle<ParentPromise>                                                parent;
-    ::beman::execution::detail::task::handle<OwnPromise>                                  handle;
-    env_holder<Environment, ::beman::execution::env_of_t<ParentPromise>>                  holder;
-    scheduler_type                                                                        scheduler;
-    ::beman::execution::detail::task::propagator<stop_source_type, upstream_stop_token_t> propagator;
+    ::std::coroutine_handle<ParentPromise>                               parent;
+    ::beman::execution::detail::task::handle<OwnPromise>                 handle;
+    env_holder<Environment, ::beman::execution::env_of_t<ParentPromise>> holder;
+    ::std::optional<scheduler_type>                                      scheduler;
+    ::std::optional<propagator_type>                                     propagator;
 };
 
 template <typename Promise>
@@ -632,10 +696,10 @@ struct promise_env {
 
     template <typename Q, typename... Args>
         requires(::beman::execution::forwarding_query(Q())) && requires(const Promise* p, Q q, Args&&... args) {
-            q(p->get_environment(), ::std::forward<Args>(args)...);
+            p->get_environment().query(q, ::std::forward<Args>(args)...);
         }
     auto query(Q q, Args&&... args) const noexcept {
-        return q(this->promise->get_environment(), ::std::forward<Args>(args)...);
+        return this->promise->get_environment().query(q, ::std::forward<Args>(args)...);
     }
 
     const Promise* promise;
@@ -662,6 +726,7 @@ class promise_base {
 
   public:
     auto set_state(state_base<Value, Environment>* s) noexcept -> void { this->state_ = s; }
+
     auto get_state() const noexcept -> state_base<Value, Environment>* { return this->state_; }
 
   private:
@@ -701,6 +766,8 @@ class promise_type : public ::beman::execution::detail::task::promise_base<::std
         if constexpr (::beman::execution::detail::task::has_exception_signature<error_types>::value) {
             this->get_state()->set_error(::std::current_exception());
         } else {
+            assert(false && "Since `task::error_types` doesn't contain `set_error_t(std::exception_ptr)`, it is "
+                            "unable to handle exceptions.");
             ::std::terminate();
         }
     }
@@ -769,7 +836,7 @@ class task {
     using awaiter = ::beman::execution::detail::task::awaiter<Value, Environment, promise_type, ParentPromise>;
 
     using signatures = ::beman::execution::detail::meta::combine<
-        ::beman::execution::completion_signatures<::beman::execution::detail::task::value_signature_t<Value>,
+        ::beman::execution::completion_signatures<::beman::execution::detail::value_signature_t<Value>,
                                                   ::beman::execution::set_stopped_t()>,
         error_types>;
 
@@ -778,9 +845,9 @@ class task {
 
     task(task&&) noexcept = default;
 
-    task& operator=(const task&) = delete;
+    auto operator=(const task&) -> task& = delete;
 
-    task& operator=(task&&) noexcept = default;
+    auto operator=(task&&) noexcept -> task& = default;
 
     ~task() = default;
 

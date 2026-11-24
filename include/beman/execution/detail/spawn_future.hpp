@@ -22,6 +22,7 @@ import beman.execution.detail.basic_sender;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.connect;
 import beman.execution.detail.connect_result_t;
 import beman.execution.detail.decayed_tuple;
 import beman.execution.detail.default_impls;
@@ -40,6 +41,7 @@ import beman.execution.detail.queryable;
 import beman.execution.detail.receiver;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender;
+import beman.execution.detail.sender_in;
 import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
@@ -50,6 +52,7 @@ import beman.execution.detail.write_env;
 #else
 #include <beman/execution/detail/as_tuple.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
+#include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/connect_result_t.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/env.hpp>
@@ -66,6 +69,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/receiver.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender.hpp>
+#include <beman/execution/detail/sender_in.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
@@ -123,10 +127,11 @@ struct spawn_future_receiver {
 
     template <typename Tag, typename... T>
     auto set_complete(T&&... t) noexcept {
-        try {
+        BEMAN_EXECUTION_TRY {
             this->state->result.template emplace<::beman::execution::detail::decayed_tuple<Tag, T...>>(
                 Tag(), ::std::forward<T>(t)...);
-        } catch (...) {
+        }
+        BEMAN_EXECUTION_CATCH(...) {
             if constexpr (!state_t::has_non_throwing_args_copy) {
                 this->state->result
                     .template emplace<::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>>(
@@ -157,16 +162,17 @@ struct spawn_future_state
     using spawned_sender_t = ::beman::execution::detail::future_spawned_sender<Sndr, Env>;
     using sigs_t           = ::beman::execution::detail::spawn_future_sigs<Sndr, Env>;
     using receiver_t       = ::beman::execution::detail::spawn_future_receiver<sigs_t>;
-    static_assert(::beman::execution::sender<spawned_sender_t>);
+    static_assert(::beman::execution::sender_in<spawned_sender_t, ::beman::execution::env<>>);
     static_assert(::beman::execution::receiver<receiver_t>);
     using op_t = ::beman::execution::connect_result_t<spawned_sender_t, receiver_t>;
 
     template <::beman::execution::sender S>
     spawn_future_state(auto a, S&& s, const Token& tok, Env env)
         : alloc(::std::move(a)),
-          op(::beman::execution::write_env(
-                 ::beman::execution::detail::stop_when(::std::forward<S>(s), source.get_token()), env),
-             receiver_t{this}),
+          op(::beman::execution::connect(
+              ::beman::execution::write_env(
+                  ::beman::execution::detail::stop_when(::std::forward<S>(s), source.get_token()), env),
+              receiver_t{this})),
           assoc(tok.try_associate()) {
         if (this->assoc) {
             ::beman::execution::start(this->op);
@@ -252,19 +258,18 @@ class spawn_future_t {
         //-dk:TODO why decltype(auto) instead of auto?
         auto make{[&]() -> decltype(auto) { return tok.wrap(::std::forward<Sndr>(sndr)); }};
         using sndr_t = decltype(make());
-        static_assert(::beman::execution::sender<Sndr>);
+        static_assert(::beman::execution::sender<sndr_t>);
 
-        auto [alloc, senv] = spawn_get_allocator(sndr, ev);
+        auto [alloc, senv] = ::beman::execution::detail::spawn_get_allocator(sndr, ev);
         using state_t = ::beman::execution::detail::spawn_future_state<decltype(alloc), Tok, sndr_t, decltype(senv)>;
         using state_alloc_t  = typename ::std::allocator_traits<decltype(alloc)>::template rebind_alloc<state_t>;
         using state_traits_t = ::std::allocator_traits<state_alloc_t>;
         state_alloc_t state_alloc(alloc);
         state_t*      op{state_traits_t::allocate(state_alloc, 1u)};
-        try {
-            state_traits_t::construct(state_alloc, op, alloc, make(), tok, senv);
-        } catch (...) {
+        BEMAN_EXECUTION_TRY { state_traits_t::construct(state_alloc, op, alloc, make(), tok, senv); }
+        BEMAN_EXECUTION_CATCH(...) {
             state_traits_t::deallocate(state_alloc, op, 1u);
-            throw;
+            BEMAN_EXECUTION_THROW();
         }
 
         using deleter = decltype([](state_t* p) noexcept { p->abandon(); });

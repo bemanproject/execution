@@ -2,17 +2,20 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/thread_pool.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
 #include <concepts>
 #include <coroutine>
+#include <cstddef>
 #include <exception>
 #include <memory>
 #include <memory_resource>
 #include <new>
 #include <stdexcept>
+#include <system_error>
 #include <thread>
 #include <tuple>
 #include <type_traits>
@@ -20,9 +23,11 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
+import beman.execution.detail.simple_allocator;
 #else
 #include <beman/execution/execution.hpp>
 #endif
+#include <test/lifetime.hpp>
 
 // ----------------------------------------------------------------------------
 
@@ -55,10 +60,12 @@ auto nested_stopped_task(bool& reached_after_stop) -> test_std::task<> {
     reached_after_stop = true;
 }
 
+#ifdef __cpp_exceptions
 auto throwing_task() -> test_std::task<int> {
     throw std::runtime_error("task failure");
     co_return 0;
 }
+#endif
 
 struct integer_error_environment {
     using error_types = test_std::completion_signatures<test_std::set_error_t(int)>;
@@ -95,11 +102,24 @@ auto pmr_allocator_task(std::allocator_arg_t, std::pmr::polymorphic_allocator<> 
     co_return 42;
 }
 
+// the coroutine allocator type is unrelated to the task's allocator_type (std::allocator<std::byte>)
+auto foreign_allocator_task(std::allocator_arg_t, std::pmr::polymorphic_allocator<>) -> test_std::task<int> {
+    co_return 67;
+}
+
 auto scheduler_task() -> test_std::task<int> {
     const auto scheduler = co_await test_std::read_env(test_std::get_scheduler);
     static_assert(std::same_as<std::remove_cvref_t<decltype(scheduler)>, test_std::task_scheduler>);
     co_await test_std::schedule(scheduler);
     co_return 42;
+}
+
+struct error_code_env {
+    using error_types = test_std::completion_signatures<test_std::set_error_t(std::error_code)>;
+};
+
+auto yield_error_code(std::errc ec) -> test_std::task<void, error_code_env> {
+    co_yield test_std::with_error{std::make_error_code(ec)};
 }
 
 struct stop_token_env {
@@ -171,6 +191,108 @@ auto test_task_awaits_senders_and_tasks() -> void {
     ASSERT(std::get<0>(*scheduler_result) == 42);
 }
 
+class counting_scheduler {
+  private:
+    struct attrs {
+        auto query(test_std::get_completion_scheduler_t<test_std::set_value_t>) const noexcept -> counting_scheduler {
+            return counting_scheduler{counter};
+        }
+
+        std::shared_ptr<std::size_t> counter;
+    };
+
+    template <test_std::receiver Receiver>
+    struct state {
+        using operation_state_concept = test_std::operation_state_tag;
+
+        auto start() & noexcept -> void {
+            ++*counter;
+            test_std::set_value(std::move(receiver));
+        }
+
+        std::shared_ptr<std::size_t> counter;
+        Receiver                     receiver;
+    };
+
+    struct sender {
+        using sender_concept = test_std::sender_tag;
+
+        template <typename...>
+        static consteval auto get_completion_signatures() noexcept
+            -> test_std::completion_signatures<test_std::set_value_t()> {
+            return {};
+        }
+
+        auto get_env() const noexcept -> attrs { return {counter}; }
+
+        template <test_std::receiver Receiver>
+        auto connect(Receiver receiver) && noexcept -> state<Receiver> {
+            return {std::move(counter), std::move(receiver)};
+        }
+
+        std::shared_ptr<std::size_t> counter;
+    };
+
+  public:
+    using scheduler_concept = test_std::scheduler_tag;
+
+    counting_scheduler() : counter(std::make_shared<::std::size_t>(0uz)) {}
+
+    explicit counting_scheduler(std::shared_ptr<std::size_t> counter) noexcept : counter(std::move(counter)) {}
+
+    auto count() const noexcept -> std::size_t { return *counter; }
+
+    auto schedule() const noexcept -> sender { return {counter}; }
+
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept -> test_std::forward_progress_guarantee {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
+
+    auto operator==(const counting_scheduler&) const noexcept -> bool = default;
+
+  private:
+    std::shared_ptr<std::size_t> counter;
+};
+static_assert(test_std::scheduler<counting_scheduler>);
+
+auto test_task_scheduler_affinity() -> void {
+    test::thread_pool pool;
+    {
+        const auto caller_thread = std::this_thread::get_id();
+        auto       tsk           = [&]() -> test_std::task<> {
+            ASSERT(std::this_thread::get_id() == caller_thread);
+            co_await test_std::schedule(pool.get_scheduler());
+            ASSERT(std::this_thread::get_id() == caller_thread);
+        };
+        test_std::sync_wait(tsk());
+    }
+    {
+        struct env {
+            using start_scheduler_type = counting_scheduler;
+        };
+
+        auto tsk = [&]() -> test_std::task<void, env> {
+            auto sch = co_await test_std::read_env(test_std::get_start_scheduler);
+            co_await test_std::just();
+            ASSERT(sch.count() == 0uz);
+            auto i = co_await test_std::then(test_std::just(), []() noexcept { return 42; });
+            ASSERT(i == 42);
+            ASSERT(sch.count() == 0uz);
+            co_await test_std::schedule(pool.get_scheduler());
+            ASSERT(sch.count() == 1uz);
+            co_await test_std::affine(test_std::just());
+            ASSERT(sch.count() == 1uz);
+            co_await test_std::affine(test_std::schedule(pool.get_scheduler()));
+            ASSERT(sch.count() == 2uz);
+            co_await test_std::affine(test_std::affine(test_std::schedule(pool.get_scheduler())));
+            ASSERT(sch.count() == 3uz);
+            co_await test_std::then(test_std::affine(test_std::just() | test_std::then([] {})), [] {});
+            ASSERT(sch.count() == 3uz);
+        };
+        test_std::sync_wait(tsk());
+    }
+}
+
 auto test_task_stopped_completion() -> void {
     bool reached_after_stop{};
     auto result = test_std::sync_wait(nested_stopped_task(reached_after_stop));
@@ -178,6 +300,7 @@ auto test_task_stopped_completion() -> void {
     ASSERT(!reached_after_stop);
 }
 
+#ifdef __cpp_exceptions
 auto test_task_errors() -> void {
     bool caught{};
     try {
@@ -198,7 +321,15 @@ auto test_task_errors() -> void {
         caught = true;
     }
     ASSERT(caught);
+
+    auto result = test_std::sync_wait_with_variant(yield_error_code(std::errc::invalid_argument) |
+                                                   test_std::upon_error([](auto ec) noexcept { return ec; }))
+                      .value();
+    ASSERT(std::holds_alternative<std::tuple<std::error_code>>(result));
+    auto [ec] = std::get<std::tuple<std::error_code>>(result);
+    ASSERT(ec == std::errc::invalid_argument);
 }
+#endif // __cpp_exceptions
 
 auto test_task_uses_pmr_allocator_arg() -> void {
     counting_memory_resource          resource;
@@ -214,6 +345,20 @@ auto test_task_uses_pmr_allocator_arg() -> void {
     ASSERT(resource.deallocations == resource.allocations);
 }
 
+auto test_task_allocator_arg_unrelated_to_allocator_type() -> void {
+    counting_memory_resource          resource;
+    std::pmr::polymorphic_allocator<> allocator{&resource};
+
+    auto task = foreign_allocator_task(std::allocator_arg, allocator);
+    ASSERT(resource.allocations == 1uz);
+    ASSERT(resource.deallocations == 0uz);
+
+    auto result = test_std::sync_wait(std::move(task));
+    ASSERT(result.has_value());
+    ASSERT(std::get<0>(*result) == 67);
+    ASSERT(resource.deallocations == 1uz);
+}
+
 auto test_task_propagates_stop_token() -> void {
     test_std::inplace_stop_source source;
     ASSERT(source.request_stop());
@@ -224,14 +369,86 @@ auto test_task_propagates_stop_token() -> void {
     ASSERT(value);
 }
 
+auto test_lifetimes() -> void {
+    test::lifetime([]() -> test_std::task<> { co_return; }());
+    test::lifetime([]() -> test_std::task<> { co_await test_std::just(); }());
+    test::lifetime([]() -> test_std::task<> { co_await test_std::just_stopped(); }());
+    test::lifetime([]() -> test_std::task<> { co_await test_std::just_error(42); }());
+    test::lifetime([]() -> test_std::task<> {
+        [[maybe_unused]] auto token{co_await test_std::read_env(test_std::get_stop_token)};
+    }());
+}
+
+struct test_query_t : test_std::forwarding_query_t {
+    template <typename Env>
+    auto operator()(const Env& env) const noexcept -> decltype(env.query(*this)) {
+        return env.query(*this);
+    }
+};
+inline constexpr test_query_t test_query{};
+
+struct test_own_env {
+    template <typename ReceiverEnv>
+        requires requires(const ReceiverEnv& parent) { test_query(parent); }
+    explicit test_own_env(const ReceiverEnv& parent) : value(test_query(parent)) {}
+
+    int value;
+};
+
+struct test_env {
+    template <typename ReceiverEnv>
+    using env_type = test_own_env;
+
+    explicit test_env(const test_own_env& own) noexcept : value(own.value) {}
+
+    auto query(test_query_t) const noexcept -> int { return value; }
+
+    int value;
+};
+
+auto test_task_env() -> void {
+    static auto tsk = []() -> test_std::task<int, test_env> { co_return co_await test_std::read_env(test_query); };
+    auto [result]   = test_std::sync_wait(tsk() | test_std::write_env(test_std::prop{test_query, 67})).value();
+    ASSERT(result == 67);
+}
+
+auto test_no_error() -> void {
+    struct env {
+        using error_types = test_std::completion_signatures<>;
+    };
+    static auto tsk    = []() -> test_std::task<int, env> { co_return 42; };
+    auto        result = test_std::sync_wait(tsk());
+    ASSERT(result.has_value());
+    ASSERT(std::get<0>(*result) == 42);
+}
+
+auto test_error_convertible() -> void {
+    struct env {
+        using error_types = test_std::completion_signatures<test_std::set_error_t(long)>;
+    };
+    static auto tsk = []() -> test_std::task<void, env> {
+        co_yield test_std::with_error(-7); // int -> long
+    };
+    long result = 0;
+    test_std::sync_wait(tsk() | test_std::upon_error([&result](long l) noexcept { result = l; }));
+    ASSERT(result == -7L);
+}
 } // namespace
 
 TEST(exec_task) {
     test_task_interface();
     test_task_is_lazy_and_completes_with_values();
     test_task_awaits_senders_and_tasks();
+    test_task_scheduler_affinity();
     test_task_stopped_completion();
+#ifdef __cpp_exceptions
     test_task_errors();
+#endif
     test_task_uses_pmr_allocator_arg();
+    test_task_allocator_arg_unrelated_to_allocator_type();
     test_task_propagates_stop_token();
+    test_task_env();
+    test_no_error();
+    test_error_convertible();
+    test_lifetimes();
 }

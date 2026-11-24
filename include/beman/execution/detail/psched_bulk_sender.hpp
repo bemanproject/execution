@@ -108,7 +108,7 @@ struct psched_bulk_sender {
             const Shape first   = is_parallel_policy ? static_cast<Shape>(begin) : Shape(0);
             const Shape last    = is_parallel_policy ? static_cast<Shape>(end) : shape;
             const auto  call_fn = [=, this]<typename... Args>(Args&... args) {
-                try {
+                BEMAN_EXECUTION_TRY {
                     if constexpr (IsChunked) {
                         static_assert(::std::invocable<Fn, Shape, Shape, Args&...>);
                         fn(first, last, args...);
@@ -118,7 +118,8 @@ struct psched_bulk_sender {
                             fn(i, args...);
                         }
                     }
-                } catch (...) {
+                }
+                BEMAN_EXECUTION_CATCH(...) {
                     if (!has_exception.exchange(true, ::std::memory_order_relaxed)) {
                         exception = ::std::current_exception();
                     }
@@ -143,7 +144,7 @@ struct psched_bulk_sender {
             const auto call_set_value = [this]<typename... Args>(Args&&... args) {
                 ::beman::execution::set_value(::std::move(rcvr), ::std::forward<Args>(args)...);
             };
-            try {
+            BEMAN_EXECUTION_TRY {
                 ::std::visit(
                     [&]<typename T>(T tpl) {
                         if constexpr (::std::same_as<T, ::std::monostate>) {
@@ -153,9 +154,8 @@ struct psched_bulk_sender {
                         }
                     },
                     ::std::move(result));
-            } catch (...) {
-                this->set_error(::std::current_exception());
             }
+            BEMAN_EXECUTION_CATCH(...) { this->set_error(::std::current_exception()); }
         }
 
         template <typename E>
@@ -174,15 +174,15 @@ struct psched_bulk_sender {
 
       public:
         alignas(psched_storage_alignment)::std::byte storage[psched_storage_size];
-        ::std::shared_ptr<backend_type>                                                 backend;
-        result_type                                                                     result;
-        [[no_unique_address]] ::beman::execution::detail::stop_propagator<stop_token_t> sp;
-        Rcvr                                                                            rcvr;
-        Policy                                                                          policy;
-        Shape                                                                           shape;
-        Fn                                                                              fn;
-        ::std::atomic<bool>                                                             has_exception{false};
-        ::std::exception_ptr                                                            exception;
+        ::std::shared_ptr<backend_type>                                                                 backend;
+        result_type                                                                                     result;
+        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::beman::execution::detail::stop_propagator<stop_token_t> sp;
+        Rcvr                                                                                            rcvr;
+        Policy                                                                                          policy;
+        Shape                                                                                           shape;
+        Fn                                                                                              fn;
+        ::std::atomic<bool>  has_exception{false};
+        ::std::exception_ptr exception;
     };
 
     template <typename Rcvr>
@@ -195,20 +195,21 @@ struct psched_bulk_sender {
             using receiver_concept = ::beman::execution::receiver_tag;
 
             template <typename... Args>
-            auto set_value(Args&&... args) noexcept -> void try {
-                using arg_t = ::beman::execution::detail::decayed_tuple<Args...>;
-                proxy->result.template emplace<arg_t>(::std::forward<Args>(args)...);
-                if (!proxy->backend) [[unlikely]] {
-                    ::std::terminate();
+            auto set_value(Args&&... args) noexcept -> void {
+                BEMAN_EXECUTION_TRY {
+                    using arg_t = ::beman::execution::detail::decayed_tuple<Args...>;
+                    proxy->result.template emplace<arg_t>(::std::forward<Args>(args)...);
+                    if (!proxy->backend) [[unlikely]] {
+                        ::std::terminate();
+                    }
+                    const ::std::size_t s = is_parallel_policy ? proxy->shape : 1uz;
+                    if constexpr (IsChunked) {
+                        proxy->backend->schedule_bulk_chunked(s, *proxy, proxy->storage);
+                    } else {
+                        proxy->backend->schedule_bulk_unchunked(s, *proxy, proxy->storage);
+                    }
                 }
-                const ::std::size_t s = is_parallel_policy ? proxy->shape : 1uz;
-                if constexpr (IsChunked) {
-                    proxy->backend->schedule_bulk_chunked(s, *proxy, proxy->storage);
-                } else {
-                    proxy->backend->schedule_bulk_unchunked(s, *proxy, proxy->storage);
-                }
-            } catch (...) {
-                proxy->set_error(::std::current_exception());
+                BEMAN_EXECUTION_CATCH(...) { proxy->set_error(::std::current_exception()); }
             }
 
             template <typename E>
@@ -254,12 +255,12 @@ struct psched_bulk_sender {
 
     auto get_env() const noexcept { return ::beman::execution::get_env(child); }
 
-    [[no_unique_address]] ::std::bool_constant<IsChunked> _;
-    ::std::shared_ptr<backend_type>                       backend;
-    Policy                                                policy;
-    Shape                                                 shape;
-    Fn                                                    fn;
-    Child                                                 child;
+    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::std::bool_constant<IsChunked> _;
+    ::std::shared_ptr<backend_type>                                       backend;
+    Policy                                                                policy;
+    Shape                                                                 shape;
+    Fn                                                                    fn;
+    Child                                                                 child;
 };
 } // namespace beman::execution::detail
 

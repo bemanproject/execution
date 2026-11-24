@@ -35,6 +35,7 @@ import beman.execution.detail.get_domain;
 import beman.execution.detail.get_forward_progress_guarantee;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_scheduler;
+import beman.execution.detail.get_scheduler_allocator;
 import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.indeterminate_domain;
@@ -50,9 +51,11 @@ import beman.execution.detail.parallel_scheduler_replacement;
 import beman.execution.detail.prop;
 import beman.execution.detail.read_env;
 import beman.execution.detail.receiver;
+import beman.execution.detail.run_loop;
 import beman.execution.detail.schedule_from;
 import beman.execution.detail.schedule;
 import beman.execution.detail.scheduler;
+import beman.execution.detail.scheduler_tag;
 import beman.execution.detail.scope_token;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_in;
@@ -111,6 +114,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/get_forward_progress_guarantee.hpp>
 #include <beman/execution/detail/get_env.hpp>
 #include <beman/execution/detail/get_scheduler.hpp>
+#include <beman/execution/detail/get_scheduler_allocator.hpp>
 #include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/indeterminate_domain.hpp>
@@ -126,9 +130,11 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/run_loop.hpp>
 #include <beman/execution/detail/schedule_from.hpp>
 #include <beman/execution/detail/schedule.hpp>
 #include <beman/execution/detail/scheduler.hpp>
+#include <beman/execution/detail/scheduler_tag.hpp>
 #include <beman/execution/detail/scope_token.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_in.hpp>

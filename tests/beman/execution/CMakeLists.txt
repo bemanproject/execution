@@ -10,6 +10,8 @@ list(APPEND unsupported_execution_tests exec-split.test)
 list(
     APPEND execution_tests
     allocator-requirements-general.test
+    dis-task_scheduler-allocation.test
+    dis-counting_scope-allocation.test
     exec-affine.test
     exec-associate.test
     exec-awaitable.test
@@ -34,6 +36,7 @@ list(
     exec-inline-scheduler.test
     exec-get-start-scheduler.test
     exec-get-scheduler.test
+    exec-get-scheduler-allocator.test
     exec-get-stop-token.test
     exec-into-variant.test
     exec-just.test
@@ -140,7 +143,22 @@ foreach(test ${execution_tests})
     else()
         target_link_libraries(${TEST_EXE} PRIVATE beman::execution_headers)
     endif()
+    target_compile_definitions(
+        ${TEST_EXE}
+        PRIVATE
+            NOMINMAX
+            # disable libstdc++'s <execution> TBB backend that would require TBB
+            _GLIBCXX_USE_TBB_PAR_BACKEND=0
+    )
     add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
+    if(BEMAN_BUILDSYS_SANITIZER STREQUAL "TSan")
+        set_tests_properties(
+            ${TEST_EXE}
+            PROPERTIES
+                ENVIRONMENT
+                    "TSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/tsan.supp"
+        )
+    endif()
 endforeach()
 
 # Disable ThreadSanitizer for this specific test target (Clang only)

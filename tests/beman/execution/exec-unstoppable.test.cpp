@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/lifetime.hpp>
 #include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -44,4 +45,6 @@ auto test_unstoppable_attributes() -> void {
 TEST(exec_unstoppable) {
     test_unstoppable();
     test_unstoppable_attributes();
+    test::lifetime(test_std::unstoppable(test_std::just()));
+    test::lifetime([](auto sched) { return test_std::unstoppable(test_std::schedule(sched)); });
 }

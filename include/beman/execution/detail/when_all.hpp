@@ -11,6 +11,7 @@ import std;
 #include <atomic>
 #include <concepts>
 #include <exception>
+#include <functional>
 #include <optional>
 #include <tuple>
 #include <type_traits>
@@ -373,11 +374,12 @@ struct when_all_t {
                         state.stop_src.request_stop();
                         using error_t          = typename std::type_identity<Args...>::type;
                         constexpr bool nothrow = ::std::is_nothrow_constructible_v<::std::decay_t<error_t>, error_t>;
-                        try {
-                            [&]() noexcept(nothrow) {
+                        BEMAN_EXECUTION_TRY {
+                            ::std::invoke([&]() noexcept(nothrow) {
                                 state.errors.template emplace<::std::decay_t<error_t>>(::std::forward<Args>(args)...);
-                            }();
-                        } catch (...) {
+                            });
+                        }
+                        BEMAN_EXECUTION_CATCH(...) {
                             if constexpr (!nothrow) {
                                 state.errors.template emplace<::std::exception_ptr>(::std::current_exception());
                             }
@@ -393,9 +395,10 @@ struct when_all_t {
                         auto& opt              = ::std::get<Index::value>(state.values);
                         using decayed_tuple_t  = typename ::std::decay_t<decltype(opt)>::value_type;
                         constexpr bool nothrow = std::is_nothrow_constructible_v<decayed_tuple_t, Args...>;
-                        try {
-                            [&]() noexcept(nothrow) { opt.emplace(::std::forward<Args>(args)...); }();
-                        } catch (...) {
+                        BEMAN_EXECUTION_TRY {
+                            ::std::invoke([&]() noexcept(nothrow) { opt.emplace(::std::forward<Args>(args)...); });
+                        }
+                        BEMAN_EXECUTION_CATCH(...) {
                             if constexpr (!nothrow) {
                                 if (disposition::error != state.disp.exchange(disposition::error)) {
                                     state.stop_src.request_stop();

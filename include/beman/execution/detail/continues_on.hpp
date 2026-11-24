@@ -9,6 +9,7 @@
 import std;
 #else
 #include <exception>
+#include <functional>
 #include <type_traits>
 #include <tuple>
 #include <utility>
@@ -328,11 +329,12 @@ struct continues_on_t {
                 using result_t         = ::beman::execution::detail::decayed_tuple<Tag, Args...>;
                 constexpr bool nothrow = (::std::is_nothrow_constructible_v<::std::decay_t<Args>, Args> && ...);
 
-                try {
-                    [&]() noexcept(nothrow) {
+                BEMAN_EXECUTION_TRY {
+                    ::std::invoke([&]() noexcept(nothrow) {
                         state.async_result.template emplace<result_t>(Tag(), ::std::forward<Args>(args)...);
-                    }();
-                } catch (...) {
+                    });
+                }
+                BEMAN_EXECUTION_CATCH(...) {
                     if constexpr (!nothrow) {
                         state.async_result
                             .template emplace<::std::tuple<::beman::execution::set_error_t, ::std::exception_ptr>>(

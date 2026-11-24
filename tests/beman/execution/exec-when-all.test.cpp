@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/lifetime.hpp>
 #include <test/sender_env.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -306,14 +307,19 @@ TEST(exec_when_all) {
     static_assert(std::same_as<const test_std::when_all_t, decltype(test_std::when_all)>);
     static_assert(std::same_as<const test_std::when_all_with_variant_t, decltype(test_std::when_all_with_variant)>);
 
-    try {
+    BEMAN_EXECUTION_TRY {
         test_when_all();
         test_when_all_attrs();
         test_when_all_with_variant();
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "the when_all tests shouldn't throw");
     }
 
     test_when_all_attributes();
+
+    test::lifetime(test_std::when_all(test_std::just(42),
+                                      std::invoke([]() -> test_std::task<> { co_await test_std::just_stopped(); })));
+    test::lifetime([](auto sched) { return test_std::when_all(test_std::schedule(sched)); });
 }

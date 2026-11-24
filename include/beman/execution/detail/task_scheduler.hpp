@@ -55,6 +55,7 @@ import beman.execution.detail.start;
 import beman.execution.detail.stop_propagator;
 import beman.execution.detail.stop_token_of_t;
 import beman.execution.detail.tag_of_t;
+import beman.execution.detail.type_id;
 import beman.execution.detail.unreachable;
 import beman.execution.detail.unstoppable_token;
 #else
@@ -95,6 +96,7 @@ import beman.execution.detail.unstoppable_token;
 #include <beman/execution/detail/stop_propagator.hpp>
 #include <beman/execution/detail/stop_token_of_t.hpp>
 #include <beman/execution/detail/tag_of_t.hpp>
+#include <beman/execution/detail/type_id.hpp>
 #include <beman/execution/detail/unreachable.hpp>
 #include <beman/execution/detail/unstoppable_token.hpp>
 #endif
@@ -156,8 +158,8 @@ struct task_scheduler_backend : ::beman::execution::parallel_scheduler_replaceme
 
         auto do_start() noexcept -> void { ::beman::execution::start(op); }
 
-        [[no_unique_address]] Alloc alloc;
-        op_t                        op;
+        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] Alloc alloc;
+        op_t                                        op;
     };
 
     template <typename Sndr>
@@ -174,6 +176,10 @@ struct task_scheduler_backend : ::beman::execution::parallel_scheduler_replaceme
 
         op_t op;
     };
+
+#ifndef __cpp_rtti
+    virtual auto sched_type() const noexcept -> ::beman::execution::detail::type_info = 0;
+#endif
 
     virtual auto get_forward_progress_guarantee() const noexcept -> ::beman::execution::forward_progress_guarantee = 0;
 
@@ -221,12 +227,29 @@ struct task_scheduler_backend_sched : task_scheduler_backend {
 
     explicit task_scheduler_backend_sched(Sched sched) noexcept : sched(::std::move(sched)) {}
 
+    static auto cast_from(const task_scheduler_backend* backend) noexcept -> const task_scheduler_backend_sched* {
+#ifndef __cpp_rtti
+        if (backend == nullptr || backend->sched_type() != ::beman::execution::detail::type_id<Sched>()) {
+            return nullptr;
+        }
+        return static_cast<const task_scheduler_backend_sched*>(backend);
+#else
+        return dynamic_cast<const task_scheduler_backend_sched*>(backend);
+#endif
+    }
+
+#ifndef __cpp_rtti
+    auto sched_type() const noexcept -> ::beman::execution::detail::type_info override {
+        return ::beman::execution::detail::type_id<Sched>();
+    }
+#endif
+
     auto get_forward_progress_guarantee() const noexcept -> ::beman::execution::forward_progress_guarantee override {
         return ::beman::execution::get_forward_progress_guarantee(sched);
     }
 
     auto do_equals(const task_scheduler_backend& other) const noexcept -> bool override {
-        if (auto o = dynamic_cast<const task_scheduler_backend_sched*>(&other)) {
+        if (auto o = cast_from(&other)) {
             return o->sched == sched;
         }
         return false;
@@ -287,7 +310,7 @@ struct task_scheduler_backend_for : task_scheduler_backend_sched<Sched> {
         using allocated_holder = typename base::template allocated_state_holder<Sndr, Alloc>;
         constexpr bool inlined =
             sizeof(inlined_holder) <= psched_storage_size && alignof(inlined_holder) <= psched_storage_alignment;
-        try {
+        BEMAN_EXECUTION_TRY {
             if constexpr (inlined) {
                 auto holder = ::new (static_cast<void*>(storage.data())) inlined_holder(::std::move(sndr), proxy);
                 holder->do_start();
@@ -296,12 +319,11 @@ struct task_scheduler_backend_for : task_scheduler_backend_sched<Sched> {
                     ::beman::execution::detail::new_object<allocated_holder>(alloc, ::std::move(sndr), proxy, alloc);
                 holder->do_start();
             }
-        } catch (...) {
-            proxy.set_error(::std::current_exception());
         }
+        BEMAN_EXECUTION_CATCH(...) { proxy.set_error(::std::current_exception()); }
     }
 
-    [[no_unique_address]] Alloc alloc;
+    [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] Alloc alloc;
 };
 } // namespace beman::execution::detail
 
@@ -344,7 +366,7 @@ class task_scheduler {
     explicit task_scheduler(Sched&& sched, Alloc alloc = {})
         : backend_(::std::allocate_shared<
                    ::beman::execution::detail::task_scheduler_backend_for<::std::remove_cvref_t<Sched>, Alloc>>(
-              alloc, ::std::forward<Sched>(sched), ::std::move(alloc))) {}
+              alloc, ::std::forward<Sched>(sched), alloc)) {}
 
     template <::beman::execution::detail::simple_allocator Alloc>
     explicit task_scheduler(task_scheduler sched, const Alloc&) noexcept : task_scheduler(::std::move(sched)) {}
@@ -377,7 +399,7 @@ class task_scheduler {
     template <typename Sched>
         requires(!::std::same_as<Sched, task_scheduler>) && ::beman::execution::scheduler<Sched>
     auto operator==(const Sched& other) const noexcept -> bool {
-        auto b = dynamic_cast<const ::beman::execution::detail::task_scheduler_backend_sched<Sched>*>(backend_.get());
+        auto b = ::beman::execution::detail::task_scheduler_backend_sched<Sched>::cast_from(backend_.get());
         return b && b->sched == other;
     }
 
@@ -432,8 +454,8 @@ class task_scheduler::sender {
             return sp_.get_token();
         }
 
-        [[no_unique_address]] ::beman::execution::detail::stop_propagator<stop_token_t> sp_;
-        Rcvr                                                                            rcvr_;
+        [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::beman::execution::detail::stop_propagator<stop_token_t> sp_;
+        Rcvr                                                                                            rcvr_;
     };
 
     template <::beman::execution::receiver Rcvr>

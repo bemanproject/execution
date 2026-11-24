@@ -100,11 +100,12 @@ auto test_stop_token_stop_possible() -> void {
 TEST(stoptoken_mem) {
     static_assert(::test_std::stoppable_token<::test_std::stop_token>);
 
-    try {
+    BEMAN_EXECUTION_TRY {
         test_stop_token_swap();
         test_stop_token_stop_requested();
         test_stop_token_stop_possible();
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "the stop token tests are not expected to throw");
         // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)

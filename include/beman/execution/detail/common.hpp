@@ -21,11 +21,28 @@
 #define BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND 1
 #endif
 
+#if __has_cpp_attribute(msvc::no_unique_address)
+#define BEMAN_EXECUTION_NO_UNIQUE_ADDRESS msvc::no_unique_address
+#else
+#define BEMAN_EXECUTION_NO_UNIQUE_ADDRESS no_unique_address
+#endif
+
+#ifdef __cpp_exceptions
+#define BEMAN_EXECUTION_TRY try
+#define BEMAN_EXECUTION_CATCH(e) catch (e)
+#define BEMAN_EXECUTION_THROW(...) throw __VA_ARGS__
+#define BEMAN_EXECUTION_RETHROW(ep) ::std::rethrow_exception(ep)
+#else
+#define BEMAN_EXECUTION_TRY if constexpr (true)
+#define BEMAN_EXECUTION_CATCH(e) else
+#define BEMAN_EXECUTION_THROW(...) ::std::terminate()
+#define BEMAN_EXECUTION_RETHROW(ep) ::std::terminate()
+#endif
+
 #define BEMAN_EXECUTION_TRY_EVAL(rcvr, expr)                                                    \
     do {                                                                                        \
-        try {                                                                                   \
-            (expr);                                                                             \
-        } catch (...) {                                                                         \
+        BEMAN_EXECUTION_TRY { (expr); }                                                         \
+        BEMAN_EXECUTION_CATCH(...) {                                                            \
             if constexpr (!noexcept((expr))) {                                                  \
                 ::beman::execution::set_error(::std::move((rcvr)), ::std::current_exception()); \
             }                                                                                   \

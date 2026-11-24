@@ -230,6 +230,7 @@ struct test_basic_state<Sndr, Rcvr> {
     using child_op_t = test_std::connect_result_t<Sndr, receiver_t>;
 
     test_basic_state(Sndr sndr, const Rcvr&) : child_op(test_std::connect(std::move(sndr), receiver_t{this})) {}
+    ~test_basic_state() {} // needed to work-around a MacOS ABI issue
 
     auto start() & noexcept -> void { test_std::start(child_op); }
 

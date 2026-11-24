@@ -1,8 +1,8 @@
 // include/beman/execution/detail/call_with_default.hpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_CALL_WITH_DEFAULT
-#define INCLUDED_INCLUDE_BEMAN_EXECUTION_DETAIL_CALL_WITH_DEFAULT
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_CALL_WITH_DEFAULT
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_CALL_WITH_DEFAULT
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD

@@ -9,6 +9,7 @@
 import std;
 #else
 #include <exception>
+#include <functional>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -113,11 +114,20 @@ struct read_env_t {
         struct start_impl {
             template <typename Query, typename Receiver>
             auto operator()(Query query, Receiver& receiver) const noexcept -> void {
-                try {
-                    auto env{::beman::execution::get_env(receiver)};
-                    ::beman::execution::set_value(::std::move(receiver), query(env));
-                } catch (...) {
-                    if constexpr (!std::is_nothrow_invocable_v<Query, ::beman::execution::env_of_t<Receiver>>) {
+                BEMAN_EXECUTION_TRY {
+                    if constexpr (::std::is_reference_v<
+                                      ::std::invoke_result_t<Query, const ::beman::execution::env_of_t<Receiver>&>>) {
+                        auto env{::beman::execution::get_env(receiver)};
+                        ::beman::execution::set_value(::std::move(receiver), query(env));
+                    } else {
+                        ::beman::execution::set_value(::std::move(receiver), ::std::invoke([&]() {
+                                                          const auto& env{::beman::execution::get_env(receiver)};
+                                                          return query(env);
+                                                      }));
+                    }
+                }
+                BEMAN_EXECUTION_CATCH(...) {
+                    if constexpr (!std::is_nothrow_invocable_v<Query, const ::beman::execution::env_of_t<Receiver>&>) {
                         ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
                     }
                 }
@@ -129,9 +139,10 @@ struct read_env_t {
         static consteval void check_types() {
             using query_type = ::std::decay_t<::beman::execution::detail::data_type<Sndr>>;
             if constexpr (!requires(const Env& env) { query_type()(env); }) {
-                throw ::std::logic_error("query is not invocable with the environment of the receiver");
+                BEMAN_EXECUTION_THROW(
+                    ::std::logic_error("query is not invocable with the environment of the receiver"));
             } else if constexpr (::std::same_as<::std::invoke_result_t<query_type, const Env&>, void>) {
-                throw ::std::logic_error("query returns void with the environment of the receiver");
+                BEMAN_EXECUTION_THROW(::std::logic_error("query returns void with the environment of the receiver"));
             }
         }
     };

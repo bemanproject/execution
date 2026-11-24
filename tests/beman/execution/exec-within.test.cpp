@@ -192,6 +192,7 @@ auto test_work_completes_with_stopped() -> void {
 }
 
 /// Checks that if the enter scope completes with error, the work isn't executed and the error is propagated.
+#ifdef __cpp_exceptions
 auto test_scope_enter_completes_with_error() -> void {
 
     // Arrange
@@ -222,6 +223,7 @@ auto test_scope_enter_completes_with_error() -> void {
     ASSERT(!work_executed);
     ASSERT(!exit_executed);
 }
+#endif // __cpp_exceptions
 
 /// Sender that can complete with value or stopped, but always completes with stopped.
 struct sender_completing_with_stopped {
@@ -272,6 +274,8 @@ TEST(exec_within) {
     test_work_with_multiple_values_alternatives();
     test_work_completes_with_error();
     test_work_completes_with_stopped();
+#ifdef __cpp_exceptions
     test_scope_enter_completes_with_error();
+#endif
     test_scope_enter_completes_with_stopped();
 }

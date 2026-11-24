@@ -308,6 +308,7 @@ auto test_bulk_shape_zero() {
     ASSERT(counter == 0);
 }
 
+#ifdef __cpp_exceptions
 auto test_bulk_exception_handling() {
     bool error_caught = false;
 
@@ -353,6 +354,7 @@ auto test_bulk_unchunked_exception_handling() {
     }
     ASSERT(error_caught);
 }
+#endif // __cpp_exceptions
 
 auto test_bulk_chunked_noexcept() {
     auto b0             = test_std::bulk_chunked(test_std::just(), test_std::seq, 1, [](int, int) noexcept {});
@@ -423,7 +425,7 @@ auto test_bulk_multiple_values() {
     ASSERT(sum_a == 30);
     ASSERT(sum_b == 60 + 0 + 1 + 2);
 }
-#ifdef __cpp_lib_parallel_algorithm
+#if defined(__cpp_lib_parallel_algorithm) && defined(__cpp_exceptions)
 template <bool IsChunked, typename Policy, typename Shape, typename Fn, typename Child>
 struct pstl_for_each_sender {
     using sender_concept = test_std::sender_tag;
@@ -595,7 +597,7 @@ auto test_bulk_attributes() {
 
 TEST(exec_bulk) {
 
-    try {
+    BEMAN_EXECUTION_TRY {
 
         test_bulk();
         test_bulk_predecessor_result();
@@ -609,21 +611,21 @@ TEST(exec_bulk) {
         test_bulk_unchunked_pipeable();
         test_execution_policies();
         test_bulk_shape_zero();
+#ifdef __cpp_exceptions
         test_bulk_exception_handling();
         test_bulk_chunked_exception_handling();
         test_bulk_unchunked_exception_handling();
+#endif
         test_bulk_chunked_noexcept();
         test_bulk_unchunked_noexcept();
         test_bulk_shape_one();
         test_bulk_chunked_covers_full_range();
         test_bulk_multiple_values();
-#ifdef __cpp_lib_parallel_algorithm
+#if defined(__cpp_lib_parallel_algorithm) && defined(__cpp_exceptions)
         test_bulk_customization();
 #endif
-    } catch (...) {
-
-        ASSERT(nullptr == +"the bulk tests shouldn't throw");
     }
+    BEMAN_EXECUTION_CATCH(...) { ASSERT(nullptr == +"the bulk tests shouldn't throw"); }
 
     test_bulk_attributes();
     return 0;

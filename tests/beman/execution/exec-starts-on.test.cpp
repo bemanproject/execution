@@ -4,6 +4,7 @@
 #include <test/execution.hpp>
 #include <test/sender_env.hpp>
 #include <test/completion_test.hpp>
+#include <test/lifetime.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -140,4 +141,6 @@ TEST(exec_starts_on) {
     test_starts_on_completions();
     test_starts_on_start_scheduler();
     test_starts_on_attributes();
+    test::lifetime(test_std::starts_on(test_std::inline_scheduler(), test_std::just()));
+    test::lifetime([](auto sched) { return test_std::starts_on(sched, test_std::just()); });
 }

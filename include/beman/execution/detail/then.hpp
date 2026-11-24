@@ -24,6 +24,7 @@ import beman.execution.detail.default_impls;
 import beman.execution.detail.dependent_sender;
 import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.impls_for;
@@ -40,6 +41,7 @@ import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
 import beman.execution.detail.transform_sender;
+import beman.execution.detail.value_signature;
 #else
 #include <beman/execution/detail/call_result_t.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
@@ -49,6 +51,7 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/dependent_sender_error.hpp>
 #include <beman/execution/detail/env.hpp>
+#include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/impls_for.hpp>
@@ -66,21 +69,12 @@ import beman.execution.detail.transform_sender;
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/transform_sender.hpp>
+#include <beman/execution/detail/value_signature.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-
-template <typename T>
-struct then_set_value {
-    using type = ::beman::execution::set_value_t(T);
-};
-template <>
-struct then_set_value<void> {
-    using type = ::beman::execution::set_value_t();
-};
-
 template <typename, typename, typename Completion>
 struct then_transform {
     using type = Completion;
@@ -88,8 +82,7 @@ struct then_transform {
 
 template <typename Fun, typename Completion, typename... T>
 struct then_transform<Fun, Completion, Completion(T...)> {
-    using type = typename ::beman::execution::detail::then_set_value<
-        ::beman::execution::detail::call_result_t<Fun, T...>>::type;
+    using type = ::beman::execution::detail::value_signature_t<::beman::execution::detail::call_result_t<Fun, T...>>;
 };
 
 template <typename Fun, typename Replace>
@@ -128,8 +121,10 @@ struct then_t {
     }
     template <::beman::execution::sender Sender>
         requires ::beman::execution::detail::nested_sender_has_affine<Sender>
-    static auto affine(Sender&& sndr) noexcept {
-        return ::std::forward<Sender>(sndr);
+    static auto affine(Sender&& sndr) {
+        auto& [_, data, child] = sndr;
+        return then_t{}(::beman::execution::detail::forward_like<Sender>(child).affine(),
+                        ::beman::execution::detail::forward_like<Sender>(data));
     }
 
   private:
@@ -170,7 +165,7 @@ struct then_t {
             template <typename Tag, typename... Args>
             auto operator()(auto, auto& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
                 if constexpr (::std::same_as<Completion, Tag>) {
-                    try {
+                    BEMAN_EXECUTION_TRY {
                         auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
                         if constexpr (::std::same_as<void, decltype(invoke())>) {
                             invoke();
@@ -178,7 +173,8 @@ struct then_t {
                         } else {
                             ::beman::execution::set_value(::std::move(receiver), invoke());
                         }
-                    } catch (...) {
+                    }
+                    BEMAN_EXECUTION_CATCH(...) {
                         if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
 
                                                        )) {

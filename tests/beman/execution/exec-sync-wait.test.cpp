@@ -157,6 +157,7 @@ auto test_sync_wait_receiver() -> void {
         ASSERT(not state.error);
         ASSERT(*state.result == (std::tuple{arg<0>{2}, arg<1>{3}, arg<2>{5}}));
     }
+#ifdef __cpp_exceptions
     {
         using local_sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
         test_detail::sync_wait_state<local_sender> state{};
@@ -191,6 +192,7 @@ auto test_sync_wait_receiver() -> void {
             ASSERT(nullptr == "unexpected exception type");
         }
     }
+#endif // __cpp_exceptions
     {
         using local_sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
         test_detail::sync_wait_state<local_sender> state{};
@@ -203,16 +205,18 @@ auto test_sync_wait_receiver() -> void {
 }
 
 auto test_sync_wait() -> void {
-    try {
+    BEMAN_EXECUTION_TRY {
         auto value{test_std::sync_wait(test_std::just(arg<0>{7}, arg<1>{11}))};
         ASSERT(value);
         ASSERT(*value == (std::tuple{arg<0>{7}, arg<1>{11}}));
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
         // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 
+#ifdef __cpp_exceptions
     try {
         auto value{test_std::sync_wait(send_error{17})};
         use(value);
@@ -225,10 +229,13 @@ auto test_sync_wait() -> void {
         ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
     }
 
-    try {
+#endif // __cpp_exceptions
+
+    BEMAN_EXECUTION_TRY {
         auto value{test_std::sync_wait(send_stopped())};
         ASSERT(not value);
-    } catch (...) {
+    }
+    BEMAN_EXECUTION_CATCH(...) {
         // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
         // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)

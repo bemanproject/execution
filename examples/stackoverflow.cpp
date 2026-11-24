@@ -97,6 +97,7 @@ int main(int ac, char*[]) {
             for (int i{}; i < n; ++i) {
                 std::cout << "await just=" << (co_await ex::just(i)) << "\n";
             }
+#ifdef __cpp_exceptions
         if constexpr (false)
             for (int i{}; i < n; ++i) {
                 try {
@@ -105,6 +106,7 @@ int main(int ac, char*[]) {
                     std::cout << "await error=" << x << "\n";
                 }
             }
+#endif
         co_await ex::just_stopped();
     }(ac < 2 ? 3 : 30000));
 #endif

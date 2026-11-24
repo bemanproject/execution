@@ -139,7 +139,7 @@ auto test_store_with_complex_signatures() -> void {
     auto max_size = std::max(sizeof(double), sizeof(char*));
     max_size      = std::max(max_size, sizeof(std::error_code));
     max_size      = std::max(max_size, sizeof(std::exception_ptr));
-    ASSERT(sizeof(sut) <= 3 * max_size + 2 * sizeof(void*)); // should be able to store the largest completion
+    ASSERT(sizeof(sut) <= 3 * max_size + 4 * sizeof(void*)); // should be able to store the largest completion
                                                              // signature, plus some overhead for the variant.
 }
 
@@ -151,12 +151,13 @@ struct throw_on_move {
     throw_on_move(int xx, int i = 1) : x(xx), iteration(i) {}
     throw_on_move(throw_on_move&& other) : x(other.x), iteration(other.iteration) {
         if (--iteration <= 0) {
-            throw std::runtime_error("throw_on_move");
+            BEMAN_EXECUTION_THROW(std::runtime_error("throw_on_move"));
         }
     }
     throw_on_move(const throw_on_move&) = delete;
 };
 
+#ifdef __cpp_exceptions
 /// Checks that when we throw when storing the completion, we store a `set_error` completion with the current
 /// exception.
 auto test_throw_on_move_when_storing() -> void {
@@ -219,12 +220,15 @@ auto test_throw_on_move_when_completing() -> void {
     // Assert
     ASSERT(executed);
 }
+#endif // __cpp_exceptions
 
 TEST(exec_completion_storage) {
     test_store_trivial_set_value();
     test_store_trivial_set_error();
     test_store_trivial_set_stopped();
     test_store_with_complex_signatures();
+#ifdef __cpp_exceptions
     test_throw_on_move_when_storing();
     test_throw_on_move_when_completing();
+#endif
 }

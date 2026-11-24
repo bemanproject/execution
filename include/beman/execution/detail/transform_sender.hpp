@@ -9,6 +9,7 @@
 import std;
 #else
 #include <concepts>
+#include <functional>
 #include <type_traits>
 #include <utility>
 #endif
@@ -56,7 +57,7 @@ struct transform_sndr_recurse {
 
     template <typename Sndr, typename Env>
     auto operator()(Sndr&& sndr, const Env& env) const {
-        auto next_domain = [&] {
+        auto       next_domain    = ::std::invoke([&] {
             if constexpr (::std::same_as<Tag, ::beman::execution::start_t>) {
                 static_assert(
                     ::beman::execution::detail::decayed_same_as<Domain,
@@ -66,7 +67,7 @@ struct transform_sndr_recurse {
                 using compl_domain_t = ::beman::execution::detail::compl_domain_of_t<void, new_sndr_t<Sndr, Env>, Env>;
                 return compl_domain_t();
             }
-        }();
+        });
         const auto next_transform = ::beman::execution::detail::transform_sndr_recurse{next_domain, Tag()};
         return next_transform(domain_t<Sndr, Env>().transform_sender(Tag(), ::std::forward<Sndr>(sndr), env), env);
     }

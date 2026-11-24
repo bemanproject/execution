@@ -68,11 +68,8 @@ class sender_awaitable {
         template <class... Args>
             requires ::std::constructible_from<result_type, Args...>
         void set_value(Args&&... args) && noexcept {
-            try {
-                ::std::get<0>(*result_ptr_).template emplace<1>(::std::forward<Args>(args)...);
-            } catch (...) {
-                ::std::get<0>(*result_ptr_).template emplace<2>(::std::current_exception());
-            }
+            BEMAN_EXECUTION_TRY { ::std::get<0>(*result_ptr_).template emplace<1>(::std::forward<Args>(args)...); }
+            BEMAN_EXECUTION_CATCH(...) { ::std::get<0>(*result_ptr_).template emplace<2>(::std::current_exception()); }
             this->resume();
         }
         template <class Error>
@@ -120,7 +117,7 @@ class sender_awaitable {
     }
     value_type await_resume() {
         if (::std::holds_alternative<::std::exception_ptr>(::std::get<0>(result))) {
-            ::std::rethrow_exception(::std::get<::std::exception_ptr>(::std::get<0>(result)));
+            BEMAN_EXECUTION_RETHROW(::std::get<::std::exception_ptr>(::std::get<0>(result)));
         }
         if constexpr (::std::is_void_v<value_type>) {
             return;

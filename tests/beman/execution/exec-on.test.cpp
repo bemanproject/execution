@@ -26,6 +26,7 @@ import beman.execution.detail;
 
 #include <beman/execution/detail/suppress_push.hpp>
 #endif
+#include <test/lifetime.hpp>
 
 // ----------------------------------------------------------------------------
 
@@ -133,6 +134,14 @@ auto test_on_attributes() {
         std::same_as<decltype(test_std::get_completion_domain<test_std::set_value_t>(attrs2, test_std::env<>{})),
                      custom_domain>);
 }
+
+auto test_on_lifetime() -> void {
+    test::lifetime(test_std::on(test_std::inline_scheduler(), test_std::just()));
+    test::lifetime([](auto sched) {
+        static_assert(test_std::scheduler<decltype(sched)>);
+        return test_std::on(std::move(sched), test_std::just());
+    });
+}
 } // namespace
 
 TEST(exec_on) {
@@ -191,4 +200,5 @@ TEST(exec_on) {
     ASSERT(on_id != std::this_thread::get_id());
 
     test_on_attributes();
+    test_on_lifetime();
 }
