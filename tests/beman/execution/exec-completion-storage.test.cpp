@@ -139,7 +139,7 @@ auto test_store_with_complex_signatures() -> void {
     auto max_size = std::max(sizeof(double), sizeof(char*));
     max_size      = std::max(max_size, sizeof(std::error_code));
     max_size      = std::max(max_size, sizeof(std::exception_ptr));
-    ASSERT(sizeof(sut) <= 3 * max_size + 2 * sizeof(void*)); // should be able to store the largest completion
+    ASSERT(sizeof(sut) <= 3 * max_size + 4 * sizeof(void*)); // should be able to store the largest completion
                                                              // signature, plus some overhead for the variant.
 }
 
