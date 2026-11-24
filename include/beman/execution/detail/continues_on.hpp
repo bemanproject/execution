@@ -9,6 +9,7 @@
 import std;
 #else
 #include <exception>
+#include <functional>
 #include <type_traits>
 #include <tuple>
 #include <utility>

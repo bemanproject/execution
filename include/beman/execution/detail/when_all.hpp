@@ -11,6 +11,7 @@ import std;
 #include <atomic>
 #include <concepts>
 #include <exception>
+#include <functional>
 #include <optional>
 #include <tuple>
 #include <type_traits>
