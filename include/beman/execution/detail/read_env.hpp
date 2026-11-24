@@ -9,6 +9,7 @@
 import std;
 #else
 #include <exception>
+#include <functional>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -114,11 +115,19 @@ struct read_env_t {
             template <typename Query, typename Receiver>
             auto operator()(Query query, Receiver& receiver) const noexcept -> void {
                 BEMAN_EXECUTION_TRY {
-                    auto env{::beman::execution::get_env(receiver)};
-                    ::beman::execution::set_value(::std::move(receiver), query(env));
+                    if constexpr (::std::is_reference_v<
+                                      ::std::invoke_result_t<Query, const ::beman::execution::env_of_t<Receiver>&>>) {
+                        auto env{::beman::execution::get_env(receiver)};
+                        ::beman::execution::set_value(::std::move(receiver), query(env));
+                    } else {
+                        ::beman::execution::set_value(::std::move(receiver), ::std::invoke([&]() {
+                                                          const auto& env{::beman::execution::get_env(receiver)};
+                                                          return query(env);
+                                                      }));
+                    }
                 }
                 BEMAN_EXECUTION_CATCH(...) {
-                    if constexpr (!std::is_nothrow_invocable_v<Query, ::beman::execution::env_of_t<Receiver>>) {
+                    if constexpr (!std::is_nothrow_invocable_v<Query, const ::beman::execution::env_of_t<Receiver>&>) {
                         ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
                     }
                 }

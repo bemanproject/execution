@@ -3,6 +3,7 @@
 
 #include <beman/execution/detail/common.hpp>
 #include <test/execution.hpp>
+#include <test/lifetime.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
@@ -42,6 +43,11 @@ auto test_scope_state_type() -> void {
     test::use(type::unused_and_closed);
     test::use(type::joined);
 }
+
+auto test_scope_lifetime() -> void {
+    test_std::counting_scope scope;
+    test::lifetime(scope.join());
+}
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -49,4 +55,5 @@ auto test_scope_state_type() -> void {
 TEST(exec_counting_scopes_general) {
     test_scope_join();
     test_scope_state_type();
+    test_scope_lifetime();
 }

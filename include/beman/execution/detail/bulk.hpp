@@ -180,11 +180,11 @@ struct bulk_algo_t {
                     constexpr bool nothrow =
                         ::beman::execution::detail::bulk_traits<is_chunked, Fun, Shape, Args...>::is_nothrow_invocable;
                     BEMAN_EXECUTION_TRY {
-                        [&]() noexcept(nothrow) {
+                        ::std::invoke([&]() noexcept(nothrow) {
                             ::beman::execution::detail::bulk_traits<is_chunked, Fun, Shape, Args...>::invoke(
                                 f, shape, args...);
                             Tag()(::std::move(rcvr), ::std::forward<Args>(args)...);
-                        }();
+                        });
                     }
                     BEMAN_EXECUTION_CATCH(...) {
                         if constexpr (!nothrow) {

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/lifetime.hpp>
 #include <test/sender_env.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -40,6 +41,10 @@ namespace {
 struct sender {
     using sender_concept        = test_std::sender_tag;
     using completion_signatures = test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>;
+    template <typename...>
+    static consteval auto get_completion_signatures() {
+        return completion_signatures{};
+    }
 
     template <test_std::receiver Rcvr>
     struct state {
@@ -98,6 +103,20 @@ auto test_stop_when_attributes() {
     //-dk:TODO test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_detail::stop_when(s,
     // source.get_token()));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_detail::stop_when(s, source.get_token()));
+}
+
+auto test_stop_when_lifetime() {
+    {
+        test_std::inplace_stop_source source;
+        test::lifetime(
+            test_std::when_all(test_std::just() | test_std::then([&]() noexcept { source.request_stop(); })));
+    }
+    {
+        test_std::inplace_stop_source source;
+        test::lifetime(
+            test_std::when_all(test_detail::stop_when(sender{}, source.get_token()),
+                               test_std::just() | test_std::then([&]() noexcept { source.request_stop(); })));
+    }
 }
 } // namespace
 
@@ -166,4 +185,5 @@ TEST(exec_stop_when) {
     test_std::inplace_stop_source source;
     test_std::sync_wait(test_detail::stop_when(test_std::just(), source.get_token()));
     test_stop_when_attributes();
+    test_stop_when_lifetime();
 }

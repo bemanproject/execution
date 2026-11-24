@@ -27,6 +27,7 @@ import beman.execution;
 #include <beman/execution/detail/read_env.hpp>
 #include <beman/execution/detail/sync_wait.hpp>
 #endif
+#include <test/lifetime.hpp>
 
 // ----------------------------------------------------------------------------
 
@@ -197,6 +198,39 @@ auto test_let_attributes() {
     test::test_sender_env<false>(
         84, test::test_non_forwardable_attr{}, test_std::let_stopped(s, [] { return test_std::just(); }));
 }
+
+auto test_let_lifetime() {
+    test::lifetime(test_std::let_value(test_std::just(), [] { return test_std::just(); }));
+    test::lifetime(test_std::let_value(test_std::just(), [] { return test_std::read_env(test_std::get_stop_token); }));
+    test::lifetime(test_std::let_value(test_std::just_error(0), [] { return test_std::just(); }));
+    test::lifetime(test_std::let_value(test_std::just_stopped(), [] { return test_std::just(); }));
+    test::lifetime(test_std::let_value(test_std::just(), [] {
+        throw 0;
+        return test_std::just();
+    }));
+    test::lifetime(test_std::let_error(test_std::just(), [](auto) { return test_std::just(); }));
+    test::lifetime(test_std::let_error(test_std::just_error(0), [](auto) { return test_std::just(); }));
+    test::lifetime(test_std::let_error(test_std::just_error(0),
+                                       [](auto) { return test_std::read_env(test_std::get_stop_token); }));
+    test::lifetime(test_std::let_error(test_std::just_stopped(), [](auto) { return test_std::just(); }));
+    test::lifetime(test_std::let_error(test_std::just_error(0), [](auto) {
+        throw 0;
+        return test_std::just();
+    }));
+    test::lifetime(test_std::let_stopped(test_std::just(), [] { return test_std::just(); }));
+    test::lifetime(test_std::let_stopped(test_std::just_error(0), [] { return test_std::just(); }));
+    test::lifetime(test_std::let_stopped(test_std::just_stopped(), [] { return test_std::just(); }));
+    test::lifetime(
+        test_std::let_stopped(test_std::just_stopped(), [] { return test_std::read_env(test_std::get_stop_token); }));
+    test::lifetime(test_std::let_stopped(test_std::just_stopped(), [] {
+        throw 0;
+        return test_std::just();
+    }));
+
+    test::lifetime(test_std::let_value(test_std::read_env(test_std::get_scheduler), [](auto& sched) {
+        return test_std::continues_on(test_std::just(), std::move(sched));
+    }));
+}
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -226,6 +260,7 @@ TEST(exec_let) {
                         (test_std::let_stopped([] { return test_std::just(); }) | test_std::then([] {})));
 
     test_let_attributes();
+    test_let_lifetime();
 
     return 0;
 }

@@ -14,6 +14,7 @@ import beman.execution;
 #include <beman/execution/detail/continues_on.hpp>
 #include <beman/execution.hpp>
 #endif
+#include <test/lifetime.hpp>
 
 // ----------------------------------------------------------------------------
 
@@ -116,6 +117,11 @@ auto test_continues_on_attributes() {
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::continues_on(s, loop.get_scheduler()));
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, test_std::continues_on(s, loop.get_scheduler()));
 }
+
+auto test_continues_on_lifetime() {
+    test::lifetime(test_std::continues_on(test_std::just(), scheduler{}));
+    test::lifetime([](auto sched) { return test_std::continues_on(test_std::just(), sched); });
+}
 } // namespace
 
 TEST(exec_continues_on) {
@@ -133,4 +139,5 @@ TEST(exec_continues_on) {
     test_use(scheduler{}, sender{});
     test_inline_scheduler();
     test_continues_on_attributes();
+    test_continues_on_lifetime();
 }

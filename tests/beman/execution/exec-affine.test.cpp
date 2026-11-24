@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/lifetime.hpp>
 #include <test/sender_env.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -278,6 +279,9 @@ TEST(affine) {
     t.join();
 
     test_affine_attributes();
+
+    test::lifetime(test_std::affine(test_std::just(42)));
+    test::lifetime([](auto sched) { return test_std::affine(test_std::schedule(sched)); });
 
     return 0;
 }
