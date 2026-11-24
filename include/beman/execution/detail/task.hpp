@@ -736,6 +736,7 @@ class promise_base {
 
   public:
     auto set_state(state_base<Value, Environment>* s) noexcept -> void { this->state_ = s; }
+
     auto get_state() const noexcept -> state_base<Value, Environment>* { return this->state_; }
 
   private:
