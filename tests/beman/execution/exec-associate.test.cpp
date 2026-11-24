@@ -129,24 +129,27 @@ TEST(exec_associate) {
     // completion signatures: this implementation currently reports set_value() only.
     {
         using snd0_t = decltype(test_std::associate(test_std::just(), null_token{}));
-        static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>,
+        static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(), test_std::set_stopped_t()>,
                                    test_std::completion_signatures_of_t<snd0_t, test_std::env<>>>);
 
         using snd1_t = decltype(test_std::associate(test_std::just(std::string{}), null_token{}));
-        static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(std::string)>,
-                                   test_std::completion_signatures_of_t<snd1_t, test_std::env<>>>);
+        static_assert(std::same_as<
+                      test_std::completion_signatures<test_std::set_value_t(std::string), test_std::set_stopped_t()>,
+                      test_std::completion_signatures_of_t<snd1_t, test_std::env<>>>);
 
         using snd2_t = decltype(test_std::associate(test_std::just_stopped(), null_token{}));
         static_assert(std::same_as<test_std::completion_signatures<test_std::set_stopped_t()>,
                                    test_std::completion_signatures_of_t<snd2_t, test_std::env<>>>);
 
         using snd3_t = decltype(test_std::associate(test_std::just_error(5), null_token{}));
-        static_assert(std::same_as<test_std::completion_signatures<test_std::set_error_t(int)>,
-                                   test_std::completion_signatures_of_t<snd3_t, test_std::env<>>>);
+        static_assert(
+            std::same_as<test_std::completion_signatures<test_std::set_error_t(int), test_std::set_stopped_t()>,
+                         test_std::completion_signatures_of_t<snd3_t, test_std::env<>>>);
 
         int i        = 42;
         using snd4_t = decltype(test_std::associate(test_std::just(std::ref(i)), null_token{}));
-        static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(std::reference_wrapper<int>)>,
+        static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t(std::reference_wrapper<int>),
+                                                                   test_std::set_stopped_t()>,
                                    test_std::completion_signatures_of_t<snd4_t, test_std::env<>>>);
     }
 

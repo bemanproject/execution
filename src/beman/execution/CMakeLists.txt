@@ -51,7 +51,6 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/common.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/common_domain.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/compl_domain.hpp
-                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signature.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/completion_signatures_for.hpp
@@ -135,6 +134,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/make_sender.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/matching_sig.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_bind.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_combine.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_contain_same.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/meta_contains.hpp
@@ -236,6 +236,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_for.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_completion_signatures.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/valid_specialization.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/value_signature.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/value_types_of_t.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/variant_or_empty.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/when_all.hpp
@@ -372,6 +373,7 @@ if(BEMAN_USE_MODULES)
                     make_env.cppm
                     make_sender.cppm
                     matching_sig.cppm
+                    meta_bind.cppm
                     meta_combine.cppm
                     meta_contains.cppm
                     meta_contain_same.cppm
@@ -471,6 +473,7 @@ if(BEMAN_USE_MODULES)
                     valid_completion_for.cppm
                     valid_completion_signatures.cppm
                     valid_specialization.cppm
+                    value_signature.cppm
                     value_types_of_t.cppm
                     variant_or_empty.cppm
                     when_all.cppm
