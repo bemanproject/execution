@@ -23,6 +23,7 @@ import beman.execution.detail.set_error;
 import beman.execution.detail.set_stopped;
 import beman.execution.detail.set_value;
 import beman.execution.detail.suspend_complete;
+import beman.execution.detail.value_signature;
 #else
 #include <beman/execution/detail/await_result_type.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
@@ -33,30 +34,12 @@ import beman.execution.detail.suspend_complete;
 #include <beman/execution/detail/set_stopped.hpp>
 #include <beman/execution/detail/set_value.hpp>
 #include <beman/execution/detail/suspend_complete.hpp>
+#include <beman/execution/detail/value_signature.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution::detail {
-/*!
- * \brief A helper template used determine the completion signature for type T which may be void
- * \headerfile beman/execution.hpp <beman/execution.hpp>
- * \internal
- */
-template <typename T>
-struct awaiter_set_value {
-    using type = ::beman::execution::set_value_t(T);
-};
-/*!
- * \brief Specialization for awaiter_set_value when the type is void
- * \headerfile beman/execution.hpp <beman/execution.hpp>
- * \internal
- */
-template <>
-struct awaiter_set_value<void> {
-    using type = ::beman::execution::set_value_t();
-};
-
 /*!
  * \brief A helper template used to determine the completion signature matching an awaiter
  * \headerfile beman/execution.hpp <beman/execution.hpp>
@@ -64,9 +47,9 @@ struct awaiter_set_value<void> {
  */
 template <typename Awaiter, typename Receiver>
 using awaiter_completion_signatures = ::beman::execution::completion_signatures<
-    typename ::beman::execution::detail::awaiter_set_value<::beman::execution::detail::await_result_type<
+    ::beman::execution::detail::value_signature_t<::beman::execution::detail::await_result_type<
         Awaiter,
-        ::beman::execution::detail::connect_awaitable_promise<Receiver>>>::type,
+        ::beman::execution::detail::connect_awaitable_promise<Receiver>>>,
     ::beman::execution::set_error_t(::std::exception_ptr),
     ::beman::execution::set_stopped_t()>;
 
