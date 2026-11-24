@@ -226,6 +226,10 @@ auto test_let_lifetime() {
         throw 0;
         return test_std::just();
     }));
+
+    test::lifetime(test_std::let_value(test_std::read_env(test_std::get_scheduler), [](auto& sched) {
+        return test_std::continues_on(test_std::just(), std::move(sched));
+    }));
 }
 } // namespace
 

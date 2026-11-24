@@ -590,8 +590,8 @@ struct state : state_base<Value, Environment> {
         : rcvr(::std::move(r)), handle(::std::move(h)), holder(env), scheduler(), propagator() {}
 
     auto start() & noexcept -> void {
-        const auto& env = ::beman::execution::get_env(this->rcvr);
-        this->scheduler.emplace(::beman::execution::detail::task::make_sched<scheduler_type>(env));
+        this->scheduler.emplace(
+            ::beman::execution::detail::task::make_sched<scheduler_type>(::beman::execution::get_env(this->rcvr)));
         this->handle.start(this).resume();
     }
 

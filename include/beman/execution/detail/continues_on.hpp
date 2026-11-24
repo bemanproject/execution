@@ -329,9 +329,9 @@ struct continues_on_t {
                 constexpr bool nothrow = (::std::is_nothrow_constructible_v<::std::decay_t<Args>, Args> && ...);
 
                 BEMAN_EXECUTION_TRY {
-                    [&]() noexcept(nothrow) {
+                    ::std::invoke([&]() noexcept(nothrow) {
                         state.async_result.template emplace<result_t>(Tag(), ::std::forward<Args>(args)...);
-                    }();
+                    });
                 }
                 BEMAN_EXECUTION_CATCH(...) {
                     if constexpr (!nothrow) {

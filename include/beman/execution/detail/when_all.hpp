@@ -374,9 +374,9 @@ struct when_all_t {
                         using error_t          = typename std::type_identity<Args...>::type;
                         constexpr bool nothrow = ::std::is_nothrow_constructible_v<::std::decay_t<error_t>, error_t>;
                         BEMAN_EXECUTION_TRY {
-                            [&]() noexcept(nothrow) {
+                            ::std::invoke([&]() noexcept(nothrow) {
                                 state.errors.template emplace<::std::decay_t<error_t>>(::std::forward<Args>(args)...);
-                            }();
+                            });
                         }
                         BEMAN_EXECUTION_CATCH(...) {
                             if constexpr (!nothrow) {
@@ -395,7 +395,7 @@ struct when_all_t {
                         using decayed_tuple_t  = typename ::std::decay_t<decltype(opt)>::value_type;
                         constexpr bool nothrow = std::is_nothrow_constructible_v<decayed_tuple_t, Args...>;
                         BEMAN_EXECUTION_TRY {
-                            [&]() noexcept(nothrow) { opt.emplace(::std::forward<Args>(args)...); }();
+                            ::std::invoke([&]() noexcept(nothrow) { opt.emplace(::std::forward<Args>(args)...); });
                         }
                         BEMAN_EXECUTION_CATCH(...) {
                             if constexpr (!nothrow) {

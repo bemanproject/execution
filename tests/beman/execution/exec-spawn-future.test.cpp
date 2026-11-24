@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/lifetime.hpp>
 #include <test/sender_env.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -479,6 +480,11 @@ auto test_spawn_future_attributes() {
     // token<true>{}));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, test_std::spawn_future(s, token<true>{}));
 }
+auto test_spawn_future_lifetime() {
+    test_std::counting_scope scope;
+    test::lifetime(test_std::spawn_future(test_std::just(), scope.get_token()));
+    test_std::sync_wait(scope.join());
+}
 } // namespace
 
 TEST(exec_spawn_future) {
@@ -500,4 +506,5 @@ TEST(exec_spawn_future) {
 
     test_spawn_future();
     test_spawn_future_attributes();
+    test_spawn_future_lifetime();
 }
