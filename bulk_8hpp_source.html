@@ -280,11 +280,11 @@ $(function(){initNavTree('bulk_8hpp_source.html','',''); });
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                    <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> nothrow =</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                        ::beman::execution::detail::bulk_traits&lt;is_chunked, Fun, Shape, Args...&gt;::is_nothrow_invocable;</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                    BEMAN_EXECUTION_TRY {</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                        [&amp;]() <span class="keyword">noexcept</span>(nothrow) {</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                        ::std::invoke([&amp;]() <span class="keyword">noexcept</span>(nothrow) {</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                            ::beman::execution::detail::bulk_traits&lt;is_chunked, Fun, Shape, Args...&gt;::invoke(</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                                f, shape, args...);</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                            Tag()(::std::move(rcvr), ::std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                        }();</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                        });</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    }</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                    BEMAN_EXECUTION_CATCH(...) {</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!nothrow) {</div>

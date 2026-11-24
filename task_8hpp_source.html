@@ -668,8 +668,8 @@ $(function(){initNavTree('task_8hpp_source.html','',''); });
 <div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>        : rcvr(::std::move(r)), handle(::std::move(h)), holder(env), scheduler(), propagator() {}</div>
 <div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span> </div>
 <div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>    <span class="keyword">auto</span> start() &amp; <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; env = ::beman::execution::get_env(this-&gt;rcvr);</div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>        this-&gt;scheduler.emplace(::beman::execution::detail::task::make_sched&lt;scheduler_type&gt;(env));</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>        this-&gt;scheduler.emplace(</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>            ::beman::execution::detail::task::make_sched&lt;scheduler_type&gt;(::beman::execution::get_env(this-&gt;rcvr)));</div>
 <div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>        this-&gt;handle.start(<span class="keyword">this</span>).resume();</div>
 <div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>    }</div>
 <div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span> </div>
