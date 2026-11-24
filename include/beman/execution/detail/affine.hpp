@@ -132,6 +132,12 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
         }
     }
 
+    template <::beman::execution::sender Sender>
+    static auto
+    affine(Sender&& sndr) noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>) {
+        return ::std::forward<Sender>(sndr);
+    }
+
   private:
     template <typename Child>
     struct attrs : ::beman::execution::detail::hide_completion_queries<::beman::execution::env_of_t<Child>> {

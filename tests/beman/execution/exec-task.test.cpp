@@ -1,13 +1,15 @@
 // tests/beman/execution/exec-task.test.cpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/execution/detail/common.hpp>
 #include <test/execution.hpp>
+#include <test/thread_pool.hpp>
+#include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
 #include <concepts>
 #include <coroutine>
+#include <cstddef>
 #include <exception>
 #include <memory>
 #include <memory_resource>
@@ -189,6 +191,108 @@ auto test_task_awaits_senders_and_tasks() -> void {
     ASSERT(std::get<0>(*scheduler_result) == 42);
 }
 
+class counting_scheduler {
+  private:
+    struct attrs {
+        auto query(test_std::get_completion_scheduler_t<test_std::set_value_t>) const noexcept -> counting_scheduler {
+            return counting_scheduler{counter};
+        }
+
+        std::shared_ptr<std::size_t> counter;
+    };
+
+    template <test_std::receiver Receiver>
+    struct state {
+        using operation_state_concept = test_std::operation_state_tag;
+
+        auto start() & noexcept -> void {
+            ++*counter;
+            test_std::set_value(std::move(receiver));
+        }
+
+        std::shared_ptr<std::size_t> counter;
+        Receiver                     receiver;
+    };
+
+    struct sender {
+        using sender_concept = test_std::sender_tag;
+
+        template <typename...>
+        static consteval auto get_completion_signatures() noexcept
+            -> test_std::completion_signatures<test_std::set_value_t()> {
+            return {};
+        }
+
+        auto get_env() const noexcept -> attrs { return {counter}; }
+
+        template <test_std::receiver Receiver>
+        auto connect(Receiver receiver) && noexcept -> state<Receiver> {
+            return {std::move(counter), std::move(receiver)};
+        }
+
+        std::shared_ptr<std::size_t> counter;
+    };
+
+  public:
+    using scheduler_concept = test_std::scheduler_tag;
+
+    counting_scheduler() : counter(std::make_shared<::std::size_t>(0uz)) {}
+
+    explicit counting_scheduler(std::shared_ptr<std::size_t> counter) noexcept : counter(std::move(counter)) {}
+
+    auto count() const noexcept -> std::size_t { return *counter; }
+
+    auto schedule() const noexcept -> sender { return {counter}; }
+
+    auto query(test_std::get_forward_progress_guarantee_t) const noexcept -> test_std::forward_progress_guarantee {
+        return test_std::forward_progress_guarantee::weakly_parallel;
+    }
+
+    auto operator==(const counting_scheduler&) const noexcept -> bool = default;
+
+  private:
+    std::shared_ptr<std::size_t> counter;
+};
+static_assert(test_std::scheduler<counting_scheduler>);
+
+auto test_task_scheduler_affinity() -> void {
+    test::thread_pool pool;
+    {
+        const auto caller_thread = std::this_thread::get_id();
+        auto       tsk           = [&]() -> test_std::task<> {
+            ASSERT(std::this_thread::get_id() == caller_thread);
+            co_await test_std::schedule(pool.get_scheduler());
+            ASSERT(std::this_thread::get_id() == caller_thread);
+        };
+        test_std::sync_wait(tsk());
+    }
+    {
+        struct env {
+            using start_scheduler_type = counting_scheduler;
+        };
+
+        auto tsk = [&]() -> test_std::task<void, env> {
+            auto sch = co_await test_std::read_env(test_std::get_start_scheduler);
+            co_await test_std::just();
+            ASSERT(sch.count() == 0uz);
+            auto i = co_await test_std::then(test_std::just(), []() noexcept { return 42; });
+            ASSERT(i == 42);
+            ASSERT(sch.count() == 0uz);
+            co_await test_std::schedule(pool.get_scheduler());
+            ASSERT(sch.count() == 1uz);
+            co_await test_std::affine(test_std::just());
+            ASSERT(sch.count() == 1uz);
+            co_await test_std::affine(test_std::schedule(pool.get_scheduler()));
+            ASSERT(sch.count() == 2uz);
+            co_await test_std::affine(test_std::affine(test_std::schedule(pool.get_scheduler())));
+            ASSERT(sch.count() == 3uz);
+            co_await test_std::then(test_std::affine(test_std::just() | test_std::then([] {})), [] {});
+            ASSERT(sch.count() == 3uz);
+        };
+        test_std::sync_wait(tsk());
+    }
+}
+
 auto test_task_stopped_completion() -> void {
     bool reached_after_stop{};
     auto result = test_std::sync_wait(nested_stopped_task(reached_after_stop));
@@ -335,6 +439,7 @@ TEST(exec_task) {
     test_task_interface();
     test_task_is_lazy_and_completes_with_values();
     test_task_awaits_senders_and_tasks();
+    test_task_scheduler_affinity();
     test_task_stopped_completion();
 #ifdef __cpp_exceptions
     test_task_errors();
