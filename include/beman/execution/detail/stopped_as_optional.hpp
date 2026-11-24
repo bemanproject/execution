@@ -16,10 +16,12 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.child_type;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
 import beman.execution.detail.just;
 import beman.execution.detail.let;
 import beman.execution.detail.make_sender;
+import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
@@ -29,10 +31,12 @@ import beman.execution.detail.single_sender_value_type;
 import beman.execution.detail.then;
 #else
 #include <beman/execution/detail/child_type.hpp>
+#include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/let.hpp>
 #include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
@@ -65,6 +69,13 @@ struct stopped_as_optional_t : ::beman::execution::sender_adaptor_closure<stoppe
     template <::beman::execution::sender Sndr>
     auto operator()(Sndr&& sndr) const {
         return ::beman::execution::detail::make_sender(stopped_as_optional_t{}, {}, ::std::forward<Sndr>(sndr));
+    }
+
+    template <::beman::execution::sender Sndr>
+        requires ::beman::execution::detail::nested_sender_has_affine<Sndr>
+    static auto affine(Sndr&& sndr) {
+        auto& [_, data, child] = sndr;
+        return stopped_as_optional_t{}(::beman::execution::detail::forward_like<Sndr>(child).affine());
     }
 
     [[deprecated("use `sender | stopped_as_optional` instead of `sender | stopped_as_optional()`")]] auto
