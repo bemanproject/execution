@@ -17,31 +17,7 @@ import std;
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 #else
-#include <beman/execution/detail/affine.hpp>
-#include <beman/execution/detail/connect.hpp>
-#include <beman/execution/detail/env.hpp>
-#include <beman/execution/detail/get_completion_scheduler.hpp>
-#include <beman/execution/detail/get_scheduler.hpp>
-#include <beman/execution/detail/get_start_scheduler.hpp>
-#include <beman/execution/detail/get_stop_token.hpp>
-#include <beman/execution/detail/inline_scheduler.hpp>
-#include <beman/execution/detail/into_variant.hpp>
-#include <beman/execution/detail/just.hpp>
-#include <beman/execution/detail/let.hpp>
-#include <beman/execution/detail/prop.hpp>
-#include <beman/execution/detail/read_env.hpp>
-#include <beman/execution/detail/run_loop.hpp>
-#include <beman/execution/detail/schedule.hpp>
-#include <beman/execution/detail/sender.hpp>
-#include <beman/execution/detail/sender_in.hpp>
-#include <beman/execution/detail/starts_on.hpp>
-#include <beman/execution/detail/stopped_as_error.hpp>
-#include <beman/execution/detail/stopped_as_optional.hpp>
-#include <beman/execution/detail/sync_wait.hpp>
-#include <beman/execution/detail/task_scheduler.hpp>
-#include <beman/execution/detail/then.hpp>
-#include <beman/execution/detail/when_all.hpp>
-#include <beman/execution/detail/write_env.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -256,6 +232,9 @@ TEST(affine) {
     test_affine_specializations(test_std::just(42) | test_std::into_variant);
     test_affine_specializations(test_std::just_error(42));
     test_affine_specializations(test_std::just_stopped());
+    test_affine_specializations(test_std::when_all(test_std::just(), test_std::just()));
+    test_affine_specializations(test_std::when_all(test_std::when_all(test_std::just(), test_std::just(1)),
+                                                   test_std::just() | test_std::bulk(test_std::par, 1, [](int) {})));
     test_affine_specializations(test_std::just_stopped() | test_std::stopped_as_error(-1));
     test_affine_specializations(test_std::read_env(test_std::get_stop_token));
     test_affine_specializations(test_std::write_env(

@@ -27,6 +27,7 @@ import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.unique;
+import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.product_type;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
@@ -47,6 +48,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
+#include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/product_type.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
@@ -132,6 +134,17 @@ struct bulk_algo_t {
             ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
                 ::std::forward<Policy>(policy), shape, ::std::forward<F>(f)},
             ::std::forward<Sender>(sndr));
+    }
+
+    template <::beman::execution::sender Sender>
+        requires ::beman::execution::detail::nested_sender_has_affine<Sender>
+    static auto affine(Sender&& sndr) {
+        auto& [_, data, child]   = sndr;
+        auto& [policy, shape, f] = data;
+        return bulk_algo_t{}(::beman::execution::detail::forward_like<Sender>(child).affine(),
+                             ::beman::execution::detail::forward_like<Sender>(policy),
+                             shape,
+                             ::beman::execution::detail::forward_like<Sender>(f));
     }
 
   private:
@@ -229,6 +242,17 @@ struct bulk_t {
             ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
                 ::std::forward<Policy>(policy), shape, ::std::forward<F>(f)},
             ::std::forward<Sender>(sndr));
+    }
+
+    template <::beman::execution::sender Sender>
+        requires ::beman::execution::detail::nested_sender_has_affine<Sender>
+    static auto affine(Sender&& sndr) {
+        auto& [_, data, child]   = sndr;
+        auto& [policy, shape, f] = data;
+        return bulk_t{}(::beman::execution::detail::forward_like<Sender>(child).affine(),
+                        ::beman::execution::detail::forward_like<Sender>(policy),
+                        shape,
+                        ::beman::execution::detail::forward_like<Sender>(f));
     }
 
     template <::beman::execution::detail::sender_for<bulk_t> Sender, typename Env>

@@ -33,6 +33,7 @@ import beman.execution.detail.dependent_sender;
 import beman.execution.detail.dependent_sender_error;
 import beman.execution.detail.env;
 import beman.execution.detail.env_of_t;
+import beman.execution.detail.forward_like;
 import beman.execution.detail.error_types_of_t;
 import beman.execution.detail.get_env;
 import beman.execution.detail.get_completion_domain;
@@ -49,6 +50,7 @@ import beman.execution.detail.meta.size;
 import beman.execution.detail.meta.to;
 import beman.execution.detail.meta.transform;
 import beman.execution.detail.meta.unique;
+import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.never_stop_token;
 import beman.execution.detail.on_stop_request;
 import beman.execution.detail.prop;
@@ -76,6 +78,7 @@ import beman.execution.detail.value_types_of_t;
 #include <beman/execution/detail/dependent_sender_error.hpp>
 #include <beman/execution/detail/env.hpp>
 #include <beman/execution/detail/env_of_t.hpp>
+#include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/get_completion_domain.hpp>
 #include <beman/execution/detail/get_domain.hpp>
@@ -91,6 +94,7 @@ import beman.execution.detail.value_types_of_t;
 #include <beman/execution/detail/meta_to.hpp>
 #include <beman/execution/detail/meta_transform.hpp>
 #include <beman/execution/detail/meta_unique.hpp>
+#include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/on_stop_request.hpp>
 #include <beman/execution/detail/prop.hpp>
 #include <beman/execution/detail/sender.hpp>
@@ -145,6 +149,14 @@ struct when_all_t {
     auto operator()(Sender&&... sender) const
         noexcept((... && ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>)) {
         return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)...);
+    }
+
+    template <::beman::execution::sender Sender>
+        requires ::beman::execution::detail::nested_sender_has_affine<Sender>
+    static auto affine(Sender&& sndr) {
+        return ::std::forward<Sender>(sndr).apply([](auto&&, auto&&, auto&&... child) {
+            return when_all_t{}(::beman::execution::detail::forward_like<Sender>(child).affine()...);
+        });
     }
 
   private:

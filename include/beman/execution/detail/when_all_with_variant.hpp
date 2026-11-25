@@ -22,6 +22,7 @@ import beman.execution.detail.get_completion_domain;
 import beman.execution.detail.get_completion_signatures;
 import beman.execution.detail.into_variant;
 import beman.execution.detail.make_sender;
+import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.sender_in;
@@ -40,6 +41,7 @@ import beman.execution.detail.when_all;
 #include <beman/execution/detail/get_completion_signatures.hpp>
 #include <beman/execution/detail/into_variant.hpp>
 #include <beman/execution/detail/make_sender.hpp>
+#include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_for.hpp>
 #include <beman/execution/detail/sender_in.hpp>
@@ -65,6 +67,14 @@ struct when_all_with_variant_t {
     auto operator()(Sender&&... sender) const
         noexcept((... && ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>)) {
         return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)...);
+    }
+
+    template <::beman::execution::sender Sender>
+        requires ::beman::execution::detail::nested_sender_has_affine<Sender>
+    static auto affine(Sender&& sndr) {
+        return ::std::forward<Sender>(sndr).apply([](auto&&, auto&&, auto&&... child) {
+            return when_all_with_variant_t{}(::beman::execution::detail::forward_like<Sender>(child).affine()...);
+        });
     }
 
   private:

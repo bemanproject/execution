@@ -282,12 +282,18 @@ auto test_task_scheduler_affinity() -> void {
             ASSERT(sch.count() == 1uz);
             co_await test_std::affine(test_std::just());
             ASSERT(sch.count() == 1uz);
+            co_await test_std::affine(test_std::when_all(test_std::just(), test_std::just()));
+            ASSERT(sch.count() == 1uz);
             co_await test_std::affine(test_std::schedule(pool.get_scheduler()));
             ASSERT(sch.count() == 2uz);
             co_await test_std::affine(test_std::affine(test_std::schedule(pool.get_scheduler())));
             ASSERT(sch.count() == 3uz);
             co_await test_std::then(test_std::affine(test_std::just() | test_std::then([] {})), [] {});
             ASSERT(sch.count() == 3uz);
+            co_await test_std::affine(test_std::when_all(test_std::just(), test_std::schedule(pool.get_scheduler())));
+            ASSERT(sch.count() == 4uz);
+            co_await test_std::bulk(test_std::just(), test_std::par, 1uz, [](std::size_t) {});
+            ASSERT(sch.count() == 4uz);
         };
         test_std::sync_wait(tsk());
     }
