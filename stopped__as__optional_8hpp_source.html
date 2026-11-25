@@ -149,7 +149,7 @@ $(function(){initNavTree('stopped__as__optional_8hpp_source.html','',''); });
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">namespace </span>beman::execution::detail {</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">struct </span>stopped_as_optional_t : ::beman::execution::sender_adaptor_closure&lt;stopped_as_optional_t&gt; {</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">template</span> &lt;::beman::execution::detail::sender_for&lt;stopped_as_optional_t&gt; Sndr, <span class="keyword">typename</span> Env&gt;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">auto</span> transform_sender(::beman::execution::set_value_t, Sndr&amp;&amp; sndr, Env&amp;&amp;) const noexcept {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">auto</span> transform_sender(::beman::execution::set_value_t, Sndr&amp;&amp; sndr, Env&amp;&amp;)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">static_assert</span>(</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            ::beman::execution::detail::single_sender&lt;child_type&lt;Sndr&gt;, ::beman::execution::detail::fwd_env&lt;Env&gt;&gt;,</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            <span class="stringliteral">&quot;sender must be a single sender&quot;</span>);</div>
@@ -167,35 +167,36 @@ $(function(){initNavTree('stopped__as__optional_8hpp_source.html','',''); });
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    }</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">template</span> &lt;::beman::execution::sender Sndr&gt;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">auto</span> operator()(Sndr&amp;&amp; sndr)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">auto</span> operator()(Sndr&amp;&amp; sndr) <span class="keyword">const</span> <span class="keyword">noexcept</span>(::std::is_nothrow_constructible_v&lt;::std::remove_cvref_t&lt;Sndr&gt;, Sndr&gt;) {</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        return ::beman::execution::detail::make_sender(stopped_as_optional_t{}, {}, ::std::forward&lt;Sndr&gt;(sndr));</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    }</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">template</span> &lt;::beman::execution::sender Sndr&gt;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        requires ::beman::execution::detail::nested_sender_has_affine&lt;Sndr&gt;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">static</span> <span class="keyword">auto</span> affine(Sndr&amp;&amp; sndr) {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">auto</span>&amp; [_, data, child] = sndr;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keywordflow">return</span> stopped_as_optional_t{}(::beman::execution::detail::forward_like&lt;Sndr&gt;(child).affine());</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    }</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    [[deprecated(<span class="stringliteral">&quot;use `sender | stopped_as_optional` instead of `sender | stopped_as_optional()`&quot;</span>)]] <span class="keyword">auto</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    operator()() const noexcept {</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    }</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>} <span class="comment">// namespace beman::execution::detail</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keyword">using </span>stopped_as_optional_t = ::beman::execution::detail::stopped_as_optional_t;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> stopped_as_optional_t stopped_as_optional{};</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>} <span class="comment">// namespace beman::execution</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPED_AS_OPTIONAL</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">static</span> <span class="keyword">auto</span> affine(Sndr&amp;&amp; sndr) <span class="keyword">noexcept</span>(</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">noexcept</span>(stopped_as_optional_t{}(::std::declval&lt;::beman::execution::detail::child_type&lt;Sndr&gt;&gt;().affine()))) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keyword">auto</span>&amp; [_, data, child] = sndr;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keywordflow">return</span> stopped_as_optional_t{}(::beman::execution::detail::forward_like&lt;Sndr&gt;(child).affine());</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    }</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    [[deprecated(<span class="stringliteral">&quot;use `sender | stopped_as_optional` instead of `sender | stopped_as_optional()`&quot;</span>)]] <span class="keyword">auto</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    operator()() const noexcept {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    }</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>};</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>} <span class="comment">// namespace beman::execution::detail</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution.html">beman::execution</a> {</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">using </span>stopped_as_optional_t = ::beman::execution::detail::stopped_as_optional_t;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> stopped_as_optional_t stopped_as_optional{};</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>} <span class="comment">// namespace beman::execution</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">#endif </span><span class="comment">// INCLUDED_BEMAN_EXECUTION_DETAIL_STOPPED_AS_OPTIONAL</span></div>
 <div class="ttc" id="anamespacebeman_1_1execution_html"><div class="ttname"><a href="namespacebeman_1_1execution.html">beman::execution</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition</b> affine.hpp:72</div></div>
-<div class="ttc" id="anamespacebeman_1_1execution_html_a67398f7901010156ad6b008f62fa9ba3"><div class="ttname"><a href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3">beman::execution::then</a></div><div class="ttdeci">constexpr ::beman::execution::then_t then</div><div class="ttdoc">then(sender, fun) yields a sender transforming a set_value_t(A...) completion</div><div class="ttdef"><b>Definition</b> then.hpp:267</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution_html_a67398f7901010156ad6b008f62fa9ba3"><div class="ttname"><a href="namespacebeman_1_1execution.html#a67398f7901010156ad6b008f62fa9ba3">beman::execution::then</a></div><div class="ttdeci">constexpr ::beman::execution::then_t then</div><div class="ttdoc">then(sender, fun) yields a sender transforming a set_value_t(A...) completion</div><div class="ttdef"><b>Definition</b> then.hpp:274</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -142,7 +142,7 @@ $(function(){initNavTree('sender__decompose_8hpp_source.html','',''); });
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>sender_data(Tag&amp;&amp;, Data&amp;, Children&amp;&amp;) -&gt; sender_data&lt;Tag, Data, Children&gt;;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender&gt;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">auto</span> get_sender_data(Sender&amp;&amp; sender) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">auto</span> get_sender_data(Sender&amp;&amp; sender) <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#if 0</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>          <span class="comment">//-dk:TODO should use a dynamic/language approach:</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>          <span class="keyword">auto</span>&amp;&amp; [tag, data, ... children] = sender;</div>
