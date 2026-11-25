@@ -70,13 +70,15 @@ import beman.execution.detail.variant_or_empty;
 namespace beman::execution::detail {
 struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_t> {
     template <::beman::execution::sender Sender>
-    auto operator()(Sender&& sender) const {
+    auto operator()(Sender&& sender) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>) {
         return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender));
     }
 
     template <::beman::execution::sender Sender>
         requires ::beman::execution::detail::nested_sender_has_affine<Sender>
-    static auto affine(Sender&& sndr) {
+    static auto affine(Sender&& sndr) noexcept(
+        noexcept(into_variant_t{}(::std::declval<::beman::execution::detail::child_type<Sender>>().affine()))) {
         auto& [_, data, child] = sndr;
         return into_variant_t{}(::beman::execution::detail::forward_like<Sender>(child).affine());
     }

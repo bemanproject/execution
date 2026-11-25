@@ -88,7 +88,7 @@ struct starts_on_t {
     template <::beman::execution::detail::sender_for<::beman::execution::detail::starts_on_t> Sender, typename Env>
         requires ::beman::execution::sender_in<::beman::execution::detail::child_type<Sender>,
                                                ::beman::execution::detail::fwd_env_t<Env>>
-    static auto transform_sender(::beman::execution::set_value_t, Sender&& sender, const Env&) noexcept {
+    static auto transform_sender(::beman::execution::set_value_t, Sender&& sender, const Env&) {
         auto&&         sched{sender.template get<1>()};
         auto&&         child{sender.template get<2>()};
         constexpr bool is_nothrow = ::std::is_nothrow_move_constructible_v<::std::remove_cvref_t<decltype(child)>>;
@@ -157,7 +157,9 @@ struct starts_on_t {
     };
 
     template <::beman::execution::scheduler Scheduler, ::beman::execution::sender Sender>
-    auto operator()(Scheduler&& scheduler, Sender&& sender) const {
+    auto operator()(Scheduler&& scheduler, Sender&& sender) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Scheduler>, Scheduler> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>) {
         return ::beman::execution::detail::make_sender(
             *this, ::std::forward<Scheduler>(scheduler), ::std::forward<Sender>(sender));
     }

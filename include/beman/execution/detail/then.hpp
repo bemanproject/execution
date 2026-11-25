@@ -12,14 +12,17 @@ import std;
 #include <concepts>
 #include <exception>
 #include <functional>
+#include <type_traits>
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.call_result_t;
+import beman.execution.detail.child_type;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.completion_signatures_of_t;
+import beman.execution.detail.data_type;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.dependent_sender;
 import beman.execution.detail.dependent_sender_error;
@@ -44,9 +47,11 @@ import beman.execution.detail.transform_sender;
 import beman.execution.detail.value_signature;
 #else
 #include <beman/execution/detail/call_result_t.hpp>
+#include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/completion_signatures.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
+#include <beman/execution/detail/data_type.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/dependent_sender.hpp>
 #include <beman/execution/detail/dependent_sender_error.hpp>
@@ -121,7 +126,9 @@ struct then_t {
     }
     template <::beman::execution::sender Sender>
         requires ::beman::execution::detail::nested_sender_has_affine<Sender>
-    static auto affine(Sender&& sndr) {
+    static auto affine(Sender&& sndr) noexcept(
+        noexcept(then_t{}(::std::declval<::beman::execution::detail::child_type<Sender>>().affine(),
+                          ::std::declval<::beman::execution::detail::data_type<Sender>>()))) {
         auto& [_, data, child] = sndr;
         return then_t{}(::beman::execution::detail::forward_like<Sender>(child).affine(),
                         ::beman::execution::detail::forward_like<Sender>(data));

@@ -30,7 +30,9 @@ struct make_sender_empty {};
 template <typename Tag, typename Data = ::beman::execution::detail::make_sender_empty, typename... Child>
     requires ::std::semiregular<Tag> && ::beman::execution::detail::movable_value<Data> &&
              (::beman::execution::sender<Child> && ...)
-constexpr auto make_sender(Tag tag, Data&& data, Child&&... child) {
+constexpr auto make_sender(Tag tag, Data&& data, Child&&... child) noexcept(
+    ::std::is_nothrow_copy_constructible_v<Tag> && ::std::is_nothrow_constructible_v<::std::decay_t<Data>, Data> &&
+    (::std::is_nothrow_constructible_v<::std::decay_t<Child>, Child> && ...)) {
     return ::beman::execution::detail::basic_sender<Tag, ::std::decay_t<Data>, ::std::decay_t<Child>...>{
         tag, ::std::forward<Data>(data), ::std::forward<Child>(child)...};
 }

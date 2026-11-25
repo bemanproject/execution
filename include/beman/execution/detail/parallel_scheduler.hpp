@@ -76,7 +76,7 @@ struct parallel_scheduler_domain {
     template <typename Sndr>
         requires ::std::same_as<::beman::execution::tag_of_t<Sndr>, ::beman::execution::bulk_chunked_t> ||
                  ::std::same_as<::beman::execution::tag_of_t<Sndr>, ::beman::execution::bulk_unchunked_t>
-    static auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, const auto&) noexcept {
+    static auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, const auto&) {
         auto&& [_, data, child]  = ::std::forward<Sndr>(sndr);
         auto [policy, shape, fn] = ::beman::execution::detail::forward_like<Sndr>(data);
         return ::beman::execution::detail::psched_bulk_sender{

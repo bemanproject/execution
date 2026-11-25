@@ -77,13 +77,13 @@ struct notify_t {
         struct state : ::beman::execution::detail::notifier::base {
             ::beman::execution::detail::notifier* n;
             ::std::remove_cvref_t<Receiver>&      receiver{};
-            state(::beman::execution::detail::notifier* nn, ::std::remove_cvref_t<Receiver>& rcvr)
+            state(::beman::execution::detail::notifier* nn, ::std::remove_cvref_t<Receiver>& rcvr) noexcept
                 : n(nn), receiver(rcvr) {}
             auto complete() -> void override { ::beman::execution::set_value(::std::move(this->receiver)); }
         };
         struct get_state_impl {
             template <typename Sender, typename Receiver>
-            auto operator()(Sender&& sender, Receiver&& receiver) const {
+            auto operator()(Sender&& sender, Receiver&& receiver) const noexcept {
                 ::beman::execution::detail::notifier* n{sender.template get<1>()};
                 return state<Receiver>(n, receiver);
             }

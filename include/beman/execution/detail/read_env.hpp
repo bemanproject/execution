@@ -52,9 +52,10 @@ import beman.execution.detail.set_value;
 
 namespace beman::execution::detail {
 struct read_env_t {
-    auto operator()(auto&& query) const { return ::beman::execution::detail::make_sender(*this, query); }
+    auto operator()(auto&& query) const noexcept { return ::beman::execution::detail::make_sender(*this, query); }
     template <::beman::execution::sender Sender>
-    static auto affine(Sender&& sndr) noexcept {
+    static auto
+    affine(Sender&& sndr) noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>) {
         return ::std::forward<Sender>(sndr);
     }
 

@@ -87,7 +87,8 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
      * @return An adapted sender to complete on the scheduler it was started on.
      */
     template <::beman::execution::sender Sender>
-    auto operator()(Sender&& sender) const {
+    auto operator()(Sender&& sender) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>) {
         return ::beman::execution::detail::make_sender(
             *this, ::beman::execution::env<>{}, ::std::forward<Sender>(sender));
     }
@@ -97,7 +98,9 @@ struct affine_t : ::beman::execution::sender_adaptor_closure<affine_t> {
      *
      * @return A sender adaptor for the affine_t.
      */
-    [[deprecated("use `sender | affine` instead of `sender | affine()`")]] auto operator()() const { return *this; }
+    [[deprecated("use `sender | affine` instead of `sender | affine()`")]] auto operator()() const noexcept {
+        return *this;
+    }
 
     /**
      * @brief affine is implemented by transforming it into a use of continues_on.

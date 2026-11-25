@@ -337,7 +337,7 @@ class task_scheduler {
         template <typename Sndr>
             requires ::std::same_as<::beman::execution::tag_of_t<Sndr>, ::beman::execution::bulk_chunked_t> ||
                      ::std::same_as<::beman::execution::tag_of_t<Sndr>, ::beman::execution::bulk_unchunked_t>
-        static auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, const auto& env) noexcept {
+        static auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, const auto& env) {
             auto&& [_, data, child]  = ::std::forward<Sndr>(sndr);
             auto [policy, shape, fn] = ::beman::execution::detail::forward_like<Sndr>(data);
             auto sch                 = ::beman::execution::detail::call_with_default(
