@@ -49,7 +49,7 @@ import beman.execution.detail.then;
 namespace beman::execution::detail {
 struct stopped_as_optional_t : ::beman::execution::sender_adaptor_closure<stopped_as_optional_t> {
     template <::beman::execution::detail::sender_for<stopped_as_optional_t> Sndr, typename Env>
-    auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, Env&&) const noexcept {
+    auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, Env&&) const {
         static_assert(
             ::beman::execution::detail::single_sender<child_type<Sndr>, ::beman::execution::detail::fwd_env<Env>>,
             "sender must be a single sender");
@@ -67,13 +67,14 @@ struct stopped_as_optional_t : ::beman::execution::sender_adaptor_closure<stoppe
     }
 
     template <::beman::execution::sender Sndr>
-    auto operator()(Sndr&& sndr) const {
+    auto operator()(Sndr&& sndr) const noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sndr>, Sndr>) {
         return ::beman::execution::detail::make_sender(stopped_as_optional_t{}, {}, ::std::forward<Sndr>(sndr));
     }
 
     template <::beman::execution::sender Sndr>
         requires ::beman::execution::detail::nested_sender_has_affine<Sndr>
-    static auto affine(Sndr&& sndr) {
+    static auto affine(Sndr&& sndr) noexcept(
+        noexcept(stopped_as_optional_t{}(::std::declval<::beman::execution::detail::child_type<Sndr>>().affine()))) {
         auto& [_, data, child] = sndr;
         return stopped_as_optional_t{}(::beman::execution::detail::forward_like<Sndr>(child).affine());
     }

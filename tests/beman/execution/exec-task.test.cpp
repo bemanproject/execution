@@ -373,7 +373,9 @@ auto test_lifetimes() -> void {
     test::lifetime([]() -> test_std::task<> { co_return; }());
     test::lifetime([]() -> test_std::task<> { co_await test_std::just(); }());
     test::lifetime([]() -> test_std::task<> { co_await test_std::just_stopped(); }());
+#ifdef __cpp_exceptions
     test::lifetime([]() -> test_std::task<> { co_await test_std::just_error(42); }());
+#endif
     test::lifetime([]() -> test_std::task<> {
         [[maybe_unused]] auto token{co_await test_std::read_env(test_std::get_stop_token)};
     }());

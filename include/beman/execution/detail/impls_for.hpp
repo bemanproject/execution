@@ -19,31 +19,31 @@ struct impls_for : ::beman::execution::detail::default_impls {};
 
 template <typename Tag>
 struct get_impls_for {
-    static constexpr auto get_attrs() -> const auto& {
+    static constexpr auto get_attrs() noexcept -> const auto& {
         if constexpr (requires { Tag::impls_for::get_attrs; })
             return Tag::impls_for::get_attrs;
         else
             return ::beman::execution::detail::impls_for<Tag>::get_attrs;
     }
-    static constexpr auto start() -> const auto& {
+    static constexpr auto start() noexcept -> const auto& {
         if constexpr (requires { Tag::impls_for::start; })
             return Tag::impls_for::start;
         else
             return ::beman::execution::detail::impls_for<Tag>::start;
     }
-    static constexpr auto get_state() -> const auto& {
+    static constexpr auto get_state() noexcept -> const auto& {
         if constexpr (requires { Tag::impls_for::get_state; })
             return Tag::impls_for::get_state;
         else
             return ::beman::execution::detail::impls_for<Tag>::get_state;
     }
-    static constexpr auto get_env() -> const auto& {
+    static constexpr auto get_env() noexcept -> const auto& {
         if constexpr (requires { Tag::impls_for::get_env; })
             return Tag::impls_for::get_env;
         else
             return ::beman::execution::detail::impls_for<Tag>::get_env;
     }
-    static constexpr auto complete() -> const auto& {
+    static constexpr auto complete() noexcept -> const auto& {
         if constexpr (requires { Tag::impls_for::complete; })
             return Tag::impls_for::complete;
         else

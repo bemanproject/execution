@@ -13,6 +13,7 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.basic_sender;
+import beman.execution.detail.child_type;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
 import beman.execution.detail.data_type;
@@ -30,6 +31,7 @@ import beman.execution.detail.sender;
 import beman.execution.detail.sender_in;
 import beman.execution.detail.sender_adaptor_closure;
 #else
+#include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/data_type.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/forward_like.hpp>
@@ -64,13 +66,16 @@ struct write_env_env_type<NewEnv, Env> {
 
 struct write_env_t {
     template <::beman::execution::sender Sender, ::beman::execution::detail::queryable Env>
-    constexpr auto operator()(Sender&& sender, Env&& env) const {
+    constexpr auto operator()(Sender&& sender, Env&& env) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Env>, Env>) {
         return ::beman::execution::detail::make_sender(
             *this, ::std::forward<Env>(env), ::std::forward<Sender>(sender));
     }
 
     template <::beman::execution::detail::queryable Env>
-    constexpr auto operator()(Env&& env) const {
+    constexpr auto operator()(Env&& env) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Env>, Env>) {
         return ::beman::execution::detail::make_sender_adaptor(*this, ::std::forward<Env>(env));
     }
 
@@ -79,7 +84,9 @@ struct write_env_t {
         requires(!::std::invocable<::beman::execution::get_start_scheduler_t,
                                    ::beman::execution::detail::data_type<Sender>>) &&
                 ::beman::execution::detail::nested_sender_has_affine<Sender>
-    static auto affine(Sender&& sndr) {
+    static auto affine(Sender&& sndr) noexcept(
+        noexcept(write_env_t{}(::std::declval<::beman::execution::detail::child_type<Sender>>().affine(),
+                               ::std::declval<::beman::execution::detail::data_type<Sender>>()))) {
         auto& [_, data, child] = sndr;
         return write_env_t{}(::beman::execution::detail::forward_like<Sender>(child).affine(),
                              ::beman::execution::detail::forward_like<Sender>(data));

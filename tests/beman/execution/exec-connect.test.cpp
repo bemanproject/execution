@@ -9,17 +9,14 @@ import std;
 #include <concepts>
 #include <coroutine>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution;
 import beman.execution.detail;
 #else
-#include <beman/execution/detail/connect.hpp>
-#include <beman/execution/detail/receiver.hpp>
-#include <beman/execution/detail/operation_state_task.hpp>
-#include <beman/execution/detail/suspend_complete.hpp>
-#include <beman/execution/detail/connect_awaitable.hpp>
+#include <beman/execution.hpp>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -134,6 +131,13 @@ struct awaiter {
 
 struct transformed {
     auto as_awaitable(auto&&) -> awaiter { return {}; }
+};
+
+struct noop_receiver {
+    using receiver_concept = test_std::receiver_tag;
+    static auto set_value(const auto&...) noexcept -> void {}
+    static auto set_error(const auto&) noexcept -> void {}
+    static auto set_stopped() noexcept -> void {}
 };
 
 auto test_connect_awaitable_promise() -> void {
@@ -332,6 +336,137 @@ auto test_connect_with_awaiter() -> void {
     handle.resume();
     ASSERT(result == true);
 }
+
+auto test_connect_noexcept() -> void {
+    static_assert(noexcept(test_std::connect(test_std::just(1), noop_receiver{})));
+    static_assert(
+        noexcept(test_std::connect(test_std::then(test_std::just(1), [](int) noexcept {}), noop_receiver{})));
+    static_assert(noexcept(test_std::connect(test_std::into_variant(test_std::just(1)), noop_receiver{})));
+    static_assert(
+        noexcept(test_std::connect(test_std::when_all(test_std::just(1), test_std::just(2)), noop_receiver{})));
+    static_assert(noexcept(test_std::connect(test_std::let_value(test_std::just(), test_std::just), noop_receiver{})));
+    static_assert(noexcept(test_std::connect(test_std::just(1), noop_receiver{})));
+}
+
+#ifdef __cpp_exceptions
+struct connect_failed_sender {
+    using sender_concept = test_std::sender_tag;
+
+    struct op_state {
+        using operation_state_concept = test_std::operation_state_tag;
+
+        static auto start() noexcept -> void {}
+    };
+
+    template <typename...>
+    static consteval auto get_completion_signatures() noexcept
+        -> test_std::completion_signatures<test_std::set_value_t()> {
+        return {};
+    }
+
+    [[noreturn]] auto connect(const auto&) const -> op_state { throw ec; }
+
+    int ec{};
+};
+
+static_assert(test_std::sender<connect_failed_sender>);
+
+struct throw_on_copy {
+    inline static bool armed{false};
+    int                value{};
+    explicit throw_on_copy(int v) noexcept : value(v) {}
+    throw_on_copy(const throw_on_copy& other) : value(other.value) {
+        if (armed) {
+            throw value;
+        }
+    }
+    throw_on_copy(throw_on_copy&& other) : value(other.value) {
+        if (armed) {
+            throw value;
+        }
+    }
+    auto operator=(const throw_on_copy&) -> throw_on_copy& = default;
+    auto operator=(throw_on_copy&&) -> throw_on_copy&      = default;
+    ~throw_on_copy()                                       = default;
+};
+
+struct throwing_domain {
+    template <typename Tag, typename Sndr, typename Env>
+    auto transform_sender(Tag, Sndr&& sndr, const Env&) const -> std::remove_cvref_t<Sndr> {
+        if (throw_on_copy::armed) {
+            throw 17;
+        }
+        return std::forward<Sndr>(sndr);
+    }
+};
+struct throwing_domain_env {
+    auto query(const test_std::get_domain_t&) const noexcept -> throwing_domain { return {}; }
+};
+struct throwing_domain_receiver {
+    using receiver_concept = test_std::receiver_tag;
+    auto        get_env() const noexcept -> throwing_domain_env { return {}; }
+    static auto set_value(const auto&...) noexcept -> void {}
+    static auto set_error(const auto&) noexcept -> void {}
+    static auto set_stopped() noexcept -> void {}
+};
+
+template <typename Sndr, typename Rcvr = noop_receiver>
+auto expect_connect_throws(Sndr&& sndr, int expected, Rcvr rcvr = {}) -> void {
+    static_assert(not noexcept(test_std::connect(std::forward<Sndr>(sndr), std::move(rcvr))));
+    bool caught{false};
+    throw_on_copy::armed = true;
+    try {
+        auto op{test_std::connect(std::forward<Sndr>(sndr), std::move(rcvr))};
+        test::use(op);
+    } catch (int i) {
+        ASSERT(i == expected);
+        caught = true;
+    }
+    throw_on_copy::armed = false;
+    ASSERT(caught);
+}
+
+auto test_connect_exception_propagation() -> void {
+    // the sender's own connect throws, directly or as a child connected by an adaptor
+    expect_connect_throws(connect_failed_sender{42}, 42);
+    expect_connect_throws(test_std::then(connect_failed_sender{67}, []() noexcept { ASSERT(false); }), 67);
+    expect_connect_throws(test_std::into_variant(connect_failed_sender{1}), 1);
+    expect_connect_throws(test_std::when_all(test_std::just(), connect_failed_sender{2}), 2);
+    expect_connect_throws(test_std::let_value(connect_failed_sender{3}, test_std::just), 3);
+    expect_connect_throws(test_std::continues_on(connect_failed_sender{4}, test_std::inline_scheduler{}), 4);
+    expect_connect_throws(test_std::write_env(connect_failed_sender{5}, test_std::env<>{}), 5);
+    expect_connect_throws(
+        test_std::stopped_as_optional(test_std::then(connect_failed_sender{6}, []() noexcept { return 0; })), 6);
+    expect_connect_throws(test_std::stopped_as_error(connect_failed_sender{7}, 0), 7);
+
+    // the operation state copies (lvalue sender) or moves (rvalue sender) data with a throwing copy/move
+    {
+        auto sndr{test_std::just(throw_on_copy{8})};
+        expect_connect_throws(sndr, 8);
+        expect_connect_throws(std::move(sndr), 8);
+    }
+    {
+        auto sndr{test_std::then(test_std::just(), [t = throw_on_copy{9}]() noexcept { test::use(t); })};
+        expect_connect_throws(sndr, 9);
+        expect_connect_throws(std::move(sndr), 9);
+    }
+    {
+        auto sndr{test_std::let_value(test_std::just(), [t = throw_on_copy{10}]() noexcept {
+            test::use(t);
+            return test_std::just();
+        })};
+        expect_connect_throws(sndr, 10);
+        expect_connect_throws(std::move(sndr), 10);
+    }
+    expect_connect_throws(test_std::when_all(test_std::just(), test_std::just(throw_on_copy{11})), 11);
+
+    // transform_sender of the algorithm itself copies the throwing data
+    expect_connect_throws(test_std::stopped_as_error(test_std::just(), throw_on_copy{12}), 12);
+
+    // transform_sender of the receiver's domain throws even though the sender's connect does not
+    expect_connect_throws(test_std::just(), 17, throwing_domain_receiver{});
+}
+#endif
 } // namespace
 
 TEST(exec_connect) {
@@ -378,4 +513,8 @@ TEST(exec_connect) {
     test_suspend_complete();
     test_connect_awaitable();
     test_connect_with_awaiter();
+    test_connect_noexcept();
+#ifdef __cpp_exceptions
+    test_connect_exception_propagation();
+#endif
 }

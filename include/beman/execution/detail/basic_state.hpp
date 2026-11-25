@@ -9,6 +9,7 @@
 import std;
 #else
 #include <exception>
+#include <type_traits>
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
@@ -34,7 +35,10 @@ namespace beman::execution::detail {
 template <typename Sender, typename Receiver>
 struct basic_state {
     using tag_t = ::beman::execution::tag_of_t<Sender>;
-    basic_state(Sender&& sender, Receiver&& rcvr) noexcept(true)
+    basic_state(Sender&& sender, Receiver&& rcvr) noexcept(
+        ::std::is_nothrow_move_constructible_v<Receiver> &&
+        noexcept(::beman::execution::detail::get_impls_for<tag_t>::get_state()(::std::declval<Sender>(),
+                                                                               ::std::declval<Receiver&>())))
         : receiver(::std::move(rcvr)),
           state(::beman::execution::detail::get_impls_for<tag_t>::get_state()(::std::forward<Sender>(sender),
                                                                               this->receiver)) {}

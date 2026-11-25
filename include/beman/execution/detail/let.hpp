@@ -19,6 +19,7 @@ import std;
 #endif
 #ifdef BEMAN_HAS_MODULES
 import beman.execution.detail.allocator_aware_move;
+import beman.execution.detail.child_type;
 import beman.execution.detail.basic_sender;
 import beman.execution.detail.call_result_t;
 import beman.execution.detail.completion_signatures;
@@ -62,6 +63,7 @@ import beman.execution.detail.start;
 import beman.execution.detail.type_list;
 #else
 #include <beman/execution/detail/allocator_aware_move.hpp>
+#include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
@@ -156,16 +158,18 @@ using successor_in = ::beman::execution::detail::successor_in_helper<
 template <typename Completion>
 struct let_t {
     template <::beman::execution::detail::movable_value Fun>
-    auto operator()(Fun&& fun) const {
+    auto operator()(Fun&& fun) const noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Fun>, Fun>) {
         return ::beman::execution::detail::make_sender_adaptor(*this, ::std::forward<Fun>(fun));
     }
     template <::beman::execution::sender Sender, ::beman::execution::detail::movable_value Fun>
-    auto operator()(Sender&& sender, Fun&& fun) const {
+    auto operator()(Sender&& sender, Fun&& fun) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Fun>, Fun>) {
         return ::beman::execution::detail::make_sender(*this, ::std::forward<Fun>(fun), std::forward<Sender>(sender));
     }
 
     template <typename Sender, typename Env>
-    static auto let_env(const Sender& sender, const Env& e) {
+    static auto let_env(const Sender& sender, const Env& e) noexcept {
         if constexpr (requires {
                           ::beman::execution::detail::sched_env(
                               ::beman::execution::get_completion_scheduler<Completion>(
@@ -310,39 +314,42 @@ struct let_t {
                                                      ::std::declval<let_receiver<Receiver, Env>>()));
         };
 
-        static constexpr auto get_state{[]<typename Sender, typename Receiver>(Sender&& sender, Receiver&& receiver) {
-            auto& fun{sender.template get<1>()};
-            auto& child{sender.template get<2>()};
+        static constexpr auto get_state{
+            []<typename Sender, typename Receiver>(Sender&& sender, Receiver&& receiver) noexcept(
+                noexcept(::beman::execution::detail::allocator_aware_move(
+                    ::std::declval<::beman::execution::detail::child_type<Sender>>, receiver))) {
+                auto& fun{sender.template get<1>()};
+                auto& child{sender.template get<2>()};
 
-            using fun_t   = ::std::remove_cvref_t<decltype(fun)>;
-            using child_t = ::std::remove_cvref_t<decltype(child)>;
-            using env_t   = let_env_t<child_t, ::beman::execution::env_of_t<Receiver>>;
-            using sigs_t =
-                ::beman::execution::completion_signatures_of_t<child_t, ::beman::execution::env_of_t<Receiver>>;
-            using comp_sigs_t = ::beman::execution::detail::meta::filter<filter_pred, sigs_t>;
-            using type_list_t = ::beman::execution::detail::meta::to<::std::variant, comp_sigs_t>;
-            using tuples_t    = ::beman::execution::detail::meta::transform<to_tuple_t, type_list_t>;
-            using unique_t    = ::beman::execution::detail::meta::unique<tuples_t>;
-            using args_t      = ::beman::execution::detail::meta::prepend<std::monostate, unique_t>;
-            using ops_t       = ::beman::execution::detail::meta::prepend<
-                ::std::monostate,
-                ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::transform<
-                    to_state<fun_t, ::std::remove_cvref_t<Receiver>, env_t>::template trans,
-                    tuples_t>>>;
+                using fun_t   = ::std::remove_cvref_t<decltype(fun)>;
+                using child_t = ::std::remove_cvref_t<decltype(child)>;
+                using env_t   = let_env_t<child_t, ::beman::execution::env_of_t<Receiver>>;
+                using sigs_t =
+                    ::beman::execution::completion_signatures_of_t<child_t, ::beman::execution::env_of_t<Receiver>>;
+                using comp_sigs_t = ::beman::execution::detail::meta::filter<filter_pred, sigs_t>;
+                using type_list_t = ::beman::execution::detail::meta::to<::std::variant, comp_sigs_t>;
+                using tuples_t    = ::beman::execution::detail::meta::transform<to_tuple_t, type_list_t>;
+                using unique_t    = ::beman::execution::detail::meta::unique<tuples_t>;
+                using args_t      = ::beman::execution::detail::meta::prepend<std::monostate, unique_t>;
+                using ops_t       = ::beman::execution::detail::meta::prepend<
+                    ::std::monostate,
+                    ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::transform<
+                        to_state<fun_t, ::std::remove_cvref_t<Receiver>, env_t>::template trans,
+                        tuples_t>>>;
 
-            struct state_t {
-                fun_t                  fun;
-                ::std::optional<env_t> env;
-                args_t                 args;
-                ops_t                  ops2;
-            };
-            return state_t{
-                beman::execution::detail::allocator_aware_move(::beman::execution::detail::forward_like<Sender>(fun),
-                                                               receiver),
-                ::beman::execution::detail::let_t<Completion>::let_env(child, ::beman::execution::get_env(receiver)),
-                {},
-                {}};
-        }};
+                struct state_t {
+                    fun_t                  fun;
+                    ::std::optional<env_t> env;
+                    args_t                 args;
+                    ops_t                  ops2;
+                };
+                return state_t{beman::execution::detail::allocator_aware_move(
+                                   ::beman::execution::detail::forward_like<Sender>(fun), receiver),
+                               ::beman::execution::detail::let_t<Completion>::let_env(
+                                   child, ::beman::execution::get_env(receiver)),
+                               {},
+                               {}};
+            }};
 
         struct get_attrs_impl {
             auto operator()(const auto&, const auto& child) const noexcept {

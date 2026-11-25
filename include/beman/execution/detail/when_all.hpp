@@ -142,7 +142,8 @@ static_assert(std::same_as<::beman::execution::inplace_stop_token,
 struct when_all_t {
     template <::beman::execution::sender... Sender>
         requires(0u != sizeof...(Sender)) && (... && beman::execution::detail::valid_when_all_sender<Sender>)
-    auto operator()(Sender&&... sender) const {
+    auto operator()(Sender&&... sender) const
+        noexcept((... && ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>)) {
         return ::beman::execution::detail::make_sender(*this, {}, ::std::forward<Sender>(sender)...);
     }
 
@@ -344,7 +345,8 @@ struct when_all_t {
         template <typename Receiver>
         struct make_state {
             template <::beman::execution::sender_in<when_all_env<::beman::execution::env_of_t<Receiver>>>... Sender>
-            auto operator()(auto, auto, Sender&&...) const {
+            auto operator()(auto, auto, Sender&&...) const
+                noexcept(::std::is_nothrow_default_constructible_v<state_type<Receiver, Sender...>>) {
                 return state_type<Receiver, Sender...>{};
             }
         };

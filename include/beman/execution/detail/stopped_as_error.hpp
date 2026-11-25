@@ -13,6 +13,8 @@ import std;
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
+import beman.execution.detail.child_type;
+import beman.execution.detail.data_type;
 import beman.execution.detail.forward_like;
 import beman.execution.detail.just;
 import beman.execution.detail.let;
@@ -24,6 +26,8 @@ import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
 import beman.execution.detail.set_value;
 #else
+#include <beman/execution/detail/child_type.hpp>
+#include <beman/execution/detail/data_type.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/let.hpp>
@@ -39,7 +43,7 @@ import beman.execution.detail.set_value;
 namespace beman::execution::detail {
 struct stopped_as_error_t {
     template <::beman::execution::detail::sender_for<stopped_as_error_t> Sndr, typename Env>
-    auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, Env&&) const noexcept {
+    auto transform_sender(::beman::execution::set_value_t, Sndr&& sndr, Env&&) const {
         auto&& data  = sndr.template get<1>();
         auto&& child = sndr.template get<2>();
         using Error  = ::std::decay_t<decltype(data)>;
@@ -52,19 +56,23 @@ struct stopped_as_error_t {
     }
 
     template <::beman::execution::sender Sndr, ::beman::execution::detail::movable_value Error>
-    auto operator()(Sndr&& sndr, Error error) const {
+    auto operator()(Sndr&& sndr, Error error) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sndr>, Sndr> &&
+                 ::std::is_nothrow_move_constructible_v<Error>) {
         return ::beman::execution::detail::make_sender(
             stopped_as_error_t{}, std::move(error), ::std::forward<Sndr>(sndr));
     }
 
     template <::beman::execution::detail::movable_value Error>
-    auto operator()(Error error) const {
+    auto operator()(Error error) const noexcept(::std::is_nothrow_move_constructible_v<Error>) {
         return ::beman::execution::detail::make_sender_adaptor(*this, ::std::move(error));
     }
 
     template <::beman::execution::sender Sndr>
         requires ::beman::execution::detail::nested_sender_has_affine<Sndr>
-    static auto affine(Sndr&& sndr) {
+    static auto affine(Sndr&& sndr) noexcept(
+        noexcept(stopped_as_error_t{}(::std::declval<::beman::execution::detail::child_type<Sndr>>().affine(),
+                                      ::std::declval<::beman::execution::detail::data_type<Sndr>>()))) {
         auto& [_, error, child] = sndr;
         return stopped_as_error_t{}(::beman::execution::detail::forward_like<Sndr>(child).affine(),
                                     ::beman::execution::detail::forward_like<Sndr>(error));

@@ -10,6 +10,7 @@ import std;
 #else
 #include <concepts>
 #include <memory>
+#include <type_traits>
 #include <utility>
 #endif
 #ifdef BEMAN_HAS_MODULES
@@ -54,13 +55,14 @@ struct just_t {
         requires ::beman::execution::detail::just_size<Completion, T...> &&
                  (::beman::execution::detail::movable_value<T> && ...)
     auto operator()(T&&... arg) const
-        noexcept((::std::is_nothrow_constructible_v<::std::remove_cvref_t<T>, T> && ...)) {
+        noexcept((... && ::std::is_nothrow_constructible_v<::std::remove_cvref_t<T>, T>)) {
         return ::beman::execution::detail::make_sender(
             *this, ::beman::execution::detail::product_type{::std::forward<T>(arg)...});
     }
 
     template <::beman::execution::sender Sender>
-    static auto affine(Sender&& sndr) noexcept {
+    static auto
+    affine(Sender&& sndr) noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>) {
         return ::std::forward<Sender>(sndr);
     }
 

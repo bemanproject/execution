@@ -36,9 +36,9 @@ namespace beman::execution::detail {
 struct connect_t {
   private:
     template <typename Sender, typename Receiver>
-    static auto make_new_sender(Sender&& sender, Receiver&& receiver)
-        //-dk:TODO this noexcept needs to get confirmed/fixed
-        noexcept(true) -> decltype(auto) {
+    static auto make_new_sender(Sender&& sender, Receiver&& receiver) noexcept(noexcept(
+        ::beman::execution::transform_sender(::std::forward<Sender>(sender), ::beman::execution::get_env(receiver))))
+        -> decltype(auto) {
         return ::beman::execution::transform_sender(::std::forward<Sender>(sender),
                                                     ::beman::execution::get_env(receiver));
     }

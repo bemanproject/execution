@@ -42,7 +42,7 @@ template <typename Tag, typename Data, typename Children>
 sender_data(Tag&&, Data&, Children&&) -> sender_data<Tag, Data, Children>;
 
 template <typename Sender>
-auto get_sender_data(Sender&& sender) {
+auto get_sender_data(Sender&& sender) noexcept {
 #if 0
           //-dk:TODO should use a dynamic/language approach:
           auto&& [tag, data, ... children] = sender;

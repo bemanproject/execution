@@ -108,12 +108,15 @@ namespace beman::execution::detail {
 
 struct continues_on_t {
     template <::beman::execution::scheduler Scheduler>
-    auto operator()(Scheduler&& scheduler) const {
+    auto operator()(Scheduler&& scheduler) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Scheduler>, Scheduler>) {
         return ::beman::execution::detail::make_sender_adaptor(*this, ::std::forward<Scheduler>(scheduler));
     }
 
     template <::beman::execution::sender Sender, ::beman::execution::scheduler Scheduler>
-    auto operator()(Sender&& sender, Scheduler&& scheduler) const {
+    auto operator()(Sender&& sender, Scheduler&& scheduler) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Scheduler>, Scheduler>) {
         return ::beman::execution::detail::make_sender(
             *this,
             ::std::forward<Scheduler>(scheduler),

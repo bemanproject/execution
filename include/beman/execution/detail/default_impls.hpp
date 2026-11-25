@@ -59,17 +59,28 @@ struct default_impls {
     };
     static constexpr auto get_env = get_env_impl{};
     struct get_state_impl {
+        template <typename Sender>
+        static constexpr bool has_data_member = requires(Sender& sender) {
+            sender.size();
+            sender.template get<1>();
+        };
+
+        template <typename Sender>
+        static auto get_data(Sender&& sender) noexcept -> decltype(auto) {
+            if constexpr (has_data_member<Sender>)
+                return sender.template get<1>();
+            else
+                return ::beman::execution::detail::get_sender_data(::std::forward<Sender>(sender)).data;
+        }
+
+        // Returns a reference to the data or a prvalue made with the receiver's allocator; copying/moving from a
+        // reference is accounted for by basic_state.
         template <typename Sender, typename Receiver>
-        auto operator()(Sender&& sender, Receiver& receiver) const noexcept -> decltype(auto) {
-            auto&& data{[&sender]() -> decltype(auto) {
-                if constexpr (requires {
-                                  sender.size();
-                                  sender.template get<1>();
-                              })
-                    return sender.template get<1>();
-                else
-                    return ::beman::execution::detail::get_sender_data(::std::forward<Sender>(sender)).data;
-            }()};
+        auto operator()(Sender&& sender, Receiver& receiver) const
+            noexcept(noexcept(::beman::execution::detail::allocator_aware_move(
+                ::beman::execution::detail::forward_like<Sender>(get_data(::std::declval<Sender>())), receiver)))
+                -> decltype(auto) {
+            auto&& data{get_data(::std::forward<Sender>(sender))};
 
             return ::beman::execution::detail::allocator_aware_move(
                 ::beman::execution::detail::forward_like<Sender>(data), receiver);

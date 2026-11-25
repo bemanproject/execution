@@ -143,20 +143,27 @@ struct on_t {
         "on(sndr, sch, closure) requires that sndr isn't both a sender and sender adaptor closure");
 
     template <::beman::execution::scheduler Sch, ::beman::execution::sender Sndr>
-    auto operator()(Sch&& sch, Sndr&& sndr) const {
+    auto operator()(Sch&& sch, Sndr&& sndr) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sch>, Sch> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sndr>, Sndr>) {
         return ::beman::execution::detail::make_sender(*this, ::std::forward<Sch>(sch), ::std::forward<Sndr>(sndr));
     }
     template <::beman::execution::scheduler                         Sch,
               ::beman::execution::sender                            Sndr,
               ::beman::execution::detail::is_sender_adaptor_closure Closure>
-    auto operator()(Sndr&& sndr, Sch&& sch, Closure&& closure) const {
+    auto operator()(Sndr&& sndr, Sch&& sch, Closure&& closure) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sndr>, Sndr> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sch>, Sch> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Closure>, Closure>) {
         return ::beman::execution::detail::make_sender(
             *this,
             ::beman::execution::detail::product_type{::std::forward<Sch>(sch), ::std::forward<Closure>(closure)},
             ::std::forward<Sndr>(sndr));
     }
     template <::beman::execution::scheduler Sch, ::beman::execution::detail::is_sender_adaptor_closure Closure>
-    auto operator()(Sch&& sch, Closure&& closure) const {
+    auto operator()(Sch&& sch, Closure&& closure) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sch>, Sch> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<Closure>, Closure>) {
         return ::beman::execution::detail::make_sender_adaptor(
             *this, ::std::forward<Sch>(sch), ::std::forward<Closure>(closure));
     }

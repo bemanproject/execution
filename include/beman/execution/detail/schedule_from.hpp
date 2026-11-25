@@ -42,7 +42,8 @@ struct schedule_from_t {
     }
 
     template <::beman::execution::sender Sender>
-    auto operator()(Sender&& sender) const {
+    auto operator()(Sender&& sender) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender>) {
         return ::beman::execution::detail::make_sender(
             *this, ::beman::execution::detail::product_type<>{}, ::std::forward<Sender>(sender));
     }

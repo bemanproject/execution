@@ -12,6 +12,8 @@ import std;
 #include <cstddef>
 #include <memory>
 #include <tuple>
+#include <type_traits>
+#include <utility>
 #endif
 
 // ----------------------------------------------------------------------------
@@ -60,7 +62,10 @@ struct product_type_base<::std::index_sequence<I...>, T...>
     }
 
     template <::std::size_t J, typename Allocator, typename Self>
-    static auto make_element(Allocator&& alloc, Self&& self) -> decltype(auto) {
+    static auto make_element(Allocator&& alloc, Self&& self) noexcept(
+        !::std::uses_allocator_v<
+            ::std::remove_cvref_t<decltype(product_type_base::element_get<J>(std::forward<Self>(self)))>,
+            Allocator>) -> decltype(auto) {
         using type = ::std::remove_cvref_t<decltype(product_type_base::element_get<J>(std::forward<Self>(self)))>;
         if constexpr (::std::uses_allocator_v<type, Allocator>)
             return ::std::make_obj_using_allocator<type>(alloc,
@@ -78,31 +83,41 @@ concept is_product_type_c = requires(const T& t) { T::is_product_type; };
 template <typename... T>
 struct product_type : ::beman::execution::detail::product_type_base<::std::index_sequence_for<T...>, T...> {
     template <typename Allocator, typename Product, std::size_t... I>
-    static auto make_from(Allocator&& allocator, Product&& product, std::index_sequence<I...>) -> product_type {
+    static auto make_from(Allocator&& allocator, Product&& product, std::index_sequence<I...>) noexcept(
+        noexcept(product_type{product_type::template make_element<I>(allocator, ::std::forward<Product>(product))...}))
+        -> product_type {
         return {product_type::template make_element<I>(allocator, ::std::forward<Product>(product))...};
     }
 
     template <typename Allocator, typename Product>
-    static auto make_from(Allocator&& allocator, Product&& product) -> product_type {
+    static auto make_from(Allocator&& allocator, Product&& product) noexcept(noexcept(product_type::make_from(
+        ::std::forward<Allocator>(allocator), ::std::forward<Product>(product), ::std::index_sequence_for<T...>{})))
+        -> product_type {
         return product_type::make_from(
             ::std::forward<Allocator>(allocator), ::std::forward<Product>(product), ::std::index_sequence_for<T...>{});
     }
 
     template <typename Fun, ::std::size_t... I>
-    constexpr auto apply_elements(::std::index_sequence<I...>, Fun&& fun) const -> decltype(auto) {
+    constexpr auto apply_elements(::std::index_sequence<I...>, Fun&& fun) const
+        noexcept(::std::is_nothrow_invocable_v<Fun, const T&...>) -> decltype(auto) {
         return ::std::forward<Fun>(fun)(this->template get<I>()...);
     }
     template <typename Fun>
-    constexpr auto apply(Fun&& fun) const -> decltype(auto) {
+    constexpr auto apply(Fun&& fun) const
+        noexcept(noexcept(::std::declval<const product_type&>().apply_elements(::std::index_sequence_for<T...>{},
+                                                                               ::std::forward<Fun>(fun))))
+            -> decltype(auto) {
         return apply_elements(::std::index_sequence_for<T...>{}, ::std::forward<Fun>(fun));
     }
     template <typename Fun, ::std::size_t... I>
-    constexpr auto apply_elements(::std::index_sequence<I...>, Fun&& fun) -> decltype(auto) {
+    constexpr auto apply_elements(::std::index_sequence<I...>,
+                                  Fun&& fun) noexcept(::std::is_nothrow_invocable_v<Fun, T...>) -> decltype(auto) {
         //-dk:TODO provide rvalue, lvalue, const lvalue overloads?
         return ::std::forward<Fun>(fun)(std::move(this->template get<I>())...);
     }
     template <typename Fun>
-    constexpr auto apply(Fun&& fun) -> decltype(auto) {
+    constexpr auto apply(Fun&& fun) noexcept(noexcept(::std::declval<product_type&>().apply_elements(
+        ::std::index_sequence_for<T...>{}, ::std::forward<Fun>(fun)))) -> decltype(auto) {
         return apply_elements(::std::index_sequence_for<T...>{}, ::std::forward<Fun>(fun));
     }
 };

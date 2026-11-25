@@ -114,7 +114,8 @@ struct bulk_algo_t {
     template <typename Policy, typename Shape, typename F>
         requires(::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)
-    auto operator()(Policy&& policy, Shape shape, F&& f) const {
+    auto operator()(Policy&& policy, Shape shape, F&& f) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<F>, F>) {
         return ::beman::execution::detail::make_sender_adaptor(
             *this, ::std::forward<Policy>(policy), shape, ::std::forward<F>(f));
     }
@@ -123,7 +124,9 @@ struct bulk_algo_t {
         requires(::beman::execution::sender<Sender> &&
                  ::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)
-    auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const {
+    auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<F>, F>) {
         return ::beman::execution::detail::make_sender(
             *this,
             ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
@@ -208,7 +211,8 @@ struct bulk_t {
     template <typename Policy, typename Shape, typename F>
         requires(::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)
-    auto operator()(Policy&& policy, Shape shape, F&& f) const {
+    auto operator()(Policy&& policy, Shape shape, F&& f) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<F>, F>) {
         return ::beman::execution::detail::make_sender_adaptor(
             *this, ::std::forward<Policy>(policy), shape, ::std::forward<F>(f));
     }
@@ -217,7 +221,9 @@ struct bulk_t {
         requires(::beman::execution::sender<Sender> &&
                  ::beman::execution::is_execution_policy_v<::std::remove_cvref_t<Policy>> && ::std::integral<Shape> &&
                  ::std::copy_constructible<::std::decay_t<F>>)
-    auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const {
+    auto operator()(Sender&& sndr, Policy&& policy, Shape shape, F&& f) const
+        noexcept(::std::is_nothrow_constructible_v<::std::remove_cvref_t<Sender>, Sender> &&
+                 ::std::is_nothrow_constructible_v<::std::remove_cvref_t<F>, F>) {
         return ::beman::execution::detail::make_sender(
             *this,
             ::beman::execution::detail::product_type<::std::remove_cvref_t<Policy>, Shape, ::std::decay_t<F>>{
