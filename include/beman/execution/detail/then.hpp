@@ -37,6 +37,7 @@ import beman.execution.detail.meta.transform;
 import beman.execution.detail.meta.unique;
 import beman.execution.detail.movable_value;
 import beman.execution.detail.nested_sender_has_affine;
+import beman.execution.detail.remap_attrs;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_in;
@@ -66,6 +67,7 @@ import beman.execution.detail.value_signature;
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/nested_sender_has_affine.hpp>
+#include <beman/execution/detail/remap_attrs.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
@@ -99,8 +101,7 @@ struct then_transform_t {
 template <typename, typename, typename>
 struct then_exception_fun : ::std::false_type {};
 template <typename Comp, typename Fun, typename... A>
-struct then_exception_fun<Comp, Fun, Comp(A...)>
-    : ::std::bool_constant<not noexcept(::std::declval<Fun>()(::std::declval<A>()...))> {};
+struct then_exception_fun<Comp, Fun, Comp(A...)> : ::std::bool_constant<!::std::is_nothrow_invocable_v<Fun, A...>> {};
 
 template <typename, typename, typename>
 struct then_exception : ::std::false_type {};
@@ -135,6 +136,17 @@ struct then_t {
     }
 
   private:
+    template <typename Fun>
+    struct invocation_exception {
+        using source = Completion;
+        using output = ::beman::execution::set_error_t;
+
+        template <typename, typename Signatures, typename...>
+        static consteval auto applies() noexcept -> bool {
+            return ::beman::execution::detail::then_exception<Completion, Fun, Signatures>::value;
+        }
+    };
+
     template <typename, typename...>
     struct get_signatures;
 
@@ -167,6 +179,12 @@ struct then_t {
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
+        static constexpr auto get_attrs = []<typename Fun>(const Fun&, const auto& child) noexcept {
+            return ::beman::execution::detail::remap_attrs<
+                ::beman::execution::detail::redirect_completion<Completion, ::beman::execution::set_value_t, false>,
+                invocation_exception<Fun>>(child);
+        };
+
         // NOLINTBEGIN(bugprone-exception-escape)
         struct complete_impl {
             template <typename Tag, typename... Args>

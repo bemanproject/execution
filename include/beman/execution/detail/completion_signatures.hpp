@@ -9,6 +9,7 @@
 import std;
 #else
 #include <concepts>
+#include <cstddef>
 #include <type_traits>
 #endif
 #ifdef BEMAN_HAS_MODULES
@@ -38,11 +39,11 @@ struct completion_signatures {
         using type = Tag;
     };
     template <typename Tag>
-    static constexpr bool count_of(Tag) {
-        return (::std::same_as<typename completion_signatures_tag<Signatures>::type, Tag> + ... + 0);
+    static constexpr auto count_of(Tag) noexcept -> ::std::size_t {
+        return (::std::same_as<typename completion_signatures_tag<Signatures>::type, Tag> + ... + 0uz);
     }
     template <typename Fun>
-    static constexpr void for_each(Fun&& fun) {
+    static constexpr auto for_each(Fun&& fun) noexcept -> void {
         (fun(static_cast<Signatures*>(nullptr)), ...);
     }
 };

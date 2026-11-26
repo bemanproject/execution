@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/attribute_sender.hpp>
 #include <test/sender_env.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -9,12 +10,14 @@ import std;
 #else
 #include <version>
 #include <algorithm>
+#include <concepts>
 #include <cstdlib>
 #include <functional>
 #include <numeric>
 #include <ranges>
 #include <stdexcept>
 #include <tuple>
+#include <type_traits>
 #include <vector>
 #ifdef __cpp_lib_parallel_algorithm
 #include <execution>
@@ -593,6 +596,54 @@ auto test_bulk_attributes() {
         84, test::test_non_forwardable_attr{}, test_std::bulk_unchunked(s, test_std::seq, 1, [](int) {}));
 }
 
+using test::attribute_sender;
+using test::completion_domain_t;
+using test::error_domain;
+using test::has_completion_scheduler;
+using test::stopped_domain;
+using test::value_domain;
+
+// A callback which may throw turns a value completion into an error completion: the error
+// completion then no longer comes from the error completion of the child only.
+auto test_bulk_completion_attributes() -> void {
+    test_std::run_loop value_loop, error_loop, stopped_loop;
+    const auto         value_scheduler   = value_loop.get_scheduler();
+    const auto         error_scheduler   = error_loop.get_scheduler();
+    const auto         stopped_scheduler = stopped_loop.get_scheduler();
+    const auto         env               = test_std::env<>{};
+    const auto         child             = attribute_sender<>{value_scheduler, error_scheduler, stopped_scheduler};
+
+    const auto check_unchanged = [&](const auto& sndr) {
+        using sender_t   = std::remove_cvref_t<decltype(sndr)>;
+        const auto attrs = test_std::get_env(sndr);
+        ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(attrs, env) == value_scheduler);
+        ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(attrs, env) == stopped_scheduler);
+        static_assert(std::same_as<completion_domain_t<test_std::set_value_t, sender_t>, value_domain>);
+        static_assert(std::same_as<completion_domain_t<test_std::set_stopped_t, sender_t>, stopped_domain>);
+    };
+    const auto check = [&](const auto& nothrow, const auto& throwing) {
+        using nothrow_t  = std::remove_cvref_t<decltype(nothrow)>;
+        using throwing_t = std::remove_cvref_t<decltype(throwing)>;
+        check_unchanged(nothrow);
+        check_unchanged(throwing);
+
+        ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(test_std::get_env(nothrow), env) ==
+               error_scheduler);
+        static_assert(std::same_as<completion_domain_t<test_std::set_error_t, nothrow_t>, error_domain>);
+
+        static_assert(!has_completion_scheduler<test_std::set_error_t, throwing_t, test_std::env<>>);
+        static_assert(std::same_as<completion_domain_t<test_std::set_error_t, throwing_t>,
+                                   test_std::indeterminate_domain<value_domain, error_domain>>);
+    };
+
+    check(child | test_std::bulk(test_std::seq, 1, [](int, int&) noexcept {}),
+          child | test_std::bulk(test_std::seq, 1, [](int, int&) {}));
+    check(child | test_std::bulk_chunked(test_std::seq, 1, [](int, int, int&) noexcept {}),
+          child | test_std::bulk_chunked(test_std::seq, 1, [](int, int, int&) {}));
+    check(child | test_std::bulk_unchunked(test_std::seq, 1, [](int, int&) noexcept {}),
+          child | test_std::bulk_unchunked(test_std::seq, 1, [](int, int&) {}));
+}
+
 } // namespace
 
 TEST(exec_bulk) {
@@ -628,5 +679,6 @@ TEST(exec_bulk) {
     BEMAN_EXECUTION_CATCH(...) { ASSERT(nullptr == +"the bulk tests shouldn't throw"); }
 
     test_bulk_attributes();
+    test_bulk_completion_attributes();
     return 0;
 }

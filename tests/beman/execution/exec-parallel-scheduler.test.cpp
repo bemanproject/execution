@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/attribute_sender.hpp>
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
@@ -296,6 +297,42 @@ auto test_parallel_scheduler_exception_propagation() -> void {
 }
 #endif // __cpp_exceptions
 
+using test::attribute_sender;
+using test::completion_domain_t;
+using test::error_domain;
+using test::has_completion_scheduler;
+using test::stopped_domain;
+using test::value_domain;
+
+// The bulk of the parallel scheduler hands a value completion of its child to the backend,
+// which may complete with an error or with stopped instead.
+auto test_parallel_bulk_completion_attributes() -> void {
+    test_std::run_loop value_loop, error_loop, stopped_loop;
+    const auto         value_scheduler = value_loop.get_scheduler();
+    const auto         env             = test_std::env<>{};
+    const auto child  = attribute_sender<>{value_scheduler, error_loop.get_scheduler(), stopped_loop.get_scheduler()};
+    const auto domain = test_std::get_completion_domain<test_std::set_value_t>(test_std::get_parallel_scheduler());
+
+    const auto check = [&](const auto& sndr) {
+        using sender_t = std::remove_cvref_t<decltype(sndr)>;
+        ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(sndr), env) ==
+               value_scheduler);
+        static_assert(std::same_as<completion_domain_t<test_std::set_value_t, sender_t>, value_domain>);
+
+        static_assert(!has_completion_scheduler<test_std::set_error_t, sender_t, test_std::env<>>);
+        static_assert(std::same_as<completion_domain_t<test_std::set_error_t, sender_t>,
+                                   test_std::indeterminate_domain<value_domain, error_domain>>);
+        static_assert(!has_completion_scheduler<test_std::set_stopped_t, sender_t, test_std::env<>>);
+        static_assert(std::same_as<completion_domain_t<test_std::set_stopped_t, sender_t>,
+                                   test_std::indeterminate_domain<value_domain, stopped_domain>>);
+    };
+
+    check(domain.transform_sender(
+        test_std::set_value, child | test_std::bulk_chunked(test_std::par, 4, [](int, int, int&) noexcept {}), env));
+    check(domain.transform_sender(
+        test_std::set_value, child | test_std::bulk_unchunked(test_std::par, 4, [](int, int&) noexcept {}), env));
+}
+
 } // namespace
 
 #if !BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND
@@ -312,6 +349,7 @@ TEST(exec_parallel_scheduler) {
     test_parallel_scheduler_synopsis();
     test_replaceability_synopsis();
     test_parallel_scheduler_schedule();
+    test_parallel_bulk_completion_attributes();
 #ifdef __cpp_exceptions
     test_parallel_scheduler_exception_propagation();
 #endif

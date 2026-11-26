@@ -169,6 +169,7 @@ target_sources(
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/read_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/receiver.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/receiver_of.hpp
+                ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/remap_attrs.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/run_loop.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/sched_env.hpp
                 ${PROJECT_SOURCE_DIR}/include/beman/execution/detail/schedule.hpp
@@ -407,6 +408,7 @@ if(BEMAN_USE_MODULES)
                     read_env.cppm
                     receiver_of.cppm
                     receiver.cppm
+                    remap_attrs.cppm
                     run_loop.cppm
                     sched_env.cppm
                     schedule_from.cppm

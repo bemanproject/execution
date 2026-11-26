@@ -208,6 +208,20 @@ TEST(exec_snd_transform) {
         ASSERT(r.value == 42);
     }
 
+    // [exec.domain.indeterminate]/4: only an empty pack paired with a bare domain unwraps.
+    using empty  = test_std::indeterminate_domain<>;
+    using single = test_std::indeterminate_domain<special_domain>;
+    static_assert(std::same_as<std::common_type_t<empty, special_domain>, special_domain>);
+    static_assert(std::same_as<std::common_type_t<special_domain, empty>, special_domain>);
+    static_assert(std::same_as<std::common_type_t<empty, single>, single>);
+    static_assert(std::same_as<std::common_type_t<single, special_domain>, single>);
+    static_assert(std::same_as<std::common_type_t<empty, test_std::default_domain>, test_std::default_domain>);
+    static_assert(std::same_as<std::common_type_t<test_std::default_domain, empty>, test_std::default_domain>);
+    static_assert(std::same_as<std::common_type_t<single, test_std::default_domain>,
+                               test_std::indeterminate_domain<special_domain, test_std::default_domain>>);
+    static_assert(std::same_as<std::common_type_t<test_std::default_domain, single>,
+                               test_std::indeterminate_domain<special_domain, test_std::default_domain>>);
+
     // indeterminate_domain
     test_indeterminate_domain_transform();
 }

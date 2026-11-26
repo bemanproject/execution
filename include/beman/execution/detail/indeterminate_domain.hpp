@@ -63,6 +63,7 @@ struct indeterminate_domain {
 
 } // namespace beman::execution
 
+#ifndef BEMAN_EXECUTION_DETAIL_INDETERMINATE_DOMAIN_CPPM
 template <typename... Domains1, typename... Domains2>
 struct std::common_type<::beman::execution::indeterminate_domain<Domains1...>,
                         ::beman::execution::indeterminate_domain<Domains2...>> {
@@ -72,12 +73,21 @@ struct std::common_type<::beman::execution::indeterminate_domain<Domains1...>,
 
 template <typename... Domains, typename D>
 struct std::common_type<::beman::execution::indeterminate_domain<Domains...>, D> {
-    using type = ::beman::execution::detail::meta::unique<::beman::execution::indeterminate_domain<Domains..., D>>;
+    // ReSharper disable once CppFunctionIsNotImplemented
+    static auto get_common_domain() noexcept -> D
+        requires(sizeof...(Domains) == 0uz);
+
+    // ReSharper disable once CppFunctionIsNotImplemented
+    static auto get_common_domain() noexcept
+        -> ::beman::execution::detail::meta::unique<::beman::execution::indeterminate_domain<Domains..., D>>;
+
+    using type = decltype(get_common_domain());
 };
 
 template <typename D, typename... Domains>
 struct std::common_type<D, ::beman::execution::indeterminate_domain<Domains...>>
     : ::std::common_type<::beman::execution::indeterminate_domain<Domains...>, D> {};
+#endif
 
 // ----------------------------------------------------------------------------
 

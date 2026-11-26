@@ -18,6 +18,7 @@ import beman.execution.detail.basic_sender;
 import beman.execution.detail.child_type;
 import beman.execution.detail.completion_signatures;
 import beman.execution.detail.completion_signatures_for;
+import beman.execution.detail.completion_signatures_of_t;
 import beman.execution.detail.decayed_tuple;
 import beman.execution.detail.default_impls;
 import beman.execution.detail.dependent_sender;
@@ -27,10 +28,13 @@ import beman.execution.detail.env_of_t;
 import beman.execution.detail.error_types_of_t;
 import beman.execution.detail.forward_like;
 import beman.execution.detail.fwd_env;
+import beman.execution.detail.gather_signatures;
 import beman.execution.detail.impls_for;
 import beman.execution.detail.make_sender;
 import beman.execution.detail.meta.combine;
+import beman.execution.detail.meta.unique;
 import beman.execution.detail.nested_sender_has_affine;
+import beman.execution.detail.remap_attrs;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_in;
@@ -43,6 +47,7 @@ import beman.execution.detail.variant_or_empty;
 #else
 #include <beman/execution/detail/child_type.hpp>
 #include <beman/execution/detail/completion_signatures_for.hpp>
+#include <beman/execution/detail/completion_signatures_of_t.hpp>
 #include <beman/execution/detail/decayed_tuple.hpp>
 #include <beman/execution/detail/default_impls.hpp>
 #include <beman/execution/detail/dependent_sender.hpp>
@@ -52,10 +57,13 @@ import beman.execution.detail.variant_or_empty;
 #include <beman/execution/detail/error_types_of_t.hpp>
 #include <beman/execution/detail/forward_like.hpp>
 #include <beman/execution/detail/fwd_env.hpp>
+#include <beman/execution/detail/gather_signatures.hpp>
 #include <beman/execution/detail/impls_for.hpp>
 #include <beman/execution/detail/make_sender.hpp>
 #include <beman/execution/detail/meta_combine.hpp>
+#include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/nested_sender_has_affine.hpp>
+#include <beman/execution/detail/remap_attrs.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_in.hpp>
@@ -92,7 +100,33 @@ struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_
     template <typename... E>
     using make_error_types = ::beman::execution::completion_signatures<::beman::execution::set_error_t(E)...>;
 
-  private:
+    template <typename Signatures>
+    using variant_for = ::beman::execution::detail::gather_signatures<::beman::execution::set_value_t,
+                                                                      Signatures,
+                                                                      ::beman::execution::detail::decayed_tuple,
+                                                                      ::beman::execution::detail::variant_or_empty>;
+
+    struct variant_construction_exception {
+        using source = ::beman::execution::set_value_t;
+        using output = ::beman::execution::set_error_t;
+
+        template <typename, typename Signatures, typename...>
+        static consteval auto applies() noexcept -> bool {
+            using variant_type = variant_for<Signatures>;
+            bool throwing      = false;
+            Signatures::for_each([&]<typename Tag, typename... Args>(Tag (*)(Args...)) noexcept {
+                if constexpr (::std::same_as<Tag, source>) {
+                    using tuple_type       = ::beman::execution::detail::decayed_tuple<Args...>;
+                    constexpr bool nothrow = requires {
+                        { variant_type(tuple_type{::std::declval<Args>()...}) } noexcept;
+                    };
+                    throwing |= !nothrow;
+                }
+            });
+            return throwing;
+        }
+    };
+
     template <typename, typename...>
     struct get_signatures;
     template <typename Sender>
@@ -105,13 +139,20 @@ struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_
 
         static consteval auto get() {
             using env_t        = ::beman::execution::detail::fwd_env_t<Env>;
-            using variant_type = ::beman::execution::value_types_of_t<Child, env_t>;
+            using signatures   = ::beman::execution::completion_signatures_of_t<Child, env_t>;
+            using variant_type = variant_for<signatures>;
             using value_types  = ::std::conditional_t<
                 ::std::same_as<variant_type, ::beman::execution::detail::empty_variant>,
                 ::beman::execution::completion_signatures<>,
                 ::beman::execution::completion_signatures<::beman::execution::set_value_t(variant_type)>>;
 
-            using error_types = ::beman::execution::error_types_of_t<Child, env_t, make_error_types>;
+            using construction_error =
+                ::std::conditional_t<variant_construction_exception::template applies<Child, signatures>(),
+                                     make_error_types<::std::exception_ptr>,
+                                     make_error_types<>>;
+            using error_types = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
+                ::beman::execution::error_types_of_t<Child, env_t, make_error_types>,
+                construction_error>>;
             using stopped_types =
                 ::std::conditional_t<::beman::execution::sends_stopped<Child, env_t>,
                                      ::beman::execution::completion_signatures<::beman::execution::set_stopped_t()>,
@@ -129,6 +170,10 @@ struct into_variant_t : ::beman::execution::sender_adaptor_closure<into_variant_
         return get_signatures<::std::remove_cvref_t<Sender>, Env...>::get();
     }
     struct impls_for : ::beman::execution::detail::default_impls {
+        static constexpr auto get_attrs = [](const auto&, const auto& child) noexcept {
+            return ::beman::execution::detail::remap_attrs<variant_construction_exception>(child);
+        };
+
         struct get_state_impl {
             template <typename Sender, typename Receiver>
             auto operator()(Sender&&, Receiver&&) const noexcept -> ::std::type_identity<

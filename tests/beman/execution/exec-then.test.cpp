@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <test/execution.hpp>
+#include <test/attribute_sender.hpp>
 #include <test/completion_test.hpp>
 #include <test/sender_env.hpp>
 #include <beman/execution/detail/common.hpp>
@@ -9,6 +10,7 @@
 import std;
 #else
 #include <concepts>
+#include <exception>
 #include <memory_resource>
 #include <optional>
 #include <tuple>
@@ -22,6 +24,13 @@ import beman.execution;
 #include <beman/execution/detail/connect.hpp>
 #include <beman/execution/detail/forwarding_query.hpp>
 #include <beman/execution/detail/read_env.hpp>
+#include <beman/execution/detail/get_stop_token.hpp>
+#include <beman/execution/detail/inplace_stop_source.hpp>
+#include <beman/execution/detail/into_variant.hpp>
+#include <beman/execution/detail/run_loop.hpp>
+#include <beman/execution/detail/schedule.hpp>
+#include <beman/execution/detail/stopped_as_error.hpp>
+#include <beman/execution/detail/stopped_as_optional.hpp>
 #include <beman/execution/detail/just.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_in.hpp>
@@ -278,6 +287,149 @@ auto test_then_attributes() {
     test::test_sender_env<true>(42, test::test_forwardable_attr{}, s | test_std::upon_stopped([]() {}));
     test::test_sender_env<false>(84, test::test_non_forwardable_attr{}, s | test_std::upon_stopped([]() {}));
 }
+
+// Completion attributes must follow the source completion after an adaptor changes its tag.
+struct attribute_domain : test_std::default_domain {};
+using test::attribute_sender;
+using test::error_domain;
+using test::has_completion_scheduler;
+using test::loop_scheduler;
+using test::stopped_domain;
+using test::value_domain;
+
+auto test_remapped_completion_attributes() -> void {
+    test_std::run_loop value_loop, error_loop, stopped_loop;
+    struct receiver_env {
+        loop_scheduler scheduler;
+        auto           query(test_std::get_start_scheduler_t) const noexcept { return scheduler; }
+        static auto    query(test_std::get_domain_t) noexcept { return attribute_domain{}; }
+    };
+    receiver_env env{value_loop.get_scheduler()};
+    auto         recovered = test_std::just_error(-1) | test_std::upon_error([](int i) noexcept { return i; });
+    auto         stopped   = test_std::just_stopped() | test_std::stopped_as_error(-1);
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(recovered), env) ==
+           value_loop.get_scheduler());
+    ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(test_std::get_env(stopped), env) ==
+           value_loop.get_scheduler());
+    static_assert(std::same_as<decltype(test_std::get_completion_domain<test_std::set_value_t>(
+                                   test_std::get_env(recovered), env)),
+                               attribute_domain>);
+    static_assert(
+        std::same_as<decltype(test_std::get_completion_domain<test_std::set_error_t>(test_std::get_env(stopped), env)),
+                     attribute_domain>);
+
+    auto child =
+        attribute_sender<>{value_loop.get_scheduler(), error_loop.get_scheduler(), stopped_loop.get_scheduler()};
+    auto mixed_value = child | test_std::upon_error([](int i) noexcept { return i; });
+    auto mixed_error = child | test_std::stopped_as_error(-1);
+    auto unchanged   = child | test_std::then([](int i) noexcept { return i; });
+    auto throwing    = child | test_std::then([](int i) { return i; });
+    auto optional    = child | test_std::stopped_as_optional;
+    auto empty_env   = test_std::env{};
+    static_assert(!has_completion_scheduler<test_std::set_value_t, decltype(mixed_value), decltype(empty_env)>);
+    static_assert(!has_completion_scheduler<test_std::set_error_t, decltype(mixed_error), decltype(empty_env)>);
+    static_assert(std::same_as<decltype(test_std::get_completion_domain<test_std::set_value_t>(
+                                   test_std::get_env(mixed_value), empty_env)),
+                               test_std::indeterminate_domain<value_domain, error_domain>>);
+    static_assert(std::same_as<decltype(test_std::get_completion_domain<test_std::set_error_t>(
+                                   test_std::get_env(mixed_error), empty_env)),
+                               test_std::indeterminate_domain<error_domain, stopped_domain>>);
+    static_assert(!has_completion_scheduler<test_std::set_error_t, decltype(throwing), decltype(empty_env)>);
+    static_assert(std::same_as<decltype(test_std::get_completion_domain<test_std::set_error_t>(
+                                   test_std::get_env(throwing), empty_env)),
+                               test_std::indeterminate_domain<value_domain, error_domain>>);
+    static_assert(!has_completion_scheduler<test_std::set_value_t, decltype(optional), decltype(empty_env)>);
+    static_assert(std::same_as<decltype(test_std::get_completion_domain<test_std::set_value_t>(
+                                   test_std::get_env(optional), empty_env)),
+                               test_std::indeterminate_domain<value_domain, stopped_domain>>);
+    ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(test_std::get_env(unchanged), empty_env) ==
+           error_loop.get_scheduler());
+    auto same_origin = test_std::just(1) | test_std::then([](int i) { return i; }) |
+                       test_std::upon_error([](const std::exception_ptr&) noexcept { return -1; });
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(same_origin), env) ==
+           value_loop.get_scheduler());
+}
+
+auto test_equal_schedulers_from_independent_sources() -> void {
+    test_std::run_loop loop;
+    const auto         scheduler = loop.get_scheduler();
+    auto               child     = attribute_sender<>{scheduler, scheduler, scheduler};
+    auto               attrs     = test_std::get_env(child);
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(attrs) ==
+           test_std::get_completion_scheduler<test_std::set_error_t>(attrs));
+
+    auto sndr = child | test_std::upon_error([](int i) noexcept { return i; });
+    // Equal scheduler values do not make two independent completion queries the same source.
+    static_assert(!has_completion_scheduler<test_std::set_value_t, decltype(sndr)>);
+    static_assert(!has_completion_scheduler<test_std::set_value_t, decltype(sndr), test_std::env<>>);
+    ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(test_std::get_env(sndr)) == scheduler);
+}
+
+struct potentially_throwing_copy {
+    potentially_throwing_copy(const potentially_throwing_copy&) noexcept(false);
+    potentially_throwing_copy(potentially_throwing_copy&&) noexcept = default;
+};
+
+auto test_optional_construction_error_origin() -> void {
+    test_std::run_loop value_loop, error_loop;
+    const auto         value_scheduler = value_loop.get_scheduler();
+    const auto         error_scheduler = error_loop.get_scheduler();
+    const auto         env             = test_std::env<>{};
+    auto               copy_child =
+        attribute_sender<const potentially_throwing_copy&>{value_scheduler, error_scheduler, value_scheduler};
+    auto move_child = attribute_sender<potentially_throwing_copy>{value_scheduler, error_scheduler, value_scheduler};
+    auto copy       = copy_child | test_std::stopped_as_optional;
+    auto move       = move_child | test_std::stopped_as_optional;
+
+    static_assert(!has_completion_scheduler<test_std::set_error_t, decltype(copy), decltype(env)>);
+    static_assert(
+        std::same_as<decltype(test_std::get_completion_domain<test_std::set_error_t>(test_std::get_env(copy), env)),
+                     test_std::indeterminate_domain<value_domain, error_domain>>);
+    ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(test_std::get_env(move), env) == error_scheduler);
+}
+
+auto test_variant_construction_error_origin() -> void {
+    test_std::run_loop value_loop, error_loop;
+    const auto         value_scheduler = value_loop.get_scheduler();
+    const auto         error_scheduler = error_loop.get_scheduler();
+    const auto         env             = test_std::env<>{};
+    auto               copy_child =
+        attribute_sender<const potentially_throwing_copy&>{value_scheduler, error_scheduler, value_scheduler};
+    auto move_child = attribute_sender<potentially_throwing_copy>{value_scheduler, error_scheduler, value_scheduler};
+    auto copy       = copy_child | test_std::into_variant;
+    auto move       = move_child | test_std::into_variant;
+
+    using copy_signatures = test_std::completion_signatures_of_t<decltype(copy), test_std::env<>>;
+    using move_signatures = test_std::completion_signatures_of_t<decltype(move), test_std::env<>>;
+    static_assert(copy_signatures::count_of(test_std::set_error_t{}) == 2);
+    static_assert(move_signatures::count_of(test_std::set_error_t{}) == 1);
+    static_assert(!has_completion_scheduler<test_std::set_error_t, decltype(copy), decltype(env)>);
+    static_assert(
+        std::same_as<decltype(test_std::get_completion_domain<test_std::set_error_t>(test_std::get_env(copy), env)),
+                     test_std::indeterminate_domain<value_domain, error_domain>>);
+    ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(test_std::get_env(move), env) == error_scheduler);
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(test_std::get_env(copy), env) == value_scheduler);
+}
+
+auto test_scheduler_origin_through_nested_adaptors() -> void {
+    test_std::run_loop            loop;
+    test_std::inplace_stop_source stop_source;
+    struct stoppable_env {
+        test_std::inplace_stop_token token;
+        auto                         query(test_std::get_stop_token_t) const noexcept { return token; }
+    };
+    const auto env       = stoppable_env{stop_source.get_token()};
+    const auto scheduler = loop.get_scheduler();
+    auto       sndr      = test_std::schedule(scheduler) | test_std::then([] { return 42; }) |
+                           test_std::upon_error([](const std::exception_ptr&) { return -1; }) |
+                           test_std::upon_error([](const std::exception_ptr&) noexcept { return -2; });
+    auto       attrs     = test_std::get_env(sndr);
+    // Each recovery can turn a callback failure back into a value. All value paths still
+    // trace to schedule's value completion, independently of the possible stopped path.
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(attrs, env) == scheduler);
+    ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(attrs, env) == scheduler);
+    static_assert(!has_completion_scheduler<test_std::set_error_t, decltype(sndr), decltype(env)>);
+}
 } // namespace
 
 TEST(exec_then) {
@@ -298,4 +450,9 @@ TEST(exec_then) {
     test_then_env();
     test_then_completions();
     test_then_attributes();
+    test_remapped_completion_attributes();
+    test_equal_schedulers_from_independent_sources();
+    test_optional_construction_error_origin();
+    test_variant_construction_error_origin();
+    test_scheduler_origin_through_nested_adaptors();
 }
