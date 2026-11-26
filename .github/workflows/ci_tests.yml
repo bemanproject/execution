@@ -47,7 +47,7 @@ jobs:
                         "Debug.Default", "Release.Default", "Release.TSan",
                         "Release.MaxSan", "Debug.Werror",
                         "Debug.Coverage", "Debug.-DBEMAN_USE_MODULES=On",
-                        "Debug.NoExRTTI", "Debug.-DBEMAN_EXECUTION_NO_EXCEPTIONS_RTTI=ON"
+                        "Debug.NoExRTTI", "Debug.-DBEMAN_EXECUTION_EXCEPTIONS_RTTI=OFF"
                       ]
                     }
                   ]
