@@ -1,8 +1,8 @@
 // include/beman/execution/detail/stop_callback_for_t.hpp           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR_T
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR_T
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -36,4 +36,4 @@ concept stoppable_callback_for =
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_STOP_CALLBACK_FOR_T

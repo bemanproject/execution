@@ -1,8 +1,8 @@
 // include/beman/execution/detail/schedule_result_t.hpp             -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT
-#define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT
+#ifndef INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT_T
+#define INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT_T
 
 #include <beman/execution/detail/common.hpp>
 #ifdef BEMAN_HAS_IMPORT_STD
@@ -27,4 +27,4 @@ using schedule_result_t = decltype(::beman::execution::schedule(::std::declval<S
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT
+#endif // INCLUDED_BEMAN_EXECUTION_DETAIL_SCHEDULE_RESULT_T
