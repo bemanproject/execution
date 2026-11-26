@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+name: vcpkg registry release
+on:
+  release:
+    types: [published]
+jobs:
+  vcpkg-release:
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-vcpkg-release.yml@1.7.5
+    with:
+      port_name: beman-execution
+    secrets:
+      VCPKG_REGISTRY_TOKEN: ${{ secrets.VCPKG_REGISTRY_TOKEN }}
