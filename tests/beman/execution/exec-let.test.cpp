@@ -204,7 +204,7 @@ auto test_let_lifetime() {
     test::lifetime(test_std::let_value(test_std::just(), [] { return test_std::read_env(test_std::get_stop_token); }));
     test::lifetime(test_std::let_value(test_std::just_error(0), [] { return test_std::just(); }));
     test::lifetime(test_std::let_value(test_std::just_stopped(), [] { return test_std::just(); }));
-    throw 0;
+    if (false) throw 0;
 #ifdef __cpp_exceptions
     test::lifetime(test_std::let_value(test_std::just(), [] {
         throw 0;
