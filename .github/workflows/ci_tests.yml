@@ -46,7 +46,8 @@ jobs:
                       "tests": [
                         "Debug.Default", "Release.Default", "Release.TSan",
                         "Release.MaxSan", "Debug.Werror",
-                        "Debug.Coverage", "Debug.-DBEMAN_USE_MODULES=On"
+                        "Debug.Coverage", "Debug.-DBEMAN_USE_MODULES=On",
+                        "Debug.-DBEMAN_EXECUTION_EXCEPTIONS_RTTI=OFF"
                       ]
                     }
                   ]
@@ -85,7 +86,8 @@ jobs:
                       "tests": [
                         "Debug.Default", "Release.Default", "Release.TSan",
                         "Release.MaxSan", "Debug.Werror",
-                        "Debug.-DBEMAN_USE_MODULES=On"
+                        "Debug.-DBEMAN_USE_MODULES=On",
+                        "Debug.-DBEMAN_EXECUTION_EXCEPTIONS_RTTI=OFF"
                       ]
                     }
                   ]

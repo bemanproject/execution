@@ -112,6 +112,21 @@ option(
     OFF
 )
 
+option(
+    BEMAN_EXECUTION_EXCEPTIONS_RTTI
+    "Build with exceptions and RTTI enabled. Default: ON. Values: { ON, OFF }."
+    ON
+)
+if(NOT BEMAN_EXECUTION_EXCEPTIONS_RTTI)
+    message(STATUS "beman.execution: exception and RTTI are disabled")
+    if(MSVC)
+        add_compile_options(/EHs-c- /GR-)
+        add_compile_definitions(_HAS_EXCEPTIONS=0)
+    else()
+        add_compile_options(-fno-exceptions -fno-rtti)
+    endif()
+endif()
+
 add_subdirectory(src/beman/execution)
 
 if(NOT BEMAN_USE_MODULES)

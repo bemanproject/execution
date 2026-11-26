@@ -8,6 +8,7 @@
 #ifdef BEMAN_HAS_IMPORT_STD
 import std;
 #else
+#include <exception>
 #include <memory>
 #include <utility>
 #endif
