@@ -317,9 +317,10 @@ struct void_type {};
 template <typename Value, typename... Errors>
 class async_result {
   private:
-    using no_void = ::std::conditional_t<::std::same_as<Value, void>, void_type, Value>;
-    using value_type =
-        ::std::conditional_t<::std::is_lvalue_reference_v<Value>, ::std::reference_wrapper<::std::remove_reference_t<no_void>>, no_void>;
+    using no_void    = ::std::conditional_t<::std::same_as<Value, void>, void_type, Value>;
+    using value_type = ::std::conditional_t<::std::is_lvalue_reference_v<Value>,
+                                            ::std::reference_wrapper<::std::remove_reference_t<no_void>>,
+                                            no_void>;
 
   public:
     template <typename T>

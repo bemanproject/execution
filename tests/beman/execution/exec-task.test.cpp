@@ -449,8 +449,8 @@ auto test_lvalue_reference() -> void {
         static auto tsk        = []() -> test_std::task<int&> { co_return lvalue_int; };
         auto [rw]              = test_std::sync_wait(tsk() | test_std::then([](int& i) noexcept {
                                             return std::ref(i); // Avoid decay-copying
-                                        }))
-                        .value();
+                                                     }))
+                                     .value();
         static_assert(std::same_as<decltype(rw), std::reference_wrapper<int>>);
         ASSERT(rw == 67);
         ASSERT(&rw.get() == &lvalue_int);
@@ -460,8 +460,8 @@ auto test_lvalue_reference() -> void {
         static auto tsk         = []() -> test_std::task<std::unique_ptr<int>&> { co_return lvalue_uptr; };
         auto [rw]               = test_std::sync_wait(tsk() | test_std::then([](std::unique_ptr<int>& p) noexcept {
                                             return std::ref(p); // Avoid decay-copying
-                                        }))
-                        .value();
+                                                      }))
+                                      .value();
         static_assert(std::same_as<decltype(rw), std::reference_wrapper<std::unique_ptr<int>>>);
         ASSERT(rw.get() == lvalue_uptr);
         ASSERT(&rw.get() == &lvalue_uptr);
