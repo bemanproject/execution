@@ -317,7 +317,9 @@ struct void_type {};
 template <typename Value, typename... Errors>
 class async_result {
   private:
-    using value_type = ::std::conditional_t<::std::same_as<void, Value>, void_type, Value>;
+    using no_void = ::std::conditional_t<::std::same_as<Value, void>, void_type, Value>;
+    using value_type =
+        ::std::conditional_t<::std::is_lvalue_reference_v<Value>, ::std::reference_wrapper<::std::remove_reference_t<no_void>>, no_void>;
 
   public:
     template <typename T>
@@ -349,10 +351,10 @@ class async_result {
             ::beman::execution::set_stopped(::std::move(rcvr));
             break;
         case 1:
-            if constexpr (::std::same_as<void_type, value_type>) {
+            if constexpr (::std::same_as<Value, void>) {
                 ::beman::execution::set_value(::std::move(rcvr));
             } else {
-                ::beman::execution::set_value(::std::move(rcvr), ::std::move(::std::get<1uz>(this->result)));
+                ::beman::execution::set_value(::std::move(rcvr), static_cast<Value&&>(::std::get<1uz>(this->result)));
             }
             break;
         default:
@@ -367,16 +369,16 @@ class async_result {
         }
     }
 
-    auto result_resume() noexcept(sizeof...(Errors) == 0uz) {
+    auto result_resume() noexcept(sizeof...(Errors) == 0uz) -> Value {
         switch (this->result.index()) {
         case 0:
             ::beman::execution::detail::unreachable();
             break;
         case 1:
-            if constexpr (::std::same_as<void_type, value_type>) {
+            if constexpr (::std::same_as<Value, void>) {
                 return;
             } else {
-                return ::std::move(::std::get<1uz>(this->result));
+                return static_cast<Value&&>(::std::get<1uz>(this->result));
             }
         default:
             if constexpr (0uz < sizeof...(Errors)) {
@@ -721,6 +723,7 @@ class promise_base {
   public:
     template <typename T = Value>
     auto return_value(T&& value) -> void {
+        static_assert(::std::constructible_from<Value, T>);
         this->get_state()->set_value(::std::forward<T>(value));
     }
 
@@ -748,7 +751,7 @@ class promise_base<void, Environment> {
 };
 
 template <typename Coroutine, typename Value, typename Environment>
-class promise_type : public ::beman::execution::detail::task::promise_base<::std::remove_cvref_t<Value>, Environment>,
+class promise_type : public ::beman::execution::detail::task::promise_base<Value, Environment>,
                      public ::beman::execution::detail::task::allocator_support<
                          ::beman::execution::detail::task::allocator_of_t<Environment>> {
   public:
@@ -817,6 +820,11 @@ class promise_type : public ::beman::execution::detail::task::promise_base<::std
 namespace beman::execution {
 template <typename Value = void, typename Environment = ::beman::execution::env<>>
 class task {
+    static_assert(::std::same_as<Value, void> || ::std::is_lvalue_reference_v<Value> ||
+                      (::std::same_as<::std::remove_cv_t<Value>, Value> && ::std::is_object_v<Value> &&
+                       !::std::is_array_v<Value>),
+                  "`Value` shall be `void`, a reference type, or a cv-unqualified non-array object type!");
+
     friend ::beman::execution::detail::task::promise_type<task, Value, Environment>;
 
   public:

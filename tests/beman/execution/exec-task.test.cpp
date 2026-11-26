@@ -11,6 +11,7 @@ import std;
 #include <coroutine>
 #include <cstddef>
 #include <exception>
+#include <functional>
 #include <memory>
 #include <memory_resource>
 #include <new>
@@ -441,6 +442,31 @@ auto test_error_convertible() -> void {
     test_std::sync_wait(tsk() | test_std::upon_error([&result](long l) noexcept { result = l; }));
     ASSERT(result == -7L);
 }
+
+auto test_lvalue_reference() -> void {
+    {
+        static int  lvalue_int = 67;
+        static auto tsk        = []() -> test_std::task<int&> { co_return lvalue_int; };
+        auto [rw]              = test_std::sync_wait(tsk() | test_std::then([](int& i) noexcept {
+                                            return std::ref(i); // Avoid decay-copying
+                                        }))
+                        .value();
+        static_assert(std::same_as<decltype(rw), std::reference_wrapper<int>>);
+        ASSERT(rw == 67);
+        ASSERT(&rw.get() == &lvalue_int);
+    }
+    {
+        static auto lvalue_uptr = std::make_unique<int>(42);
+        static auto tsk         = []() -> test_std::task<std::unique_ptr<int>&> { co_return lvalue_uptr; };
+        auto [rw]               = test_std::sync_wait(tsk() | test_std::then([](std::unique_ptr<int>& p) noexcept {
+                                            return std::ref(p); // Avoid decay-copying
+                                        }))
+                        .value();
+        static_assert(std::same_as<decltype(rw), std::reference_wrapper<std::unique_ptr<int>>>);
+        ASSERT(rw.get() == lvalue_uptr);
+        ASSERT(&rw.get() == &lvalue_uptr);
+    }
+}
 } // namespace
 
 TEST(exec_task) {
@@ -459,4 +485,5 @@ TEST(exec_task) {
     test_no_error();
     test_error_convertible();
     test_lifetimes();
+    test_lvalue_reference();
 }
