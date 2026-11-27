@@ -49,6 +49,7 @@ find_package_test: # XXX install  ## Test with installed cmake config package
     --debug-find-pkg=beman.execution
 	ninja -C build/find_package_test test
 	ninja -C build/find_package_test ninja -t deps | egrep -w '(cmake_cxx_std|beman)'
+	ninja -C build/find_package_test -t commands beman_execution.example.modules | tail -1
 
 distclean: ## Remove all build artifacts
 	rm -rf build .cache

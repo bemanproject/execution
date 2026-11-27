@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # gersemi: on
 
-cmake_minimum_required(VERSION 3.30...4.4)
+cmake_minimum_required(VERSION 3.30...4.5)
 
 include(../cmake/prelude.cmake)
 
@@ -38,8 +38,7 @@ set(EXAMPLES
 )
 
 if(BEMAN_USE_MODULES)
-    #-dk:TODO gcc doesn't like the modules: list(APPEND EXAMPLES modules modules_and_header)
-    list(APPEND EXAMPLES modules_and_header)
+    list(APPEND EXAMPLES modules modules_and_header)
 endif()
 
 if(BEMAN_EXECUTION_WITH_DEFAULT_PARALLEL_SCHEDULER_BACKEND)
