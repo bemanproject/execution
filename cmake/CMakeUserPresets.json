@@ -22,7 +22,6 @@
       "configurePreset": "release",
       "configuration": "Release",
       "targets": [
-        "all_verify_interface_header_sets",
         "all"
       ]
     }

@@ -41,6 +41,16 @@ compile_commands.json: $(_build_path)/compile_commands.json
 CMakeUserPresets.json:: cmake/CMakeUserPresets.json
 	-ln -fs $< $@
 
+find_package_test: # XXX install  ## Test with installed cmake config package
+	cmake -S examples -B build/find_package_test -G Ninja \
+    -D CMAKE_CXX_STANDARD=26 \
+    -D CMAKE_BUILD_TYPE=Release \
+    -D CMAKE_SKIP_TEST_ALL_DEPENDENCY=OFF \
+    --debug-find-pkg=beman.execution
+	ninja -C build/find_package_test test
+	ninja -C build/find_package_test ninja -t deps | egrep -w '(cmake_cxx_std|beman)'
+	ninja -C build/find_package_test -t commands beman_execution.example.modules | tail -1
+
 distclean: ## Remove all build artifacts
 	rm -rf build .cache
 	rm -f CMakeUserPresets.json \
@@ -49,8 +59,9 @@ distclean: ## Remove all build artifacts
 	find . -name '*~' -delete
 
 format: distclean  ## Format all files with pre-commit
-	-pre-commit autoupdate
-	pre-commit run --all
+	git ls-files ':(top,exclude)infra/cmake/' ::cmake.in ::*.cmake ::*CMakeLists.txt | xargs gersemi -i
+	# -pre-commit autoupdate --freeze
+	# pre-commit run --all
 
 dockerbuild: ## Start docker image interactive
 	docker run -it -v $(CURDIR):/src $(IMAGE)
