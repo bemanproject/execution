@@ -7,6 +7,7 @@
 import std;
 #else
 #include <concepts>
+#include <cstddef>
 #include <exception>
 #include <variant>
 #endif
@@ -90,6 +91,12 @@ auto test_completion_signature() {
 }
 
 auto test_completion_signatures() -> void {
+    static_assert(std::same_as<decltype(sender::env_signatures::count_of(test_std::set_value)), std::size_t>);
+    static_assert(sender::env_signatures::count_of(test_std::set_value) == 4);
+    static_assert(sender::env_signatures::count_of(test_std::set_error) == 2);
+    static_assert(sender::env_signatures::count_of(test_std::set_stopped) == 1);
+    static_assert(sender::none_signatures::count_of(test_std::set_value) == 0);
+
     test_std::completion_signatures<>();
     test_std::completion_signatures<test_std::set_error_t(error)>();
     //-dk:TODO create negative compilation test_std::completion_signatures<test_std::set_error_t()>();

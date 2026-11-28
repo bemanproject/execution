@@ -37,6 +37,7 @@ import beman.execution.detail.meta.transform;
 import beman.execution.detail.meta.unique;
 import beman.execution.detail.movable_value;
 import beman.execution.detail.nested_sender_has_affine;
+import beman.execution.detail.remap_attrs;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_in;
@@ -66,6 +67,7 @@ import beman.execution.detail.value_signature;
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/movable_value.hpp>
 #include <beman/execution/detail/nested_sender_has_affine.hpp>
+#include <beman/execution/detail/remap_attrs.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
@@ -99,17 +101,13 @@ struct then_transform_t {
 template <typename, typename, typename>
 struct then_exception_fun : ::std::false_type {};
 template <typename Comp, typename Fun, typename... A>
-struct then_exception_fun<Comp, Fun, Comp(A...)>
-    : ::std::bool_constant<not noexcept(::std::declval<Fun>()(::std::declval<A>()...))> {};
+struct then_exception_fun<Comp, Fun, Comp(A...)> : ::std::bool_constant<!::std::is_nothrow_invocable_v<Fun, A...>> {};
 
 template <typename, typename, typename>
 struct then_exception : ::std::false_type {};
-template <typename Comp, typename Fun, typename Completion, typename... Completions>
-struct then_exception<Comp, Fun, ::beman::execution::completion_signatures<Completion, Completions...>> {
-    static constexpr bool value{
-        then_exception_fun<Comp, Fun, Completion>::value ||
-        then_exception<Comp, Fun, ::beman::execution::completion_signatures<Completions...>>::value};
-};
+template <typename Comp, typename Fun, typename... Signatures>
+struct then_exception<Comp, Fun, ::beman::execution::completion_signatures<Signatures...>>
+    : ::std::disjunction<then_exception_fun<Comp, Fun, Signatures>...> {};
 
 template <typename Completion>
 struct then_t {
@@ -135,6 +133,17 @@ struct then_t {
     }
 
   private:
+    template <typename Fun>
+    struct invocation_exception {
+        using source = Completion;
+        using output = ::beman::execution::set_error_t;
+
+        template <typename, typename Signatures, typename...>
+        static consteval auto applies() noexcept -> bool {
+            return ::beman::execution::detail::then_exception<Completion, Fun, Signatures>::value;
+        }
+    };
+
     template <typename, typename...>
     struct get_signatures;
 
@@ -167,26 +176,28 @@ struct then_t {
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
+        static constexpr auto get_attrs = []<typename Fun>(const Fun&, const auto& child) noexcept {
+            return ::beman::execution::detail::remap_attrs<
+                ::beman::execution::detail::redirect_completion<Completion, ::beman::execution::set_value_t, false>,
+                invocation_exception<Fun>>(child);
+        };
+
         // NOLINTBEGIN(bugprone-exception-escape)
         struct complete_impl {
-            template <typename Tag, typename... Args>
-            auto operator()(auto, auto& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
+            template <typename Fun, typename Tag, typename... Args>
+            auto operator()(auto, Fun& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
                 if constexpr (::std::same_as<Completion, Tag>) {
                     BEMAN_EXECUTION_TRY {
-                        auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
-                        if constexpr (::std::same_as<void, decltype(invoke())>) {
-                            invoke();
+                        if constexpr (::std::is_void_v<::std::invoke_result_t<Fun, Args...>>) {
+                            ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...);
                             ::beman::execution::set_value(::std::move(receiver));
                         } else {
-                            ::beman::execution::set_value(::std::move(receiver), invoke());
+                            ::beman::execution::set_value(
+                                ::std::move(receiver), ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...));
                         }
                     }
                     BEMAN_EXECUTION_CATCH(...) {
-                        if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
-
-                                                       )) {
-                            static_assert(noexcept(
-                                ::beman::execution::set_error(::std::move(receiver), ::std::current_exception())));
+                        if constexpr (!::std::is_nothrow_invocable_v<Fun, Args...>) {
                             ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
                         }
                     }

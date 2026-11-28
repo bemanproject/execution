@@ -6,6 +6,10 @@ module;
 
 export module beman.execution.detail.get_completion_domain;
 
+namespace beman::execution::detail {
+export using beman::execution::detail::no_completion_domain;
+} // namespace beman::execution::detail
+
 namespace beman::execution {
 export using beman::execution::get_completion_domain_t;
 export using beman::execution::get_completion_domain;

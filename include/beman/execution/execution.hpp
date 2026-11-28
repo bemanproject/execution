@@ -40,6 +40,7 @@ import beman.execution.detail.get_scheduler_allocator;
 import beman.execution.detail.get_start_scheduler;
 import beman.execution.detail.get_stop_token;
 import beman.execution.detail.indeterminate_domain;
+import beman.execution.detail.inlinable_receiver;
 import beman.execution.detail.inline_scheduler;
 import beman.execution.detail.into_variant;
 import beman.execution.detail.just;
@@ -68,7 +69,6 @@ import beman.execution.detail.set_value;
 import beman.execution.detail.simple_counting_scope;
 import beman.execution.detail.spawn_future;
 import beman.execution.detail.spawn;
-//-dk:TODO? import beman.execution.detail.split;
 import beman.execution.detail.start;
 import beman.execution.detail.starts_on;
 import beman.execution.detail.stopped_as_error;
@@ -119,6 +119,7 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/get_start_scheduler.hpp>
 #include <beman/execution/detail/get_stop_token.hpp>
 #include <beman/execution/detail/indeterminate_domain.hpp>
+#include <beman/execution/detail/inlinable_receiver.hpp>
 #include <beman/execution/detail/inline_scheduler.hpp>
 #include <beman/execution/detail/into_variant.hpp>
 #include <beman/execution/detail/just.hpp>
@@ -147,7 +148,6 @@ import beman.execution.detail.write_env;
 #include <beman/execution/detail/simple_counting_scope.hpp>
 #include <beman/execution/detail/spawn_future.hpp>
 #include <beman/execution/detail/spawn.hpp>
-//-dk:TODO? #include <beman/execution/detail/split.hpp>
 #include <beman/execution/detail/start.hpp>
 #include <beman/execution/detail/starts_on.hpp>
 #include <beman/execution/detail/stopped_as_error.hpp>

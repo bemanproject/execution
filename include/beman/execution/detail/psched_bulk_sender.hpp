@@ -37,6 +37,7 @@ import beman.execution.detail.meta.unique;
 import beman.execution.detail.operation_state;
 import beman.execution.detail.parallel_scheduler_replacement;
 import beman.execution.detail.receiver;
+import beman.execution.detail.remap_attrs;
 import beman.execution.detail.sender;
 import beman.execution.detail.start;
 import beman.execution.detail.set_error;
@@ -63,6 +64,7 @@ import beman.execution.detail.value_types_of_t;
 #include <beman/execution/detail/operation_state.hpp>
 #include <beman/execution/detail/parallel_scheduler_replacement.hpp>
 #include <beman/execution/detail/receiver.hpp>
+#include <beman/execution/detail/remap_attrs.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/set_error.hpp>
 #include <beman/execution/detail/set_stopped.hpp>
@@ -240,7 +242,8 @@ struct psched_bulk_sender {
         constexpr auto compl_sigs = ::beman::execution::get_completion_signatures<Child, Env...>();
         return ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
             ::std::remove_cvref_t<decltype(compl_sigs)>,
-            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>>{};
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr),
+                                                      ::beman::execution::set_stopped_t()>>>{};
     }
 
     template <typename Rcvr>
@@ -253,7 +256,15 @@ struct psched_bulk_sender {
                            ::std::move(fn)};
     }
 
-    auto get_env() const noexcept { return ::beman::execution::get_env(child); }
+    // After a value completion of the child the work is handed to the backend, which can also
+    // complete with an error or, when stop was requested, with stopped.
+    auto get_env() const noexcept {
+        return ::beman::execution::detail::remap_attrs<
+            ::beman::execution::detail::
+                redirect_completion<::beman::execution::set_value_t, ::beman::execution::set_error_t, true>,
+            ::beman::execution::detail::
+                redirect_completion<::beman::execution::set_value_t, ::beman::execution::set_stopped_t, true>>(child);
+    }
 
     [[BEMAN_EXECUTION_NO_UNIQUE_ADDRESS]] ::std::bool_constant<IsChunked> _;
     ::std::shared_ptr<backend_type>                                       backend;

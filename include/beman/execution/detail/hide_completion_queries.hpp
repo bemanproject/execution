@@ -44,7 +44,7 @@ struct hide_completion_queries {
         return ::beman::execution::detail::fwd_env(child_attrs).query(q, ::std::forward<Args>(args)...);
     }
 
-    ::std::remove_cvref_t<ChildAttrs> child_attrs;
+    ChildAttrs child_attrs;
 };
 } // namespace beman::execution::detail
 

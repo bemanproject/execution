@@ -29,6 +29,7 @@ import beman.execution.detail.meta.combine;
 import beman.execution.detail.meta.unique;
 import beman.execution.detail.nested_sender_has_affine;
 import beman.execution.detail.product_type;
+import beman.execution.detail.remap_attrs;
 import beman.execution.detail.sender;
 import beman.execution.detail.sender_adaptor_closure;
 import beman.execution.detail.sender_for;
@@ -50,6 +51,7 @@ import beman.execution.detail.set_value;
 #include <beman/execution/detail/meta_unique.hpp>
 #include <beman/execution/detail/nested_sender_has_affine.hpp>
 #include <beman/execution/detail/product_type.hpp>
+#include <beman/execution/detail/remap_attrs.hpp>
 #include <beman/execution/detail/sender.hpp>
 #include <beman/execution/detail/sender_adaptor_closure.hpp>
 #include <beman/execution/detail/sender_for.hpp>
@@ -103,12 +105,36 @@ struct bulk_transform_signatures<IsChunked, F, Shape, ::beman::execution::comple
         : ::std::bool_constant<
               ::beman::execution::detail::bulk_traits<IsChunked, F, Shape, Args...>::is_nothrow_invocable> {};
 
+    static constexpr bool may_throw = !(... && is_nothrow<Sigs>::value);
+
     using type = ::beman::execution::detail::meta::unique<::beman::execution::detail::meta::combine<
         ::beman::execution::completion_signatures<Sigs...>,
         ::std::conditional_t<
-            (... && is_nothrow<Sigs>::value),
-            ::beman::execution::completion_signatures<>,
-            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>>>>;
+            may_throw,
+            ::beman::execution::completion_signatures<::beman::execution::set_error_t(::std::exception_ptr)>,
+            ::beman::execution::completion_signatures<>>>>;
+};
+
+// A value completion becomes set_error if the invocation of the function throws.
+template <bool IsChunked, typename F, typename Shape>
+struct bulk_invocation_exception {
+    using source = ::beman::execution::set_value_t;
+    using output = ::beman::execution::set_error_t;
+
+    template <typename, typename Signatures, typename...>
+    static consteval auto applies() noexcept -> bool {
+        return ::beman::execution::detail::bulk_transform_signatures<IsChunked, F, Shape, Signatures>::may_throw;
+    }
+};
+
+template <bool IsChunked>
+struct bulk_get_attrs {
+    template <typename Policy, typename Shape, typename F>
+    auto operator()(const ::beman::execution::detail::product_type<Policy, Shape, F>&,
+                    const auto& child) const noexcept {
+        return ::beman::execution::detail::remap_attrs<
+            ::beman::execution::detail::bulk_invocation_exception<IsChunked, F, Shape>>(child);
+    }
 };
 
 template <bool IsChunked>
@@ -176,6 +202,8 @@ struct bulk_algo_t {
     }
 
     struct impls_for : ::beman::execution::detail::default_impls {
+        static constexpr ::beman::execution::detail::bulk_get_attrs<is_chunked> get_attrs{};
+
         struct complete_impl {
             template <typename Index,
                       typename Policy,
@@ -254,6 +282,11 @@ struct bulk_t {
                         shape,
                         ::beman::execution::detail::forward_like<Sender>(f));
     }
+
+    // bulk is lowered to bulk_chunked calling f for each index: it throws when bulk_unchunked would.
+    struct impls_for : ::beman::execution::detail::default_impls {
+        static constexpr ::beman::execution::detail::bulk_get_attrs<false> get_attrs{};
+    };
 
     template <::beman::execution::detail::sender_for<bulk_t> Sender, typename Env>
     static auto transform_sender(::beman::execution::set_value_t, Sender&& sndr, const Env&) {
