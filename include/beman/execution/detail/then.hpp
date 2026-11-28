@@ -105,12 +105,9 @@ struct then_exception_fun<Comp, Fun, Comp(A...)> : ::std::bool_constant<!::std::
 
 template <typename, typename, typename>
 struct then_exception : ::std::false_type {};
-template <typename Comp, typename Fun, typename Completion, typename... Completions>
-struct then_exception<Comp, Fun, ::beman::execution::completion_signatures<Completion, Completions...>> {
-    static constexpr bool value{
-        then_exception_fun<Comp, Fun, Completion>::value ||
-        then_exception<Comp, Fun, ::beman::execution::completion_signatures<Completions...>>::value};
-};
+template <typename Comp, typename Fun, typename... Signatures>
+struct then_exception<Comp, Fun, ::beman::execution::completion_signatures<Signatures...>>
+    : ::std::disjunction<then_exception_fun<Comp, Fun, Signatures>...> {};
 
 template <typename Completion>
 struct then_t {
@@ -187,24 +184,20 @@ struct then_t {
 
         // NOLINTBEGIN(bugprone-exception-escape)
         struct complete_impl {
-            template <typename Tag, typename... Args>
-            auto operator()(auto, auto& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
+            template <typename Fun, typename Tag, typename... Args>
+            auto operator()(auto, Fun& fun, auto& receiver, Tag, Args&&... args) const noexcept -> void {
                 if constexpr (::std::same_as<Completion, Tag>) {
                     BEMAN_EXECUTION_TRY {
-                        auto invoke = [&] { return ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...); };
-                        if constexpr (::std::same_as<void, decltype(invoke())>) {
-                            invoke();
+                        if constexpr (::std::is_void_v<::std::invoke_result_t<Fun, Args...>>) {
+                            ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...);
                             ::beman::execution::set_value(::std::move(receiver));
                         } else {
-                            ::beman::execution::set_value(::std::move(receiver), invoke());
+                            ::beman::execution::set_value(
+                                ::std::move(receiver), ::std::invoke(::std::move(fun), ::std::forward<Args>(args)...));
                         }
                     }
                     BEMAN_EXECUTION_CATCH(...) {
-                        if constexpr (not noexcept(::std::invoke(::std::move(fun), ::std::forward<Args>(args)...)
-
-                                                       )) {
-                            static_assert(noexcept(
-                                ::beman::execution::set_error(::std::move(receiver), ::std::current_exception())));
+                        if constexpr (!::std::is_nothrow_invocable_v<Fun, Args...>) {
                             ::beman::execution::set_error(::std::move(receiver), ::std::current_exception());
                         }
                     }

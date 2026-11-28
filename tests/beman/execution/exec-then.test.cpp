@@ -192,6 +192,17 @@ auto test_then_value() -> void {
            test_std::sync_wait(test_std::just_stopped() | test_std::upon_stopped([]() { return 17; })));
 }
 
+auto test_then_reference_result() -> void {
+    int  value             = 42;
+    bool received_original = false;
+    auto child             = test_std::just() | test_std::then([&]() noexcept -> int& { return value; });
+    test_then_type<test_std::set_value_t(int&)>(child);
+    auto state = test_std::connect(
+        child | test_std::then([&](int& result) noexcept { received_original = (&result == &value); }), receiver{});
+    test_std::start(state);
+    ASSERT(received_original);
+}
+
 struct memory_env {
     std::pmr::polymorphic_allocator<> allocator;
     auto                              query(const test_std::get_allocator_t&) const noexcept { return allocator; }
@@ -445,6 +456,7 @@ TEST(exec_then) {
     test_then_type();
     test_then_multi_type();
     test_then_value();
+    test_then_reference_result();
     test_then_allocator();
 
     test_then_env();
